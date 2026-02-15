@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,24 +22,33 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "NOURISH — Meal Pairer",
+  title: "NOURISH — Meal Explorer",
   description:
     "Find the perfect sides for your favourite meal. Discover culturally appropriate side dishes with beautiful interactive pairing.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nourish-meal-pairer.vercel.app"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nourish-meal-explorer.vercel.app"
   ),
   openGraph: {
-    title: "NOURISH — Meal Pairer",
+    title: "NOURISH — Meal Explorer",
     description:
       "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
     siteName: "NOURISH",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "NOURISH Meal Explorer — ADA Plate Method visualization with culturally diverse foods",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NOURISH — Meal Pairer",
+    title: "NOURISH — Meal Explorer",
     description:
       "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
+    images: ["/og-image.png"],
   },
 };
 
@@ -50,6 +61,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
