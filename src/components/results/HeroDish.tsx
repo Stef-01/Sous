@@ -1,16 +1,56 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Meal } from "@/types";
 import { springs, spawnScaleKeyframes, squashStretchKeyframes } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+import HoverCard from "./HoverCard";
+
 interface HeroDishProps {
   meal: Meal;
   onClick?: () => void;
   hideLabel?: boolean;
+}
+
+// Helper to guess nutrition for main dish since it lacks explicit tags
+function inferMealNutrition(meal: Meal): { tags: string[]; category: "protein" | "carb" | "vegetable" } {
+  const lowerName = meal.name.toLowerCase();
+  const lowerDesc = meal.description.toLowerCase();
+  const text = `${lowerName} ${lowerDesc}`;
+
+  const tags: string[] = [];
+  let category: "protein" | "carb" | "vegetable" = "protein"; // Default to protein for main
+
+  // Heuristic Tagging
+  if (text.includes("chicken")) tags.push("chicken");
+  if (text.includes("fish") || text.includes("salmon")) tags.push("fish");
+  if (text.includes("paneer")) tags.push("paneer");
+  if (text.includes("dal") || text.includes("lentil")) tags.push("lentil");
+  if (text.includes("rice") || text.includes("biryani")) {
+    tags.push("rice");
+    category = "carb";
+  }
+  if (text.includes("pasta") || text.includes("spaghetti")) {
+    tags.push("pasta");
+    category = "carb";
+  }
+  if (text.includes("potato") || text.includes("aloo")) {
+    tags.push("potato");
+    category = "carb"; // Usually side, but if main...
+  }
+  if (text.includes("salad") || text.includes("bowl")) {
+    category = "vegetable";
+  }
+
+  if (text.includes("spinach") || text.includes("saag") || text.includes("palak")) tags.push("spinach");
+  if (text.includes("curry")) tags.push("curry");
+  if (text.includes("fried")) tags.push("fried");
+  if (text.includes("yogurt") || text.includes("curd")) tags.push("yogurt");
+
+  return { tags, category };
 }
 
 // Video game spawn — multi-phase scale from 0 with overshoot bounces
@@ -92,6 +132,8 @@ const reducedVariants = {
 export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishProps) {
   const [imgError, setImgError] = useState(false);
   const [showGlowRing, setShowGlowRing] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prefersReduced = useReducedMotion();
 
   // Reset glow ring on meal change
@@ -101,15 +143,29 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
     return () => clearTimeout(timer);
   }, [meal.id]);
 
+  const { tags, category } = inferMealNutrition(meal);
+
+  const handleMouseEnter = () => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => setIsHovered(true), 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => setIsHovered(false), 150);
+  };
+
   return (
     <motion.div
-      className="flex flex-col items-center cursor-pointer"
+      className="flex flex-col items-center cursor-pointer relative"
       variants={prefersReduced ? reducedVariants : heroSpawnVariants}
       initial="initial"
       animate="animate"
       exit="exit"
       key={meal.id}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
       aria-label={`View details for ${meal.name}`}
@@ -120,11 +176,24 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
         }
       }}
     >
+      {/* Power Up Badge on Main Dish */}
+      <AnimatePresence>
+        {isHovered && !hideLabel && !prefersReduced && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 z-50 pointer-events-none w-max">
+            <HoverCard
+              name={meal.name}
+              tags={tags}
+              nutritionCategory={category}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
         whileHover={prefersReduced ? {} : {
-          scale: 1.04,
-          y: -6,
+          scale: 1.06, // Increased zoom to match new tactile feel
+          y: -8,
         }}
         transition={springs.gentle}
       >

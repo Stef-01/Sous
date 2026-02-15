@@ -219,7 +219,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
           ? {}
           : {
             y: -8,
-            scale: 1.02,
+            scale: 1.06,
             // If settled (>5s), use bouncy snappy spring. If fresh, use stiff overdamped spring.
             transition: isHoverSettled
               ? springs.snappy
@@ -232,7 +232,12 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
       <div className="hidden hover-hover:block">
         <AnimatePresence>
           {showHoverCard && (
-            <HoverCard side={side} onSwap={handleHoverCardSwap} />
+            <HoverCard
+              name={side.name}
+              tags={side.tags}
+              nutritionCategory={side.nutritionCategory}
+              onSwap={handleHoverCardSwap}
+            />
           )}
         </AnimatePresence>
       </div>
