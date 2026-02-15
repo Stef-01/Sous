@@ -39,6 +39,10 @@ const ENGINE_TO_APP: Record<string, string> = {
   "Baingan Bharta (Side)": "baingan-bharta-side",
   "Cabbage Thoran": "cabbage-thoran",
   "Palak Corn": "palak-corn",
+
+  // International Mappings
+  "Corn on the Cob": "corn-on-cob",
+  "Mac & Cheese": "mac-and-cheese",
 };
 
 // Build set of all app side IDs at import time

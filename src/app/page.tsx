@@ -111,7 +111,7 @@ export default function Home() {
 
   const appraisal = useMemo(() => {
     if (!hasResults) return null;
-    return getPlateAppraisal({ sides, mealName: meal.name });
+    return getPlateAppraisal({ sides, meal });
   }, [hasResults, sides, meal]);
 
   return (

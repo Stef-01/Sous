@@ -212,8 +212,8 @@ export default function ResultsStage({
           {/* Food cluster — removed negative margins for clean grid layout */}
           <motion.div
             layout
-            transition={springs.modal}
-            className={`relative flex items-center ${showPlateMethod ? "gap-0" : "gap-10 lg:gap-14"
+            transition={{ ...springs.modal, duration: 0.6 }} // Slower, smoother transition
+            className={`relative flex items-center transition-all duration-500 ease-in-out ${showPlateMethod ? "gap-0" : "gap-10 lg:gap-14"
               }`}
           >
             {/* Subtle shadow pool options — kept but sized correctly */}

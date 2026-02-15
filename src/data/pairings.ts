@@ -44,6 +44,13 @@ const ENGINE_MAIN_TO_MEAL_ID: Record<string, string> = {
   "Sambar": "sambar",
   "Tandoori Vegetables": "tandoori-vegetables",
   "Tofu Bhurji": "tofu-bhurji",
+
+  // International Expansion
+  "Sushi Platter": "sushi-platter",
+  "Pasta Carbonara": "pasta-carbonara",
+  "Fish Tacos": "fish-tacos",
+  "BBQ Ribs": "bbq-ribs",
+  "Beef Burger": "beef-burger",
 };
 
 // Reverse lookup: meal ID → engine main name

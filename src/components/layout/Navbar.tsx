@@ -63,7 +63,7 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
           <SparkleEffect count={8}>
             <motion.button
               onClick={onLogoClick}
-              className="text-nourish-dark font-serif text-lg tracking-wide cursor-pointer hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 rounded"
+              className="text-nourish-dark font-serif text-3xl tracking-wide cursor-pointer hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 rounded"
               variants={prefersReduced ? {} : itemVariants}
               whileTap={prefersReduced ? {} : { scale: 0.95 }}
               aria-label="Spin the wheel — pick a random meal"

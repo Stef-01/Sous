@@ -243,7 +243,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
       </div>
       {/* Inner squash-stretch container */}
       <motion.div
-        className="relative w-32 h-32 md:w-44 md:h-44 lg:w-48 lg:h-48"
+        className="relative w-36 h-36 md:w-48 md:h-48 lg:w-56 lg:h-56"
         variants={prefersReduced ? {} : squashVariants}
         initial="initial"
         animate="animate"
@@ -319,7 +319,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
                 <SparkleEffect count={6}>
                   <motion.button
                     onClick={handleSwap}
-                    className="w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-nourish-subtext hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
+                    className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full shadow-lg overflow-hidden border-4 border-white group-hover:border-nourish-cream transition-colors duration-300 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
                     aria-label={`Swap ${side.name} for another side dish`}
                     whileHover={prefersReduced ? {} : { scale: 1.15 }}
                     whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}

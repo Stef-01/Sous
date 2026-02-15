@@ -46,7 +46,7 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   } else if (cat === "protein") {
     benefits.push({
       id: "muscle",
-      label: "Muscle Repair",
+      label: "Muscle Health",
       color: "text-rose-700",
       bgColor: "bg-rose-50",
       icon: "💪",
@@ -96,13 +96,58 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
     });
   }
 
-  if (lowerTags.some((t) => ["spinach", "kale", "leafy", "greens", "broccoli", "lentil", "dal"].includes(t))) {
+  // 1. Evidence-Based High Impact
+  // Bone Health (Calcium + Vit K)
+  if (lowerTags.some((t) => ["dairy", "cheese", "yogurt", "milk", "leafy", "spinach", "broccoli", "almond"].includes(t))) {
     benefits.push({
-      id: "iron",
-      label: "Iron Boost",
-      color: "text-teal-700",
-      bgColor: "bg-teal-50",
-      icon: "🔩",
+      id: "bone-health",
+      label: "+ Bone Health",
+      color: "text-indigo-700",
+      bgColor: "bg-indigo-50",
+      icon: "🦴",
+    });
+  }
+
+  // Brain Health (B12 / Omega-3)
+  if (lowerTags.some((t) => ["fish", "seafood", "egg", "meat", "chicken", "dairy", "fortified"].includes(t))) {
+    benefits.push({
+      id: "brain-health",
+      label: "Brain Health (B12)",
+      color: "text-purple-700",
+      bgColor: "bg-purple-50",
+      icon: "🧠",
+    });
+  }
+
+  // High Iron
+  if (lowerTags.some((t) => ["spinach", "lentil", "beans", "chickpea", "meat", "beef", "lamb", "tofu"].includes(t))) {
+    benefits.push({
+      id: "high-iron",
+      label: "High Iron",
+      color: "text-rose-700",
+      bgColor: "bg-rose-50",
+      icon: "🩸",
+    });
+  }
+
+  // Gut Health (Fiber / Fermented)
+  if (lowerTags.some((t) => ["fiber", "fermented", "yogurt", "kimchi", "miso", "whole-grain", "oats", "barley", "lentil", "beans"].includes(t)) || cat === "vegetable") {
+    benefits.push({
+      id: "gut-health",
+      label: "Gut Health",
+      color: "text-emerald-700",
+      bgColor: "bg-emerald-50",
+      icon: "🥬",
+    });
+  }
+
+  if (lowerTags.some((t) => ["fish", "salmon", "omega", "seeds", "flax", "walnut"].includes(t))) {
+    benefits.push({
+      id: "brain",
+      label: "Omega-3 / Brain",
+      color: "text-pink-700",
+      bgColor: "bg-pink-50",
+      icon: "🧠",
     });
   }
 
@@ -116,15 +161,7 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
     });
   }
 
-  if (lowerTags.some((t) => ["fish", "salmon", "omega", "seeds", "flax", "walnut"].includes(t))) {
-    benefits.push({
-      id: "brain",
-      label: "Omega-3 / Brain",
-      color: "text-pink-700",
-      bgColor: "bg-pink-50",
-      icon: "🧠",
-    });
-  }
+
 
   if (lowerTags.some((t) => ["chicken", "turkey", "lean"].includes(t))) {
     benefits.push({

@@ -8909,5 +8909,202 @@
         "complementary accents improve overall plate balance"
       ]
     }
+  ],
+  "Sushi Platter": [
+    {
+      "side": "Miso Soup",
+      "score": 85,
+      "tier": "great",
+      "reasons": [
+        "classic Japanese starter",
+        "warm umami broth complements fresh sushi"
+      ]
+    },
+    {
+      "side": "Edamame",
+      "score": 82,
+      "tier": "great",
+      "reasons": [
+        "light protein snack",
+        "fun to eat alongside sushi rolls"
+      ]
+    },
+    {
+      "side": "Seaweed Salad",
+      "score": 78,
+      "tier": "good",
+      "reasons": [
+        "refreshing vinegar dressing cleanses the palate",
+        "adds texture contrast"
+      ]
+    },
+    {
+      "side": "Gyoza",
+      "score": 75,
+      "tier": "good",
+      "reasons": [
+        "crispy dumplings balance soft sushi texture"
+      ]
+    },
+    {
+      "side": "Takoyaki",
+      "score": 70,
+      "tier": "good",
+      "reasons": [
+        "savoury snack to round out a Japanese feast"
+      ]
+    }
+  ],
+  "Pasta Carbonara": [
+    {
+      "side": "Caesar Salad",
+      "score": 88,
+      "tier": "great",
+      "reasons": [
+        "crisp romaine cuts through rich creamy pasta sauce",
+        "classic Italian-American pairing"
+      ]
+    },
+    {
+      "side": "Garlic Bread",
+      "score": 85,
+      "tier": "great",
+      "reasons": [
+        "perfect for soaking up leftover sauce",
+        "crunchy texture contrast"
+      ]
+    },
+    {
+      "side": "Caprese Salad",
+      "score": 80,
+      "tier": "great",
+      "reasons": [
+        "fresh tomato and basil balance heavy cheese and egg",
+        "traditional Italian starter"
+      ]
+    },
+    {
+      "side": "Bruschetta",
+      "score": 75,
+      "tier": "good",
+      "reasons": [
+        "crunchy toast with fresh toppings",
+        "adds acidity to a rich meal"
+      ]
+    }
+  ],
+  "Fish Tacos": [
+    {
+      "side": "Guacamole",
+      "score": 90,
+      "tier": "great",
+      "reasons": [
+        "creamy avocado balances crispy fish",
+        "essential Mexican side"
+      ]
+    },
+    {
+      "side": "Mexican Rice",
+      "score": 85,
+      "tier": "great",
+      "reasons": [
+        "hearty starch to complete the taco meal",
+        "absorbs spicy salsas well"
+      ]
+    },
+    {
+      "side": "Pico de Gallo",
+      "score": 82,
+      "tier": "good",
+      "reasons": [
+        "fresh acidity cuts through fried toppings",
+        "adds vibrant color"
+      ]
+    },
+    {
+      "side": "Elote",
+      "score": 80,
+      "tier": "good",
+      "reasons": [
+        "street-corn style richness",
+        "sweet corn complements spicy tacos"
+      ]
+    }
+  ],
+  "BBQ Ribs": [
+    {
+      "side": "Coleslaw",
+      "score": 88,
+      "tier": "great",
+      "reasons": [
+        "creamy crunch cuts through sticky bbq sauce",
+        "classic barbecue essential"
+      ]
+    },
+    {
+      "side": "Corn on the Cob",
+      "score": 85,
+      "tier": "great",
+      "reasons": [
+        "sweet corn balances smoky meat",
+        "fun finger food match"
+      ]
+    },
+    {
+      "side": "Mac & Cheese",
+      "score": 82,
+      "tier": "great",
+      "reasons": [
+        "rich cheesy comfort alongside smoky ribs",
+        "ultimate comfort pairing"
+      ]
+    },
+    {
+      "side": "Cornbread",
+      "score": 78,
+      "tier": "good",
+      "reasons": [
+        "sweet crumbly bread soaks up bbq juices",
+        "Southern classic"
+      ]
+    }
+  ],
+  "Beef Burger": [
+    {
+      "side": "French Fries",
+      "score": 95,
+      "tier": "great",
+      "reasons": [
+        "the ultimate burger companion",
+        "salty crunch complements juicy beef"
+      ]
+    },
+    {
+      "side": "Onion Rings",
+      "score": 85,
+      "tier": "great",
+      "reasons": [
+        "sweet fried onion pairs perfectly with savory meat",
+        "fun crispy alternative to fries"
+      ]
+    },
+    {
+      "side": "Pickles",
+      "score": 75,
+      "tier": "good",
+      "reasons": [
+        "acidic crunch cuts through greasy cheese and meat",
+        "refreshing palate cleanser"
+      ]
+    },
+    {
+      "side": "Coleslaw",
+      "score": 70,
+      "tier": "good",
+      "reasons": [
+        "creamy vegetable side adds freshness",
+        "contrast to hot burger"
+      ]
+    }
   ]
 }

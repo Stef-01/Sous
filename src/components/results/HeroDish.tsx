@@ -9,48 +9,12 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 import HoverCard from "./HoverCard";
 
+import { inferMealNutrition } from "@/lib/nutrition";
+
 interface HeroDishProps {
   meal: Meal;
   onClick?: () => void;
   hideLabel?: boolean;
-}
-
-// Helper to guess nutrition for main dish since it lacks explicit tags
-function inferMealNutrition(meal: Meal): { tags: string[]; category: "protein" | "carb" | "vegetable" } {
-  const lowerName = meal.name.toLowerCase();
-  const lowerDesc = meal.description.toLowerCase();
-  const text = `${lowerName} ${lowerDesc}`;
-
-  const tags: string[] = [];
-  let category: "protein" | "carb" | "vegetable" = "protein"; // Default to protein for main
-
-  // Heuristic Tagging
-  if (text.includes("chicken")) tags.push("chicken");
-  if (text.includes("fish") || text.includes("salmon")) tags.push("fish");
-  if (text.includes("paneer")) tags.push("paneer");
-  if (text.includes("dal") || text.includes("lentil")) tags.push("lentil");
-  if (text.includes("rice") || text.includes("biryani")) {
-    tags.push("rice");
-    category = "carb";
-  }
-  if (text.includes("pasta") || text.includes("spaghetti")) {
-    tags.push("pasta");
-    category = "carb";
-  }
-  if (text.includes("potato") || text.includes("aloo")) {
-    tags.push("potato");
-    category = "carb"; // Usually side, but if main...
-  }
-  if (text.includes("salad") || text.includes("bowl")) {
-    category = "vegetable";
-  }
-
-  if (text.includes("spinach") || text.includes("saag") || text.includes("palak")) tags.push("spinach");
-  if (text.includes("curry")) tags.push("curry");
-  if (text.includes("fried")) tags.push("fried");
-  if (text.includes("yogurt") || text.includes("curd")) tags.push("yogurt");
-
-  return { tags, category };
 }
 
 // Video game spawn — multi-phase scale from 0 with overshoot bounces
@@ -190,7 +154,7 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
       </AnimatePresence>
 
       <motion.div
-        className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
+        className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden"
         whileHover={prefersReduced ? {} : {
           scale: 1.06, // Increased zoom to match new tactile feel
           y: -8,
