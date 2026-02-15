@@ -8,6 +8,7 @@ import { springs, spawnScaleKeyframes, wobbleRotationKeyframes } from "@/lib/mot
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import HoverCard from "./HoverCard";
 import SparkleEffect from "@/components/ui/SparkleEffect";
+import MagicalLoader from "@/components/ui/MagicalLoader";
 
 interface SideDishCardProps {
   side: SideDish;
@@ -110,6 +111,7 @@ const reducedVariants = {
 export default function SideDishCard({ side, index, onSwap, onClick, pairingScore, hideControls = false }: SideDishCardProps) {
   const [imgError, setImgError] = useState(false);
   const [imageReady, setImageReady] = useState(false);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
   const [swapKey, setSwapKey] = useState(0);
   const [showGlow, setShowGlow] = useState(true);
   const [showHoverCard, setShowHoverCard] = useState(false);
@@ -130,9 +132,17 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
   useEffect(() => {
     setShowGlow(true);
     setImageReady(false);
+    setMinTimeElapsed(false);
     setImgError(false);
-    const timer = setTimeout(() => setShowGlow(false), 500);
-    return () => clearTimeout(timer);
+
+    // Ensure at least 2.5s of "magical" loading time
+    const minTimer = setTimeout(() => setMinTimeElapsed(true), 2500);
+    const glowTimer = setTimeout(() => setShowGlow(false), 500);
+
+    return () => {
+      clearTimeout(minTimer);
+      clearTimeout(glowTimer);
+    };
   }, [side.id]);
 
   // Clean up hover timers
@@ -199,7 +209,11 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
       whileHover={
         prefersReduced
           ? {}
-          : { y: -4, rotate: 2, scale: 1.04, transition: springs.snappy }
+          : {
+            y: -8,
+            scale: 1.02,
+            transition: { type: "spring", stiffness: 300, damping: 35 } // Less bouncy, more floaty
+          }
       }
       whileTap={prefersReduced ? {} : { scale: 0.95 }}
     >
@@ -244,16 +258,18 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
               src={side.imageUrl}
               alt={`Side dish: ${side.name}`}
               fill
-              className={`object-contain transition-opacity duration-300 ${imageReady ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-contain transition-opacity duration-300 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
               sizes="(max-width: 768px) 128px, (max-width: 1024px) 176px, 192px"
               onError={() => setImgError(true)}
               onLoad={() => setImageReady(true)}
             />
           )}
 
-          {/* Shimmer placeholder while image loads */}
-          {!imageReady && !imgError && (
-            <div className="absolute inset-[10%] rounded-full shimmer" />
+          {/* Magical Loader while waiting for image OR min time */}
+          {(!imageReady || !minTimeElapsed) && !imgError && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <MagicalLoader />
+            </div>
           )}
 
           {/* Swap button with mini-plop on swap — hidden in evaluate mode */}
@@ -317,9 +333,9 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
         </div>
       </motion.div>
 
-      {/* Name label fades in after plop settles — hidden in evaluate mode */}
+      {/* Name label fades in after delay — hidden in evaluate mode */}
       <AnimatePresence>
-        {!hideControls && imageReady && (
+        {!hideControls && imageReady && minTimeElapsed && (
           <motion.div
             className="mt-2 flex flex-col items-center"
             initial={{ opacity: 0, y: 8 }}
