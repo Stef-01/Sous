@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import AboutModal from "./AboutModal";
 import { springs } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -72,17 +72,17 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
             {onVerifiedToggle && (
               <motion.button
                 onClick={onVerifiedToggle}
-                className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${
-                  verifiedOnly
-                    ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
-                    : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
-                }`}
+                className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${verifiedOnly
+                  ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
+                  : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
+                  }`}
                 variants={prefersReduced ? {} : itemVariants}
                 whileTap={prefersReduced ? {} : { scale: 0.95 }}
                 aria-pressed={verifiedOnly}
                 aria-label="Toggle NOURISH Verified filter"
               >
-                <svg
+                <motion.svg
+                  key={`star-${verifiedOnly}`}
                   xmlns="http://www.w3.org/2000/svg"
                   width="12"
                   height="12"
@@ -92,9 +92,15 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  initial={{ scale: 1, rotate: 0 }}
+                  animate={verifiedOnly
+                    ? { scale: [1, 1.4, 1], rotate: [0, 15, 0] }
+                    : { scale: 1, rotate: 0 }
+                  }
+                  transition={{ duration: 0.35, ease: "easeOut" }}
                 >
                   <path d="M12 2 L15.09 8.26 L22 9.27 L17 14.14 L18.18 21.02 L12 17.77 L5.82 21.02 L7 14.14 L2 9.27 L8.91 8.26 Z" />
-                </svg>
+                </motion.svg>
                 Verified
               </motion.button>
             )}

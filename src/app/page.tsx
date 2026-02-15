@@ -128,17 +128,42 @@ export default function Home() {
         <AnimatePresence>
           {!showPlateMethod && (
             <motion.h1
-              className={`text-nourish-dark font-serif text-center max-w-2xl ${
-                hasResults
+              className={`text-nourish-dark font-serif text-center max-w-2xl ${hasResults
                   ? "text-base md:text-lg lg:text-xl mb-2"
                   : "text-xl md:text-2xl lg:text-3xl mb-3"
-              }`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
+                }`}
+              initial="hidden"
+              animate="visible"
               exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+                },
+              }}
             >
-              Find the perfect sides for your favourite meal.
+              {"Find the perfect sides for your favourite meal.".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  className="inline-block mr-[0.3em]"
+                  variants={{
+                    hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      filter: "blur(0px)",
+                      transition: {
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 20,
+                        mass: 0.8,
+                      },
+                    },
+                  }}
+                >
+                  {word}
+                </motion.span>
+              ))}
             </motion.h1>
           )}
         </AnimatePresence>

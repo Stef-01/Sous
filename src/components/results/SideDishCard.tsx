@@ -117,6 +117,13 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
 
   const variants = prefersReduced ? reducedVariants : getSpawnVariants(index);
 
+  // Subtle ambient float after spawn settles
+  const [hasSpawned, setHasSpawned] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setHasSpawned(true), 1000);
+    return () => clearTimeout(timer);
+  }, [side.id]);
+
   // Reset glow on side dish change
   useEffect(() => {
     setShowGlow(true);
@@ -166,7 +173,9 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
 
   return (
     <motion.div
-      className="group relative flex flex-col items-center cursor-pointer"
+      className={`group relative flex flex-col items-center cursor-pointer ${hasSpawned && !prefersReduced ? "ambient-float" : ""
+        }`}
+      style={hasSpawned && !prefersReduced ? { animationDelay: `${index * 0.7}s` } : undefined}
       onClick={onClick}
       role="button"
       tabIndex={0}

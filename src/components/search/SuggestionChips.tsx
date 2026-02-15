@@ -31,17 +31,17 @@ const chipVariants = {
   animate: {
     opacity: 1,
     y: 0,
-    scale: [0, 1.12, 0.95, 1.03, 1],
+    scale: [0, 1.06, 0.97, 1.02, 1],
     rotate: 0,
     transition: {
       scale: {
-        duration: 0.4,
+        duration: 0.35,
         times: [0, 0.35, 0.55, 0.8, 1],
         ease: "easeOut" as const,
       },
       opacity: { duration: 0.08 },
-      y: springs.wobbly,
-      rotate: springs.wobbly,
+      y: springs.snappy,
+      rotate: springs.snappy,
     },
   },
 };
@@ -71,7 +71,7 @@ export default function SuggestionChips({
           whileHover={
             prefersReduced
               ? {}
-              : { scale: 1.08, y: -3, rotate: 2 }
+              : { scale: 1.05, y: -2 }
           }
           whileTap={prefersReduced ? {} : { scale: 0.92 }}
           transition={springs.snappy}

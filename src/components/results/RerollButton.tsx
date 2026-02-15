@@ -20,7 +20,7 @@ const buttonVariants = {
   },
   animate: {
     opacity: 1,
-    scale: [0, 1.15, 0.95, 1.05, 1],
+    scale: [0, 1.08, 0.97, 1.02, 1],
     y: 0,
     transition: {
       scale: {
@@ -104,9 +104,9 @@ export default function RerollButton({ onReroll, disabled = false, onReset }: Re
         animate={
           spinKey > 0
             ? {
-                rotate: 360,
-                scale: [1, 1.3, 1],
-              }
+              rotate: 360,
+              scale: [1, 1.15, 1],
+            }
             : {}
         }
         transition={{
