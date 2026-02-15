@@ -79,6 +79,23 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
     });
   }
 
+  // Diabetes Friendly Check (Green Flag)
+  // Logic: Veggie OR specific healthy tags, AND no bad tags.
+  const isDiabetesFriendly = (
+    (cat === "vegetable" || lowerTags.some((t) => ["lentil", "dal", "bean", "fish", "salmon", "nuts", "seeds", "chicken", "turkey"].includes(t))) &&
+    !lowerTags.some((t) => ["potato", "alco", "fried", "deep-fried", "sugar", "sweet", "rice", "bread", "naan", "pasta", "fruit"].includes(t))
+  );
+
+  if (isDiabetesFriendly) {
+    benefits.push({
+      id: "diabetes",
+      label: "Diabetes Friendly",
+      color: "text-sky-700",
+      bgColor: "bg-sky-50",
+      icon: "💙",
+    });
+  }
+
   if (lowerTags.some((t) => ["spinach", "kale", "leafy", "greens", "broccoli", "lentil", "dal"].includes(t))) {
     benefits.push({
       id: "iron",

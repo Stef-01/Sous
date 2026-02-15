@@ -39,6 +39,26 @@ export function getPlateAppraisal({ sides, mealName }: AppraisalInput): PlateApp
   if (!hasVeg) missing.push("vegetables");
   if (!hasCarb) missing.push("whole grains");
 
+  // Diabetes Awareness Check: Count "Carb Heavy" items
+  // We look for explicit carb indicators in name/tags (inferred here broadly by category + known keywords)
+  // Since we don't have full tags here, we rely on the fact that 'carb' category items are usually strict starches.
+  // We also check for multiple 'carb' items.
+  const carbCount = sides.filter(s => s.nutritionCategory === "carb").length;
+
+  // Also check if Meal is likely a carb (heuristic based on name)
+  const lowerMeal = mealName.toLowerCase();
+  const isMealCarb = ["rice", "biryani", "pasta", "spaghetti", "noodles", "pizza", "burger", "sandwich", "aloo", "potato"].some(k => lowerMeal.includes(k));
+
+  const totalCarbHeavy = carbCount + (isMealCarb ? 1 : 0);
+
+  // Strict Diabetes Warning: If there are 2 or more heavy carb sources (e.g. Rice + Naan, or Pasta + Bread)
+  if (totalCarbHeavy >= 2) {
+    return {
+      sentence: "Caution: High carbohydrate content — not ideal for diabetes management.",
+      tone: "needs-work",
+    };
+  }
+
   // Build the sentence — kept short and clinical for the search bar
   if (isBalanced && avgScore !== null && avgScore >= 60) {
     return {
