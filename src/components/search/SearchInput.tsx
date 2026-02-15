@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { springs } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import SearchDropdown from "./SearchDropdown";
+import SparkleEffect from "@/components/ui/SparkleEffect";
 
 interface SearchInputProps {
   value: string;
@@ -84,11 +85,10 @@ export default function SearchInput({
       transition={prefersReduced ? { duration: 0.2 } : { ...springs.gentle, delay: 0.15 }}
     >
       <motion.div
-        className={`flex items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-500 ${
-          isEvaluating
+        className={`flex items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-500 ${isEvaluating
             ? "bg-transparent border border-transparent shadow-none"
             : "bg-white border border-stone-200 shadow-sm focus-within:border-nourish-button focus-within:ring-1 focus-within:ring-nourish-button/20"
-        }`}
+          }`}
         animate={
           prefersReduced
             ? {}
@@ -173,45 +173,46 @@ export default function SearchInput({
           </AnimatePresence>
 
           {/* Main action button — morphs between "Pair my meal" and "Hide Plate" */}
-          <motion.button
-            type={showEvaluate ? "button" : "submit"}
-            onClick={showEvaluate ? onEvaluate : undefined}
-            disabled={showEvaluate ? disabled : disabled || !value.trim()}
-            className={`px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all duration-300 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 whitespace-nowrap ${
-              showEvaluate
-                ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
-                : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
-            }`}
-            whileHover={prefersReduced ? {} : { scale: 1.03 }}
-            whileTap={prefersReduced ? {} : { scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
-          >
-            <AnimatePresence mode="wait" initial={false}>
-              {showEvaluate ? (
-                <motion.span
-                  key={isEvaluating ? "hide-plate-text" : "evaluate-text"}
-                  initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                  transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="block"
-                >
-                  {isEvaluating ? "Hide Plate" : "Evaluate"}
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="submit-text"
-                  initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                  transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="block"
-                >
-                  Pair my meal
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+          <SparkleEffect count={12}>
+            <motion.button
+              type={showEvaluate ? "button" : "submit"}
+              onClick={showEvaluate ? onEvaluate : undefined}
+              disabled={showEvaluate ? disabled : disabled || !value.trim()}
+              className={`px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all duration-300 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 whitespace-nowrap ${showEvaluate
+                  ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
+                  : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
+                }`}
+              whileHover={prefersReduced ? {} : { scale: 1.03 }}
+              whileTap={prefersReduced ? {} : { scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {showEvaluate ? (
+                  <motion.span
+                    key={isEvaluating ? "hide-plate-text" : "evaluate-text"}
+                    initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="block"
+                  >
+                    {isEvaluating ? "Hide Plate" : "Evaluate"}
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="submit-text"
+                    initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
+                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="block"
+                  >
+                    Pair my meal
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </motion.button>
+          </SparkleEffect>
         </div>
       </motion.div>
       {!isEvaluating && (

@@ -121,13 +121,11 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
       }}
     >
       <motion.div
-        className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80"
+        className="relative w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full overflow-hidden"
         whileHover={prefersReduced ? {} : {
           scale: 1.04,
           y: -6,
-          filter: "drop-shadow(0 12px 20px rgba(0,0,0,0.12))",
         }}
-        style={{ filter: "drop-shadow(0 4px 8px rgba(0,0,0,0.06))" }}
         transition={springs.gentle}
       >
         {/* Squash-stretch inner wrapper */}
@@ -153,7 +151,7 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
               src={meal.heroImageUrl}
               alt={`Dish: ${meal.name}`}
               fill
-              className="object-contain"
+              className="object-cover"
               sizes="(max-width: 768px) 224px, (max-width: 1024px) 288px, 320px"
               priority
               onError={() => setImgError(true)}
