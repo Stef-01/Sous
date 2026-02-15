@@ -12,6 +12,25 @@
       ]
     },
     {
+      "side": "Bhindi Fry (Side)",
+      "score": 75,
+      "tier": "great",
+      "reasons": [
+        "diabetes-friendly low-carb pairing",
+        "crunchy green side to balance soft curries",
+        "primary flavor objectives are covered"
+      ]
+    },
+    {
+      "side": "Cabbage Thoran",
+      "score": 72,
+      "tier": "good",
+      "reasons": [
+        "diabetes-friendly fiber boost",
+        "crunchy coconut texture contrasts with gravy"
+      ]
+    },
+    {
       "side": "Kakdi Koshimbir (cucumber salad)",
       "score": 66,
       "tier": "good",
@@ -665,6 +684,25 @@
   ],
   "Masoor Dal": [
     {
+      "side": "Bhindi Fry (Side)",
+      "score": 78,
+      "tier": "great",
+      "reasons": [
+        "perfect low-carb partner for dal",
+        "adds essential fiber and crunch",
+        "diabetes-friendly choice"
+      ]
+    },
+    {
+      "side": "Cabbage Thoran",
+      "score": 75,
+      "tier": "good",
+      "reasons": [
+        "classic South Indian dal accompaniment",
+        "adds fresh crunch and coconut sweetness"
+      ]
+    },
+    {
       "side": "Instant Pot Jeera Rice",
       "score": 68,
       "tier": "good",
@@ -1309,6 +1347,25 @@
     }
   ],
   "Kadhi": [
+    {
+      "side": "Bhindi Fry (Side)",
+      "score": 82,
+      "tier": "great",
+      "reasons": [
+        "classic kadhi-bhindi combination",
+        "crunchy dry sabzi contrasts creamy curry",
+        "diabetes-friendly low-carb option"
+      ]
+    },
+    {
+      "side": "Baingan Bharta (Side)",
+      "score": 70,
+      "tier": "good",
+      "reasons": [
+        "smoky eggplant complements tangy yogurt",
+        "healthy vegetable alternative to pakoras"
+      ]
+    },
     {
       "side": "Instant Pot Jeera Rice",
       "score": 70,
@@ -2594,6 +2651,25 @@
     }
   ],
   "Mattar Paneer": [
+    {
+      "side": "Palak Corn",
+      "score": 76,
+      "tier": "great",
+      "reasons": [
+        "rich spinach gravy complements paneer",
+        "adds iron and fiber to the meal",
+        "diabetes-friendly green option"
+      ]
+    },
+    {
+      "side": "Baingan Bharta (Side)",
+      "score": 74,
+      "tier": "good",
+      "reasons": [
+        "smoky eggplant adds depth to the meal",
+        "low-carb vegetable alternative to bread"
+      ]
+    },
     {
       "side": "Garlic Naan",
       "score": 76,
@@ -6941,6 +7017,16 @@
   ],
   "Mumbai Pav Bhaji": [
     {
+      "side": "Cabbage Thoran",
+      "score": 80,
+      "tier": "great",
+      "reasons": [
+        "perfect textural contrast to mushy pav bhaji",
+        "adds fresh vegetable crunch",
+        "diabetes-friendly fiber boost"
+      ]
+    },
+    {
       "side": "Buttered Ladi Pav",
       "score": 70,
       "tier": "strong",
@@ -7567,6 +7653,25 @@
     }
   ],
   "Mushroom Masala": [
+    {
+      "side": "Bhindi Fry (Side)",
+      "score": 79,
+      "tier": "great",
+      "reasons": [
+        "crispy texture breaks up the soft mushroom curry",
+        "excellent low-carb alternative to naan",
+        "diabetes-friendly choice"
+      ]
+    },
+    {
+      "side": "Palak Corn",
+      "score": 75,
+      "tier": "good",
+      "reasons": [
+        "creamy spinach pairs well with earthy mushrooms",
+        "adds nutrition without heavy carbs"
+      ]
+    },
     {
       "side": "Garlic Naan",
       "score": 76,

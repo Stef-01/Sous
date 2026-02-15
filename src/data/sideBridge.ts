@@ -33,6 +33,12 @@ const ENGINE_TO_APP: Record<string, string> = {
 
   // Aloo Gobi
   "Aloo Gobi": "aloo-gobi",
+
+  // New Healthy Sides
+  "Bhindi Fry (Side)": "bhindi-fry-side",
+  "Baingan Bharta (Side)": "baingan-bharta-side",
+  "Cabbage Thoran": "cabbage-thoran",
+  "Palak Corn": "palak-corn",
 };
 
 // Build set of all app side IDs at import time
