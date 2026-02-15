@@ -72,12 +72,10 @@ export default function SideDishCardMobile({
 
   const variants = prefersReduced ? reducedVariants : getSlideVariants(index);
 
-  // Reset image error + readiness on side change
+  // Handle regeneration delay.
+  // Note: We do NOT reset state here because unique keys generally cause remounts.
+  // Resetting here caused race conditions where imageReady was cleared after onLoad fired.
   useEffect(() => {
-    setImgError(false);
-    setImageReady(false);
-    setMinTimeElapsed(false);
-
     let minTimer: NodeJS.Timeout;
     if (enableRegenerationDelay) {
       minTimer = setTimeout(() => setMinTimeElapsed(true), 1500);

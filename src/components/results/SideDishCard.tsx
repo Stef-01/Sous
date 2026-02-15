@@ -130,14 +130,8 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
     return () => clearTimeout(timer);
   }, [side.id]);
 
-  // Reset glow + image readiness on side dish change
+  // Handle regeneration delay and hover settle
   useEffect(() => {
-    setShowGlow(true);
-    setImageReady(false);
-    setMinTimeElapsed(false);
-    setImgError(false);
-    setIsHoverSettled(false);
-
     // Ensure at least 1.5s of "magical" loading time ONLY if delay is enabled (regeneration)
     // If it's initial load, show immediately.
     let minTimer: NodeJS.Timeout;
