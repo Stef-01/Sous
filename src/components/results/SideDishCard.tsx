@@ -17,6 +17,7 @@ interface SideDishCardProps {
   onClick?: () => void;
   pairingScore?: PairingScore;
   hideControls?: boolean;
+  enableRegenerationDelay?: boolean;
 }
 
 // Each side dish spawns from a unique direction — exaggerated for drama
@@ -108,13 +109,14 @@ const reducedVariants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-export default function SideDishCard({ side, index, onSwap, onClick, pairingScore, hideControls = false }: SideDishCardProps) {
+export default function SideDishCard({ side, index, onSwap, onClick, pairingScore, hideControls = false, enableRegenerationDelay = false }: SideDishCardProps) {
   const [imgError, setImgError] = useState(false);
   const [imageReady, setImageReady] = useState(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
   const [swapKey, setSwapKey] = useState(0);
   const [showGlow, setShowGlow] = useState(true);
   const [showHoverCard, setShowHoverCard] = useState(false);
+  const [isHoverSettled, setIsHoverSettled] = useState(false);
   const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prefersReduced = useReducedMotion();
@@ -134,16 +136,28 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
     setImageReady(false);
     setMinTimeElapsed(false);
     setImgError(false);
+    setIsHoverSettled(false);
 
-    // Ensure at least 1.5s of "magical" loading time
-    const minTimer = setTimeout(() => setMinTimeElapsed(true), 1500);
+    // Ensure at least 1.5s of "magical" loading time ONLY if delay is enabled (regeneration)
+    // If it's initial load, show immediately.
+    let minTimer: NodeJS.Timeout;
+    if (enableRegenerationDelay) {
+      minTimer = setTimeout(() => setMinTimeElapsed(true), 1500);
+    } else {
+      setMinTimeElapsed(true);
+    }
+
+    // Enable bouncy hover after 5 seconds
+    const hoverSettleTimer = setTimeout(() => setIsHoverSettled(true), 5000);
+
     const glowTimer = setTimeout(() => setShowGlow(false), 500);
 
     return () => {
-      clearTimeout(minTimer);
+      if (minTimer) clearTimeout(minTimer);
+      clearTimeout(hoverSettleTimer);
       clearTimeout(glowTimer);
     };
-  }, [side.id]);
+  }, [side.id, enableRegenerationDelay]);
 
   // Clean up hover timers
   useEffect(() => {
@@ -212,7 +226,10 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
           : {
             y: -8,
             scale: 1.02,
-            transition: { type: "spring", stiffness: 300, damping: 35 } // Less bouncy, more floaty
+            // If settled (>5s), use bouncy snappy spring. If fresh, use stiff overdamped spring.
+            transition: isHoverSettled
+              ? springs.snappy
+              : { type: "spring", stiffness: 300, damping: 35 }
           }
       }
       whileTap={prefersReduced ? {} : { scale: 0.95 }}
@@ -272,7 +289,6 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
             </div>
           )}
 
-          {/* Swap button with mini-plop on swap — hidden in evaluate mode */}
           {/* Swap button with mini-plop on swap — hidden in evaluate mode */}
           <AnimatePresence>
             {!hideControls && (
@@ -349,9 +365,6 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
           </motion.div>
         )}
       </AnimatePresence>
-
-
-
     </motion.div >
   );
 }

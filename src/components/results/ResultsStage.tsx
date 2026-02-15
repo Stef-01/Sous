@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Meal, SideDish, PairingScore } from "@/types";
 import HeroDish from "./HeroDish";
@@ -101,6 +101,11 @@ export default function ResultsStage({
 }: ResultsStageProps) {
   const prefersReduced = useReducedMotion();
   const [selectedDish, setSelectedDish] = useState<SelectedDish | null>(null);
+  const hasMounted = useRef(false);
+
+  useEffect(() => {
+    hasMounted.current = true;
+  }, []);
 
   const handleHeroClick = () => {
     setSelectedDish({
@@ -137,11 +142,10 @@ export default function ResultsStage({
       >
         {/* Desktop layout */}
         <div
-          className={`hidden md:flex items-center ${
-            showPlateMethod
+          className={`hidden md:flex items-center ${showPlateMethod
               ? "justify-center gap-0"
               : "justify-center gap-10 lg:gap-14"
-          }`}
+            }`}
         >
           {/* Inline plate — centered in available space */}
           <AnimatePresence>
@@ -169,9 +173,8 @@ export default function ResultsStage({
           <motion.div
             layout
             transition={springs.modal}
-            className={`relative flex items-center ${
-              showPlateMethod ? "flex-shrink-0 gap-0 -mr-12" : "gap-10 lg:gap-14"
-            }`}
+            className={`relative flex items-center ${showPlateMethod ? "flex-shrink-0 gap-0 -mr-12" : "gap-10 lg:gap-14"
+              }`}
           >
             {/* Subtle shadow pool grounding the food cluster in scrapbook mode */}
             {showPlateMethod && (
@@ -187,16 +190,15 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 self-center ${
-                showPlateMethod ? "-mr-16 lg:-mr-24" : ""
-              }`}
+              className={`flex-shrink-0 self-center ${showPlateMethod ? "-mr-16 lg:-mr-24" : ""
+                }`}
               animate={
                 prefersReduced
                   ? {}
                   : {
-                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[0] : 0,
-                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                    }
+                    rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[0] : 0,
+                    scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                  }
               }
               variants={
                 prefersReduced ? childVariants : getSideContainerVariants(0)
@@ -212,6 +214,7 @@ export default function ResultsStage({
                     onClick={() => handleSideClick(sides[0], 0)}
                     pairingScore={getPairingScore(sides[0])}
                     hideControls={showPlateMethod}
+                    enableRegenerationDelay={hasMounted.current}
                   />
                 )}
               </AnimatePresence>
@@ -221,16 +224,15 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 ${
-                showPlateMethod ? "-mx-12 lg:-mx-20 z-10" : ""
-              }`}
+              className={`flex-shrink-0 ${showPlateMethod ? "-mx-12 lg:-mx-20 z-10" : ""
+                }`}
               animate={
                 prefersReduced
                   ? {}
                   : {
-                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[1] : 0,
-                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                    }
+                    rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[1] : 0,
+                    scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                  }
               }
               variants={
                 prefersReduced ? childVariants : heroContainerVariants
@@ -250,67 +252,68 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 flex flex-col ${
-                showPlateMethod ? "gap-1 -ml-16 lg:-ml-24" : "gap-4"
-              }`}
+              className={`flex-shrink-0 flex flex-col ${showPlateMethod ? "gap-1 -ml-16 lg:-ml-24" : "gap-4"
+                }`}
             >
-            <motion.div
-              animate={
-                prefersReduced
-                  ? {}
-                  : {
+              <motion.div
+                animate={
+                  prefersReduced
+                    ? {}
+                    : {
                       rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[2] : 0,
                       scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
                     }
-              }
-              transition={springs.modal}
-              variants={
-                prefersReduced ? childVariants : getSideContainerVariants(1)
-              }
-            >
-              <AnimatePresence mode="wait">
-                {sides[1] && (
-                  <SideDishCard
-                    key={sides[1].id}
-                    side={sides[1]}
-                    index={1}
-                    onSwap={onSwap}
-                    onClick={() => handleSideClick(sides[1], 1)}
-                    pairingScore={getPairingScore(sides[1])}
-                    hideControls={showPlateMethod}
-                  />
-                )}
-              </AnimatePresence>
-            </motion.div>
-            <motion.div
-              animate={
-                prefersReduced
-                  ? {}
-                  : {
+                }
+                transition={springs.modal}
+                variants={
+                  prefersReduced ? childVariants : getSideContainerVariants(1)
+                }
+              >
+                <AnimatePresence mode="wait">
+                  {sides[1] && (
+                    <SideDishCard
+                      key={sides[1].id}
+                      side={sides[1]}
+                      index={1}
+                      onSwap={onSwap}
+                      onClick={() => handleSideClick(sides[1], 1)}
+                      pairingScore={getPairingScore(sides[1])}
+                      hideControls={showPlateMethod}
+                      enableRegenerationDelay={hasMounted.current}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.div>
+              <motion.div
+                animate={
+                  prefersReduced
+                    ? {}
+                    : {
                       rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[3] : 0,
                       scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
                     }
-              }
-              transition={springs.modal}
-              variants={
-                prefersReduced ? childVariants : getSideContainerVariants(2)
-              }
-            >
-              <AnimatePresence mode="wait">
-                {sides[2] && (
-                  <SideDishCard
-                    key={sides[2].id}
-                    side={sides[2]}
-                    index={2}
-                    onSwap={onSwap}
-                    onClick={() => handleSideClick(sides[2], 2)}
-                    pairingScore={getPairingScore(sides[2])}
-                    hideControls={showPlateMethod}
-                  />
-                )}
-              </AnimatePresence>
+                }
+                transition={springs.modal}
+                variants={
+                  prefersReduced ? childVariants : getSideContainerVariants(2)
+                }
+              >
+                <AnimatePresence mode="wait">
+                  {sides[2] && (
+                    <SideDishCard
+                      key={sides[2].id}
+                      side={sides[2]}
+                      index={2}
+                      onSwap={onSwap}
+                      onClick={() => handleSideClick(sides[2], 2)}
+                      pairingScore={getPairingScore(sides[2])}
+                      hideControls={showPlateMethod}
+                      enableRegenerationDelay={hasMounted.current}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.div>
             </motion.div>
-          </motion.div>
           </motion.div>
         </div>
 
@@ -364,6 +367,7 @@ export default function ResultsStage({
                     onSwap={onSwap}
                     onClick={() => handleSideClick(side, i)}
                     pairingScore={getPairingScore(side)}
+                    enableRegenerationDelay={hasMounted.current}
                   />
                 </motion.div>
               ))}

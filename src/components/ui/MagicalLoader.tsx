@@ -3,19 +3,32 @@
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-export default function MagicalLoader() {
+interface MagicalLoaderProps {
+    size?: "default" | "small";
+}
+
+export default function MagicalLoader({ size = "default" }: MagicalLoaderProps) {
     const prefersReduced = useReducedMotion();
 
     if (prefersReduced) {
         return (
-            <div className="flex flex-col items-center justify-center h-48 w-full">
+            <div className={`flex flex-col items-center justify-center w-full ${size === "small" ? "h-14" : "h-48"}`}>
                 <p className="text-nourish-subtext text-sm">Loading...</p>
             </div>
         );
     }
 
+    const containerClasses = size === "small"
+        ? "relative flex items-center justify-center h-14 w-14"
+        : "relative flex items-center justify-center h-48 w-48 mx-auto -my-4";
+
+    // Scale down for small variant (default is ~192px/48px rings, small is 56px wrapper)
+    // 56px / 192px is approx 0.3, but rings are 64px. 
+    // 64px * 0.5 = 32px. Fits in 56px.
+    const style = size === "small" ? { transform: "scale(0.5)" } : undefined;
+
     return (
-        <div className="relative flex items-center justify-center h-48 w-48 mx-auto -my-4">
+        <div className={containerClasses} style={style}>
             {/* Outer rotating ring */}
             <motion.div
                 className="absolute w-16 h-16 border-2 border-nourish-gold/30 rounded-full border-t-nourish-gold"

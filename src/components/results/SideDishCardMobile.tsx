@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { SideDish, PairingScore } from "@/types";
 import { springs } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import MagicalLoader from "@/components/ui/MagicalLoader";
+import SparkleEffect from "@/components/ui/SparkleEffect";
 
 interface SideDishCardMobileProps {
   side: SideDish;
@@ -13,6 +15,7 @@ interface SideDishCardMobileProps {
   onSwap: (index: number) => void;
   onClick?: () => void;
   pairingScore?: PairingScore;
+  enableRegenerationDelay?: boolean;
 }
 
 // Mobile cards slide in from the left with staggered delays
@@ -59,23 +62,41 @@ export default function SideDishCardMobile({
   onSwap,
   onClick,
   pairingScore,
+  enableRegenerationDelay = false,
 }: SideDishCardMobileProps) {
   const [imgError, setImgError] = useState(false);
+  const [imageReady, setImageReady] = useState(false);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
   const [swapKey, setSwapKey] = useState(0);
   const prefersReduced = useReducedMotion();
 
   const variants = prefersReduced ? reducedVariants : getSlideVariants(index);
 
-  // Reset image error on side change
+  // Reset image error + readiness on side change
   useEffect(() => {
     setImgError(false);
-  }, [side.id]);
+    setImageReady(false);
+    setMinTimeElapsed(false);
+
+    let minTimer: NodeJS.Timeout;
+    if (enableRegenerationDelay) {
+      minTimer = setTimeout(() => setMinTimeElapsed(true), 1500);
+    } else {
+      setMinTimeElapsed(true);
+    }
+
+    return () => {
+      if (minTimer) clearTimeout(minTimer);
+    };
+  }, [side.id, enableRegenerationDelay]);
 
   const handleSwap = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSwapKey((k) => k + 1);
     onSwap(index);
   };
+
+  const isReady = (imageReady && minTimeElapsed) || imgError;
 
   return (
     <motion.div
@@ -99,7 +120,11 @@ export default function SideDishCardMobile({
     >
       {/* Food image — no circle crop */}
       <div className="relative w-14 h-14 flex-shrink-0">
-        {imgError ? (
+        {!isReady ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <MagicalLoader size="small" />
+          </div>
+        ) : imgError ? (
           <div className="w-full h-full bg-nourish-input flex items-center justify-center rounded-xl">
             <span className="text-nourish-subtext text-[10px] text-center px-1 leading-tight">
               {side.name}
@@ -113,62 +138,79 @@ export default function SideDishCardMobile({
             className="object-contain"
             sizes="56px"
             onError={() => setImgError(true)}
+            onLoad={() => setImageReady(true)}
           />
         )}
       </div>
 
       {/* Text content */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-serif text-nourish-dark truncate">
-          {side.name}
-        </p>
+        <AnimatePresence mode="wait">
+          {isReady && (
+            <motion.p
+              key="text"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+              className="text-sm font-serif text-nourish-dark truncate"
+            >
+              {side.name}
+            </motion.p>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Swap button */}
-      <motion.button
-        key={`swap-mobile-${swapKey}`}
-        onClick={handleSwap}
-        className="flex-shrink-0 w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-nourish-subtext hover:text-nourish-button hover:border-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
-        aria-label={`Swap ${side.name} for another side dish`}
-        initial={swapKey > 0 ? { scale: 0, rotate: -180 } : false}
-        animate={
-          swapKey > 0
-            ? {
+      <AnimatePresence>
+        <motion.div
+          key={`swap-wrapper-mobile-${swapKey}`}
+          initial={swapKey > 0 ? { scale: 0, rotate: -180 } : false}
+          animate={
+            swapKey > 0
+              ? {
                 scale: [0, 1.3, 0.9, 1.1, 1],
                 rotate: 0,
               }
-            : {}
-        }
-        transition={
-          swapKey > 0
-            ? {
+              : {}
+          }
+          transition={
+            swapKey > 0
+              ? {
                 scale: {
                   duration: 0.4,
                   times: [0, 0.4, 0.6, 0.8, 1],
                 },
                 rotate: springs.snappy,
               }
-            : springs.snappy
-        }
-        whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+              : springs.snappy
+          }
         >
-          <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-          <path d="M3 3v5h5" />
-          <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-          <path d="M16 16h5v5" />
-        </svg>
-      </motion.button>
+          <SparkleEffect count={6}>
+            <button
+              onClick={handleSwap}
+              className="flex-shrink-0 w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center text-nourish-subtext hover:text-nourish-button hover:border-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
+              aria-label={`Swap ${side.name} for another side dish`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                <path d="M16 16h5v5" />
+              </svg>
+            </button>
+          </SparkleEffect>
+        </motion.div>
+      </AnimatePresence>
     </motion.div>
   );
 }
