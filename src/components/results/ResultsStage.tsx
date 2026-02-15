@@ -183,8 +183,8 @@ export default function ResultsStage({
         {/* Desktop layout */}
         <div
           className={`hidden md:flex items-center ${showPlateMethod
-              ? "justify-center gap-16 lg:gap-24" // Much wider gap for separation
-              : "justify-center gap-10 lg:gap-14"
+            ? "justify-center gap-16 lg:gap-24" // Much wider gap for separation
+            : "justify-center gap-10 lg:gap-14"
             }`}
         >
           {/* Inline plate — centered in its column */}
@@ -265,7 +265,7 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 ${showPlateMethod ? "-mx-12 lg:-mx-20 z-10" : ""
+              className={`flex-shrink-0 ${showPlateMethod ? "-mx-12 lg:-mx-20" : ""
                 }`}
               animate={
                 prefersReduced
