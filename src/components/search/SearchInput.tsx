@@ -75,12 +75,12 @@ export default function SearchInput({
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className="w-full mx-auto relative max-w-xl lg:max-w-2xl"
+      className={`w-full mx-auto relative max-w-xl lg:max-w-2xl ${isEvaluating ? "pointer-events-none" : ""}`}
       initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 15 }}
       animate={
         prefersReduced
-          ? { opacity: 1 }
-          : { opacity: 1, y: 0 }
+          ? { opacity: isEvaluating ? 0 : 1 }
+          : { opacity: isEvaluating ? 0 : 1, y: isEvaluating ? -20 : 0 }
       }
       transition={prefersReduced ? { duration: 0.2 } : { ...springs.gentle, delay: 0.15 }}
     >
