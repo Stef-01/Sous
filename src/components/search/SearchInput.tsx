@@ -96,48 +96,24 @@ export default function SearchInput({
         }
         transition={springs.snappy}
       >
-        <AnimatePresence mode="wait" initial={false}>
-          {isEvaluating && appraisalSentence ? (
-            /* ── Appraisal mode: sentence replaces the input ── */
-            <motion.p
-              key="appraisal-sentence"
-              className={`flex-1 px-4 py-2 font-sans text-sm md:text-[15px] text-center tracking-tight leading-snug ${appraisalColor}`}
-              initial={{ opacity: 0, filter: "blur(6px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, filter: "blur(6px)" }}
-              transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              {appraisalSentence}
-            </motion.p>
-          ) : (
-            /* ── Search mode: normal input ── */
-            <motion.div
-              key="search-input"
-              className="flex-1 flex items-center"
-              initial={{ opacity: 0, filter: "blur(6px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, filter: "blur(6px)" }}
-              transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholder="Pizza Margherita..."
-                disabled={disabled}
-                className="flex-1 px-4 py-2.5 bg-transparent text-nourish-dark placeholder-nourish-subtext/50 text-base outline-none disabled:opacity-50"
-                aria-label="Enter a meal name"
-                role="combobox"
-                aria-expanded={isFocused}
-                aria-autocomplete="list"
-                aria-controls="search-dropdown"
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="flex-1 flex items-center">
+          <input
+            ref={inputRef}
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="Pizza Margherita..."
+            disabled={disabled}
+            className="flex-1 px-4 py-2.5 bg-transparent text-nourish-dark placeholder-nourish-subtext/50 text-base outline-none disabled:opacity-50"
+            aria-label="Enter a meal name"
+            role="combobox"
+            aria-expanded={isFocused}
+            aria-autocomplete="list"
+            aria-controls="search-dropdown"
+          />
+        </div>
 
         <div className="flex items-center gap-1.5 flex-shrink-0">
           {/* Share button — hidden during evaluate mode */}

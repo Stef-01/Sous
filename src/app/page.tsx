@@ -129,8 +129,8 @@ export default function Home() {
           {!showPlateMethod && (
             <motion.h1
               className={`text-nourish-dark font-serif text-center max-w-2xl ${hasResults
-                  ? "text-base md:text-lg lg:text-xl mb-2"
-                  : "text-xl md:text-2xl lg:text-3xl mb-3"
+                ? "text-base md:text-lg lg:text-xl mb-2"
+                : "text-xl md:text-2xl lg:text-3xl mb-3"
                 }`}
               initial="hidden"
               animate="visible"
@@ -223,6 +223,7 @@ export default function Home() {
                 onSwap={handleSwap}
                 showPlateMethod={showPlateMethod}
                 onClosePlate={() => setShowPlateMethod(false)}
+                appraisal={appraisal}
               />
             </motion.div>
           )}

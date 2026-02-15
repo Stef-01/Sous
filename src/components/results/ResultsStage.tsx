@@ -26,6 +26,10 @@ interface ResultsStageProps {
   onSwap: (index: number) => void;
   showPlateMethod?: boolean;
   onClosePlate?: () => void;
+  appraisal?: {
+    sentence: string;
+    tone: "balanced" | "strong" | "needs-work";
+  } | null;
 }
 
 interface SelectedDish {
@@ -98,6 +102,7 @@ export default function ResultsStage({
   onSwap,
   showPlateMethod = false,
   onClosePlate,
+  appraisal,
 }: ResultsStageProps) {
   const prefersReduced = useReducedMotion();
   const [selectedDish, setSelectedDish] = useState<SelectedDish | null>(null);
@@ -128,10 +133,18 @@ export default function ResultsStage({
     });
   };
 
+  // Appraisal tone color mapping
+  const appraisalColor =
+    appraisal?.tone === "balanced"
+      ? "text-nourish-green"
+      : appraisal?.tone === "needs-work"
+        ? "text-amber-600"
+        : "text-stone-500";
+
   return (
     <>
       <motion.div
-        className="w-full max-w-6xl mx-auto mt-4 px-4 sm:px-6 h-full flex flex-col justify-center"
+        className="w-full max-w-6xl mx-auto mt-4 px-4 sm:px-6 h-full flex flex-col justify-center relative"
         role="region"
         aria-label="Meal pairing results"
         aria-live="polite"
@@ -140,23 +153,50 @@ export default function ResultsStage({
         animate="animate"
         exit="exit"
       >
+        {/* Appraisal Text — Only visible in plate mode */}
+        <AnimatePresence>
+          {showPlateMethod && appraisal && (
+            <motion.div
+              className="absolute top-0 left-0 right-0 flex flex-col items-center justify-center -mt-16 z-20 pointer-events-none"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <p className={`text-lg md:text-xl font-serif text-center ${appraisalColor}`}>
+                {appraisal.sentence}
+              </p>
+
+              {/* Back button (replaces "Hide Plate") */}
+              {onClosePlate && (
+                <button
+                  onClick={onClosePlate}
+                  className="mt-3 pointer-events-auto text-sm text-nourish-subtext hover:text-nourish-dark underline underline-offset-4 decoration-stone-300 transition-colors"
+                >
+                  Back to meal
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Desktop layout */}
         <div
           className={`hidden md:flex items-center ${showPlateMethod
-              ? "justify-center gap-0"
+              ? "justify-center gap-16 lg:gap-24" // Much wider gap for separation
               : "justify-center gap-10 lg:gap-14"
             }`}
         >
-          {/* Inline plate — centered in available space */}
+          {/* Inline plate — centered in its column */}
           <AnimatePresence>
             {showPlateMethod && onClosePlate && (
               <motion.div
                 key="plate-wrapper"
                 layout
-                className="flex-1 flex items-center justify-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                className="flex items-center justify-center"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
                 transition={springs.modal}
               >
                 <InlinePlate
@@ -169,14 +209,14 @@ export default function ResultsStage({
             )}
           </AnimatePresence>
 
-          {/* Food cluster — pushed to far right when plate is showing */}
+          {/* Food cluster — removed negative margins for clean grid layout */}
           <motion.div
             layout
             transition={springs.modal}
-            className={`relative flex items-center ${showPlateMethod ? "flex-shrink-0 gap-0 -mr-12" : "gap-10 lg:gap-14"
+            className={`relative flex items-center ${showPlateMethod ? "gap-0" : "gap-10 lg:gap-14"
               }`}
           >
-            {/* Subtle shadow pool grounding the food cluster in scrapbook mode */}
+            {/* Subtle shadow pool options — kept but sized correctly */}
             {showPlateMethod && (
               <div
                 className="absolute inset-0 -inset-x-8 -inset-y-4 pointer-events-none rounded-3xl"
@@ -186,6 +226,7 @@ export default function ResultsStage({
                 }}
               />
             )}
+
             {/* Left side dish */}
             <motion.div
               layout
@@ -220,7 +261,7 @@ export default function ResultsStage({
               </AnimatePresence>
             </motion.div>
 
-            {/* Hero center — no drop-shadow (transparent PNG would show box outline) */}
+            {/* Hero center */}
             <motion.div
               layout
               transition={springs.modal}
@@ -319,6 +360,17 @@ export default function ResultsStage({
 
         {/* Mobile layout — vertical stack */}
         <div className="flex md:hidden flex-col items-center gap-4">
+          <AnimatePresence>
+            {showPlateMethod && appraisal && (
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="w-full text-center px-4 mb-2"
+              >
+                <p className={`text-sm font-medium ${appraisalColor}`}>{appraisal.sentence}</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.div
             variants={
               prefersReduced ? childVariants : heroContainerVariants
@@ -336,12 +388,21 @@ export default function ResultsStage({
           {/* Inline plate — below hero on mobile */}
           <AnimatePresence>
             {showPlateMethod && onClosePlate && (
-              <InlinePlate
-                key="inline-plate-mobile"
-                meal={meal}
-                sides={sides}
-                onClose={onClosePlate}
-              />
+              <div className="flex flex-col items-center gap-4">
+                <InlinePlate
+                  key="inline-plate-mobile"
+                  meal={meal}
+                  sides={sides}
+                  onClose={onClosePlate}
+                />
+                {/* Mobile Back button */}
+                <button
+                  onClick={onClosePlate}
+                  className="text-sm text-nourish-subtext underline underline-offset-4"
+                >
+                  Back to meal
+                </button>
+              </div>
             )}
           </AnimatePresence>
 
