@@ -1,0 +1,1553 @@
+[
+  {
+    "id": "pizza-margherita",
+    "name": "Pizza Margherita",
+    "aliases": [
+      "margherita pizza",
+      "margherita",
+      "cheese pizza"
+    ],
+    "heroImageUrl": "/food_images/pizza_margherita.png",
+    "sidePool": [
+      "caesar-salad",
+      "garlic-bread",
+      "tomato-soup",
+      "mixed-green-salad",
+      "bruschetta",
+      "minestrone",
+      "caprese-salad",
+      "arancini"
+    ],
+    "cuisine": "Italian",
+    "description": "A classic Neapolitan pizza with San Marzano tomato sauce, fresh mozzarella, fragrant basil leaves, and a drizzle of olive oil on a thin, beautifully charred crust.",
+    "nourishVerified": false
+  },
+  {
+    "id": "butter-chicken",
+    "name": "Butter Chicken",
+    "aliases": [
+      "murgh makhani",
+      "makhani chicken",
+      "chicken makhani"
+    ],
+    "heroImageUrl": "/food_images/butter_chicken.png",
+    "sidePool": [
+      "naan-bread",
+      "basmati-rice",
+      "raita",
+      "mango-chutney",
+      "samosa",
+      "aloo-gobi",
+      "dal-tadka",
+      "papadum",
+      "roti",
+      "phulka",
+      "onion-raita",
+      "cilantro-mint-chutney"
+    ],
+    "cuisine": "Indian",
+    "description": "Tender marinated chicken simmered in a rich, velvety tomato-based sauce with butter, cream, and a warm blend of garam masala, fenugreek, and a touch of honey.",
+    "nourishVerified": true
+  },
+  {
+    "id": "fish-tacos",
+    "name": "Fish Tacos",
+    "aliases": [
+      "baja tacos",
+      "taco de pescado",
+      "seafood tacos"
+    ],
+    "heroImageUrl": "/food_images/fish_tacos.png",
+    "sidePool": [
+      "guacamole",
+      "mexican-rice",
+      "elote",
+      "pico-de-gallo",
+      "refried-beans",
+      "churros",
+      "esquites",
+      "tortilla-chips"
+    ],
+    "cuisine": "Mexican",
+    "description": "Crispy beer-battered or grilled white fish nestled in warm corn tortillas, topped with crunchy cabbage slaw, tangy lime crema, and a squeeze of fresh lime.",
+    "nourishVerified": false
+  },
+  {
+    "id": "tonkotsu-ramen",
+    "name": "Tonkotsu Ramen",
+    "aliases": [
+      "pork ramen",
+      "ramen",
+      "japanese ramen"
+    ],
+    "heroImageUrl": "/food_images/tonkotsu_ramen.png",
+    "sidePool": [
+      "gyoza",
+      "edamame",
+      "tempura",
+      "miso-soup",
+      "takoyaki",
+      "seaweed-salad",
+      "karaage",
+      "onigiri"
+    ],
+    "cuisine": "Japanese",
+    "description": "A deeply flavourful pork bone broth simmered for hours until creamy and rich, served with springy noodles, soft-boiled egg, chashu pork, and nori.",
+    "nourishVerified": false
+  },
+  {
+    "id": "grilled-salmon",
+    "name": "Grilled Salmon",
+    "aliases": [
+      "salmon fillet",
+      "baked salmon",
+      "pan-seared salmon"
+    ],
+    "heroImageUrl": "/food_images/grilled_salmon.png",
+    "sidePool": [
+      "roasted-asparagus",
+      "mashed-potatoes",
+      "coleslaw",
+      "mixed-green-salad",
+      "corn-on-cob",
+      "wild-rice",
+      "steamed-broccoli",
+      "caesar-salad"
+    ],
+    "cuisine": "American",
+    "description": "A perfectly seared salmon fillet with a golden, slightly crispy skin and a tender, flaky interior, seasoned simply with lemon, herbs, and a hint of garlic.",
+    "nourishVerified": false
+  },
+  {
+    "id": "falafel-wrap",
+    "name": "Falafel Wrap",
+    "aliases": [
+      "falafel pita",
+      "falafel sandwich",
+      "falafel"
+    ],
+    "heroImageUrl": "/food_images/falafel_wrap.png",
+    "sidePool": [
+      "hummus",
+      "tabbouleh",
+      "baba-ganoush",
+      "fattoush",
+      "stuffed-grape-leaves",
+      "tzatziki",
+      "pita-chips",
+      "pickled-turnips"
+    ],
+    "cuisine": "Mediterranean",
+    "description": "Golden-crisp chickpea fritters tucked into warm pita bread with fresh vegetables, creamy tahini sauce, and pickled turnips for a satisfying plant-based meal.",
+    "nourishVerified": false
+  },
+  {
+    "id": "pad-thai",
+    "name": "Pad Thai",
+    "aliases": [
+      "thai noodles",
+      "thai stir fry",
+      "phat thai"
+    ],
+    "heroImageUrl": "/food_images/pad_thai.png",
+    "sidePool": [
+      "spring-rolls",
+      "tom-yum-soup",
+      "papaya-salad",
+      "thai-iced-tea",
+      "satay",
+      "sticky-rice",
+      "larb",
+      "coconut-soup"
+    ],
+    "cuisine": "Thai",
+    "description": "Wok-tossed rice noodles in a sweet-sour tamarind sauce with prawns or tofu, bean sprouts, crushed peanuts, and a squeeze of lime, all kissed by high heat.",
+    "nourishVerified": false
+  },
+  {
+    "id": "pasta-carbonara",
+    "name": "Pasta Carbonara",
+    "aliases": [
+      "carbonara",
+      "spaghetti carbonara"
+    ],
+    "heroImageUrl": "/food_images/pasta_carbonara.png",
+    "sidePool": [
+      "garlic-bread",
+      "caesar-salad",
+      "bruschetta",
+      "caprese-salad",
+      "minestrone",
+      "arancini",
+      "mixed-green-salad",
+      "tomato-soup"
+    ],
+    "cuisine": "Italian",
+    "description": "Silky al dente spaghetti coated in a luscious emulsion of egg yolks, Pecorino Romano, and crispy guanciale, finished with a generous crack of black pepper.",
+    "nourishVerified": false
+  },
+  {
+    "id": "sushi-platter",
+    "name": "Sushi Platter",
+    "aliases": [
+      "sushi",
+      "sashimi",
+      "nigiri",
+      "maki rolls"
+    ],
+    "heroImageUrl": "/food_images/sushi_platter.png",
+    "sidePool": [
+      "miso-soup",
+      "edamame",
+      "seaweed-salad",
+      "gyoza",
+      "tempura",
+      "takoyaki",
+      "pickled-ginger",
+      "onigiri"
+    ],
+    "cuisine": "Japanese",
+    "description": "An artful arrangement of fresh nigiri, maki rolls, and sashimi featuring the finest seasonal fish, served with pickled ginger, wasabi, and soy sauce.",
+    "nourishVerified": false
+  },
+  {
+    "id": "chicken-tikka-masala",
+    "name": "Chicken Tikka Masala",
+    "aliases": [
+      "chicken tikka",
+      "tikka masala"
+    ],
+    "heroImageUrl": "/food_images/chicken_tikka_masala.png",
+    "sidePool": [
+      "naan-bread",
+      "basmati-rice",
+      "raita",
+      "samosa",
+      "aloo-gobi",
+      "mango-chutney",
+      "papadum",
+      "dal-tadka",
+      "lachha-paratha",
+      "boondi-raita",
+      "kachumber",
+      "tamarind-date-chutney"
+    ],
+    "cuisine": "Indian",
+    "description": "Chunks of tandoori-spiced chicken bathed in a creamy, mildly spiced tomato and yogurt sauce with aromatic cumin, coriander, and a swirl of fresh cream.",
+    "nourishVerified": true
+  },
+  {
+    "id": "bbq-ribs",
+    "name": "BBQ Ribs",
+    "aliases": [
+      "barbecue ribs",
+      "pork ribs",
+      "baby back ribs"
+    ],
+    "heroImageUrl": "/food_images/bbq_ribs.png",
+    "sidePool": [
+      "coleslaw",
+      "corn-on-cob",
+      "mashed-potatoes",
+      "cornbread",
+      "baked-beans",
+      "mac-and-cheese",
+      "pickles",
+      "potato-salad"
+    ],
+    "cuisine": "American",
+    "description": "Fall-off-the-bone tender pork ribs slow-smoked for hours, glazed with a sticky-sweet barbecue sauce that caramelises into irresistible charred edges.",
+    "nourishVerified": false
+  },
+  {
+    "id": "bibimbap",
+    "name": "Bibimbap",
+    "aliases": [
+      "korean rice bowl",
+      "mixed rice"
+    ],
+    "heroImageUrl": "/food_images/bibimbap.png",
+    "sidePool": [
+      "kimchi",
+      "korean-pancake",
+      "japchae",
+      "mandu",
+      "bean-sprout-salad",
+      "tteokbokki",
+      "seaweed-soup",
+      "pickled-radish"
+    ],
+    "cuisine": "Korean",
+    "description": "A vibrant bowl of warm rice topped with an array of seasoned vegetables, gochujang chilli paste, a fried egg, and optional bulgogi beef, mixed together before eating.",
+    "nourishVerified": false
+  },
+  {
+    "id": "beef-burger",
+    "name": "Beef Burger",
+    "aliases": [
+      "hamburger",
+      "cheeseburger",
+      "burger"
+    ],
+    "heroImageUrl": "/food_images/beef_burger.png",
+    "sidePool": [
+      "french-fries",
+      "coleslaw",
+      "onion-rings",
+      "pickles",
+      "potato-salad",
+      "mac-and-cheese",
+      "mixed-green-salad",
+      "sweet-potato-fries"
+    ],
+    "cuisine": "American",
+    "description": "A juicy, flame-grilled beef patty stacked with melted cheese, crisp lettuce, ripe tomato, and special sauce, all held together by a toasted brioche bun.",
+    "nourishVerified": false
+  },
+  {
+    "id": "chicken-shawarma",
+    "name": "Chicken Shawarma",
+    "aliases": [
+      "shawarma",
+      "shawarma wrap"
+    ],
+    "heroImageUrl": "/food_images/chicken_shawarma.png",
+    "sidePool": [
+      "hummus",
+      "tabbouleh",
+      "fattoush",
+      "pita-chips",
+      "baba-ganoush",
+      "pickled-turnips",
+      "tzatziki",
+      "stuffed-grape-leaves"
+    ],
+    "cuisine": "Mediterranean",
+    "description": "Thinly shaved layers of marinated chicken, slow-roasted on a vertical spit until golden and crispy-edged, served with garlic sauce, pickles, and warm flatbread.",
+    "nourishVerified": false
+  },
+  {
+    "id": "pho",
+    "name": "Pho",
+    "aliases": [
+      "vietnamese pho",
+      "beef pho",
+      "pho bo"
+    ],
+    "heroImageUrl": "/food_images/pho.png",
+    "sidePool": [
+      "spring-rolls",
+      "banh-mi",
+      "papaya-salad",
+      "vietnamese-coffee",
+      "bao-buns",
+      "crispy-wontons",
+      "lotus-root-salad",
+      "summer-rolls"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A fragrant, star anise and cinnamon-infused beef broth ladled over silky rice noodles and paper-thin slices of beef, garnished with fresh herbs, bean sprouts, and lime.",
+    "nourishVerified": false
+  },
+  {
+    "id": "steak",
+    "name": "Steak",
+    "aliases": [
+      "ribeye",
+      "sirloin",
+      "filet mignon",
+      "grilled steak",
+      "beef steak"
+    ],
+    "heroImageUrl": "/food_images/steak.png",
+    "sidePool": [
+      "mashed-potatoes",
+      "roasted-asparagus",
+      "caesar-salad",
+      "creamed-spinach",
+      "baked-potato",
+      "onion-rings",
+      "wild-rice",
+      "steamed-broccoli"
+    ],
+    "cuisine": "American",
+    "description": "A premium cut of beef seared to a perfect crust on the outside and a blushing pink centre, rested and finished with a knob of herb butter and flaky sea salt.",
+    "nourishVerified": false
+  },
+  {
+    "id": "tacos-al-pastor",
+    "name": "Tacos al Pastor",
+    "aliases": [
+      "al pastor",
+      "pastor tacos",
+      "tacos"
+    ],
+    "heroImageUrl": "/food_images/tacos_al_pastor.png",
+    "sidePool": [
+      "guacamole",
+      "mexican-rice",
+      "elote",
+      "refried-beans",
+      "pico-de-gallo",
+      "esquites",
+      "churros",
+      "tortilla-chips"
+    ],
+    "cuisine": "Mexican",
+    "description": "Spit-roasted pork marinated in a smoky dried chilli and pineapple adobo, carved onto small corn tortillas with diced onion, cilantro, and a wedge of grilled pineapple.",
+    "nourishVerified": false
+  },
+  {
+    "id": "chicken-biryani",
+    "name": "Chicken Biryani",
+    "aliases": [
+      "biryani",
+      "dum biryani",
+      "hyderabadi biryani"
+    ],
+    "heroImageUrl": "/food_images/chicken_biryani.png",
+    "sidePool": [
+      "raita",
+      "mirchi-ka-salan",
+      "papadum",
+      "mango-chutney",
+      "dal-tadka",
+      "aloo-gobi",
+      "samosa",
+      "naan-bread",
+      "kakdi-koshimbir",
+      "onion-raita",
+      "kachumber",
+      "burani-raita"
+    ],
+    "cuisine": "Indian",
+    "description": "Fragrant basmati rice layered with spiced chicken, caramelised onions, and saffron-infused milk, slow-cooked under a sealed lid to let the flavours mingle beautifully.",
+    "nourishVerified": true
+  },
+  {
+    "id": "moussaka",
+    "name": "Moussaka",
+    "aliases": [
+      "greek moussaka",
+      "eggplant moussaka"
+    ],
+    "heroImageUrl": "/food_images/moussaka.png",
+    "sidePool": [
+      "greek-salad",
+      "tzatziki",
+      "hummus",
+      "pita-chips",
+      "stuffed-grape-leaves",
+      "spanakopita",
+      "fattoush",
+      "tabbouleh"
+    ],
+    "cuisine": "Mediterranean",
+    "description": "A hearty Greek casserole of silky roasted eggplant, seasoned lamb mince in tomato sauce, and a golden, bubbling layer of creamy béchamel on top.",
+    "nourishVerified": false
+  },
+  {
+    "id": "dim-sum",
+    "name": "Dim Sum",
+    "aliases": [
+      "chinese dumplings",
+      "har gow",
+      "siu mai"
+    ],
+    "heroImageUrl": "/food_images/dim_sum.png",
+    "sidePool": [
+      "spring-rolls",
+      "crispy-wontons",
+      "bao-buns",
+      "congee",
+      "sesame-balls",
+      "turnip-cake",
+      "chinese-broccoli",
+      "egg-tart"
+    ],
+    "cuisine": "Chinese",
+    "description": "An assortment of bite-sized steamed and fried dumplings, buns, and pastries served in bamboo baskets, perfect for sharing over tea in the Cantonese tradition.",
+    "nourishVerified": false
+  },
+  {
+    "id": "lamb-chops",
+    "name": "Lamb Chops",
+    "aliases": [
+      "grilled lamb",
+      "lamb cutlets",
+      "rack of lamb"
+    ],
+    "heroImageUrl": "/food_images/lamb_chops.png",
+    "sidePool": [
+      "roasted-asparagus",
+      "mashed-potatoes",
+      "tabbouleh",
+      "tzatziki",
+      "wild-rice",
+      "mixed-green-salad",
+      "baked-potato",
+      "creamed-spinach"
+    ],
+    "cuisine": "Mediterranean",
+    "description": "Succulent, herb-crusted lamb cutlets seared in a hot pan until beautifully caramelised outside and rosy pink within, finished with a rosemary and garlic jus.",
+    "nourishVerified": false
+  },
+  {
+    "id": "enchiladas",
+    "name": "Enchiladas",
+    "aliases": [
+      "chicken enchiladas",
+      "cheese enchiladas",
+      "beef enchiladas"
+    ],
+    "heroImageUrl": "/food_images/enchiladas.png",
+    "sidePool": [
+      "guacamole",
+      "mexican-rice",
+      "refried-beans",
+      "elote",
+      "pico-de-gallo",
+      "tortilla-chips",
+      "esquites",
+      "churros"
+    ],
+    "cuisine": "Mexican",
+    "description": "Soft corn tortillas rolled around a savoury filling of chicken, cheese, or beef, smothered in a vibrant chilli sauce and baked until bubbly with melted cheese on top.",
+    "nourishVerified": false
+  },
+  {
+    "id": "bell-pepper-curry",
+    "name": "Bell Pepper Curry",
+    "aliases": [
+      "capsicum curry",
+      "shimla mirch curry",
+      "bell pepper sabzi"
+    ],
+    "heroImageUrl": "/food_images/bell_pepper_curry.png",
+    "sidePool": [
+      "naan-bread",
+      "phulka",
+      "roti",
+      "lachha-paratha",
+      "instant-pot-jeera-rice",
+      "basmati-rice",
+      "buttered-ladi-pav",
+      "curd-rice"
+    ],
+    "cuisine": "Indian",
+    "description": "Vibrant bell peppers simmered in a fragrant onion-tomato gravy seasoned with cumin, coriander, and turmeric. This everyday North Indian sabzi brings a gentle sweetness from the peppers that balances beautifully with the warm spices.",
+    "nourishVerified": true
+  },
+  {
+    "id": "bhindi-masala",
+    "name": "Bhindi Masala",
+    "aliases": [
+      "okra masala",
+      "okra curry",
+      "bhindi ki sabzi",
+      "okra stir fry"
+    ],
+    "heroImageUrl": "/food_images/bhindi_masala.png",
+    "sidePool": [
+      "phulka",
+      "roti",
+      "kachumber",
+      "naan-bread",
+      "instant-pot-jeera-rice",
+      "buttered-ladi-pav",
+      "lachha-paratha",
+      "beet-koshimbir"
+    ],
+    "cuisine": "Indian",
+    "description": "Tender okra stir-fried with onions, tomatoes, and a bold blend of coriander, cumin, and amchur until perfectly crisp-tender. This beloved dry sabzi is a staple across Indian households, prized for its earthy flavor and satisfying texture.",
+    "nourishVerified": true
+  },
+  {
+    "id": "eggplant-methi",
+    "name": "Eggplant Methi",
+    "aliases": [
+      "baingan methi",
+      "eggplant fenugreek",
+      "brinjal methi"
+    ],
+    "heroImageUrl": "/food_images/eggplant_methi.png",
+    "sidePool": [
+      "phulka",
+      "roti",
+      "naan-bread",
+      "beet-koshimbir",
+      "cabbage-salad-with-indian-tadka",
+      "kachumber",
+      "roasted-papad",
+      "instant-pot-jeera-rice"
+    ],
+    "cuisine": "Indian",
+    "description": "Soft eggplant pieces cooked with fresh fenugreek leaves, garlic, and a warming spice blend of mustard seeds, cumin, and red chili. The slight bitterness of the methi leaves complements the creamy eggplant for a deeply satisfying vegetable dish.",
+    "nourishVerified": true
+  },
+  {
+    "id": "kadhi",
+    "name": "Kadhi",
+    "aliases": [
+      "kadhi pakora",
+      "yogurt curry",
+      "besan kadhi",
+      "karhi"
+    ],
+    "heroImageUrl": "/food_images/kadhi.png",
+    "sidePool": [
+      "instant-pot-jeera-rice",
+      "phulka",
+      "roti",
+      "basmati-rice",
+      "naan-bread",
+      "buttered-ladi-pav",
+      "lachha-paratha",
+      "puri"
+    ],
+    "cuisine": "Indian",
+    "description": "A tangy and comforting yogurt-based curry thickened with besan and tempered with mustard seeds, curry leaves, and dried red chilies. Often studded with crispy pakoras, this home-style dish is the quintessential comfort food paired with steamed rice.",
+    "nourishVerified": true
+  },
+  {
+    "id": "marathi-moong-curry",
+    "name": "Marathi Moong Curry",
+    "aliases": [
+      "moong dal curry",
+      "mung bean curry",
+      "moong chi usal"
+    ],
+    "heroImageUrl": "/food_images/marathi_moong_curry.png",
+    "sidePool": [
+      "instant-pot-jeera-rice",
+      "kakdi-koshimbir",
+      "phulka",
+      "basmati-rice",
+      "beet-koshimbir",
+      "roasted-papad",
+      "naan-bread",
+      "curd-rice"
+    ],
+    "cuisine": "Indian",
+    "description": "A wholesome Maharashtrian preparation of whole green moong beans cooked in a coconut and peanut-based masala with aromatic curry leaves and mustard seeds. This protein-rich curry is a staple in Marathi households, offering a hearty and nutritious everyday meal.",
+    "nourishVerified": true
+  },
+  {
+    "id": "masoor-dal",
+    "name": "Masoor Dal",
+    "aliases": [
+      "red lentil dal",
+      "masoor ki dal",
+      "red lentil curry"
+    ],
+    "heroImageUrl": "/food_images/masoor_dal.png",
+    "sidePool": [
+      "instant-pot-jeera-rice",
+      "phulka",
+      "roti",
+      "millet-khichdi",
+      "basmati-rice",
+      "instant-pot-quinoa",
+      "naan-bread",
+      "buttered-ladi-pav"
+    ],
+    "cuisine": "Indian",
+    "description": "Pink-red lentils simmered until meltingly soft and finished with a sizzling tadka of ghee, cumin, garlic, and whole dried chilies. This everyday dal is beloved for its simplicity, quick cooking time, and deeply satisfying, earthy flavor.",
+    "nourishVerified": true
+  },
+  {
+    "id": "mattar-paneer",
+    "name": "Mattar Paneer",
+    "aliases": [
+      "matar paneer",
+      "peas paneer",
+      "paneer mutter",
+      "mutter paneer"
+    ],
+    "heroImageUrl": "/food_images/mattar_paneer.png",
+    "sidePool": [
+      "naan-bread",
+      "lachha-paratha",
+      "phulka",
+      "roti",
+      "instant-pot-jeera-rice",
+      "curd-rice",
+      "buttered-ladi-pav",
+      "beet-koshimbir"
+    ],
+    "cuisine": "Indian",
+    "description": "Cubes of soft paneer and sweet green peas simmered in a luscious tomato-onion gravy spiced with garam masala, turmeric, and kasuri methi. This iconic North Indian curry is a vegetarian crowd-pleaser found on restaurant menus and home tables alike.",
+    "nourishVerified": true
+  },
+  {
+    "id": "mixed-veg-paneer",
+    "name": "Mixed Veg + Paneer",
+    "aliases": [
+      "mixed vegetable paneer",
+      "veg paneer curry",
+      "paneer sabzi"
+    ],
+    "heroImageUrl": "/food_images/mixed_veg_paneer.png",
+    "sidePool": [
+      "naan-bread",
+      "lachha-paratha",
+      "phulka",
+      "roti",
+      "instant-pot-jeera-rice",
+      "buttered-ladi-pav",
+      "basmati-rice",
+      "puri"
+    ],
+    "cuisine": "Indian",
+    "description": "A colorful medley of seasonal vegetables and golden paneer cubes tossed in a fragrant masala of ginger, garlic, and warming spices. This versatile dry sabzi is a nutritious one-pot dish that showcases whatever fresh produce is in season.",
+    "nourishVerified": true
+  },
+  {
+    "id": "mumbai-pav-bhaji",
+    "name": "Mumbai Pav Bhaji",
+    "aliases": [
+      "pav bhaji",
+      "pav bhaaji",
+      "bread and curry"
+    ],
+    "heroImageUrl": "/food_images/mumbai_pav_bhaji.png",
+    "sidePool": [
+      "buttered-ladi-pav",
+      "laccha-pyaz",
+      "sirke-wale-pyaaz",
+      "cabbage-salad-with-indian-tadka",
+      "kachumber",
+      "masala-papad",
+      "roti",
+      "vibrant-apple-beet-carrot-salad"
+    ],
+    "cuisine": "Indian",
+    "description": "A beloved Mumbai street food featuring a thick, buttery mash of mixed vegetables cooked with a special pav bhaji masala and heaps of butter, served sizzling hot alongside toasted, buttered pav rolls. The generous squeeze of lemon and raw onion garnish are essential to the experience.",
+    "nourishVerified": true
+  },
+  {
+    "id": "mushroom-masala",
+    "name": "Mushroom Masala",
+    "aliases": [
+      "mushroom curry",
+      "mushroom sabzi",
+      "masala mushroom"
+    ],
+    "heroImageUrl": "/food_images/mushroom_masala.png",
+    "sidePool": [
+      "naan-bread",
+      "lachha-paratha",
+      "phulka",
+      "roti",
+      "instant-pot-jeera-rice",
+      "buttered-ladi-pav",
+      "puri",
+      "basmati-rice"
+    ],
+    "cuisine": "Indian",
+    "description": "Meaty button mushrooms cooked in a rich onion-tomato gravy with ginger, garlic, and a blend of garam masala and kasuri methi. The mushrooms soak up the aromatic sauce beautifully, making this a favorite vegetarian curry for both everyday meals and special occasions.",
+    "nourishVerified": true
+  },
+  {
+    "id": "sambar",
+    "name": "Sambar",
+    "aliases": [
+      "sambhar",
+      "lentil stew",
+      "sambar rice",
+      "south indian sambar"
+    ],
+    "heroImageUrl": "/food_images/sambar.png",
+    "sidePool": [
+      "uttapam",
+      "plain-dosa",
+      "medu-vada",
+      "oats-idli",
+      "plain-idli",
+      "upma",
+      "instant-pot-jeera-rice",
+      "curd-rice"
+    ],
+    "cuisine": "Indian",
+    "description": "A tangy and aromatic South Indian lentil stew made with toor dal, tamarind, seasonal vegetables, and a freshly ground sambar powder of coriander, fenugreek, and dried chilies. Finished with a crackling tempering of mustard seeds, curry leaves, and asafoetida, it is the cornerstone of any South Indian meal.",
+    "nourishVerified": true
+  },
+  {
+    "id": "tandoori-vegetables",
+    "name": "Tandoori Vegetables",
+    "aliases": [
+      "tandoori veggies",
+      "tandoori sabzi",
+      "grilled tandoori vegetables"
+    ],
+    "heroImageUrl": "/food_images/tandoori_vegetables.png",
+    "sidePool": [
+      "kachumber",
+      "cilantro-mint-chutney",
+      "onion-raita",
+      "beet-koshimbir",
+      "cabbage-salad-with-indian-tadka",
+      "raita",
+      "beet-cucumber-raita",
+      "laccha-pyaz"
+    ],
+    "cuisine": "Indian",
+    "description": "An assortment of vegetables such as paneer, bell peppers, onions, and mushrooms marinated in a vibrant tandoori yogurt spice paste and charred in high heat until smoky and caramelized. These smoky, slightly charred bites capture the essence of tandoor cooking in a vegetarian form.",
+    "nourishVerified": true
+  },
+  {
+    "id": "tofu-bhurji",
+    "name": "Tofu Bhurji",
+    "aliases": [
+      "scrambled tofu",
+      "tofu scramble",
+      "tofu bhurji masala"
+    ],
+    "heroImageUrl": "/food_images/tofu_bhurji.png",
+    "sidePool": [
+      "phulka",
+      "roti",
+      "naan-bread",
+      "roasted-papad",
+      "cabbage-salad-with-indian-tadka",
+      "kachumber",
+      "buttered-ladi-pav",
+      "lachha-paratha"
+    ],
+    "cuisine": "Indian",
+    "description": "Crumbled tofu scrambled with onions, tomatoes, green chilies, and turmeric in the style of classic Indian paneer bhurji. This protein-packed plant-based dish comes together in minutes and delivers bold, satisfying flavor with every bite.",
+    "nourishVerified": true
+  },
+  {
+    "id": "teriyaki-salmon",
+    "name": "Teriyaki Salmon",
+    "aliases": [
+      "salmon teriyaki",
+      "grilled salmon teriyaki"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "goma-ae-spinach",
+      "sunomono",
+      "miso-soup",
+      "edamame",
+      "tsukemono",
+      "kinpira-gobo",
+      "soba-noodles",
+      "pickled-ginger",
+      "ohitashi",
+      "tamagoyaki",
+      "seaweed-salad"
+    ],
+    "cuisine": "Japanese",
+    "description": "Thick salmon fillets glazed with a sweet-savory teriyaki sauce of soy, mirin, and sake, grilled until caramelized and flaky.",
+    "nourishVerified": false
+  },
+  {
+    "id": "chicken-katsu",
+    "name": "Chicken Katsu",
+    "aliases": [
+      "katsu",
+      "tonkatsu",
+      "chicken cutlet"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "sunomono",
+      "miso-soup",
+      "tsukemono",
+      "kinpira-gobo",
+      "goma-ae-spinach",
+      "edamame",
+      "pickled-ginger",
+      "ohitashi",
+      "seaweed-salad",
+      "tamagoyaki"
+    ],
+    "cuisine": "Japanese",
+    "description": "A crispy panko-breaded chicken cutlet deep-fried to a golden crunch, served with tangy tonkatsu sauce and shredded cabbage.",
+    "nourishVerified": false
+  },
+  {
+    "id": "gyudon",
+    "name": "Gyudon (Beef Bowl)",
+    "aliases": [
+      "gyudon",
+      "beef rice bowl",
+      "yoshinoya"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "miso-soup",
+      "tsukemono",
+      "sunomono",
+      "goma-ae-spinach",
+      "edamame",
+      "pickled-ginger",
+      "ohitashi",
+      "tamagoyaki",
+      "kinpira-gobo"
+    ],
+    "cuisine": "Japanese",
+    "description": "Thin-sliced beef and sweet onions simmered in a dashi-soy-mirin broth, served over a steaming bowl of rice with a soft-cooked egg.",
+    "nourishVerified": false
+  },
+  {
+    "id": "yakitori",
+    "name": "Yakitori",
+    "aliases": [
+      "chicken skewers",
+      "grilled chicken skewers japanese"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "edamame",
+      "sunomono",
+      "tsukemono",
+      "goma-ae-spinach",
+      "hiyayakko",
+      "miso-soup",
+      "kinpira-gobo",
+      "pickled-ginger",
+      "nasu-dengaku",
+      "ohitashi"
+    ],
+    "cuisine": "Japanese",
+    "description": "Bite-sized chicken pieces skewered on bamboo sticks and grilled over binchōtan charcoal, brushed with tare sauce or simply salted.",
+    "nourishVerified": false
+  },
+  {
+    "id": "miso-cod",
+    "name": "Miso-Glazed Black Cod",
+    "aliases": [
+      "miso cod",
+      "black cod miso",
+      "nobu cod"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "goma-ae-spinach",
+      "sunomono",
+      "miso-soup",
+      "tsukemono",
+      "edamame",
+      "ohitashi",
+      "kinpira-gobo",
+      "seaweed-salad",
+      "hiyayakko",
+      "nasu-dengaku"
+    ],
+    "cuisine": "Japanese",
+    "description": "Buttery black cod marinated in sweet white miso for days, then broiled until caramelized and flaking apart.",
+    "nourishVerified": false
+  },
+  {
+    "id": "tempura-udon",
+    "name": "Tempura Udon",
+    "aliases": [
+      "udon",
+      "udon noodles",
+      "nabeyaki udon"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "tsukemono",
+      "edamame",
+      "goma-ae-spinach",
+      "sunomono",
+      "hiyayakko",
+      "tamagoyaki",
+      "pickled-ginger",
+      "ohitashi",
+      "kinpira-gobo",
+      "agedashi-tofu"
+    ],
+    "cuisine": "Japanese",
+    "description": "Thick, chewy wheat noodles served in a steaming dashi broth topped with crispy shrimp and vegetable tempura.",
+    "nourishVerified": false
+  },
+  {
+    "id": "kimchi-jjigae",
+    "name": "Kimchi Jjigae",
+    "aliases": [
+      "kimchi stew",
+      "kimchi soup"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1583224944252-fa8e674f2886?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "kimchi",
+      "kongnamul",
+      "sigeumchi-namul",
+      "bean-sprout-salad",
+      "pickled-radish",
+      "hobak-bokkeum",
+      "gamja-jorim",
+      "dubu-jorim",
+      "musaengchae",
+      "miyeok-muchim"
+    ],
+    "cuisine": "Korean",
+    "description": "A fiery, deeply savory stew of aged kimchi, pork belly, tofu, and scallions, bubbling in an earthenware pot.",
+    "nourishVerified": false
+  },
+  {
+    "id": "bulgogi",
+    "name": "Bulgogi",
+    "aliases": [
+      "korean bbq beef",
+      "fire meat",
+      "bulgogi beef"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "kimchi",
+      "kongnamul",
+      "sigeumchi-namul",
+      "japchae",
+      "bean-sprout-salad",
+      "pickled-radish",
+      "musaengchae",
+      "hobak-bokkeum",
+      "seaweed-soup",
+      "miyeok-muchim",
+      "dubu-jorim"
+    ],
+    "cuisine": "Korean",
+    "description": "Paper-thin beef slices marinated in a sweet soy-pear sauce with garlic, sesame, and scallions, grilled over an open flame.",
+    "nourishVerified": false
+  },
+  {
+    "id": "soondubu-jjigae",
+    "name": "Soondubu Jjigae (Soft Tofu Stew)",
+    "aliases": [
+      "sundubu",
+      "tofu stew",
+      "soft tofu stew"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "kimchi",
+      "kongnamul",
+      "sigeumchi-namul",
+      "bean-sprout-salad",
+      "pickled-radish",
+      "hobak-bokkeum",
+      "gamja-jorim",
+      "musaengchae",
+      "miyeok-muchim",
+      "dubu-jorim"
+    ],
+    "cuisine": "Korean",
+    "description": "A spicy, silky stew of uncurdled soft tofu, seafood, vegetables, and a cracked egg in a bubbling gochugaru broth.",
+    "nourishVerified": false
+  },
+  {
+    "id": "japchae-main",
+    "name": "Japchae (Glass Noodle Stir-Fry)",
+    "aliases": [
+      "japchae",
+      "glass noodle stir fry",
+      "sweet potato noodles"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "kimchi",
+      "kongnamul",
+      "sigeumchi-namul",
+      "bean-sprout-salad",
+      "pickled-radish",
+      "musaengchae",
+      "hobak-bokkeum",
+      "miyeok-muchim",
+      "seaweed-soup",
+      "dubu-jorim"
+    ],
+    "cuisine": "Korean",
+    "description": "Glassy sweet potato noodles stir-fried with colorful julienned vegetables, beef, and a sweet soy-sesame sauce — a Korean celebration dish.",
+    "nourishVerified": false
+  },
+  {
+    "id": "dakgalbi",
+    "name": "Dakgalbi (Spicy Chicken Stir-Fry)",
+    "aliases": [
+      "dak galbi",
+      "chuncheon chicken",
+      "spicy chicken"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1583224944252-fa8e674f2886?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "kimchi",
+      "kongnamul",
+      "sigeumchi-namul",
+      "pickled-radish",
+      "bean-sprout-salad",
+      "hobak-bokkeum",
+      "musaengchae",
+      "miyeok-muchim",
+      "gamja-jorim",
+      "tteokbokki"
+    ],
+    "cuisine": "Korean",
+    "description": "Chunky chicken thighs stir-fried on a massive hot plate with cabbage, sweet potato, rice cakes, and a fiery gochujang sauce.",
+    "nourishVerified": false
+  },
+  {
+    "id": "green-curry",
+    "name": "Thai Green Curry",
+    "aliases": [
+      "gaeng keow wan",
+      "green curry chicken"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "som-tum",
+      "sticky-rice",
+      "pak-boong",
+      "tom-yum-soup",
+      "spring-rolls",
+      "larb",
+      "papaya-salad",
+      "gai-yang",
+      "yum-woon-sen",
+      "thai-iced-tea"
+    ],
+    "cuisine": "Thai",
+    "description": "A fragrant coconut milk curry simmered with green curry paste, Thai eggplant, bamboo shoots, basil, and tender chicken.",
+    "nourishVerified": false
+  },
+  {
+    "id": "massaman-curry",
+    "name": "Massaman Curry",
+    "aliases": [
+      "massaman",
+      "muslim curry",
+      "kaeng massaman"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "som-tum",
+      "sticky-rice",
+      "pak-boong",
+      "papaya-salad",
+      "spring-rolls",
+      "tom-yum-soup",
+      "gai-yang",
+      "satay",
+      "yum-woon-sen",
+      "tod-mun-pla"
+    ],
+    "cuisine": "Thai",
+    "description": "A rich, mild Thai curry with warm spices — cinnamon, cardamom, star anise — slow-simmered with potatoes, peanuts, and beef.",
+    "nourishVerified": false
+  },
+  {
+    "id": "tom-kha-gai",
+    "name": "Tom Kha Gai",
+    "aliases": [
+      "coconut chicken soup",
+      "tom kha",
+      "galangal soup"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "som-tum",
+      "sticky-rice",
+      "pak-boong",
+      "papaya-salad",
+      "spring-rolls",
+      "gai-yang",
+      "satay",
+      "larb",
+      "yum-woon-sen",
+      "tod-mun-pla"
+    ],
+    "cuisine": "Thai",
+    "description": "A creamy coconut milk soup perfumed with galangal, lemongrass, kaffir lime, mushrooms, and tender chicken.",
+    "nourishVerified": false
+  },
+  {
+    "id": "khao-pad",
+    "name": "Khao Pad (Thai Fried Rice)",
+    "aliases": [
+      "thai fried rice",
+      "khao pad",
+      "kao pad"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1536304993881-460e32f50f37?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "som-tum",
+      "pak-boong",
+      "tom-yum-soup",
+      "papaya-salad",
+      "spring-rolls",
+      "satay",
+      "gai-yang",
+      "pla-rad-prik",
+      "tod-mun-pla",
+      "yum-woon-sen"
+    ],
+    "cuisine": "Thai",
+    "description": "Jasmine rice wok-fried with egg, garlic, onion, and a splash of fish sauce, served with a wedge of lime and sliced cucumber.",
+    "nourishVerified": false
+  },
+  {
+    "id": "basil-chicken",
+    "name": "Pad Kra Pao (Thai Basil Chicken)",
+    "aliases": [
+      "pad krapao",
+      "basil chicken",
+      "holy basil stir fry"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "som-tum",
+      "sticky-rice",
+      "pak-boong",
+      "papaya-salad",
+      "spring-rolls",
+      "tom-yum-soup",
+      "coconut-soup",
+      "gai-yang",
+      "yum-woon-sen",
+      "tod-mun-pla"
+    ],
+    "cuisine": "Thai",
+    "description": "Minced chicken stir-fried with holy basil, garlic, chili, and soy-oyster sauce, served over rice with a crispy fried egg on top.",
+    "nourishVerified": false
+  },
+  {
+    "id": "kung-pao-chicken",
+    "name": "Kung Pao Chicken",
+    "aliases": [
+      "gong bao chicken",
+      "kung pao"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "bok-choy-garlic",
+      "smashed-cucumber-salad",
+      "hot-and-sour-soup",
+      "chinese-broccoli",
+      "mapo-tofu",
+      "wood-ear-mushroom-salad",
+      "steamed-fish-ginger",
+      "dan-dan-noodles",
+      "congee",
+      "xiao-long-bao"
+    ],
+    "cuisine": "Chinese",
+    "description": "Crispy diced chicken wok-tossed with peanuts, dried chilies, and Sichuan peppercorns in a tangy-sweet soy-vinegar sauce.",
+    "nourishVerified": false
+  },
+  {
+    "id": "char-siu",
+    "name": "Char Siu (BBQ Pork)",
+    "aliases": [
+      "chinese bbq pork",
+      "roast pork",
+      "cha siu"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "bok-choy-garlic",
+      "smashed-cucumber-salad",
+      "chinese-broccoli",
+      "hot-and-sour-soup",
+      "wood-ear-mushroom-salad",
+      "congee",
+      "bao-buns",
+      "crispy-wontons",
+      "mapo-tofu",
+      "dan-dan-noodles"
+    ],
+    "cuisine": "Chinese",
+    "description": "Pork shoulder lacquered in a sweet-savory glaze of hoisin, honey, five-spice, and red fermented tofu, then roasted until charred at the edges.",
+    "nourishVerified": false
+  },
+  {
+    "id": "mapo-tofu-main",
+    "name": "Mapo Tofu (Sichuan)",
+    "aliases": [
+      "mapo doufu",
+      "spicy tofu",
+      "sichuan tofu"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "bok-choy-garlic",
+      "smashed-cucumber-salad",
+      "hot-and-sour-soup",
+      "chinese-broccoli",
+      "wood-ear-mushroom-salad",
+      "dan-dan-noodles",
+      "steamed-fish-ginger",
+      "xiao-long-bao",
+      "congee",
+      "crispy-wontons"
+    ],
+    "cuisine": "Chinese",
+    "description": "Silken tofu swimming in a fiery, numbing sauce of doubanjiang, Sichuan peppercorns, and minced pork — Chengdu's signature dish.",
+    "nourishVerified": false
+  },
+  {
+    "id": "steamed-fish-cantonese",
+    "name": "Cantonese Steamed Fish",
+    "aliases": [
+      "steamed fish",
+      "cantonese fish",
+      "zheng yu"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "bok-choy-garlic",
+      "chinese-broccoli",
+      "smashed-cucumber-salad",
+      "hot-and-sour-soup",
+      "congee",
+      "wood-ear-mushroom-salad",
+      "xiao-long-bao",
+      "crispy-wontons",
+      "turnip-cake",
+      "steamed-fish-ginger"
+    ],
+    "cuisine": "Chinese",
+    "description": "A whole white fish delicately steamed with ginger and scallion, finished with a sizzle of hot oil and light soy sauce.",
+    "nourishVerified": false
+  },
+  {
+    "id": "wonton-noodle-soup",
+    "name": "Wonton Noodle Soup",
+    "aliases": [
+      "wonton soup",
+      "wanton mee",
+      "won ton noodles"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "bok-choy-garlic",
+      "chinese-broccoli",
+      "smashed-cucumber-salad",
+      "wood-ear-mushroom-salad",
+      "xiao-long-bao",
+      "crispy-wontons",
+      "turnip-cake",
+      "hot-and-sour-soup",
+      "congee",
+      "mapo-tofu"
+    ],
+    "cuisine": "Chinese",
+    "description": "Thin egg noodles in a clear, savory broth with plump shrimp-and-pork wontons, choy sum, and a scattering of fried shallots.",
+    "nourishVerified": false
+  },
+  {
+    "id": "bun-bo-hue",
+    "name": "Bún Bò Huế",
+    "aliases": [
+      "hue beef noodle soup",
+      "bun bo",
+      "spicy beef noodle"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "goi-cuon",
+      "rau-muong-xao-toi",
+      "canh-chua",
+      "goi-ga",
+      "cha-gio",
+      "summer-rolls",
+      "bun-cha",
+      "lotus-root-salad",
+      "vietnamese-coffee",
+      "banh-mi"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A fiery, lemongrass-perfumed beef noodle soup from Huế with thick round noodles, beef shank, pork knuckle, and chili oil.",
+    "nourishVerified": false
+  },
+  {
+    "id": "com-tam",
+    "name": "Cơm Tấm (Broken Rice)",
+    "aliases": [
+      "com tam",
+      "broken rice",
+      "saigon rice"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1536304993881-460e32f50f37?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "goi-cuon",
+      "rau-muong-xao-toi",
+      "canh-chua",
+      "goi-ga",
+      "cha-gio",
+      "summer-rolls",
+      "lotus-root-salad",
+      "vietnamese-coffee"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Saigon's signature broken rice plate with a caramelized grilled pork chop, a fried egg, shredded pork skin, and pickled vegetables.",
+    "nourishVerified": false
+  },
+  {
+    "id": "banh-xeo",
+    "name": "Bánh Xèo (Vietnamese Crêpe)",
+    "aliases": [
+      "banh xeo",
+      "sizzling crepe",
+      "vietnamese pancake"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "goi-cuon",
+      "rau-muong-xao-toi",
+      "canh-chua",
+      "goi-ga",
+      "cha-gio",
+      "lotus-root-salad",
+      "summer-rolls",
+      "vietnamese-coffee",
+      "bun-cha"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A crispy, turmeric-yellow rice flour crêpe stuffed with shrimp, pork, bean sprouts, and herbs — wrapped in lettuce to eat.",
+    "nourishVerified": false
+  },
+  {
+    "id": "ca-kho-to",
+    "name": "Cá Kho Tộ (Caramelized Fish)",
+    "aliases": [
+      "ca kho to",
+      "claypot fish",
+      "caramel fish"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1579631542720-3a87824fff86?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "rau-muong-xao-toi",
+      "canh-chua",
+      "goi-cuon",
+      "goi-ga",
+      "cha-gio",
+      "summer-rolls",
+      "lotus-root-salad",
+      "vietnamese-coffee"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Catfish fillets braised in a clay pot with a rich caramel sauce of fish sauce, sugar, black pepper, and shallots.",
+    "nourishVerified": false
+  },
+  {
+    "id": "chicken-adobo",
+    "name": "Chicken Adobo",
+    "aliases": [
+      "adobo",
+      "adobong manok",
+      "filipino adobo"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "laing",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice"
+    ],
+    "cuisine": "Filipino",
+    "description": "Chicken braised in a bold sauce of vinegar, soy sauce, garlic, bay leaves, and black peppercorns — the Philippines' national dish.",
+    "nourishVerified": false
+  },
+  {
+    "id": "sinigang-na-baboy",
+    "name": "Sinigang na Baboy",
+    "aliases": [
+      "sinigang",
+      "pork sinigang",
+      "sour soup pork"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "laing",
+      "lumpiang-sariwa",
+      "brown-rice-bowl"
+    ],
+    "cuisine": "Filipino",
+    "description": "A sour, savory pork soup made with tamarind broth, loaded with bok choy, radish, eggplant, string beans, and taro.",
+    "nourishVerified": false
+  },
+  {
+    "id": "kare-kare",
+    "name": "Kare-Kare",
+    "aliases": [
+      "kare kare",
+      "peanut stew",
+      "oxtail stew"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "laing",
+      "lumpiang-sariwa",
+      "brown-rice-bowl"
+    ],
+    "cuisine": "Filipino",
+    "description": "A rich, nutty peanut-based stew with oxtail, tripe, bok choy, and eggplant, served with fermented shrimp paste on the side.",
+    "nourishVerified": false
+  },
+  {
+    "id": "tinola",
+    "name": "Chicken Tinola",
+    "aliases": [
+      "tinola",
+      "tinolang manok",
+      "ginger chicken soup"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice"
+    ],
+    "cuisine": "Filipino",
+    "description": "A light, ginger-forward chicken soup with green papaya wedges, malunggay leaves, and fish sauce — Filipino comfort at its purest.",
+    "nourishVerified": false
+  },
+  {
+    "id": "bistek-tagalog",
+    "name": "Bistek Tagalog",
+    "aliases": [
+      "bistek",
+      "filipino beef steak",
+      "bistek tagalog"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "laing",
+      "lumpiang-sariwa",
+      "brown-rice-bowl"
+    ],
+    "cuisine": "Filipino",
+    "description": "Thin-sliced beef marinated in soy sauce and calamansi juice, pan-fried until tender and topped with caramelized onion rings.",
+    "nourishVerified": false
+  }
+]
