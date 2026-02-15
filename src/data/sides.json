@@ -2615,7 +2615,7 @@
     "description": "Char-grilled eggplant peeled and dressed with vinegar, onions, tomatoes, and a drizzle of bagoong.",
     "pairingReason": "smoky eggplant to brighten any Filipino meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "atchara",
@@ -2629,7 +2629,7 @@
     "description": "Sweet and tangy pickled green papaya with carrots, bell peppers, ginger, and raisins in a vinegar brine.",
     "pairingReason": "sweet-sour pickle to cut through rich grilled meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "pinakbet",
@@ -2643,7 +2643,7 @@
     "description": "An Ilocano medley of bitter melon, eggplant, squash, okra, and string beans simmered with bagoong shrimp paste.",
     "pairingReason": "vegetable stew bursting with Filipino flavors",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "ginisang-munggo",
@@ -2657,7 +2657,7 @@
     "description": "Hearty mung bean stew sauteed with garlic, onions, tomatoes, and leafy greens like malunggay or ampalaya leaves.",
     "pairingReason": "fiber-rich bean stew for a nutritious pairing",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "tortang-talong",
@@ -2671,7 +2671,7 @@
     "description": "Charred eggplant flattened and coated in beaten egg, pan-fried until golden — a simple Filipino breakfast staple.",
     "pairingReason": "eggy charred eggplant for protein and fiber",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "laing",
@@ -2685,7 +2685,7 @@
     "description": "Dried taro leaves slow-simmered in rich coconut milk with chili, ginger, and shrimp paste until meltingly tender.",
     "pairingReason": "creamy, spicy coconut greens for Bicolano flair",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "lumpiang-sariwa",
@@ -2699,7 +2699,7 @@
     "description": "Fresh crepe wrappers filled with julienned jicama, carrots, green beans, and tofu, topped with a sweet peanut sauce.",
     "pairingReason": "fresh vegetable rolls with a sweet-savory drizzle",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "brown-rice-bowl",
@@ -2742,5 +2742,50 @@
     "pairingReason": "zero-carb noodle swap for ramen or stir-fries",
     "nutritionCategory": "vegetable",
     "nourishVerified": false
+  },
+  {
+    "id": "chaas",
+    "name": "Chaas (Spiced Buttermilk)",
+    "imageUrl": "https://images.unsplash.com/photo-1626201850979-7c3a0c3a8d11?w=600&auto=format&fit=crop&q=80",
+    "tags": [
+      "south-asian",
+      "drink",
+      "probiotic",
+      "cooling"
+    ],
+    "description": "A refreshing spiced buttermilk drink seasoned with roasted cumin, curry leaves, and fresh cilantro — the quintessential cooling companion to any Indian meal.",
+    "pairingReason": "cooling probiotic drink to balance spicy mains",
+    "nutritionCategory": "dairy",
+    "nourishVerified": true
+  },
+  {
+    "id": "bellpepper-curry",
+    "name": "Bellpepper Curry",
+    "imageUrl": "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&auto=format&fit=crop&q=80",
+    "tags": [
+      "south-asian",
+      "curry",
+      "vegetable",
+      "colorful"
+    ],
+    "description": "Vibrant bell peppers simmered in a fragrant onion-tomato masala with cumin, coriander, and a hint of turmeric — a colorful, mild curry.",
+    "pairingReason": "mild, colorful vegetable curry to add variety",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
+    "id": "egg-drop-soup-with-veggies",
+    "name": "Egg Drop Soup with Veggies",
+    "imageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
+    "tags": [
+      "filipino",
+      "soup",
+      "light",
+      "egg"
+    ],
+    "description": "A light, savory broth with silky ribbons of egg and tender mixed vegetables — a warm, nourishing Filipino staple.",
+    "pairingReason": "light brothy warmth alongside heartier Filipino mains",
+    "nutritionCategory": "protein",
+    "nourishVerified": true
   }
 ]

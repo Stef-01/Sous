@@ -1456,7 +1456,7 @@
     ],
     "cuisine": "Filipino",
     "description": "Chicken braised in a bold sauce of vinegar, soy sauce, garlic, bay leaves, and black peppercorns — the Philippines' national dish.",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "sinigang-na-baboy",
@@ -1479,7 +1479,7 @@
     ],
     "cuisine": "Filipino",
     "description": "A sour, savory pork soup made with tamarind broth, loaded with bok choy, radish, eggplant, string beans, and taro.",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "kare-kare",
@@ -1502,15 +1502,16 @@
     ],
     "cuisine": "Filipino",
     "description": "A rich, nutty peanut-based stew with oxtail, tripe, bok choy, and eggplant, served with fermented shrimp paste on the side.",
-    "nourishVerified": false
+    "nourishVerified": true
   },
   {
     "id": "tinola",
-    "name": "Chicken Tinola",
+    "name": "Chicken Tinola with Chayote and Zucchini",
     "aliases": [
       "tinola",
       "tinolang manok",
-      "ginger chicken soup"
+      "ginger chicken soup",
+      "chicken tinola with chayote and zucchini"
     ],
     "heroImageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&auto=format&fit=crop&q=80",
     "sidePool": [
@@ -1524,8 +1525,8 @@
       "cauliflower-rice"
     ],
     "cuisine": "Filipino",
-    "description": "A light, ginger-forward chicken soup with green papaya wedges, malunggay leaves, and fish sauce — Filipino comfort at its purest.",
-    "nourishVerified": false
+    "description": "A light, ginger-forward chicken soup with chayote, zucchini, green papaya wedges, malunggay leaves, and fish sauce — Filipino comfort at its purest.",
+    "nourishVerified": true
   },
   {
     "id": "bistek-tagalog",
@@ -1548,6 +1549,264 @@
     ],
     "cuisine": "Filipino",
     "description": "Thin-sliced beef marinated in soy sauce and calamansi juice, pan-fried until tender and topped with caramelized onion rings.",
-    "nourishVerified": false
+    "nourishVerified": true
+  },
+  {
+    "id": "eggplant-adobo",
+    "name": "Eggplant Adobo",
+    "aliases": [
+      "adobong talong",
+      "vegetable adobo"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Tender eggplant braised in a rich soy-vinegar sauce with garlic and bay leaves — a hearty vegetarian twist on the Filipino classic.",
+    "nourishVerified": true
+  },
+  {
+    "id": "tortang-talong-with-chicken",
+    "name": "Tortang Talong with Ground Chicken and Sautéed Vegetables",
+    "aliases": [
+      "tortang talong with ground chicken",
+      "stuffed eggplant omelette"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Flame-roasted eggplant flattened and pan-fried with seasoned ground chicken and sautéed vegetables in a golden egg batter — a protein-rich Filipino comfort dish.",
+    "nourishVerified": true
+  },
+  {
+    "id": "open-lumpia-bowl",
+    "name": "Open Lumpia Bowl",
+    "aliases": [
+      "lumpia bowl",
+      "deconstructed lumpia"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "All the flavors of classic lumpia — seasoned pork, shredded cabbage, carrots, and garlic — served deconstructed in a bowl with a side of sweet chili dipping sauce.",
+    "nourishVerified": true
+  },
+  {
+    "id": "grilled-pompano",
+    "name": "Grilled Pompano",
+    "aliases": [
+      "inihaw na pompano",
+      "grilled fish filipino"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Whole pompano stuffed with tomatoes, onions, and calamansi, then grilled over charcoal until smoky and perfectly flaky — a Filipino seafood favorite.",
+    "nourishVerified": true
+  },
+  {
+    "id": "arroz-caldo",
+    "name": "Arroz Caldo",
+    "aliases": [
+      "arroz caldo",
+      "filipino chicken congee",
+      "lugaw"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "A fragrant Filipino chicken rice porridge infused with ginger, garlic, and fish sauce, topped with toasted garlic, scallions, and a wedge of calamansi.",
+    "nourishVerified": true
+  },
+  {
+    "id": "open-face-pandesal-sandwich",
+    "name": "Open-Face Pandesal Sandwich",
+    "aliases": [
+      "pandesal sandwich",
+      "filipino breakfast sandwich"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1528736235302-52922df5c122?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Soft, pillowy pandesal rolls topped with a choice of corned beef, egg, cheese, or sardines — the beloved Filipino breakfast open-face style.",
+    "nourishVerified": true
+  },
+  {
+    "id": "chia-champorado",
+    "name": "Chia Champorado",
+    "aliases": [
+      "champorado",
+      "chocolate rice porridge",
+      "chia chocolate porridge"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1495214783159-3503fd1b572d?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "A healthier take on the classic Filipino chocolate rice porridge, using chia seeds for added fiber and omega-3s, sweetened with coconut sugar and topped with coconut milk.",
+    "nourishVerified": true
+  },
+  {
+    "id": "bbq-chicken-filipino",
+    "name": "Filipino BBQ Chicken",
+    "aliases": [
+      "bbq chicken",
+      "inihaw na manok",
+      "filipino grilled chicken"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Chicken marinated in a sweet-savory banana ketchup and soy sauce glaze, skewered and grilled until caramelized and smoky — a Filipino street food staple.",
+    "nourishVerified": true
+  },
+  {
+    "id": "veg-pancit",
+    "name": "Veg Pancit",
+    "aliases": [
+      "pancit guisado",
+      "vegetable pancit",
+      "filipino noodles"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Stir-fried rice noodles loaded with julienned vegetables, soy sauce, and calamansi — a plant-forward version of the classic Filipino birthday noodle dish.",
+    "nourishVerified": true
+  },
+  {
+    "id": "filipino-grilled-shrimp",
+    "name": "Filipino Grilled Shrimp",
+    "aliases": [
+      "inihaw na hipon",
+      "grilled shrimp filipino"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Jumbo shrimp marinated in garlic butter, calamansi, and soy sauce, then grilled until pink and slightly charred — served with a spiced vinegar dip.",
+    "nourishVerified": true
+  },
+  {
+    "id": "tocino-rice-bowl",
+    "name": "Tocino Rice Bowl",
+    "aliases": [
+      "tocino",
+      "tocilog",
+      "sweet cured pork"
+    ],
+    "heroImageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80",
+    "sidePool": [
+      "ensaladang-talong",
+      "atchara",
+      "pinakbet",
+      "ginisang-munggo",
+      "tortang-talong",
+      "lumpiang-sariwa",
+      "brown-rice-bowl",
+      "cauliflower-rice",
+      "egg-drop-soup-with-veggies"
+    ],
+    "cuisine": "Filipino",
+    "description": "Sweet, caramelized cured pork slices served over garlic fried rice with a fried egg and pickled papaya atchara — the classic Filipino tocilog reimagined as a bowl.",
+    "nourishVerified": true
   }
 ]
