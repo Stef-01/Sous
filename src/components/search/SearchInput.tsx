@@ -86,8 +86,8 @@ export default function SearchInput({
     >
       <motion.div
         className={`flex items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-500 ${isEvaluating
-            ? "bg-transparent border border-transparent shadow-none"
-            : "bg-white border border-stone-200 shadow-sm focus-within:border-nourish-button focus-within:ring-1 focus-within:ring-nourish-button/20"
+          ? "bg-transparent border border-transparent shadow-none"
+          : "bg-white border border-stone-200 shadow-sm focus-within:border-nourish-button focus-within:ring-1 focus-within:ring-nourish-button/20"
           }`}
         animate={
           prefersReduced
@@ -143,32 +143,38 @@ export default function SearchInput({
           {/* Share button — hidden during evaluate mode */}
           <AnimatePresence>
             {onSave && !isEvaluating && (
-              <motion.button
-                type="button"
-                onClick={onSave}
+              <motion.div
+                key="share-button-wrapper"
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
                 transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.5 }}
-                className="p-2.5 rounded-full border border-stone-200 bg-white text-nourish-subtext hover:border-nourish-button hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-1"
-                aria-label="Share this plate"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                  <polyline points="16 6 12 2 8 6" />
-                  <line x1="12" y1="2" x2="12" y2="15" />
-                </svg>
-              </motion.button>
+                <SparkleEffect count={8}>
+                  <button
+                    type="button"
+                    onClick={onSave}
+                    className="p-2.5 rounded-full border border-stone-200 bg-white text-nourish-subtext hover:border-nourish-button hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-1"
+                    aria-label="Share this plate"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                      <polyline points="16 6 12 2 8 6" />
+                      <line x1="12" y1="2" x2="12" y2="15" />
+                    </svg>
+                  </button>
+                </SparkleEffect>
+              </motion.div>
             )}
           </AnimatePresence>
 
@@ -179,8 +185,8 @@ export default function SearchInput({
               onClick={showEvaluate ? onEvaluate : undefined}
               disabled={showEvaluate ? disabled : disabled || !value.trim()}
               className={`px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all duration-300 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 whitespace-nowrap ${showEvaluate
-                  ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
-                  : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
+                ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
+                : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
                 }`}
               whileHover={prefersReduced ? {} : { scale: 1.03 }}
               whileTap={prefersReduced ? {} : { scale: 0.97 }}

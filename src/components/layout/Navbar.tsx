@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AboutModal from "./AboutModal";
 import { springs } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import SparkleEffect from "@/components/ui/SparkleEffect";
 
 const navVariants = {
   initial: { y: -20, opacity: 0 },
@@ -59,50 +60,54 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
         animate="animate"
       >
         <div className="w-full mx-auto px-6 lg:px-10 py-4 flex items-center justify-between">
-          <motion.button
-            onClick={onLogoClick}
-            className="text-nourish-dark font-serif text-lg tracking-wide cursor-pointer hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 rounded"
-            variants={prefersReduced ? {} : itemVariants}
-            whileTap={prefersReduced ? {} : { scale: 0.95 }}
-            aria-label="Spin the wheel — pick a random meal"
-          >
-            NOURISH
-          </motion.button>
+          <SparkleEffect count={8}>
+            <motion.button
+              onClick={onLogoClick}
+              className="text-nourish-dark font-serif text-lg tracking-wide cursor-pointer hover:opacity-70 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 rounded"
+              variants={prefersReduced ? {} : itemVariants}
+              whileTap={prefersReduced ? {} : { scale: 0.95 }}
+              aria-label="Spin the wheel — pick a random meal"
+            >
+              NOURISH
+            </motion.button>
+          </SparkleEffect>
           <div className="flex items-center gap-4">
             {onVerifiedToggle && (
-              <motion.button
-                onClick={onVerifiedToggle}
-                className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${verifiedOnly
-                  ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
-                  : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
-                  }`}
-                variants={prefersReduced ? {} : itemVariants}
-                whileTap={prefersReduced ? {} : { scale: 0.95 }}
-                aria-pressed={verifiedOnly}
-                aria-label="Toggle NOURISH Verified filter"
-              >
-                <motion.svg
-                  key={`star-${verifiedOnly}`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12"
-                  height="12"
-                  viewBox="0 0 24 24"
-                  fill={verifiedOnly ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  initial={{ scale: 1, rotate: 0 }}
-                  animate={verifiedOnly
-                    ? { scale: [1, 1.4, 1], rotate: [0, 15, 0] }
-                    : { scale: 1, rotate: 0 }
-                  }
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+              <SparkleEffect count={6}>
+                <motion.button
+                  onClick={onVerifiedToggle}
+                  className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${verifiedOnly
+                    ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
+                    : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
+                    }`}
+                  variants={prefersReduced ? {} : itemVariants}
+                  whileTap={prefersReduced ? {} : { scale: 0.95 }}
+                  aria-pressed={verifiedOnly}
+                  aria-label="Toggle NOURISH Verified filter"
                 >
-                  <path d="M12 2 L15.09 8.26 L22 9.27 L17 14.14 L18.18 21.02 L12 17.77 L5.82 21.02 L7 14.14 L2 9.27 L8.91 8.26 Z" />
-                </motion.svg>
-                Verified
-              </motion.button>
+                  <motion.svg
+                    key={`star-${verifiedOnly}`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill={verifiedOnly ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ scale: 1, rotate: 0 }}
+                    animate={verifiedOnly
+                      ? { scale: [1, 1.4, 1], rotate: [0, 15, 0] }
+                      : { scale: 1, rotate: 0 }
+                    }
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  >
+                    <path d="M12 2 L15.09 8.26 L22 9.27 L17 14.14 L18.18 21.02 L12 17.77 L5.82 21.02 L7 14.14 L2 9.27 L8.91 8.26 Z" />
+                  </motion.svg>
+                  Verified
+                </motion.button>
+              </SparkleEffect>
             )}
             {savedCount > 0 && onSavedClick && (
               <motion.button

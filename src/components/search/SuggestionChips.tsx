@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { trackEvent } from "@/lib/analytics";
 import { springs } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import SparkleEffect from "@/components/ui/SparkleEffect";
 
 interface SuggestionChipsProps {
   suggestions: string[];
@@ -65,24 +66,25 @@ export default function SuggestionChips({
       animate="animate"
     >
       {suggestions.map((suggestion) => (
-        <motion.button
-          key={suggestion}
-          variants={prefersReduced ? reducedChipVariants : chipVariants}
-          whileHover={
-            prefersReduced
-              ? {}
-              : { scale: 1.05, y: -2 }
-          }
-          whileTap={prefersReduced ? {} : { scale: 0.92 }}
-          transition={springs.snappy}
-          onClick={() => {
-            trackEvent("suggestionChipClicked", { suggestion });
-            onSelect(suggestion);
-          }}
-          className="px-4 py-2 text-sm text-nourish-subtext bg-white border border-gray-200 rounded-full hover:border-nourish-button hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2"
-        >
-          {suggestion}
-        </motion.button>
+        <SparkleEffect key={suggestion} count={10}>
+          <motion.button
+            variants={prefersReduced ? reducedChipVariants : chipVariants}
+            whileHover={
+              prefersReduced
+                ? {}
+                : { scale: 1.05, y: -2 }
+            }
+            whileTap={prefersReduced ? {} : { scale: 0.92 }}
+            transition={springs.snappy}
+            onClick={() => {
+              trackEvent("suggestionChipClicked", { suggestion });
+              onSelect(suggestion);
+            }}
+            className="px-4 py-2 text-sm text-nourish-subtext bg-white border border-gray-200 rounded-full hover:border-nourish-button hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2"
+          >
+            {suggestion}
+          </motion.button>
+        </SparkleEffect>
       ))}
     </motion.div>
   );

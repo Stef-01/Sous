@@ -7,6 +7,7 @@ import type { SideDish, PairingScore } from "@/types";
 import { springs, spawnScaleKeyframes, wobbleRotationKeyframes } from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import HoverCard from "./HoverCard";
+import SparkleEffect from "@/components/ui/SparkleEffect";
 
 interface SideDishCardProps {
   side: SideDish;
@@ -108,6 +109,7 @@ const reducedVariants = {
 
 export default function SideDishCard({ side, index, onSwap, onClick, pairingScore, hideControls = false }: SideDishCardProps) {
   const [imgError, setImgError] = useState(false);
+  const [imageReady, setImageReady] = useState(false);
   const [swapKey, setSwapKey] = useState(0);
   const [showGlow, setShowGlow] = useState(true);
   const [showHoverCard, setShowHoverCard] = useState(false);
@@ -124,9 +126,11 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
     return () => clearTimeout(timer);
   }, [side.id]);
 
-  // Reset glow on side dish change
+  // Reset glow + image readiness on side dish change
   useEffect(() => {
     setShowGlow(true);
+    setImageReady(false);
+    setImgError(false);
     const timer = setTimeout(() => setShowGlow(false), 500);
     return () => clearTimeout(timer);
   }, [side.id]);
@@ -240,20 +244,25 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
               src={side.imageUrl}
               alt={`Side dish: ${side.name}`}
               fill
-              className="object-contain"
+              className={`object-contain transition-opacity duration-300 ${imageReady ? 'opacity-100' : 'opacity-0'}`}
               sizes="(max-width: 768px) 128px, (max-width: 1024px) 176px, 192px"
               onError={() => setImgError(true)}
+              onLoad={() => setImageReady(true)}
             />
           )}
 
+          {/* Shimmer placeholder while image loads */}
+          {!imageReady && !imgError && (
+            <div className="absolute inset-[10%] rounded-full shimmer" />
+          )}
+
+          {/* Swap button with mini-plop on swap — hidden in evaluate mode */}
           {/* Swap button with mini-plop on swap — hidden in evaluate mode */}
           <AnimatePresence>
             {!hideControls && (
-              <motion.button
-                key={`swap-${swapKey}`}
-                onClick={handleSwap}
-                className="absolute -top-1 -right-1 z-10 w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-nourish-subtext hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
-                aria-label={`Swap ${side.name} for another side dish`}
+              <motion.div
+                key={`swap-wrapper-${swapKey}`}
+                className="absolute -top-1 -right-1 z-10"
                 initial={swapKey > 0 ? { scale: 0, rotate: -180 } : { opacity: 1 }}
                 animate={
                   swapKey > 0
@@ -275,26 +284,34 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
                     }
                     : springs.snappy
                 }
-                whileHover={prefersReduced ? {} : { scale: 1.15 }}
-                whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                  <path d="M3 3v5h5" />
-                  <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-                  <path d="M16 16h5v5" />
-                </svg>
-              </motion.button>
+                <SparkleEffect count={6}>
+                  <motion.button
+                    onClick={handleSwap}
+                    className="w-7 h-7 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-nourish-subtext hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
+                    aria-label={`Swap ${side.name} for another side dish`}
+                    whileHover={prefersReduced ? {} : { scale: 1.15 }}
+                    whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                      <path d="M3 3v5h5" />
+                      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                      <path d="M16 16h5v5" />
+                    </svg>
+                  </motion.button>
+                </SparkleEffect>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -302,13 +319,13 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
 
       {/* Name label fades in after plop settles — hidden in evaluate mode */}
       <AnimatePresence>
-        {!hideControls && (
+        {!hideControls && imageReady && (
           <motion.div
             className="mt-2 flex flex-col items-center"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4, transition: { duration: 0.15 } }}
-            transition={{ delay: 0.4, duration: 0.3 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
           >
             <p className="text-sm text-nourish-dark text-center font-serif">
               {side.name}
@@ -319,6 +336,6 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
 
 
 
-    </motion.div>
+    </motion.div >
   );
 }
