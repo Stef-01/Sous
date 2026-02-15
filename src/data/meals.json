@@ -43,7 +43,9 @@
       "roti",
       "phulka",
       "onion-raita",
-      "cilantro-mint-chutney"
+      "cilantro-mint-chutney",
+      "bhindi-fry-side",
+      "baingan-bharta-side"
     ],
     "cuisine": "Indian",
     "description": "Tender marinated chicken simmered in a rich, velvety tomato-based sauce with butter, cream, and a warm blend of garam masala, fenugreek, and a touch of honey.",
@@ -197,14 +199,12 @@
     ],
     "heroImageUrl": "/food_images/sushi_platter.png",
     "sidePool": [
-      "miso-soup",
-      "edamame",
-      "seaweed-salad",
-      "gyoza",
-      "tempura",
-      "takoyaki",
-      "pickled-ginger",
-      "onigiri"
+      "dal-tadka",
+      "papadum",
+      "roti",
+      "bhindi-fry-side",
+      "cabbage-thoran",
+      "palak-corn"
     ],
     "cuisine": "Japanese",
     "description": "An artful arrangement of fresh nigiri, maki rolls, and sashimi featuring the finest seasonal fish, served with pickled ginger, wasabi, and soy sauce.",
@@ -230,7 +230,9 @@
       "lachha-paratha",
       "boondi-raita",
       "kachumber",
-      "tamarind-date-chutney"
+      "tamarind-date-chutney",
+      "bhindi-fry-side",
+      "baingan-bharta-side"
     ],
     "cuisine": "Indian",
     "description": "Chunks of tandoori-spiced chicken bathed in a creamy, mildly spiced tomato and yogurt sauce with aromatic cumin, coriander, and a swirl of fresh cream.",
@@ -673,7 +675,9 @@
       "instant-pot-jeera-rice",
       "curd-rice",
       "buttered-ladi-pav",
-      "beet-koshimbir"
+      "beet-koshimbir",
+      "palak-corn",
+      "baingan-bharta-side"
     ],
     "cuisine": "Indian",
     "description": "Cubes of soft paneer and sweet green peas simmered in a luscious tomato-onion gravy spiced with garam masala, turmeric, and kasuri methi. This iconic North Indian curry is a vegetarian crowd-pleaser found on restaurant menus and home tables alike.",
@@ -742,7 +746,10 @@
       "instant-pot-jeera-rice",
       "buttered-ladi-pav",
       "puri",
-      "basmati-rice"
+      "basmati-rice",
+      "bhindi-fry-side",
+      "cabbage-thoran",
+      "palak-corn"
     ],
     "cuisine": "Indian",
     "description": "Meaty button mushrooms cooked in a rich onion-tomato gravy with ginger, garlic, and a blend of garam masala and kasuri methi. The mushrooms soak up the aromatic sauce beautifully, making this a favorite vegetarian curry for both everyday meals and special occasions.",

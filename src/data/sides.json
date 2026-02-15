@@ -2787,5 +2787,65 @@
     "pairingReason": "light brothy warmth alongside heartier Filipino mains",
     "nutritionCategory": "protein",
     "nourishVerified": true
+  },
+  {
+    "id": "bhindi-fry-side",
+    "name": "Bhindi Fry (Side)",
+    "imageUrl": "/food_images/bhindi_masala.png",
+    "tags": [
+      "vegetable",
+      "indian",
+      "low-carb",
+      "healthy"
+    ],
+    "description": "Crispy okra stir-fried with cumin, turmeric, and dry mango powder — a crunchy, fiber-rich side perfect for blood sugar balance.",
+    "pairingReason": "crunchy green side to balance soft curries",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
+    "id": "baingan-bharta-side",
+    "name": "Baingan Bharta (Side)",
+    "imageUrl": "/food_images/eggplant_methi.png",
+    "tags": [
+      "vegetable",
+      "indian",
+      "low-carb",
+      "smoky"
+    ],
+    "description": "Smoky mashed eggplant cooked with onions, tomatoes, and green chilies. A flavorful, low-glycemic vegetable side.",
+    "pairingReason": "smoky flavor depth for rich meals",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
+    "id": "cabbage-thoran",
+    "name": "Cabbage Thoran",
+    "imageUrl": "/food_images/cabbage_salad_tadka.png",
+    "tags": [
+      "vegetable",
+      "indian",
+      "coconut",
+      "healthy"
+    ],
+    "description": "Finely chopped cabbage stir-fried with fresh coconut, mustard seeds, and curry leaves. Light, crunchy, and nutritious.",
+    "pairingReason": "sweet crunch of coconut cabbage cleanses the palate",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
+    "id": "palak-corn",
+    "name": "Palak Corn",
+    "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80",
+    "tags": [
+      "vegetable",
+      "indian",
+      "spinach",
+      "healthy"
+    ],
+    "description": "Creamy spinach curry studded with sweet corn kernels and a garlic tempering. Packed with iron and fiber.",
+    "pairingReason": "creamy greens to add iron and fiber",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": false
   }
 ]
