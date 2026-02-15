@@ -135,8 +135,8 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
     setMinTimeElapsed(false);
     setImgError(false);
 
-    // Ensure at least 2.5s of "magical" loading time
-    const minTimer = setTimeout(() => setMinTimeElapsed(true), 2500);
+    // Ensure at least 1.5s of "magical" loading time
+    const minTimer = setTimeout(() => setMinTimeElapsed(true), 1500);
     const glowTimer = setTimeout(() => setShowGlow(false), 500);
 
     return () => {
