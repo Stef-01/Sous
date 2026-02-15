@@ -85,14 +85,14 @@ const getSpawnVariants = (index: number) => {
   };
 };
 
-// Squash-stretch for the landing
+// Squash-stretch for the landing (subtle)
 const squashVariants = {
   initial: { scaleX: 1, scaleY: 1 },
   animate: {
-    scaleX: [1, 1.12, 0.94, 1.04, 1],
-    scaleY: [1, 0.88, 1.08, 0.97, 1],
+    scaleX: [1, 1.06, 0.97, 1.02, 1],
+    scaleY: [1, 0.94, 1.04, 0.98, 1],
     transition: {
-      duration: 0.35,
+      duration: 0.3,
       delay: 0.3,
       times: [0, 0.3, 0.5, 0.75, 1],
       ease: "easeOut" as const,
@@ -186,7 +186,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
       whileHover={
         prefersReduced
           ? {}
-          : { y: -8, rotate: 5, scale: 1.08, transition: springs.wobbly }
+          : { y: -4, rotate: 2, scale: 1.04, transition: springs.snappy }
       }
       whileTap={prefersReduced ? {} : { scale: 0.95 }}
     >
@@ -249,21 +249,21 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
                 animate={
                   swapKey > 0
                     ? {
-                        scale: [0, 1.3, 0.9, 1.1, 1],
-                        rotate: 0,
-                      }
+                      scale: [0, 1.15, 0.95, 1.05, 1],
+                      rotate: 0,
+                    }
                     : { opacity: 1 }
                 }
                 exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
                 transition={
                   swapKey > 0
                     ? {
-                        scale: {
-                          duration: 0.4,
-                          times: [0, 0.4, 0.6, 0.8, 1],
-                        },
-                        rotate: springs.snappy,
-                      }
+                      scale: {
+                        duration: 0.4,
+                        times: [0, 0.4, 0.6, 0.8, 1],
+                      },
+                      rotate: springs.snappy,
+                    }
                     : springs.snappy
                 }
                 whileHover={prefersReduced ? {} : { scale: 1.15 }}

@@ -7,7 +7,7 @@ export const springs = {
   /** Snappy — button taps, quick micro-interactions */
   snappy: { type: "spring" as const, stiffness: 400, damping: 25, mass: 0.6 },
   /** Wobbly — playful overshoot for side dishes and chips */
-  wobbly: { type: "spring" as const, stiffness: 200, damping: 15, mass: 1.0 },
+  wobbly: { type: "spring" as const, stiffness: 200, damping: 22, mass: 1.0 },
   /** Modal — smooth and deliberate for overlays */
   modal: { type: "spring" as const, stiffness: 250, damping: 22, mass: 1.0 },
 
@@ -32,7 +32,7 @@ export const springs = {
  * 0 → 0.4 → 1.25 → 0.92 → 1.08 → 0.97 → 1.02 → 1
  */
 export const spawnScaleKeyframes = {
-  scale: [0, 0.4, 1.25, 0.92, 1.08, 0.97, 1.02, 1],
+  scale: [0, 0.4, 1.12, 0.95, 1.04, 0.98, 1.01, 1],
   times: [0, 0.15, 0.4, 0.55, 0.7, 0.82, 0.92, 1],
 };
 
@@ -50,7 +50,7 @@ export const squashStretchKeyframes = {
  * Rotation wobble that accompanies the plop
  */
 export const wobbleRotationKeyframes = {
-  rotate: [0, -8, 6, -3, 1.5, 0],
+  rotate: [0, -4, 3, -1.5, 0.5, 0],
   times: [0, 0.25, 0.45, 0.65, 0.85, 1],
 };
 
