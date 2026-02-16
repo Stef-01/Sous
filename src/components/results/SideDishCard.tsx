@@ -319,7 +319,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
                 <SparkleEffect count={6}>
                   <motion.button
                     onClick={handleSwap}
-                    className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 rounded-full shadow-lg overflow-hidden border-4 border-white group-hover:border-nourish-cream transition-colors duration-300 bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
+                    className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-nourish-subtext hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
                     aria-label={`Swap ${side.name} for another side dish`}
                     whileHover={prefersReduced ? {} : { scale: 1.15 }}
                     whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}
