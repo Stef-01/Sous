@@ -8,6 +8,7 @@ import SideDishCard from "./SideDishCard";
 import SideDishCardMobile from "./SideDishCardMobile";
 import DishDetailModal from "./DishDetailModal";
 import InlinePlate from "./InlinePlate";
+import ConfettiBurst from "@/components/ui/ConfettiBurst";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { springs, spawnStagger } from "@/lib/motion";
 
@@ -106,11 +107,27 @@ export default function ResultsStage({
 }: ResultsStageProps) {
   const prefersReduced = useReducedMotion();
   const [selectedDish, setSelectedDish] = useState<SelectedDish | null>(null);
+  const [showConfetti, setShowConfetti] = useState(false);
   const hasMounted = useRef(false);
+  const confettiFiredRef = useRef(false);
 
   useEffect(() => {
     hasMounted.current = true;
   }, []);
+
+  // Fire confetti once when a balanced plate is revealed
+  useEffect(() => {
+    if (showPlateMethod && appraisal?.tone === "balanced" && !confettiFiredRef.current) {
+      confettiFiredRef.current = true;
+      // Short delay so the plate animates in first
+      const timer = setTimeout(() => setShowConfetti(true), 600);
+      return () => clearTimeout(timer);
+    }
+    if (!showPlateMethod) {
+      confettiFiredRef.current = false;
+      setShowConfetti(false);
+    }
+  }, [showPlateMethod, appraisal]);
 
   const handleHeroClick = () => {
     setSelectedDish({
@@ -153,6 +170,9 @@ export default function ResultsStage({
         animate="animate"
         exit="exit"
       >
+        {/* Confetti celebration for balanced plates */}
+        <ConfettiBurst trigger={showConfetti} count={45} />
+
         {/* Appraisal Text — Only visible in plate mode */}
         <AnimatePresence>
           {showPlateMethod && appraisal && (

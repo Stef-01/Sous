@@ -47,29 +47,38 @@ function PlateSvgOutline({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Top semicircle — Vegetables */}
-      <path
+      {/* Top semicircle — Vegetables (draws itself) */}
+      <motion.path
         d={`M ${left},${cy} A ${r},${r} 0 0,1 ${right},${cy}`}
         stroke={hasVegs ? "#22c55e" : "#d6d3d1"}
         strokeWidth="3.5"
         strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0.3 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
       />
-      {/* Bottom-left quarter — Protein */}
-      <path
+      {/* Bottom-left quarter — Protein (draws itself) */}
+      <motion.path
         d={`M ${left},${cy} A ${r},${r} 0 0,0 ${cx},${bottom}`}
         stroke={hasProteins ? "#f43f5e" : "#d6d3d1"}
         strokeWidth="3.5"
         strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0.3 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.7, delay: 0.7, ease: "easeOut" }}
       />
-      {/* Bottom-right quarter — Carbs */}
-      <path
+      {/* Bottom-right quarter — Carbs (draws itself) */}
+      <motion.path
         d={`M ${cx},${bottom} A ${r},${r} 0 0,0 ${right},${cy}`}
         stroke={hasCarbs ? "#f97316" : "#d6d3d1"}
         strokeWidth="3.5"
         strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0.3 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        transition={{ duration: 0.7, delay: 1.0, ease: "easeOut" }}
       />
       {/* Horizontal divider — subtle dashed guide */}
-      <line
+      <motion.line
         x1={left}
         y1={cy}
         x2={right}
@@ -78,9 +87,12 @@ function PlateSvgOutline({
         strokeWidth="0.75"
         strokeOpacity="0.5"
         strokeDasharray="4 3"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
       />
       {/* Vertical divider (bottom half) — subtle dashed guide */}
-      <line
+      <motion.line
         x1={cx}
         y1={cy}
         x2={cx}
@@ -89,6 +101,9 @@ function PlateSvgOutline({
         strokeWidth="0.75"
         strokeOpacity="0.5"
         strokeDasharray="4 3"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
       />
     </svg>
   );
@@ -267,11 +282,10 @@ export default function InlinePlate({
       <div className="relative pt-5 pb-5 px-5">
         {/* External label: VEGETABLES — top center with badge */}
         <motion.span
-          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
-            hasVegs
+          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasVegs
               ? "text-green-700 bg-green-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-          }`}
+            }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
           <span className="text-xs md:text-sm leading-none">{hasVegs ? "\u2713" : "\u2717"}</span>
@@ -280,11 +294,10 @@ export default function InlinePlate({
 
         {/* External label: PROTEIN — bottom-left with badge */}
         <motion.span
-          className={`absolute bottom-0 left-1/4 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
-            hasProteins
+          className={`absolute bottom-0 left-1/4 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasProteins
               ? "text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-          }`}
+            }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
           <span className="text-xs md:text-sm leading-none">{hasProteins ? "\u2713" : "\u2717"}</span>
@@ -293,11 +306,10 @@ export default function InlinePlate({
 
         {/* External label: CARBS — bottom-right with badge */}
         <motion.span
-          className={`absolute bottom-0 right-1/4 translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
-            hasCarbs
+          className={`absolute bottom-0 right-1/4 translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasCarbs
               ? "text-orange-700 bg-orange-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-          }`}
+            }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
           <span className="text-xs md:text-sm leading-none">{hasCarbs ? "\u2713" : "\u2717"}</span>
@@ -364,13 +376,12 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-2xl overflow-hidden ${
-                          isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-2xl overflow-hidden ${isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                        }`}
+                          }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image
@@ -409,13 +420,12 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${
-                          isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                        }`}
+                          }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image
@@ -454,13 +464,12 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${
-                          isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                        }`}
+                          }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image

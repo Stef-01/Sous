@@ -214,24 +214,50 @@ export default function HoverCard({ name, tags, nutritionCategory, onSwap }: Hov
           </span>
         </div>
 
-        {/* Benefits Grid */}
-        <div className="flex flex-col gap-1.5">
+        {/* Benefits Grid — staggered cascade */}
+        <motion.div
+          className="flex flex-col gap-1.5"
+          variants={{
+            hidden: {},
+            visible: {
+              transition: {
+                staggerChildren: 0.08,
+                delayChildren: 0.05,
+              },
+            },
+          }}
+          initial="hidden"
+          animate="visible"
+        >
           {benefits.length > 0 ? benefits.map((b) => (
-            <div
+            <motion.div
               key={b.id}
               className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg ${b.bgColor} transition-colors`}
+              variants={{
+                hidden: { opacity: 0, y: 8, scale: 0.9 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 22,
+                  },
+                },
+              }}
             >
               <span className="text-sm leading-none filter drop-shadow-sm">{b.icon}</span>
               <span className={`text-[11px] font-semibold ${b.color}`}>
                 {b.label}
               </span>
-            </div>
+            </motion.div>
           )) : (
             <div className="px-2 py-1 text-center">
               <span className="text-[10px] text-stone-400 italic">No specific badges found</span>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Arrow tip (match blur/color) */}
