@@ -221,8 +221,7 @@ export default function HoverCard({ name, tags, nutritionCategory, onSwap }: Hov
             hidden: {},
             visible: {
               transition: {
-                staggerChildren: 0.08,
-                delayChildren: 0.05,
+                staggerChildren: 0.06,
               },
             },
           }}
@@ -232,17 +231,15 @@ export default function HoverCard({ name, tags, nutritionCategory, onSwap }: Hov
           {benefits.length > 0 ? benefits.map((b) => (
             <motion.div
               key={b.id}
-              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg ${b.bgColor} transition-colors`}
+              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg ${b.bgColor}`}
               variants={{
-                hidden: { opacity: 0, y: 8, scale: 0.9 },
+                hidden: { opacity: 0, y: 4 },
                 visible: {
                   opacity: 1,
                   y: 0,
-                  scale: 1,
                   transition: {
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 22,
+                    duration: 0.2,
+                    ease: "easeOut",
                   },
                 },
               }}

@@ -274,8 +274,8 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
               src={side.imageUrl}
               alt={`Side dish: ${side.name}`}
               fill
-              className={`object-contain transition-opacity duration-300 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
-              sizes="(max-width: 768px) 128px, (max-width: 1024px) 176px, 192px"
+              className={`object-contain transition-all duration-300 ease-out group-hover:scale-110 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
+              sizes="(max-width: 768px) 144px, (max-width: 1024px) 192px, 224px"
               onError={() => setImgError(true)}
               onLoad={() => setImageReady(true)}
             />
