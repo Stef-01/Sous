@@ -248,7 +248,11 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
         initial="initial"
         animate="animate"
       >
-        <div className="relative w-full h-full">
+        <motion.div
+          className="relative w-full h-full overflow-hidden rounded-2xl"
+          whileHover={prefersReduced ? {} : { scale: 1.08 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        >
           {/* Spawn glow ring for side dishes */}
           {!prefersReduced && showGlow && (
             <motion.div
@@ -274,7 +278,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
               src={side.imageUrl}
               alt={`Side dish: ${side.name}`}
               fill
-              className={`object-contain transition-all duration-300 ease-out group-hover:scale-110 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-contain transition-opacity duration-300 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
               sizes="(max-width: 768px) 144px, (max-width: 1024px) 192px, 224px"
               onError={() => setImgError(true)}
               onLoad={() => setImageReady(true)}
@@ -345,7 +349,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Name label fades in after delay — hidden in evaluate mode */}
