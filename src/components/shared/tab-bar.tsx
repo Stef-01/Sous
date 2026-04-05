@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, LayoutGroup } from "framer-motion";
 import { useNavigation } from "@/lib/hooks/use-navigation";
 import { cn } from "@/lib/utils/cn";
 
@@ -18,30 +19,48 @@ export function TabBar({
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 backdrop-blur-sm safe-area-bottom">
-      <div className="mx-auto flex max-w-md items-center justify-around py-2">
-        {tabs.map((tab) => {
-          const isActive =
-            tab.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(tab.href);
+      <LayoutGroup>
+        <div className="mx-auto flex max-w-md items-center justify-around py-2">
+          {tabs.map((tab) => {
+            const isActive =
+              tab.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(tab.href);
 
-          return (
-            <Link
-              key={tab.id}
-              href={tab.href}
-              className={cn(
-                "flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium transition-all duration-200",
-                isActive
-                  ? "text-[var(--nourish-green)] bg-[var(--nourish-green)]/8"
-                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
-              )}
-            >
-              <TabIcon id={tab.id} active={isActive} />
-              <span>{tab.label}</span>
-            </Link>
-          );
-        })}
-      </div>
+            return (
+              <Link
+                key={tab.id}
+                href={tab.href}
+                className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
+              >
+                {/* Sliding active indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="tab-indicator"
+                    className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/8"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  />
+                )}
+                <motion.div
+                  className="relative z-10 flex flex-col items-center gap-0.5"
+                  animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
+                  transition={isActive ? { duration: 0.3, ease: "easeInOut" } : {}}
+                >
+                  <TabIcon id={tab.id} active={isActive} />
+                  <span className={cn(
+                    "transition-colors duration-200",
+                    isActive
+                      ? "text-[var(--nourish-green)]"
+                      : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+                  )}>
+                    {tab.label}
+                  </span>
+                </motion.div>
+              </Link>
+            );
+          })}
+        </div>
+      </LayoutGroup>
     </nav>
   );
 }

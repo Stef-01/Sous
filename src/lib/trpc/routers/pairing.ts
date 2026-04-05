@@ -2,7 +2,8 @@ import { z } from "zod";
 import { router, publicProcedure } from "@/lib/trpc/server";
 import { parseCraving } from "@/lib/ai/craving-parser";
 import { suggestSides } from "@/lib/engine/pairing-engine";
-import { getAvailableCookSlugs } from "@/data/guided-cook-steps";
+import { getAvailableCookSlugs, getAvailableMealCookSlugs } from "@/data/guided-cook-steps";
+import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
 
 // Import static data as fallback (until DB is seeded)
@@ -126,9 +127,17 @@ export const pairingRouter = router({
       // 3. Return top 3 with explanations
       const cookSlugs = new Set(getAvailableCookSlugs());
 
+      // Resolve main dish to a meal slug for combined cook navigation.
+      // Try the parsed intent's dish name first (more precise), then raw input as fallback.
+      const mealCookSlugs = new Set(getAvailableMealCookSlugs());
+      const resolvedMealSlug =
+        resolveMealSlug(intent.dishName) ?? resolveMealSlug(input.mainDish);
+      const mainHasGuidedCook = resolvedMealSlug !== null && mealCookSlugs.has(resolvedMealSlug);
+
       return {
         success: true as const,
         intent,
+        resolvedMealSlug: mainHasGuidedCook ? resolvedMealSlug : null,
         sides: result.data.sides.map((s) => ({
           id: s.sideDish.id,
           slug: s.sideDish.slug,
@@ -146,6 +155,59 @@ export const pairingRouter = router({
           // Whether guided cook steps exist for this dish
           hasGuidedCook: cookSlugs.has(s.sideDish.slug),
         })),
+      };
+    }),
+
+  /**
+   * Reroll a single side — returns 1 replacement excluding specified IDs.
+   */
+  rerollSide: publicProcedure
+    .input(
+      z.object({
+        mainDish: z.string(),
+        excludeIds: z.array(z.string()),
+        cuisineHint: z.string().optional(),
+      })
+    )
+    .query(async ({ input }) => {
+      const parseResult = await parseCraving(input.mainDish);
+      if (!parseResult.success) {
+        return { success: false as const, error: parseResult.error, side: null };
+      }
+
+      const intent = parseResult.data;
+      if (input.cuisineHint && !intent.cuisineSignals.includes(input.cuisineHint)) {
+        intent.cuisineSignals.unshift(input.cuisineHint);
+      }
+
+      const excludeSet = new Set(input.excludeIds);
+      const candidates = getCandidates().filter((c) => !excludeSet.has(c.id));
+      const result = suggestSides(intent, candidates, undefined, undefined, 1);
+
+      if (!result.success || result.data.sides.length === 0) {
+        return { success: false as const, error: "No more alternatives available", side: null };
+      }
+
+      const cookSlugs = new Set(getAvailableCookSlugs());
+      const s = result.data.sides[0];
+
+      return {
+        success: true as const,
+        side: {
+          id: s.sideDish.id,
+          slug: s.sideDish.slug,
+          name: s.sideDish.name,
+          cuisineFamily: s.sideDish.cuisineFamily,
+          tags: s.sideDish.tags,
+          pairingReason: s.sideDish.pairingReason,
+          nutritionCategory: s.sideDish.nutritionCategory,
+          explanation: s.explanation,
+          totalScore: s.totalScore,
+          scores: s.scores,
+          imageUrl: existingSides.find((es: { id: string }) => es.id === s.sideDish.id)?.imageUrl ?? "",
+          description: existingSides.find((es: { id: string }) => es.id === s.sideDish.id)?.description ?? "",
+          hasGuidedCook: cookSlugs.has(s.sideDish.slug),
+        },
       };
     }),
 

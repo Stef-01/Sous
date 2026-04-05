@@ -10,6 +10,7 @@ interface MissionScreenProps {
   prepTimeMinutes: number;
   cookTimeMinutes: number;
   heroImageUrl: string | null;
+  hasIngredients?: boolean;
   onStart: () => void;
 }
 
@@ -24,55 +25,83 @@ export function MissionScreen({
   prepTimeMinutes,
   cookTimeMinutes,
   heroImageUrl,
+  hasIngredients = true,
   onStart,
 }: MissionScreenProps) {
   const totalTime = prepTimeMinutes + cookTimeMinutes;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="flex flex-col gap-5"
     >
       {/* Hero image */}
       {heroImageUrl && (
-        <div className="overflow-hidden rounded-2xl">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25 }}
+          className="overflow-hidden rounded-2xl"
+        >
           <img
             src={heroImageUrl}
             alt={dishName}
             className="w-full aspect-[4/3] object-cover"
           />
-        </div>
+        </motion.div>
       )}
 
       {/* Dish name + flavor badges */}
       <div className="space-y-3">
-        <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.1 }}
+          className="font-serif text-2xl text-[var(--nourish-dark)]"
+        >
           {dishName}
-        </h1>
+        </motion.h1>
 
         <div className="flex flex-wrap gap-2">
-          {flavorProfile.map((flavor) => (
-            <span
+          {flavorProfile.map((flavor, idx) => (
+            <motion.span
               key={flavor}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.15 + idx * 0.05 }}
               className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
             >
               {flavor}
-            </span>
+            </motion.span>
           ))}
-          <span className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]">
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.15 + flavorProfile.length * 0.05 }}
+            className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]"
+          >
             {totalTime} min
-          </span>
+          </motion.span>
         </div>
       </div>
 
       {/* Description */}
-      <p className="text-sm text-[var(--nourish-subtext)] leading-relaxed">
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.2 }}
+        className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
+      >
         {description}
-      </p>
+      </motion.p>
 
       {/* CTA */}
-      <button
+      <motion.button
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.25 }}
+        whileTap={{ scale: 0.96 }}
         onClick={onStart}
         className={cn(
           "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
@@ -81,8 +110,8 @@ export function MissionScreen({
         )}
         type="button"
       >
-        Let&apos;s gather
-      </button>
+        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+      </motion.button>
     </motion.div>
   );
 }

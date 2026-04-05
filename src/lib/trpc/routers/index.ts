@@ -5,6 +5,7 @@ import { cookRouter } from "./cook";
 import { journeyRouter } from "./journey";
 import { coachRouter } from "./coach";
 import { contentRouter } from "./content";
+import { aiRouter } from "./ai";
 
 export const appRouter = router({
   pairing: pairingRouter,
@@ -13,6 +14,7 @@ export const appRouter = router({
   journey: journeyRouter,
   coach: coachRouter,
   content: contentRouter,
+  ai: aiRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { StreakCounter } from "@/components/today/streak-counter";
-import { BirdMascot } from "@/components/today/bird-mascot";
+import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { QuestCard } from "@/components/today/quest-card";
 import { FallbackActions } from "@/components/today/fallback-actions";
 import { FriendsStrip } from "@/components/today/friends-strip";
@@ -13,8 +13,10 @@ import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
 import { CameraInput } from "@/components/today/camera-input";
 import { CorrectionChips } from "@/components/today/correction-chips";
-import ShimmerPlaceholder from "@/components/states/ShimmerPlaceholder";
+
+import { BreadQuiz } from "@/components/shared/bread-quiz";
 import { trpc } from "@/lib/trpc/client";
+import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 
 type ViewState =
   | { type: "idle" }
@@ -27,12 +29,31 @@ type ViewState =
 export default function TodayPage() {
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
+  const [showQuiz, setShowQuiz] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [resetKey, setResetKey] = useState(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { stats } = useCookSessions();
 
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
+
+  // Auto-open search with sides for a dish (from mission screen "Select sides to pair")
+  const selectSidesParam = searchParams.get("selectSides");
+  const handledSelectSidesRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (selectSidesParam && selectSidesParam !== handledSelectSidesRef.current) {
+      handledSelectSidesRef.current = selectSidesParam;
+      setShowSearch(true);
+      pendingQueryRef.current = selectSidesParam;
+      setMainDishQuery(selectSidesParam);
+      setView({ type: "loading", mainDish: selectSidesParam });
+      // Clean up the URL param
+      router.replace("/", { scroll: false });
+    }
+  }, [selectSidesParam, router]);
 
   // tRPC query
   const pairingQuery = trpc.pairing.suggest.useQuery(
@@ -137,38 +158,18 @@ export default function TodayPage() {
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="flex items-center gap-1.5">
             <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">Sous</h1>
-            <StreakCounter streak={12} />
+            <StreakCounter streak={stats.currentStreak} />
           </div>
-          {/* Bird icon — header mascot */}
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 border border-[var(--nourish-green)]/10">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 64 64"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-label="Sous"
-            >
-              <ellipse cx="32" cy="36" rx="18" ry="16" fill="var(--nourish-green)" />
-              <circle cx="32" cy="22" r="12" fill="var(--nourish-green)" />
-              <circle cx="27" cy="20" r="2.5" fill="white" />
-              <circle cx="37" cy="20" r="2.5" fill="white" />
-              <circle cx="28" cy="19.5" r="1.2" fill="#1a1a1a" />
-              <circle cx="38" cy="19.5" r="1.2" fill="#1a1a1a" />
-              <path d="M30 24 L32 27 L34 24" fill="#D4A84B" />
-              <ellipse cx="32" cy="12" rx="9" ry="3.5" fill="white" />
-              <rect x="27" y="9" width="10" height="5" rx="2" fill="white" />
-              <circle cx="32" cy="8" r="2.5" fill="white" />
-            </svg>
-          </div>
+          {/* Owl mascot — profile position */}
+          <OwlAvatar onClick={handleOpenSearch} />
         </div>
       </header>
 
       {/* Main content */}
       <main className="mx-auto max-w-md px-4 pt-3 pb-24">
-        {/* Primary craving trigger — bird mascot with speech bubble */}
-        <div className="flex items-center justify-center mb-3">
-          <BirdMascot onCravingClick={handleOpenSearch} />
+        {/* Primary craving trigger — search bar */}
+        <div className="mb-3">
+          <CravingSearchBar onClick={handleOpenSearch} />
         </div>
 
         {/* Today's Quest — swipeable card stack */}
@@ -177,27 +178,30 @@ export default function TodayPage() {
         </div>
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}
-        <div className="space-y-2 mb-3">
+        <div className="space-y-2.5 mb-4 overflow-visible">
           <p className="text-center">
             <button
               onClick={() => {
                 setShowSearch(true);
                 handleTextSubmit("something quick and easy, I'm tired");
               }}
-              className="text-[11px] text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
+              className="text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
               type="button"
             >
               Too tired?{" "}
-              <span className="underline underline-offset-2 decoration-[var(--nourish-green)]/30">
-                Make something in 15 min
+              <span className="underline underline-offset-2 decoration-[var(--nourish-green)]/50">
+                Make something in 15 minutes
               </span>
             </button>
           </p>
-          <FallbackActions onRescueFridge={handleRescueFridge} />
+          <FallbackActions
+            onRescueFridge={handleRescueFridge}
+            onPlayGame={() => setShowQuiz(true)}
+          />
         </div>
 
         {/* Subtle divider */}
-        <div className="border-t border-neutral-100 mb-3" />
+        <div className="mx-8 border-t border-neutral-100/60 mb-4" />
 
         {/* Friends cooked recently */}
         <FriendsStrip />
@@ -239,11 +243,25 @@ export default function TodayPage() {
 
             {/* Loading state */}
             {view.type === "loading" && (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <p className="text-sm text-center text-[var(--nourish-subtext)]">
                   Finding your sides...
                 </p>
-                <ShimmerPlaceholder />
+                <div className="space-y-3">
+                  {[0, 1, 2].map((i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 rounded-xl border border-neutral-100 bg-white p-3"
+                      style={{ animationDelay: `${i * 150}ms` }}
+                    >
+                      <div className="h-14 w-14 shrink-0 rounded-lg shimmer" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-3.5 w-24 rounded shimmer" />
+                        <div className="h-2.5 w-36 rounded shimmer" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
@@ -253,21 +271,62 @@ export default function TodayPage() {
                 mainDish={view.mainDish}
                 sides={pairingQuery.data.sides}
                 onCookThis={handleCookThis}
+                onCookSelected={(sides) => {
+                  if (sides.length === 0) return;
+
+                  // Check if the main dish has guided cook data for combined flow
+                  const queryData = pairingQuery.data;
+                  const mealSlug =
+                    queryData && "resolvedMealSlug" in queryData
+                      ? (queryData.resolvedMealSlug as string | null)
+                      : null;
+
+                  if (mealSlug && sides.length >= 1) {
+                    // Navigate to combined cook flow
+                    const sideSlugs = sides.map((s) => s.slug).join(",");
+                    setShowSearch(false);
+                    router.push(`/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`);
+                  } else {
+                    // Fallback: cook the first selected side
+                    handleCookThis(sides[0]);
+                  }
+                }}
                 onReroll={handleReroll}
               />
             )}
 
             {/* Error state */}
             {pairingQuery.error && (
-              <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-center">
+              <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-center space-y-2">
                 <p className="text-sm text-red-600">
-                  {pairingQuery.error.message || "Something went wrong. Try again?"}
+                  {pairingQuery.error.message || "Something went wrong."}
                 </p>
+                <button
+                  onClick={handleReroll}
+                  className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
+                  type="button"
+                >
+                  Try again
+                </button>
               </div>
             )}
           </>
         )}
       </SearchPopout>
+
+      {/* Bread personality quiz — full-screen overlay */}
+      <AnimatePresence>
+        {showQuiz && (
+          <BreadQuiz
+            onClose={() => setShowQuiz(false)}
+            onComplete={(breadType) => {
+              // Quiz result saved to localStorage by the component itself.
+              // Could trigger a celebratory craving search based on cuisine affinities.
+              console.log("[Sous] Bread quiz result:", breadType);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

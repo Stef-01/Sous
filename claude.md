@@ -71,6 +71,8 @@ src/
 3. **No settings pages**: Preferences are learned from behavior or captured through playful coach interactions. Never expose filter panels, preference checklists, or configuration screens.
 4. **Quest shell consistency**: Every recipe — internal, user-created, or externally retrieved — renders through the same Mission → Grab → Cook → Win flow. No exceptions.
 5. **Progressive interface**: New users see only the Today tab. Path reveals after 3 completed cooks. Community after 30 days. This is enforced in the layout, not optional.
+6. **Simplicity-first UI**: When in doubt, remove it. Badges, labels, metadata, and decorative elements should be stripped unless they directly drive the user to cook. The home screen should feel clean and inviting, not information-dense. Every element must earn its pixel space.
+7. **No invented recipes or images**: Never generate new dish entries or images that don't already exist in the dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows to existing meals and sides already present in the data layer. New recipes must come from real, reputable online sources and be added to the existing side/meal catalog first.
 
 ## AI integration notes
 

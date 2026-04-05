@@ -105,7 +105,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
             >
               {/* Scrollable content area */}
               <div
-                className="h-full w-full overflow-y-auto overflow-x-hidden"
+                className="h-full w-full overflow-y-auto overflow-x-hidden scrollbar-hide"
                 style={{ paddingTop: 44 }}
               >
                 {children}
