@@ -59,7 +59,7 @@ export default function SharePlateModal({
   const handleDownload = async () => {
     const dataUrl = imageDataUrl || (await handleGenerate());
     if (dataUrl && meal) {
-      downloadImage(dataUrl, `nourish-${meal.name.toLowerCase().replace(/\s+/g, "-")}.png`);
+      downloadImage(dataUrl, `sous-${meal.name.toLowerCase().replace(/\s+/g, "-")}.png`);
     }
   };
 
@@ -199,10 +199,10 @@ export default function SharePlateModal({
                     ))}
                   </div>
 
-                  {/* NOURISH branding */}
+                  {/* Sous branding */}
                   <div className="text-center mt-3">
                     <span className="text-[9px] font-serif tracking-[0.2em] text-nourish-subtext/30 uppercase">
-                      nourish
+                      sous
                     </span>
                   </div>
                 </div>

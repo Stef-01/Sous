@@ -59,7 +59,7 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" aria-label="About NOURISH">
+        <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" aria-label="About Sous">
           {/* Backdrop with blur */}
           <motion.div
             className="fixed inset-0 bg-black/30"
@@ -120,13 +120,13 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
                   className="text-xl font-semibold text-nourish-dark mb-4"
                   variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
                 >
-                  About NOURISH Meal Pairer
+                  About Sous
                 </motion.h2>
                 <motion.p
                   className="text-nourish-subtext text-sm leading-relaxed mb-4"
                   variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
                 >
-                  NOURISH helps you discover culturally appropriate side dishes to
+                  Sous helps you discover culturally appropriate side dishes to
                   complement your favourite meals. Simply type a dish you love and
                   we will suggest perfect pairings.
                 </motion.p>

@@ -68,7 +68,7 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
               whileTap={prefersReduced ? {} : { scale: 0.95 }}
               aria-label="Spin the wheel — pick a random meal"
             >
-              NOURISH
+              Sous
             </motion.button>
           </SparkleEffect>
           <div className="flex items-center gap-4">
@@ -83,7 +83,7 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
                   variants={prefersReduced ? {} : itemVariants}
                   whileTap={prefersReduced ? {} : { scale: 0.95 }}
                   aria-pressed={verifiedOnly}
-                  aria-label="Toggle NOURISH Verified filter"
+                  aria-label="Toggle Sous verified filter"
                 >
                   <motion.svg
                     key={`star-${verifiedOnly}`}

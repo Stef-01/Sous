@@ -22,30 +22,30 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "NOURISH — Meal Explorer",
+  title: "Sous — Meal Explorer",
   description:
     "Find the perfect sides for your favourite meal. Discover culturally appropriate side dishes with beautiful interactive pairing.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nourish-meal-explorer.vercel.app"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://sous.vercel.app"
   ),
   openGraph: {
-    title: "NOURISH — Meal Explorer",
+    title: "Sous — Meal Explorer",
     description:
       "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
-    siteName: "NOURISH",
+    siteName: "Sous",
     type: "website",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "NOURISH Meal Explorer — ADA Plate Method visualization with culturally diverse foods",
+        alt: "Sous — ADA Plate Method visualization with culturally diverse foods",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "NOURISH — Meal Explorer",
+    title: "Sous — Meal Explorer",
     description:
       "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
     images: ["/og-image.png"],

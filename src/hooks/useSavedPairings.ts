@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 
-const STORAGE_KEY = "nourish-saved-pairings";
+const STORAGE_KEY = "sous-saved-pairings";
 const MAX_SAVED = 20;
 
 export interface SavedPairing {

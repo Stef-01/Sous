@@ -31,7 +31,7 @@ export function useSharePlate() {
   );
 
   const downloadImage = useCallback(
-    (dataUrl: string, filename = "nourish-plate.png") => {
+    (dataUrl: string, filename = "sous-plate.png") => {
       const link = document.createElement("a");
       link.download = filename;
       link.href = dataUrl;
@@ -63,14 +63,14 @@ export function useSharePlate() {
       try {
         const response = await fetch(dataUrl);
         const blob = await response.blob();
-        const file = new File([blob], `nourish-${mealName.toLowerCase().replace(/\s+/g, "-")}.png`, {
+        const file = new File([blob], `sous-${mealName.toLowerCase().replace(/\s+/g, "-")}.png`, {
           type: "image/png",
         });
 
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
           await navigator.share({
             title: `My ${mealName} Plate`,
-            text: `Check out my meal pairing from NOURISH!`,
+            text: `Check out my meal pairing from Sous!`,
             files: [file],
           });
           return true;

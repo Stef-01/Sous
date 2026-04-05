@@ -21,14 +21,14 @@ function useVerifiedToggle() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem("nourish-verified");
+    const stored = localStorage.getItem("sous-verified");
     if (stored === "1") setVerifiedOnly(true);
   }, []);
 
   const toggle = useCallback(() => {
     setVerifiedOnly((prev) => {
       const next = !prev;
-      localStorage.setItem("nourish-verified", next ? "1" : "0");
+      localStorage.setItem("sous-verified", next ? "1" : "0");
       return next;
     });
   }, []);
