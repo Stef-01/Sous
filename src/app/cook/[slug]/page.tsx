@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useCallback, useMemo } from "react";
+import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -11,6 +11,9 @@ import { StepCard } from "@/components/guided-cook/step-card";
 import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
+import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { getStaticCookData } from "@/data/guided-cook-steps";
+import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
 type Phase = "mission" | "grab" | "cook" | "win";
@@ -23,7 +26,16 @@ export default function GuidedCookPage({
   const { slug } = use(params);
   const router = useRouter();
 
-  // Store
+  // Session tracking
+  const { startSession, completeSession, updateSession } = useCookSessions();
+  const sessionIdRef = useRef<string | null>(null);
+  const [winMeta, setWinMeta] = useState<{
+    pathJustUnlocked: boolean;
+    streak: number;
+    saved: boolean;
+  }>({ pathJustUnlocked: false, streak: 0, saved: false });
+
+  // Cook store
   const {
     currentPhase,
     currentStepIndex,
@@ -32,19 +44,42 @@ export default function GuidedCookPage({
     setTotalSteps,
     toggleChip,
     startTimer,
-    completeSession,
+    completeSession: completeCookPhase,
     reset,
   } = useCookStore();
 
-  // Fetch steps from DB
+  // Reset store on mount to ensure clean state (handles direct navigation from combined cook)
+  useEffect(() => {
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Fetch steps from tRPC
   const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
     { sideDishSlug: slug },
     { enabled: !!slug }
   );
 
+  // Cuisine family for this side dish
+  const cuisine = useMemo(() => {
+    const staticData = getStaticCookData(slug);
+    return staticData?.cuisineFamily ?? "unknown";
+  }, [slug]);
+
+  // Start session on mount (once data is available)
+  useEffect(() => {
+    if (data?.dish && !sessionIdRef.current) {
+      sessionIdRef.current = startSession(
+        slug,
+        data.dish.name,
+        cuisine
+      );
+    }
+  }, [data?.dish, slug, cuisine, startSession]);
+
   // Filter steps by phase
   const cookSteps = useMemo(
-    () => data?.steps?.filter((s) => s.phase === "cook") ?? [],
+    () => data?.steps?.filter((s: { phase: string }) => s.phase === "cook") ?? [],
     [data?.steps]
   );
 
@@ -56,7 +91,6 @@ export default function GuidedCookPage({
     if (data?.ingredients && data.ingredients.length > 0) {
       setPhase("grab");
     } else {
-      // Skip grab — go straight to cook
       setTotalSteps(cookSteps.length);
       setPhase("cook");
     }
@@ -69,16 +103,23 @@ export default function GuidedCookPage({
 
   const handleNext = useCallback(() => {
     if (currentStepIndex >= cookSteps.length - 1) {
-      // Last cook step — go to win
-      completeSession();
+      // Last cook step — complete session and go to win
+      if (sessionIdRef.current) {
+        const result = completeSession(sessionIdRef.current, {});
+        setWinMeta({
+          pathJustUnlocked: result.pathJustUnlocked,
+          streak: result.newStreak,
+          saved: false,
+        });
+      }
+      completeCookPhase();
     } else {
-      // Directly set next step index (avoids store totalSteps dependency)
       useCookStore.setState({
         currentStepIndex: currentStepIndex + 1,
         expandedChip: null,
       });
     }
-  }, [currentStepIndex, cookSteps.length, completeSession]);
+  }, [currentStepIndex, cookSteps.length, completeCookPhase, completeSession]);
 
   const handleToggleChip = useCallback(
     (chip: string | null) => {
@@ -99,10 +140,79 @@ export default function GuidedCookPage({
     router.push("/");
   }, [reset, router]);
 
+  const handleBack = useCallback(() => {
+    switch (currentPhase) {
+      case "mission":
+        handleBackToday();
+        break;
+      case "grab":
+        setPhase("mission");
+        break;
+      case "cook":
+        if (currentStepIndex > 0) {
+          useCookStore.setState({
+            currentStepIndex: currentStepIndex - 1,
+            expandedChip: null,
+          });
+        } else {
+          // First cook step — go back to grab (or mission if no ingredients)
+          if (data?.ingredients && data.ingredients.length > 0) {
+            setPhase("grab");
+          } else {
+            setPhase("mission");
+          }
+        }
+        break;
+      case "win":
+        handleBackToday();
+        break;
+    }
+  }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data?.ingredients]);
+
+  const handleSelectSides = useCallback(() => {
+    if (!data?.dish) return;
+    reset();
+    router.push(`/?selectSides=${encodeURIComponent(data.dish.name)}`);
+  }, [data?.dish, reset, router]);
+
   const handleCookAgain = useCallback(() => {
+    sessionIdRef.current = null;
     reset();
     router.refresh();
   }, [reset, router]);
+
+  // ── Win screen handlers ─────────────────────────
+
+  const handleRate = useCallback(
+    (rating: number) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { rating });
+      }
+    },
+    [updateSession]
+  );
+
+  const handleAddNote = useCallback(
+    (note: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { note });
+      }
+    },
+    [updateSession]
+  );
+
+  const handleAddPhoto = useCallback(() => {
+    // Photo capture — in V1, placeholder until camera component is integrated
+    if (sessionIdRef.current) {
+      updateSession(sessionIdRef.current, {
+        photoUri: `photo-${Date.now()}-placeholder`,
+      });
+    }
+  }, [updateSession]);
+
+  const handleSave = useCallback(() => {
+    setWinMeta((prev) => ({ ...prev, saved: true }));
+  }, []);
 
   // ── Loading / error states ────────────────────────
 
@@ -143,8 +253,13 @@ export default function GuidedCookPage({
       <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <button
-            onClick={currentPhase === "mission" ? handleBackToday : undefined}
-            className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+            onClick={currentPhase === "win" ? undefined : handleBack}
+            className={cn(
+              "rounded-lg p-1.5 transition-colors",
+              currentPhase === "win"
+                ? "text-neutral-200 cursor-default"
+                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+            )}
             type="button"
           >
             <ArrowLeft size={20} />
@@ -156,7 +271,7 @@ export default function GuidedCookPage({
 
       {/* Content */}
       <main className="mx-auto max-w-md px-4 py-6">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="popLayout">
           {currentPhase === "mission" && (
             <MissionScreen
               key="mission"
@@ -166,6 +281,7 @@ export default function GuidedCookPage({
               prepTimeMinutes={dish.prepTimeMinutes}
               cookTimeMinutes={dish.cookTimeMinutes}
               heroImageUrl={dish.heroImageUrl}
+              hasIngredients={ingredients.length > 0}
               onStart={handleMissionStart}
             />
           )}
@@ -174,7 +290,10 @@ export default function GuidedCookPage({
             <IngredientList
               key="grab"
               ingredients={ingredients}
+              recipeName={dish.name}
+              cuisineFamily={cuisine}
               onReady={handleGrabReady}
+              onSelectSides={handleSelectSides}
             />
           )}
 
@@ -184,6 +303,10 @@ export default function GuidedCookPage({
               stepNumber={currentStepIndex + 1}
               totalSteps={cookSteps.length}
               instruction={currentCookStep.instruction}
+              recipeName={dish.name}
+              previousStep={cookSteps[currentStepIndex - 1]?.instruction}
+              nextStep={cookSteps[currentStepIndex + 1]?.instruction}
+              ingredients={ingredients.map((i: { name: string }) => i.name)}
               timerSeconds={currentCookStep.timerSeconds}
               mistakeWarning={currentCookStep.mistakeWarning}
               quickHack={currentCookStep.quickHack}
@@ -194,15 +317,8 @@ export default function GuidedCookPage({
               onToggleChip={handleToggleChip}
               onStartTimer={handleStartTimer}
               onNext={handleNext}
-              onPrev={() => {
-                if (currentStepIndex > 0) {
-                  useCookStore.setState({
-                    currentStepIndex: currentStepIndex - 1,
-                    expandedChip: null,
-                  });
-                }
-              }}
-              isFirst={currentStepIndex === 0}
+              onPrev={handleBack}
+              isFirst={false}
               isLast={currentStepIndex === cookSteps.length - 1}
             />
           )}
@@ -211,10 +327,17 @@ export default function GuidedCookPage({
             <WinScreen
               key="win"
               dishName={dish.name}
-              onRate={() => {}}
-              onAddPhoto={() => {}}
-              onAddNote={() => {}}
-              onSave={() => {}}
+              sideDishes={[dish.name]}
+              cuisineFamily={cuisine}
+              isFirstCook={winMeta.streak === 1}
+              streak={winMeta.streak}
+              totalSteps={cookSteps.length}
+              pathJustUnlocked={winMeta.pathJustUnlocked}
+              saved={winMeta.saved}
+              onRate={handleRate}
+              onAddPhoto={handleAddPhoto}
+              onAddNote={handleAddNote}
+              onSave={handleSave}
               onCookAgain={handleCookAgain}
               onBackToday={handleBackToday}
             />

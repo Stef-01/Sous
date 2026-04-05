@@ -34,7 +34,7 @@
   --color-nourish-evaluate: var(--nourish-evaluate);
   --color-nourish-evaluate-hover: var(--nourish-evaluate-hover);
   --font-sans: "Inter", sans-serif;
-  --font-serif: var(--font-serif), "DM Serif Display", serif;
+  --font-serif: "DM Serif Display", Georgia, serif;
 }
 
 body {
@@ -121,13 +121,32 @@ body {
   animation: ambient-float 4s ease-in-out infinite;
 }
 
+/* === STREAK FLAME === */
+@keyframes streak-flame {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+.streak-flame {
+  animation: streak-flame 2s ease-in-out infinite;
+}
+
+/* === SAFE AREA === */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* === SCROLLBAR HIDE === */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
+  overflow: -moz-scrollbars-none; /* Older Firefox */
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;             /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
 /* === REDUCED MOTION === */
@@ -146,6 +165,10 @@ body {
   }
 
   .ambient-float {
+    animation: none;
+  }
+
+  .streak-flame {
     animation: none;
   }
 

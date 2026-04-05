@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure } from "@/lib/trpc/server";
-import { getStaticCookData } from "@/data/guided-cook-steps";
+import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
 
 export const cookRouter = router({
   getSteps: publicProcedure
@@ -93,6 +93,64 @@ export const cookRouter = router({
           ...s,
         })),
         ingredients: staticData.ingredients,
+      };
+    }),
+
+  /**
+   * Get combined cook data for a main dish + one or more sides.
+   * Returns all dishes with their steps and ingredients, plus a suggested cook order.
+   */
+  getCombinedSteps: publicProcedure
+    .input(
+      z.object({
+        mainDishSlug: z.string(),
+        sideSlugs: z.array(z.string()),
+      })
+    )
+    .query(({ input }) => {
+      const formatDish = (data: NonNullable<ReturnType<typeof getStaticCookData>>) => ({
+        dish: {
+          id: data.slug,
+          name: data.name,
+          slug: data.slug,
+          description: data.description,
+          cuisineFamily: data.cuisineFamily,
+          prepTimeMinutes: data.prepTimeMinutes,
+          cookTimeMinutes: data.cookTimeMinutes,
+          skillLevel: data.skillLevel,
+          heroImageUrl: data.heroImageUrl,
+          flavorProfile: data.flavorProfile,
+          temperature: data.temperature,
+        },
+        steps: data.steps.map((s, idx) => ({
+          id: `${data.slug}-step-${idx + 1}`,
+          ...s,
+        })),
+        ingredients: data.ingredients,
+      });
+
+      // Fetch main dish cook data
+      const mainData = getStaticMealCookData(input.mainDishSlug);
+      const main = mainData ? formatDish(mainData) : null;
+
+      // Fetch side dish cook data (skip sides without data)
+      const sides = input.sideSlugs
+        .map((slug) => {
+          const sideData = getStaticCookData(slug);
+          return sideData ? formatDish(sideData) : null;
+        })
+        .filter((s): s is NonNullable<typeof s> => s !== null);
+
+      // Cook order: longest total cook time first (so longest dishes start first)
+      const allDishes = [
+        ...(main ? [{ slug: main.dish.slug, totalTime: main.dish.prepTimeMinutes + main.dish.cookTimeMinutes }] : []),
+        ...sides.map((s) => ({ slug: s.dish.slug, totalTime: s.dish.prepTimeMinutes + s.dish.cookTimeMinutes })),
+      ].sort((a, b) => b.totalTime - a.totalTime);
+
+      return {
+        main,
+        sides,
+        cookOrder: allDishes.map((d) => d.slug),
       };
     }),
 

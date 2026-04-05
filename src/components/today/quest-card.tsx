@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   motion,
@@ -11,6 +11,9 @@ import {
 } from "framer-motion";
 import { Clock, ShoppingBag, X, Heart } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { getAvailableCookSlugs, getStaticCookData } from "@/data/guided-cook-steps";
+import { sides } from "@/data";
+import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 
 interface QuestDish {
   dishName: string;
@@ -20,121 +23,156 @@ interface QuestDish {
   cuisineFamily: string;
   description: string;
   tags: string[];
+  ingredientCount: number;
+  hasGuidedCook: boolean;
 }
 
-// Curated quest dishes — diverse, visually appealing, from the seed database
-const QUEST_DISHES: QuestDish[] = [
-  {
-    dishName: "Tabbouleh",
-    slug: "tabbouleh",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80",
-    cookTimeMinutes: 25,
-    cuisineFamily: "Mediterranean",
-    description: "A vibrant herb salad with bulgur wheat, fresh parsley, mint, and lemon.",
-    tags: ["Fresh", "Herby", "Light"],
-  },
-  {
-    dishName: "Gyoza",
-    slug: "gyoza",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&auto=format&fit=crop&q=80",
-    cookTimeMinutes: 25,
-    cuisineFamily: "Japanese",
-    description: "Pan-fried dumplings with a crispy golden bottom and savory pork filling.",
-    tags: ["Crispy", "Savory", "Umami"],
-  },
-  {
-    dishName: "Bruschetta",
-    slug: "bruschetta",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=600&auto=format&fit=crop&q=80",
-    cookTimeMinutes: 20,
-    cuisineFamily: "Italian",
-    description: "Toasted ciabatta with diced tomatoes, basil, garlic, and balsamic glaze.",
-    tags: ["Bright", "Classic", "Quick"],
-  },
-  {
-    dishName: "Samosa",
-    slug: "samosa",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&auto=format&fit=crop&q=80",
-    cookTimeMinutes: 30,
-    cuisineFamily: "Indian",
-    description: "Crispy pastry triangles stuffed with spiced potatoes, peas, and aromatic herbs.",
-    tags: ["Spiced", "Crispy", "Comforting"],
-  },
-  {
-    dishName: "Spring Rolls",
-    slug: "spring-rolls",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1536304993881-460e32f50f37?w=600&auto=format&fit=crop&q=80",
-    cookTimeMinutes: 25,
-    cuisineFamily: "Thai",
-    description: "Golden crispy rolls filled with vegetables and glass noodles.",
-    tags: ["Crispy", "Light", "Fresh"],
-  },
-];
+/**
+ * Build quest dish list from ALL side dishes in the catalog.
+ * Guided-cook dishes appear first, then the rest of the 200+ sides.
+ * Uses deterministic daily shuffle so the feed feels fresh each day.
+ */
+function buildQuestDishes(): QuestDish[] {
+  const guidedSlugs = new Set(getAvailableCookSlugs());
+  const guidedDishes: QuestDish[] = [];
+  const catalogDishes: QuestDish[] = [];
+
+  // Day-based seed for deterministic daily shuffle
+  const now = new Date();
+  const dayOfYear = Math.floor(
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+  );
+
+  // Add all sides from the catalog
+  for (const side of sides) {
+    if (!side.imageUrl) continue;
+
+    const staticData = guidedSlugs.has(side.id) ? getStaticCookData(side.id) : null;
+
+    const tags = side.tags
+      .slice(0, 3)
+      .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+
+    const dish: QuestDish = {
+      dishName: side.name,
+      slug: side.id,
+      heroImageUrl: side.imageUrl,
+      cookTimeMinutes: staticData
+        ? staticData.prepTimeMinutes + staticData.cookTimeMinutes
+        : 15,
+      cuisineFamily: (side.tags.find((t) =>
+        ["italian", "indian", "japanese", "korean", "thai", "chinese", "mexican", "mediterranean", "vietnamese", "filipino"].includes(t.toLowerCase())
+      ) ?? "Classic").replace(/^\w/, (c) => c.toUpperCase()),
+      description: side.description,
+      tags,
+      ingredientCount: staticData ? staticData.ingredients.length : 5,
+      hasGuidedCook: guidedSlugs.has(side.id),
+    };
+
+    if (guidedSlugs.has(side.id)) {
+      guidedDishes.push(dish);
+    } else {
+      catalogDishes.push(dish);
+    }
+  }
+
+  // Deterministic daily shuffle of catalog dishes
+  const shuffled = catalogDishes.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = ((dayOfYear * 31 + i * 17) % (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // Guided dishes first, then shuffled catalog
+  return [...guidedDishes, ...shuffled];
+}
 
 const SWIPE_THRESHOLD = 80;
 
 /**
  * QuestCard — swipeable Tinder-style card stack.
- * Users swipe right to cook a dish, left to skip to the next.
- * X button in top-right to dismiss, heart + "Start cooking" inside card.
- * No counter — infinite wrapping through recommendations.
+ * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
+ * Swipe right to cook, left to skip. Heart saves to localStorage.
  */
 export function QuestCard() {
+  const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(null);
-  const [savedToast, setSavedToast] = useState(false);
+  const { saveDish, isDishSaved } = useSavedDishes();
+  const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
+      if (questDishes.length === 0) return;
+
       if (direction === "right") {
-        // Swipe right = "Cook this" → navigate to guided cook
-        const dish = QUEST_DISHES[currentIndex];
-        setExitDirection("right");
-        setTimeout(() => {
-          router.push(`/cook/${dish.slug}`);
-        }, 300);
+        const dish = questDishes[currentIndex % questDishes.length];
+        if (dish.hasGuidedCook) {
+          setExitDirection("right");
+          setTimeout(() => {
+            router.push(`/cook/${dish.slug}`);
+          }, 300);
+        } else {
+          // Non-guided dish: save it and advance to next card
+          saveDish(dish.slug, dish.dishName);
+          setSavedToastSlug(dish.slug);
+          setTimeout(() => setSavedToastSlug(null), 1500);
+          setExitDirection("right");
+          setTimeout(() => {
+            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
+            setExitDirection(null);
+          }, 250);
+        }
       } else {
-        // Swipe left = skip to next
         setExitDirection("left");
         setTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % QUEST_DISHES.length);
+          setCurrentIndex((prev) => (prev + 1) % questDishes.length);
           setExitDirection(null);
         }, 250);
       }
     },
-    [currentIndex, router]
+    [currentIndex, questDishes, router, saveDish]
   );
 
   const handleStart = useCallback(() => {
-    handleSwipe("right");
-  }, [handleSwipe]);
+    const dish = questDishes[currentIndex % questDishes.length];
+    if (dish?.hasGuidedCook) {
+      handleSwipe("right");
+    } else {
+      // For non-guided dishes, save and advance
+      handleSwipe("right");
+    }
+  }, [handleSwipe, currentIndex, questDishes]);
 
   const handleSkip = useCallback(() => {
     handleSwipe("left");
   }, [handleSwipe]);
 
   const handleSave = useCallback(() => {
-    // Save for later — show toast, will be stored in Path scrapbook
-    setSavedToast(true);
-    setTimeout(() => setSavedToast(false), 1500);
-  }, []);
+    if (questDishes.length === 0) return;
+    const dish = questDishes[currentIndex % questDishes.length];
+    const wasNew = saveDish(dish.slug, dish.dishName);
+    if (wasNew) {
+      setSavedToastSlug(dish.slug);
+      setTimeout(() => setSavedToastSlug(null), 1500);
+    }
+  }, [currentIndex, questDishes, saveDish]);
+
+  if (questDishes.length === 0) {
+    return null;
+  }
 
   // Show up to 3 stacked cards
   const visibleCards = [];
-  for (let i = 0; i < 3; i++) {
-    const idx = (currentIndex + i) % QUEST_DISHES.length;
-    visibleCards.push({ ...QUEST_DISHES[idx], stackIndex: i });
+  for (let i = 0; i < Math.min(3, questDishes.length); i++) {
+    const idx = (currentIndex + i) % questDishes.length;
+    visibleCards.push({ ...questDishes[idx], stackIndex: i });
   }
 
   return (
     <div className="space-y-1.5">
-      {/* Section header — no counter */}
+      {/* Section header */}
       <div className="px-1">
         <h2 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
           Today&apos;s Quest
@@ -142,7 +180,7 @@ export function QuestCard() {
       </div>
 
       {/* Card stack container */}
-      <div className="relative" style={{ height: 380 }}>
+      <div className="relative" style={{ minHeight: 380 }}>
         <AnimatePresence mode="popLayout">
           {visibleCards
             .slice()
@@ -153,6 +191,7 @@ export function QuestCard() {
                 dish={dish}
                 stackIndex={dish.stackIndex}
                 isTop={dish.stackIndex === 0}
+                isSaved={isDishSaved(dish.slug)}
                 onSwipe={handleSwipe}
                 onStart={handleStart}
                 onSkip={handleSkip}
@@ -164,7 +203,7 @@ export function QuestCard() {
 
         {/* Saved for later toast */}
         <AnimatePresence>
-          {savedToast && (
+          {savedToastSlug && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -185,12 +224,12 @@ export function QuestCard() {
 
 /**
  * Individual swipe card with drag interaction and stack positioning.
- * X dismiss button in top-right, heart + Start cooking inside card bottom.
  */
 function SwipeCard({
   dish,
   stackIndex,
   isTop,
+  isSaved,
   onSwipe,
   onStart,
   onSkip,
@@ -200,6 +239,7 @@ function SwipeCard({
   dish: QuestDish & { stackIndex: number };
   stackIndex: number;
   isTop: boolean;
+  isSaved: boolean;
   onSwipe: (direction: "left" | "right") => void;
   onStart: () => void;
   onSkip: () => void;
@@ -208,11 +248,13 @@ function SwipeCard({
 }) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
-  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0.5, 0.8, 1, 0.8, 0.5]);
 
   // Swipe indicator overlays
   const likeOpacity = useTransform(x, [0, 80], [0, 1]);
   const nopeOpacity = useTransform(x, [-80, 0], [1, 0]);
+  // Scale labels as drag approaches threshold
+  const likeScale = useTransform(x, [0, 80], [0.8, 1.1]);
+  const nopeScale = useTransform(x, [-80, 0], [1.1, 0.8]);
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     if (Math.abs(info.offset.x) > SWIPE_THRESHOLD) {
@@ -220,16 +262,17 @@ function SwipeCard({
     }
   };
 
-  // Stack positioning: scale down and shift back for deeper cards
+  // Stack positioning: scale down, shift back, and rotate for peek effect
   const scale = 1 - stackIndex * 0.04;
-  const translateY = stackIndex * 10;
+  const translateY = stackIndex * 14;
+  const peekRotation = stackIndex === 1 ? 2 : stackIndex === 2 ? -1.5 : 0;
 
   return (
     <motion.div
       className="absolute inset-x-0 top-0"
       style={{
         x: isTop ? x : 0,
-        rotate: isTop ? rotate : 0,
+        rotate: isTop ? rotate : peekRotation,
         zIndex: 10 - stackIndex,
       }}
       initial={{
@@ -267,17 +310,23 @@ function SwipeCard({
               className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-[var(--nourish-green)]/8"
               style={{ opacity: likeOpacity }}
             >
-              <span className="rounded-xl border-2 border-[var(--nourish-green)] bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-[var(--nourish-green)] -rotate-12 tracking-wide shadow-sm">
+              <motion.span
+                className="rounded-xl border-2 border-[var(--nourish-green)] bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-[var(--nourish-green)] -rotate-12 tracking-wide shadow-sm"
+                style={{ scale: likeScale }}
+              >
                 COOK!
-              </span>
+              </motion.span>
             </motion.div>
             <motion.div
               className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-red-500/8"
               style={{ opacity: nopeOpacity }}
             >
-              <span className="rounded-xl border-2 border-red-400 bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-red-500 rotate-12 tracking-wide shadow-sm">
+              <motion.span
+                className="rounded-xl border-2 border-red-400 bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-red-500 rotate-12 tracking-wide shadow-sm"
+                style={{ scale: nopeScale }}
+              >
                 SKIP
-              </span>
+              </motion.span>
             </motion.div>
           </>
         )}
@@ -292,12 +341,6 @@ function SwipeCard({
           />
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
-          {/* Cuisine badge — top left */}
-          <div className="absolute top-2.5 left-2.5">
-            <span className="rounded-full bg-white/95 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-dark)] shadow-sm tracking-wide uppercase">
-              {dish.cuisineFamily}
-            </span>
-          </div>
           {/* Skip (X) button — top right */}
           {isTop && (
             <button
@@ -326,7 +369,7 @@ function SwipeCard({
             </span>
             <span className="flex items-center gap-1">
               <ShoppingBag size={13} className="text-[var(--nourish-green)]" />
-              {((dish.cookTimeMinutes % 4) + 3)} of {((dish.cookTimeMinutes % 3) + 6)} ingredients
+              {dish.ingredientCount} ingredients
             </span>
           </div>
           {/* Flavor tags */}
@@ -343,51 +386,55 @@ function SwipeCard({
         </div>
 
         {/* Action row — heart save + Start cooking */}
-        <div className="flex items-center gap-2.5 px-4 pb-3.5 pt-1">
-          {/* Save for later — heart button with tooltip */}
+        <div className="flex items-center gap-3 px-4 pb-4 pt-1.5">
+          {/* Save for later — heart button */}
           <div className="group relative">
-            <button
+            <motion.button
               onClick={(e) => {
                 e.stopPropagation();
                 onSave();
               }}
+              whileTap={{ scale: 1.2 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-xl",
-                "border border-neutral-200/80 bg-neutral-50 text-neutral-400",
-                "transition-all duration-200",
-                "hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50",
-                "active:scale-90"
+                "flex h-[42px] w-[42px] items-center justify-center rounded-xl",
+                "transition-colors duration-200",
+                isSaved
+                  ? "border border-pink-200 bg-pink-50 text-pink-500"
+                  : "border border-neutral-200 bg-neutral-50/80 text-neutral-400 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50"
               )}
               type="button"
-              aria-label="Save for later"
+              aria-label={isSaved ? "Already saved" : "Save for later"}
             >
-              <Heart size={17} />
-            </button>
+              <Heart size={18} className={isSaved ? "fill-current" : ""} />
+            </motion.button>
             {/* Hover tooltip */}
             <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
               <div className="whitespace-nowrap rounded-md bg-[var(--nourish-dark)] px-2 py-0.5 text-[9px] font-medium text-white shadow-lg">
-                Save for later
+                {isSaved ? "Saved" : "Save for later"}
               </div>
               <div className="mx-auto h-1.5 w-1.5 -mt-0.5 rotate-45 bg-[var(--nourish-dark)]" />
             </div>
           </div>
 
           {/* Start cooking — primary CTA */}
-          <button
+          <motion.button
             onClick={(e) => {
               e.stopPropagation();
               onStart();
             }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex-1 rounded-xl py-2.5 text-[13px] font-semibold text-white tracking-wide",
+              "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
               "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
               "shadow-sm shadow-[var(--nourish-green)]/20",
-              "transition-all duration-200 active:scale-[0.98]"
+              "transition-colors duration-200"
             )}
             type="button"
           >
             Start cooking
-          </button>
+          </motion.button>
         </div>
       </div>
     </motion.div>

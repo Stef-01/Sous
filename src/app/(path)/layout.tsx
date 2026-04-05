@@ -3,7 +3,7 @@
 import { TabBar } from "@/components/shared/tab-bar";
 import { useUnlockStatus } from "@/lib/hooks/use-unlock-status";
 
-export default function TodayLayout({
+export default function PathLayout({
   children,
 }: {
   children: React.ReactNode;

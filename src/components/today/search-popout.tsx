@@ -26,7 +26,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.15 }}
             className="fixed inset-0 z-40 bg-black/30"
             onClick={onClose}
           />
@@ -63,7 +63,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             </div>
 
             {/* Search flow content */}
-            <div className="mx-auto max-w-md px-4 pb-8 pt-2 space-y-4">
+            <div className="mx-auto max-w-md px-4 pb-24 pt-2 space-y-4">
               {children}
             </div>
           </motion.div>
