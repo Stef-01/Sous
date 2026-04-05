@@ -9,7 +9,7 @@
   --nourish-green: #2D5A3D;
   --nourish-dark-green: #1A3D25;
   --nourish-gold: #D4A84B;
-  --nourish-cream: #FFFFFF;
+  --nourish-cream: #FAFAF8;
   --nourish-dark: #0D0D0D;
   --nourish-input-bg: #F0EDE8;
   --nourish-subtext: #6B6B6B;
@@ -119,6 +119,15 @@ body {
 
 .ambient-float {
   animation: ambient-float 4s ease-in-out infinite;
+}
+
+/* === SCROLLBAR HIDE === */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
 }
 
 /* === REDUCED MOTION === */

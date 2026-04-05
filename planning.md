@@ -1662,3 +1662,257 @@ flowchart LR
 - **Path:** skill map wider; scrapbook as masonry grid.
 
 ---
+
+## 23. Feature roadmap — post-V1 phases
+
+> Added based on design review and AI architecture analysis. Features are ordered by implementation priority. Each feature lists its **entry point** (where it lives in the UI) and **dependencies** (what must exist first).
+
+---
+
+### 23.1 Evaluate mode (Phase 2A — next priority)
+
+**Entry point:** Bottom sheet triggered from the Results view after selecting sides, AND as a final step on the Win screen after completing a cook.
+
+**What it does:**
+- Shows a short appraisal of the user's plate (main + selected sides)
+- Confidence-before-compliance: always names two things the plate already does well before suggesting improvements
+- One compact plate/balance visualization
+- One dominant CTA: `Cook this plate` or `Make one better swap`
+
+**Win screen integration:**
+- After completing the Guided Cook Win phase, a `📸 Evaluate my plate` button appears
+- User takes a photo of their completed plate
+- App provides a confidence-first summary: what worked, one suggestion for next time
+- This is a **placeholder camera button** in V1 — full photo analysis comes in Phase 3
+
+**UI rules:**
+- Evaluate is a mode transition (bottom sheet), not a separate heavy screen
+- Max one appraisal sentence + one action
+- Never preachy; uses zero-guilt language
+- No nutritional scores or percentages shown — plain-language only
+
+**Component plan:**
+```
+src/components/today/
+  evaluate-sheet.tsx          # Bottom sheet with plate appraisal
+  confidence-summary.tsx      # "You already have freshness and fiber..."
+  one-degree-chip.tsx         # "Make this one degree healthier" action
+
+src/components/guided-cook/
+  evaluate-plate-button.tsx   # Camera placeholder on Win screen
+```
+
+**Dependencies:** Results view must exist (already built). Win screen must exist (already built as `/cook/[slug]`).
+
+---
+
+### 23.2 Saved for later + Path scrapbook (Phase 2B)
+
+**Entry point:** Heart button on quest cards saves dishes to the user's scrapbook, accessible from the Path tab.
+
+**What it does:**
+- Tapping ♡ on any quest card saves that dish to `saved_recipes` in the database
+- Path tab includes a "Scrapbook" section showing all saved dishes
+- Saved dishes can be cooked directly from the scrapbook
+- Scrapbook also shows completed cook photos and personal notes
+
+**Data model:**
+- `saved_recipes` table already exists in the schema (§3)
+- Add a `savedFromSource` field: `quest` | `results` | `manual`
+- Scrapbook entries combine `saved_recipes` + `cook_sessions` with photos
+
+**Component plan:**
+```
+src/components/path/
+  recipe-scrapbook.tsx        # Grid of saved + completed dishes
+  scrapbook-card.tsx          # Individual dish card with photo/note
+  saved-dishes-strip.tsx      # Horizontal strip preview on Path main
+```
+
+**Dependencies:** Path tab layout (stubbed). `saved_recipes` DB table (schema exists, needs queries).
+
+---
+
+### 23.3 Save plate patterns (Phase 3 — later)
+
+**What it does:**
+Instead of only saving individual recipes, users can save reusable **plate patterns** — abstract meal structures that can be re-applied:
+
+- `rich main + cooling side + crunchy veg`
+- `rice main + protein side + fresh acid side`
+- `comfort main + bright salad + warm bread`
+
+**Why this matters:**
+- Patterns are more transferable than individual recipes
+- The pairing engine can use saved patterns to bias future recommendations
+- Users build a personal vocabulary of meal structures over time
+
+**Data model addition:**
+```typescript
+export const platePatterns = pgTable('plate_patterns', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').references(() => users.id).notNull(),
+  name: text('name').notNull(),           // user-given or auto-generated
+  structure: jsonb('structure').$type<{
+    mainCategory: string;                  // "rich", "light", "rice-based"
+    sideSlots: Array<{
+      role: string;                        // "cooling", "crunchy", "acid"
+      flavorProfile: string[];
+    }>;
+  }>().notNull(),
+  usageCount: integer('usage_count').default(0),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+```
+
+**Dependencies:** Evaluate mode (23.1). User needs to have completed enough cooks for patterns to emerge.
+
+---
+
+### 23.4 One-degree healthier (Phase 3 — later, Gemma integration)
+
+**Entry point:** Inside Evaluate mode as a secondary action.
+
+**What it does:**
+- After evaluating a plate, user can tap `Make this one degree healthier`
+- System proposes exactly **one** small change — never a full meal replacement
+- Preserves cultural recognizability of the original meal
+- Examples:
+  - "You already have freshness and contrast. Add one protein anchor."
+  - "This is close. Swap the fries for roasted sweet potatoes."
+  - "Keep the meal. Just add a side of cucumber raita."
+
+**Rules:**
+- Never suggest total meal replacement
+- Prefer one small side change over multiple
+- Optionally offer one garnish or technique tweak
+- Always preserve the identity of the meal
+
+**Dependencies:** Evaluate mode (23.1). Gemma or Claude integration for contextual suggestions.
+
+---
+
+### 23.5 Make this taste better (Phase 3 — later, Gemma)
+
+**Entry point:** Inside Guided Cook as a contextual chip, or inside Evaluate as a secondary action.
+
+**What it does:**
+- Suggests one **culinary improvement**, not a health lecture
+- Examples:
+  - "Caramelize the onions 5 more minutes for deeper flavor"
+  - "Finish with a squeeze of lemon — acid wakes everything up"
+  - "Add cooling crunch: quick-pickled radish on top"
+  - "Reduce the sauce a bit further for gloss"
+
+**Why this matters:**
+Makes Sous feel like a cooking-fluency product, not just a health product. This is the core differentiator.
+
+**Dependencies:** Guided Cook flow (exists). Gemma/Claude contextual integration.
+
+---
+
+### 23.6 Guided Cook recovery flow (Phase 3 — later)
+
+**Entry point:** `Something went wrong` button inside Cook phase steps.
+
+**What it does:**
+- User taps the button when something goes wrong mid-cook
+- Chooses from failure-state shortcuts or types the problem:
+  - too watery / too dry / bland / over-browned / running late
+- App proposes one minimal rescue action
+- Cook resumes without leaving the flow
+
+**Component plan:**
+```
+src/components/guided-cook/
+  recovery-sheet.tsx          # Bottom sheet with failure shortcuts
+  rescue-action.tsx           # Single rescue suggestion card
+```
+
+**Dependencies:** Guided Cook flow (exists). Gemma/Claude for contextual rescue suggestions.
+
+---
+
+### 23.7 Bounded recommendation agent (Phase 4 — later, Gemma)
+
+**Entry point:** One `For you tonight` card on Today tab, replacing or augmenting the quest card rotation.
+
+**What it does:**
+1. Daily scheduler reads local memory (saved meals, completed cooks, repeated cuisines, skipped dishes)
+2. Deterministic ranking filters candidates from the dish database
+3. Gemma writes concise recommendation cards
+4. User sees **one** featured recommendation — never an infinite feed
+
+**UI rule:**
+Recommendations appear as either:
+- One `For you tonight` card (replaces quest card when available)
+- One dismissible below-the-fold section
+
+Never as an infinite feed on Today.
+
+**Dependencies:** User history data (cook sessions). Gemma integration. Pattern saving (23.3) for better personalization.
+
+---
+
+### 23.8 UI clutter control rules (standing policy)
+
+These rules apply to ALL future feature additions:
+
+1. One primary CTA per screen
+2. No more than one hero card above the fold
+3. Max 3 secondary chips visible at once
+4. Path metrics capped to 3 blocks
+5. Today never becomes a dashboard
+6. Social proof only below the fold in prototype
+7. Recommendation surfaces capped to one featured card
+8. Any new feature must prove it helps the user cook tonight or belong elsewhere
+
+**Escalation rule for new features:**
+1. Hidden logic (no UI)
+2. Optional chip
+3. Secondary sheet
+4. Primary surface only if repeatedly high value
+
+---
+
+### 23.9 Revised component map (target state)
+
+```
+src/components/
+  today/
+    quest-card.tsx                 # Swipeable card stack (built)
+    craving-trigger.tsx            # Bird mascot + speech bubble (built as bird-mascot.tsx)
+    streak-chip.tsx                # Tiny inline streak counter (built as streak-counter.tsx)
+    search-popout.tsx              # Bottom sheet craving input (built)
+    text-prompt.tsx                # Text input field (built)
+    result-stack.tsx               # 3 side dish results (built)
+    fallback-actions.tsx           # Rescue fridge, play game, order out (built)
+    friends-strip.tsx              # Social proof strip (built)
+    camera-input.tsx               # Camera capture (built)
+    correction-chips.tsx           # Photo correction chips (built)
+    evaluate-sheet.tsx             # Plate evaluation bottom sheet (Phase 2A)
+    confidence-summary.tsx         # Confidence-first appraisal (Phase 2A)
+    one-degree-chip.tsx            # One-degree-healthier action (Phase 3)
+    featured-recommendation.tsx    # AI recommendation card (Phase 4)
+
+  guided-cook/
+    step-card.tsx                  # Cook step (built)
+    phase-indicator.tsx            # Mission/Grab/Cook/Win (built)
+    timer.tsx                      # Countdown timer (built)
+    mistake-chip.tsx               # Warning expandable (built)
+    hack-chip.tsx                  # Quick hack expandable (built)
+    evaluate-plate-button.tsx      # Camera placeholder on Win (Phase 2A)
+    recovery-sheet.tsx             # Something went wrong (Phase 3)
+
+  path/
+    recipe-scrapbook.tsx           # Saved + completed dishes (Phase 2B)
+    scrapbook-card.tsx             # Individual dish card (Phase 2B)
+    journey-nodes.tsx              # 2-3 node skill journey (Phase 2B)
+    weekly-goal-card.tsx           # Weekly cooking goal (Phase 2B)
+    next-unlock-card.tsx           # Next milestone preview (Phase 2B)
+
+  shared/
+    device-frame.tsx               # Phone frame dev container (built)
+    user-avatar.tsx                # User avatar (built)
+    tab-bar.tsx                    # Bottom navigation (built)
+```

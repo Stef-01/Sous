@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Providers } from "@/components/providers";
+import { AuthProvider } from "@/components/auth-provider";
+import { DeviceFrame } from "@/components/shared/device-frame";
 import "./globals.css";
 
 const inter = Inter({
@@ -58,12 +61,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}>
-        {children}
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
+    <AuthProvider>
+      <html lang="en">
+        <body className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}>
+          <Providers>
+            <DeviceFrame>
+              {children}
+            </DeviceFrame>
+          </Providers>
+          <Analytics />
+          <SpeedInsights />
+        </body>
+      </html>
+    </AuthProvider>
   );
 }
