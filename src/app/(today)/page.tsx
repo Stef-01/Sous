@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { StreakCounter } from "@/components/today/streak-counter";
@@ -27,6 +27,20 @@ type ViewState =
   | { type: "correction"; dishName: string; confidence: number; alternates: string[]; cuisine: string };
 
 export default function TodayPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-full bg-[var(--nourish-cream)] flex items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-[var(--nourish-green)]" />
+        </div>
+      }
+    >
+      <TodayPageContent />
+    </Suspense>
+  );
+}
+
+function TodayPageContent() {
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
