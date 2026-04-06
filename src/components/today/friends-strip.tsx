@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { sides } from "@/data";
 
@@ -94,12 +95,14 @@ export function FriendsStrip() {
               <span className="absolute inset-0 flex items-center justify-center text-lg">
                 🍽️
               </span>
-              <img
+              <Image
                 src={friend.dishImage}
                 alt={friend.dishName}
-                className="relative h-full w-full object-cover"
+                fill
+                className="object-cover"
+                sizes="56px"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}
               />
             </div>

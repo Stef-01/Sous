@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   motion,
@@ -355,12 +356,17 @@ function SwipeCard({
 
         {/* Hero food image */}
         <div className="relative">
-          <img
-            src={dish.heroImageUrl}
-            alt={dish.dishName}
-            className="w-full aspect-[3/2] object-cover"
-            draggable={false}
-          />
+          <div className="relative w-full aspect-[3/2]">
+            <Image
+              src={dish.heroImageUrl}
+              alt={dish.dishName}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 480px"
+              draggable={false}
+              priority
+            />
+          </div>
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
           {/* Skip (X) button — top right */}

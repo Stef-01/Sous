@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -386,7 +387,7 @@ function ResultCard({
           type="button"
         >
           {/* Side dish image */}
-          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
             {isRerolling ? (
               <div className="flex h-full w-full items-center justify-center">
                 <RefreshCw
@@ -396,10 +397,12 @@ function ResultCard({
               </div>
             ) : (
               side.imageUrl && (
-                <img
+                <Image
                   src={side.imageUrl}
                   alt={side.name}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="80px"
                 />
               )
             )}

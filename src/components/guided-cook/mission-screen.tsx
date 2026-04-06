@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 
@@ -44,11 +45,16 @@ export function MissionScreen({
           transition={{ type: "spring", stiffness: 260, damping: 25 }}
           className="overflow-hidden rounded-2xl"
         >
-          <img
-            src={heroImageUrl}
-            alt={dishName}
-            className="w-full aspect-[4/3] object-cover"
-          />
+          <div className="relative w-full aspect-[4/3]">
+            <Image
+              src={heroImageUrl}
+              alt={dishName}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 480px"
+              priority
+            />
+          </div>
         </motion.div>
       )}
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -126,11 +127,15 @@ export function StepCard({
       {/* Step image (optional) */}
       {imageUrl && (
         <div className="overflow-hidden rounded-xl">
-          <img
-            src={imageUrl}
-            alt={`Step ${stepNumber}`}
-            className="w-full aspect-video object-cover"
-          />
+          <div className="relative w-full aspect-video">
+            <Image
+              src={imageUrl}
+              alt={`Step ${stepNumber}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 480px"
+            />
+          </div>
         </div>
       )}
 
