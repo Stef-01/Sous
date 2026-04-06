@@ -374,10 +374,9 @@ function TodayPageContent() {
         {showQuiz && (
           <BreadQuiz
             onClose={() => setShowQuiz(false)}
-            onComplete={(breadType) => {
+            onComplete={() => {
               // Quiz result saved to localStorage by the component itself.
               // Could trigger a celebratory craving search based on cuisine affinities.
-              console.log("[Sous] Bread quiz result:", breadType);
             }}
           />
         )}
