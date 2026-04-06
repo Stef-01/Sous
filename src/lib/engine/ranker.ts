@@ -4,7 +4,6 @@ import type {
   ScoredCandidate,
   ScoreBreakdown,
   Scorer,
-  DEFAULT_WEIGHTS,
 } from "./types";
 
 /**

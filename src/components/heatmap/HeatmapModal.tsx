@@ -40,6 +40,7 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
 
   useEffect(() => {
     if (open && !data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- fetching external data and updating state on resolution
       setLoading(true);
       fetch("/api/heatmap")
         .then((r) => r.json())

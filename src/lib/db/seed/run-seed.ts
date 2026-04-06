@@ -125,7 +125,6 @@ function computeBestPairedWith(
  */
 function estimatePrepTime(side: ExistingSide): { prep: number; cook: number } {
   const tags = side.tags.map((t) => t.toLowerCase());
-  const desc = side.description.toLowerCase();
 
   // No-cook items
   if (tags.includes("no-cook") || tags.includes("raw") || tags.includes("fresh")) {

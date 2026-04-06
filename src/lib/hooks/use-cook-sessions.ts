@@ -100,10 +100,12 @@ export function useCookSessions() {
   const [sessions, setSessions] = useState<CookSessionRecord[]>([]);
   const [stats, setStats] = useState<CookStats>(DEFAULT_STATS);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount */
   useEffect(() => {
     setSessions(loadSessions());
     setStats(loadStats());
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   /**
    * Start a new cook session. Returns the session ID.

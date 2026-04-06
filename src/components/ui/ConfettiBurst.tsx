@@ -13,6 +13,7 @@ interface Particle {
     color: string;
     shape: "circle" | "rect" | "star";
     delay: number;
+    durationJitter: number;
 }
 
 const CONFETTI_COLORS = [
@@ -41,6 +42,7 @@ function generateParticles(count: number): Particle[] {
             color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
             shape: (["circle", "rect", "star"] as const)[Math.floor(Math.random() * 3)],
             delay: Math.random() * 0.15,
+            durationJitter: Math.random() * 0.3,
         };
     });
 }
@@ -68,6 +70,7 @@ export default function ConfettiBurst({ trigger, count = 40 }: ConfettiBurstProp
     }, [count, prefersReduced]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- trigger confetti particles from prop change
         if (trigger) burst();
     }, [trigger, burst]);
 
@@ -104,7 +107,7 @@ export default function ConfettiBurst({ trigger, count = 40 }: ConfettiBurstProp
                         }}
                         exit={{ opacity: 0 }}
                         transition={{
-                            duration: 1.1 + Math.random() * 0.3,
+                            duration: 1.1 + p.durationJitter,
                             delay: p.delay,
                             ease: [0.22, 0.68, 0.35, 1],
                         }}

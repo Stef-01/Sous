@@ -23,7 +23,7 @@ export const aiRouter = router({
   explainPairing: publicProcedure
     .input(explainPairingInputSchema)
     .query(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.explainPairing(input);
     }),
 
@@ -33,7 +33,7 @@ export const aiRouter = router({
   askCookQuestion: publicProcedure
     .input(cookQuestionInputSchema)
     .mutation(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.answerCookQuestion(input);
     }),
 
@@ -43,7 +43,7 @@ export const aiRouter = router({
   suggestSubstitution: publicProcedure
     .input(substitutionInputSchema)
     .query(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.suggestSubstitution(input);
     }),
 
@@ -53,7 +53,7 @@ export const aiRouter = router({
   generateWinMessage: publicProcedure
     .input(winMessageInputSchema)
     .query(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.generateWinMessage(input);
     }),
 
@@ -63,7 +63,7 @@ export const aiRouter = router({
   rewriteAppraisal: publicProcedure
     .input(appraisalRewriteInputSchema)
     .query(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.rewriteAppraisal(input);
     }),
 
@@ -73,7 +73,7 @@ export const aiRouter = router({
   generateReflection: publicProcedure
     .input(postCookReflectionInputSchema)
     .query(async ({ input }) => {
-      const provider = getAIProvider();
+      const provider = await getAIProvider();
       return provider.generateReflection(input);
     }),
 });

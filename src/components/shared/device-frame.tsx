@@ -50,13 +50,12 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   // Phone mode — render inside a phone-shaped frame
   return (
     <DeviceFrameContext.Provider value={{ mode, setMode }}>
-      <div className="fixed inset-0 flex items-center justify-center bg-neutral-100 overflow-hidden">
-        {/* Phone bezel */}
-        <div className="relative" style={{ width: 390, height: 844 }}>
+      <div className="fixed inset-0 flex items-center justify-center bg-neutral-100 overflow-hidden p-4">
+        {/* Phone bezel — scales down on smaller viewports while maintaining aspect ratio */}
+        <div className="relative w-[390px] max-w-full" style={{ aspectRatio: "390 / 844", maxHeight: "calc(100vh - 2rem)" }}>
           {/* Phone outer shell */}
           <div
-            className="relative overflow-hidden rounded-[3rem] border-[8px] border-neutral-800 bg-neutral-800 shadow-2xl"
-            style={{ width: 390, height: 844 }}
+            className="relative overflow-hidden rounded-[3rem] border-[8px] border-neutral-800 bg-neutral-800 shadow-2xl w-full h-full"
           >
             {/* Notch / dynamic island */}
             <div className="absolute top-0 left-1/2 z-[100] -translate-x-1/2">

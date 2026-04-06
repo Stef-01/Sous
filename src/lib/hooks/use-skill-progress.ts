@@ -7,7 +7,7 @@ import {
   XP_PER_COOK,
   computeLevel,
 } from "@/data/skill-tree";
-import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
+import type { SkillNodeStatus } from "@/data/skill-tree";
 
 // ── Types ───────────────────────────────────────────────────
 
@@ -49,10 +49,12 @@ export function useSkillProgress() {
   const [mounted, setMounted] = useState(false);
 
   // Load from localStorage on mount
+  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount */
   useEffect(() => {
     setProgress(loadProgress());
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   /** Get the visual status of a node */
   const getNodeStatus = useCallback(

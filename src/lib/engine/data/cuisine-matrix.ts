@@ -9,26 +9,6 @@
  * Access: CUISINE_MATRIX[sideCuisine][mainCuisine]
  */
 
-type CuisineFamily =
-  | "mediterranean"
-  | "south-asian"
-  | "east-asian"
-  | "southeast-asian"
-  | "latin-american"
-  | "middle-eastern"
-  | "west-african"
-  | "comfort-classic"
-  | "indian"
-  | "japanese"
-  | "korean"
-  | "thai"
-  | "chinese"
-  | "vietnamese"
-  | "filipino"
-  | "italian"
-  | "mexican"
-  | "american";
-
 // Default compatibility for unknown pairings
 const DEFAULT_COMPATIBILITY = 0.5;
 

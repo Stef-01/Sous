@@ -33,6 +33,7 @@ export function useSavedDishes() {
   const [saved, setSaved] = useState<SavedDish[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
     setSaved(loadSaved());
   }, []);
 

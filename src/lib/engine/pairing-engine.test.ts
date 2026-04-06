@@ -23,6 +23,7 @@ const chickenMain: MainDishIntent = {
   moodSignals: ["rich", "creamy"],
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- test fixture for future use
 const saladMain: MainDishIntent = {
   dishName: "Caesar Salad",
   cuisineSignals: ["italian", "american"],

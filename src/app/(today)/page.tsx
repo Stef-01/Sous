@@ -46,6 +46,7 @@ function TodayPageContent() {
   const [showQuiz, setShowQuiz] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [resetKey, setResetKey] = useState(0);
+  const [recognitionError, setRecognitionError] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats } = useCookSessions();
@@ -57,6 +58,7 @@ function TodayPageContent() {
   const selectSidesParam = searchParams.get("selectSides");
   const handledSelectSidesRef = useRef<string | null>(null);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- syncs URL search param (external state) into component state */
   useEffect(() => {
     if (selectSidesParam && selectSidesParam !== handledSelectSidesRef.current) {
       handledSelectSidesRef.current = selectSidesParam;
@@ -68,6 +70,7 @@ function TodayPageContent() {
       router.replace("/", { scroll: false });
     }
   }, [selectSidesParam, router]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // tRPC query
   const pairingQuery = trpc.pairing.suggest.useQuery(
@@ -80,6 +83,7 @@ function TodayPageContent() {
   const recognitionMutation = trpc.recognition.identify.useMutation();
 
   // Transition from loading → results when query resolves for the CURRENT query
+  /* eslint-disable react-hooks/set-state-in-effect -- state machine transition driven by async tRPC query resolution */
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -90,6 +94,7 @@ function TodayPageContent() {
       setView({ type: "results", mainDish: view.mainDish });
     }
   }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── Handlers ──────────────────────────────────────────
 
@@ -130,8 +135,10 @@ function TodayPageContent() {
         cuisine: result.cuisine,
       });
     } else {
-      // Recognition failed — fall back to text input
+      // Recognition failed — show brief feedback then fall back to text input
+      setRecognitionError(true);
       setView({ type: "idle" });
+      setTimeout(() => setRecognitionError(false), 4000);
     }
   }, [recognitionMutation]);
 
@@ -245,6 +252,15 @@ function TodayPageContent() {
           />
         )}
 
+        {/* Recognition failure feedback */}
+        {recognitionError && view.type === "idle" && (
+          <div className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center mb-3">
+            <p className="text-sm text-amber-700">
+              Couldn&apos;t identify the dish from the photo. Try typing it instead.
+            </p>
+          </div>
+        )}
+
         {/* Search input + results */}
         {(view.type === "idle" || view.type === "loading" || view.type === "results") && (
           <>
@@ -313,7 +329,11 @@ function TodayPageContent() {
             {pairingQuery.error && (
               <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-center space-y-2">
                 <p className="text-sm text-red-600">
-                  {pairingQuery.error.message || "Something went wrong."}
+                  {pairingQuery.error.message?.includes("timed out") || pairingQuery.error.message?.includes("timeout")
+                    ? "The request took too long. Check your connection and try again."
+                    : pairingQuery.error.message?.includes("fetch")
+                      ? "Couldn\u2019t reach the server. Check your internet connection."
+                      : "Couldn\u2019t find sides for that dish. Try a different craving."}
                 </p>
                 <button
                   onClick={handleReroll}

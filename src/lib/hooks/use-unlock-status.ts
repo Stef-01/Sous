@@ -23,6 +23,7 @@ export function useUnlockStatus(): UnlockStatus {
     completedCooks: 0,
   });
 
+  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount + subscribe to storage events */
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STATS_KEY);
@@ -57,6 +58,7 @@ export function useUnlockStatus(): UnlockStatus {
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return status;
 }

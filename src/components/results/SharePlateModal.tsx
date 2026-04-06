@@ -43,12 +43,14 @@ export default function SharePlateModal({
   }, [open, onClose]);
 
   // Reset state when modal opens/closes
+  /* eslint-disable react-hooks/set-state-in-effect -- reset modal state when open prop changes */
   useEffect(() => {
     if (!open) {
       setImageDataUrl(null);
       setCopiedFeedback(false);
     }
   }, [open]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleGenerate = async () => {
     const dataUrl = await generateImage(plateRef);
