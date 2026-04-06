@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { sides } from "@/data";
@@ -36,8 +35,13 @@ function buildFriendCooks(count: number): FriendCook[] {
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
   );
 
-  // Filter sides that have usable images
-  const pool = sides.filter((s) => s.imageUrl);
+  // Prefer local images (/food_images/) which are always available.
+  // Unsplash URLs can return 404. Fall back to all sides with imageUrl if local pool is too small.
+  const localPool = sides.filter(
+    (s) => s.imageUrl && s.imageUrl.startsWith("/food_images/"),
+  );
+  const pool =
+    localPool.length >= 8 ? localPool : sides.filter((s) => s.imageUrl);
 
   const friends: FriendCook[] = [];
   for (let i = 0; i < count; i++) {
@@ -60,7 +64,7 @@ function buildFriendCooks(count: number): FriendCook[] {
  * Uses real side dish images with deterministic daily rotation.
  */
 export function FriendsStrip() {
-  const friends = useMemo(() => buildFriendCooks(4), []);
+  const friends = buildFriendCooks(4);
 
   return (
     <motion.div
@@ -98,9 +102,10 @@ export function FriendsStrip() {
               <Image
                 src={friend.dishImage}
                 alt={friend.dishName}
-                fill
-                className="object-cover"
-                sizes="56px"
+                width={56}
+                height={56}
+                unoptimized
+                className="relative h-full w-full object-cover"
                 onError={(e) => {
                   (e.currentTarget as HTMLImageElement).style.display = "none";
                 }}

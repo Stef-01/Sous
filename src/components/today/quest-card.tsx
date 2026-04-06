@@ -356,13 +356,14 @@ function SwipeCard({
 
         {/* Hero food image */}
         <div className="relative">
-          <div className="relative w-full aspect-[3/2]">
+          <div className="w-full aspect-[3/2] overflow-hidden">
             <Image
               src={dish.heroImageUrl}
               alt={dish.dishName}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 480px"
+              width={480}
+              height={320}
+              unoptimized
+              className="w-full h-full object-cover"
               draggable={false}
               priority
             />

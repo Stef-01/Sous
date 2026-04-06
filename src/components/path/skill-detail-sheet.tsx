@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChefHat, Lock, Check, ArrowRight } from "lucide-react";
+import { X, ChefHat, Lock, Check, ArrowRight, Zap } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
@@ -107,35 +107,63 @@ export function SkillDetailSheet({
                 {node.description}
               </p>
 
-              {/* Progress bar */}
+              {/* Progress bar + XP */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-[var(--nourish-subtext)]">
                     Progress
                   </span>
-                  <span
-                    className={cn(
-                      "font-semibold",
-                      status === "completed"
-                        ? "text-[var(--nourish-green)]"
-                        : "text-[var(--nourish-dark)]",
-                    )}
-                  >
-                    {cooksCompleted}/{node.cooksRequired} cooks
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        "font-semibold",
+                        status === "completed"
+                          ? "text-[var(--nourish-green)]"
+                          : "text-[var(--nourish-dark)]",
+                      )}
+                    >
+                      {cooksCompleted}/{node.cooksRequired} cooks
+                    </span>
+                    <div className="flex items-center gap-0.5 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5">
+                      <Zap
+                        size={9}
+                        className="text-[var(--nourish-green)] fill-[var(--nourish-green)]"
+                      />
+                      <span className="text-[9px] font-bold text-[var(--nourish-green)]">
+                        +50 XP
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="h-2.5 w-full rounded-full bg-neutral-100 overflow-hidden">
+                <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
                   <motion.div
-                    className={cn(
-                      "h-full rounded-full",
-                      status === "completed"
-                        ? "bg-[var(--nourish-green)]"
-                        : "bg-[var(--nourish-green)]/70",
-                    )}
+                    className="h-full rounded-full relative overflow-hidden"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)",
+                    }}
                     initial={{ width: 0 }}
-                    animate={{ width: `${progress * 100}%` }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                  />
+                    animate={{
+                      width: `${Math.max(progress * 100, progress > 0 ? 4 : 0)}%`,
+                    }}
+                    transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
+                  >
+                    <motion.div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                      }}
+                      animate={{ x: ["-100%", "200%"] }}
+                      transition={{
+                        duration: 2,
+                        delay: 0.8,
+                        ease: "linear",
+                        repeat: Infinity,
+                        repeatDelay: 2,
+                      }}
+                    />
+                  </motion.div>
                 </div>
               </div>
 
