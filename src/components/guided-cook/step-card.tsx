@@ -127,13 +127,14 @@ export function StepCard({
       {/* Step image (optional) */}
       {imageUrl && (
         <div className="overflow-hidden rounded-xl">
-          <div className="relative w-full aspect-video">
+          <div className="w-full aspect-video overflow-hidden">
             <Image
               src={imageUrl}
               alt={`Step ${stepNumber}`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 480px"
+              width={480}
+              height={270}
+              unoptimized
+              className="w-full h-full object-cover"
             />
           </div>
         </div>

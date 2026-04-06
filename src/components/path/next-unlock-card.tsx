@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lock } from "lucide-react";
+import { Lock, Zap, ChevronRight } from "lucide-react";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 
 interface NextUnlockCardProps {
@@ -19,13 +19,11 @@ interface NextUnlockCardProps {
   skillsCompleted: number;
 }
 
+/** XP reward per skill completion */
+const XP_REWARD = 50;
+
 /**
- * Next Unlock Card — Phase 3 milestone preview.
- *
- * Shows either:
- * - An in-progress or available skill with progress toward completing it
- * - A locked teaser showing what's coming next
- * - An "all unlocked" celebration if everything is done
+ * Next Unlock Card — Phase 3 milestone preview with gamified XP reward display.
  */
 export function NextUnlockCard({
   nextNode,
@@ -39,14 +37,24 @@ export function NextUnlockCard({
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="rounded-2xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-5"
+        className="rounded-2xl p-5"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(74,222,128,0.08) 100%)",
+          border: "1px solid rgba(34,197,94,0.2)",
+        }}
       >
-        <p className="text-sm font-semibold text-[var(--nourish-green)]">
-          🏆 All {skillsCompleted} skills unlocked
-        </p>
-        <p className="text-xs text-[var(--nourish-subtext)] mt-1">
-          You&apos;ve mastered every technique in the tree. Keep cooking!
-        </p>
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">🏆</span>
+          <div>
+            <p className="text-sm font-bold text-[var(--nourish-green)]">
+              All {skillsCompleted} skills mastered!
+            </p>
+            <p className="text-xs text-[var(--nourish-subtext)] mt-0.5">
+              You&apos;ve completed every technique. Keep cooking!
+            </p>
+          </div>
+        </div>
       </motion.div>
     );
   }
@@ -56,51 +64,134 @@ export function NextUnlockCard({
     const { node, status, cooksCompleted } = nextNode;
     const progress = Math.min(cooksCompleted / node.cooksRequired, 1);
     const remaining = node.cooksRequired - cooksCompleted;
+    const progressPct = Math.max(progress * 100, cooksCompleted > 0 ? 6 : 0);
 
     return (
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
-        className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3"
+        className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3.5"
       >
+        {/* Header */}
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-[var(--nourish-dark)]">
-            {status === "in_progress" ? "In progress" : "Up next"}
-          </h3>
-          <span className="text-lg">{node.emoji}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
+              {status === "in_progress" ? "In progress" : "Up next"}
+            </span>
+            {status === "in_progress" && (
+              <motion.span
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="text-[10px]"
+              >
+                🔥
+              </motion.span>
+            )}
+          </div>
+
+          {/* XP reward badge */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 15,
+              delay: 0.4,
+            }}
+            className="flex items-center gap-1 rounded-full px-2.5 py-1"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(74,222,128,0.12))",
+              border: "1px solid rgba(34,197,94,0.2)",
+            }}
+          >
+            <Zap
+              size={11}
+              className="text-[var(--nourish-green)] fill-[var(--nourish-green)]"
+            />
+            <span className="text-[10px] font-bold text-[var(--nourish-green)]">
+              +{XP_REWARD} XP
+            </span>
+          </motion.div>
         </div>
 
-        <div className="space-y-1">
-          <p className="text-sm font-medium text-[var(--nourish-dark)]">
-            {node.name}
-          </p>
-          <p className="text-xs text-[var(--nourish-subtext)] leading-relaxed">
-            {node.description}
-          </p>
+        {/* Skill info */}
+        <div className="flex items-center gap-3">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(74,222,128,0.1))",
+            }}
+          >
+            {node.emoji}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+              {node.name}
+            </p>
+            <p className="text-xs text-[var(--nourish-subtext)] leading-relaxed mt-0.5">
+              {node.description}
+            </p>
+          </div>
         </div>
 
-        {/* Progress bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-xs text-[var(--nourish-subtext)]">
-            <span>
+        {/* Progress */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-[var(--nourish-subtext)]">
               {remaining > 0
                 ? `${remaining} cook${remaining === 1 ? "" : "s"} to unlock`
                 : "Ready to complete!"}
             </span>
-            <span>
+            <span className="text-xs font-semibold text-[var(--nourish-dark)] tabular-nums">
               {cooksCompleted}/{node.cooksRequired}
             </span>
           </div>
-          <div className="h-2 w-full rounded-full bg-neutral-100 overflow-hidden">
+
+          {/* Gradient progress bar */}
+          <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
             <motion.div
-              className="h-full rounded-full bg-[var(--nourish-green)]"
+              className="h-full rounded-full relative overflow-hidden"
+              style={{
+                background: "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)",
+              }}
               initial={{ width: 0 }}
-              animate={{ width: `${progress * 100}%` }}
-              transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-            />
+              animate={{ width: `${progressPct}%` }}
+              transition={{
+                duration: 0.7,
+                delay: 0.4,
+                ease: [0.34, 1.56, 0.64, 1],
+              }}
+            >
+              <motion.div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                }}
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{
+                  duration: 2,
+                  delay: 1,
+                  ease: "linear",
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                }}
+              />
+            </motion.div>
           </div>
         </div>
+
+        {/* CTA hint */}
+        {remaining > 0 && (
+          <div className="flex items-center gap-1 text-xs text-[var(--nourish-green)] font-medium">
+            <span>Cook today to make progress</span>
+            <ChevronRight size={12} />
+          </div>
+        )}
       </motion.div>
     );
   }
@@ -116,19 +207,25 @@ export function NextUnlockCard({
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3"
     >
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-[var(--nourish-dark)]">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
           Coming up
-        </h3>
-        <Lock size={14} className="text-neutral-300" />
+        </span>
+        <Lock size={13} className="text-neutral-300" />
       </div>
 
-      <div className="space-y-1 opacity-60">
-        <p className="text-sm font-medium text-[var(--nourish-dark)]">
-          {node.emoji} {node.name}
-        </p>
-        <p className="text-xs text-[var(--nourish-subtext)]">
-          Cook {cooksNeeded} more dish{cooksNeeded === 1 ? "" : "es"} to unlock
-        </p>
+      <div className="flex items-center gap-3 opacity-60">
+        <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center text-2xl grayscale flex-shrink-0">
+          {node.emoji}
+        </div>
+        <div>
+          <p className="text-sm font-medium text-[var(--nourish-dark)]">
+            {node.name}
+          </p>
+          <p className="text-xs text-[var(--nourish-subtext)] mt-0.5">
+            Cook {cooksNeeded} more dish{cooksNeeded === 1 ? "" : "es"} to
+            unlock
+          </p>
+        </div>
       </div>
     </motion.div>
   );

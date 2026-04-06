@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNodeStatus } from "@/data/skill-tree";
 
@@ -19,10 +19,10 @@ interface SkillNodeProps {
  * Skill Node — circular node in the skill tree.
  *
  * Visual states:
- *   completed  — green fill, checkmark overlay
+ *   completed  — green gradient fill, checkmark badge, star burst
  *   in_progress — green border, pulsing glow, progress fraction
- *   available  — white circle, visible emoji, tappable
- *   locked     — gray circle, lock icon, not tappable
+ *   available  — white circle, subtle bounce on hover, tappable
+ *   locked     — soft gray-blue tint, lock icon, dimmed but visible
  */
 export function SkillNodeComponent({
   id,
@@ -40,6 +40,7 @@ export function SkillNodeComponent({
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      whileTap={isInteractive ? { scale: 0.9 } : undefined}
       onClick={() => isInteractive && onTap(id)}
       disabled={!isInteractive}
       className={cn(
@@ -52,44 +53,72 @@ export function SkillNodeComponent({
       <div
         className={cn(
           "relative flex items-center justify-center rounded-full transition-all duration-300",
-          // Size
           "w-16 h-16",
-          // Status-based styling
-          status === "completed" &&
-            "bg-[var(--nourish-green)] border-2 border-[var(--nourish-green)] shadow-lg shadow-[var(--nourish-green)]/20",
+          status === "completed" && "shadow-lg",
           status === "in_progress" &&
-            "bg-white border-[3px] border-[var(--nourish-green)] shadow-lg shadow-[var(--nourish-green)]/30",
+            "bg-white border-[3px] border-[var(--nourish-green)] shadow-lg",
           status === "available" &&
-            "bg-white border-2 border-neutral-200 hover:border-[var(--nourish-green)]/50 hover:shadow-md",
-          status === "locked" &&
-            "bg-neutral-100 border-2 border-neutral-200 opacity-50",
+            "bg-white border-2 border-neutral-200 hover:border-[var(--nourish-green)]/60 hover:shadow-md hover:shadow-[var(--nourish-green)]/10",
+          status === "locked" && "bg-slate-50 border-2 border-slate-200",
         )}
+        style={
+          status === "completed"
+            ? {
+                background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                boxShadow: "0 4px 12px rgba(34, 197, 94, 0.3)",
+              }
+            : status === "in_progress"
+              ? {
+                  boxShadow: "0 4px 16px rgba(34, 197, 94, 0.25)",
+                }
+              : undefined
+        }
       >
         {/* Content by state */}
         {status === "completed" ? (
           <>
-            <span className="text-lg">{emoji}</span>
-            <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-sm">
+            <span className="text-xl">{emoji}</span>
+            {/* Checkmark badge */}
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 12,
+                delay: 0.2,
+              }}
+              className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-md border border-[var(--nourish-green)]/20"
+            >
               <Check
-                size={12}
+                size={11}
                 className="text-[var(--nourish-green)]"
                 strokeWidth={3}
               />
-            </div>
+            </motion.div>
           </>
         ) : status === "in_progress" ? (
           <>
             <span className="text-xl">{emoji}</span>
             {/* Progress badge */}
-            <div className="absolute -bottom-1 -right-1 flex items-center justify-center rounded-full bg-[var(--nourish-green)] text-white text-[9px] font-bold min-w-[22px] h-[18px] px-1 shadow-sm">
+            <div
+              className="absolute -bottom-1 -right-1 flex items-center justify-center rounded-full text-white text-[9px] font-bold min-w-[22px] h-[18px] px-1 shadow-sm"
+              style={{
+                background: "linear-gradient(135deg, #22c55e, #16a34a)",
+              }}
+            >
               {cooksCompleted}/{cooksRequired}
             </div>
-            {/* Pulsing ring */}
+            {/* Pulsing glow ring */}
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]"
+              className="absolute inset-0 rounded-full"
+              style={{
+                border: "2px solid var(--nourish-green)",
+                boxShadow: "0 0 0 0 rgba(34,197,94,0.5)",
+              }}
               animate={{
-                scale: [1, 1.15, 1],
-                opacity: [0.6, 0, 0.6],
+                scale: [1, 1.18, 1],
+                opacity: [0.7, 0, 0.7],
               }}
               transition={{
                 duration: 2,
@@ -99,9 +128,21 @@ export function SkillNodeComponent({
             />
           </>
         ) : status === "available" ? (
-          <span className="text-xl">{emoji}</span>
+          <>
+            <span className="text-xl">{emoji}</span>
+            {/* Subtle available indicator */}
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/0"
+              whileHover={{ borderColor: "rgba(34,197,94,0.3)" }}
+              transition={{ duration: 0.2 }}
+            />
+          </>
         ) : (
-          <span className="text-lg grayscale opacity-40">{emoji}</span>
+          /* Locked state */
+          <div className="flex flex-col items-center gap-0.5 opacity-40">
+            <span className="text-base grayscale">{emoji}</span>
+            <Lock size={9} className="text-slate-400" />
+          </div>
         )}
       </div>
 
@@ -109,10 +150,10 @@ export function SkillNodeComponent({
       <span
         className={cn(
           "text-[10px] font-medium text-center leading-tight max-w-[80px]",
-          status === "completed" && "text-[var(--nourish-green)]",
+          status === "completed" && "text-[var(--nourish-green)] font-semibold",
           status === "in_progress" && "text-[var(--nourish-dark)]",
           status === "available" && "text-[var(--nourish-subtext)]",
-          status === "locked" && "text-neutral-300",
+          status === "locked" && "text-slate-300",
         )}
       >
         {name}

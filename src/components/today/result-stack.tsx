@@ -387,7 +387,7 @@ function ResultCard({
           type="button"
         >
           {/* Side dish image */}
-          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
             {isRerolling ? (
               <div className="flex h-full w-full items-center justify-center">
                 <RefreshCw
@@ -400,9 +400,10 @@ function ResultCard({
                 <Image
                   src={side.imageUrl}
                   alt={side.name}
-                  fill
-                  className="object-cover"
-                  sizes="80px"
+                  width={56}
+                  height={56}
+                  unoptimized
+                  className="h-full w-full object-cover"
                 />
               )
             )}
