@@ -13,6 +13,7 @@ export default function FavoritesPage() {
   const { favoriteSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard: must set state after mount to avoid SSR/client mismatch
   useEffect(() => setMounted(true), []);
 
   const handleReplay = useCallback(

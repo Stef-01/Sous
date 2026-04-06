@@ -9,12 +9,12 @@ export const coachRouter = router({
         answer: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async () => {
       // TODO: Store response, update preference vector, return result card
       return { resultText: "", resultEmoji: "" };
     }),
 
-  vibePrompt: protectedProcedure.query(async ({ ctx }) => {
+  vibePrompt: protectedProcedure.query(async () => {
     // TODO: Return today's vibe question
     return {
       questionKey: "",

@@ -3,12 +3,21 @@
 import { motion } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
+// Pre-computed sparkle offsets — generated once at module load to keep render pure
+const SPARKLE_OFFSETS = [
+    { y: -28, x: 8 },
+    { y: -35, x: -12 },
+    { y: -22, x: 5 },
+];
+
 interface MagicalLoaderProps {
     size?: "default" | "small";
 }
 
 export default function MagicalLoader({ size = "default" }: MagicalLoaderProps) {
     const prefersReduced = useReducedMotion();
+
+    const sparkleOffsets = SPARKLE_OFFSETS;
 
     if (prefersReduced) {
         return (
@@ -51,7 +60,7 @@ export default function MagicalLoader({ size = "default" }: MagicalLoaderProps) 
             />
 
             {/* Floating sparkles */}
-            {[0, 1, 2].map((i) => (
+            {sparkleOffsets.map((offsets, i) => (
                 <motion.div
                     key={i}
                     className="absolute w-1 h-1 bg-nourish-gold rounded-full"
@@ -59,8 +68,8 @@ export default function MagicalLoader({ size = "default" }: MagicalLoaderProps) 
                     animate={{
                         opacity: [0, 1, 0],
                         scale: [0, 1, 0],
-                        y: -20 - Math.random() * 20,
-                        x: (Math.random() - 0.5) * 30,
+                        y: offsets.y,
+                        x: offsets.x,
                     }}
                     transition={{
                         duration: 2,

@@ -109,7 +109,7 @@ const reducedVariants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-export default function SideDishCard({ side, index, onSwap, onClick, pairingScore, hideControls = false, enableRegenerationDelay = false }: SideDishCardProps) {
+export default function SideDishCard({ side, index, onSwap, onClick, hideControls = false, enableRegenerationDelay = false }: SideDishCardProps) {
   const [imgError, setImgError] = useState(false);
   const [imageReady, setImageReady] = useState(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
@@ -131,6 +131,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
   }, [side.id]);
 
   // Handle regeneration delay and hover settle
+  /* eslint-disable react-hooks/set-state-in-effect -- synchronize initial loading state from prop */
   useEffect(() => {
     // Ensure at least 1.5s of "magical" loading time ONLY if delay is enabled (regeneration)
     // If it's initial load, show immediately.
@@ -152,6 +153,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, pairingScor
       clearTimeout(glowTimer);
     };
   }, [side.id, enableRegenerationDelay]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Clean up hover timers
   useEffect(() => {

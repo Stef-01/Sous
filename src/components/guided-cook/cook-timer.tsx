@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Pause, Play } from "lucide-react";
+import { X } from "lucide-react";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { cn } from "@/lib/utils/cn";
 

@@ -12,15 +12,15 @@ import type { AIProvider } from "./contracts";
 
 let _provider: AIProvider | null = null;
 
-export function getAIProvider(): AIProvider {
+export async function getAIProvider(): Promise<AIProvider> {
   if (_provider) return _provider;
 
   if (process.env.ANTHROPIC_API_KEY) {
     // Lazy import to avoid loading AI SDK when not needed
-    const { ClaudeAIProvider } = require("./providers/claude") as typeof import("./providers/claude");
+    const { ClaudeAIProvider } = await import("./providers/claude");
     _provider = new ClaudeAIProvider();
   } else {
-    const { MockAIProvider } = require("./providers/mock") as typeof import("./providers/mock");
+    const { MockAIProvider } = await import("./providers/mock");
     _provider = new MockAIProvider();
   }
 
@@ -35,12 +35,12 @@ export async function withFallback<T>(
   fn: (provider: AIProvider) => Promise<T>,
   fallbackFn: (provider: AIProvider) => Promise<T>
 ): Promise<T> {
-  const provider = getAIProvider();
+  const provider = await getAIProvider();
   try {
     return await fn(provider);
   } catch (error) {
     console.error("AI provider error, using mock fallback:", error);
-    const { MockAIProvider } = require("./providers/mock") as typeof import("./providers/mock");
+    const { MockAIProvider } = await import("./providers/mock");
     const mock = new MockAIProvider();
     return fallbackFn(mock);
   }

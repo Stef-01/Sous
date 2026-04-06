@@ -188,8 +188,7 @@ export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation
   const status = computeStatus(signals, filledCount);
   const { appraisal, appraisalTone } = computeAppraisal(
     status,
-    signals,
-    alreadyWorking
+    signals
   );
 
   return {
@@ -295,8 +294,7 @@ function computeStatus(
 
 function computeAppraisal(
   status: PlateStatus,
-  signals: PlateSignal[],
-  strengths: string[]
+  signals: PlateSignal[]
 ): { appraisal: string; appraisalTone: "balanced" | "strong" | "needs-work" } {
   switch (status) {
     case "balanced":

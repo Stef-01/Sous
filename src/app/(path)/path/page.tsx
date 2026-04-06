@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BookOpen, Heart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
+import { JourneySummary } from "@/components/path/journey-summary";
+import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
 import { SkillDetailSheet } from "@/components/path/skill-detail-sheet";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
@@ -30,7 +32,7 @@ export default function PathPage() {
     skillsCompleted,
   } = useSkillProgress();
 
-  const { stats } = useCookSessions();
+  const { stats, completedSessions } = useCookSessions();
   const router = useRouter();
 
   // Detail sheet state
@@ -91,6 +93,12 @@ export default function PathPage() {
         levelProgress={levelProgress}
         skillsCompleted={skillsCompleted}
       />
+
+      {/* Journey summary + weekly goal — the 3-block dashboard */}
+      <div className="mx-auto max-w-md px-4 pt-4 space-y-3">
+        <JourneySummary stats={stats} />
+        <WeeklyGoalCard completedSessions={completedSessions} />
+      </div>
 
       {/* Skill tree */}
       <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />

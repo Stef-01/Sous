@@ -108,11 +108,12 @@ export default function ResultsStage({
   const prefersReduced = useReducedMotion();
   const [selectedDish, setSelectedDish] = useState<SelectedDish | null>(null);
   const [showConfetti, setShowConfetti] = useState(false);
-  const hasMounted = useRef(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const confettiFiredRef = useRef(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- track mount status and manage confetti state */
   useEffect(() => {
-    hasMounted.current = true;
+    setHasMounted(true);
   }, []);
 
   // Fire confetti once when a balanced plate is revealed
@@ -128,6 +129,7 @@ export default function ResultsStage({
       setShowConfetti(false);
     }
   }, [showPlateMethod, appraisal]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleHeroClick = () => {
     setSelectedDish({
@@ -275,7 +277,7 @@ export default function ResultsStage({
                     onClick={() => handleSideClick(sides[0], 0)}
                     pairingScore={getPairingScore(sides[0])}
                     hideControls={showPlateMethod}
-                    enableRegenerationDelay={hasMounted.current}
+                    enableRegenerationDelay={hasMounted}
                   />
                 )}
               </AnimatePresence>
@@ -340,7 +342,7 @@ export default function ResultsStage({
                       onClick={() => handleSideClick(sides[1], 1)}
                       pairingScore={getPairingScore(sides[1])}
                       hideControls={showPlateMethod}
-                      enableRegenerationDelay={hasMounted.current}
+                      enableRegenerationDelay={hasMounted}
                     />
                   )}
                 </AnimatePresence>
@@ -369,7 +371,7 @@ export default function ResultsStage({
                       onClick={() => handleSideClick(sides[2], 2)}
                       pairingScore={getPairingScore(sides[2])}
                       hideControls={showPlateMethod}
-                      enableRegenerationDelay={hasMounted.current}
+                      enableRegenerationDelay={hasMounted}
                     />
                   )}
                 </AnimatePresence>
@@ -448,7 +450,7 @@ export default function ResultsStage({
                     onSwap={onSwap}
                     onClick={() => handleSideClick(side, i)}
                     pairingScore={getPairingScore(side)}
-                    enableRegenerationDelay={hasMounted.current}
+                    enableRegenerationDelay={hasMounted}
                   />
                 </motion.div>
               ))}

@@ -16,8 +16,6 @@ import { getStaticCookData } from "@/data/guided-cook-steps";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
-type Phase = "mission" | "grab" | "cook" | "win";
-
 export default function GuidedCookPage({
   params,
 }: {

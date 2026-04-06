@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Meal } from "@/types";
 import { searchMeals } from "@/lib/fuzzySearch";
@@ -26,6 +26,7 @@ export default function SearchDropdown({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Debounced search
+  /* eslint-disable react-hooks/set-state-in-effect -- debounced search results from external fuzzy search */
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
@@ -44,7 +45,8 @@ export default function SearchDropdown({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [query]);
+  }, [query, verifiedOnly]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {

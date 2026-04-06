@@ -195,7 +195,7 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   }).slice(0, 3); // Max 3 badges
 }
 
-export default function HoverCard({ name, tags, nutritionCategory, onSwap }: HoverContextProps) {
+export default function HoverCard({ name, tags, nutritionCategory }: HoverContextProps) {
   const benefits = useMemo(() => getNutritionalBenefits(tags, nutritionCategory), [tags, nutritionCategory]);
 
   return (

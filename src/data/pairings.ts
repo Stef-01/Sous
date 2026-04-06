@@ -7,7 +7,6 @@
  */
 
 import type { PairingScore } from "@/types";
-import type { Meal, SideDish } from "@/types";
 import rawPairings from "./pairings.json";
 import { resolveEngineSideId } from "./sideBridge";
 import { meals, sides as allAppSides } from "./index";

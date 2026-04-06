@@ -61,7 +61,6 @@ export default function SideDishCardMobile({
   index,
   onSwap,
   onClick,
-  pairingScore,
   enableRegenerationDelay = false,
 }: SideDishCardMobileProps) {
   const [imgError, setImgError] = useState(false);
@@ -75,6 +74,7 @@ export default function SideDishCardMobile({
   // Handle regeneration delay.
   // Note: We do NOT reset state here because unique keys generally cause remounts.
   // Resetting here caused race conditions where imageReady was cleared after onLoad fired.
+  /* eslint-disable react-hooks/set-state-in-effect -- synchronize initial loading state from prop */
   useEffect(() => {
     let minTimer: NodeJS.Timeout;
     if (enableRegenerationDelay) {
@@ -87,6 +87,7 @@ export default function SideDishCardMobile({
       if (minTimer) clearTimeout(minTimer);
     };
   }, [side.id, enableRegenerationDelay]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleSwap = (e: React.MouseEvent) => {
     e.stopPropagation();

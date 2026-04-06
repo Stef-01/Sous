@@ -34,6 +34,7 @@ export default function SpinWheel({ open, onClose, onSelect, verifiedOnly = fals
   const SEGMENT_COUNT = 12;
   const SEGMENT_ANGLE = 360 / SEGMENT_COUNT;
 
+  /* eslint-disable react-hooks/set-state-in-effect -- reset wheel state when dialog opens */
   useEffect(() => {
     if (open) {
       const shuffled = [...pool].sort(() => Math.random() - 0.5);
@@ -46,6 +47,7 @@ export default function SpinWheel({ open, onClose, onSelect, verifiedOnly = fals
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, [open, pool]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Esc to close (when not spinning)
   useEffect(() => {

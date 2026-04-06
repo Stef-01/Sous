@@ -78,8 +78,16 @@ export function IngredientList({
 
   const allChecked = checked.size >= totalIngredients;
 
-  // Running index across sections for stagger animation delay
-  let runningIdx = 0;
+  // Precompute running index offsets for stagger animation delay
+  const sectionStartIndices = useMemo(() => {
+    const indices: number[] = [];
+    let running = 0;
+    for (const section of effectiveSections) {
+      indices.push(running);
+      running += section.ingredients.length;
+    }
+    return indices;
+  }, [effectiveSections]);
 
   return (
     <motion.div
@@ -91,9 +99,8 @@ export function IngredientList({
         Gather these
       </h2>
 
-      {effectiveSections.map((section) => {
-        const sectionStartIdx = runningIdx;
-        runningIdx += section.ingredients.length;
+      {effectiveSections.map((section, sectionIdx) => {
+        const sectionStartIdx = sectionStartIndices[sectionIdx];
 
         return (
           <div key={section.label || "default"} className="space-y-1">

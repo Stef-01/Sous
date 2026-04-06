@@ -101,11 +101,13 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
   const prefersReduced = useReducedMotion();
 
   // Reset glow ring on meal change
+  /* eslint-disable react-hooks/set-state-in-effect -- reset glow state when meal changes */
   useEffect(() => {
     setShowGlowRing(true);
     const timer = setTimeout(() => setShowGlowRing(false), 600);
     return () => clearTimeout(timer);
   }, [meal.id]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const { tags, category } = inferMealNutrition(meal);
 

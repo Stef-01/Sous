@@ -48,7 +48,7 @@ export function WinScreen({
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
   const [showReflection, setShowReflection] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(true);
+  const [, setShowConfetti] = useState(true);
   const [photoAdded, setPhotoAdded] = useState(false);
 
   // AI-powered win message (mock or real, depending on API key)

@@ -40,6 +40,7 @@ export function useSavedPairings() {
 
   // Load on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
     setPairings(loadPairings());
   }, []);
 

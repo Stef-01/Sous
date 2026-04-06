@@ -31,7 +31,6 @@ export function SkillDetailSheet({
   if (!node) return null;
 
   const progress = Math.min(cooksCompleted / node.cooksRequired, 1);
-  const remaining = Math.max(0, node.cooksRequired - cooksCompleted);
 
   // Pick a random dish from the node's associated dishes
   const handleStartCook = () => {

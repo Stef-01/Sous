@@ -22,6 +22,7 @@ function useVerifiedToggle() {
 
   useEffect(() => {
     const stored = localStorage.getItem("sous-verified");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
     if (stored === "1") setVerifiedOnly(true);
   }, []);
 
@@ -61,7 +62,7 @@ export default function Home() {
       lastOffsetRef.current = nextOffset;
     }
   }, [nextOffset, setRankOffset]);
-  const { pairings, savePairing, removePairing, isSaved } = useSavedPairings();
+  const { pairings, removePairing, isSaved } = useSavedPairings();
   const [showSaved, setShowSaved] = useState(false);
   const [showPlateMethod, setShowPlateMethod] = useState(false);
   const [showSharePlate, setShowSharePlate] = useState(false);

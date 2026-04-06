@@ -1,12 +1,12 @@
 import { router, protectedProcedure } from "@/lib/trpc/server";
 
 export const journeyRouter = router({
-  recent: protectedProcedure.query(async ({ ctx }) => {
+  recent: protectedProcedure.query(async () => {
     // TODO: Return last 20 completed cook sessions
     return { sessions: [] };
   }),
 
-  stats: protectedProcedure.query(async ({ ctx }) => {
+  stats: protectedProcedure.query(async () => {
     // TODO: Return cooking frequency, cuisine diversity, streak
     return {
       totalCooks: 0,

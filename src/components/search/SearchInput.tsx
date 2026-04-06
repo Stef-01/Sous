@@ -28,13 +28,10 @@ export default function SearchInput({
   onSubmit,
   disabled = false,
   onSave,
-  isSaved = false,
   verifiedOnly = false,
   onEvaluate,
   currentMealName,
   isEvaluating = false,
-  appraisalSentence,
-  appraisalTone,
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -63,14 +60,6 @@ export default function SearchInput({
     inputRef.current?.blur();
     onSubmit(mealName);
   };
-
-  // Appraisal tone → subtle color mapping (muted, clinical)
-  const appraisalColor =
-    appraisalTone === "balanced"
-      ? "text-nourish-green"
-      : appraisalTone === "needs-work"
-        ? "text-amber-600/80"
-        : "text-stone-500";
 
   return (
     <motion.form
