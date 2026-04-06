@@ -43,7 +43,14 @@ interface NavbarProps {
   onLogoClick?: () => void;
 }
 
-export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, verifiedOnly = false, onVerifiedToggle, onLogoClick }: NavbarProps) {
+export default function Navbar({
+  savedCount = 0,
+  onSavedClick,
+  onHeatmapClick,
+  verifiedOnly = false,
+  onVerifiedToggle,
+  onLogoClick,
+}: NavbarProps) {
   const handleHeatmapFromAbout = () => {
     setShowAbout(false);
     onHeatmapClick?.();
@@ -76,10 +83,11 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
               <SparkleEffect count={6}>
                 <motion.button
                   onClick={onVerifiedToggle}
-                  className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${verifiedOnly
-                    ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
-                    : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
-                    }`}
+                  className={`text-xs font-medium flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 ${
+                    verifiedOnly
+                      ? "border-nourish-button bg-nourish-button/10 text-nourish-button"
+                      : "border-stone-200 text-nourish-subtext hover:border-nourish-button hover:text-nourish-button"
+                  }`}
                   variants={prefersReduced ? {} : itemVariants}
                   whileTap={prefersReduced ? {} : { scale: 0.95 }}
                   aria-pressed={verifiedOnly}
@@ -97,9 +105,10 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     initial={{ scale: 1, rotate: 0 }}
-                    animate={verifiedOnly
-                      ? { scale: [1, 1.4, 1], rotate: [0, 15, 0] }
-                      : { scale: 1, rotate: 0 }
+                    animate={
+                      verifiedOnly
+                        ? { scale: [1, 1.4, 1], rotate: [0, 15, 0] }
+                        : { scale: 1, rotate: 0 }
                     }
                     transition={{ duration: 0.35, ease: "easeOut" }}
                   >
@@ -148,7 +157,11 @@ export default function Navbar({ savedCount = 0, onSavedClick, onHeatmapClick, v
           </div>
         </div>
       </motion.nav>
-      <AboutModal open={showAbout} onClose={() => setShowAbout(false)} onHeatmapClick={handleHeatmapFromAbout} />
+      <AboutModal
+        open={showAbout}
+        onClose={() => setShowAbout(false)}
+        onHeatmapClick={handleHeatmapFromAbout}
+      />
     </>
   );
 }

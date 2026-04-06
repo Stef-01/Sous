@@ -14,7 +14,7 @@ const ENGINE_TO_APP: Record<string, string> = {
   // Direct matches (engine name → app side ID)
   "Mango Chutney": "mango-chutney",
   "Mirchi Ka Salan": "mirchi-ka-salan",
-  "Papadum": "papadum",
+  Papadum: "papadum",
 
   // Raita variants — app has a single "raita" entry
   "Cucumber Raita": "raita",
@@ -26,7 +26,7 @@ const ENGINE_TO_APP: Record<string, string> = {
   "Garlic Naan": "naan-bread",
 
   // Samosa
-  "Samosa": "samosa",
+  Samosa: "samosa",
 
   // Dal
   "Dal Tadka": "dal-tadka",

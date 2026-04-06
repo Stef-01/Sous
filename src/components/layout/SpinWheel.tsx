@@ -12,16 +12,33 @@ interface SpinWheelProps {
 }
 
 const WHEEL_COLORS = [
-  "#2D5A3D", "#8C1515", "#D4A847", "#4A7C6F", "#B85C38",
-  "#5B8C5A", "#C4956A", "#3D6B5E", "#A0522D", "#6B8E6B",
-  "#D4886B", "#4E8975", "#C17F59", "#7BA37B", "#B07048",
+  "#2D5A3D",
+  "#8C1515",
+  "#D4A847",
+  "#4A7C6F",
+  "#B85C38",
+  "#5B8C5A",
+  "#C4956A",
+  "#3D6B5E",
+  "#A0522D",
+  "#6B8E6B",
+  "#D4886B",
+  "#4E8975",
+  "#C17F59",
+  "#7BA37B",
+  "#B07048",
   "#5A9E7A",
 ];
 
-export default function SpinWheel({ open, onClose, onSelect, verifiedOnly = false }: SpinWheelProps) {
+export default function SpinWheel({
+  open,
+  onClose,
+  onSelect,
+  verifiedOnly = false,
+}: SpinWheelProps) {
   const pool = useMemo(
     () => (verifiedOnly ? meals.filter((m) => m.nourishVerified) : meals),
-    [verifiedOnly]
+    [verifiedOnly],
   );
 
   // Pick 12 random meals for the wheel on each open
@@ -207,7 +224,14 @@ export default function SpinWheel({ open, onClose, onSelect, verifiedOnly = fals
                     );
                   })}
                   {/* Center circle */}
-                  <circle cx="150" cy="150" r="22" fill="white" stroke="#d6d3d1" strokeWidth="1.5" />
+                  <circle
+                    cx="150"
+                    cy="150"
+                    r="22"
+                    fill="white"
+                    stroke="#d6d3d1"
+                    strokeWidth="1.5"
+                  />
                   <text
                     x="150"
                     y="150"
@@ -237,7 +261,9 @@ export default function SpinWheel({ open, onClose, onSelect, verifiedOnly = fals
                     exit={{ opacity: 0 }}
                   >
                     <p className="text-white/80 text-sm">It landed on...</p>
-                    <p className="text-white font-serif text-lg md:text-xl">{landed}</p>
+                    <p className="text-white font-serif text-lg md:text-xl">
+                      {landed}
+                    </p>
                     <div className="flex gap-3">
                       <button
                         onClick={handleChoose}

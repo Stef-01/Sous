@@ -20,7 +20,7 @@ export default function ScrapbookPage() {
     (slug: string) => {
       router.push(`/cook/${slug}`);
     },
-    [router]
+    [router],
   );
 
   return (

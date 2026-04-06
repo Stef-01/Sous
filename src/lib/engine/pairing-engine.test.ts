@@ -9,7 +9,11 @@ import { temperatureScorer } from "./scorers/temperature";
 import { preferenceScorer } from "./scorers/preference";
 import { rankCandidates, topK } from "./ranker";
 import { generateExplanation } from "./explainer";
-import type { MainDishIntent, SideDishCandidate, ScoredCandidate } from "./types";
+import type {
+  MainDishIntent,
+  SideDishCandidate,
+  ScoredCandidate,
+} from "./types";
 import { DEFAULT_WEIGHTS } from "./types";
 
 // ── Test fixtures ──────────────────────────────────────
@@ -264,14 +268,20 @@ describe("Ranker", () => {
     const ranked = rankCandidates(
       chickenMain,
       allCandidates,
-      [cuisineFitScorer, flavorContrastScorer, nutritionBalanceScorer,
-       prepBurdenScorer, temperatureScorer, preferenceScorer],
-      DEFAULT_WEIGHTS
+      [
+        cuisineFitScorer,
+        flavorContrastScorer,
+        nutritionBalanceScorer,
+        prepBurdenScorer,
+        temperatureScorer,
+        preferenceScorer,
+      ],
+      DEFAULT_WEIGHTS,
     );
 
     for (let i = 1; i < ranked.length; i++) {
       expect(ranked[i - 1].totalScore).toBeGreaterThanOrEqual(
-        ranked[i].totalScore - 0.001
+        ranked[i].totalScore - 0.001,
       );
     }
   });
@@ -281,7 +291,7 @@ describe("Ranker", () => {
       chickenMain,
       allCandidates,
       [cuisineFitScorer],
-      DEFAULT_WEIGHTS
+      DEFAULT_WEIGHTS,
     );
     const top2 = topK(ranked, 2);
     expect(top2).toHaveLength(2);
@@ -292,7 +302,7 @@ describe("Ranker", () => {
       chickenMain,
       [naan],
       [cuisineFitScorer],
-      DEFAULT_WEIGHTS
+      DEFAULT_WEIGHTS,
     );
     const top3 = topK(ranked, 3);
     expect(top3).toHaveLength(1);
@@ -374,11 +384,17 @@ describe("suggestSides (integration)", () => {
       temperature: 0.05,
       preference: 0.05,
     };
-    const result = suggestSides(chickenMain, allCandidates, undefined, heavyPrepWeights);
+    const result = suggestSides(
+      chickenMain,
+      allCandidates,
+      undefined,
+      heavyPrepWeights,
+    );
     if (result.success) {
       // Quick sides should rank higher with heavy prep weight
       const topSide = result.data.sides[0];
-      const totalPrep = topSide.sideDish.prepTimeMinutes + topSide.sideDish.cookTimeMinutes;
+      const totalPrep =
+        topSide.sideDish.prepTimeMinutes + topSide.sideDish.cookTimeMinutes;
       expect(totalPrep).toBeLessThanOrEqual(15);
     }
   });

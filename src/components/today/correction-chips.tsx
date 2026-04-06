@@ -33,7 +33,9 @@ export function CorrectionChips({
       className="space-y-4"
     >
       <div className="text-center space-y-1">
-        <p className="text-sm text-[var(--nourish-subtext)]">We think this is:</p>
+        <p className="text-sm text-[var(--nourish-subtext)]">
+          We think this is:
+        </p>
         <div className="flex items-center justify-center gap-2">
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             {dishName}
@@ -44,8 +46,8 @@ export function CorrectionChips({
               confidencePct >= 80
                 ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
                 : confidencePct >= 60
-                ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
-                : "bg-red-50 text-red-600"
+                  ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
+                  : "bg-red-50 text-red-600",
             )}
           >
             {confidencePct}%
@@ -68,7 +70,7 @@ export function CorrectionChips({
                   "rounded-full border px-3 py-1.5 text-sm transition-all duration-150",
                   name === dishName
                     ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
-                    : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]"
+                    : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]",
                 )}
                 type="button"
               >
@@ -92,7 +94,7 @@ export function CorrectionChips({
         className={cn(
           "w-full rounded-xl py-3 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200 flex items-center justify-center gap-2"
+          "transition-colors duration-200 flex items-center justify-center gap-2",
         )}
         type="button"
       >

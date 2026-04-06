@@ -35,7 +35,7 @@ const mock = new MockAIProvider();
 async function callClaude<T>(
   schema: import("zod").ZodType<T>,
   system: string,
-  prompt: string
+  prompt: string,
 ): Promise<T> {
   const { generateObject } = await import("ai");
   const { anthropic } = await import("@ai-sdk/anthropic");
@@ -51,7 +51,9 @@ async function callClaude<T>(
 }
 
 export class ClaudeAIProvider implements AIProvider {
-  async explainPairing(input: ExplainPairingInput): Promise<ExplainPairingResult> {
+  async explainPairing(
+    input: ExplainPairingInput,
+  ): Promise<ExplainPairingResult> {
     try {
       return await callClaude(
         explainPairingResultSchema,
@@ -63,7 +65,7 @@ Never use grading language. Speak like a knowledgeable friend.`,
 Side dish: ${input.sideDish}
 Cuisine: ${input.cuisineFamily}
 Pairing rationale: ${input.pairingReason}
-Tags: ${input.tags.join(", ")}`
+Tags: ${input.tags.join(", ")}`,
       );
     } catch (e) {
       console.error("Claude explainPairing failed, using fallback:", e);
@@ -71,7 +73,9 @@ Tags: ${input.tags.join(", ")}`
     }
   }
 
-  async answerCookQuestion(input: CookQuestionInput): Promise<CookQuestionResult> {
+  async answerCookQuestion(
+    input: CookQuestionInput,
+  ): Promise<CookQuestionResult> {
     try {
       return await callClaude(
         cookQuestionResultSchema,
@@ -86,7 +90,7 @@ ${input.previousStep ? `Previous step: ${input.previousStep}` : ""}
 ${input.nextStep ? `Next step: ${input.nextStep}` : ""}
 ${input.ingredients ? `Ingredients: ${input.ingredients.join(", ")}` : ""}
 
-User's question: ${input.question}`
+User's question: ${input.question}`,
       );
     } catch (e) {
       console.error("Claude answerCookQuestion failed, using fallback:", e);
@@ -94,7 +98,9 @@ User's question: ${input.question}`
     }
   }
 
-  async suggestSubstitution(input: SubstitutionInput): Promise<SubstitutionResult> {
+  async suggestSubstitution(
+    input: SubstitutionInput,
+  ): Promise<SubstitutionResult> {
     try {
       return await callClaude(
         substitutionResultSchema,
@@ -105,7 +111,7 @@ Keep the suggestion concise. Prefer common pantry items.`,
         `Missing ingredient: ${input.missingIngredient}
 Recipe: ${input.recipeName}
 Cuisine: ${input.cuisineFamily}
-${input.availableIngredients ? `Available: ${input.availableIngredients.join(", ")}` : ""}`
+${input.availableIngredients ? `Available: ${input.availableIngredients.join(", ")}` : ""}`,
       );
     } catch (e) {
       console.error("Claude suggestSubstitution failed, using fallback:", e);
@@ -126,7 +132,7 @@ ${input.currentStreak && input.currentStreak >= 3 ? `The user has a ${input.curr
         `Completed: ${input.dishName}
 Sides: ${input.sideDishes.join(", ")}
 Cuisine: ${input.cuisineFamily}
-${input.cookDurationMinutes ? `Cook time: ${input.cookDurationMinutes} minutes` : ""}`
+${input.cookDurationMinutes ? `Cook time: ${input.cookDurationMinutes} minutes` : ""}`,
       );
     } catch (e) {
       console.error("Claude generateWinMessage failed, using fallback:", e);
@@ -134,7 +140,9 @@ ${input.cookDurationMinutes ? `Cook time: ${input.cookDurationMinutes} minutes` 
     }
   }
 
-  async rewriteAppraisal(input: AppraisalRewriteInput): Promise<AppraisalRewriteResult> {
+  async rewriteAppraisal(
+    input: AppraisalRewriteInput,
+  ): Promise<AppraisalRewriteResult> {
     try {
       return await callClaude(
         appraisalRewriteResultSchema,
@@ -147,7 +155,7 @@ Status: ${input.status}
 Main: ${input.mainDish}
 Sides: ${input.sideDishes.join(", ")}
 Strengths: ${input.strengths.join("; ")}
-${input.suggestion ? `Suggestion: ${input.suggestion}` : ""}`
+${input.suggestion ? `Suggestion: ${input.suggestion}` : ""}`,
       );
     } catch (e) {
       console.error("Claude rewriteAppraisal failed, using fallback:", e);
@@ -155,7 +163,9 @@ ${input.suggestion ? `Suggestion: ${input.suggestion}` : ""}`
     }
   }
 
-  async generateReflection(input: PostCookReflectionInput): Promise<PostCookReflectionResult> {
+  async generateReflection(
+    input: PostCookReflectionInput,
+  ): Promise<PostCookReflectionResult> {
     try {
       return await callClaude(
         postCookReflectionResultSchema,
@@ -178,7 +188,7 @@ ${input.note ? `User's note: ${input.note}` : "No note"}
 ${input.hasPhoto ? "User took a photo of their cook" : "No photo"}
 Completed ${input.completedSteps} of ${input.totalSteps} steps
 ${input.isFirstCook ? "This is the user's FIRST cook ever!" : ""}
-${input.currentStreak ? `Current streak: ${input.currentStreak} days` : ""}`
+${input.currentStreak ? `Current streak: ${input.currentStreak} days` : ""}`,
       );
     } catch (e) {
       console.error("Claude generateReflection failed, using fallback:", e);

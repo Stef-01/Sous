@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageCircleQuestion, Send } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  MessageCircleQuestion,
+  Send,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { TimerChip } from "./timer-chip";
 import { MistakeChip } from "./mistake-chip";
@@ -61,7 +66,10 @@ export function StepCard({
 }: StepCardProps) {
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
-  const [lastAnswer, setLastAnswer] = useState<{ answer: string; confidence: string } | null>(null);
+  const [lastAnswer, setLastAnswer] = useState<{
+    answer: string;
+    confidence: string;
+  } | null>(null);
 
   const askMutation = trpc.ai.askCookQuestion.useMutation({
     onSuccess: (data) => {
@@ -70,7 +78,8 @@ export function StepCard({
     },
     onError: () => {
       setLastAnswer({
-        answer: "Sorry, I couldn't process that right now. Follow the recipe steps as written.",
+        answer:
+          "Sorry, I couldn't process that right now. Follow the recipe steps as written.",
         confidence: "low",
       });
     },
@@ -143,7 +152,9 @@ export function StepCard({
           <TimerChip
             seconds={timerSeconds}
             isExpanded={expandedChip === "timer"}
-            onToggle={() => onToggleChip(expandedChip === "timer" ? null : "timer")}
+            onToggle={() =>
+              onToggleChip(expandedChip === "timer" ? null : "timer")
+            }
             onStart={() => onStartTimer(timerSeconds)}
           />
         )}
@@ -152,7 +163,9 @@ export function StepCard({
           <MistakeChip
             warning={mistakeWarning}
             isExpanded={expandedChip === "mistake"}
-            onToggle={() => onToggleChip(expandedChip === "mistake" ? null : "mistake")}
+            onToggle={() =>
+              onToggleChip(expandedChip === "mistake" ? null : "mistake")
+            }
           />
         )}
 
@@ -160,7 +173,9 @@ export function StepCard({
           <HackChip
             hack={quickHack}
             isExpanded={expandedChip === "hack"}
-            onToggle={() => onToggleChip(expandedChip === "hack" ? null : "hack")}
+            onToggle={() =>
+              onToggleChip(expandedChip === "hack" ? null : "hack")
+            }
           />
         )}
 
@@ -168,7 +183,9 @@ export function StepCard({
           <FactChip
             fact={cuisineFact}
             isExpanded={expandedChip === "fact"}
-            onToggle={() => onToggleChip(expandedChip === "fact" ? null : "fact")}
+            onToggle={() =>
+              onToggleChip(expandedChip === "fact" ? null : "fact")
+            }
           />
         )}
       </div>
@@ -182,7 +199,7 @@ export function StepCard({
             "border transition-all duration-150",
             showQA
               ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
-              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
         >
@@ -218,7 +235,7 @@ export function StepCard({
                     "rounded-lg px-3 py-2 text-white transition-colors",
                     question.trim() && !askMutation.isPending
                       ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]"
-                      : "bg-neutral-200 cursor-not-allowed"
+                      : "bg-neutral-200 cursor-not-allowed",
                   )}
                   type="button"
                 >
@@ -269,7 +286,7 @@ export function StepCard({
             "border border-neutral-200 transition-colors duration-150",
             isFirst
               ? "text-neutral-300 border-neutral-100 cursor-not-allowed opacity-40"
-              : "text-[var(--nourish-subtext)] hover:border-neutral-300"
+              : "text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
         >
@@ -286,7 +303,7 @@ export function StepCard({
             isLast
               ? "px-8 py-3 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] shadow-md shadow-[var(--nourish-green)]/20"
               : "px-6 py-2.5 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-            "transition-colors duration-200"
+            "transition-colors duration-200",
           )}
           type="button"
         >

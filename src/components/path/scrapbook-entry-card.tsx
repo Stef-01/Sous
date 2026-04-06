@@ -51,10 +51,12 @@ export function ScrapbookEntryCard({
             "shrink-0 rounded-lg p-1.5 transition-colors",
             session.favorite
               ? "text-pink-500"
-              : "text-neutral-300 hover:text-pink-400"
+              : "text-neutral-300 hover:text-pink-400",
           )}
           type="button"
-          aria-label={session.favorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={
+            session.favorite ? "Remove from favorites" : "Add to favorites"
+          }
         >
           <Heart size={14} className={session.favorite ? "fill-current" : ""} />
         </button>
@@ -70,7 +72,7 @@ export function ScrapbookEntryCard({
               className={cn(
                 star <= session.rating!
                   ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
-                  : "text-neutral-200"
+                  : "text-neutral-200",
               )}
             />
           ))}

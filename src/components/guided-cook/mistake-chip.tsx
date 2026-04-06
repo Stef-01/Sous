@@ -10,7 +10,11 @@ interface MistakeChipProps {
   onToggle: () => void;
 }
 
-export function MistakeChip({ warning, isExpanded, onToggle }: MistakeChipProps) {
+export function MistakeChip({
+  warning,
+  isExpanded,
+  onToggle,
+}: MistakeChipProps) {
   return (
     <div>
       <button
@@ -20,7 +24,7 @@ export function MistakeChip({ warning, isExpanded, onToggle }: MistakeChipProps)
           "border transition-all duration-150",
           isExpanded
             ? "border-amber-300/50 bg-amber-50 text-amber-700"
-            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
       >

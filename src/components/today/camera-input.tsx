@@ -15,7 +15,11 @@ interface CameraInputProps {
  * Camera Input — captures a photo of the user's main dish.
  * Falls back to file upload on devices without camera access.
  */
-export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputProps) {
+export function CameraInput({
+  onCapture,
+  onClose,
+  isProcessing,
+}: CameraInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -38,7 +42,7 @@ export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputPro
       };
       reader.readAsDataURL(file);
     },
-    []
+    [],
   );
 
   const handleConfirm = useCallback(() => {
@@ -58,7 +62,11 @@ export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputPro
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3">
-        <button onClick={onClose} className="rounded-lg p-2 text-white/80 hover:text-white" type="button">
+        <button
+          onClick={onClose}
+          className="rounded-lg p-2 text-white/80 hover:text-white"
+          type="button"
+        >
           <X size={24} />
         </button>
         <span className="text-sm font-medium text-white/80">
@@ -107,7 +115,6 @@ export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputPro
               <Upload size={24} />
               <span className="text-xs">Upload</span>
             </button>
-
             {/* Shutter button (opens file picker as camera) */}
             <button
               onClick={() => fileInputRef.current?.click()}
@@ -116,7 +123,6 @@ export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputPro
             >
               <div className="h-14 w-14 rounded-full border-2 border-neutral-300" />
             </button>
-
             <div className="w-16" /> {/* Spacer */}
           </>
         ) : (
@@ -138,7 +144,7 @@ export function CameraInput({ onCapture, onClose, isProcessing }: CameraInputPro
               className={cn(
                 "rounded-xl px-8 py-3 text-sm font-semibold",
                 "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-                "disabled:opacity-50 transition-all duration-200"
+                "disabled:opacity-50 transition-all duration-200",
               )}
               type="button"
             >

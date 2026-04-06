@@ -7,7 +7,7 @@ export const coachRouter = router({
       z.object({
         questionKey: z.string(),
         answer: z.string(),
-      })
+      }),
     )
     .mutation(async () => {
       // TODO: Store response, update preference vector, return result card

@@ -24,7 +24,21 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   const lowerTags = tags.map((t) => t.toLowerCase());
 
   // 0. Red Flags / Warnings (High Priority)
-  if (lowerTags.some((t) => ["rice", "naan", "bread", "pasta", "potato", "fried", "deep-fried", "sugar", "sweet"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      [
+        "rice",
+        "naan",
+        "bread",
+        "pasta",
+        "potato",
+        "fried",
+        "deep-fried",
+        "sugar",
+        "sweet",
+      ].includes(t),
+    )
+  ) {
     benefits.push({
       id: "high-carb",
       label: "Heavy / High Carb",
@@ -69,7 +83,11 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   }
 
   // 2. Tag-based Evidence
-  if (lowerTags.some((t) => ["yogurt", "curd", "kimchi", "fermented", "probiotic"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      ["yogurt", "curd", "kimchi", "fermented", "probiotic"].includes(t),
+    )
+  ) {
     benefits.push({
       id: "probiotics",
       label: "Probiotics",
@@ -81,10 +99,36 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
 
   // Diabetes Friendly Check (Green Flag)
   // Logic: Veggie OR specific healthy tags, AND no bad tags.
-  const isDiabetesFriendly = (
-    (cat === "vegetable" || lowerTags.some((t) => ["lentil", "dal", "bean", "fish", "salmon", "nuts", "seeds", "chicken", "turkey"].includes(t))) &&
-    !lowerTags.some((t) => ["potato", "alco", "fried", "deep-fried", "sugar", "sweet", "rice", "bread", "naan", "pasta", "fruit"].includes(t))
-  );
+  const isDiabetesFriendly =
+    (cat === "vegetable" ||
+      lowerTags.some((t) =>
+        [
+          "lentil",
+          "dal",
+          "bean",
+          "fish",
+          "salmon",
+          "nuts",
+          "seeds",
+          "chicken",
+          "turkey",
+        ].includes(t),
+      )) &&
+    !lowerTags.some((t) =>
+      [
+        "potato",
+        "alco",
+        "fried",
+        "deep-fried",
+        "sugar",
+        "sweet",
+        "rice",
+        "bread",
+        "naan",
+        "pasta",
+        "fruit",
+      ].includes(t),
+    );
 
   if (isDiabetesFriendly) {
     benefits.push({
@@ -98,7 +142,20 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
 
   // 1. Evidence-Based High Impact
   // Bone Health (Calcium + Vit K)
-  if (lowerTags.some((t) => ["dairy", "cheese", "yogurt", "milk", "leafy", "spinach", "broccoli", "almond"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      [
+        "dairy",
+        "cheese",
+        "yogurt",
+        "milk",
+        "leafy",
+        "spinach",
+        "broccoli",
+        "almond",
+      ].includes(t),
+    )
+  ) {
     benefits.push({
       id: "bone-health",
       label: "+ Bone Health",
@@ -109,7 +166,19 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   }
 
   // Brain Health (B12 / Omega-3)
-  if (lowerTags.some((t) => ["fish", "seafood", "egg", "meat", "chicken", "dairy", "fortified"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      [
+        "fish",
+        "seafood",
+        "egg",
+        "meat",
+        "chicken",
+        "dairy",
+        "fortified",
+      ].includes(t),
+    )
+  ) {
     benefits.push({
       id: "brain-health",
       label: "Brain Health (B12)",
@@ -120,7 +189,20 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   }
 
   // High Iron
-  if (lowerTags.some((t) => ["spinach", "lentil", "beans", "chickpea", "meat", "beef", "lamb", "tofu"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      [
+        "spinach",
+        "lentil",
+        "beans",
+        "chickpea",
+        "meat",
+        "beef",
+        "lamb",
+        "tofu",
+      ].includes(t),
+    )
+  ) {
     benefits.push({
       id: "high-iron",
       label: "High Iron",
@@ -131,7 +213,23 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
   }
 
   // Gut Health (Fiber / Fermented)
-  if (lowerTags.some((t) => ["fiber", "fermented", "yogurt", "kimchi", "miso", "whole-grain", "oats", "barley", "lentil", "beans"].includes(t)) || cat === "vegetable") {
+  if (
+    lowerTags.some((t) =>
+      [
+        "fiber",
+        "fermented",
+        "yogurt",
+        "kimchi",
+        "miso",
+        "whole-grain",
+        "oats",
+        "barley",
+        "lentil",
+        "beans",
+      ].includes(t),
+    ) ||
+    cat === "vegetable"
+  ) {
     benefits.push({
       id: "gut-health",
       label: "Gut Health",
@@ -141,7 +239,11 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
     });
   }
 
-  if (lowerTags.some((t) => ["fish", "salmon", "omega", "seeds", "flax", "walnut"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      ["fish", "salmon", "omega", "seeds", "flax", "walnut"].includes(t),
+    )
+  ) {
     benefits.push({
       id: "brain",
       label: "Omega-3 / Brain",
@@ -151,7 +253,19 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
     });
   }
 
-  if (lowerTags.some((t) => ["orange", "citrus", "lemon", "lime", "tomato", "capsicum", "pepper"].includes(t))) {
+  if (
+    lowerTags.some((t) =>
+      [
+        "orange",
+        "citrus",
+        "lemon",
+        "lime",
+        "tomato",
+        "capsicum",
+        "pepper",
+      ].includes(t),
+    )
+  ) {
     benefits.push({
       id: "immunity",
       label: "Vit C / Immunity",
@@ -160,8 +274,6 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
       icon: "🛡️",
     });
   }
-
-
 
   if (lowerTags.some((t) => ["chicken", "turkey", "lean"].includes(t))) {
     benefits.push({
@@ -188,15 +300,24 @@ function getNutritionalBenefits(tags: string[], cat?: string): Benefit[] {
 
   // Deduplicate
   const seen = new Set();
-  return benefits.filter(b => {
-    const duplicate = seen.has(b.id);
-    seen.add(b.id);
-    return !duplicate;
-  }).slice(0, 3); // Max 3 badges
+  return benefits
+    .filter((b) => {
+      const duplicate = seen.has(b.id);
+      seen.add(b.id);
+      return !duplicate;
+    })
+    .slice(0, 3); // Max 3 badges
 }
 
-export default function HoverCard({ name, tags, nutritionCategory }: HoverContextProps) {
-  const benefits = useMemo(() => getNutritionalBenefits(tags, nutritionCategory), [tags, nutritionCategory]);
+export default function HoverCard({
+  name,
+  tags,
+  nutritionCategory,
+}: HoverContextProps) {
+  const benefits = useMemo(
+    () => getNutritionalBenefits(tags, nutritionCategory),
+    [tags, nutritionCategory],
+  );
 
   return (
     <motion.div
@@ -228,30 +349,36 @@ export default function HoverCard({ name, tags, nutritionCategory }: HoverContex
           initial="hidden"
           animate="visible"
         >
-          {benefits.length > 0 ? benefits.map((b) => (
-            <motion.div
-              key={b.id}
-              className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg ${b.bgColor}`}
-              variants={{
-                hidden: { opacity: 0, y: 4 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.2,
-                    ease: "easeOut",
+          {benefits.length > 0 ? (
+            benefits.map((b) => (
+              <motion.div
+                key={b.id}
+                className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg ${b.bgColor}`}
+                variants={{
+                  hidden: { opacity: 0, y: 4 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.2,
+                      ease: "easeOut",
+                    },
                   },
-                },
-              }}
-            >
-              <span className="text-sm leading-none filter drop-shadow-sm">{b.icon}</span>
-              <span className={`text-[11px] font-semibold ${b.color}`}>
-                {b.label}
-              </span>
-            </motion.div>
-          )) : (
+                }}
+              >
+                <span className="text-sm leading-none filter drop-shadow-sm">
+                  {b.icon}
+                </span>
+                <span className={`text-[11px] font-semibold ${b.color}`}>
+                  {b.label}
+                </span>
+              </motion.div>
+            ))
+          ) : (
             <div className="px-2 py-1 text-center">
-              <span className="text-[10px] text-stone-400 italic">No specific badges found</span>
+              <span className="text-[10px] text-stone-400 italic">
+                No specific badges found
+              </span>
             </div>
           )}
         </motion.div>

@@ -21,11 +21,11 @@ The result: patients leave their first appointment with a printout they never lo
 
 ## 2. Product Vision
 
-> *"Making a change to more healthy diabetes eating feels simple, achievable, and realistic."*
+> _"Making a change to more healthy diabetes eating feels simple, achievable, and realistic."_
 
 NOURISH is a **clinical adjunct learning tool** — not a meal tracker, not a diet app. It sits in the space between a patient's diagnosis and their first real dietary shift, making the ADA Plate Method intuitive by showing, not telling.
 
-**The core loop:** Type a meal you already eat → See three side dishes that complete a balanced plate → Understand *why* they work together → Feel confident that change is possible.
+**The core loop:** Type a meal you already eat → See three side dishes that complete a balanced plate → Understand _why_ they work together → Feel confident that change is possible.
 
 ---
 
@@ -33,29 +33,29 @@ NOURISH is a **clinical adjunct learning tool** — not a meal tracker, not a di
 
 ### Primary: Newly Diagnosed Diabetes / Pre-Diabetes Patients
 
-| Attribute | Detail |
-|-----------|--------|
-| **Demographics** | Adults (25–70), diverse ethnic backgrounds, varying health literacy |
-| **Trigger moment** | First 1–4 weeks post-diagnosis; the "now what?" window |
-| **Emotional state** | Anxious, overwhelmed, often grieving familiar foods |
-| **Current behavior** | Googling "can I still eat rice with diabetes" at midnight |
-| **Desired outcome** | A realistic plate they can make tomorrow, not a 30-day plan |
+| Attribute            | Detail                                                              |
+| -------------------- | ------------------------------------------------------------------- |
+| **Demographics**     | Adults (25–70), diverse ethnic backgrounds, varying health literacy |
+| **Trigger moment**   | First 1–4 weeks post-diagnosis; the "now what?" window              |
+| **Emotional state**  | Anxious, overwhelmed, often grieving familiar foods                 |
+| **Current behavior** | Googling "can I still eat rice with diabetes" at midnight           |
+| **Desired outcome**  | A realistic plate they can make tomorrow, not a 30-day plan         |
 
 ### Secondary: Clinical Partners (Stanford Endocrinology)
 
-| Attribute | Detail |
-|-----------|--------|
-| **Role** | Endocrinologists, diabetes educators, registered dietitians |
-| **Need** | A tool to prescribe alongside medication — "Try this before your next visit" |
+| Attribute          | Detail                                                                          |
+| ------------------ | ------------------------------------------------------------------------------- |
+| **Role**           | Endocrinologists, diabetes educators, registered dietitians                     |
+| **Need**           | A tool to prescribe alongside medication — "Try this before your next visit"    |
 | **Success signal** | Patient arrives at follow-up having explored culturally relevant balanced meals |
 
 ### Tertiary: Health-Curious Public
 
-| Attribute | Detail |
-|-----------|--------|
-| **Profile** | Anyone curious about balanced eating via the Plate Method |
-| **Entry point** | Word of mouth, social sharing of plates, search |
-| **Value** | Culturally authentic meal pairing without diabetes framing |
+| Attribute       | Detail                                                     |
+| --------------- | ---------------------------------------------------------- |
+| **Profile**     | Anyone curious about balanced eating via the Plate Method  |
+| **Entry point** | Word of mouth, social sharing of plates, search            |
+| **Value**       | Culturally authentic meal pairing without diabetes framing |
 
 ---
 
@@ -67,21 +67,21 @@ NOURISH is a **clinical adjunct learning tool** — not a meal tracker, not a di
 
 ### Primary Goals
 
-| Goal | Metric | Target (6-month) |
-|------|--------|-------------------|
-| **Spark dietary curiosity post-diagnosis** | % of referred patients who explore ≥5 meals in first 2 weeks | 60% |
-| **Improve dietitian follow-up quality** | Pre/post survey: "I tried a new balanced meal this week" | 40% ↑ from baseline |
-| **Represent cultural diversity** | Cuisines with ≥80 recipes | 15 ethnicity-cuisine categories |
-| **Clinical partner adoption** | Clinics actively recommending NOURISH | 3 Stanford-affiliated clinics |
+| Goal                                       | Metric                                                       | Target (6-month)                |
+| ------------------------------------------ | ------------------------------------------------------------ | ------------------------------- |
+| **Spark dietary curiosity post-diagnosis** | % of referred patients who explore ≥5 meals in first 2 weeks | 60%                             |
+| **Improve dietitian follow-up quality**    | Pre/post survey: "I tried a new balanced meal this week"     | 40% ↑ from baseline             |
+| **Represent cultural diversity**           | Cuisines with ≥80 recipes                                    | 15 ethnicity-cuisine categories |
+| **Clinical partner adoption**              | Clinics actively recommending NOURISH                        | 3 Stanford-affiliated clinics   |
 
 ### Secondary Goals
 
-| Goal | Metric | Target |
-|------|--------|--------|
-| **Build a viable startup foundation** | Seed-stage readiness (product, data, traction) | By month 12 |
-| **Weekly retention** | Patients returning week-over-week | 35% W1→W4 |
-| **Shareability** | Plates shared (download, clipboard, native) | 500/month organic |
-| **Accessibility** | WCAG 2.1 AA compliance | 100% core flows |
+| Goal                                  | Metric                                         | Target            |
+| ------------------------------------- | ---------------------------------------------- | ----------------- |
+| **Build a viable startup foundation** | Seed-stage readiness (product, data, traction) | By month 12       |
+| **Weekly retention**                  | Patients returning week-over-week              | 35% W1→W4         |
+| **Shareability**                      | Plates shared (download, clipboard, native)    | 500/month organic |
+| **Accessibility**                     | WCAG 2.1 AA compliance                         | 100% core flows   |
 
 ---
 
@@ -92,6 +92,7 @@ NOURISH is a **clinical adjunct learning tool** — not a meal tracker, not a di
 The entry point. A patient types a meal from their own kitchen — "chicken biryani," "arroz con pollo," "pad thai" — and instantly sees three complementary side dishes.
 
 **Mechanics:**
+
 - Fuzzy search with alias support (e.g., "biryani" finds "Chicken Biryani")
 - Suggestion chips on empty state (culturally diverse quick-starts)
 - Error state offers related meals (never a dead end)
@@ -104,15 +105,18 @@ The entry point. A patient types a meal from their own kitchen — "chicken biry
 The engine behind the magic. Two modes:
 
 **Ranked Mode** (14 cuisines today → all cuisines at scale):
+
 - Pre-computed scores (0–100) from a Python scoring engine
 - Considers: flavor complementarity, texture contrast, cultural authenticity, nutritional balance, spice compatibility
 - Tier classification: Excellent / Strong / Good / Experimental / Low
 
 **Curated Mode** (fallback for unscored meals):
+
 - Hand-curated side pools with randomized selection
 - Fisher-Yates shuffle ensures variety across rerolls
 
 **Reroll & Swap:**
+
 - "Swap" a single side to explore alternatives
 - Session tracking prevents repeats until pool is exhausted
 - Graceful wrap-around when all options shown
@@ -122,6 +126,7 @@ The engine behind the magic. Two modes:
 When a patient clicks "Evaluate," the search bar morphs into a clinical one-liner appraisal ("Balanced plate with strong pairings.") and the food cards scatter into a scrapbook cluster while an interactive plate diagram appears.
 
 **Plate anatomy:**
+
 - Three sections: 50% Vegetables, 25% Protein, 25% Carbs (ADA standard)
 - Food images from the current pairing populate each section
 - Stacked angled-card presentation when multiple items share a category
@@ -130,6 +135,7 @@ When a patient clicks "Evaluate," the search bar morphs into a clinical one-line
 - ✓/✗ indicators in external labels for balance status
 
 **Appraisal sentence** (displayed in search bar during evaluation):
+
 - Synthesizes a doctor's note + coach + traffic light into 5–8 words
 - Tone-mapped colors: nourish-green (balanced), amber (needs work), stone (neutral)
 - Typography: sans-serif, muted, clinical — never preachy
@@ -153,41 +159,41 @@ Interactive matrix visualization (35 mains × 148 sides) color-coded by compatib
 
 ### Phase 1: Data Expansion (Months 1–3)
 
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| **15 Ethnicity-Cuisine Categories** | South Indian, North Indian, Mexican, Japanese, Korean, Thai, Mediterranean, Middle Eastern, West African, Ethiopian, Caribbean, Southern US, Italian, Chinese, Filipino | P0 |
-| **80 Recipes Per Culture** | 80 main dishes per ethnicity category → 1,200+ total meals | P0 |
-| **Full Engine Scoring** | Extend Python engine to score all 1,200+ mains | P0 |
-| **Side Dish Expansion** | Proportional growth of culturally authentic sides | P0 |
+| Feature                             | Description                                                                                                                                                             | Priority |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| **15 Ethnicity-Cuisine Categories** | South Indian, North Indian, Mexican, Japanese, Korean, Thai, Mediterranean, Middle Eastern, West African, Ethiopian, Caribbean, Southern US, Italian, Chinese, Filipino | P0       |
+| **80 Recipes Per Culture**          | 80 main dishes per ethnicity category → 1,200+ total meals                                                                                                              | P0       |
+| **Full Engine Scoring**             | Extend Python engine to score all 1,200+ mains                                                                                                                          | P0       |
+| **Side Dish Expansion**             | Proportional growth of culturally authentic sides                                                                                                                       | P0       |
 
 ### Phase 2: Clinical Integration (Months 3–6)
 
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| **Clinician Referral Flow** | QR code or short-link a clinician can hand to patients | P1 |
-| **Curated "Starter Packs"** | Per-ethnicity meal sets a clinician can prescribe ("Try these 5 Indian meals this week") | P1 |
-| **Progress Journaling** | Lightweight: "I tried this plate" check-in (not full food logging) | P2 |
-| **Dietitian Dashboard** | View which meals a referred patient explored (anonymized, opt-in) | P2 |
+| Feature                     | Description                                                                              | Priority |
+| --------------------------- | ---------------------------------------------------------------------------------------- | -------- |
+| **Clinician Referral Flow** | QR code or short-link a clinician can hand to patients                                   | P1       |
+| **Curated "Starter Packs"** | Per-ethnicity meal sets a clinician can prescribe ("Try these 5 Indian meals this week") | P1       |
+| **Progress Journaling**     | Lightweight: "I tried this plate" check-in (not full food logging)                       | P2       |
+| **Dietitian Dashboard**     | View which meals a referred patient explored (anonymized, opt-in)                        | P2       |
 
 ### Phase 3: Personalization & Intelligence (Months 6–12)
 
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| **Glycemic Impact Indicators** | Traffic-light overlay: green/yellow/red per side based on GI + fiber | P1 |
-| **Portion Guidance** | Gentle visual cues ("a fist-sized serving") without calorie counting | P1 |
-| **Meal History Intelligence** | "You've been exploring mostly Indian meals — try these Mediterranean plates" | P2 |
-| **Ingredient Substitutions** | "Swap white rice for brown rice" inline suggestions | P2 |
-| **Accessibility Audit** | Full WCAG 2.1 AA certification | P1 |
+| Feature                        | Description                                                                  | Priority |
+| ------------------------------ | ---------------------------------------------------------------------------- | -------- |
+| **Glycemic Impact Indicators** | Traffic-light overlay: green/yellow/red per side based on GI + fiber         | P1       |
+| **Portion Guidance**           | Gentle visual cues ("a fist-sized serving") without calorie counting         | P1       |
+| **Meal History Intelligence**  | "You've been exploring mostly Indian meals — try these Mediterranean plates" | P2       |
+| **Ingredient Substitutions**   | "Swap white rice for brown rice" inline suggestions                          | P2       |
+| **Accessibility Audit**        | Full WCAG 2.1 AA certification                                               | P1       |
 
 ### Phase 4: Platform & Growth (Months 9–18)
 
-| Feature | Description | Priority |
-|---------|-------------|----------|
-| **User Accounts (Optional)** | Cloud sync for saved pairings, cross-device | P2 |
-| **PWA / Mobile App** | Installable app experience, offline capable | P1 |
-| **Embeddable Widget** | Clinic websites can embed the search bar | P2 |
-| **Multi-language** | Spanish, Hindi, Tagalog (top 3 patient languages at Stanford) | P1 |
-| **Analytics Infrastructure** | Funnel tracking, A/B testing, outcome correlation | P1 |
+| Feature                      | Description                                                   | Priority |
+| ---------------------------- | ------------------------------------------------------------- | -------- |
+| **User Accounts (Optional)** | Cloud sync for saved pairings, cross-device                   | P2       |
+| **PWA / Mobile App**         | Installable app experience, offline capable                   | P1       |
+| **Embeddable Widget**        | Clinic websites can embed the search bar                      | P2       |
+| **Multi-language**           | Spanish, Hindi, Tagalog (top 3 patient languages at Stanford) | P1       |
+| **Analytics Infrastructure** | Funnel tracking, A/B testing, outcome correlation             | P1       |
 
 ---
 
@@ -308,21 +314,27 @@ Endocrinologist sees patient A1C at 7.2
 ## 8. Design Principles
 
 ### 1. Cultural Authenticity First
-Every cuisine must feel *respected*, not translated. "Raita" stays "Raita" — never "Indian Yogurt Dip." Food images should look like what a patient's grandmother would recognize.
+
+Every cuisine must feel _respected_, not translated. "Raita" stays "Raita" — never "Indian Yogurt Dip." Food images should look like what a patient's grandmother would recognize.
 
 ### 2. Show, Don't Tell
+
 No paragraphs explaining the Plate Method. The interactive plate, populated with the patient's own food choices, teaches through visual recognition. The appraisal sentence is 5–8 words, not a lecture.
 
 ### 3. Warm Clinical, Not Cold Medical
+
 The design language walks a line: trustworthy enough for a clinician to recommend, warm enough for a scared patient to use at 11pm. Stone-warm color palette, serif headlines, clean sans-serif body text.
 
 ### 4. Zero Guilt
+
 The tool never says "bad plate" or "unhealthy." The worst feedback is "Needs vegetables and whole grains for balance" — constructive, not judgmental. Traffic-light-style indicators point toward improvement, not away from failure.
 
 ### 5. Progressive Disclosure
+
 First visit: just search and see results. Second visit: try Evaluate. Third visit: start swapping sides. The UI doesn't overwhelm — features reveal themselves as the patient gains confidence.
 
 ### 6. One Input, One Screen
+
 The entire core experience lives on a single page. No navigation, no onboarding flow, no tutorial. Type → see → learn. Everything else is secondary.
 
 ---
@@ -371,23 +383,23 @@ The entire core experience lives on a single page. No navigation, no onboarding 
 
 ### Ethnicity-Cuisine Categories (15 Planned)
 
-| # | Category | Example Mains | Status |
-|---|----------|---------------|--------|
-| 1 | South Indian | Dosa, Idli Sambar, Chettinad Chicken | Partial (in v1) |
-| 2 | North Indian | Biryani, Dal Makhani, Chole | Partial (in v1) |
-| 3 | Mexican | Tacos, Enchiladas, Pozole | Partial (in v1) |
-| 4 | Japanese | Ramen, Teriyaki, Onigiri | Partial (in v1) |
-| 5 | Korean | Bibimbap, Bulgogi, Kimchi Jjigae | Not started |
-| 6 | Thai | Pad Thai, Green Curry, Tom Yum | Partial (in v1) |
-| 7 | Mediterranean | Falafel, Moussaka, Shakshuka | Partial (in v1) |
-| 8 | Middle Eastern | Kebab, Mansaf, Kibbeh | Not started |
-| 9 | West African | Jollof Rice, Egusi Soup, Suya | Not started |
-| 10 | Ethiopian | Injera Combos, Doro Wat, Kitfo | Not started |
-| 11 | Caribbean | Jerk Chicken, Roti, Ackee & Saltfish | Not started |
-| 12 | Southern US | Gumbo, Fried Chicken, Collard Greens | Not started |
-| 13 | Italian | Pasta, Risotto, Ossobuco | Partial (in v1) |
-| 14 | Chinese | Dim Sum, Mapo Tofu, Kung Pao | Not started |
-| 15 | Filipino | Adobo, Sinigang, Lumpia | Not started |
+| #   | Category       | Example Mains                        | Status          |
+| --- | -------------- | ------------------------------------ | --------------- |
+| 1   | South Indian   | Dosa, Idli Sambar, Chettinad Chicken | Partial (in v1) |
+| 2   | North Indian   | Biryani, Dal Makhani, Chole          | Partial (in v1) |
+| 3   | Mexican        | Tacos, Enchiladas, Pozole            | Partial (in v1) |
+| 4   | Japanese       | Ramen, Teriyaki, Onigiri             | Partial (in v1) |
+| 5   | Korean         | Bibimbap, Bulgogi, Kimchi Jjigae     | Not started     |
+| 6   | Thai           | Pad Thai, Green Curry, Tom Yum       | Partial (in v1) |
+| 7   | Mediterranean  | Falafel, Moussaka, Shakshuka         | Partial (in v1) |
+| 8   | Middle Eastern | Kebab, Mansaf, Kibbeh                | Not started     |
+| 9   | West African   | Jollof Rice, Egusi Soup, Suya        | Not started     |
+| 10  | Ethiopian      | Injera Combos, Doro Wat, Kitfo       | Not started     |
+| 11  | Caribbean      | Jerk Chicken, Roti, Ackee & Saltfish | Not started     |
+| 12  | Southern US    | Gumbo, Fried Chicken, Collard Greens | Not started     |
+| 13  | Italian        | Pasta, Risotto, Ossobuco             | Partial (in v1) |
+| 14  | Chinese        | Dim Sum, Mapo Tofu, Kung Pao         | Not started     |
+| 15  | Filipino       | Adobo, Sinigang, Lumpia              | Not started     |
 
 ---
 
@@ -395,39 +407,39 @@ The entire core experience lives on a single page. No navigation, no onboarding 
 
 ### Current Stack
 
-| Layer | Technology | Notes |
-|-------|-----------|-------|
-| Framework | Next.js 16 (App Router) | Turbopack for dev |
-| UI | React 19 + Tailwind CSS v4 | Custom design tokens |
-| Animation | Framer Motion 12 | Spring physics, reduced motion support |
-| Search | Fuse.js | Client-side fuzzy matching |
-| Data | Static JSON | Bundled at build time |
-| Export | html-to-image | DOM → PNG conversion |
-| Hosting | Vercel | Edge deployment |
-| Scoring | Python (offline) | Pre-computed, output to JSON |
+| Layer     | Technology                 | Notes                                  |
+| --------- | -------------------------- | -------------------------------------- |
+| Framework | Next.js 16 (App Router)    | Turbopack for dev                      |
+| UI        | React 19 + Tailwind CSS v4 | Custom design tokens                   |
+| Animation | Framer Motion 12           | Spring physics, reduced motion support |
+| Search    | Fuse.js                    | Client-side fuzzy matching             |
+| Data      | Static JSON                | Bundled at build time                  |
+| Export    | html-to-image              | DOM → PNG conversion                   |
+| Hosting   | Vercel                     | Edge deployment                        |
+| Scoring   | Python (offline)           | Pre-computed, output to JSON           |
 
 ### Scaling Considerations
 
-| Challenge | Current | Future |
-|-----------|---------|--------|
-| Data size | 35 meals (JSON bundled) | 1,200+ meals → edge database (Turso/PlanetScale) |
-| Search | Client-side Fuse.js | Server-side with cuisine filtering + pagination |
-| Scoring | Offline Python → JSON | Real-time scoring API or pre-computed in DB |
-| Images | Unsplash URLs | CDN-hosted curated photography |
-| Analytics | Console.log stub | PostHog / Mixpanel with clinical dashboards |
-| Auth | None | Optional accounts for cloud sync + clinician linking |
+| Challenge | Current                 | Future                                               |
+| --------- | ----------------------- | ---------------------------------------------------- |
+| Data size | 35 meals (JSON bundled) | 1,200+ meals → edge database (Turso/PlanetScale)     |
+| Search    | Client-side Fuse.js     | Server-side with cuisine filtering + pagination      |
+| Scoring   | Offline Python → JSON   | Real-time scoring API or pre-computed in DB          |
+| Images    | Unsplash URLs           | CDN-hosted curated photography                       |
+| Analytics | Console.log stub        | PostHog / Mixpanel with clinical dashboards          |
+| Auth      | None                    | Optional accounts for cloud sync + clinician linking |
 
 ---
 
 ## 11. Competitive Landscape
 
-| Tool | Approach | NOURISH Differentiation |
-|------|----------|------------------------|
-| **MyFitnessPal** | Calorie/macro tracking | NOURISH is *learning*, not logging |
-| **Fooducate** | Grade system (A–D) | NOURISH shows balanced *plates*, not isolated foods |
-| **mySugr** | Blood sugar logging | NOURISH operates upstream — before the glucose spike |
-| **ADA Plate Planner** | Static PDF guide | NOURISH is interactive, culturally diverse, beautiful |
-| **Noom** | Behavioral coaching ($$$) | NOURISH is free, focused, no subscription |
+| Tool                  | Approach                  | NOURISH Differentiation                               |
+| --------------------- | ------------------------- | ----------------------------------------------------- |
+| **MyFitnessPal**      | Calorie/macro tracking    | NOURISH is _learning_, not logging                    |
+| **Fooducate**         | Grade system (A–D)        | NOURISH shows balanced _plates_, not isolated foods   |
+| **mySugr**            | Blood sugar logging       | NOURISH operates upstream — before the glucose spike  |
+| **ADA Plate Planner** | Static PDF guide          | NOURISH is interactive, culturally diverse, beautiful |
+| **Noom**              | Behavioral coaching ($$$) | NOURISH is free, focused, no subscription             |
 
 **Unique position:** The only tool that combines **cultural food intelligence** + **ADA Plate Method visualization** + **discovery-based learning** in a single, free, zero-friction interface.
 
@@ -435,14 +447,14 @@ The entire core experience lives on a single page. No navigation, no onboarding 
 
 ## 12. Risk Register
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Cultural insensitivity in food pairings | Medium | High | Community review panels per cuisine; cultural consultant per ethnicity category |
-| Nutritional inaccuracy | Medium | High | Registered dietitian review of all pairings; disclaimers; "Not medical advice" |
-| Low patient engagement | Medium | Medium | Clinician integration as primary distribution; social sharing virality |
-| Data scaling complexity | Medium | Medium | Incremental: 3 cuisines/quarter; templated data pipeline |
-| Over-reliance on Stanford affiliation | Low | Medium | Expand to community health centers; FQHC partnerships |
-| Image quality inconsistency | High | Low | Build custom photography pipeline; community-sourced images |
+| Risk                                    | Likelihood | Impact | Mitigation                                                                      |
+| --------------------------------------- | ---------- | ------ | ------------------------------------------------------------------------------- |
+| Cultural insensitivity in food pairings | Medium     | High   | Community review panels per cuisine; cultural consultant per ethnicity category |
+| Nutritional inaccuracy                  | Medium     | High   | Registered dietitian review of all pairings; disclaimers; "Not medical advice"  |
+| Low patient engagement                  | Medium     | Medium | Clinician integration as primary distribution; social sharing virality          |
+| Data scaling complexity                 | Medium     | Medium | Incremental: 3 cuisines/quarter; templated data pipeline                        |
+| Over-reliance on Stanford affiliation   | Low        | Medium | Expand to community health centers; FQHC partnerships                           |
+| Image quality inconsistency             | High       | Low    | Build custom photography pipeline; community-sourced images                     |
 
 ---
 
@@ -460,16 +472,16 @@ The entire core experience lives on a single page. No navigation, no onboarding 
 
 > **Maria, 54, diagnosed with Type 2 diabetes three weeks ago.**
 >
-> Her endocrinologist at Stanford hands her a card: *"Before your dietitian appointment, try nourish.app."*
+> Her endocrinologist at Stanford hands her a card: _"Before your dietitian appointment, try nourish.app."_
 >
-> That evening, Maria types "arroz con pollo." She sees three sides appear — black beans, plantains, and a cabbage slaw. She taps "Evaluate" and sees: *"Balanced plate with strong pairings."* For the first time since her diagnosis, she smiles. This is food she already knows.
+> That evening, Maria types "arroz con pollo." She sees three sides appear — black beans, plantains, and a cabbage slaw. She taps "Evaluate" and sees: _"Balanced plate with strong pairings."_ For the first time since her diagnosis, she smiles. This is food she already knows.
 >
 > Over the next two weeks, she searches for 12 more meals. She discovers that her pozole needs a vegetable side. She starts making ensalada de nopales.
 >
-> At her dietitian visit, she says: *"I've been using this app. I think I understand the plate thing. Can we talk about portion sizes now?"*
+> At her dietitian visit, she says: _"I've been using this app. I think I understand the plate thing. Can we talk about portion sizes now?"_
 >
 > The dietitian, for the first time in years, starts a follow-up at Step 2 instead of Step 0.
 
 ---
 
-*NOURISH — Because healthy eating should feel like coming home, not leaving it.*
+_NOURISH — Because healthy eating should feel like coming home, not leaving it._

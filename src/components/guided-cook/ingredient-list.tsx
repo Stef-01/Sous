@@ -59,10 +59,11 @@ export function IngredientList({
   // Count total ingredients across all sections
   const totalIngredients = useMemo(
     () => effectiveSections.reduce((sum, s) => sum + s.ingredients.length, 0),
-    [effectiveSections]
+    [effectiveSections],
   );
 
-  const isSegmented = effectiveSections.length > 1 || (effectiveSections[0]?.label !== "");
+  const isSegmented =
+    effectiveSections.length > 1 || effectiveSections[0]?.label !== "";
 
   const toggleItem = (id: string) => {
     setChecked((prev) => {
@@ -126,7 +127,9 @@ export function IngredientList({
                 recipeName={recipeName}
                 cuisineFamily={cuisineFamily}
                 onToggle={() => toggleItem(item.id)}
-                onAskSub={() => setAskingSub(askingSub === item.id ? null : item.id)}
+                onAskSub={() =>
+                  setAskingSub(askingSub === item.id ? null : item.id)
+                }
               />
             ))}
           </div>
@@ -143,7 +146,7 @@ export function IngredientList({
             "transition-all duration-200",
             allChecked
               ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]"
-              : "bg-[var(--nourish-green)]/80 hover:bg-[var(--nourish-green)]"
+              : "bg-[var(--nourish-green)]/80 hover:bg-[var(--nourish-green)]",
           )}
           type="button"
         >
@@ -155,13 +158,18 @@ export function IngredientList({
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.15 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: 0.15,
+            }}
             whileTap={{ scale: 0.96 }}
             onClick={onSelectSides}
             className={cn(
               "flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-medium",
               "text-[var(--nourish-green)] border border-[var(--nourish-green)]/25",
-              "hover:bg-[var(--nourish-green)]/5 transition-colors duration-200"
+              "hover:bg-[var(--nourish-green)]/5 transition-colors duration-200",
             )}
             type="button"
           >
@@ -200,7 +208,7 @@ function IngredientRow({
       recipeName,
       cuisineFamily,
     },
-    { enabled: showingSub, staleTime: Infinity }
+    { enabled: showingSub, staleTime: Infinity },
   );
 
   return (
@@ -212,15 +220,11 @@ function IngredientRow({
         className={cn(
           "flex w-full items-start gap-3 rounded-lg px-3 py-2.5",
           "transition-colors duration-100",
-          checked && "opacity-60"
+          checked && "opacity-60",
         )}
       >
         {/* Checkbox */}
-        <button
-          onClick={onToggle}
-          className="mt-0.5 shrink-0"
-          type="button"
-        >
+        <button onClick={onToggle} className="mt-0.5 shrink-0" type="button">
           {checked ? (
             <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[var(--nourish-green)]">
               <Check size={12} className="text-white" strokeWidth={3} />
@@ -242,7 +246,7 @@ function IngredientRow({
                 "text-sm font-medium",
                 checked
                   ? "text-[var(--nourish-subtext)] line-through"
-                  : "text-[var(--nourish-dark)]"
+                  : "text-[var(--nourish-dark)]",
               )}
             >
               {item.name}
@@ -271,7 +275,7 @@ function IngredientRow({
               "mt-0.5 shrink-0 rounded-md p-1 transition-colors",
               showingSub
                 ? "text-[var(--nourish-green)] bg-[var(--nourish-green)]/10"
-                : "text-neutral-300 hover:text-[var(--nourish-subtext)]"
+                : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
             )}
             type="button"
             title="I don't have this"

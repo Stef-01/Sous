@@ -40,7 +40,11 @@ const reducedVariants = {
   animate: { opacity: 1, transition: { duration: 0.2, delay: 0.3 } },
 };
 
-export default function RerollButton({ onReroll, disabled = false, onReset }: RerollButtonProps) {
+export default function RerollButton({
+  onReroll,
+  disabled = false,
+  onReset,
+}: RerollButtonProps) {
   const [spinKey, setSpinKey] = useState(0);
   const prefersReduced = useReducedMotion();
 
@@ -106,9 +110,9 @@ export default function RerollButton({ onReroll, disabled = false, onReset }: Re
           animate={
             spinKey > 0
               ? {
-                rotate: 360,
-                scale: [1, 1.15, 1],
-              }
+                  rotate: 360,
+                  scale: [1, 1.15, 1],
+                }
               : {}
           }
           transition={{

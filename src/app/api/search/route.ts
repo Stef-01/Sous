@@ -8,8 +8,11 @@ export async function GET(request: NextRequest) {
 
   if (!query || query.trim().length === 0) {
     return NextResponse.json(
-      { error: "Please enter a meal name.", suggestions: getSuggestions(4, verifiedOnly) },
-      { status: 400 }
+      {
+        error: "Please enter a meal name.",
+        suggestions: getSuggestions(4, verifiedOnly),
+      },
+      { status: 400 },
     );
   }
 
@@ -21,11 +24,17 @@ export async function GET(request: NextRequest) {
         error: `We couldn't find a match for "${query}".`,
         suggestions: getSuggestions(4, verifiedOnly),
       },
-      { status: 404 }
+      { status: 404 },
     );
   }
 
-  const { sides, nextOffset, isRanked } = selectSides(meal, 3, new Set(), 0, verifiedOnly);
+  const { sides, nextOffset, isRanked } = selectSides(
+    meal,
+    3,
+    new Set(),
+    0,
+    verifiedOnly,
+  );
 
   return NextResponse.json({ meal, sides, nextOffset, isRanked });
 }

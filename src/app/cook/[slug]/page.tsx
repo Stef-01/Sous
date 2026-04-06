@@ -15,6 +15,7 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { getStaticCookData } from "@/data/guided-cook-steps";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
 
 export default function GuidedCookPage({
   params,
@@ -55,7 +56,7 @@ export default function GuidedCookPage({
   // Fetch steps from tRPC
   const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
     { sideDishSlug: slug },
-    { enabled: !!slug }
+    { enabled: !!slug },
   );
 
   // Cuisine family for this side dish
@@ -67,18 +68,15 @@ export default function GuidedCookPage({
   // Start session on mount (once data is available)
   useEffect(() => {
     if (data?.dish && !sessionIdRef.current) {
-      sessionIdRef.current = startSession(
-        slug,
-        data.dish.name,
-        cuisine
-      );
+      sessionIdRef.current = startSession(slug, data.dish.name, cuisine);
     }
   }, [data?.dish, slug, cuisine, startSession]);
 
   // Filter steps by phase
   const cookSteps = useMemo(
-    () => data?.steps?.filter((s: { phase: string }) => s.phase === "cook") ?? [],
-    [data?.steps]
+    () =>
+      data?.steps?.filter((s: { phase: string }) => s.phase === "cook") ?? [],
+    [data?.steps],
   );
 
   const currentCookStep = cookSteps[currentStepIndex];
@@ -123,14 +121,14 @@ export default function GuidedCookPage({
     (chip: string | null) => {
       toggleChip(chip as "timer" | "mistake" | "hack" | "fact" | null);
     },
-    [toggleChip]
+    [toggleChip],
   );
 
   const handleStartTimer = useCallback(
     (seconds: number) => {
       startTimer(seconds);
     },
-    [startTimer]
+    [startTimer],
   );
 
   const handleBackToday = useCallback(() => {
@@ -165,7 +163,13 @@ export default function GuidedCookPage({
         handleBackToday();
         break;
     }
-  }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data?.ingredients]);
+  }, [
+    currentPhase,
+    currentStepIndex,
+    handleBackToday,
+    setPhase,
+    data?.ingredients,
+  ]);
 
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
@@ -181,36 +185,19 @@ export default function GuidedCookPage({
 
   // ── Win screen handlers ─────────────────────────
 
-  const handleRate = useCallback(
-    (rating: number) => {
+  const handleSave = useCallback(
+    ({ rating, note }: PostCookEvaluation) => {
       if (sessionIdRef.current) {
-        updateSession(sessionIdRef.current, { rating });
+        updateSession(sessionIdRef.current, {
+          rating,
+          note,
+          scrapbookSaved: true,
+        });
       }
+      setWinMeta((prev) => ({ ...prev, saved: true }));
     },
-    [updateSession]
+    [updateSession],
   );
-
-  const handleAddNote = useCallback(
-    (note: string) => {
-      if (sessionIdRef.current) {
-        updateSession(sessionIdRef.current, { note });
-      }
-    },
-    [updateSession]
-  );
-
-  const handleAddPhoto = useCallback(() => {
-    // Photo capture — in V1, placeholder until camera component is integrated
-    if (sessionIdRef.current) {
-      updateSession(sessionIdRef.current, {
-        photoUri: `photo-${Date.now()}-placeholder`,
-      });
-    }
-  }, [updateSession]);
-
-  const handleSave = useCallback(() => {
-    setWinMeta((prev) => ({ ...prev, saved: true }));
-  }, []);
 
   // ── Loading / error states ────────────────────────
 
@@ -256,7 +243,7 @@ export default function GuidedCookPage({
               "rounded-lg p-1.5 transition-colors",
               currentPhase === "win"
                 ? "text-neutral-200 cursor-default"
-                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
             )}
             type="button"
           >
@@ -332,9 +319,6 @@ export default function GuidedCookPage({
               totalSteps={cookSteps.length}
               pathJustUnlocked={winMeta.pathJustUnlocked}
               saved={winMeta.saved}
-              onRate={handleRate}
-              onAddPhoto={handleAddPhoto}
-              onAddNote={handleAddNote}
               onSave={handleSave}
               onCookAgain={handleCookAgain}
               onBackToday={handleBackToday}

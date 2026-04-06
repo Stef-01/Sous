@@ -7,7 +7,10 @@ type AnalyticsEvent =
   | "aboutOpened"
   | "suggestionChipClicked";
 
-export function trackEvent(event: AnalyticsEvent, data?: Record<string, string>) {
+export function trackEvent(
+  event: AnalyticsEvent,
+  data?: Record<string, string>,
+) {
   if (process.env.NODE_ENV === "development") {
     console.log(`[Analytics] ${event}`, data ?? "");
   }

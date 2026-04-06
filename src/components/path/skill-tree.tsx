@@ -124,7 +124,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
 
   const handleNodeTap = useCallback(
     (nodeId: string) => onNodeTap(nodeId),
-    [onNodeTap]
+    [onNodeTap],
   );
 
   return (

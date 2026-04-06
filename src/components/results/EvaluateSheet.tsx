@@ -40,7 +40,7 @@ export function EvaluateSheet({
       mainDish,
       sideDishes,
     },
-    { enabled: open && !!mainDish, staleTime: Infinity }
+    { enabled: open && !!mainDish, staleTime: Infinity },
   );
 
   const displayAppraisal = aiAppraisal.data?.appraisal ?? evaluation.appraisal;
@@ -117,17 +117,12 @@ export function EvaluateSheet({
                 className={cn(
                   "flex items-center gap-2.5 rounded-xl border px-4 py-3",
                   config.bg,
-                  config.border
+                  config.border,
                 )}
               >
                 {config.icon}
                 <div>
-                  <p
-                    className={cn(
-                      "text-sm font-semibold",
-                      config.color
-                    )}
-                  >
+                  <p className={cn("text-sm font-semibold", config.color)}>
                     {displayAppraisal}
                   </p>
                   <p className="text-[11px] text-[var(--nourish-subtext)] mt-0.5">
@@ -200,7 +195,8 @@ export function EvaluateSheet({
 
               {/* CTA */}
               <div className="pt-1">
-                {evaluation.oneBestMove?.type === "swap_side" && onFinishPlate ? (
+                {evaluation.oneBestMove?.type === "swap_side" &&
+                onFinishPlate ? (
                   <button
                     onClick={onFinishPlate}
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
@@ -270,7 +266,7 @@ function CategoryPill({
     <div
       className={cn(
         "flex flex-1 items-center justify-center gap-1.5 rounded-lg border py-2 text-xs font-medium transition-colors",
-        style
+        style,
       )}
     >
       {filled ? (

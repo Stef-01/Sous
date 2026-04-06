@@ -65,10 +65,7 @@ export function useSkillProgress() {
       const nodeProgress = progress[nodeId];
 
       // Check if completed
-      if (
-        nodeProgress &&
-        nodeProgress.cooksCompleted >= node.cooksRequired
-      ) {
+      if (nodeProgress && nodeProgress.cooksCompleted >= node.cooksRequired) {
         return "completed";
       }
 
@@ -77,9 +74,7 @@ export function useSkillProgress() {
         const req = getSkillNode(reqId);
         const reqProgress = progress[reqId];
         return (
-          req &&
-          reqProgress &&
-          reqProgress.cooksCompleted >= req.cooksRequired
+          req && reqProgress && reqProgress.cooksCompleted >= req.cooksRequired
         );
       });
 
@@ -92,43 +87,38 @@ export function useSkillProgress() {
 
       return "available";
     },
-    [progress]
+    [progress],
   );
 
   /** Record a cook toward a skill node */
-  const recordSkillCook = useCallback(
-    (nodeId: string) => {
-      const node = getSkillNode(nodeId);
-      if (!node) return;
+  const recordSkillCook = useCallback((nodeId: string) => {
+    const node = getSkillNode(nodeId);
+    if (!node) return;
 
-      setProgress((prev) => {
-        const current = prev[nodeId] || { cooksCompleted: 0 };
-        const newCount = current.cooksCompleted + 1;
-        const isNowComplete = newCount >= node.cooksRequired;
+    setProgress((prev) => {
+      const current = prev[nodeId] || { cooksCompleted: 0 };
+      const newCount = current.cooksCompleted + 1;
+      const isNowComplete = newCount >= node.cooksRequired;
 
-        const updated: SkillProgressState = {
-          ...prev,
-          [nodeId]: {
-            cooksCompleted: newCount,
-            ...(isNowComplete
-              ? { completedAt: new Date().toISOString() }
-              : {}),
-          },
-        };
+      const updated: SkillProgressState = {
+        ...prev,
+        [nodeId]: {
+          cooksCompleted: newCount,
+          ...(isNowComplete ? { completedAt: new Date().toISOString() } : {}),
+        },
+      };
 
-        saveProgress(updated);
-        return updated;
-      });
-    },
-    []
-  );
+      saveProgress(updated);
+      return updated;
+    });
+  }, []);
 
   /** Get progress for a specific node */
   const getNodeProgress = useCallback(
     (nodeId: string): NodeProgress => {
       return progress[nodeId] || { cooksCompleted: 0 };
     },
-    [progress]
+    [progress],
   );
 
   /** Total XP from all completed cooks */
@@ -161,7 +151,7 @@ export function useSkillProgress() {
   /** Get all available (unlocked, not completed) nodes */
   const availableNodes = useMemo(() => {
     return skillTreeNodes.filter(
-      (node) => getNodeStatus(node.id) === "available"
+      (node) => getNodeStatus(node.id) === "available",
     );
   }, [getNodeStatus]);
 

@@ -29,21 +29,39 @@ import type {
 // ── Common substitution map ─────────────────────────────
 
 const COMMON_SUBS: Record<string, { sub: string; note: string }> = {
-  "butter": { sub: "olive oil", note: "Use about 3/4 the amount" },
-  "cream": { sub: "coconut cream", note: "Works well in most sauces" },
+  butter: { sub: "olive oil", note: "Use about 3/4 the amount" },
+  cream: { sub: "coconut cream", note: "Works well in most sauces" },
   "sour cream": { sub: "Greek yogurt", note: "Similar tang and texture" },
-  "lemon juice": { sub: "lime juice or white vinegar", note: "Start with half the amount" },
+  "lemon juice": {
+    sub: "lime juice or white vinegar",
+    note: "Start with half the amount",
+  },
   "lime juice": { sub: "lemon juice", note: "Very close substitute" },
-  "cilantro": { sub: "flat-leaf parsley", note: "Won't replicate the flavor but works visually" },
-  "parsley": { sub: "cilantro or chives", note: "Any soft herb will work" },
-  "garlic": { sub: "garlic powder (1/4 tsp per clove)", note: "Add near end of cooking" },
-  "onion": { sub: "shallots or leeks", note: "Use a similar volume" },
-  "soy sauce": { sub: "tamari or coconut aminos", note: "Coconut aminos is less salty" },
-  "rice vinegar": { sub: "apple cider vinegar", note: "A touch sweeter, use slightly less" },
-  "honey": { sub: "maple syrup", note: "About the same amount" },
-  "egg": { sub: "flax egg (1 tbsp ground flax + 3 tbsp water)", note: "Let sit 5 minutes first" },
-  "milk": { sub: "oat milk or almond milk", note: "Oat milk is creamiest" },
-  "cheese": { sub: "nutritional yeast", note: "Use 2 tbsp per 1/4 cup cheese" },
+  cilantro: {
+    sub: "flat-leaf parsley",
+    note: "Won't replicate the flavor but works visually",
+  },
+  parsley: { sub: "cilantro or chives", note: "Any soft herb will work" },
+  garlic: {
+    sub: "garlic powder (1/4 tsp per clove)",
+    note: "Add near end of cooking",
+  },
+  onion: { sub: "shallots or leeks", note: "Use a similar volume" },
+  "soy sauce": {
+    sub: "tamari or coconut aminos",
+    note: "Coconut aminos is less salty",
+  },
+  "rice vinegar": {
+    sub: "apple cider vinegar",
+    note: "A touch sweeter, use slightly less",
+  },
+  honey: { sub: "maple syrup", note: "About the same amount" },
+  egg: {
+    sub: "flax egg (1 tbsp ground flax + 3 tbsp water)",
+    note: "Let sit 5 minutes first",
+  },
+  milk: { sub: "oat milk or almond milk", note: "Oat milk is creamiest" },
+  cheese: { sub: "nutritional yeast", note: "Use 2 tbsp per 1/4 cup cheese" },
 };
 
 // ── Explanation templates ───────────────────────────────
@@ -101,25 +119,54 @@ const SUGGESTION_TEMPLATES: Array<{
   type: "plating" | "ratio" | "technique" | "finish";
   message: (dish: string) => string;
 }> = [
-  { type: "plating", message: (dish: string) => `Try plating ${dish} on a warm plate — it stays hot longer.` },
-  { type: "finish", message: () => "A squeeze of fresh lemon or lime can brighten any dish." },
-  { type: "technique", message: () => "Let things rest for a minute before serving — flavors settle." },
-  { type: "ratio", message: () => "Next time, try adding a small raw element for textural contrast." },
-  { type: "finish", message: () => "A pinch of flaky salt right before serving adds a nice crunch." },
-  { type: "technique", message: () => "Taste as you go — your palate gets better with every cook." },
+  {
+    type: "plating",
+    message: (dish: string) =>
+      `Try plating ${dish} on a warm plate — it stays hot longer.`,
+  },
+  {
+    type: "finish",
+    message: () => "A squeeze of fresh lemon or lime can brighten any dish.",
+  },
+  {
+    type: "technique",
+    message: () =>
+      "Let things rest for a minute before serving — flavors settle.",
+  },
+  {
+    type: "ratio",
+    message: () =>
+      "Next time, try adding a small raw element for textural contrast.",
+  },
+  {
+    type: "finish",
+    message: () =>
+      "A pinch of flaky salt right before serving adds a nice crunch.",
+  },
+  {
+    type: "technique",
+    message: () => "Taste as you go — your palate gets better with every cook.",
+  },
 ];
 
 // ── Mock Provider ───────────────────────────────────────
 
 export class MockAIProvider implements AIProvider {
-  async explainPairing(input: ExplainPairingInput): Promise<ExplainPairingResult> {
-    const template = EXPLAIN_TEMPLATES[hash(input.mainDish + input.sideDish) % EXPLAIN_TEMPLATES.length];
+  async explainPairing(
+    input: ExplainPairingInput,
+  ): Promise<ExplainPairingResult> {
+    const template =
+      EXPLAIN_TEMPLATES[
+        hash(input.mainDish + input.sideDish) % EXPLAIN_TEMPLATES.length
+      ];
     return {
       explanation: template(input.mainDish, input.sideDish),
     };
   }
 
-  async answerCookQuestion(input: CookQuestionInput): Promise<CookQuestionResult> {
+  async answerCookQuestion(
+    input: CookQuestionInput,
+  ): Promise<CookQuestionResult> {
     const q = input.question.toLowerCase();
 
     // Common cooking questions with deterministic answers
@@ -130,14 +177,22 @@ export class MockAIProvider implements AIProvider {
       };
     }
 
-    if (q.includes("substitute") || q.includes("replace") || q.includes("don't have")) {
+    if (
+      q.includes("substitute") ||
+      q.includes("replace") ||
+      q.includes("don't have")
+    ) {
       return {
         answer: `Check the substitution helper for specific swap ideas. Most herbs and acids can be swapped freely; proteins and starches are less flexible.`,
         confidence: "medium",
       };
     }
 
-    if (q.includes("too much") || q.includes("too little") || q.includes("mistake")) {
+    if (
+      q.includes("too much") ||
+      q.includes("too little") ||
+      q.includes("mistake")
+    ) {
       return {
         answer: `Don't worry — most cooking mistakes are recoverable. If it's too salty, add acid (lemon/vinegar). Too bland, add salt gradually. Too thick, add a splash of liquid.`,
         confidence: "medium",
@@ -157,7 +212,9 @@ export class MockAIProvider implements AIProvider {
     };
   }
 
-  async suggestSubstitution(input: SubstitutionInput): Promise<SubstitutionResult> {
+  async suggestSubstitution(
+    input: SubstitutionInput,
+  ): Promise<SubstitutionResult> {
     const key = input.missingIngredient.toLowerCase();
     const match = COMMON_SUBS[key];
 
@@ -184,38 +241,50 @@ export class MockAIProvider implements AIProvider {
       headline = "Your first cook!";
     }
 
-    const messageIdx = hash(input.dishName + input.cuisineFamily) % WIN_MESSAGES.length;
+    const messageIdx =
+      hash(input.dishName + input.cuisineFamily) % WIN_MESSAGES.length;
     let message = WIN_MESSAGES[messageIdx](input.dishName, input.sideDishes);
 
     if (input.currentStreak && input.currentStreak >= 3) {
-      const streakIdx = hash(String(input.currentStreak)) % STREAK_MESSAGES.length;
+      const streakIdx =
+        hash(String(input.currentStreak)) % STREAK_MESSAGES.length;
       message = STREAK_MESSAGES[streakIdx](input.currentStreak);
     }
 
     return { headline, message };
   }
 
-  async rewriteAppraisal(input: AppraisalRewriteInput): Promise<AppraisalRewriteResult> {
+  async rewriteAppraisal(
+    input: AppraisalRewriteInput,
+  ): Promise<AppraisalRewriteResult> {
     // The deterministic appraisal is already good — just return it
     return { appraisal: input.deterministic };
   }
 
-  async generateReflection(input: PostCookReflectionInput): Promise<PostCookReflectionResult> {
+  async generateReflection(
+    input: PostCookReflectionInput,
+  ): Promise<PostCookReflectionResult> {
     const h = hash(input.dishName + input.cuisineFamily);
 
     // Build strengths (1-3)
     const strengths: string[] = [];
 
-    strengths.push(STRENGTH_TEMPLATES[h % 2](input.dishName, input.cuisineFamily));
+    strengths.push(
+      STRENGTH_TEMPLATES[h % 2](input.dishName, input.cuisineFamily),
+    );
 
     if (input.currentStreak && input.currentStreak >= 2) {
       strengths.push(STREAK_STRENGTH(input.currentStreak));
     } else {
-      strengths.push(STRENGTH_TEMPLATES[2](input.dishName, input.cuisineFamily));
+      strengths.push(
+        STRENGTH_TEMPLATES[2](input.dishName, input.cuisineFamily),
+      );
     }
 
     if (input.isFirstCook) {
-      strengths.push("Your very first cook — this is the start of something great.");
+      strengths.push(
+        "Your very first cook — this is the start of something great.",
+      );
     }
 
     // Build suggestions (0-2, only if rating > 0 and not perfect 5)
@@ -230,7 +299,10 @@ export class MockAIProvider implements AIProvider {
         const idx2 = (h + 3) % SUGGESTION_TEMPLATES.length;
         if (idx2 !== idx1) {
           const s2 = SUGGESTION_TEMPLATES[idx2];
-          suggestions.push({ type: s2.type, message: s2.message(input.dishName) });
+          suggestions.push({
+            type: s2.type,
+            message: s2.message(input.dishName),
+          });
         }
       }
     }

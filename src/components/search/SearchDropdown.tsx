@@ -54,14 +54,10 @@ export default function SearchDropdown({
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setHighlightIndex((prev) =>
-          prev < results.length - 1 ? prev + 1 : 0
-        );
+        setHighlightIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setHighlightIndex((prev) =>
-          prev > 0 ? prev - 1 : results.length - 1
-        );
+        setHighlightIndex((prev) => (prev > 0 ? prev - 1 : results.length - 1));
       } else if (e.key === "Enter" && highlightIndex >= 0) {
         e.preventDefault();
         onSelect(results[highlightIndex].name);
@@ -70,7 +66,7 @@ export default function SearchDropdown({
         setHighlightIndex(-1);
       }
     },
-    [visible, results, highlightIndex, onSelect]
+    [visible, results, highlightIndex, onSelect],
   );
 
   useEffect(() => {

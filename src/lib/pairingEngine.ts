@@ -21,7 +21,7 @@ export function selectSides(
   count: number = 3,
   exclude: Set<string> = new Set(),
   rankOffset: number = 0,
-  verifiedOnly: boolean = false
+  verifiedOnly: boolean = false,
 ): { sides: SideWithScore[]; nextOffset: number; isRanked: boolean } {
   const ranked = getRankedSidesForMeal(meal.id);
 
@@ -49,7 +49,7 @@ function selectRankedSides(
   ranked: PairingScore[],
   count: number,
   exclude: Set<string>,
-  rankOffset: number
+  rankOffset: number,
 ): { sides: SideWithScore[]; nextOffset: number; isRanked: boolean } {
   const results: SideWithScore[] = [];
   let pointer = rankOffset;
@@ -93,7 +93,7 @@ function selectRandomSides(
   meal: Meal,
   count: number,
   exclude: Set<string>,
-  verifiedOnly: boolean = false
+  verifiedOnly: boolean = false,
 ): SideWithScore[] {
   let basePool = meal.sidePool;
   if (verifiedOnly) {
@@ -103,7 +103,11 @@ function selectRandomSides(
   const pool = available.length >= count ? available : [...basePool];
 
   const shuffled = [...pool];
-  for (let i = shuffled.length - 1; i > 0 && i >= shuffled.length - count; i--) {
+  for (
+    let i = shuffled.length - 1;
+    i > 0 && i >= shuffled.length - count;
+    i--
+  ) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
@@ -122,8 +126,12 @@ export function swapOneSide(
   currentSides: SideDish[],
   indexToSwap: number,
   usedIds: Set<string>,
-  rankOffset: number = 0
-): { newSides: SideWithScore[]; swappedSide: SideWithScore | null; nextOffset: number } {
+  rankOffset: number = 0,
+): {
+  newSides: SideWithScore[];
+  swappedSide: SideWithScore | null;
+  nextOffset: number;
+} {
   const currentIds = new Set(currentSides.map((s) => s.id));
   const allExcluded = new Set([...usedIds, ...currentIds]);
 
@@ -131,7 +139,12 @@ export function swapOneSide(
 
   if (ranked && ranked.length > 0) {
     // Find the next ranked side not currently shown or already used
-    const { sides: next, nextOffset } = selectRankedSides(ranked, 1, allExcluded, rankOffset);
+    const { sides: next, nextOffset } = selectRankedSides(
+      ranked,
+      1,
+      allExcluded,
+      rankOffset,
+    );
 
     if (next.length === 0) {
       // All ranked sides exhausted — try excluding only current (allow re-use of previously used)
@@ -139,10 +152,14 @@ export function swapOneSide(
         ranked,
         1,
         currentIds,
-        rankOffset
+        rankOffset,
       );
       if (fallback.length === 0) {
-        return { newSides: currentSides as SideWithScore[], swappedSide: null, nextOffset: rankOffset };
+        return {
+          newSides: currentSides as SideWithScore[],
+          swappedSide: null,
+          nextOffset: rankOffset,
+        };
       }
       const newSides = [...currentSides] as SideWithScore[];
       newSides[indexToSwap] = fallback[0];
@@ -160,14 +177,22 @@ export function swapOneSide(
     available = meal.sidePool.filter((id) => !currentIds.has(id));
   }
   if (available.length === 0) {
-    return { newSides: currentSides as SideWithScore[], swappedSide: null, nextOffset: 0 };
+    return {
+      newSides: currentSides as SideWithScore[],
+      swappedSide: null,
+      nextOffset: 0,
+    };
   }
 
   const randomId = available[Math.floor(Math.random() * available.length)];
   const newSide = getSidesByIds([randomId])[0] as SideWithScore | undefined;
 
   if (!newSide) {
-    return { newSides: currentSides as SideWithScore[], swappedSide: null, nextOffset: 0 };
+    return {
+      newSides: currentSides as SideWithScore[],
+      swappedSide: null,
+      nextOffset: 0,
+    };
   }
 
   const newSides = [...currentSides] as SideWithScore[];

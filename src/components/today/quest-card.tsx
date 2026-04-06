@@ -11,7 +11,10 @@ import {
 } from "framer-motion";
 import { Clock, ShoppingBag, X, Heart } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { getAvailableCookSlugs, getStaticCookData } from "@/data/guided-cook-steps";
+import {
+  getAvailableCookSlugs,
+  getStaticCookData,
+} from "@/data/guided-cook-steps";
 import { sides } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 
@@ -40,14 +43,16 @@ function buildQuestDishes(): QuestDish[] {
   // Day-based seed for deterministic daily shuffle
   const now = new Date();
   const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
   );
 
   // Add all sides from the catalog
   for (const side of sides) {
     if (!side.imageUrl) continue;
 
-    const staticData = guidedSlugs.has(side.id) ? getStaticCookData(side.id) : null;
+    const staticData = guidedSlugs.has(side.id)
+      ? getStaticCookData(side.id)
+      : null;
 
     const tags = side.tags
       .slice(0, 3)
@@ -60,9 +65,22 @@ function buildQuestDishes(): QuestDish[] {
       cookTimeMinutes: staticData
         ? staticData.prepTimeMinutes + staticData.cookTimeMinutes
         : 15,
-      cuisineFamily: (side.tags.find((t) =>
-        ["italian", "indian", "japanese", "korean", "thai", "chinese", "mexican", "mediterranean", "vietnamese", "filipino"].includes(t.toLowerCase())
-      ) ?? "Classic").replace(/^\w/, (c) => c.toUpperCase()),
+      cuisineFamily: (
+        side.tags.find((t) =>
+          [
+            "italian",
+            "indian",
+            "japanese",
+            "korean",
+            "thai",
+            "chinese",
+            "mexican",
+            "mediterranean",
+            "vietnamese",
+            "filipino",
+          ].includes(t.toLowerCase()),
+        ) ?? "Classic"
+      ).replace(/^\w/, (c) => c.toUpperCase()),
       description: side.description,
       tags,
       ingredientCount: staticData ? staticData.ingredients.length : 5,
@@ -79,7 +97,7 @@ function buildQuestDishes(): QuestDish[] {
   // Deterministic daily shuffle of catalog dishes
   const shuffled = catalogDishes.slice();
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = ((dayOfYear * 31 + i * 17) % (i + 1));
+    const j = (dayOfYear * 31 + i * 17) % (i + 1);
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
@@ -97,7 +115,9 @@ const SWIPE_THRESHOLD = 80;
 export function QuestCard() {
   const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(null);
+  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
+    null,
+  );
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
@@ -132,7 +152,7 @@ export function QuestCard() {
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish]
+    [currentIndex, questDishes, router, saveDish],
   );
 
   const handleStart = useCallback(() => {
@@ -286,8 +306,10 @@ function SwipeCard({
         opacity: 1,
       }}
       exit={{
-        x: exitDirection === "right" ? 300 : exitDirection === "left" ? -300 : 0,
-        rotate: exitDirection === "right" ? 20 : exitDirection === "left" ? -20 : 0,
+        x:
+          exitDirection === "right" ? 300 : exitDirection === "left" ? -300 : 0,
+        rotate:
+          exitDirection === "right" ? 20 : exitDirection === "left" ? -20 : 0,
         opacity: 0,
         transition: { duration: 0.25, ease: "easeIn" },
       }}
@@ -300,7 +322,7 @@ function SwipeCard({
       <div
         className={cn(
           "overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm",
-          isTop && "cursor-grab active:cursor-grabbing shadow-md"
+          isTop && "cursor-grab active:cursor-grabbing shadow-md",
         )}
       >
         {/* Swipe feedback overlays — only on top card */}
@@ -401,7 +423,7 @@ function SwipeCard({
                 "transition-colors duration-200",
                 isSaved
                   ? "border border-pink-200 bg-pink-50 text-pink-500"
-                  : "border border-neutral-200 bg-neutral-50/80 text-neutral-400 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50"
+                  : "border border-neutral-200 bg-neutral-50/80 text-neutral-400 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50",
               )}
               type="button"
               aria-label={isSaved ? "Already saved" : "Save for later"}
@@ -429,7 +451,7 @@ function SwipeCard({
               "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
               "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
               "shadow-sm shadow-[var(--nourish-green)]/20",
-              "transition-colors duration-200"
+              "transition-colors duration-200",
             )}
             type="button"
           >

@@ -11,10 +11,12 @@ type Tab = {
  * Progressive navigation — tabs unlock based on user behavior.
  * Today is always visible. Path unlocks after 3 cooks. Community after 30 days.
  */
-export function useNavigation(user: {
-  pathUnlocked: boolean;
-  communityUnlocked: boolean;
-} | null) {
+export function useNavigation(
+  user: {
+    pathUnlocked: boolean;
+    communityUnlocked: boolean;
+  } | null,
+) {
   return useMemo<Tab[]>(() => {
     const tabs: Tab[] = [
       { id: "today", label: "Today", href: "/", visible: true },

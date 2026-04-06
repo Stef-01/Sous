@@ -15,23 +15,25 @@ export const cuisineFitScorer: Scorer = {
     const primaryCuisine = main.cuisineSignals[0] ?? "";
     const matrixScore = getCuisineCompatibility(
       side.cuisineFamily,
-      primaryCuisine
+      primaryCuisine,
     );
 
     // 2. Bonus if the side's bestPairedWith tags match the main dish
     const mainLower = main.dishName.toLowerCase();
     const bestPairedBonus = side.bestPairedWith.some((tag) =>
-      mainLower.includes(tag.toLowerCase())
+      mainLower.includes(tag.toLowerCase()),
     )
       ? 0.15
       : 0;
 
     // 3. Bonus for matching any secondary cuisine signals
-    const secondaryCuisineBonus = main.cuisineSignals.slice(1).some(
-      (signal) =>
-        side.cuisineFamily.toLowerCase() === signal.toLowerCase() ||
-        side.tags.some((t) => t.toLowerCase() === signal.toLowerCase())
-    )
+    const secondaryCuisineBonus = main.cuisineSignals
+      .slice(1)
+      .some(
+        (signal) =>
+          side.cuisineFamily.toLowerCase() === signal.toLowerCase() ||
+          side.tags.some((t) => t.toLowerCase() === signal.toLowerCase()),
+      )
       ? 0.1
       : 0;
 

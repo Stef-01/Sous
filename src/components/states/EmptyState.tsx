@@ -46,7 +46,10 @@ interface EmptyStateProps {
   verifiedOnly?: boolean;
 }
 
-export default function EmptyState({ onSelect, verifiedOnly = false }: EmptyStateProps) {
+export default function EmptyState({
+  onSelect,
+  verifiedOnly = false,
+}: EmptyStateProps) {
   const suggestions = verifiedOnly ? VERIFIED_SUGGESTIONS : DEFAULT_SUGGESTIONS;
 
   return (

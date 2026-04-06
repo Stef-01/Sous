@@ -71,7 +71,10 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
                    transition-all duration-200 text-left group"
         type="button"
       >
-        <Search size={15} className="text-[var(--nourish-subtext)] opacity-50 group-hover:text-[var(--nourish-green)] group-hover:opacity-100 transition-all shrink-0" />
+        <Search
+          size={15}
+          className="text-[var(--nourish-subtext)] opacity-50 group-hover:text-[var(--nourish-green)] group-hover:opacity-100 transition-all shrink-0"
+        />
         <span className="text-sm text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
           I&apos;m craving...
         </span>

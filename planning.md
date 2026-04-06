@@ -1,26 +1,44 @@
 # Sous — Forward Build Plan
 
-> **Last updated:** 2026-04-05
-> **Related docs:** `documentation.md` (what's built), `CLAUDE.md` (conventions), `PIPELINE.md` (pairing data), `PRD.md` (product vision), `data-structure.md` (data schemas)
+> **Last updated:** 2026-04-06
+> **Related docs:** `documentation.md` (what's built), `CLAUDE.md` (conventions), `PIPELINE.md` (pairing data), `PRD.md` (product vision), `data-structure.md` (data schemas), `NUTRITION_INTELLIGENCE_PLAN.md` (nutrition system detail)
 
 ---
 
 ## 0. Current state summary
 
-The app is ~70% feature-complete for V1. The core Today experience works end-to-end:
-- Craving input (text + camera) -> AI parsing -> Deterministic pairing engine -> 3 ranked results
+**Sprints 1–3 complete. App is ~90% feature-complete for V1.**
+
+### Built and shipping
+
+- Craving input (text + camera) → AI parsing → Deterministic pairing engine → 3 ranked results
 - Swipeable quest card stack with drag interactions
-- Full Guided Cook flow (Mission -> Grab -> Cook -> Win) with timers, hacks, mistake warnings, cuisine facts
-- Evaluate mode (ADA plate visualization) with confidence-first appraisal
-- Save/share pairings, heatmap visualizer
+- Full Guided Cook flow (Mission → Grab → Cook → Win) with timers, hacks, mistake warnings, cuisine facts
+- Combined cook flow: main + 1-3 sides cooked in one session with dish-transition cards
+- **Evaluate A** (pre-cook plate check): category coverage, confidence-first appraisal, one-swap recommendation
+- **Evaluate B** (post-cook reflection): `PostCookEvaluateSheet` — star rating, what-went-well/to-improve chips, optional note, AI reflection, save to scrapbook
+- **Cook session persistence**: `useCookSessions` hook (localStorage) — start, complete, update, favorite
+- **Win screen**: AI-personalized headline, streak badge, Path-unlock celebration, Evaluate B trigger, scrapbook save with "View Scrapbook →" link
+- **Path tab**: progressive unlock after 3 cooks (same-tab real-time via `CustomEvent`), 3-block dashboard (JourneySummary + NextUnlockCard + WeeklyGoalCard), Duolingo-style skill tree
+- **Scrapbook**: full grid of completed cooks with rating, note preview, replay, favorite toggle
+- **Favorites**: filtered view of hearted sessions
+- **Journey tRPC**: `publicProcedure` endpoints accepting client session data, computing weekly frequency + stats
 - 93 mains, 203 sides, 924 engine-scored pairings
-- tRPC API with working pairing, recognition, and cook endpoints
-- Database schema defined (7 tables in Drizzle) but not yet seeded
-- Auth integrated (Clerk), state management working (Zustand)
+- tRPC API with working pairing, recognition, cook, AI, and journey endpoints
+- Database schema defined (7 tables in Drizzle) but not yet connected (localStorage is interim)
+- Auth integrated (Clerk, bypassed in dev with mock user), state management (Zustand)
+- 5 bounded AI surfaces: pairing explanation, cook Q&A, substitution, win message, appraisal rewrite
 
-**What's NOT built:** Path tab, Community tab, cook session persistence, scrapbook/favorites browsing, coach quiz, journey tracking.
+### What's NOT yet built
 
-See `documentation.md` for complete inventory.
+- Phase 6: Evaluate B photo-informed AI suggestions
+- Phase 12: Nutrition intelligence + preference memory
+- Phases 7–11: Multi-side reroll, cook sequencing, agentic assistant, Instacart, advanced skill progression
+- Community tab (deferred — unlocks after 30 days, not in prototype scope)
+- Production database seeding (DB schema exists, data in JSON files)
+- Real auth (Clerk configured but bypassed)
+
+See `documentation.md` for full component inventory.
 
 ---
 
@@ -50,6 +68,7 @@ The product has two evaluation moments. They are different surfaces with differe
 **Status:** Built and working (`src/lib/plateAppraisal.ts`, plate UI in `src/components/results/`).
 
 Rules:
+
 - Optional, skippable, no blocking modals
 - No grading language
 - Max one suggestion
@@ -61,19 +80,23 @@ Rules:
 **Purpose:** Reflect on the completed result. Save the meal memory. Later: gentle skill and plating improvement.
 
 Rules:
+
 - Optional, supportive, never judgmental
 - Early version is manual and static (photo + note + rating + save)
 - Later version can include photo-informed reflection (Phase 5)
 
 Entry points:
+
 - `Reflect on this meal` button on Win screen
 - `Add photo + note` quick action
 
 Allowed outputs by phase:
+
 - **Phase 2-3:** Photo, note, rating, save to scrapbook
 - **Phase 5:** Plating ratio suggestions, one tiny improvement for next time, cooking craft suggestion
 
 Not allowed early:
+
 - Automatic critique
 - Multimodal AI dependence
 - "You did this wrong" language
@@ -83,9 +106,11 @@ Not allowed early:
 ## 3. Phase 1 — Production polish and Today stability
 
 ### Objective
+
 Make the Today page production-ready. Fix remaining rough edges, ensure the core flow is bulletproof.
 
 ### Scope
+
 - [ ] Fix remaining visual micro-refinements (button alignment, badge overflow — in progress)
 - [ ] Ensure scrollbar hiding works across all browsers (Windows Chrome, Safari, Firefox)
 - [ ] Expand quest card pool beyond 5 hardcoded dishes — connect to actual side dish data
@@ -98,6 +123,7 @@ Make the Today page production-ready. Fix remaining rough edges, ensure the core
 - [ ] Run `pnpm lint && pnpm test` — fix any failures
 
 ### Definition of done
+
 A user can: open the app -> see quest cards -> tap "I'm craving" -> type or photograph a dish -> see 3 paired sides -> optionally evaluate -> tap "Cook this" -> complete full Guided Cook -> land on Win screen. No dead ends, no broken states.
 
 ---
@@ -105,12 +131,15 @@ A user can: open the app -> see quest cards -> tap "I'm craving" -> type or phot
 ## 4. Phase 2 — Cook session tracking and Evaluate B shell
 
 ### Objective
+
 Turn completed cooks into persistent records. Ship the manual version of post-cook reflection.
 
 ### Why this phase exists
+
 The biggest gap between "demo" and "product" is that nothing persists. A user completes a guided cook and there's no record of it. Without persistence, there's no reason to return.
 
 ### Scope
+
 - [ ] Seed the database or implement localStorage-based session storage as interim
 - [ ] Implement `cook.start` — creates a session when user enters Guided Cook
 - [ ] Implement `cook.complete` — marks session done, stores rating/note/photo metadata
@@ -134,10 +163,11 @@ type CookSessionRecord = {
   photoUri?: string;
   rating?: number; // 1-5
   favorite: boolean;
-}
+};
 ```
 
 ### Definition of done
+
 A user can complete a Guided Cook, optionally add a photo and note, save it, and the record persists across page reloads.
 
 ---
@@ -145,19 +175,23 @@ A user can complete a Guided Cook, optionally add a photo and note, save it, and
 ## 5. Phase 3 — Scrapbook, favorites, and minimal Path
 
 ### Objective
+
 Turn saved cooks into visible momentum and replay value. Ship the Path tab.
 
 ### Why this phase exists
+
 Once cooking sessions persist, the next highest-leverage feature is letting users see their history and replay winners. This creates return behavior before any AI enhancement.
 
 ### Scope
 
 #### Scrapbook and favorites
+
 - [ ] Scrapbook data model: completed cook sessions + saved pairings merged
 - [ ] Favorites: toggle on any completed cook or saved pairing
 - [ ] Recent cooks list (last 20)
 
 #### Path tab
+
 - [ ] `src/app/(path)/page.tsx` — Path home with 3 blocks max:
   1. Current journey summary (cooks this week/month)
   2. Weekly goal card (simple "Cook 3 times this week" target)
@@ -168,6 +202,7 @@ Once cooking sessions persist, the next highest-leverage feature is letting user
 - [ ] Replay flow: tapping a scrapbook entry re-opens the pairer with the original main
 
 #### Progressive unlock
+
 - [ ] Enforce Path tab visibility: hidden until `completedCooks >= 3`
 - [ ] Show "Path unlocked!" celebration on the 3rd completion
 - [ ] Community tab remains hidden/stubbed (unlocks after 30 days, not in prototype scope)
@@ -186,11 +221,13 @@ src/components/path/
 ```
 
 ### Path home hard rules
+
 - Only 3 main blocks visible at once
 - No charts, no dashboards, no analytics feel
 - "Journey" tone, not "performance" tone
 
 ### Definition of done
+
 A user who has completed 3+ cooks can tap the Path tab, see their cooking journey, browse saved meals in a scrapbook, favorite winners, and replay a past meal.
 
 ---
@@ -198,12 +235,15 @@ A user who has completed 3+ cooks can tap the Path tab, see their cooking journe
 ## 6. Phase 4 — Deterministic Evaluate A upgrade and plate-learning loop
 
 ### Objective
+
 Make the pre-cook evaluation genuinely useful as a teaching tool without adding AI.
 
 ### Why this phase exists
+
 Evaluate A already works but the appraisal is basic. This phase sharpens it into a real learning moment that users notice and remember.
 
 ### Scope
+
 - [x] Upgraded deterministic evaluation engine in `src/lib/engine/`
   - Category coverage detection (vegetables, protein, carbs)
   - Signal classification: protein_light, veg_light, carb_heavy, freshness_missing, texture_contrast_missing, balanced
@@ -218,26 +258,28 @@ Evaluate A already works but the appraisal is basic. This phase sharpens it into
 
 ```typescript
 type PlateEvaluation = {
-  status: 'balanced' | 'good_start' | 'needs_improvement';
-  categoryCoverage: { vegetables: boolean; protein: boolean; carbs: boolean; };
+  status: "balanced" | "good_start" | "needs_improvement";
+  categoryCoverage: { vegetables: boolean; protein: boolean; carbs: boolean };
   alreadyWorking: string[];
   oneBestMove?: {
-    type: 'swap_side' | 'add_category' | 'keep_as_is';
+    type: "swap_side" | "add_category" | "keep_as_is";
     message: string;
     targetSideId?: string;
     replacementSideId?: string;
   };
   appraisal: string; // 5-10 words max
-}
+};
 ```
 
 ### UI hard rules
+
 - Evaluate sheet opens over pairer context, not a new page
 - Only one main CTA
 - Must always include a no-friction exit
 - No charts, no dashboards, no numbers-heavy summaries
 
 ### Definition of done
+
 Balanced plates show a positive appraisal. Missing-category plates show one best move. Evaluate can be skipped at any time. Swap suggestion updates plate correctly. No network or AI required.
 
 ---
@@ -245,19 +287,23 @@ Balanced plates show a positive appraisal. Missing-category plates show one best
 ## 7. Phase 5 — Bounded AI enhancement
 
 ### Objective
+
 Introduce AI only where it enhances an already-working deterministic product.
 
 ### Why this phase exists
+
 At this point the app has: a stable pairer, a real cooking loop, evaluation, memory, and Path. AI can enhance clarity and warmth without being a crutch.
 
 ### Scope
 
 #### AI provider abstraction
+
 - [x] `src/lib/ai/contracts.ts` — Provider interface with typed inputs/outputs
 - [x] `src/lib/ai/providers/mock.ts` — Deterministic fallback for every AI surface
 - [x] Keep existing `src/lib/ai/food-recognition.ts` (OpenAI Vision) and `src/lib/ai/craving-parser.ts` (Claude)
 
 #### Bounded AI surfaces
+
 - [x] Pairing explanation rewrite — Claude generates a warmer "why this works" sentence
 - [x] Guided Cook Q&A — user can ask a bounded question about the current step (context-limited to recipe + neighbors)
 - [x] Substitution suggestions — "I don't have X, what can I use?" from approved substitution list
@@ -265,7 +311,9 @@ At this point the app has: a stable pairer, a real cooking loop, evaluation, mem
 - [x] Evaluate A confidence summary — Claude rewrites the deterministic appraisal into natural language
 
 #### Prompt discipline
+
 Every AI call must receive:
+
 - Current route context
 - Current meal and side IDs
 - Evaluation state if relevant
@@ -286,6 +334,7 @@ export interface AIProvider {
 ```
 
 ### Hard rules
+
 - If AI is unavailable, mock/fallback responses keep every flow working
 - AI outputs must validate against Zod schema
 - Invalid outputs must not break UI
@@ -293,6 +342,7 @@ export interface AIProvider {
 - No open-ended chatbot — all AI is bounded to specific UI triggers
 
 ### Definition of done
+
 AI improves clarity and warmth in 5 bounded places. The app remains fully usable if all AI calls fail.
 
 ---
@@ -300,23 +350,27 @@ AI improves clarity and warmth in 5 bounded places. The app remains fully usable
 ## 8. Phase 6 — Evaluate B intelligence and post-cook reflection
 
 ### Objective
+
 Add thoughtful post-cook reflection. This is the most complex layer and easiest to overbuild.
 
 ### Sub-phases
 
 #### 6A: Manual Evaluate B (pairs with Phase 2 shell)
+
 - Photo capture on Win screen
 - Note input
 - Save to scrapbook
 - Optional 1-5 rating
 
 #### 6B: Photo-informed reflection (requires Phase 5 AI)
+
 - After saving a photo, optionally see 1-2 supportive suggestions:
   - Plating ratio ideas ("More color contrast next time")
   - One cooking skill improvement ("Caramelize onions 5 more minutes")
   - One finishing improvement ("A squeeze of lemon wakes everything up")
 
 ### Hard rules
+
 - Evaluate B is always optional
 - The user can always just save and leave
 - Max 2 next-time suggestions
@@ -330,14 +384,15 @@ Add thoughtful post-cook reflection. This is the most complex layer and easiest 
 type PostCookReflection = {
   strengths: string[];
   nextTimeSuggestions: Array<{
-    type: 'plating' | 'ratio' | 'technique' | 'finish';
+    type: "plating" | "ratio" | "technique" | "finish";
     message: string;
   }>;
-  tone: 'encouraging';
-}
+  tone: "encouraging";
+};
 ```
 
 ### Definition of done
+
 A user can photograph their finished meal, save it, and optionally receive 1-2 kind suggestions. AI suggestions are bounded and non-judgmental. No critique is required for completion.
 
 ---
@@ -346,29 +401,29 @@ A user can photograph their finished meal, save it, and optionally receive 1-2 k
 
 ### Rejected from AI feedback
 
-| Suggestion | Verdict | Reason |
-|-----------|---------|--------|
-| Meal readiness screen | REJECTED | Sous pairs sides with mains the user already has. Users aren't discovering mains — they know what they're cooking. A "can you make this tonight?" gate adds friction to the core loop. |
-| `src/lib/pairing/` refactor | REJECTED | Code already uses `src/lib/engine/` which is well-structured with 6 scorers, ranker, explainer, and tests. Renaming would break imports for no benefit. |
-| "Gemma" AI provider | CORRECTED | Sous uses Claude (Anthropic) and OpenAI Vision, not Google Gemma. All AI feedback references to "Gemma" should read "Claude." |
-| Retrieval-backed AI (local embeddings, RAG) | DEFERRED | With 203 sides and static recipe data, simple DB queries outperform local embeddings. RAG is premature engineering for V1. Reconsider only if content scales to 1000+ items. |
-| PairerState / MealReadinessState models | REJECTED | Duplicate what already exists in `useTodayStore` and `useCookStore` Zustand stores. |
-| Community tab | DEFERRED | Per CLAUDE.md rules: Community reveals after 30 days. Not in prototype scope. |
-| "Order missing ingredients" flow | DEFERRED | Delivery integration is a separate product concern. Placeholder button exists in fallback actions. |
-| Coach quiz and vibe prompts | DEFERRED to Phase 5+ | tRPC stubs exist. Ship when AI provider abstraction is ready. |
+| Suggestion                                  | Verdict              | Reason                                                                                                                                                                                 |
+| ------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Meal readiness screen                       | REJECTED             | Sous pairs sides with mains the user already has. Users aren't discovering mains — they know what they're cooking. A "can you make this tonight?" gate adds friction to the core loop. |
+| `src/lib/pairing/` refactor                 | REJECTED             | Code already uses `src/lib/engine/` which is well-structured with 6 scorers, ranker, explainer, and tests. Renaming would break imports for no benefit.                                |
+| "Gemma" AI provider                         | CORRECTED            | Sous uses Claude (Anthropic) and OpenAI Vision, not Google Gemma. All AI feedback references to "Gemma" should read "Claude."                                                          |
+| Retrieval-backed AI (local embeddings, RAG) | DEFERRED             | With 203 sides and static recipe data, simple DB queries outperform local embeddings. RAG is premature engineering for V1. Reconsider only if content scales to 1000+ items.           |
+| PairerState / MealReadinessState models     | REJECTED             | Duplicate what already exists in `useTodayStore` and `useCookStore` Zustand stores.                                                                                                    |
+| Community tab                               | DEFERRED             | Per CLAUDE.md rules: Community reveals after 30 days. Not in prototype scope.                                                                                                          |
+| "Order missing ingredients" flow            | DEFERRED             | Delivery integration is a separate product concern. Placeholder button exists in fallback actions.                                                                                     |
+| Coach quiz and vibe prompts                 | DEFERRED to Phase 5+ | tRPC stubs exist. Ship when AI provider abstraction is ready.                                                                                                                          |
 
 ### Accepted from AI feedback
 
-| Suggestion | Integrated into | Rationale |
-|-----------|----------------|-----------|
-| Two-surface Evaluate model (A pre-cook, B post-cook) | §2, §6, §8 | Clean delineation. Evaluate A already exists; Evaluate B is a natural Win screen extension. |
-| Phase sequencing discipline (no backend early, deterministic first) | §1 rules | Sound engineering principle that matches existing architecture. |
-| AI provider abstraction with mock/fallback | §7 | Critical for resilience. Every AI surface must work without AI. |
-| Scrapbook + favorites + Path as momentum layer | §5 | Fills the biggest gap: nothing persists after a cook. Creates return behavior. |
-| PlateEvaluation schema with categoryCoverage and oneBestMove | §6 | Stronger than current basic appraisal. Upgrades the existing evaluate without adding AI. |
-| Prompt discipline (context-bounded, schema-validated) | §7 | Prevents AI sprawl. Every call gets minimal required context + Zod schema. |
-| "One CTA per screen" as standing policy | §1 rule 8 | Already in CLAUDE.md, reinforced as a sequencing rule. |
-| PostCookReflection schema (strengths before suggestions) | §8 | Good UX pattern: lead with what worked, then one kind suggestion. |
+| Suggestion                                                          | Integrated into | Rationale                                                                                   |
+| ------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------- |
+| Two-surface Evaluate model (A pre-cook, B post-cook)                | §2, §6, §8      | Clean delineation. Evaluate A already exists; Evaluate B is a natural Win screen extension. |
+| Phase sequencing discipline (no backend early, deterministic first) | §1 rules        | Sound engineering principle that matches existing architecture.                             |
+| AI provider abstraction with mock/fallback                          | §7              | Critical for resilience. Every AI surface must work without AI.                             |
+| Scrapbook + favorites + Path as momentum layer                      | §5              | Fills the biggest gap: nothing persists after a cook. Creates return behavior.              |
+| PlateEvaluation schema with categoryCoverage and oneBestMove        | §6              | Stronger than current basic appraisal. Upgrades the existing evaluate without adding AI.    |
+| Prompt discipline (context-bounded, schema-validated)               | §7              | Prevents AI sprawl. Every call gets minimal required context + Zod schema.                  |
+| "One CTA per screen" as standing policy                             | §1 rule 8       | Already in CLAUDE.md, reinforced as a sequencing rule.                                      |
+| PostCookReflection schema (strengths before suggestions)            | §8              | Good UX pattern: lead with what worked, then one kind suggestion.                           |
 
 ---
 
@@ -376,26 +431,31 @@ A user can photograph their finished meal, save it, and optionally receive 1-2 k
 
 This maps phases to concrete sprint work. Each sprint leaves the app shippable.
 
-### Sprint 1: Production polish (Phase 1)
-- Fix remaining visual micro-refinements
-- Connect quest cards to real data and routes
+### ✅ Sprint 1: Production polish (Phase 1) — COMPLETE
+
+- Visual micro-refinements, responsive phone frame
+- Quest cards connected to real data and routes
 - Error states and loading skeletons
-- Run lint + test, fix failures
+- Lint + test passing
 
-### Sprint 2: Persistence (Phase 2)
-- Cook session storage (localStorage or DB)
-- Win screen save flow (photo, note, rating)
-- Evaluate B manual shell
-- Completion counter
+### ✅ Sprint 2: Persistence (Phase 2) — COMPLETE
 
-### Sprint 3: Path and memory (Phase 3)
-- Scrapbook data model
-- Favorites toggle
-- Path tab with 3-block layout
-- Progressive unlock at 3 cooks
-- Replay flow from scrapbook
+- `useCookSessions` hook (localStorage): start, complete, update, favorite
+- `PostCookEvaluateSheet` (Evaluate B): rating, chips, note, AI reflection, save
+- Win screen wired: onSave persists `{ rating, note, scrapbookSaved }` to session
+- Completion counter + streak tracking + Path-unlock trigger
+- Journey tRPC changed to `publicProcedure`, accepts session data, computes weekly stats
+
+### ✅ Sprint 3: Path and memory (Phase 3) — COMPLETE
+
+- Scrapbook + Favorites pages fully functional
+- Path tab: 3-block dashboard (JourneySummary, NextUnlockCard, WeeklyGoalCard) + SkillTree
+- Progressive unlock enforced — same-tab real-time via `CustomEvent` from `persistStats`
+- `NextUnlockCard` component shows closest skill with progress bar
+- Replay flow: ScrapbookEntryCard → `/cook/[slug]`
 
 ### Sprint 4: Smarter evaluation (Phase 4)
+
 - Category coverage detection
 - Signal classification
 - Confidence-first appraisal copy
@@ -403,16 +463,41 @@ This maps phases to concrete sprint work. Each sprint leaves the app shippable.
 - One-swap recommendation
 
 ### Sprint 5: Bounded AI (Phase 5)
+
 - AI provider abstraction + mock provider
 - 5 bounded AI surfaces (explain, Q&A, substitute, win message, appraisal rewrite)
 - Schema validation on all AI outputs
 - Graceful fallback when AI unavailable
 
 ### Sprint 6: Reflection intelligence (Phase 6)
+
 - Evaluate B photo-informed suggestions
 - Post-cook reflection UI
 - Strengths-before-suggestions pattern
 - Scrapbook integration with reflection data
+
+### Sprint 7: Nutrition Memory Foundation (Phase 12A)
+
+- `NutritionChatInput` on Today page (collapsed chip → textarea)
+- `useNutritionMemory` hook (localStorage, weight decay)
+- `nutrition.parsePreference` tRPC endpoint (Claude extraction + deterministic fallback)
+- Preferences panel in Path tab → "My preferences"
+
+### Sprint 8: Absorption-Aware Pairing (Phase 12B)
+
+- `nutrient-interactions.json` seed data (7 priority interaction pairs)
+- Nutrient tags + `absorptionNotes` added to side dish records
+- `nutrient-alignment` scorer in pairing engine
+- `absorption-compatibility` scorer (penalises inhibitor combos)
+- `NutrientBadge` chips on result cards
+- Soft absorption warnings (amber, dismissible)
+
+### Sprint 9: Context-Aware Recommendations (Phase 12C)
+
+- `ContextEvaluator` (time-of-day + season + optional weather)
+- Open-Meteo integration (free, permission-gated, client-only)
+- "For you today" chip on Today page (max 1, context-matched)
+- Preference weight decay + seasonal expiry logic
 
 ---
 
@@ -423,9 +508,11 @@ These phases represent the next evolution of Sous. Each is self-contained and le
 ### Phase 7 — Multi-Side Selection & Reroll Per Side
 
 #### Objective
+
 Let users select which sides to cook (1, 2, or all 3) and reroll individual sides while keeping the ones they want.
 
 #### Scope
+
 - [ ] Redesign `result-stack.tsx` to show all 3 sides as selectable cards with checkboxes
 - [ ] Add per-side reroll icon (🔄) on each individual side card
 - [ ] Reroll replaces only that side with the next-best candidate from the engine
@@ -435,6 +522,7 @@ Let users select which sides to cook (1, 2, or all 3) and reroll individual side
 - [ ] Side selection state managed in `useTodayStore`
 
 #### Definition of done
+
 A user can see 3 side suggestions, reroll any individual side, select 1-3 sides, and proceed to cook all selected sides.
 
 ---
@@ -442,9 +530,11 @@ A user can see 3 side suggestions, reroll any individual side, select 1-3 sides,
 ### Phase 8 — Intelligent Multi-Component Cook Sequencing
 
 #### Objective
+
 When cooking multiple sides + a main, intelligently sequence all steps so everything finishes together and nothing sits cold.
 
 #### Scope
+
 - [ ] `src/lib/engine/cook-sequencer.ts` — Sequencing engine that takes multiple dishes and interleaves steps
 - [ ] Uses `prepTimeMinutes` and `cookTimeMinutes` from each dish to compute optimal start order
 - [ ] Generates a unified step list: e.g., "Start potato in oven" → "Prep asparagus" → "Cook steak" → "Everything done"
@@ -455,6 +545,7 @@ When cooking multiple sides + a main, intelligently sequence all steps so everyt
 - [ ] Modified `cook/[slug]/page.tsx` to support multi-dish cook sessions
 
 #### Sequencing rules
+
 1. Cold dishes (salads, dressings) prep first, serve last
 2. Longest-cooking items start first (oven → stovetop → assembly)
 3. Quick-cook items (steaks, stir-fry) start last so they're hot when served
@@ -462,6 +553,7 @@ When cooking multiple sides + a main, intelligently sequence all steps so everyt
 5. Never leave a user idle — always suggest the next useful action
 
 #### Definition of done
+
 A user cooking steak + sweet potato + asparagus gets a unified step sequence where the potato goes in the oven first, asparagus cooks mid-way, steak cooks last, and everything finishes within 2 minutes of each other.
 
 ---
@@ -469,9 +561,11 @@ A user cooking steak + sweet potato + asparagus gets a unified step sequence whe
 ### Phase 9 — Agentic Sous Assistant
 
 #### Objective
+
 An AI-powered assistant that helps users build their personal recipe collection from real-world inspiration.
 
 #### Scope
+
 - [ ] Sous Assistant modal/sheet accessible from scrapbook and main navigation
 - [ ] Custom recipe creation: manually enter name, ingredients, steps, tags
 - [ ] Save custom recipes to scrapbook alongside completed cooks
@@ -484,6 +578,7 @@ An AI-powered assistant that helps users build their personal recipe collection 
 - [ ] Status tracking: "Processing your dishes..." with progress indicator
 
 #### Agent capabilities
+
 1. **Image analysis** — Identify dish from photo using Vision API
 2. **Recipe search** — Find healthy recreations via web search
 3. **Plate balancing** — Suggest optimal sides using the existing pairing engine
@@ -491,12 +586,14 @@ An AI-powered assistant that helps users build their personal recipe collection 
 5. **Personalization** — Factor in user's cooking history and cuisine preferences
 
 #### Hard rules
+
 - Agent is bounded — only responds to explicit upload triggers, never proactive
 - All recipes go through the same Quest shell (Mission → Grab → Cook → Win)
 - Custom recipes are clearly labeled as "Custom" vs engine-generated
 - User always reviews and approves agent suggestions before they're saved
 
 #### Definition of done
+
 A user can upload 3 photos of restaurant dishes, and within a few hours, find healthy recreation recipes in their scrapbook with balanced side suggestions.
 
 ---
@@ -504,9 +601,11 @@ A user can upload 3 photos of restaurant dishes, and within a few hours, find he
 ### Phase 10 — Instacart Integration
 
 #### Objective
+
 Let users order missing ingredients directly from the Grab screen with one tap.
 
 #### Scope
+
 - [ ] At ingredient selection phase (Grab screen), track which items are unchecked (missing)
 - [ ] "Order with Instacart" button appears when any ingredients are unchecked
 - [ ] Shows estimated delivery time next to button (placeholder: random 25-45 min)
@@ -518,6 +617,7 @@ Let users order missing ingredients directly from the Grab screen with one tap.
 - [ ] Modified `ingredient-list.tsx` to include the order button below the ingredient list
 
 #### Integration architecture
+
 ```
 User unchecks ingredients → Missing list computed →
   "Order with Instacart" button shows →
@@ -526,6 +626,7 @@ User unchecks ingredients → Missing list computed →
 ```
 
 #### Definition of done
+
 A user on the Grab screen who hasn't checked off 4 ingredients sees an "Order with Instacart · ~35 min" button. Pressing it shows a placeholder toast in V1, or opens Instacart with the correct items in V2.
 
 ---
@@ -533,9 +634,11 @@ A user on the Grab screen who hasn't checked off 4 ingredients sees an "Order wi
 ### Phase 11 — Advanced Path & Skill Progression
 
 #### Objective
+
 Make the skill tree a living progression system that rewards consistent cooking and drives mastery.
 
 #### Scope
+
 - [ ] Link skill tree progression to actual cook sessions (auto-detect cuisine match)
 - [ ] XP system: earn XP per cook, level up with milestones
 - [ ] Cuisine mastery badges: complete all associated dishes in a cuisine family
@@ -547,7 +650,149 @@ Make the skill tree a living progression system that rewards consistent cooking 
 - [ ] Skill recommendations: suggest next skill based on user's cooking patterns
 
 #### Definition of done
+
 A user who completes 2 Caesar Salad cooks sees Knife Basics skill progress to "completed", Heat Control unlocks as "available", and their XP increases. Weekly challenges appear and award bonus XP.
+
+---
+
+### Phase 12 — Nutrition Intelligence & Preference Memory
+
+> Full detail: `NUTRITION_INTELLIGENCE_PLAN.md`
+
+#### Objective
+
+Give Sous a persistent memory for nutrition goals, health context, and flavour preferences — and use that memory to make pairing recommendations scientifically smarter and personally relevant. This is Duolingo for nutritional fluency, not a calorie tracker.
+
+#### Why this phase exists
+
+Users have real, recurring nutritional needs (iron during periods, hydration in heat, energy on busy days) that no mainstream cooking app remembers or acts on. A preference memory system that understands nutrient absorption rules creates a genuine moat: it's useful, scientifically grounded, and impossible to replicate with a simple recipe search.
+
+#### Hard constraints
+
+- **Never medical.** Language bounded to: "supports", "helps with", "good source of". Never "treats", "cures", "deficiency".
+- **One callout per card.** If a side hits multiple nutrient goals, show only the highest-priority badge.
+- **Opt-in context only.** Weather data requires explicit permission. Never silently geolocate.
+- **Preferences are fully visible and deletable.** No hidden profiles. Every stored intent is reviewable.
+- **No calorie counting, no macro targets, no wearable integration.**
+
+---
+
+#### Phase 12A — Memory Foundation (Sprint 7)
+
+**Goal:** Capture and persist user nutrition intents via natural language. No AI inference in results yet — just listen and store.
+
+**Scope:**
+
+- [ ] `NutritionChatInput` component on Today page
+  - Collapsed by default — single "Tell me what you need" chip below craving input
+  - Expands to textarea on tap
+  - Placeholder: _"I want more iron… I love mango in hot weather…"_
+  - Sends to Claude for structured extraction on submit, shows "Saved ✓" chip
+- [ ] `useNutritionMemory` hook (localStorage, same pattern as `useCookSessions`)
+  - CRUD for `PreferenceRecord[]`
+  - Weight decay: reduce by 10% per 30 days, remove below 0.05
+  - Exports: `activePreferences`, `addPreference`, `removePreference`, `allPreferences`
+- [ ] `nutrition.parsePreference` tRPC endpoint (`publicProcedure`)
+  - Input: raw text string
+  - Output: `ParsedPreference` (Zod-validated): `nutrientGoals`, `flavorSignals`, `contextTriggers`, `exclusions`, `tone`
+  - Deterministic fallback: keyword matching (iron → iron goal, mango → flavor:tropical)
+- [ ] Preferences panel in Path tab → "My preferences" quick link
+  - Shows saved preference chips with delete (×) button
+  - No edit — delete and re-enter (simpler, less error-prone)
+  - One-time medical disclaimer card on first save
+
+**Data model:**
+
+```typescript
+interface PreferenceRecord {
+  id: string;
+  rawInput: string;
+  parsed: ParsedPreference;
+  createdAt: string;
+  lastTriggeredAt?: string;
+  triggerCount: number;
+  weight: number; // 0–1, decays over time
+  expiresAt?: string;
+  tags: string[];
+}
+
+interface ParsedPreference {
+  nutrientGoals: {
+    nutrient: string;
+    priority: "high" | "medium";
+    reason?: string;
+  }[];
+  flavorSignals: string[];
+  contextTriggers: {
+    type: "time_of_day" | "weather" | "season";
+    value: string;
+  }[];
+  exclusions: string[];
+  tone: "health" | "pleasure" | "comfort" | "energy";
+}
+```
+
+**Definition of done:** User types "I want more iron because of periods" → stored as a `PreferenceRecord` with parsed nutrient goals → visible in preferences panel → persists on reload.
+
+---
+
+#### Phase 12B — Absorption-Aware Pairing (Sprint 8)
+
+**Goal:** Make the pairing engine nutrient-intelligent. Boost sides that fulfil active goals; warn about known inhibitor combinations.
+
+**Scope:**
+
+- [ ] `src/data/nutrient-interactions.json` — static seed for 7 priority interaction pairs:
+
+  | Nutrient        | Key Enhancers               | Key Inhibitors             |
+  | --------------- | --------------------------- | -------------------------- |
+  | Iron (non-haem) | Vitamin C, citric acid      | Calcium, tannins, phytates |
+  | Calcium         | Vitamin D, magnesium        | Oxalates, phytates         |
+  | Zinc            | Animal protein, citric acid | Phytates, high iron        |
+  | Magnesium       | Vitamin D, B6               | Excess calcium, alcohol    |
+  | Vitamin D       | Dietary fat                 | —                          |
+  | Folate          | Vitamin C                   | Alcohol, heat              |
+  | Omega-3         | —                           | Omega-6 excess             |
+
+- [ ] Add `nutrients: string[]` and `absorptionNotes?: string` to side dish data model
+- [ ] `src/lib/engine/scorers/nutrient-alignment.ts` — boosts sides matching active `nutrientGoals`
+- [ ] `src/lib/engine/scorers/absorption-compatibility.ts` — penalises known inhibitor pairings
+- [ ] `NutrientBadge` chip component: "High iron", "Vitamin C boost", "Avoid with iron" (amber)
+- [ ] Soft absorption warning on result card (amber, one sentence, tap to dismiss)
+
+**Definition of done:** User with an iron preference gets vitamin-C-rich sides boosted. Selecting steak + yogurt side shows "dairy reduces iron absorption" amber chip. Balanced plate explanation references the nutrient goal.
+
+---
+
+#### Phase 12C — Context-Aware Recommendations (Sprint 9)
+
+**Goal:** Make recommendations sensitive to time of day, weather, and season — so the right suggestion appears at the right moment without the user asking.
+
+**Scope:**
+
+- [ ] `src/lib/engine/context-evaluator.ts`
+  ```typescript
+  interface UserContext {
+    timeOfDay: "morning" | "midday" | "afternoon" | "evening" | "night";
+    tempCelsius?: number;
+    season: "spring" | "summer" | "autumn" | "winter";
+    dayOfWeek: string;
+  }
+  function evaluateContext(): UserContext;
+  function scoreContextMatch(pref: PreferenceRecord, ctx: UserContext): number;
+  ```
+- [ ] Open-Meteo weather integration (free, no API key, client-only)
+  - Opt-in prompt: "Enable weather-aware suggestions?"
+  - Uses browser Geolocation API; if denied, falls back to seasonal heuristics
+  - Temperature data never sent to any server
+- [ ] "For you today" chip on Today page
+  - Appears when active context matches a stored preference trigger
+  - Example: 32°C midday → "Hot day? Try a mango lassi side 🥭"
+  - Navigates to contextual pairing with suggestion pre-loaded
+  - Max 1 chip shown at a time, never a carousel
+- [ ] Preference weight decay finalised: seasonal `expiresAt` set automatically; general preferences decay 10%/30 days; "Refresh?" prompt for aging preferences in panel
+
+**Definition of done:** User with "mango on hot days" preference: on a 30°C midday, sees "Hot day? Try a mango side" chip on Today. On a cold day: chip absent. Weather is opt-in. Preference panel shows decay state.
 
 ---
 
@@ -569,36 +814,43 @@ A user who completes 2 Caesar Salad cooks sees Knife Basics skill progress to "c
 The following sections from the original planning document remain valid architecture reference. They describe the target system design and are implemented as described in `documentation.md`.
 
 ### Tech stack
+
 See `CLAUDE.md` § Tech stack — Next.js 15, React 19, Tailwind 4, Zustand, TanStack Query, tRPC, Drizzle, Neon Postgres, Clerk, OpenAI Vision, Anthropic Claude, Cloudflare R2, Upstash Redis, Vitest, Playwright.
 
 ### Database schema
+
 See `documentation.md` §2.11 and `src/lib/db/schema.ts` — 7 tables: sideDishes, cookSteps, ingredients, users, cookSessions, savedRecipes, quizResponses.
 
 ### Pairing engine
+
 See `documentation.md` §2.3 — Two-tier system with Python engine scores and TypeScript deterministic scorers.
 
 ### API design
+
 See `documentation.md` §4 — tRPC router with 12 endpoints (6 fully implemented, 6 stubbed).
 
 ### Component architecture
+
 See `documentation.md` §2 — 51 component files across today, guided-cook, results, search, layout, shared, heatmap, states, and ui directories.
 
 ### Data pipeline
+
 See `PIPELINE.md` — Python engine → pairings.json → pairings.ts → sideBridge.ts → pairing engine → API.
 
 ### Content seed structure
+
 See `data-structure.md` — 93 meals, 203 sides, 11 cuisines, guided cook step data.
 
 ### Performance targets
 
-| Metric | Target |
-|--------|--------|
-| First Contentful Paint | < 1.2s |
-| Time to Interactive | < 2.0s |
-| Pairing engine response | < 200ms |
-| AI recognition response | < 3s |
-| Cook step transition | < 100ms |
-| Lighthouse Performance | > 90 |
+| Metric                   | Target          |
+| ------------------------ | --------------- |
+| First Contentful Paint   | < 1.2s          |
+| Time to Interactive      | < 2.0s          |
+| Pairing engine response  | < 200ms         |
+| AI recognition response  | < 3s            |
+| Cook step transition     | < 100ms         |
+| Lighthouse Performance   | > 90            |
 | Bundle size (initial JS) | < 150KB gzipped |
 
 ### Testing strategy

@@ -52,9 +52,7 @@ export function WeeklyGoalCard({
 
       <div className="space-y-1.5">
         <div className="flex items-center justify-between text-xs text-[var(--nourish-subtext)]">
-          <span>
-            Cook {weeklyTarget} times
-          </span>
+          <span>Cook {weeklyTarget} times</span>
           <span>
             {cooksThisWeek}/{weeklyTarget}
           </span>
