@@ -166,9 +166,9 @@ export function WinScreen({
       )}
 
       {/* Star rating */}
-      <div className="space-y-1">
-        <p className="text-xs text-[var(--nourish-subtext)]">How did it turn out?</p>
-        <div className="flex items-center justify-center gap-1">
+      <div className="space-y-1" role="group" aria-label="Rate this cook">
+        <p className="text-xs text-[var(--nourish-subtext)]" id="rating-label">How did it turn out?</p>
+        <div className="flex items-center justify-center gap-1" role="radiogroup" aria-labelledby="rating-label">
           {[1, 2, 3, 4, 5].map((star, idx) => (
             <motion.button
               key={star}
@@ -182,6 +182,9 @@ export function WinScreen({
               }}
               className="p-1"
               type="button"
+              role="radio"
+              aria-checked={star === rating}
+              aria-label={`${star} star${star > 1 ? "s" : ""}`}
             >
               <Star
                 size={24}

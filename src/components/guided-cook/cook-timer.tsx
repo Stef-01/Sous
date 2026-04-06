@@ -14,14 +14,14 @@ export function CookTimer() {
   const { timerActive, timerRemaining, tickTimer, stopTimer } = useCookStore();
 
   useEffect(() => {
-    if (!timerActive || timerRemaining <= 0) return;
+    if (!timerActive) return;
 
     const interval = setInterval(() => {
       tickTimer();
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timerActive, timerRemaining, tickTimer]);
+  }, [timerActive, tickTimer]);
 
   // Timer completion effect
   useEffect(() => {

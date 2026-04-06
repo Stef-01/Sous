@@ -103,7 +103,7 @@ export function IngredientList({
         const sectionStartIdx = sectionStartIndices[sectionIdx];
 
         return (
-          <div key={section.label || "default"} className="space-y-1">
+          <div key={section.label || `section-${sectionIdx}`} className="space-y-1">
             {/* Section header — only shown in segmented mode */}
             {isSegmented && section.label && (
               <motion.h3

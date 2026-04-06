@@ -13,6 +13,8 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
+import { getSkillNodesForDish } from "@/data/skill-tree";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
@@ -52,6 +54,7 @@ function CombinedCookContent() {
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  const { recordSkillCook } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
@@ -204,13 +207,12 @@ function CombinedCookContent() {
 
   const handleNext = useCallback(() => {
     if (currentStepIndex >= currentCookSteps.length - 1) {
-      // Capture current dish name before nextDish() advances the index
-      const justCompletedName = currentDish?.dish.name ?? "";
-
       // Completed the current dish's cook steps
-      const hasMore = nextDish();
-      if (hasMore) {
-        // Show transition card before moving to next dish
+      const justCompletedName = currentDish?.dish.name ?? "";
+      const isLastDish = currentDishIndex >= dishes.length - 1;
+
+      if (!isLastDish) {
+        // Show transition card BEFORE advancing dish (defer nextDish to continue handler)
         setCompletedDishName(justCompletedName);
         setShowTransition(true);
       } else {
@@ -222,6 +224,11 @@ function CombinedCookContent() {
             streak: result.newStreak,
             saved: false,
           });
+          // Record skill tree progress for all dishes cooked in this session
+          for (const dish of dishes) {
+            const skillNodes = getSkillNodesForDish(dish.slug);
+            skillNodes.forEach((nodeId) => recordSkillCook(nodeId));
+          }
         }
         completeCookPhase();
       }
@@ -234,15 +241,18 @@ function CombinedCookContent() {
   }, [
     currentStepIndex,
     currentCookSteps.length,
-    nextDish,
+    currentDishIndex,
+    dishes,
     currentDish,
     completeCookPhase,
     completeSession,
+    recordSkillCook,
   ]);
 
   const handleTransitionContinue = useCallback(() => {
+    nextDish(); // Advance to the next dish in the store
     setShowTransition(false);
-  }, []);
+  }, [nextDish]);
 
   const handleToggleChip = useCallback(
     (chip: string | null) => {
@@ -344,8 +354,11 @@ function CombinedCookContent() {
   }, [updateSession]);
 
   const handleSave = useCallback(() => {
+    if (sessionIdRef.current) {
+      updateSession(sessionIdRef.current, { favorite: true });
+    }
     setWinMeta((prev) => ({ ...prev, saved: true }));
-  }, []);
+  }, [updateSession]);
 
   // ── Loading / error states ────────────────────────
 

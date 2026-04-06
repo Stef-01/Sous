@@ -427,3 +427,13 @@ export const XP_PER_COOK = {
 export function computeLevel(xp: number): number {
   return Math.floor(xp / 100) + 1;
 }
+
+/**
+ * Find all skill nodes that list a given dish slug in their associatedDishes.
+ * Returns node IDs, used to record progress when a cook is completed.
+ */
+export function getSkillNodesForDish(dishSlug: string): string[] {
+  return skillTreeNodes
+    .filter((node) => node.associatedDishes.includes(dishSlug))
+    .map((node) => node.id);
+}

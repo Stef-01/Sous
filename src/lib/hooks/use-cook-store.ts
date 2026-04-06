@@ -95,6 +95,8 @@ export const useCookStore = create<CookStore>((set, get) => ({
         currentStepIndex: 0,
         totalSteps: dishes[nextIdx].totalSteps,
         expandedChip: null,
+        timerActive: false,
+        timerRemaining: 0,
       });
       return true;
     }
@@ -106,12 +108,18 @@ export const useCookStore = create<CookStore>((set, get) => ({
       expandedChip: state.expandedChip === chip ? null : chip,
     })),
 
-  startTimer: (seconds) => set({ timerActive: true, timerRemaining: seconds }),
+  startTimer: (seconds) => {
+    // Guard against double-tap: don't restart if a timer is already running
+    const { timerActive } = get();
+    if (timerActive) return;
+    set({ timerActive: true, timerRemaining: seconds });
+  },
 
   tickTimer: () =>
     set((state) => {
       if (state.timerRemaining <= 1) {
-        return { timerActive: false, timerRemaining: 0 };
+        // Keep timerActive true at 0 so the completion effect can detect it
+        return { timerRemaining: 0 };
       }
       return { timerRemaining: state.timerRemaining - 1 };
     }),

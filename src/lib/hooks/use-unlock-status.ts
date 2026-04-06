@@ -39,24 +39,37 @@ export function useUnlockStatus(): UnlockStatus {
       // localStorage unavailable
     }
 
-    // Listen for storage changes (from other tabs or cook completions)
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === STATS_KEY && e.newValue) {
-        try {
-          const stats = JSON.parse(e.newValue);
+    // Re-read stats from localStorage (used by both listeners)
+    const refreshStatus = () => {
+      try {
+        const raw = localStorage.getItem(STATS_KEY);
+        if (raw) {
+          const stats = JSON.parse(raw);
           setStatus({
             pathUnlocked: (stats.completedCooks ?? 0) >= 3,
             communityUnlocked: false,
             completedCooks: stats.completedCooks ?? 0,
           });
-        } catch {
-          // ignore
         }
+      } catch {
+        // ignore
       }
     };
 
+    // Listen for storage changes from other tabs
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === STATS_KEY) refreshStatus();
+    };
+
+    // Listen for same-tab stats updates (StorageEvent only fires cross-tab)
+    const handleSameTab = () => refreshStatus();
+
     window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener("sous-stats-updated", handleSameTab);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("sous-stats-updated", handleSameTab);
+    };
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 

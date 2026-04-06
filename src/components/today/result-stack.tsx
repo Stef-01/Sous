@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -68,12 +68,16 @@ export function ResultStack({
   // Sync when parent provides new sides (full reroll)
   const sidesKey = initialSides.map((s) => s.id).join(",");
   const [lastSidesKey, setLastSidesKey] = useState(sidesKey);
-  if (sidesKey !== lastSidesKey) {
-    setSides(initialSides);
-    setSelectedIds(new Set(initialSides.map((s) => s.id)));
-    setSeenIds(new Set(initialSides.map((s) => s.id)));
-    setLastSidesKey(sidesKey);
-  }
+  /* eslint-disable react-hooks/set-state-in-effect -- sync parent prop change into local state */
+  useEffect(() => {
+    if (sidesKey !== lastSidesKey) {
+      setSides(initialSides);
+      setSelectedIds(new Set(initialSides.map((s) => s.id)));
+      setSeenIds(new Set(initialSides.map((s) => s.id)));
+      setLastSidesKey(sidesKey);
+    }
+  }, [sidesKey, lastSidesKey, initialSides]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const selectedSides = useMemo(
     () => sides.filter((s) => selectedIds.has(s.id)),
@@ -108,38 +112,41 @@ export function ResultStack({
   const lastRerollData = rerollQuery.data;
   const [appliedRerollKey, setAppliedRerollKey] = useState("");
 
-  if (
-    rerollingIndex !== null &&
-    lastRerollData?.success &&
-    lastRerollData.side &&
-    !rerollQuery.isFetching
-  ) {
-    const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
-    if (rerollKey !== appliedRerollKey) {
-      const newSide = lastRerollData.side as SideResult;
-      const idx = rerollingIndex;
+  /* eslint-disable react-hooks/set-state-in-effect -- async tRPC result drives state machine transition */
+  useEffect(() => {
+    if (
+      rerollingIndex !== null &&
+      lastRerollData?.success &&
+      lastRerollData.side &&
+      !rerollQuery.isFetching
+    ) {
+      const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
+      if (rerollKey !== appliedRerollKey) {
+        const newSide = lastRerollData.side as SideResult;
+        const idx = rerollingIndex;
 
-      setSides((prev) => {
-        const next = [...prev];
-        // Deselect old, select new
-        const oldId = next[idx].id;
-        setSelectedIds((sel) => {
-          const updated = new Set(sel);
-          if (updated.has(oldId)) {
-            updated.delete(oldId);
-            updated.add(newSide.id);
-          }
-          return updated;
+        setSides((prev) => {
+          const next = [...prev];
+          const oldId = next[idx].id;
+          setSelectedIds((sel) => {
+            const updated = new Set(sel);
+            if (updated.has(oldId)) {
+              updated.delete(oldId);
+              updated.add(newSide.id);
+            }
+            return updated;
+          });
+          next[idx] = newSide;
+          return next;
         });
-        next[idx] = newSide;
-        return next;
-      });
 
-      setSeenIds((prev) => new Set([...prev, newSide.id]));
-      setAppliedRerollKey(rerollKey);
-      setRerollingIndex(null);
+        setSeenIds((prev) => new Set([...prev, newSide.id]));
+        setAppliedRerollKey(rerollKey);
+        setRerollingIndex(null);
+      }
     }
-  }
+  }, [rerollingIndex, lastRerollData, rerollQuery.isFetching, appliedRerollKey]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleRerollSide = useCallback(
     (index: number) => {
@@ -379,6 +386,9 @@ function ResultCard({
               : "border-neutral-300 bg-white"
           )}
           type="button"
+          role="checkbox"
+          aria-checked={selected}
+          aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
           {selected && <Check size={12} className="text-white" strokeWidth={3} />}
         </motion.button>
@@ -452,6 +462,7 @@ function ResultCard({
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors disabled:opacity-40"
           type="button"
           title="Swap this side"
+          aria-label={`Swap ${side.name} for a different side`}
         >
           <RotateCcw size={12} />
         </motion.button>

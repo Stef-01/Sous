@@ -100,6 +100,7 @@ export const pairingRouter = router({
         mainDish: z.string(),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
+        _rerollSeed: z.number().optional(), // Cache buster for reroll — not used in logic
       })
     )
     .query(async ({ input }) => {

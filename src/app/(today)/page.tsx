@@ -45,6 +45,7 @@ function TodayPageContent() {
   const [showSearch, setShowSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
+  const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
   const router = useRouter();
@@ -72,9 +73,9 @@ function TodayPageContent() {
   }, [selectSidesParam, router]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // tRPC query
+  // tRPC query — rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
-    { mainDish: mainDishQuery, inputMode: "text" },
+    { mainDish: mainDishQuery, inputMode: "text", _rerollSeed: rerollSeed || undefined },
     {
       enabled: !!mainDishQuery && (view.type === "loading" || view.type === "results"),
     }
@@ -87,10 +88,11 @@ function TodayPageContent() {
   useEffect(() => {
     if (
       view.type === "loading" &&
-      pairingQuery.data?.success &&
       !pairingQuery.isFetching &&
+      pairingQuery.data &&
       pendingQueryRef.current === mainDishQuery
     ) {
+      // Transition to results regardless of success/failure — the results view handles both
       setView({ type: "results", mainDish: view.mainDish });
     }
   }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
@@ -124,23 +126,31 @@ function TodayPageContent() {
   const handleCameraCapture = useCallback(async (imageBase64: string) => {
     setView({ type: "recognition", imageBase64 });
 
-    const result = await recognitionMutation.mutateAsync({ imageBase64 });
+    try {
+      const result = await recognitionMutation.mutateAsync({ imageBase64 });
 
-    if (result.success) {
-      setView({
-        type: "correction",
-        dishName: result.dishName,
-        confidence: result.confidence,
-        alternates: result.alternates,
-        cuisine: result.cuisine,
-      });
-    } else {
-      // Recognition failed — show brief feedback then fall back to text input
+      if (result.success) {
+        setView({
+          type: "correction",
+          dishName: result.dishName,
+          confidence: result.confidence,
+          alternates: result.alternates,
+          cuisine: result.cuisine,
+        });
+      } else {
+        // Recognition failed — show brief feedback then fall back to text input
+        setRecognitionError(true);
+        setView({ type: "idle" });
+        setTimeout(() => setRecognitionError(false), 4000);
+      }
+    } catch {
+      // Network or server error — show feedback and fall back to text input
       setRecognitionError(true);
       setView({ type: "idle" });
       setTimeout(() => setRecognitionError(false), 4000);
     }
-  }, [recognitionMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- recognitionMutation is stable (tRPC hook)
+  }, []);
 
   const handleCorrectionConfirm = useCallback(
     (confirmedDish: string) => {
@@ -158,9 +168,8 @@ function TodayPageContent() {
 
   const handleReroll = useCallback(() => {
     if (mainDishQuery) {
-      const busted = mainDishQuery.trim() + ` (${Date.now()})`;
-      pendingQueryRef.current = busted;
-      setMainDishQuery(busted);
+      setRerollSeed(Date.now());
+      pendingQueryRef.current = mainDishQuery;
       setView({ type: "loading", mainDish: mainDishQuery.trim() });
     }
   }, [mainDishQuery]);
@@ -323,6 +332,26 @@ function TodayPageContent() {
                 }}
                 onReroll={handleReroll}
               />
+            )}
+
+            {/* Engine returned success: false (e.g. unparseable craving) */}
+            {view.type === "results" && pairingQuery.data && !pairingQuery.data.success && (
+              <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-center space-y-2">
+                <p className="text-sm text-amber-700">
+                  {pairingQuery.data.error || "Couldn\u2019t parse that craving. Try describing a specific dish."}
+                </p>
+                <button
+                  onClick={() => {
+                    setView({ type: "idle" });
+                    setMainDishQuery("");
+                    setResetKey((k) => k + 1);
+                  }}
+                  className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
+                  type="button"
+                >
+                  Try something else
+                </button>
+              </div>
             )}
 
             {/* Error state */}

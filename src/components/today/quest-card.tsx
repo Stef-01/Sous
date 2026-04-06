@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   motion,
@@ -101,6 +101,23 @@ export function QuestCard() {
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  // Clean up all pending timeouts on unmount
+  useEffect(() => {
+    return () => {
+      timersRef.current.forEach(clearTimeout);
+    };
+  }, []);
+
+  const scheduleTimeout = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      timersRef.current = timersRef.current.filter((t) => t !== id);
+      fn();
+    }, ms);
+    timersRef.current.push(id);
+    return id;
+  }, []);
 
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
@@ -110,29 +127,29 @@ export function QuestCard() {
         const dish = questDishes[currentIndex % questDishes.length];
         if (dish.hasGuidedCook) {
           setExitDirection("right");
-          setTimeout(() => {
+          scheduleTimeout(() => {
             router.push(`/cook/${dish.slug}`);
           }, 300);
         } else {
           // Non-guided dish: save it and advance to next card
           saveDish(dish.slug, dish.dishName);
           setSavedToastSlug(dish.slug);
-          setTimeout(() => setSavedToastSlug(null), 1500);
+          scheduleTimeout(() => setSavedToastSlug(null), 1500);
           setExitDirection("right");
-          setTimeout(() => {
+          scheduleTimeout(() => {
             setCurrentIndex((prev) => (prev + 1) % questDishes.length);
             setExitDirection(null);
           }, 250);
         }
       } else {
         setExitDirection("left");
-        setTimeout(() => {
+        scheduleTimeout(() => {
           setCurrentIndex((prev) => (prev + 1) % questDishes.length);
           setExitDirection(null);
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish]
+    [currentIndex, questDishes, router, saveDish, scheduleTimeout]
   );
 
   const handleStart = useCallback(() => {
@@ -155,9 +172,9 @@ export function QuestCard() {
     const wasNew = saveDish(dish.slug, dish.dishName);
     if (wasNew) {
       setSavedToastSlug(dish.slug);
-      setTimeout(() => setSavedToastSlug(null), 1500);
+      scheduleTimeout(() => setSavedToastSlug(null), 1500);
     }
-  }, [currentIndex, questDishes, saveDish]);
+  }, [currentIndex, questDishes, saveDish, scheduleTimeout]);
 
   if (questDishes.length === 0) {
     return null;
