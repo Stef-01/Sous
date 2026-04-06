@@ -14,7 +14,8 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
-import { getSkillNodesForDish } from "@/data/skill-tree";
+import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
+import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
@@ -54,13 +55,14 @@ function CombinedCookContent() {
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
-  const { recordSkillCook } = useSkillProgress();
+  const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
     streak: number;
     saved: boolean;
-  }>({ pathJustUnlocked: false, streak: 0, saved: false });
+    skillProgress: SkillProgressEntry[];
+  }>({ pathJustUnlocked: false, streak: 0, saved: false, skillProgress: [] });
 
   // Cook store
   const {
@@ -219,16 +221,36 @@ function CombinedCookContent() {
         // All dishes done — go to win screen
         if (sessionIdRef.current) {
           const result = completeSession(sessionIdRef.current, {});
+
+          // Record skill tree progress for all dishes and capture results
+          const allSkillEntries: SkillProgressEntry[] = [];
+          const seenNodes = new Set<string>();
+          for (const dish of dishes) {
+            const skillNodes = getSkillNodesForDish(dish.slug);
+            for (const nodeId of skillNodes) {
+              if (seenNodes.has(nodeId)) continue;
+              seenNodes.add(nodeId);
+              const node = getSkillNode(nodeId);
+              if (!node) continue;
+              recordSkillCook(nodeId);
+              const np = getNodeProgress(nodeId);
+              allSkillEntries.push({
+                nodeId,
+                name: node.name,
+                emoji: node.emoji,
+                newCount: np.cooksCompleted + 1,
+                required: node.cooksRequired,
+                justCompleted: np.cooksCompleted + 1 >= node.cooksRequired,
+              });
+            }
+          }
+
           setWinMeta({
             pathJustUnlocked: result.pathJustUnlocked,
             streak: result.newStreak,
             saved: false,
+            skillProgress: allSkillEntries,
           });
-          // Record skill tree progress for all dishes cooked in this session
-          for (const dish of dishes) {
-            const skillNodes = getSkillNodesForDish(dish.slug);
-            skillNodes.forEach((nodeId) => recordSkillCook(nodeId));
-          }
         }
         completeCookPhase();
       }
@@ -247,6 +269,7 @@ function CombinedCookContent() {
     completeCookPhase,
     completeSession,
     recordSkillCook,
+    getNodeProgress,
   ]);
 
   const handleTransitionContinue = useCallback(() => {
@@ -538,6 +561,7 @@ function CombinedCookContent() {
               )}
               pathJustUnlocked={winMeta.pathJustUnlocked}
               saved={winMeta.saved}
+              skillProgress={winMeta.skillProgress}
               onRate={handleRate}
               onAddPhoto={handleAddPhoto}
               onAddNote={handleAddNote}

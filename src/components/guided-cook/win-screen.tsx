@@ -6,6 +6,16 @@ import { Star, Camera, StickyNote, BookmarkPlus, RotateCcw, Home, Sparkles, Chev
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
+/** Skill node that was progressed during this cook. */
+export interface SkillProgressEntry {
+  nodeId: string;
+  name: string;
+  emoji: string;
+  newCount: number;
+  required: number;
+  justCompleted: boolean;
+}
+
 interface WinScreenProps {
   dishName: string;
   sideDishes?: string[];
@@ -15,6 +25,7 @@ interface WinScreenProps {
   totalSteps?: number;
   pathJustUnlocked?: boolean;
   saved?: boolean;
+  skillProgress?: SkillProgressEntry[];
   onRate: (rating: number) => void;
   onAddPhoto: () => void;
   onAddNote: (note: string) => void;
@@ -37,6 +48,7 @@ export function WinScreen({
   totalSteps = 0,
   pathJustUnlocked,
   saved = false,
+  skillProgress = [],
   onRate,
   onAddPhoto,
   onAddNote,
@@ -91,6 +103,10 @@ export function WinScreen({
   const handleRate = (stars: number) => {
     setRating(stars);
     onRate(stars);
+    // Auto-expand reflection for lower ratings (gentle nudge to improve)
+    if (stars <= 3 && !showReflection) {
+      setShowReflection(true);
+    }
   };
 
   return (
@@ -121,30 +137,52 @@ export function WinScreen({
         </p>
       </motion.div>
 
-      {/* Streak + skill */}
-      {streak > 0 && (
+      {/* Streak + skill progress */}
+      {(streak > 0 || skillProgress.length > 0) && (
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 12 }}
-          className="flex items-center gap-3"
+          className="flex flex-wrap items-center justify-center gap-2"
         >
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 12 }}
-            className="rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]"
-          >
-            Streak: {streak} 🔥
-          </motion.div>
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.6, type: "spring", stiffness: 300, damping: 12 }}
-            className="rounded-full bg-[var(--nourish-gold)]/15 px-3 py-1.5 text-sm font-medium text-[var(--nourish-gold)]"
-          >
-            +1 skill
-          </motion.div>
+          {streak > 0 && (
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 12 }}
+              className="rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]"
+            >
+              Streak: {streak} 🔥
+            </motion.div>
+          )}
+          {skillProgress.length > 0 ? (
+            skillProgress.map((sp, i) => (
+              <motion.div
+                key={sp.nodeId}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.5 + i * 0.1, type: "spring", stiffness: 300, damping: 12 }}
+                className={cn(
+                  "rounded-full px-3 py-1.5 text-sm font-medium",
+                  sp.justCompleted
+                    ? "bg-[var(--nourish-gold)]/20 text-[var(--nourish-gold)]"
+                    : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]"
+                )}
+              >
+                {sp.emoji} {sp.name} {sp.newCount}/{sp.required}
+                {sp.justCompleted && " ✓"}
+              </motion.div>
+            ))
+          ) : (
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.6, type: "spring", stiffness: 300, damping: 12 }}
+              className="rounded-full bg-[var(--nourish-gold)]/15 px-3 py-1.5 text-sm font-medium text-[var(--nourish-gold)]"
+            >
+              +1 skill
+            </motion.div>
+          )}
         </motion.div>
       )}
 
@@ -199,6 +237,23 @@ export function WinScreen({
           ))}
         </div>
       </div>
+
+      {/* Quick inline insight after rating */}
+      <AnimatePresence>
+        {rating > 0 && !showReflection && (
+          <motion.p
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            className="text-xs text-[var(--nourish-subtext)] italic"
+          >
+            {rating >= 4
+              ? "Nice work — tap reflect below to see what you nailed."
+              : "Every cook teaches you something. Tap reflect for a quick tip."}
+          </motion.p>
+        )}
+      </AnimatePresence>
 
       {/* Action buttons */}
       <div className="flex items-center justify-center gap-3">
