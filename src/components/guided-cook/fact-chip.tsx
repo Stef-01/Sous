@@ -20,7 +20,7 @@ export function FactChip({ fact, isExpanded, onToggle }: FactChipProps) {
           "border transition-all duration-150",
           isExpanded
             ? "border-purple-300/50 bg-purple-50 text-purple-700"
-            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
       >

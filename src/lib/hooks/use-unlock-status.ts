@@ -23,42 +23,45 @@ export function useUnlockStatus(): UnlockStatus {
     completedCooks: 0,
   });
 
-  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount + subscribe to storage events */
   useEffect(() => {
+    const applyStats = (stats: { completedCooks?: number }) => {
+      setStatus({
+        pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+        communityUnlocked: false, // deferred
+        completedCooks: stats.completedCooks ?? 0,
+      });
+    };
+
     try {
       const raw = localStorage.getItem(STATS_KEY);
-      if (raw) {
-        const stats = JSON.parse(raw);
-        setStatus({
-          pathUnlocked: (stats.completedCooks ?? 0) >= 3,
-          communityUnlocked: false, // deferred
-          completedCooks: stats.completedCooks ?? 0,
-        });
-      }
+      if (raw) applyStats(JSON.parse(raw));
     } catch {
       // localStorage unavailable
     }
 
-    // Listen for storage changes (from other tabs or cook completions)
+    // Cross-tab changes (StorageEvent)
     const handleStorage = (e: StorageEvent) => {
       if (e.key === STATS_KEY && e.newValue) {
         try {
-          const stats = JSON.parse(e.newValue);
-          setStatus({
-            pathUnlocked: (stats.completedCooks ?? 0) >= 3,
-            communityUnlocked: false,
-            completedCooks: stats.completedCooks ?? 0,
-          });
+          applyStats(JSON.parse(e.newValue));
         } catch {
           // ignore
         }
       }
     };
 
+    // Same-tab changes (custom event dispatched by persistStats)
+    const handleCustom = (e: Event) => {
+      applyStats((e as CustomEvent<{ completedCooks?: number }>).detail);
+    };
+
     window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
+    window.addEventListener("sous:stats-updated", handleCustom);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("sous:stats-updated", handleCustom);
+    };
   }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   return status;
 }

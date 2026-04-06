@@ -4,7 +4,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { SideDish, PairingScore } from "@/types";
-import { springs, spawnScaleKeyframes, wobbleRotationKeyframes } from "@/lib/motion";
+import {
+  springs,
+  spawnScaleKeyframes,
+  wobbleRotationKeyframes,
+} from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import HoverCard from "./HoverCard";
 import SparkleEffect from "@/components/ui/SparkleEffect";
@@ -23,9 +27,9 @@ interface SideDishCardProps {
 // Each side dish spawns from a unique direction — exaggerated for drama
 const getSpawnOrigin = (index: number) => {
   const origins = [
-    { x: -100, y: 60, rotate: -25 },   // Left: arcs in from lower-left
-    { x: 80, y: -80, rotate: 15 },     // Upper-right: drops in from sky
-    { x: 100, y: 80, rotate: 20 },     // Lower-right: bounces in
+    { x: -100, y: 60, rotate: -25 }, // Left: arcs in from lower-left
+    { x: 80, y: -80, rotate: 15 }, // Upper-right: drops in from sky
+    { x: 100, y: 80, rotate: 20 }, // Lower-right: bounces in
   ];
   return origins[index % 3];
 };
@@ -109,7 +113,14 @@ const reducedVariants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-export default function SideDishCard({ side, index, onSwap, onClick, hideControls = false, enableRegenerationDelay = false }: SideDishCardProps) {
+export default function SideDishCard({
+  side,
+  index,
+  onSwap,
+  onClick,
+  hideControls = false,
+  enableRegenerationDelay = false,
+}: SideDishCardProps) {
   const [imgError, setImgError] = useState(false);
   const [imageReady, setImageReady] = useState(false);
   const [minTimeElapsed, setMinTimeElapsed] = useState(false);
@@ -197,9 +208,14 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
 
   return (
     <motion.div
-      className={`group relative flex flex-col items-center cursor-pointer ${hasSpawned && !prefersReduced ? "ambient-float" : ""
-        }`}
-      style={hasSpawned && !prefersReduced ? { animationDelay: `${index * 0.7}s` } : undefined}
+      className={`group relative flex flex-col items-center cursor-pointer ${
+        hasSpawned && !prefersReduced ? "ambient-float" : ""
+      }`}
+      style={
+        hasSpawned && !prefersReduced
+          ? { animationDelay: `${index * 0.7}s` }
+          : undefined
+      }
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -220,13 +236,13 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
         prefersReduced
           ? {}
           : {
-            y: -8,
-            scale: 1.06,
-            // If settled (>5s), use bouncy snappy spring. If fresh, use stiff overdamped spring.
-            transition: isHoverSettled
-              ? springs.snappy
-              : { type: "spring", stiffness: 300, damping: 35 }
-          }
+              y: -8,
+              scale: 1.06,
+              // If settled (>5s), use bouncy snappy spring. If fresh, use stiff overdamped spring.
+              transition: isHoverSettled
+                ? springs.snappy
+                : { type: "spring", stiffness: 300, damping: 35 },
+            }
       }
       whileTap={prefersReduced ? {} : { scale: 0.95 }}
     >
@@ -280,7 +296,7 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
               src={side.imageUrl}
               alt={`Side dish: ${side.name}`}
               fill
-              className={`object-contain transition-opacity duration-300 ${imageReady && minTimeElapsed ? 'opacity-100' : 'opacity-0'}`}
+              className={`object-contain transition-opacity duration-300 ${imageReady && minTimeElapsed ? "opacity-100" : "opacity-0"}`}
               sizes="(max-width: 768px) 144px, (max-width: 1024px) 192px, 224px"
               onError={() => setImgError(true)}
               onLoad={() => setImageReady(true)}
@@ -300,25 +316,31 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
               <motion.div
                 key={`swap-wrapper-${swapKey}`}
                 className="absolute -top-1 -right-1 z-10"
-                initial={swapKey > 0 ? { scale: 0, rotate: -180 } : { opacity: 1 }}
+                initial={
+                  swapKey > 0 ? { scale: 0, rotate: -180 } : { opacity: 1 }
+                }
                 animate={
                   swapKey > 0
                     ? {
-                      scale: [0, 1.15, 0.95, 1.05, 1],
-                      rotate: 0,
-                    }
+                        scale: [0, 1.15, 0.95, 1.05, 1],
+                        rotate: 0,
+                      }
                     : { opacity: 1 }
                 }
-                exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.15 } }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.5,
+                  transition: { duration: 0.15 },
+                }}
                 transition={
                   swapKey > 0
                     ? {
-                      scale: {
-                        duration: 0.4,
-                        times: [0, 0.4, 0.6, 0.8, 1],
-                      },
-                      rotate: springs.snappy,
-                    }
+                        scale: {
+                          duration: 0.4,
+                          times: [0, 0.4, 0.6, 0.8, 1],
+                        },
+                        rotate: springs.snappy,
+                      }
                     : springs.snappy
                 }
               >
@@ -328,7 +350,9 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
                     className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-nourish-subtext hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold"
                     aria-label={`Swap ${side.name} for another side dish`}
                     whileHover={prefersReduced ? {} : { scale: 1.15 }}
-                    whileTap={prefersReduced ? {} : { scale: 0.85, rotate: -180 }}
+                    whileTap={
+                      prefersReduced ? {} : { scale: 0.85, rotate: -180 }
+                    }
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -370,6 +394,6 @@ export default function SideDishCard({ side, index, onSwap, onClick, hideControl
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div >
+    </motion.div>
   );
 }

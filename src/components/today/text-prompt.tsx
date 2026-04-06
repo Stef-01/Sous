@@ -34,7 +34,7 @@ export function TextPrompt({
         handleSubmit();
       }
     },
-    [handleSubmit]
+    [handleSubmit],
   );
 
   return (
@@ -56,7 +56,7 @@ export function TextPrompt({
             "placeholder:text-[var(--nourish-subtext)]/60",
             "focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/30 focus:border-[var(--nourish-green)]",
             "disabled:opacity-50",
-            "transition-all duration-200"
+            "transition-all duration-200",
           )}
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
@@ -75,7 +75,7 @@ export function TextPrompt({
               "rounded-lg p-2 transition-all duration-200",
               text.trim() && !isLoading
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
-                : "text-[var(--nourish-subtext)]/40 cursor-not-allowed"
+                : "text-[var(--nourish-subtext)]/40 cursor-not-allowed",
             )}
             aria-label="Search"
             type="button"
@@ -102,7 +102,7 @@ export function TextPrompt({
               className={cn(
                 "rounded-full border border-neutral-200 px-3 py-1.5 text-sm",
                 "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
-                "transition-colors duration-150"
+                "transition-colors duration-150",
               )}
               type="button"
             >

@@ -28,7 +28,13 @@ const REGIONAL_AFFINITIES: Record<string, string[]> = {
   japanese: ["east-asian", "korean", "chinese", "southeast-asian"],
   korean: ["east-asian", "japanese", "chinese", "southeast-asian"],
   chinese: ["east-asian", "japanese", "korean", "southeast-asian"],
-  "southeast-asian": ["thai", "vietnamese", "filipino", "east-asian", "south-asian"],
+  "southeast-asian": [
+    "thai",
+    "vietnamese",
+    "filipino",
+    "east-asian",
+    "south-asian",
+  ],
   thai: ["southeast-asian", "vietnamese", "east-asian", "south-asian"],
   vietnamese: ["southeast-asian", "thai", "east-asian", "chinese"],
   filipino: ["southeast-asian", "east-asian", "american", "comfort-classic"],
@@ -44,7 +50,7 @@ const REGIONAL_AFFINITIES: Record<string, string[]> = {
  */
 export function getCuisineCompatibility(
   sideCuisine: string,
-  mainCuisine: string
+  mainCuisine: string,
 ): number {
   const sideNorm = sideCuisine.toLowerCase();
   const mainNorm = mainCuisine.toLowerCase();
@@ -61,7 +67,8 @@ export function getCuisineCompatibility(
   if (reverseAffinities?.includes(sideNorm)) return 0.75;
 
   // Comfort classics pair moderately with everything
-  if (sideNorm === "comfort-classic" || mainNorm === "comfort-classic") return 0.6;
+  if (sideNorm === "comfort-classic" || mainNorm === "comfort-classic")
+    return 0.6;
 
   // Default — distant cuisines
   return DEFAULT_COMPATIBILITY;

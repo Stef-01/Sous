@@ -44,7 +44,7 @@ export function SkillNodeComponent({
       disabled={!isInteractive}
       className={cn(
         "flex flex-col items-center gap-1.5 group",
-        isInteractive ? "cursor-pointer" : "cursor-default"
+        isInteractive ? "cursor-pointer" : "cursor-default",
       )}
       type="button"
     >
@@ -62,7 +62,7 @@ export function SkillNodeComponent({
           status === "available" &&
             "bg-white border-2 border-neutral-200 hover:border-[var(--nourish-green)]/50 hover:shadow-md",
           status === "locked" &&
-            "bg-neutral-100 border-2 border-neutral-200 opacity-50"
+            "bg-neutral-100 border-2 border-neutral-200 opacity-50",
         )}
       >
         {/* Content by state */}
@@ -112,7 +112,7 @@ export function SkillNodeComponent({
           status === "completed" && "text-[var(--nourish-green)]",
           status === "in_progress" && "text-[var(--nourish-dark)]",
           status === "available" && "text-[var(--nourish-subtext)]",
-          status === "locked" && "text-neutral-300"
+          status === "locked" && "text-neutral-300",
         )}
       >
         {name}

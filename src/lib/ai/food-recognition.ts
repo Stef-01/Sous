@@ -18,13 +18,16 @@ Be honest about confidence. If the image is blurry, dark, or ambiguous, lower th
  * Returns structured recognition result with correction chip candidates.
  */
 export async function recognizeDish(
-  imageBase64: string
-): Promise<{ success: true; data: RecognitionResult } | { success: false; error: string }> {
+  imageBase64: string,
+): Promise<
+  { success: true; data: RecognitionResult } | { success: false; error: string }
+> {
   // Only attempt Vision API if OpenAI key is configured
   if (!process.env.OPENAI_API_KEY) {
     return {
       success: false,
-      error: "Photo recognition is not configured yet. Please type your dish instead.",
+      error:
+        "Photo recognition is not configured yet. Please type your dish instead.",
     };
   }
 
@@ -58,7 +61,8 @@ export async function recognizeDish(
     console.error("Food recognition error:", error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Failed to recognize dish",
+      error:
+        error instanceof Error ? error.message : "Failed to recognize dish",
     };
   }
 }

@@ -16,7 +16,10 @@ interface PlateAppraisal {
  * Delegates to the new PlateEvaluation engine (Phase 4) and returns
  * the backward-compatible sentence + tone format for existing UI consumers.
  */
-export function getPlateAppraisal({ sides, meal }: AppraisalInput): PlateAppraisal {
+export function getPlateAppraisal({
+  sides,
+  meal,
+}: AppraisalInput): PlateAppraisal {
   const evaluation = evaluatePlate({ meal, sides });
 
   return {

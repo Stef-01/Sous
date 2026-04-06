@@ -2,7 +2,10 @@ import { z } from "zod";
 import { router, publicProcedure } from "@/lib/trpc/server";
 import { parseCraving } from "@/lib/ai/craving-parser";
 import { suggestSides } from "@/lib/engine/pairing-engine";
-import { getAvailableCookSlugs, getAvailableMealCookSlugs } from "@/data/guided-cook-steps";
+import {
+  getAvailableCookSlugs,
+  getAvailableMealCookSlugs,
+} from "@/data/guided-cook-steps";
 import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
 
@@ -40,7 +43,8 @@ function buildCandidatesFromStatic(): SideDishCandidate[] {
     bestPairedWith: pairedWith.get(side.id) ?? [],
     tags: side.tags,
     pairingReason: side.pairingReason,
-    nutritionCategory: side.nutritionCategory === "dairy" ? "protein" : side.nutritionCategory,
+    nutritionCategory:
+      side.nutritionCategory === "dairy" ? "protein" : side.nutritionCategory,
   }));
 }
 
@@ -69,7 +73,8 @@ function deriveFlavorFromTags(tags: string[], desc: string): string[] {
   if (t.has("yogurt") || t.has("creamy")) flavors.push("creamy");
   if (t.has("fried")) flavors.push("rich");
   if (lower.includes("bright")) flavors.push("bright");
-  if (lower.includes("herb") || lower.includes("cilantro")) flavors.push("herby");
+  if (lower.includes("herb") || lower.includes("cilantro"))
+    flavors.push("herby");
   if (lower.includes("cool")) flavors.push("cooling");
   if (lower.includes("warm") || lower.includes("comfort")) flavors.push("warm");
   return flavors.length > 0 ? flavors : ["savory"];
@@ -77,10 +82,23 @@ function deriveFlavorFromTags(tags: string[], desc: string): string[] {
 
 function deriveTemperature(tags: string[], desc: string): string {
   const t = new Set(tags.map((s) => s.toLowerCase()));
-  if (t.has("salad") || t.has("fresh") || t.has("pickled") || t.has("yogurt")) return "cold";
-  if (t.has("soup") || t.has("baked") || t.has("fried") || t.has("warm") || t.has("stir-fry")) return "hot";
-  if (desc.toLowerCase().includes("cold") || desc.toLowerCase().includes("chilled")) return "cold";
-  if (desc.toLowerCase().includes("hot") || desc.toLowerCase().includes("warm")) return "hot";
+  if (t.has("salad") || t.has("fresh") || t.has("pickled") || t.has("yogurt"))
+    return "cold";
+  if (
+    t.has("soup") ||
+    t.has("baked") ||
+    t.has("fried") ||
+    t.has("warm") ||
+    t.has("stir-fry")
+  )
+    return "hot";
+  if (
+    desc.toLowerCase().includes("cold") ||
+    desc.toLowerCase().includes("chilled")
+  )
+    return "cold";
+  if (desc.toLowerCase().includes("hot") || desc.toLowerCase().includes("warm"))
+    return "hot";
   return "room-temp";
 }
 
@@ -100,7 +118,7 @@ export const pairingRouter = router({
         mainDish: z.string(),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       // 1. Parse craving text into structured intent
@@ -112,7 +130,10 @@ export const pairingRouter = router({
       const intent = parseResult.data;
 
       // Add cuisine hint if provided (from camera recognition)
-      if (input.cuisineHint && !intent.cuisineSignals.includes(input.cuisineHint)) {
+      if (
+        input.cuisineHint &&
+        !intent.cuisineSignals.includes(input.cuisineHint)
+      ) {
         intent.cuisineSignals.unshift(input.cuisineHint);
       }
 
@@ -132,7 +153,8 @@ export const pairingRouter = router({
       const mealCookSlugs = new Set(getAvailableMealCookSlugs());
       const resolvedMealSlug =
         resolveMealSlug(intent.dishName) ?? resolveMealSlug(input.mainDish);
-      const mainHasGuidedCook = resolvedMealSlug !== null && mealCookSlugs.has(resolvedMealSlug);
+      const mainHasGuidedCook =
+        resolvedMealSlug !== null && mealCookSlugs.has(resolvedMealSlug);
 
       return {
         success: true as const,
@@ -150,8 +172,11 @@ export const pairingRouter = router({
           totalScore: s.totalScore,
           scores: s.scores,
           // Include image and description from original data
-          imageUrl: existingSides.find((es) => es.id === s.sideDish.id)?.imageUrl ?? "",
-          description: existingSides.find((es) => es.id === s.sideDish.id)?.description ?? "",
+          imageUrl:
+            existingSides.find((es) => es.id === s.sideDish.id)?.imageUrl ?? "",
+          description:
+            existingSides.find((es) => es.id === s.sideDish.id)?.description ??
+            "",
           // Whether guided cook steps exist for this dish
           hasGuidedCook: cookSlugs.has(s.sideDish.slug),
         })),
@@ -167,16 +192,23 @@ export const pairingRouter = router({
         mainDish: z.string(),
         excludeIds: z.array(z.string()),
         cuisineHint: z.string().optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const parseResult = await parseCraving(input.mainDish);
       if (!parseResult.success) {
-        return { success: false as const, error: parseResult.error, side: null };
+        return {
+          success: false as const,
+          error: parseResult.error,
+          side: null,
+        };
       }
 
       const intent = parseResult.data;
-      if (input.cuisineHint && !intent.cuisineSignals.includes(input.cuisineHint)) {
+      if (
+        input.cuisineHint &&
+        !intent.cuisineSignals.includes(input.cuisineHint)
+      ) {
         intent.cuisineSignals.unshift(input.cuisineHint);
       }
 
@@ -185,7 +217,11 @@ export const pairingRouter = router({
       const result = suggestSides(intent, candidates, undefined, undefined, 1);
 
       if (!result.success || result.data.sides.length === 0) {
-        return { success: false as const, error: "No more alternatives available", side: null };
+        return {
+          success: false as const,
+          error: "No more alternatives available",
+          side: null,
+        };
       }
 
       const cookSlugs = new Set(getAvailableCookSlugs());
@@ -204,8 +240,12 @@ export const pairingRouter = router({
           explanation: s.explanation,
           totalScore: s.totalScore,
           scores: s.scores,
-          imageUrl: existingSides.find((es: { id: string }) => es.id === s.sideDish.id)?.imageUrl ?? "",
-          description: existingSides.find((es: { id: string }) => es.id === s.sideDish.id)?.description ?? "",
+          imageUrl:
+            existingSides.find((es: { id: string }) => es.id === s.sideDish.id)
+              ?.imageUrl ?? "",
+          description:
+            existingSides.find((es: { id: string }) => es.id === s.sideDish.id)
+              ?.description ?? "",
           hasGuidedCook: cookSlugs.has(s.sideDish.slug),
         },
       };

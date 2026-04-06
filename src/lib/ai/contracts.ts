@@ -102,7 +102,9 @@ export const appraisalRewriteResultSchema = z.object({
   appraisal: z.string().max(100),
 });
 
-export type AppraisalRewriteResult = z.infer<typeof appraisalRewriteResultSchema>;
+export type AppraisalRewriteResult = z.infer<
+  typeof appraisalRewriteResultSchema
+>;
 
 // ── Post-Cook Reflection ───────────────────────────────
 
@@ -118,20 +120,26 @@ export const postCookReflectionInputSchema = z.object({
   currentStreak: z.number().optional(),
 });
 
-export type PostCookReflectionInput = z.infer<typeof postCookReflectionInputSchema>;
+export type PostCookReflectionInput = z.infer<
+  typeof postCookReflectionInputSchema
+>;
 
 export const postCookReflectionResultSchema = z.object({
   strengths: z.array(z.string().max(120)).min(1).max(3),
-  nextTimeSuggestions: z.array(
-    z.object({
-      type: z.enum(["plating", "ratio", "technique", "finish"]),
-      message: z.string().max(120),
-    })
-  ).max(2),
+  nextTimeSuggestions: z
+    .array(
+      z.object({
+        type: z.enum(["plating", "ratio", "technique", "finish"]),
+        message: z.string().max(120),
+      }),
+    )
+    .max(2),
   tone: z.literal("encouraging"),
 });
 
-export type PostCookReflectionResult = z.infer<typeof postCookReflectionResultSchema>;
+export type PostCookReflectionResult = z.infer<
+  typeof postCookReflectionResultSchema
+>;
 
 // ── Provider Interface ──────────────────────────────────
 
@@ -140,6 +148,10 @@ export interface AIProvider {
   answerCookQuestion(input: CookQuestionInput): Promise<CookQuestionResult>;
   suggestSubstitution(input: SubstitutionInput): Promise<SubstitutionResult>;
   generateWinMessage(input: WinMessageInput): Promise<WinMessageResult>;
-  rewriteAppraisal(input: AppraisalRewriteInput): Promise<AppraisalRewriteResult>;
-  generateReflection(input: PostCookReflectionInput): Promise<PostCookReflectionResult>;
+  rewriteAppraisal(
+    input: AppraisalRewriteInput,
+  ): Promise<AppraisalRewriteResult>;
+  generateReflection(
+    input: PostCookReflectionInput,
+  ): Promise<PostCookReflectionResult>;
 }

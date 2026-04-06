@@ -21,7 +21,10 @@ export const sideDishSchema = z.object({
   bestPairedWith: z.array(z.string()),
   tags: z.array(z.string()).default([]),
   pairingReason: z.string().nullable().optional(),
-  nutritionCategory: z.enum(["protein", "carb", "vegetable"]).nullable().optional(),
+  nutritionCategory: z
+    .enum(["protein", "carb", "vegetable"])
+    .nullable()
+    .optional(),
 });
 
 export type SideDishInput = z.infer<typeof sideDishSchema>;
@@ -37,7 +40,7 @@ export const seedSideDishSchema = sideDishSchema.extend({
         quantity: z.string().min(1),
         isOptional: z.boolean().default(false),
         substitution: z.string().nullable().optional(),
-      })
+      }),
     )
     .optional(),
   steps: z
@@ -52,7 +55,7 @@ export const seedSideDishSchema = sideDishSchema.extend({
         cuisineFact: z.string().nullable().optional(),
         donenessCue: z.string().nullable().optional(),
         imageUrl: z.string().nullable().optional(),
-      })
+      }),
     )
     .optional(),
 });

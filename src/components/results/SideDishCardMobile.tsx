@@ -167,20 +167,20 @@ export default function SideDishCardMobile({
           animate={
             swapKey > 0
               ? {
-                scale: [0, 1.3, 0.9, 1.1, 1],
-                rotate: 0,
-              }
+                  scale: [0, 1.3, 0.9, 1.1, 1],
+                  rotate: 0,
+                }
               : {}
           }
           transition={
             swapKey > 0
               ? {
-                scale: {
-                  duration: 0.4,
-                  times: [0, 0.4, 0.6, 0.8, 1],
-                },
-                rotate: springs.snappy,
-              }
+                  scale: {
+                    duration: 0.4,
+                    times: [0, 0.4, 0.6, 0.8, 1],
+                  },
+                  rotate: springs.snappy,
+                }
               : springs.snappy
           }
         >

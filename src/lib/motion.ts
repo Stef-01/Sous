@@ -14,14 +14,24 @@ export const springs = {
   // === Video Game Spawn Springs ===
 
   /** Spawn plop — extreme bounce for the initial overshoot (0 → 1.25) */
-  spawnPlop: { type: "spring" as const, stiffness: 500, damping: 12, mass: 0.8 },
+  spawnPlop: {
+    type: "spring" as const,
+    stiffness: 500,
+    damping: 12,
+    mass: 0.8,
+  },
   /** Squish — quick spring for the squash-stretch effect */
   squish: { type: "spring" as const, stiffness: 600, damping: 15, mass: 0.5 },
 
   // === UI Transition Springs ===
 
   /** Button morph — smooth crossfade for button text/color transitions */
-  buttonMorph: { type: "spring" as const, stiffness: 350, damping: 28, mass: 0.7 },
+  buttonMorph: {
+    type: "spring" as const,
+    stiffness: 350,
+    damping: 28,
+    mass: 0.7,
+  },
 } as const;
 
 // === Keyframe Animation Definitions ===

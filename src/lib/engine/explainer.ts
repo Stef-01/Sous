@@ -65,7 +65,9 @@ export function generateExplanation(candidate: ScoredCandidate): string {
 /**
  * Add explanations to all scored candidates in place.
  */
-export function addExplanations(candidates: ScoredCandidate[]): ScoredCandidate[] {
+export function addExplanations(
+  candidates: ScoredCandidate[],
+): ScoredCandidate[] {
   return candidates.map((c) => ({
     ...c,
     explanation: generateExplanation(c),

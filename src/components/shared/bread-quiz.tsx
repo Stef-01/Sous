@@ -56,7 +56,7 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
             localStorage.setItem("sous-bread-result", winner);
             localStorage.setItem(
               "sous-bread-cuisines",
-              JSON.stringify(breadResults[winner].cuisineAffinities)
+              JSON.stringify(breadResults[winner].cuisineAffinities),
             );
           } catch {
             // localStorage unavailable
@@ -68,7 +68,7 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
         }
       }, 350);
     },
-    [answers, currentQ, onComplete]
+    [answers, currentQ, onComplete],
   );
 
   const handleBack = useCallback(() => {
@@ -81,7 +81,8 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
 
   const progress = result
     ? 100
-    : ((currentQ + (selectedOption !== null ? 0.5 : 0)) / TOTAL_QUESTIONS) * 100;
+    : ((currentQ + (selectedOption !== null ? 0.5 : 0)) / TOTAL_QUESTIONS) *
+      100;
 
   // ── Result screen ────��──────────────────────────
 
@@ -110,7 +111,12 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 12,
+              delay: 0.1,
+            }}
             className="text-7xl mb-4"
           >
             {bread.emoji}
@@ -120,7 +126,12 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 25 }}
+            transition={{
+              delay: 0.3,
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+            }}
             className="font-serif text-3xl text-[var(--nourish-dark)] mb-3"
           >
             {bread.headline}
@@ -130,7 +141,12 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, type: "spring", stiffness: 260, damping: 25 }}
+            transition={{
+              delay: 0.45,
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+            }}
             className="text-sm text-[var(--nourish-subtext)] leading-relaxed max-w-sm"
           >
             {bread.description}
@@ -163,7 +179,7 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
             className={cn(
               "mt-8 w-full max-w-xs rounded-xl py-3.5 text-sm font-semibold text-white",
               "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-              "transition-colors duration-200"
+              "transition-colors duration-200",
             )}
             type="button"
           >
@@ -254,7 +270,7 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
                     "transition-colors duration-150",
                     selectedOption === idx
                       ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/5 text-[var(--nourish-dark)]"
-                      : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-neutral-300"
+                      : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-neutral-300",
                   )}
                   type="button"
                 >
@@ -264,7 +280,11 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 15,
+                        }}
                       >
                         <ChevronRight
                           size={16}

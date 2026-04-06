@@ -12,8 +12,16 @@ interface FriendCook {
 
 // Fixed friend names — rotated against real side dish data
 const FRIEND_NAMES = [
-  "Zainab", "Hieu", "Kenji", "Beatriz", "Priya",
-  "Carlos", "Mei", "Omar", "Sofia", "Jin",
+  "Zainab",
+  "Hieu",
+  "Kenji",
+  "Beatriz",
+  "Priya",
+  "Carlos",
+  "Mei",
+  "Omar",
+  "Sofia",
+  "Jin",
 ];
 
 /**
@@ -24,7 +32,7 @@ function buildFriendCooks(count: number): FriendCook[] {
   // Use day-of-year as rotation seed for deterministic daily variety
   const now = new Date();
   const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
   );
 
   // Filter sides that have usable images
@@ -72,13 +80,20 @@ export function FriendsStrip() {
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.35 + idx * 0.08 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 20,
+              delay: 0.35 + idx * 0.08,
+            }}
             className="flex flex-col items-center gap-1 group cursor-pointer"
           >
             {/* Food image circle */}
             <div className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-neutral-100 group-hover:border-[var(--nourish-green)]/40 bg-neutral-50 transition-colors">
               {/* Fallback emoji — visible when image fails */}
-              <span className="absolute inset-0 flex items-center justify-center text-lg">🍽️</span>
+              <span className="absolute inset-0 flex items-center justify-center text-lg">
+                🍽️
+              </span>
               <img
                 src={friend.dishImage}
                 alt={friend.dishName}

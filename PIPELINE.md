@@ -8,10 +8,10 @@ How meal-to-side pairings work, how the heatmap stays current, and how to add ne
 
 The system has two pairing strategies:
 
-| Strategy | Coverage | How it works |
-|----------|----------|--------------|
+| Strategy          | Coverage                                         | How it works                                                                  |
+| ----------------- | ------------------------------------------------ | ----------------------------------------------------------------------------- |
 | **Engine-scored** | 14 Indian mains x 66 Indian sides (924 pairings) | Deterministic multi-factor scoring in Python, pre-computed to `pairings.json` |
-| **Curated** | 21 non-Indian mains x 8-12 sides each | Hand-picked `sidePool` arrays in `meals.json` |
+| **Curated**       | 21 non-Indian mains x 8-12 sides each            | Hand-picked `sidePool` arrays in `meals.json`                                 |
 
 The heatmap visualizer shows **both** strategies: engine-scored cells use a red-to-green gradient (0-100), curated cells appear in blue.
 
@@ -25,6 +25,7 @@ The Python engine at `~/Documents/New project/pairing_system.py` uses an **addit
 
 **1. Plate Structure (format fit)**
 Does the side's physical form match the main's needs?
+
 - Gravy main + starch: **+10**
 - Gravy main + bread: **+8**
 - Dry main + bread: **+10**
@@ -33,22 +34,26 @@ Does the side's physical form match the main's needs?
 
 **2. Evidence Priors (real-world anchors)**
 Is this pairing commonly served together in Indian restaurants/homes?
+
 - Side appears in evidence list: **+16**
 - Side's category appears in evidence categories: **+7**
 
 **3. Note-Hit Bonuses (flavor strategy)**
 Does the side cover the main's flavor objectives?
+
 - Preferred note hits: **min(12, 4 x count)**
 - Complementary note hits: **min(8, 2 x count)**
 - Avoid note hits: **-4 x count**
 
 **4. Flavor-Note Relations**
 Do the spice families cohere or clash?
+
 - Shared notes (overlap): **min(10, 3 x count)**
 - Compatibility map matches: **min(12, bonus)**
 - Clash map matches: **max(-18, penalty)**
 
 **5. Secondary Balance Checks**
+
 - Spice gap (heat mismatch): +4 to -3
 - Richness + freshness cut: +6 / heavy penalty: -7
 - Texture contrast (saucy + crunchy): +4
@@ -58,15 +63,16 @@ Do the spice families cohere or clash?
 **6. Clamping & Tier Assignment**
 Final score clamped to 0-100, then mapped:
 
-| Score | Tier |
-|-------|------|
-| >= 85 | excellent |
-| >= 70 | strong |
-| >= 55 | good |
+| Score | Tier         |
+| ----- | ------------ |
+| >= 85 | excellent    |
+| >= 70 | strong       |
+| >= 55 | good         |
 | >= 40 | experimental |
-| < 40 | low |
+| < 40  | low          |
 
 ### Reason Generation
+
 Top 4 positive contributions are extracted as human-readable strings. Fallback: "general compatibility".
 
 ---
@@ -111,6 +117,7 @@ The heatmap reads from two sources at runtime:
 2. **`meals.json` + `sides.json`** — all app meals and their `sidePool` arrays
 
 The `getHeatmapData()` function in `src/data/pairings.ts`:
+
 - Iterates all engine mains first (real scores)
 - Then iterates all app meals NOT in the engine (curated pools, marked as -1)
 - Collects all unique side names from both sources
@@ -125,6 +132,7 @@ The `getHeatmapData()` function in `src/data/pairings.ts`:
 ### Adding a new curated meal (no engine scoring)
 
 1. **Add side dishes** to `src/data/sides.json` if they don't exist:
+
    ```json
    {
      "id": "caesar-salad",
@@ -138,6 +146,7 @@ The `getHeatmapData()` function in `src/data/pairings.ts`:
    ```
 
 2. **Add the meal** to `src/data/meals.json`:
+
    ```json
    {
      "id": "grilled-chicken",
@@ -167,13 +176,16 @@ The `getHeatmapData()` function in `src/data/pairings.ts`:
    - Notes are auto-derived via `_derive_side_notes()`
 
 3. **Run the engine**:
+
    ```bash
    cd ~/Documents/New\ project
    python3 pairing_system.py
    ```
+
    This regenerates `pairings.json` with the full matrix.
 
 4. **Copy to app**:
+
    ```bash
    cp pairings.json ~/nourish-meal-pairer/src/data/pairings.json
    ```
@@ -212,16 +224,16 @@ console.log(missing === 0 ? 'All sides resolve.' : missing + ' unresolved.');
 
 ## File Reference
 
-| File | Purpose |
-|------|---------|
-| `src/data/meals.json` | 35 meals with sidePool arrays |
-| `src/data/sides.json` | 148 side dishes |
-| `src/data/pairings.json` | 924 engine-scored pairings (14 x 66) |
-| `src/data/pairings.ts` | Engine adapter: `getRankedSidesForMeal()`, `getHeatmapData()` |
-| `src/data/sideBridge.ts` | Engine name -> app ID resolution |
-| `src/data/index.ts` | Data access: `meals`, `sides`, `getSideById()` |
-| `src/lib/pairingEngine.ts` | Runtime selection: `selectSides()`, `swapOneSide()` |
-| `src/lib/scoreColor.ts` | `scoreToHsl()`, `tierToClasses()` |
-| `src/components/heatmap/HeatmapModal.tsx` | Heatmap visualizer UI |
-| `src/app/api/heatmap/route.ts` | Heatmap data API |
-| `~/Documents/New project/pairing_system.py` | Python scoring engine (source of truth) |
+| File                                        | Purpose                                                       |
+| ------------------------------------------- | ------------------------------------------------------------- |
+| `src/data/meals.json`                       | 35 meals with sidePool arrays                                 |
+| `src/data/sides.json`                       | 148 side dishes                                               |
+| `src/data/pairings.json`                    | 924 engine-scored pairings (14 x 66)                          |
+| `src/data/pairings.ts`                      | Engine adapter: `getRankedSidesForMeal()`, `getHeatmapData()` |
+| `src/data/sideBridge.ts`                    | Engine name -> app ID resolution                              |
+| `src/data/index.ts`                         | Data access: `meals`, `sides`, `getSideById()`                |
+| `src/lib/pairingEngine.ts`                  | Runtime selection: `selectSides()`, `swapOneSide()`           |
+| `src/lib/scoreColor.ts`                     | `scoreToHsl()`, `tierToClasses()`                             |
+| `src/components/heatmap/HeatmapModal.tsx`   | Heatmap visualizer UI                                         |
+| `src/app/api/heatmap/route.ts`              | Heatmap data API                                              |
+| `~/Documents/New project/pairing_system.py` | Python scoring engine (source of truth)                       |

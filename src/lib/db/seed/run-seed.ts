@@ -41,16 +41,34 @@ function deriveCuisineFamily(side: ExistingSide): string {
   if (tagSet.has("filipino")) return "filipino";
   if (tagSet.has("italian")) return "italian";
   if (tagSet.has("mexican")) return "mexican";
-  if (tagSet.has("mediterranean") || tagSet.has("greek") || tagSet.has("middle-eastern")) return "mediterranean";
+  if (
+    tagSet.has("mediterranean") ||
+    tagSet.has("greek") ||
+    tagSet.has("middle-eastern")
+  )
+    return "mediterranean";
   if (tagSet.has("american") || tagSet.has("comfort")) return "comfort-classic";
 
   // Fallback: check name patterns
   const name = side.name.toLowerCase();
-  if (name.includes("kimchi") || name.includes("namul") || name.includes("gochujang")) return "korean";
-  if (name.includes("miso") || name.includes("dashi") || name.includes("soba")) return "japanese";
-  if (name.includes("wonton") || name.includes("bok choy") || name.includes("mapo")) return "chinese";
-  if (name.includes("pho") || name.includes("banh") || name.includes("goi")) return "vietnamese";
-  if (name.includes("som tum") || name.includes("pad") || name.includes("tod")) return "thai";
+  if (
+    name.includes("kimchi") ||
+    name.includes("namul") ||
+    name.includes("gochujang")
+  )
+    return "korean";
+  if (name.includes("miso") || name.includes("dashi") || name.includes("soba"))
+    return "japanese";
+  if (
+    name.includes("wonton") ||
+    name.includes("bok choy") ||
+    name.includes("mapo")
+  )
+    return "chinese";
+  if (name.includes("pho") || name.includes("banh") || name.includes("goi"))
+    return "vietnamese";
+  if (name.includes("som tum") || name.includes("pad") || name.includes("tod"))
+    return "thai";
 
   return "comfort-classic"; // Safe default
 }
@@ -66,23 +84,46 @@ function deriveFlavorProfile(side: ExistingSide): string[] {
 
   // From tags
   if (tags.includes("fresh") || tags.includes("salad")) profiles.push("fresh");
-  if (tags.includes("crispy") || tags.includes("crunchy")) profiles.push("crunchy");
+  if (tags.includes("crispy") || tags.includes("crunchy"))
+    profiles.push("crunchy");
   if (tags.includes("spicy")) profiles.push("spicy");
-  if (tags.includes("fermented") || tags.includes("pickled")) profiles.push("tangy");
+  if (tags.includes("fermented") || tags.includes("pickled"))
+    profiles.push("tangy");
   if (tags.includes("sweet")) profiles.push("sweet");
   if (tags.includes("savory")) profiles.push("savory");
   if (tags.includes("fried")) profiles.push("rich");
-  if (tags.includes("yogurt") || tags.includes("creamy")) profiles.push("creamy");
+  if (tags.includes("yogurt") || tags.includes("creamy"))
+    profiles.push("creamy");
 
   // From description and pairing reason
-  if (desc.includes("bright") || reason.includes("bright")) profiles.push("bright");
-  if (desc.includes("herb") || desc.includes("cilantro") || desc.includes("mint")) profiles.push("herby");
-  if (desc.includes("cool") || reason.includes("cool")) profiles.push("cooling");
-  if (desc.includes("tangy") || desc.includes("sour") || desc.includes("vinegar")) profiles.push("tangy");
-  if (desc.includes("rich") || desc.includes("buttery") || reason.includes("rich")) profiles.push("rich");
-  if (desc.includes("warm") || desc.includes("comforting")) profiles.push("warm");
-  if (desc.includes("light") || reason.includes("light")) profiles.push("light");
-  if (desc.includes("crisp") || reason.includes("crunch")) profiles.push("crunchy");
+  if (desc.includes("bright") || reason.includes("bright"))
+    profiles.push("bright");
+  if (
+    desc.includes("herb") ||
+    desc.includes("cilantro") ||
+    desc.includes("mint")
+  )
+    profiles.push("herby");
+  if (desc.includes("cool") || reason.includes("cool"))
+    profiles.push("cooling");
+  if (
+    desc.includes("tangy") ||
+    desc.includes("sour") ||
+    desc.includes("vinegar")
+  )
+    profiles.push("tangy");
+  if (
+    desc.includes("rich") ||
+    desc.includes("buttery") ||
+    reason.includes("rich")
+  )
+    profiles.push("rich");
+  if (desc.includes("warm") || desc.includes("comforting"))
+    profiles.push("warm");
+  if (desc.includes("light") || reason.includes("light"))
+    profiles.push("light");
+  if (desc.includes("crisp") || reason.includes("crunch"))
+    profiles.push("crunchy");
 
   // Deduplicate
   const unique = [...new Set(profiles)];
@@ -96,10 +137,35 @@ function deriveTemperature(side: ExistingSide): "hot" | "cold" | "room-temp" {
   const tags = side.tags.map((t) => t.toLowerCase());
   const desc = side.description.toLowerCase();
 
-  if (tags.includes("salad") || tags.includes("fresh") || tags.includes("pickled") || tags.includes("yogurt")) return "cold";
-  if (tags.includes("soup") || tags.includes("baked") || tags.includes("fried") || tags.includes("warm") || tags.includes("stir-fry")) return "hot";
-  if (desc.includes("cold") || desc.includes("chilled") || desc.includes("refreshing")) return "cold";
-  if (desc.includes("hot") || desc.includes("warm") || desc.includes("toasted") || desc.includes("steamed") || desc.includes("grilled")) return "hot";
+  if (
+    tags.includes("salad") ||
+    tags.includes("fresh") ||
+    tags.includes("pickled") ||
+    tags.includes("yogurt")
+  )
+    return "cold";
+  if (
+    tags.includes("soup") ||
+    tags.includes("baked") ||
+    tags.includes("fried") ||
+    tags.includes("warm") ||
+    tags.includes("stir-fry")
+  )
+    return "hot";
+  if (
+    desc.includes("cold") ||
+    desc.includes("chilled") ||
+    desc.includes("refreshing")
+  )
+    return "cold";
+  if (
+    desc.includes("hot") ||
+    desc.includes("warm") ||
+    desc.includes("toasted") ||
+    desc.includes("steamed") ||
+    desc.includes("grilled")
+  )
+    return "hot";
 
   return "room-temp";
 }
@@ -109,7 +175,7 @@ function deriveTemperature(side: ExistingSide): "hot" | "cold" | "room-temp" {
  */
 function computeBestPairedWith(
   sideId: string,
-  meals: ExistingMeal[]
+  meals: ExistingMeal[],
 ): string[] {
   const paired: string[] = [];
   for (const meal of meals) {
@@ -127,12 +193,21 @@ function estimatePrepTime(side: ExistingSide): { prep: number; cook: number } {
   const tags = side.tags.map((t) => t.toLowerCase());
 
   // No-cook items
-  if (tags.includes("no-cook") || tags.includes("raw") || tags.includes("fresh")) {
+  if (
+    tags.includes("no-cook") ||
+    tags.includes("raw") ||
+    tags.includes("fresh")
+  ) {
     return { prep: 5, cook: 0 };
   }
 
   // Quick items
-  if (tags.includes("salad") || tags.includes("yogurt") || tags.includes("pickled") || tags.includes("condiment")) {
+  if (
+    tags.includes("salad") ||
+    tags.includes("yogurt") ||
+    tags.includes("pickled") ||
+    tags.includes("condiment")
+  ) {
     return { prep: 10, cook: 0 };
   }
 
@@ -147,7 +222,11 @@ function estimatePrepTime(side: ExistingSide): { prep: number; cook: number } {
   }
 
   // Bread/grain
-  if (tags.includes("bread") || tags.includes("grain") || tags.includes("rice")) {
+  if (
+    tags.includes("bread") ||
+    tags.includes("grain") ||
+    tags.includes("rice")
+  ) {
     return { prep: 5, cook: 15 };
   }
 
@@ -251,7 +330,7 @@ function validateOnly() {
 }
 
 function normalizeNutritionCategory(
-  cat: string
+  cat: string,
 ): "protein" | "carb" | "vegetable" {
   const valid = ["protein", "carb", "vegetable"];
   if (valid.includes(cat)) return cat as "protein" | "carb" | "vegetable";
@@ -276,7 +355,10 @@ function enrichSide(side: ExistingSide): SideDishInput {
     fiberGrams: null,
     caloriesPerServing: null,
     heroImageUrl: side.imageUrl,
-    bestPairedWith: computeBestPairedWith(side.id, existingMeals as ExistingMeal[]),
+    bestPairedWith: computeBestPairedWith(
+      side.id,
+      existingMeals as ExistingMeal[],
+    ),
     tags: side.tags,
     pairingReason: side.pairingReason,
     nutritionCategory: normalizeNutritionCategory(side.nutritionCategory),

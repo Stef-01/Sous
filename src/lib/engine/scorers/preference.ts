@@ -15,7 +15,7 @@ export const preferenceScorer: Scorer = {
   score(
     _main: MainDishIntent,
     side: SideDishCandidate,
-    userPreferences?: Record<string, number>
+    userPreferences?: Record<string, number>,
   ): number {
     // No preference data → neutral score
     if (!userPreferences || Object.keys(userPreferences).length === 0) {

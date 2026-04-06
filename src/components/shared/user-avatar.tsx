@@ -44,7 +44,7 @@ function ClerkAvatar({ size = 32, className }: UserAvatarProps) {
       height={size}
       className={cn(
         "rounded-full object-cover border border-neutral-200",
-        className
+        className,
       )}
     />
   );
@@ -56,7 +56,7 @@ function FallbackAvatar({ size = 32, className }: UserAvatarProps) {
       style={{ width: size, height: size }}
       className={cn(
         "flex items-center justify-center rounded-full bg-[var(--nourish-input-bg)] border border-neutral-200",
-        className
+        className,
       )}
     >
       <User

@@ -48,7 +48,7 @@ export function useSavedPairings() {
     (
       mealName: string,
       mealImageUrl: string,
-      sides: { name: string; imageUrl: string }[]
+      sides: { name: string; imageUrl: string }[],
     ): boolean => {
       const existing = loadPairings();
       // Check if already saved (same meal + same sides)
@@ -56,7 +56,7 @@ export function useSavedPairings() {
         (p) =>
           p.mealName === mealName &&
           p.sides.map((s) => s.name).join(",") ===
-            sides.map((s) => s.name).join(",")
+            sides.map((s) => s.name).join(","),
       );
       if (isDuplicate) return false;
 
@@ -78,7 +78,7 @@ export function useSavedPairings() {
       setPairings(updated);
       return true;
     },
-    []
+    [],
   );
 
   const removePairing = useCallback((id: string) => {
@@ -89,18 +89,15 @@ export function useSavedPairings() {
   }, []);
 
   const isSaved = useCallback(
-    (
-      mealName: string,
-      sides: { name: string }[]
-    ): boolean => {
+    (mealName: string, sides: { name: string }[]): boolean => {
       return pairings.some(
         (p) =>
           p.mealName === mealName &&
           p.sides.map((s) => s.name).join(",") ===
-            sides.map((s) => s.name).join(",")
+            sides.map((s) => s.name).join(","),
       );
     },
-    [pairings]
+    [pairings],
   );
 
   return { pairings, savePairing, removePairing, isSaved };

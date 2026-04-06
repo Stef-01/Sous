@@ -1,17 +1,18 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BookOpen, Heart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
+import { NextUnlockCard } from "@/components/path/next-unlock-card";
 import { SkillTree } from "@/components/path/skill-tree";
 import { SkillDetailSheet } from "@/components/path/skill-detail-sheet";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
-import { getSkillNode } from "@/data/skill-tree";
+import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
 /**
  * Path home — Duolingo-style skill tree for cooking progression.
@@ -35,10 +36,57 @@ export default function PathPage() {
   const { stats, completedSessions } = useCookSessions();
   const router = useRouter();
 
+  // Compute the next skill to unlock for NextUnlockCard
+  const nextUnlockData = useMemo(() => {
+    if (!mounted) return { nextNode: null, lockedPreview: null };
+
+    // First: any in_progress node
+    const inProgress = nodesWithStatus.find((n) => n.status === "in_progress");
+    if (inProgress) {
+      return {
+        nextNode: {
+          node: inProgress,
+          status: inProgress.status,
+          cooksCompleted: inProgress.progress.cooksCompleted,
+        },
+        lockedPreview: null,
+      };
+    }
+
+    // Second: first available node
+    const available = nodesWithStatus.find((n) => n.status === "available");
+    if (available) {
+      return {
+        nextNode: {
+          node: available,
+          status: available.status,
+          cooksCompleted: available.progress.cooksCompleted,
+        },
+        lockedPreview: null,
+      };
+    }
+
+    // Third: first locked node as a teaser
+    const firstLocked = skillTreeNodes.find(
+      (n) => getNodeStatus(n.id) === "locked",
+    );
+    if (firstLocked) {
+      return {
+        nextNode: null,
+        lockedPreview: {
+          node: firstLocked,
+          cooksNeeded: firstLocked.cooksRequired,
+        },
+      };
+    }
+
+    return { nextNode: null, lockedPreview: null };
+  }, [mounted, nodesWithStatus, getNodeStatus]);
+
   // Detail sheet state
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const selectedNode = selectedNodeId
-    ? getSkillNode(selectedNodeId) ?? null
+    ? (getSkillNode(selectedNodeId) ?? null)
     : null;
   const selectedStatus = selectedNodeId
     ? getNodeStatus(selectedNodeId)
@@ -56,7 +104,7 @@ export default function PathPage() {
       setSelectedNodeId(null);
       router.push(`/cook/${dishSlug}`);
     },
-    [router]
+    [router],
   );
 
   const handleCloseSheet = useCallback(() => {
@@ -94,9 +142,14 @@ export default function PathPage() {
         skillsCompleted={skillsCompleted}
       />
 
-      {/* Journey summary + weekly goal — the 3-block dashboard */}
+      {/* Journey summary + next unlock + weekly goal — the 3-block dashboard */}
       <div className="mx-auto max-w-md px-4 pt-4 space-y-3">
         <JourneySummary stats={stats} />
+        <NextUnlockCard
+          nextNode={nextUnlockData.nextNode}
+          lockedPreview={nextUnlockData.lockedPreview}
+          skillsCompleted={skillsCompleted}
+        />
         <WeeklyGoalCard completedSessions={completedSessions} />
       </div>
 

@@ -75,7 +75,7 @@ export function SkillDetailSheet({
                     status === "completed" && "bg-[var(--nourish-green)]/10",
                     status === "in_progress" && "bg-[var(--nourish-green)]/10",
                     status === "available" && "bg-neutral-100",
-                    status === "locked" && "bg-neutral-100"
+                    status === "locked" && "bg-neutral-100",
                   )}
                 >
                   <span className="text-2xl">{node.emoji}</span>
@@ -118,7 +118,7 @@ export function SkillDetailSheet({
                       "font-semibold",
                       status === "completed"
                         ? "text-[var(--nourish-green)]"
-                        : "text-[var(--nourish-dark)]"
+                        : "text-[var(--nourish-dark)]",
                     )}
                   >
                     {cooksCompleted}/{node.cooksRequired} cooks
@@ -130,7 +130,7 @@ export function SkillDetailSheet({
                       "h-full rounded-full",
                       status === "completed"
                         ? "bg-[var(--nourish-green)]"
-                        : "bg-[var(--nourish-green)]/70"
+                        : "bg-[var(--nourish-green)]/70",
                     )}
                     initial={{ width: 0 }}
                     animate={{ width: `${progress * 100}%` }}
@@ -148,15 +148,13 @@ export function SkillDetailSheet({
                   {node.associatedDishes.map((slug) => (
                     <button
                       key={slug}
-                      onClick={() =>
-                        status !== "locked" && onStartCook(slug)
-                      }
+                      onClick={() => status !== "locked" && onStartCook(slug)}
                       disabled={status === "locked"}
                       className={cn(
                         "rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
                         status === "locked"
                           ? "border-neutral-100 text-neutral-300 cursor-default"
-                          : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer"
+                          : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer",
                       )}
                       type="button"
                     >

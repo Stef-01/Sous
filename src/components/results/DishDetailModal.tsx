@@ -129,18 +129,14 @@ export default function DishDetailModal({
                   ? { opacity: 0 }
                   : { opacity: 0, y: 40, scale: 0.95 }
               }
-              transition={
-                prefersReduced ? { duration: 0.2 } : springs.modal
-              }
+              transition={prefersReduced ? { duration: 0.2 } : springs.modal}
             >
               {/* Close button with spin on hover */}
               <motion.button
                 onClick={onClose}
                 className="absolute top-4 right-4 text-nourish-subtext hover:text-nourish-dark transition-colors text-xl leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold rounded p-1"
                 aria-label="Close dish details"
-                whileHover={
-                  prefersReduced ? {} : { scale: 1.1, rotate: 90 }
-                }
+                whileHover={prefersReduced ? {} : { scale: 1.1, rotate: 90 }}
                 whileTap={prefersReduced ? {} : { scale: 0.85 }}
                 transition={springs.snappy}
               >
@@ -175,9 +171,7 @@ export default function DishDetailModal({
                 {/* Dish name */}
                 <motion.h2
                   className="text-xl font-serif text-nourish-dark mb-2 text-center"
-                  variants={
-                    prefersReduced ? reducedItemVariants : itemVariants
-                  }
+                  variants={prefersReduced ? reducedItemVariants : itemVariants}
                 >
                   {dish.name}
                 </motion.h2>
@@ -185,9 +179,7 @@ export default function DishDetailModal({
                 {/* Cuisine badge or tags */}
                 <motion.div
                   className="flex flex-wrap gap-1.5 justify-center mb-4"
-                  variants={
-                    prefersReduced ? reducedItemVariants : itemVariants
-                  }
+                  variants={prefersReduced ? reducedItemVariants : itemVariants}
                 >
                   {dish.cuisine && (
                     <span className="px-3 py-1 text-xs font-medium bg-nourish-gold/15 text-nourish-dark rounded-full">
@@ -207,10 +199,10 @@ export default function DishDetailModal({
                 {/* Description — hover to reveal pairing rationale */}
                 <motion.div
                   className="relative mb-6 cursor-default"
-                  variants={
-                    prefersReduced ? reducedItemVariants : itemVariants
+                  variants={prefersReduced ? reducedItemVariants : itemVariants}
+                  onMouseEnter={() =>
+                    dish.pairingRationale && setShowRationale(true)
                   }
-                  onMouseEnter={() => dish.pairingRationale && setShowRationale(true)}
                   onMouseLeave={() => setShowRationale(false)}
                 >
                   <AnimatePresence mode="wait">
@@ -243,16 +235,12 @@ export default function DishDetailModal({
                 {/* Action buttons */}
                 <motion.div
                   className="flex flex-col items-center gap-3 w-full"
-                  variants={
-                    prefersReduced ? reducedItemVariants : itemVariants
-                  }
+                  variants={prefersReduced ? reducedItemVariants : itemVariants}
                 >
                   {/* View Recipe button (placeholder) */}
                   <motion.button
                     className="px-6 py-2.5 text-sm font-medium text-white bg-nourish-button rounded-full hover:bg-nourish-button/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 flex items-center gap-2"
-                    whileHover={
-                      prefersReduced ? {} : { scale: 1.05, y: -2 }
-                    }
+                    whileHover={prefersReduced ? {} : { scale: 1.05, y: -2 }}
                     whileTap={prefersReduced ? {} : { scale: 0.95 }}
                     transition={springs.snappy}
                     onClick={(e) => e.preventDefault()}
@@ -265,9 +253,7 @@ export default function DishDetailModal({
                   {isSideDish && onSwapSide && (
                     <motion.button
                       className="px-5 py-2 text-sm text-nourish-subtext bg-transparent border border-gray-200 rounded-full hover:border-nourish-button hover:text-nourish-button transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nourish-gold focus-visible:ring-offset-2 flex items-center gap-2"
-                      whileHover={
-                        prefersReduced ? {} : { scale: 1.03, y: -1 }
-                      }
+                      whileHover={prefersReduced ? {} : { scale: 1.03, y: -1 }}
                       whileTap={prefersReduced ? {} : { scale: 0.95 }}
                       transition={springs.snappy}
                       onClick={() => {

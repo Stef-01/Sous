@@ -71,13 +71,16 @@ export default function SearchInput({
           ? { opacity: isEvaluating ? 0 : 1 }
           : { opacity: isEvaluating ? 0 : 1, y: isEvaluating ? -20 : 0 }
       }
-      transition={prefersReduced ? { duration: 0.2 } : { ...springs.gentle, delay: 0.15 }}
+      transition={
+        prefersReduced ? { duration: 0.2 } : { ...springs.gentle, delay: 0.15 }
+      }
     >
       <motion.div
-        className={`flex items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-500 ${isEvaluating
-          ? "bg-transparent border border-transparent shadow-none"
-          : "bg-white border border-stone-200 shadow-sm focus-within:border-nourish-button focus-within:ring-1 focus-within:ring-nourish-button/20"
-          }`}
+        className={`flex items-center gap-2 rounded-full px-2 py-1.5 transition-all duration-500 ${
+          isEvaluating
+            ? "bg-transparent border border-transparent shadow-none"
+            : "bg-white border border-stone-200 shadow-sm focus-within:border-nourish-button focus-within:ring-1 focus-within:ring-nourish-button/20"
+        }`}
         animate={
           prefersReduced
             ? {}
@@ -113,7 +116,12 @@ export default function SearchInput({
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
-                transition={{ type: "spring", stiffness: 400, damping: 25, mass: 0.5 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 25,
+                  mass: 0.5,
+                }}
               >
                 <SparkleEffect count={8}>
                   <button
@@ -149,13 +157,19 @@ export default function SearchInput({
               type={showEvaluate ? "button" : "submit"}
               onClick={showEvaluate ? onEvaluate : undefined}
               disabled={showEvaluate ? disabled : disabled || !value.trim()}
-              className={`px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all duration-300 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 whitespace-nowrap ${showEvaluate
-                ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
-                : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
-                }`}
+              className={`px-6 py-2.5 text-white text-sm font-medium rounded-full transition-all duration-300 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 whitespace-nowrap ${
+                showEvaluate
+                  ? "bg-nourish-evaluate hover:bg-nourish-evaluate-hover focus-visible:ring-nourish-evaluate"
+                  : "bg-nourish-button hover:bg-nourish-button-hover focus-visible:ring-nourish-gold"
+              }`}
               whileHover={prefersReduced ? {} : { scale: 1.03 }}
               whileTap={prefersReduced ? {} : { scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30, mass: 0.5 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30,
+                mass: 0.5,
+              }}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {showEvaluate ? (
@@ -164,7 +178,10 @@ export default function SearchInput({
                     initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{
+                      duration: 0.2,
+                      ease: [0.25, 0.46, 0.45, 0.94],
+                    }}
                     className="block"
                   >
                     {isEvaluating ? "Hide Plate" : "Evaluate"}
@@ -175,7 +192,10 @@ export default function SearchInput({
                     initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
                     animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                     exit={{ opacity: 0, y: -8, filter: "blur(4px)" }}
-                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{
+                      duration: 0.2,
+                      ease: [0.25, 0.46, 0.45, 0.94],
+                    }}
                     className="block"
                   >
                     Pair my meal

@@ -50,7 +50,7 @@ export function CookTimer() {
       <div
         className={cn(
           "flex items-center gap-3 rounded-full px-5 py-3 shadow-lg",
-          "bg-[var(--nourish-dark)] text-white"
+          "bg-[var(--nourish-dark)] text-white",
         )}
       >
         {/* Timer display */}

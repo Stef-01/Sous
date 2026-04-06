@@ -44,15 +44,19 @@ export function TabBar({
                 <motion.div
                   className="relative z-10 flex flex-col items-center gap-0.5"
                   animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
-                  transition={isActive ? { duration: 0.3, ease: "easeInOut" } : {}}
+                  transition={
+                    isActive ? { duration: 0.3, ease: "easeInOut" } : {}
+                  }
                 >
                   <TabIcon id={tab.id} active={isActive} />
-                  <span className={cn(
-                    "transition-colors duration-200",
-                    isActive
-                      ? "text-[var(--nourish-green)]"
-                      : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
-                  )}>
+                  <span
+                    className={cn(
+                      "transition-colors duration-200",
+                      isActive
+                        ? "text-[var(--nourish-green)]"
+                        : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                    )}
+                  >
                     {tab.label}
                   </span>
                 </motion.div>

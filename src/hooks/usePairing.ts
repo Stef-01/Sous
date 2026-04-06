@@ -21,7 +21,7 @@ export function usePairing() {
         meal,
         3,
         newExclude,
-        rankOffset
+        rankOffset,
       );
 
       setRankOffset(nextOffset);
@@ -34,21 +34,21 @@ export function usePairing() {
       trackEvent("reroll", { meal: meal.name });
       return newSides;
     },
-    [usedSideIds, rankOffset]
+    [usedSideIds, rankOffset],
   );
 
   const swap = useCallback(
     (
       meal: Meal,
       currentSides: SideDish[],
-      indexToSwap: number
+      indexToSwap: number,
     ): SideWithScore[] => {
       const { newSides, swappedSide, nextOffset } = swapOneSide(
         meal,
         currentSides,
         indexToSwap,
         usedSideIds,
-        rankOffset
+        rankOffset,
       );
 
       setRankOffset(nextOffset);
@@ -63,7 +63,7 @@ export function usePairing() {
 
       return newSides;
     },
-    [usedSideIds, rankOffset]
+    [usedSideIds, rankOffset],
   );
 
   const resetUsed = useCallback(() => {
@@ -79,8 +79,16 @@ export function usePairing() {
       ]);
       return meal.sidePool.every((id) => allSeen.has(id));
     },
-    [usedSideIds]
+    [usedSideIds],
   );
 
-  return { reroll, swap, resetUsed, isPoolExhausted, usedSideIds, rankOffset, setRankOffset };
+  return {
+    reroll,
+    swap,
+    resetUsed,
+    isPoolExhausted,
+    usedSideIds,
+    rankOffset,
+    setRankOffset,
+  };
 }

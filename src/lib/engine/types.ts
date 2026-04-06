@@ -54,7 +54,7 @@ export interface Scorer {
   score(
     main: MainDishIntent,
     side: SideDishCandidate,
-    userPreferences?: Record<string, number>
+    userPreferences?: Record<string, number>,
   ): number;
 }
 
@@ -63,6 +63,6 @@ export const DEFAULT_WEIGHTS: Record<keyof ScoreBreakdown, number> = {
   flavorContrast: 0.25,
   nutritionBalance: 0.15,
   prepBurden: 0.15,
-  temperature: 0.10,
-  preference: 0.10,
+  temperature: 0.1,
+  preference: 0.1,
 };

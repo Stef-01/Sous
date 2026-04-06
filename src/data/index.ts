@@ -31,16 +31,19 @@ export function resolveMealSlug(text: string): string | null {
   // Exact match on name or alias
   for (const meal of meals) {
     if (meal.name.toLowerCase() === normalized) return meal.id;
-    if (meal.aliases.some((a) => a.toLowerCase() === normalized)) return meal.id;
+    if (meal.aliases.some((a) => a.toLowerCase() === normalized))
+      return meal.id;
   }
 
   // Substring match — meal name contained in query or query contained in meal name
   for (const meal of meals) {
     const mealLower = meal.name.toLowerCase();
-    if (normalized.includes(mealLower) || mealLower.includes(normalized)) return meal.id;
+    if (normalized.includes(mealLower) || mealLower.includes(normalized))
+      return meal.id;
     for (const alias of meal.aliases) {
       const aliasLower = alias.toLowerCase();
-      if (normalized.includes(aliasLower) || aliasLower.includes(normalized)) return meal.id;
+      if (normalized.includes(aliasLower) || aliasLower.includes(normalized))
+        return meal.id;
     }
   }
 

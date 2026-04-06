@@ -20,7 +20,7 @@ export function HackChip({ hack, isExpanded, onToggle }: HackChipProps) {
           "border transition-all duration-150",
           isExpanded
             ? "border-blue-300/50 bg-blue-50 text-blue-700"
-            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
       >

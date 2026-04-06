@@ -18,9 +18,7 @@ interface TodayStore {
   setInputMode: (mode: "text" | "camera") => void;
   setCravingText: (text: string) => void;
   setCapturedPhoto: (url: string) => void;
-  setRecognizedDish: (
-    result: TodayStore["recognizedDish"]
-  ) => void;
+  setRecognizedDish: (result: TodayStore["recognizedDish"]) => void;
   selectSide: (sideId: string) => void;
   setLoading: (loading: boolean) => void;
   reset: () => void;

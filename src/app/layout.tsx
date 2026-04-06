@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   description:
     "Find the perfect sides for your favourite meal. Discover culturally appropriate side dishes with beautiful interactive pairing.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://sous.vercel.app"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://sous.vercel.app",
   ),
   openGraph: {
     title: "Sous — Meal Explorer",
@@ -63,11 +63,11 @@ export default function RootLayout({
   return (
     <AuthProvider>
       <html lang="en">
-        <body className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}>
+        <body
+          className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}
+        >
           <Providers>
-            <DeviceFrame>
-              {children}
-            </DeviceFrame>
+            <DeviceFrame>{children}</DeviceFrame>
           </Providers>
           <Analytics />
           <SpeedInsights />
