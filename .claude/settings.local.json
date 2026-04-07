@@ -1,12 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(xargs -I {} basename {})",
-      "Bash(pnpm test:*)",
-      "Bash(pnpm install:*)",
-      "Bash(pnpm lint:*)",
+      "Bash(ls -la \"/c/Users/stefa/Sous/.claude/worktrees/modest-shannon/src/app/\\(path\\)/\")",
+      "Bash(find C:UsersstefaSous.claudeworktreesmodest-shannonsrcappcook[slug] -type f)",
+      "Bash(find C:/Users/stefa/Sous/.claude/worktrees/modest-shannon/src/lib -type f -name *router* -o -type f -name *trpc*)",
       "Bash(pnpm build:*)",
-      "mcp__Claude_Preview__preview_start"
+      "Bash(pnpm install:*)",
+      "Bash(grep -E '^\\\\s+\"\"\"\"[^\"\"\"\"]+\"\"\"\": \\\\{$' C:/Users/stefa/Sous/.claude/worktrees/modest-shannon/src/data/guided-cook-steps.ts)",
+      "Bash(grep -E '^\\\\s+\"\"\"\"[^\"\"\"\"]+\"\"\"\": \\\\{$')",
+      "Bash(ls -la \"C:\\\\Users\\\\stefa\\\\Sous\\\\.claude\\\\worktrees\\\\modest-shannon\\\\src\\\\app\\\\\\(path\\)\\\\path\")",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm test:*)"
     ]
   }
 }
