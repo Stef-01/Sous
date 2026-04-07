@@ -1,4 +1,22 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "NotebookEdit(*)",
+      "TodoWrite(*)",
+      "Agent(*)",
+      "Task(*)",
+      "ToolSearch(*)",
+      "mcp__*"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
