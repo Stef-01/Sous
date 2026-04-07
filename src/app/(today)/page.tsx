@@ -195,7 +195,12 @@ function TodayPageContent() {
 
         {/* Today's Quest — swipeable card stack */}
         <div className="mb-2">
-          <QuestCard />
+          <QuestCard
+            onFindSides={(dishName) => {
+              setShowSearch(true);
+              handleTextSubmit(dishName);
+            }}
+          />
         </div>
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}
@@ -225,7 +230,12 @@ function TodayPageContent() {
         <div className="mx-8 border-t border-neutral-100/60 mb-4" />
 
         {/* Friends cooked recently */}
-        <FriendsStrip />
+        <FriendsStrip
+          onDishSelect={(dishName) => {
+            setShowSearch(true);
+            handleTextSubmit(dishName);
+          }}
+        />
       </main>
 
       {/* Search popout — slides up from bottom */}

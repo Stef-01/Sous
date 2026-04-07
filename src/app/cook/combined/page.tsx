@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Suspense, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -579,12 +580,13 @@ function CombinedMissionScreen({
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="overflow-hidden rounded-2xl"
+          className="relative aspect-[4/3] overflow-hidden rounded-2xl"
         >
-          <img
+          <Image
             src={mainDishHeroImage}
             alt={mainDishName}
-            className="w-full aspect-[4/3] object-cover"
+            fill
+            className="object-cover"
           />
         </motion.div>
       )}

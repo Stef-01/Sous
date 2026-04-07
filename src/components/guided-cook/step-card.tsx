@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, MessageCircleQuestion, Send } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -116,11 +117,12 @@ export function StepCard({
 
       {/* Step image (optional) */}
       {imageUrl && (
-        <div className="overflow-hidden rounded-xl">
-          <img
+        <div className="relative aspect-video overflow-hidden rounded-xl">
+          <Image
             src={imageUrl}
             alt={`Step ${stepNumber}`}
-            className="w-full aspect-video object-cover"
+            fill
+            className="object-cover"
           />
         </div>
       )}
