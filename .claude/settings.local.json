@@ -1,8 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm build:*)",
-      "Bash(npx next:*)"
+      "Bash(*)",
+      "Grep(*)",
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Glob(*)"
     ]
   }
 }
