@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 
 const SESSIONS_KEY = "sous-cook-sessions";
 const STATS_KEY = "sous-cook-stats";
@@ -100,16 +100,23 @@ function persistStats(stats: CookStats) {
 /**
  * Calculate whether the streak is still active.
  * A streak stays alive if the user cooked today or yesterday.
+ * Uses calendar-day comparison (not raw ms diff) to avoid timezone bugs.
  */
 function computeStreak(
   lastCookDate: string | null,
   currentStreak: number,
 ): number {
   if (!lastCookDate) return 0;
-  const last = new Date(lastCookDate);
-  const now = new Date();
-  const diffDays = Math.floor((now.getTime() - last.getTime()) / 86400000);
-  if (diffDays <= 1) return currentStreak;
+  // Compare calendar days using local date strings
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
+
+  if (lastCookDate === todayStr || lastCookDate === yesterdayStr) {
+    return currentStreak;
+  }
   return 0; // streak broken
 }
 
@@ -201,12 +208,11 @@ export function useCookSessions() {
 
       // Update stats
       const currentStats = loadStats();
-      const today = new Date().toISOString().split("T")[0];
-      const activeStreak = computeStreak(
-        currentStats.lastCookDate,
-        currentStats.currentStreak,
-      );
-      const newStreak = activeStreak + 1;
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      const activeStreak = computeStreak(currentStats.lastCookDate, currentStats.currentStreak);
+      // Only increment streak once per calendar day
+      const newStreak = currentStats.lastCookDate === today ? activeStreak : activeStreak + 1;
 
       const cuisines = new Set(currentStats.cuisinesCovered);
       cuisines.add(existing[idx].cuisineFamily);
@@ -220,6 +226,11 @@ export function useCookSessions() {
 
       persistStats(newStats);
       setStats(newStats);
+
+      // Notify other hooks in the same tab (StorageEvent only fires cross-tab)
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("sous-stats-updated"));
+      }
 
       const pathJustUnlocked = currentStats.completedCooks === 2; // was 2, now becomes 3
       return { pathJustUnlocked, newStreak };
@@ -264,12 +275,12 @@ export function useCookSessions() {
   /**
    * Get completed sessions (most recent first).
    */
-  const completedSessions = sessions.filter((s) => s.completedAt);
+  const completedSessions = useMemo(() => sessions.filter((s) => s.completedAt), [sessions]);
 
   /**
    * Get favorite sessions.
    */
-  const favoriteSessions = sessions.filter((s) => s.favorite);
+  const favoriteSessions = useMemo(() => sessions.filter((s) => s.favorite), [sessions]);
 
   return {
     sessions,

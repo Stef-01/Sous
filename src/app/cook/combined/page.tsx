@@ -21,6 +21,9 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
+import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
+import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
@@ -61,12 +64,14 @@ function CombinedCookContent() {
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
     streak: number;
     saved: boolean;
-  }>({ pathJustUnlocked: false, streak: 0, saved: false });
+    skillProgress: SkillProgressEntry[];
+  }>({ pathJustUnlocked: false, streak: 0, saved: false, skillProgress: [] });
 
   // Cook store
   const {
@@ -212,23 +217,47 @@ function CombinedCookContent() {
 
   const handleNext = useCallback(() => {
     if (currentStepIndex >= currentCookSteps.length - 1) {
-      // Capture current dish name before nextDish() advances the index
-      const justCompletedName = currentDish?.dish.name ?? "";
-
       // Completed the current dish's cook steps
-      const hasMore = nextDish();
-      if (hasMore) {
-        // Show transition card before moving to next dish
+      const justCompletedName = currentDish?.dish.name ?? "";
+      const isLastDish = currentDishIndex >= dishes.length - 1;
+
+      if (!isLastDish) {
+        // Show transition card BEFORE advancing dish (defer nextDish to continue handler)
         setCompletedDishName(justCompletedName);
         setShowTransition(true);
       } else {
         // All dishes done — go to win screen
         if (sessionIdRef.current) {
           const result = completeSession(sessionIdRef.current, {});
+
+          // Record skill tree progress for all dishes and capture results
+          const allSkillEntries: SkillProgressEntry[] = [];
+          const seenNodes = new Set<string>();
+          for (const dish of dishes) {
+            const skillNodes = getSkillNodesForDish(dish.slug);
+            for (const nodeId of skillNodes) {
+              if (seenNodes.has(nodeId)) continue;
+              seenNodes.add(nodeId);
+              const node = getSkillNode(nodeId);
+              if (!node) continue;
+              recordSkillCook(nodeId);
+              const np = getNodeProgress(nodeId);
+              allSkillEntries.push({
+                nodeId,
+                name: node.name,
+                emoji: node.emoji,
+                newCount: np.cooksCompleted + 1,
+                required: node.cooksRequired,
+                justCompleted: np.cooksCompleted + 1 >= node.cooksRequired,
+              });
+            }
+          }
+
           setWinMeta({
             pathJustUnlocked: result.pathJustUnlocked,
             streak: result.newStreak,
             saved: false,
+            skillProgress: allSkillEntries,
           });
         }
         completeCookPhase();
@@ -242,15 +271,19 @@ function CombinedCookContent() {
   }, [
     currentStepIndex,
     currentCookSteps.length,
-    nextDish,
+    currentDishIndex,
+    dishes,
     currentDish,
     completeCookPhase,
     completeSession,
+    recordSkillCook,
+    getNodeProgress,
   ]);
 
   const handleTransitionContinue = useCallback(() => {
+    nextDish(); // Advance to the next dish in the store
     setShowTransition(false);
-  }, []);
+  }, [nextDish]);
 
   const handleToggleChip = useCallback(
     (chip: string | null) => {
@@ -357,8 +390,11 @@ function CombinedCookContent() {
   }, [updateSession]);
 
   const handleSave = useCallback(() => {
+    if (sessionIdRef.current) {
+      updateSession(sessionIdRef.current, { favorite: true });
+    }
     setWinMeta((prev) => ({ ...prev, saved: true }));
-  }, []);
+  }, [updateSession]);
 
   // ── Loading / error states ────────────────────────
 
@@ -544,6 +580,10 @@ function CombinedCookContent() {
               )}
               pathJustUnlocked={winMeta.pathJustUnlocked}
               saved={winMeta.saved}
+              skillProgress={winMeta.skillProgress}
+              onRate={handleRate}
+              onAddPhoto={handleAddPhoto}
+              onAddNote={handleAddNote}
               onSave={handleSave}
               onCookAgain={handleCookAgain}
               onBackToday={handleBackToday}

@@ -63,7 +63,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             </div>
 
             {/* Search flow content */}
-            <div className="mx-auto max-w-md px-4 pb-24 pt-2 space-y-4">
+            <div className="mx-auto max-w-md px-4 pb-8 pt-2 space-y-4">
               {children}
             </div>
           </motion.div>

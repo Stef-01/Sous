@@ -16,7 +16,7 @@ export function TabBar({
 
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 backdrop-blur-sm safe-area-bottom">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 backdrop-blur-sm safe-area-bottom" aria-label="Main navigation">
       <LayoutGroup>
         <div className="mx-auto flex max-w-md items-center justify-around py-2">
           {tabs.map((tab) => {
@@ -30,6 +30,8 @@ export function TabBar({
                 key={tab.id}
                 href={tab.href}
                 className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
+                aria-current={isActive ? "page" : undefined}
+                aria-label={tab.label}
               >
                 {/* Sliding active indicator */}
                 {isActive && (

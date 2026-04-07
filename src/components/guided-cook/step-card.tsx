@@ -240,6 +240,7 @@ export function StepCard({
                       : "bg-neutral-200 cursor-not-allowed",
                   )}
                   type="button"
+                  aria-label="Send question"
                 >
                   <Send size={14} />
                 </motion.button>
@@ -291,6 +292,7 @@ export function StepCard({
               : "text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
+          aria-label={`Go back to step ${stepNumber - 1}`}
         >
           <ChevronLeft size={16} />
           Back
@@ -308,6 +310,7 @@ export function StepCard({
             "transition-colors duration-200",
           )}
           type="button"
+          aria-label={isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`}
         >
           {isLast ? "Done! 🎉" : "Next"}
           {!isLast && <ChevronRight size={16} />}

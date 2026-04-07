@@ -39,27 +39,36 @@ export function useUnlockStatus(): UnlockStatus {
       // localStorage unavailable
     }
 
-    // Cross-tab changes (StorageEvent)
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === STATS_KEY && e.newValue) {
-        try {
-          applyStats(JSON.parse(e.newValue));
-        } catch {
-          // ignore
+    // Re-read stats from localStorage (used by both listeners)
+    const refreshStatus = () => {
+      try {
+        const raw = localStorage.getItem(STATS_KEY);
+        if (raw) {
+          const stats = JSON.parse(raw);
+          setStatus({
+            pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+            communityUnlocked: false,
+            completedCooks: stats.completedCooks ?? 0,
+          });
         }
+      } catch {
+        // ignore
       }
     };
 
-    // Same-tab changes (custom event dispatched by persistStats)
-    const handleCustom = (e: Event) => {
-      applyStats((e as CustomEvent<{ completedCooks?: number }>).detail);
+    // Listen for storage changes from other tabs
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === STATS_KEY) refreshStatus();
     };
 
+    // Listen for same-tab stats updates (StorageEvent only fires cross-tab)
+    const handleSameTab = () => refreshStatus();
+
     window.addEventListener("storage", handleStorage);
-    window.addEventListener("sous:stats-updated", handleCustom);
+    window.addEventListener("sous-stats-updated", handleSameTab);
     return () => {
       window.removeEventListener("storage", handleStorage);
-      window.removeEventListener("sous:stats-updated", handleCustom);
+      window.removeEventListener("sous-stats-updated", handleSameTab);
     };
   }, []);
 

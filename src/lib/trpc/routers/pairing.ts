@@ -118,13 +118,8 @@ export const pairingRouter = router({
         mainDish: z.string(),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
-        /** User preference vector from coach quiz (keys: cuisine/flavor/nutrition tags, values -1..1). */
-        userPreferences: z.record(z.number()).optional(),
-        /** Effort tolerance from coach quiz — overrides the parsed intent's value. */
-        effortTolerance: z
-          .enum(["minimal", "moderate", "willing"])
-          .optional(),
-      }),
+        _rerollSeed: z.number().optional(), // Cache buster for reroll — not used in logic
+      })
     )
     .query(async ({ input }) => {
       // 1. Parse craving text into structured intent

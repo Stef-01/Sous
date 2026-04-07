@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
-import Image from "next/image";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
@@ -69,12 +68,16 @@ export function ResultStack({
   // Sync when parent provides new sides (full reroll)
   const sidesKey = initialSides.map((s) => s.id).join(",");
   const [lastSidesKey, setLastSidesKey] = useState(sidesKey);
-  if (sidesKey !== lastSidesKey) {
-    setSides(initialSides);
-    setSelectedIds(new Set(initialSides.map((s) => s.id)));
-    setSeenIds(new Set(initialSides.map((s) => s.id)));
-    setLastSidesKey(sidesKey);
-  }
+  /* eslint-disable react-hooks/set-state-in-effect -- sync parent prop change into local state */
+  useEffect(() => {
+    if (sidesKey !== lastSidesKey) {
+      setSides(initialSides);
+      setSelectedIds(new Set(initialSides.map((s) => s.id)));
+      setSeenIds(new Set(initialSides.map((s) => s.id)));
+      setLastSidesKey(sidesKey);
+    }
+  }, [sidesKey, lastSidesKey, initialSides]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const selectedSides = useMemo(
     () => sides.filter((s) => selectedIds.has(s.id)),
@@ -109,38 +112,41 @@ export function ResultStack({
   const lastRerollData = rerollQuery.data;
   const [appliedRerollKey, setAppliedRerollKey] = useState("");
 
-  if (
-    rerollingIndex !== null &&
-    lastRerollData?.success &&
-    lastRerollData.side &&
-    !rerollQuery.isFetching
-  ) {
-    const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
-    if (rerollKey !== appliedRerollKey) {
-      const newSide = lastRerollData.side as SideResult;
-      const idx = rerollingIndex;
+  /* eslint-disable react-hooks/set-state-in-effect -- async tRPC result drives state machine transition */
+  useEffect(() => {
+    if (
+      rerollingIndex !== null &&
+      lastRerollData?.success &&
+      lastRerollData.side &&
+      !rerollQuery.isFetching
+    ) {
+      const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
+      if (rerollKey !== appliedRerollKey) {
+        const newSide = lastRerollData.side as SideResult;
+        const idx = rerollingIndex;
 
-      setSides((prev) => {
-        const next = [...prev];
-        // Deselect old, select new
-        const oldId = next[idx].id;
-        setSelectedIds((sel) => {
-          const updated = new Set(sel);
-          if (updated.has(oldId)) {
-            updated.delete(oldId);
-            updated.add(newSide.id);
-          }
-          return updated;
+        setSides((prev) => {
+          const next = [...prev];
+          const oldId = next[idx].id;
+          setSelectedIds((sel) => {
+            const updated = new Set(sel);
+            if (updated.has(oldId)) {
+              updated.delete(oldId);
+              updated.add(newSide.id);
+            }
+            return updated;
+          });
+          next[idx] = newSide;
+          return next;
         });
-        next[idx] = newSide;
-        return next;
-      });
 
-      setSeenIds((prev) => new Set([...prev, newSide.id]));
-      setAppliedRerollKey(rerollKey);
-      setRerollingIndex(null);
+        setSeenIds((prev) => new Set([...prev, newSide.id]));
+        setAppliedRerollKey(rerollKey);
+        setRerollingIndex(null);
+      }
     }
-  }
+  }, [rerollingIndex, lastRerollData, rerollQuery.isFetching, appliedRerollKey]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleRerollSide = useCallback((index: number) => {
     setRerollingIndex(index);
@@ -367,31 +373,28 @@ function ResultCard({
           }}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center"
+          className={cn(
+            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
+            selected
+              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+              : "border-neutral-300 bg-white"
+          )}
           type="button"
+          role="checkbox"
+          aria-checked={selected}
+          aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
-          <span
-            className={cn(
-              "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-150",
-              selected
-                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-                : "border-neutral-300 bg-white",
-            )}
-          >
-            {selected && (
-              <Check size={12} className="text-white" strokeWidth={3} />
-            )}
-          </span>
+          {selected && <Check size={10} className="text-white" strokeWidth={3} />}
         </motion.button>
 
         {/* Card content (tappable to expand) */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex flex-1 items-center gap-3 text-left min-w-0"
+          className="flex flex-1 items-center gap-2.5 text-left min-w-0"
           type="button"
         >
           {/* Side dish image */}
-          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
             {isRerolling ? (
               <div className="flex h-full w-full items-center justify-center">
                 <RefreshCw
@@ -416,24 +419,23 @@ function ResultCard({
             <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
               {side.name}
             </h3>
-            {(rank === 1 && selected) || side.hasGuidedCook ? (
-              <div className="mt-0.5 flex items-center gap-1.5">
+            {(rank === 1 && selected || side.hasGuidedCook) && (
+              <div className="flex items-center gap-1.5 mt-0.5">
                 {rank === 1 && selected && (
-                  <span className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
                     Best match
                   </span>
                 )}
                 {side.hasGuidedCook && (
-                  <span className="rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
                     Guided
                   </span>
                 )}
               </div>
-            ) : (
-              <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
-                {side.explanation}
-              </p>
             )}
+            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
+              {side.explanation}
+            </p>
           </div>
 
           <ChevronDown
@@ -457,6 +459,7 @@ function ResultCard({
           className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
           type="button"
           title="Swap this side"
+          aria-label={`Swap ${side.name} for a different side`}
         >
           <span className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors">
             <RotateCcw size={12} />
