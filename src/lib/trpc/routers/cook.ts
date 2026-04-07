@@ -71,8 +71,10 @@ export const cookRouter = router({
         }
       }
 
-      // Fallback: use static guided cook data
-      const staticData = getStaticCookData(input.sideDishSlug);
+      // Fallback: use static guided cook data (check sides first, then meals)
+      const staticData =
+        getStaticCookData(input.sideDishSlug) ??
+        getStaticMealCookData(input.sideDishSlug);
 
       if (!staticData) {
         return { dish: null, steps: [], ingredients: [] };

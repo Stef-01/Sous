@@ -12,7 +12,7 @@ import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
-import { getStaticCookData } from "@/data/guided-cook-steps";
+import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
@@ -59,9 +59,9 @@ export default function GuidedCookPage({
     { enabled: !!slug },
   );
 
-  // Cuisine family for this side dish
+  // Cuisine family for this dish (side or meal)
   const cuisine = useMemo(() => {
-    const staticData = getStaticCookData(slug);
+    const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
     return staticData?.cuisineFamily ?? "unknown";
   }, [slug]);
 
