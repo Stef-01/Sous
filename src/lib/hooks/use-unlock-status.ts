@@ -13,12 +13,11 @@ interface UnlockStatus {
 /**
  * Read-only hook that checks localStorage for cook stats
  * and determines which tabs should be visible.
- * Path unlocks at 3 completed cooks.
- * Community is deferred (always false in prototype).
+ * Path is always unlocked. Community is deferred (always false in prototype).
  */
 export function useUnlockStatus(): UnlockStatus {
   const [status, setStatus] = useState<UnlockStatus>({
-    pathUnlocked: false,
+    pathUnlocked: true,
     communityUnlocked: false,
     completedCooks: 0,
   });
@@ -26,7 +25,7 @@ export function useUnlockStatus(): UnlockStatus {
   useEffect(() => {
     const applyStats = (stats: { completedCooks?: number }) => {
       setStatus({
-        pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+        pathUnlocked: true, // always unlocked
         communityUnlocked: false, // deferred
         completedCooks: stats.completedCooks ?? 0,
       });
@@ -46,7 +45,7 @@ export function useUnlockStatus(): UnlockStatus {
         if (raw) {
           const stats = JSON.parse(raw);
           setStatus({
-            pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+            pathUnlocked: true, // always unlocked
             communityUnlocked: false,
             completedCooks: stats.completedCooks ?? 0,
           });

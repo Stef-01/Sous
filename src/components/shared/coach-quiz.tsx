@@ -99,7 +99,8 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
   if (result) {
     const cuisines = topCuisines(result.preferences);
     const flavors = topFlavors(result.preferences);
-    const effortLabel = EFFORT_LABELS[result.effortTolerance] ?? "Ready to cook";
+    const effortLabel =
+      EFFORT_LABELS[result.effortTolerance] ?? "Ready to cook";
 
     return (
       <motion.div
@@ -124,7 +125,12 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 12,
+              delay: 0.1,
+            }}
             className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--nourish-green)]/10"
           >
             <Sparkles size={36} className="text-[var(--nourish-green)]" />
@@ -134,7 +140,12 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, type: "spring", stiffness: 260, damping: 25 }}
+            transition={{
+              delay: 0.25,
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+            }}
             className="font-serif text-2xl text-[var(--nourish-dark)] mb-2"
           >
             Your taste profile is set!
@@ -258,7 +269,9 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           >
             {/* Category pill */}
             <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-base leading-none">{question.categoryEmoji}</span>
+              <span className="text-base leading-none">
+                {question.categoryEmoji}
+              </span>
               <span className="text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
                 {question.category}
               </span>
@@ -296,14 +309,20 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl leading-none">{option.emoji}</span>
+                      <span className="text-xl leading-none">
+                        {option.emoji}
+                      </span>
                       <span>{option.label}</span>
                     </div>
                     {selectedOption === idx && (
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 15 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 15,
+                        }}
                       >
                         <ChevronRight
                           size={16}

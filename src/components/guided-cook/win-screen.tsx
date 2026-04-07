@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, Camera, StickyNote, BookmarkPlus, RotateCcw, Home, Sparkles, ChevronDown } from "lucide-react";
+import {
+  Star,
+  Camera,
+  StickyNote,
+  BookmarkPlus,
+  RotateCcw,
+  Home,
+  Sparkles,
+  ChevronDown,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
@@ -72,7 +81,7 @@ export function WinScreen({
       isFirstCook,
       currentStreak: streak,
     },
-    { staleTime: Infinity }
+    { staleTime: Infinity },
   );
 
   const headline = winMessage.data?.headline ?? "You did it!";
@@ -91,7 +100,7 @@ export function WinScreen({
       isFirstCook,
       currentStreak: streak,
     },
-    { enabled: showReflection, staleTime: Infinity }
+    { enabled: showReflection, staleTime: Infinity },
   );
 
   // Hide confetti after animation
@@ -132,9 +141,7 @@ export function WinScreen({
         <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
           {headline}
         </h1>
-        <p className="text-[var(--nourish-subtext)]">
-          {message}
-        </p>
+        <p className="text-[var(--nourish-subtext)]">{message}</p>
       </motion.div>
 
       {/* Streak + skill progress */}
@@ -142,14 +149,24 @@ export function WinScreen({
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 12 }}
+          transition={{
+            delay: 0.4,
+            type: "spring",
+            stiffness: 200,
+            damping: 12,
+          }}
           className="flex flex-wrap items-center justify-center gap-2"
         >
           {streak > 0 && (
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.5, type: "spring", stiffness: 300, damping: 12 }}
+              transition={{
+                delay: 0.5,
+                type: "spring",
+                stiffness: 300,
+                damping: 12,
+              }}
               className="rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]"
             >
               Streak: {streak} 🔥
@@ -161,12 +178,17 @@ export function WinScreen({
                 key={sp.nodeId}
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 0.5 + i * 0.1, type: "spring", stiffness: 300, damping: 12 }}
+                transition={{
+                  delay: 0.5 + i * 0.1,
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 12,
+                }}
                 className={cn(
                   "rounded-full px-3 py-1.5 text-sm font-medium",
                   sp.justCompleted
                     ? "bg-[var(--nourish-gold)]/20 text-[var(--nourish-gold)]"
-                    : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]"
+                    : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]",
                 )}
               >
                 {sp.emoji} {sp.name} {sp.newCount}/{sp.required}
@@ -177,7 +199,12 @@ export function WinScreen({
             <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 300, damping: 12 }}
+              transition={{
+                delay: 0.6,
+                type: "spring",
+                stiffness: 300,
+                damping: 12,
+              }}
               className="rounded-full bg-[var(--nourish-gold)]/15 px-3 py-1.5 text-sm font-medium text-[var(--nourish-gold)]"
             >
               +1 skill
@@ -191,7 +218,12 @@ export function WinScreen({
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6, type: "spring", stiffness: 200, damping: 12 }}
+          transition={{
+            delay: 0.6,
+            type: "spring",
+            stiffness: 200,
+            damping: 12,
+          }}
           className="rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 p-4"
         >
           <p className="text-sm font-semibold text-[var(--nourish-green)]">
@@ -205,8 +237,14 @@ export function WinScreen({
 
       {/* Star rating */}
       <div className="space-y-1" role="group" aria-label="Rate this cook">
-        <p className="text-xs text-[var(--nourish-subtext)]" id="rating-label">How did it turn out?</p>
-        <div className="flex items-center justify-center gap-1" role="radiogroup" aria-labelledby="rating-label">
+        <p className="text-xs text-[var(--nourish-subtext)]" id="rating-label">
+          How did it turn out?
+        </p>
+        <div
+          className="flex items-center justify-center gap-1"
+          role="radiogroup"
+          aria-labelledby="rating-label"
+        >
           {[1, 2, 3, 4, 5].map((star, idx) => (
             <motion.button
               key={star}
@@ -230,7 +268,7 @@ export function WinScreen({
                   "transition-colors",
                   star <= rating
                     ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
-                    : "text-neutral-200 fill-neutral-100"
+                    : "text-neutral-200 fill-neutral-100",
                 )}
               />
             </motion.button>
@@ -269,7 +307,7 @@ export function WinScreen({
             "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
             photoAdded
               ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
-              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
         >
@@ -326,7 +364,7 @@ export function WinScreen({
             "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all duration-150",
             showReflection
               ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
-              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
         >
@@ -375,7 +413,12 @@ export function WinScreen({
                           key={i}
                           initial={{ opacity: 0, x: -8 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: i * 0.1, type: "spring", stiffness: 260, damping: 25 }}
+                          transition={{
+                            delay: i * 0.1,
+                            type: "spring",
+                            stiffness: 260,
+                            damping: 25,
+                          }}
                           className="text-sm text-[var(--nourish-dark)] leading-relaxed"
                         >
                           {s}
@@ -394,7 +437,12 @@ export function WinScreen({
                             key={i}
                             initial={{ opacity: 0, x: -8 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.3 + i * 0.1, type: "spring", stiffness: 260, damping: 25 }}
+                            transition={{
+                              delay: 0.3 + i * 0.1,
+                              type: "spring",
+                              stiffness: 260,
+                              damping: 25,
+                            }}
                             className="text-sm text-[var(--nourish-dark)] leading-relaxed"
                           >
                             {s.message}
@@ -421,7 +469,7 @@ export function WinScreen({
             "flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-medium transition-colors",
             saved
               ? "border-[var(--nourish-green)]/40 bg-[var(--nourish-green)]/10 text-[var(--nourish-green)] cursor-default"
-              : "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5"
+              : "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
           )}
           type="button"
         >

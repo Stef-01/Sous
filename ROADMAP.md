@@ -16,6 +16,7 @@ The goal is a working, demoable prototype. No auth enforcement, no production in
 These features exist as real, substantial code — not stubs.
 
 #### Core Experience (Today Tab)
+
 - **Today page** (`src/app/(today)/page.tsx`) — full state machine: idle → loading → results | camera → recognition → correction. Working.
 - **Quest card stack** (`src/components/today/quest-card.tsx`) — swipeable Tinder-style cards, drag overlays, heart/X buttons. Working, but pool is **5 hardcoded dishes** (not connected to real data).
 - **Bird mascot + craving trigger** (`src/components/today/bird-mascot.tsx`) — speech bubble "I'm craving…" interaction. Working.
@@ -29,6 +30,7 @@ These features exist as real, substantial code — not stubs.
 - **Streak counter** (`src/components/today/streak-counter.tsx`) — working, reads from localStorage.
 
 #### Pairing Engine
+
 - **6 scorer modules** (`src/lib/engine/scorers/`) — cuisine-fit, flavor-contrast, nutrition-balance, prep-burden, temperature, preference. All implemented.
 - **Ranker** (`src/lib/engine/ranker.ts`) — weighted aggregation. Working.
 - **Explainer** (`src/lib/engine/explainer.ts`) — plain-language "why this works" strings. Working.
@@ -38,6 +40,7 @@ These features exist as real, substantial code — not stubs.
 - **tRPC `pairing.suggest` and `pairing.explain`** — fully implemented.
 
 #### AI Integration
+
 - **Food photo recognition** (`src/lib/ai/food-recognition.ts`) — OpenAI gpt-4o Vision → structured dish output. Working.
 - **Craving text parser** (`src/lib/ai/craving-parser.ts`) — Claude → CravingIntent (dish, cuisine, effort, health, mood). Working.
 - **AI provider abstraction** (`src/lib/ai/contracts.ts`, `src/lib/ai/provider.ts`) — typed interface, mock + Claude providers. All 6 surfaces defined.
@@ -47,6 +50,7 @@ These features exist as real, substantial code — not stubs.
 - **tRPC `recognition.identify`** — fully implemented.
 
 #### Guided Cook Flow
+
 - **`/cook/[slug]`** — full 4-phase flow: Mission → Grab → Cook → Win.
 - **Mission screen** (`src/components/guided-cook/mission-screen.tsx`) — dish overview, what you'll learn. Working.
 - **Ingredient list** (`src/components/guided-cook/ingredient-list.tsx`) — checkable list, "I don't have this" fires `ai.suggestSubstitution`. Working.
@@ -60,15 +64,18 @@ These features exist as real, substantial code — not stubs.
 - **Cook store** (`src/lib/hooks/use-cook-store.ts`) — Zustand session state. Working.
 
 #### Cook Session Persistence
+
 - **`useCookSessions` hook** (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
 - **`useUnlockStatus` hook** (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
 
 #### Evaluate A (Pre-Cook Plate Evaluation)
+
 - **Plate evaluation engine** (`src/lib/plateAppraisal.ts`, `src/lib/engine/plate-evaluation.ts`) — category coverage (veg/protein/carbs), signal classification, confidence-first appraisal, one-best-move recommendation. Working.
 - **Evaluate sheet UI** (`src/components/results/EvaluateSheet.tsx`) — ADA plate visualization, balance indicators, swap suggestion. Working.
 - **`ai.rewriteAppraisal`** — warmer natural-language version of deterministic appraisal. Wired.
 
 #### Results, Search, Save, Share
+
 - **Full results UI** (`src/components/results/`) — HeroDish, SideDishCard (desktop + mobile), DishDetailModal, HoverCard, InlinePlate, PlateMethodModal, SharePlateModal, RerollButton, BalanceIndicator. All working.
 - **Fuzzy search** (`src/lib/fuzzySearch.ts`) — Fuse.js against 93 mains. Working.
 - **SearchDropdown + SuggestionChips** — typeahead with cuisine badges, quick-start chips. Working.
@@ -77,6 +84,7 @@ These features exist as real, substantial code — not stubs.
 - **PNG plate export + native share** — html-to-image, clipboard fallback. Working.
 
 #### Path Tab
+
 - **Path home** (`src/app/(path)/path/page.tsx`) — skill tree, journey summary, weekly goal card, path header with XP/level/streak. Working.
 - **Skill tree** (`src/components/path/skill-tree.tsx`, `skill-node.tsx`, `skill-connector.tsx`) — Duolingo-style nodes with Foundation → Intermediate → Cuisine Specializations tiers. Working.
 - **Skill detail sheet** (`src/components/path/skill-detail-sheet.tsx`) — node info + "Start cooking" CTA. Working.
@@ -89,6 +97,7 @@ These features exist as real, substantial code — not stubs.
 - **Replay from scrapbook** — tapping a scrapbook entry navigates to `/cook/[slug]`. Working.
 
 #### Infrastructure
+
 - **tRPC v11** (`src/lib/trpc/`) — full router, TanStack Query client. Working.
 - **Drizzle ORM schema** (`src/lib/db/schema.ts`) — 7 tables: sideDishes, cookSteps, ingredients, users, cookSessions, savedRecipes, quizResponses. Defined, **not seeded**.
 - **Zustand state** — `useTodayStore`, `useCookStore`. Working.
@@ -143,18 +152,18 @@ These are the specific gaps between the current state and a fully demoable proto
 
 These are intentionally out of scope for Stage 1:
 
-| Feature | Reason |
-|---------|--------|
-| Community tab | Unlocks after 30 days. Always hidden in prototype. |
-| Clerk auth enforcement | Auth is integrated but not required. No login wall. |
-| Real database (Neon Postgres) | Everything uses localStorage. DB schema is defined and ready. |
-| Cloudflare R2 image storage | Images use Unsplash URLs. |
-| Upstash Redis cache/rate limiting | Not needed at prototype scale. |
-| Instacart integration | Placeholder button exists in fallback actions. V1 shows a "coming soon" toast. |
-| Multi-side selection + per-side reroll | Phase 7 in planning.md — post-V1. |
-| Intelligent cook sequencer | Phase 8 — post-V1. |
-| Agentic recipe assistant | Phase 9 — post-V1. |
-| Advanced skill progression / XP system | Phase 11 — post-V1. Skill tree nodes exist but XP is local-only. |
+| Feature                                | Reason                                                                         |
+| -------------------------------------- | ------------------------------------------------------------------------------ |
+| Community tab                          | Unlocks after 30 days. Always hidden in prototype.                             |
+| Clerk auth enforcement                 | Auth is integrated but not required. No login wall.                            |
+| Real database (Neon Postgres)          | Everything uses localStorage. DB schema is defined and ready.                  |
+| Cloudflare R2 image storage            | Images use Unsplash URLs.                                                      |
+| Upstash Redis cache/rate limiting      | Not needed at prototype scale.                                                 |
+| Instacart integration                  | Placeholder button exists in fallback actions. V1 shows a "coming soon" toast. |
+| Multi-side selection + per-side reroll | Phase 7 in planning.md — post-V1.                                              |
+| Intelligent cook sequencer             | Phase 8 — post-V1.                                                             |
+| Agentic recipe assistant               | Phase 9 — post-V1.                                                             |
+| Advanced skill progression / XP system | Phase 11 — post-V1. Skill tree nodes exist but XP is local-only.               |
 
 ---
 
@@ -165,6 +174,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 ---
 
 ### Auth (Clerk)
+
 - [ ] Enable Clerk auth fully — `src/components/auth-provider.tsx` and `src/middleware.ts` exist but auth is not enforced on any route.
 - [ ] Add login/signup flow with social providers (Google, Apple).
 - [ ] Associate cook sessions with Clerk user IDs (currently local sessions use `local-${Date.now()}`).
@@ -172,6 +182,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Migrate localStorage sessions to DB on first login ("import your history" flow).
 
 ### Real Database (Neon Postgres + Drizzle)
+
 - [ ] Provision a Neon Postgres database and set `DATABASE_URL`.
 - [ ] Run `pnpm db:push` to apply the 7-table Drizzle schema.
 - [ ] Run `pnpm db:seed` to seed the side dish and meal catalog.
@@ -179,6 +190,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Replace localStorage-only session hooks with server-backed equivalents (localStorage can remain as optimistic cache).
 
 ### Performance
+
 - [ ] Lazy-load the pairing engine and data files (currently bundled at build time).
 - [ ] Add ISR or edge caching for the `pairing.suggest` endpoint.
 - [ ] Optimize Framer Motion bundle — tree-shake unused features.
@@ -187,32 +199,38 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Lighthouse score ≥ 90 on mobile.
 
 ### Caching and Rate Limiting (Upstash Redis)
+
 - [ ] Add Upstash Redis for rate limiting on AI endpoints (`recognition.identify`, `pairing.suggest`).
 - [ ] Cache pairing results per main dish slug to reduce AI API costs on repeat queries.
 - [ ] Cache food recognition results by image hash to avoid re-querying Vision API for the same photo.
 
 ### Image Pipeline (Cloudflare R2)
+
 - [ ] Stand up a Cloudflare R2 bucket for food images.
 - [ ] Replace Unsplash URLs with R2-hosted, culturally reviewed photography.
 - [ ] Build an image upload pipeline for Win screen photos (currently `photoUri` in cook sessions is a local blob URL that doesn't persist across devices).
 
 ### Error Monitoring (Sentry)
+
 - [ ] Add Sentry for both client and server-side error capture.
 - [ ] Set up alert rules for: AI API failures, pairing engine errors, database query failures.
 - [ ] Add source maps for production stack traces.
 
 ### Analytics
+
 - [ ] Expand Vercel Analytics stub (`src/lib/analytics.ts`) with real event tracking: search submitted, pairing viewed, cook started, cook completed, evaluate opened, plate shared.
 - [ ] Set up a funnel view: search → results → cook → win.
 - [ ] Track feature discovery rates (how many users find Evaluate, Path, scrapbook).
 
 ### SEO
+
 - [ ] Add `og:image` and `twitter:card` meta tags to the Today page (shareable plate preview image).
 - [ ] Add structured data (Schema.org Recipe) for guided cook pages.
 - [ ] Generate a sitemap for `/cook/[slug]` routes.
 - [ ] Ensure all pages have unique, descriptive `<title>` and `<meta description>` tags.
 
 ### Security
+
 - [ ] Enforce Clerk auth on all mutation tRPC endpoints in production (`publicProcedure` → `protectedProcedure` where appropriate).
 - [ ] Add input sanitization and output validation on all AI endpoints (Zod schemas are defined — enforce them at the route boundary).
 - [ ] Rate limit camera/recognition endpoint per user to prevent Vision API abuse.
@@ -221,6 +239,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Rotate any API keys currently in `.env.local` and store in Vercel Environment Variables.
 
 ### CI/CD Pipeline
+
 - [ ] Set up GitHub Actions: lint + test on every PR.
 - [ ] Block merges to `main` if `pnpm lint` or `pnpm test` fail.
 - [ ] Add Playwright E2E smoke tests to CI (requires running Vercel preview URL).
@@ -228,6 +247,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Configure preview deployments on Vercel for all PRs.
 
 ### Accessibility
+
 - [ ] Full WCAG 2.1 AA audit on core flows (search, results, guided cook, evaluate).
 - [ ] Keyboard navigation for the quest card stack and search popout.
 - [ ] Screen reader labels on all icon-only buttons.
@@ -235,6 +255,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - [ ] Color contrast audit — the cream/stone palette needs verification at small text sizes.
 
 ### Additional Production Concerns
+
 - [ ] **PWA / installability** — Add a web app manifest, service worker, and offline fallback for the core Today page.
 - [ ] **Multi-language** — Spanish, Hindi, Tagalog are the highest-priority candidates per the PRD (Stanford patient demographics).
 - [ ] **Legal disclaimers** — "Not medical advice" notice, Privacy Policy, Terms of Service pages.
@@ -245,13 +266,13 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ## Summary
 
-| | Stage 1 (Prototype) | Stage 2 (Production) |
-|---|---|---|
-| **Auth** | None (anonymous) | Clerk, enforced |
-| **Data** | localStorage + static JSON | Neon Postgres, seeded |
-| **AI** | Working (mock fallback) | Rate-limited, cached, monitored |
-| **Images** | Unsplash URLs | Cloudflare R2 |
-| **Testing** | Engine unit tests + 1 E2E smoke test | Full CI pipeline, Playwright suite |
-| **Errors** | Console.warn fallbacks | Sentry, alert rules |
-| **Analytics** | Vercel Analytics (basic) | Full funnel tracking |
-| **Deploy** | Vercel (already live) | Vercel + hardened config |
+|               | Stage 1 (Prototype)                  | Stage 2 (Production)               |
+| ------------- | ------------------------------------ | ---------------------------------- |
+| **Auth**      | None (anonymous)                     | Clerk, enforced                    |
+| **Data**      | localStorage + static JSON           | Neon Postgres, seeded              |
+| **AI**        | Working (mock fallback)              | Rate-limited, cached, monitored    |
+| **Images**    | Unsplash URLs                        | Cloudflare R2                      |
+| **Testing**   | Engine unit tests + 1 E2E smoke test | Full CI pipeline, Playwright suite |
+| **Errors**    | Console.warn fallbacks               | Sentry, alert rules                |
+| **Analytics** | Vercel Analytics (basic)             | Full funnel tracking               |
+| **Deploy**    | Vercel (already live)                | Vercel + hardened config           |

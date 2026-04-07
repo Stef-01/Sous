@@ -210,9 +210,13 @@ export function useCookSessions() {
       const currentStats = loadStats();
       const now = new Date();
       const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-      const activeStreak = computeStreak(currentStats.lastCookDate, currentStats.currentStreak);
+      const activeStreak = computeStreak(
+        currentStats.lastCookDate,
+        currentStats.currentStreak,
+      );
       // Only increment streak once per calendar day
-      const newStreak = currentStats.lastCookDate === today ? activeStreak : activeStreak + 1;
+      const newStreak =
+        currentStats.lastCookDate === today ? activeStreak : activeStreak + 1;
 
       const cuisines = new Set(currentStats.cuisinesCovered);
       cuisines.add(existing[idx].cuisineFamily);
@@ -275,12 +279,18 @@ export function useCookSessions() {
   /**
    * Get completed sessions (most recent first).
    */
-  const completedSessions = useMemo(() => sessions.filter((s) => s.completedAt), [sessions]);
+  const completedSessions = useMemo(
+    () => sessions.filter((s) => s.completedAt),
+    [sessions],
+  );
 
   /**
    * Get favorite sessions.
    */
-  const favoriteSessions = useMemo(() => sessions.filter((s) => s.favorite), [sessions]);
+  const favoriteSessions = useMemo(
+    () => sessions.filter((s) => s.favorite),
+    [sessions],
+  );
 
   return {
     sessions,

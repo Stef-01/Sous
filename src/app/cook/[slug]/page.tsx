@@ -13,7 +13,10 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
-import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
+import {
+  getStaticCookData,
+  getStaticMealCookData,
+} from "@/data/guided-cook-steps";
 import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
@@ -153,7 +156,15 @@ export default function GuidedCookPage({
         expandedChip: null,
       });
     }
-  }, [currentStepIndex, cookSteps.length, completeCookPhase, completeSession, slug, recordSkillCook, getNodeProgress]);
+  }, [
+    currentStepIndex,
+    cookSteps.length,
+    completeCookPhase,
+    completeSession,
+    slug,
+    recordSkillCook,
+    getNodeProgress,
+  ]);
 
   const handleToggleChip = useCallback(
     (chip: string | null) => {

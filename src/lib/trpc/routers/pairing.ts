@@ -121,7 +121,7 @@ export const pairingRouter = router({
         _rerollSeed: z.number().optional(), // Cache buster for reroll — not used in logic
         userPreferences: z.record(z.number()).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       // 1. Parse craving text into structured intent
@@ -201,9 +201,7 @@ export const pairingRouter = router({
         excludeIds: z.array(z.string()),
         cuisineHint: z.string().optional(),
         userPreferences: z.record(z.number()).optional(),
-        effortTolerance: z
-          .enum(["minimal", "moderate", "willing"])
-          .optional(),
+        effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
     )
     .query(async ({ input }) => {

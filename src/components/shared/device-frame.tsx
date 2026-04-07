@@ -246,7 +246,8 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   );
 }
 
-/** Live clock status bar for the phone frame. */
+/** Live clock status bar for the phone frame. Reserved for future use. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function StatusBar() {
   const [time, setTime] = useState(() => {
     const d = new Date();

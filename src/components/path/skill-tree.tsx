@@ -148,11 +148,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   );
 
   return (
-    <div
-      ref={scrollRef}
-      className="relative flex-1 overflow-y-auto overflow-x-hidden scroll-contain"
-      style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
-    >
+    <div ref={scrollRef} className="relative w-full overflow-x-hidden">
       <div
         className="relative mx-auto"
         style={{ width: TREE_WIDTH, height: canvasHeight }}

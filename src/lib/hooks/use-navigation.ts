@@ -34,5 +34,5 @@ export function useNavigation(
       },
     ];
     return tabs.filter((t) => t.visible);
-  }, [user?.pathUnlocked, user?.communityUnlocked]);
+  }, [user?.communityUnlocked]);
 }

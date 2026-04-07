@@ -114,7 +114,11 @@ const SWIPE_THRESHOLD = 80;
  * Swipe right to cook, left to skip. Heart saves to localStorage.
  * Pass onFindSides to enable "Find sides" flow for non-guided dishes.
  */
-export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) => void }) {
+export function QuestCard({
+  onFindSides,
+}: {
+  onFindSides?: (dishName: string) => void;
+}) {
   const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
@@ -141,11 +145,6 @@ export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) =>
     return id;
   }, []);
 
-  const advance = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-    setExitDirection(null);
-  }, [questDishes.length]);
-
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
       if (questDishes.length === 0) return;
@@ -157,8 +156,11 @@ export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) =>
           scheduleTimeout(() => {
             router.push(`/cook/${dish.slug}`);
           }, 300);
+        } else if (onFindSides) {
+          // Non-guided dish: open find-sides search
+          onFindSides(dish.dishName);
         } else {
-          // Non-guided dish: save it and advance to next card
+          // Fallback if no handler: save and advance
           saveDish(dish.slug, dish.dishName);
           setSavedToastSlug(dish.slug);
           scheduleTimeout(() => setSavedToastSlug(null), 1500);
@@ -176,7 +178,7 @@ export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) =>
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish, scheduleTimeout]
+    [currentIndex, questDishes, router, saveDish, scheduleTimeout, onFindSides],
   );
 
   const handleStart = useCallback(() => {

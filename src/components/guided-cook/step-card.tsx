@@ -310,7 +310,9 @@ export function StepCard({
             "transition-colors duration-200",
           )}
           type="button"
-          aria-label={isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`}
+          aria-label={
+            isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`
+          }
         >
           {isLast ? "Done! 🎉" : "Next"}
           {!isLast && <ChevronRight size={16} />}

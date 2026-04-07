@@ -76,7 +76,8 @@ function TodayPageContent() {
   useEffect(() => {
     try {
       const prefs = localStorage.getItem("sous-preferences");
-      if (prefs) setUserPreferences(JSON.parse(prefs) as Record<string, number>);
+      if (prefs)
+        setUserPreferences(JSON.parse(prefs) as Record<string, number>);
       const effort = localStorage.getItem(
         "sous-effort-tolerance",
       ) as EffortTolerance | null;
@@ -103,7 +104,6 @@ function TodayPageContent() {
   const selectSidesParam = searchParams.get("selectSides");
   const handledSelectSidesRef = useRef<string | null>(null);
 
-   
   useEffect(() => {
     if (
       selectSidesParam &&
@@ -118,7 +118,6 @@ function TodayPageContent() {
       router.replace("/", { scroll: false });
     }
   }, [selectSidesParam, router]);
-   
 
   // tRPC query — rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
@@ -136,7 +135,7 @@ function TodayPageContent() {
   const recognitionMutation = trpc.recognition.identify.useMutation();
 
   // Transition from loading → results when query resolves for the CURRENT query
-   
+
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -148,7 +147,6 @@ function TodayPageContent() {
       setView({ type: "results", mainDish: view.mainDish });
     }
   }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
-   
 
   // ── Handlers ──────────────────────────────────────────
 
@@ -175,9 +173,8 @@ function TodayPageContent() {
     setView({ type: "camera" });
   }, []);
 
-  const handleCameraCapture = useCallback(
-    async (imageBase64: string) => {
-      setView({ type: "recognition", imageBase64 });
+  const handleCameraCapture = useCallback(async (imageBase64: string) => {
+    setView({ type: "recognition", imageBase64 });
 
     try {
       const result = await recognitionMutation.mutateAsync({ imageBase64 });
@@ -235,25 +232,22 @@ function TodayPageContent() {
     handleTextSubmit("simple side with basic pantry ingredients");
   }, [handleTextSubmit]);
 
-  const handleCoachQuizComplete = useCallback(
-    (result: CoachQuizResult) => {
-      try {
-        localStorage.setItem(
-          "sous-preferences",
-          JSON.stringify(result.preferences),
-        );
-        localStorage.setItem("sous-effort-tolerance", result.effortTolerance);
-        localStorage.setItem("sous-coach-quiz-done", "true");
-      } catch {
-        // localStorage unavailable
-      }
-      setUserPreferences(result.preferences);
-      setEffortTolerance(result.effortTolerance);
-      setQuizDone(true);
-      setShowCoachQuiz(false);
-    },
-    [],
-  );
+  const handleCoachQuizComplete = useCallback((result: CoachQuizResult) => {
+    try {
+      localStorage.setItem(
+        "sous-preferences",
+        JSON.stringify(result.preferences),
+      );
+      localStorage.setItem("sous-effort-tolerance", result.effortTolerance);
+      localStorage.setItem("sous-coach-quiz-done", "true");
+    } catch {
+      // localStorage unavailable
+    }
+    setUserPreferences(result.preferences);
+    setEffortTolerance(result.effortTolerance);
+    setQuizDone(true);
+    setShowCoachQuiz(false);
+  }, []);
 
   // ── Render ────────────────────────────────────────────
 
@@ -429,24 +423,27 @@ function TodayPageContent() {
             )}
 
             {/* Engine returned success: false (e.g. unparseable craving) */}
-            {view.type === "results" && pairingQuery.data && !pairingQuery.data.success && (
-              <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-center space-y-2">
-                <p className="text-sm text-amber-700">
-                  {pairingQuery.data.error || "Couldn\u2019t parse that craving. Try describing a specific dish."}
-                </p>
-                <button
-                  onClick={() => {
-                    setView({ type: "idle" });
-                    setMainDishQuery("");
-                    setResetKey((k) => k + 1);
-                  }}
-                  className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
-                  type="button"
-                >
-                  Try something else
-                </button>
-              </div>
-            )}
+            {view.type === "results" &&
+              pairingQuery.data &&
+              !pairingQuery.data.success && (
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-center space-y-2">
+                  <p className="text-sm text-amber-700">
+                    {pairingQuery.data.error ||
+                      "Couldn\u2019t parse that craving. Try describing a specific dish."}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setView({ type: "idle" });
+                      setMainDishQuery("");
+                      setResetKey((k) => k + 1);
+                    }}
+                    className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
+                    type="button"
+                  >
+                    Try something else
+                  </button>
+                </div>
+              )}
 
             {/* Error state */}
             {pairingQuery.error && (

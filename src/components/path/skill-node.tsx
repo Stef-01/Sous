@@ -42,7 +42,10 @@ export function SkillNodeComponent({
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
       whileTap={
         isInteractive
-          ? { scale: 0.88, transition: { type: "spring", stiffness: 400, damping: 15 } }
+          ? {
+              scale: 0.88,
+              transition: { type: "spring", stiffness: 400, damping: 15 },
+            }
           : undefined
       }
       onClick={() => isInteractive && onTap(id)}
