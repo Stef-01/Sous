@@ -75,7 +75,9 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
     return result;
   }, [nodes, nodePositions]);
 
-  // Auto-scroll to first available/in-progress node on mount
+  // Auto-scroll to first available/in-progress node on mount.
+  // Walks up to the nearest scrollable ancestor (phone frame on desktop)
+  // and falls back to window scroll (real mobile).
   useEffect(() => {
     const target =
       nodes.find((n) => n.status === "in_progress") ||
@@ -84,8 +86,26 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
       const pos = nodePositions[target.id];
       if (pos) {
         requestAnimationFrame(() => {
-          scrollRef.current?.scrollTo({
-            top: Math.max(0, pos.cy - 200),
+          if (!scrollRef.current) return;
+          const scrollTarget = Math.max(0, pos.cy - 200);
+          // Find nearest scrollable ancestor (e.g. the phone frame inner div)
+          let ancestor: Element | null = scrollRef.current.parentElement;
+          while (ancestor && ancestor !== document.body) {
+            const overflow = window.getComputedStyle(ancestor).overflowY;
+            if (
+              (overflow === "auto" || overflow === "scroll") &&
+              ancestor.scrollHeight > ancestor.clientHeight
+            ) {
+              ancestor.scrollTo({ top: scrollTarget, behavior: "smooth" });
+              return;
+            }
+            ancestor = ancestor.parentElement;
+          }
+          // Fallback: real mobile — scroll the window
+          const containerTop =
+            scrollRef.current.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({
+            top: containerTop + scrollTarget,
             behavior: "smooth",
           });
         });
@@ -130,8 +150,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   return (
     <div
       ref={scrollRef}
-      className="relative flex-1 overflow-y-auto overflow-x-hidden"
-      style={{ WebkitOverflowScrolling: "touch" }}
+      className="relative overflow-x-hidden"
     >
       <div
         className="relative mx-auto"
