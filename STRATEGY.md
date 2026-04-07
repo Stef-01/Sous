@@ -471,7 +471,61 @@ This section tracks ideas from other apps that could be feasibly integrated into
 
 ---
 
-## 12. Ambitious Ideas Parking Lot
+## 12. Market Research — Multi-Screen Candidates
+
+> **GATE:** Features in this section require one or more new screens or views. They pass the value test but not the minimalism test from Section 11. Build only when the core app is stable and user feedback validates demand.
+
+### 12.1 Paprika — Recipe Import and Collection
+- **Source:** Paprika
+- **What:** Import recipes from any URL into a personal collection with tagging and folders
+- **Requires:** New recipe collection screen, import flow, tag management
+- **Value:** Users can bring external recipes into Sous and cook them through the guided flow
+- **Risk:** Could shift focus from curated pairings to general recipe management
+- **Status:** EVALUATE — only if users repeatedly ask to cook non-Sous recipes
+
+### 12.2 Mealime — Grocery List Generation
+- **Source:** Mealime
+- **What:** Auto-generated grocery list from selected recipes, with aisle grouping
+- **Requires:** New grocery list screen, ingredient aggregation logic, aisle categorization
+- **Value:** Bridges the gap between deciding to cook and having ingredients
+- **Risk:** Becomes a grocery app. Maintenance burden for ingredient databases.
+- **Status:** EVALUATE — natural extension of Grab screen
+
+### 12.3 Duolingo — Skill Tree Full Page
+- **Source:** Duolingo
+- **What:** Full interactive skill tree showing cuisine mastery paths with branching progression
+- **Requires:** New skill tree screen under Path tab, progression data model, visual tree layout
+- **Value:** Gives cooking journey a visual shape, motivates exploration of new cuisines
+- **Risk:** Over-gamification could feel forced for casual cooks
+- **Status:** EVALUATE — aligns with Path tab expansion
+
+### 12.4 Centr — Program Mode (Multi-Week Challenges)
+- **Source:** Centr
+- **What:** Structured 2-4 week cooking programs (e.g., "Mediterranean Month", "Master Basics")
+- **Requires:** New program browser screen, program progress tracker, curated recipe sequences
+- **Value:** Guided learning paths for users who want structure beyond daily quests
+- **Risk:** Content creation burden. Could feel prescriptive vs. Sous's spontaneous philosophy.
+- **Status:** EVALUATE — test with one pilot program first
+
+### 12.5 Headspace — Cooking Journal / Reflection History
+- **Source:** Headspace (meditation journal)
+- **What:** Dedicated journal view showing cooking reflections over time with mood/confidence tracking
+- **Requires:** New journal screen, reflection timeline, optional mood tags
+- **Value:** Makes cooking progress tangible, supports mindful cooking practice
+- **Risk:** Could overlap with scrapbook. Users may not want another reflection surface.
+- **Status:** EVALUATE — consider merging with enhanced scrapbook instead
+
+### 12.6 Yummly — Taste Profile Dashboard
+- **Source:** Yummly
+- **What:** Visual dashboard showing your flavor preferences, cuisine breakdown, cooking patterns
+- **Requires:** New profile/dashboard screen, data visualization components, preference aggregation
+- **Value:** Makes the invisible preference engine visible, builds trust in recommendations
+- **Risk:** Dashboard = information density, conflicts with minimalism. Users may not care about their data.
+- **Status:** EVALUATE — could work as a single card in Path tab instead of full screen
+
+---
+
+## 13. Ambitious Ideas Parking Lot
 
 > **Review cadence:** Review this section monthly. Present top 3 candidates to founder for go/no-go decision.
 
@@ -479,7 +533,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.1 AR Overlay for Plating Guidance
+### 13.1 AR Overlay for Plating Guidance
 
 **Source/inspiration:** Cooking competition shows, augmented reality food apps (e.g., SideChef AR experiments).
 
@@ -497,7 +551,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.2 Voice-Guided Cooking (Hands-Free Mode)
+### 13.2 Voice-Guided Cooking (Hands-Free Mode)
 
 **Source/inspiration:** Alexa/Google Home cooking skills, SideChef voice mode.
 
@@ -515,7 +569,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.3 AI-Generated Weekly Meal Plans
+### 13.3 AI-Generated Weekly Meal Plans
 
 **Source/inspiration:** Mealime, Eat This Much, Whisk.
 
@@ -533,7 +587,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.4 Social Recipe Marketplace
+### 13.4 Social Recipe Marketplace
 
 **Source/inspiration:** Etsy model applied to recipes; Gumroad for creators.
 
@@ -551,7 +605,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.5 Smart Kitchen Device Integration
+### 13.5 Smart Kitchen Device Integration
 
 **Source/inspiration:** BRAVA, June Oven, Breville smart appliances; integration with Alexa cooking timers.
 
@@ -569,7 +623,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.6 Computer Vision Real-Time Cooking Feedback
+### 13.6 Computer Vision Real-Time Cooking Feedback
 
 **Source/inspiration:** Computational gastronomy research; startup experiments in real-time food analysis (e.g., detecting browning, doneness).
 
@@ -587,7 +641,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.7 Seasonal Ingredient Sourcing Partnerships with Local Farms
+### 13.7 Seasonal Ingredient Sourcing Partnerships with Local Farms
 
 **Source/inspiration:** CSA (Community Supported Agriculture) subscriptions; Farmbox Direct; Good Eggs.
 
@@ -605,7 +659,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.8 Gamified Cooking Tournaments and Competitions
+### 13.8 Gamified Cooking Tournaments and Competitions
 
 **Source/inspiration:** Duolingo leagues, Strava challenges, cooking competition format.
 
@@ -623,7 +677,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.9 White-Label Version for Cooking Schools and Corporate Wellness
+### 13.9 White-Label Version for Cooking Schools and Corporate Wellness
 
 **Source/inspiration:** B2B SaaS model; Calm for Business; corporate wellness platforms.
 
@@ -641,7 +695,7 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-### 12.10 Offline Mode with Full Guided Cook Capability
+### 13.10 Offline Mode with Full Guided Cook Capability
 
 **Source/inspiration:** Duolingo offline lessons; Spotify offline playback; Headspace offline sessions.
 
@@ -704,37 +758,91 @@ This section tracks bigger, riskier, or more complex ideas from competitor resea
 
 ---
 
-## 12. Ambitious Ideas Parking Lot
+## 12. Market Research — Multi-Screen Candidates
+
+> **GATE:** Features in this section require one or more new screens or views. They pass the value test but not the minimalism test from Section 11. Build only when the core app is stable and user feedback validates demand.
+
+### 12.1 Paprika — Recipe Import and Collection
+- **Source:** Paprika
+- **What:** Import recipes from any URL into a personal collection with tagging and folders
+- **Requires:** New recipe collection screen, import flow, tag management
+- **Value:** Users can bring external recipes into Sous and cook them through the guided flow
+- **Risk:** Could shift focus from curated pairings to general recipe management
+- **Status:** EVALUATE — only if users repeatedly ask to cook non-Sous recipes
+
+### 12.2 Mealime — Grocery List Generation
+- **Source:** Mealime
+- **What:** Auto-generated grocery list from selected recipes, with aisle grouping
+- **Requires:** New grocery list screen, ingredient aggregation logic, aisle categorization
+- **Value:** Bridges the gap between deciding to cook and having ingredients
+- **Risk:** Becomes a grocery app. Maintenance burden for ingredient databases.
+- **Status:** EVALUATE — natural extension of Grab screen
+
+### 12.3 Duolingo — Skill Tree Full Page
+- **Source:** Duolingo
+- **What:** Full interactive skill tree showing cuisine mastery paths with branching progression
+- **Requires:** New skill tree screen under Path tab, progression data model, visual tree layout
+- **Value:** Gives cooking journey a visual shape, motivates exploration of new cuisines
+- **Risk:** Over-gamification could feel forced for casual cooks
+- **Status:** EVALUATE — aligns with Path tab expansion
+
+### 12.4 Centr — Program Mode (Multi-Week Challenges)
+- **Source:** Centr
+- **What:** Structured 2-4 week cooking programs (e.g., "Mediterranean Month", "Master Basics")
+- **Requires:** New program browser screen, program progress tracker, curated recipe sequences
+- **Value:** Guided learning paths for users who want structure beyond daily quests
+- **Risk:** Content creation burden. Could feel prescriptive vs. Sous's spontaneous philosophy.
+- **Status:** EVALUATE — test with one pilot program first
+
+### 12.5 Headspace — Cooking Journal / Reflection History
+- **Source:** Headspace (meditation journal)
+- **What:** Dedicated journal view showing cooking reflections over time with mood/confidence tracking
+- **Requires:** New journal screen, reflection timeline, optional mood tags
+- **Value:** Makes cooking progress tangible, supports mindful cooking practice
+- **Risk:** Could overlap with scrapbook. Users may not want another reflection surface.
+- **Status:** EVALUATE — consider merging with enhanced scrapbook instead
+
+### 12.6 Yummly — Taste Profile Dashboard
+- **Source:** Yummly
+- **What:** Visual dashboard showing your flavor preferences, cuisine breakdown, cooking patterns
+- **Requires:** New profile/dashboard screen, data visualization components, preference aggregation
+- **Value:** Makes the invisible preference engine visible, builds trust in recommendations
+- **Risk:** Dashboard = information density, conflicts with minimalism. Users may not care about their data.
+- **Status:** EVALUATE — could work as a single card in Path tab instead of full screen
+
+---
+
+## 13. Ambitious Ideas Parking Lot
 
 > **Review cadence:** Monthly. Present top 3 to founder for go/no-go.
 
-### 12.1 AR Plating Guidance — PARKED
+### 13.1 AR Plating Guidance — PARKED
 Camera overlay for plating arrangement. High visual impact but gimmicky risk.
 
-### 12.2 Voice-Guided Cooking — UNDER CONSIDERATION
+### 13.2 Voice-Guided Cooking — UNDER CONSIDERATION
 Hands-free via Speech API. High utility but kitchen noise degrades recognition.
 
-### 12.3 AI Weekly Meal Plans — PARKED
+### 13.3 AI Weekly Meal Plans — PARKED
 Conflicts with spontaneous cooking thesis. Revisit if research shows demand.
 
-### 12.4 Social Recipe Marketplace — PARKED
+### 13.4 Social Recipe Marketplace — PARKED
 Creator economy for guided cooks. Needs large user base and quality control.
 
-### 12.5 Smart Kitchen Device Integration — PARKED
+### 13.5 Smart Kitchen Device Integration — PARKED
 Send commands to connected devices. Tiny addressable market.
 
-### 12.6 CV Real-Time Cook Feedback — PARKED
+### 13.6 CV Real-Time Cook Feedback — PARKED
 Revolutionary but tech not ready. Revisit 2027+.
 
-### 12.7 Gamified Cooking Tournaments — PARKED
+### 13.7 Gamified Cooking Tournaments — PARKED
 Conflicts with supportive tone for cooking-anxious users.
 
-### 12.8 Offline Mode — UNDER CONSIDERATION
+### 13.8 Offline Mode — UNDER CONSIDERATION
 PWA offline for poor-signal kitchens. Feasible, high practical value.
 
-### 12.9 White-Label B2B — PARKED
+### 13.9 White-Label B2B — PARKED
 Cooking schools and corporate wellness. Revisit after consumer PMF.
 
-### 12.10 Seasonal Sourcing Partnerships — PARKED
+### 13.10 Seasonal Sourcing Partnerships — PARKED
 Local ingredient delivery. Logistics nightmare but completes cook loop.
 
