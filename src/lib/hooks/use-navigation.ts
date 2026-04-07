@@ -24,7 +24,7 @@ export function useNavigation(
         id: "path",
         label: "Path",
         href: "/path",
-        visible: user?.pathUnlocked ?? false,
+        visible: true,
       },
       {
         id: "community",
