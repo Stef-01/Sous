@@ -59,7 +59,7 @@ function TodayPageContent() {
   const selectSidesParam = searchParams.get("selectSides");
   const handledSelectSidesRef = useRef<string | null>(null);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- syncs URL search param (external state) into component state */
+   
   useEffect(() => {
     if (selectSidesParam && selectSidesParam !== handledSelectSidesRef.current) {
       handledSelectSidesRef.current = selectSidesParam;
@@ -71,7 +71,7 @@ function TodayPageContent() {
       router.replace("/", { scroll: false });
     }
   }, [selectSidesParam, router]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+   
 
   // tRPC query — rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
@@ -84,7 +84,7 @@ function TodayPageContent() {
   const recognitionMutation = trpc.recognition.identify.useMutation();
 
   // Transition from loading → results when query resolves for the CURRENT query
-  /* eslint-disable react-hooks/set-state-in-effect -- state machine transition driven by async tRPC query resolution */
+   
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -96,7 +96,7 @@ function TodayPageContent() {
       setView({ type: "results", mainDish: view.mainDish });
     }
   }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+   
 
   // ── Handlers ──────────────────────────────────────────
 

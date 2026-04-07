@@ -380,7 +380,7 @@ function ResultCard({
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
-            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
+            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
             selected
               ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
               : "border-neutral-300 bg-white"
@@ -390,17 +390,17 @@ function ResultCard({
           aria-checked={selected}
           aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
-          {selected && <Check size={12} className="text-white" strokeWidth={3} />}
+          {selected && <Check size={10} className="text-white" strokeWidth={3} />}
         </motion.button>
 
         {/* Card content (tappable to expand) */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex flex-1 items-center gap-3 text-left min-w-0"
+          className="flex flex-1 items-center gap-2.5 text-left min-w-0"
           type="button"
         >
           {/* Side dish image */}
-          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
             {isRerolling ? (
               <div className="flex h-full w-full items-center justify-center">
                 <RefreshCw
@@ -421,21 +421,23 @@ function ResultCard({
 
           {/* Side dish info */}
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
-                {side.name}
-              </h3>
-              {rank === 1 && selected && (
-                <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
-                  Best match
-                </span>
-              )}
-              {side.hasGuidedCook && (
-                <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
-                  Guided
-                </span>
-              )}
-            </div>
+            <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
+              {side.name}
+            </h3>
+            {(rank === 1 && selected || side.hasGuidedCook) && (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                {rank === 1 && selected && (
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
+                    Best match
+                  </span>
+                )}
+                {side.hasGuidedCook && (
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
+                    Guided
+                  </span>
+                )}
+              </div>
+            )}
             <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
               {side.explanation}
             </p>
