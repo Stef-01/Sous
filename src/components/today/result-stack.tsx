@@ -411,24 +411,27 @@ function ResultCard({
 
           {/* Side dish info */}
           <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
-                {side.name}
-              </h3>
-              {rank === 1 && selected && (
-                <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
-                  Best match
-                </span>
-              )}
-              {side.hasGuidedCook && (
-                <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
-                  Guided
-                </span>
-              )}
-            </div>
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
-              {side.explanation}
-            </p>
+            <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
+              {side.name}
+            </h3>
+            {(rank === 1 && selected) || side.hasGuidedCook ? (
+              <div className="mt-0.5 flex items-center gap-1.5">
+                {rank === 1 && selected && (
+                  <span className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
+                    Best match
+                  </span>
+                )}
+                {side.hasGuidedCook && (
+                  <span className="rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
+                    Guided
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
+                {side.explanation}
+              </p>
+            )}
           </div>
 
           <ChevronDown

@@ -40,13 +40,18 @@ export function SkillNodeComponent({
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      whileTap={isInteractive ? { scale: 0.9 } : undefined}
+      whileTap={
+        isInteractive
+          ? { scale: 0.88, transition: { type: "spring", stiffness: 400, damping: 15 } }
+          : undefined
+      }
       onClick={() => isInteractive && onTap(id)}
       disabled={!isInteractive}
       className={cn(
         "flex flex-col items-center gap-1.5 group",
         isInteractive ? "cursor-pointer" : "cursor-default",
       )}
+      style={{ WebkitTapHighlightColor: "transparent" }}
       type="button"
     >
       {/* Circle */}
@@ -130,11 +135,22 @@ export function SkillNodeComponent({
         ) : status === "available" ? (
           <>
             <span className="text-xl">{emoji}</span>
-            {/* Subtle available indicator */}
+            {/* Breathing glow to signal interactivity */}
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/0"
-              whileHover={{ borderColor: "rgba(34,197,94,0.3)" }}
-              transition={{ duration: 0.2 }}
+              className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/20"
+              animate={{
+                borderColor: [
+                  "rgba(34,197,94,0.15)",
+                  "rgba(34,197,94,0.35)",
+                  "rgba(34,197,94,0.15)",
+                ],
+                boxShadow: [
+                  "0 0 0 0 rgba(34,197,94,0)",
+                  "0 0 8px 2px rgba(34,197,94,0.08)",
+                  "0 0 0 0 rgba(34,197,94,0)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
           </>
         ) : (
