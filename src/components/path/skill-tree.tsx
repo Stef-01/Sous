@@ -50,6 +50,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
 
   // Total canvas height
   const canvasHeight = useMemo(() => {
+    if (nodes.length === 0) return 300;
     const maxY = Math.max(...nodes.map((n) => n.position.y));
     return (maxY + 1) * ROW_HEIGHT + BOTTOM_PAD + 80;
   }, [nodes]);
@@ -148,11 +149,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   );
 
   return (
-    <div
-      ref={scrollRef}
-      className="relative flex-1 overflow-y-auto overflow-x-hidden scroll-contain"
-      style={{ WebkitOverflowScrolling: "touch" } as React.CSSProperties}
-    >
+    <div ref={scrollRef} className="relative w-full overflow-x-hidden">
       <div
         className="relative mx-auto"
         style={{ width: TREE_WIDTH, height: canvasHeight }}

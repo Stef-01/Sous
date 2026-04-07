@@ -22,7 +22,7 @@ import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 interface QuestDish {
   dishName: string;
   slug: string;
-  heroImageUrl: string;
+  heroImageUrl: string | null;
   cookTimeMinutes: number;
   cuisineFamily: string;
   description: string;
@@ -49,8 +49,6 @@ function buildQuestDishes(): QuestDish[] {
 
   // Add all sides from the catalog
   for (const side of sides) {
-    if (!side.imageUrl) continue;
-
     const staticData = guidedSlugs.has(side.id)
       ? getStaticCookData(side.id)
       : null;
@@ -62,7 +60,7 @@ function buildQuestDishes(): QuestDish[] {
     const dish: QuestDish = {
       dishName: side.name,
       slug: side.id,
-      heroImageUrl: side.imageUrl,
+      heroImageUrl: side.imageUrl ?? null,
       cookTimeMinutes: staticData
         ? staticData.prepTimeMinutes + staticData.cookTimeMinutes
         : 15,
@@ -114,7 +112,11 @@ const SWIPE_THRESHOLD = 80;
  * Swipe right to cook, left to skip. Heart saves to localStorage.
  * Pass onFindSides to enable "Find sides" flow for non-guided dishes.
  */
-export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) => void }) {
+export function QuestCard({
+  onFindSides,
+}: {
+  onFindSides?: (dishName: string) => void;
+}) {
   const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
@@ -176,7 +178,7 @@ export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) =>
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish, scheduleTimeout]
+    [currentIndex, questDishes, router, saveDish, scheduleTimeout],
   );
 
   const handleStart = useCallback(() => {
@@ -373,13 +375,22 @@ function SwipeCard({
 
         {/* Hero food image */}
         <div className="relative aspect-[3/2]">
-          <Image
-            src={dish.heroImageUrl}
-            alt={dish.dishName}
-            fill
-            className="object-cover"
-            draggable={false}
-          />
+          {dish.heroImageUrl ? (
+            <Image
+              src={dish.heroImageUrl}
+              alt={dish.dishName}
+              fill
+              className="object-cover"
+              draggable={false}
+            />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[var(--nourish-green)]/15 via-[var(--nourish-cream)] to-[var(--nourish-green)]/8">
+              <span className="text-5xl">🍽️</span>
+              <span className="text-xs font-medium text-[var(--nourish-subtext)] text-center px-4 leading-tight">
+                {dish.dishName}
+              </span>
+            </div>
+          )}
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
           {/* Skip (X) button — top right, min 44px touch target */}
