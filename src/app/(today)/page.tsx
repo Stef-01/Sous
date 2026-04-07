@@ -122,13 +122,10 @@ function TodayPageContent() {
 
   // tRPC query — rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
-    { mainDish: mainDishQuery, inputMode: "text", _rerollSeed: rerollSeed || undefined },
     {
       mainDish: mainDishQuery,
       inputMode: "text",
-      userPreferences:
-        Object.keys(userPreferences).length > 0 ? userPreferences : undefined,
-      effortTolerance,
+      _rerollSeed: rerollSeed || undefined,
     },
     {
       enabled:
@@ -207,15 +204,6 @@ function TodayPageContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recognitionMutation is stable (tRPC hook)
   }, []);
-
-  const handleCorrectionConfirm = useCallback(
-    (confirmedDish: string) => {
-      pendingQueryRef.current = confirmedDish;
-      setMainDishQuery(confirmedDish);
-      setView({ type: "loading", mainDish: confirmedDish });
-    },
-    [recognitionMutation],
-  );
 
   const handleCorrectionConfirm = useCallback((confirmedDish: string) => {
     pendingQueryRef.current = confirmedDish;

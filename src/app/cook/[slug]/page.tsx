@@ -13,12 +13,11 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
-import { getStaticCookData } from "@/data/guided-cook-steps";
+import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
 import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
-import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
 
 export default function GuidedCookPage({
   params,
@@ -143,9 +142,9 @@ export default function GuidedCookPage({
         });
       }
       // Record skill progress for this dish (if it maps to a skill node)
-      const skillNode = findSkillNodeForDish(slug);
-      if (skillNode) {
-        recordSkillCook(skillNode.id);
+      const skillNodeId = getSkillNodesForDish(slug)[0];
+      if (skillNodeId) {
+        recordSkillCook(skillNodeId);
       }
       completeCookPhase();
     } else {
@@ -224,20 +223,6 @@ export default function GuidedCookPage({
 
   // ── Win screen handlers ─────────────────────────
 
-  const handleSave = useCallback(
-    ({ rating, note }: PostCookEvaluation) => {
-      if (sessionIdRef.current) {
-        updateSession(sessionIdRef.current, {
-          rating,
-          note,
-          scrapbookSaved: true,
-        });
-      }
-      setWinMeta((prev) => ({ ...prev, saved: true }));
-    },
-    [updateSession],
-  );
-
   const handleAddNote = useCallback(
     (note: string) => {
       if (sessionIdRef.current) {
@@ -255,6 +240,15 @@ export default function GuidedCookPage({
       });
     }
   }, [updateSession]);
+
+  const handleRate = useCallback(
+    (stars: number) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { rating: stars });
+      }
+    },
+    [updateSession],
+  );
 
   const handleSave = useCallback(() => {
     if (sessionIdRef.current) {

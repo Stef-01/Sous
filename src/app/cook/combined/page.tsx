@@ -26,7 +26,6 @@ import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
-import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
 
 /**
  * Combined Cook Page — guides the user through cooking a main dish + 1-3 sides
@@ -358,20 +357,6 @@ function CombinedCookContent() {
 
   // ── Win screen handlers ─────────────────────────
 
-  const handleSave = useCallback(
-    ({ rating, note }: PostCookEvaluation) => {
-      if (sessionIdRef.current) {
-        updateSession(sessionIdRef.current, {
-          rating,
-          note,
-          scrapbookSaved: true,
-        });
-      }
-      setWinMeta((prev) => ({ ...prev, saved: true }));
-    },
-    [updateSession],
-  );
-
   const handleAddNote = useCallback(
     (note: string) => {
       if (sessionIdRef.current) {
@@ -388,6 +373,15 @@ function CombinedCookContent() {
       });
     }
   }, [updateSession]);
+
+  const handleRate = useCallback(
+    (stars: number) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { rating: stars });
+      }
+    },
+    [updateSession],
+  );
 
   const handleSave = useCallback(() => {
     if (sessionIdRef.current) {

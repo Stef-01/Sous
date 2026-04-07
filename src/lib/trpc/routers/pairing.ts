@@ -119,6 +119,8 @@ export const pairingRouter = router({
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
         _rerollSeed: z.number().optional(), // Cache buster for reroll — not used in logic
+        userPreferences: z.record(z.number()).optional(),
+        effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       })
     )
     .query(async ({ input }) => {

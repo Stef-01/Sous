@@ -70,16 +70,9 @@ export function WeeklyGoalCard({
         )}
       </div>
 
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-[var(--nourish-subtext)]">
-          <span>Cook {weeklyTarget} times</span>
-          <span>
-            {cooksThisWeek}/{weeklyTarget}
-          </span>
-        </div>
-
-        {/* Progress bar */}
-        <div className="h-2 w-full rounded-full bg-neutral-100 overflow-hidden">
+      {/* Dot progress row */}
+      <div className="flex items-center gap-2">
+        {dots.map((dot) => (
           <motion.div
             key={dot.index}
             initial={{ scale: 0.6, opacity: 0 }}

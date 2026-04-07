@@ -10,6 +10,7 @@ import {
   Check,
   RotateCcw,
 } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import type { ScoreBreakdown } from "@/lib/engine/types";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
