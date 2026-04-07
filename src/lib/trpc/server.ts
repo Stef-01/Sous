@@ -32,6 +32,10 @@ export async function createTRPCContext(): Promise<TRPCContext> {
     } catch {
       // Clerk not configured — continue as anonymous
     }
+  } else {
+    // TODO: Re-enable Clerk auth for V1 launch
+    // Stub user so protectedProcedures work without real auth
+    userId = "mock-user-dev";
   }
   return { db: getDbSafe(), userId };
 }
