@@ -42,3 +42,7 @@ next-env.d.ts
 
 # claude code hooks
 .claude/command-log.txt
+.claude/worktrees/
+.claude/skills/
+.claude/launch.json
+.claude/settings.local.json
