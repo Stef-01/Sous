@@ -55,11 +55,11 @@ export function SkillDetailSheet({
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-white shadow-2xl"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[80vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            transition={{ type: "spring", damping: 26, stiffness: 350, mass: 0.8 }}
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -101,14 +101,34 @@ export function SkillDetailSheet({
               </button>
             </div>
 
-            <div className="px-5 pb-8 space-y-5">
+            <motion.div
+              className="px-5 pb-8 space-y-5"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+              }}
+            >
               {/* Description */}
-              <p className="text-sm text-[var(--nourish-subtext)] leading-relaxed">
+              <motion.p
+                className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
                 {node.description}
-              </p>
+              </motion.p>
 
               {/* Progress bar + XP */}
-              <div className="space-y-2">
+              <motion.div
+                className="space-y-2"
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-[var(--nourish-subtext)]">
                     Progress
@@ -165,10 +185,16 @@ export function SkillDetailSheet({
                     />
                   </motion.div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Associated dishes */}
-              <div className="space-y-2">
+              <motion.div
+                className="space-y-2"
+                variants={{
+                  hidden: { opacity: 0, y: 8 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+              >
                 <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
                   Practice dishes
                 </h3>
@@ -194,7 +220,7 @@ export function SkillDetailSheet({
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Prerequisites (for locked nodes) */}
               {status === "locked" && node.requiredSkills.length > 0 && (
@@ -261,7 +287,7 @@ export function SkillDetailSheet({
                   Practice again
                 </button>
               )}
-            </div>
+            </motion.div>
           </motion.div>
         </>
       )}
