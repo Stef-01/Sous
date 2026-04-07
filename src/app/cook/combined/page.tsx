@@ -8,6 +8,7 @@ import {
   useState,
   useEffect,
 } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChefHat, ChevronRight } from "lucide-react";
@@ -575,9 +576,12 @@ function CombinedMissionScreen({
           transition={{ type: "spring", stiffness: 260, damping: 25 }}
           className="overflow-hidden rounded-2xl"
         >
-          <img
+          <Image
             src={mainDishHeroImage}
             alt={mainDishName}
+            width={480}
+            height={360}
+            unoptimized
             className="w-full aspect-[4/3] object-cover"
           />
         </motion.div>

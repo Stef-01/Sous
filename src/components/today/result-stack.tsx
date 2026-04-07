@@ -359,7 +359,7 @@ function ResultCard({
       )}
     >
       <div className="flex w-full items-center gap-3 p-4">
-        {/* Selection checkbox */}
+        {/* Selection checkbox — min 44px touch target, visual circle stays h-6 w-6 */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -367,17 +367,21 @@ function ResultCard({
           }}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className={cn(
-            "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
-            selected
-              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-              : "border-neutral-300 bg-white",
-          )}
+          className="flex h-11 w-11 shrink-0 items-center justify-center"
           type="button"
         >
-          {selected && (
-            <Check size={12} className="text-white" strokeWidth={3} />
-          )}
+          <span
+            className={cn(
+              "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-all duration-150",
+              selected
+                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+                : "border-neutral-300 bg-white",
+            )}
+          >
+            {selected && (
+              <Check size={12} className="text-white" strokeWidth={3} />
+            )}
+          </span>
         </motion.button>
 
         {/* Card content (tappable to expand) */}
@@ -443,7 +447,7 @@ function ResultCard({
           />
         </button>
 
-        {/* Per-side reroll */}
+        {/* Per-side reroll — min 44px touch target */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -452,11 +456,13 @@ function ResultCard({
           disabled={isRerolling}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors disabled:opacity-40"
+          className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
           type="button"
           title="Swap this side"
         >
-          <RotateCcw size={12} />
+          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors">
+            <RotateCcw size={12} />
+          </span>
         </motion.button>
       </div>
 
