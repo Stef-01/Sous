@@ -1,14 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm build:*)",
+      "Bash(xargs -I {} basename {})",
       "Bash(pnpm test:*)",
+      "Bash(pnpm install:*)",
       "Bash(pnpm lint:*)",
-      "mcp__Claude_Preview__preview_start",
-      "Bash(ln -s \"/c/Users/stefa/Sous/node_modules\" \"/c/Users/stefa/Sous/.claude/worktrees/bold-pare/node_modules\")",
-      "Bash(pnpm dev:*)",
-      "Bash(node_modules/.bin/next dev:*)",
-      "Bash(\"/c/Users/stefa/Sous/node_modules/.bin/tsc\" --noEmit)"
+      "Bash(pnpm build:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }

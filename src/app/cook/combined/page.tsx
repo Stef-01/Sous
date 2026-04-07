@@ -1,7 +1,14 @@
 "use client";
 
+import {
+  Suspense,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import Image from "next/image";
-import { Suspense, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChefHat, ChevronRight } from "lucide-react";
@@ -593,8 +600,10 @@ function CombinedMissionScreen({
           <Image
             src={mainDishHeroImage}
             alt={mainDishName}
-            fill
-            className="object-cover"
+            width={480}
+            height={360}
+            unoptimized
+            className="w-full aspect-[4/3] object-cover"
           />
         </motion.div>
       )}

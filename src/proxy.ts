@@ -6,6 +6,7 @@ import type { NextRequest } from "next/server";
  * Clerk auth middleware will be enabled here once CLERK_SECRET_KEY
  * and NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY env vars are configured.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function proxy(_request: NextRequest) {
   return NextResponse.next();
 }

@@ -366,18 +366,20 @@ function SwipeCard({
           />
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
-          {/* Skip (X) button — top right */}
+          {/* Skip (X) button — top right, min 44px touch target */}
           {isTop && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onSkip();
               }}
-              className="absolute top-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/25 backdrop-blur-sm text-white/90 transition-all hover:bg-black/40 active:scale-90"
+              className="absolute top-1 right-1 flex h-11 w-11 items-center justify-center active:scale-90"
               type="button"
               aria-label="Skip dish"
             >
-              <X size={14} />
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black/25 backdrop-blur-sm text-white/90 transition-all hover:bg-black/40">
+                <X size={14} />
+              </span>
             </button>
           )}
         </div>
