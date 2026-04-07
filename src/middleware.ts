@@ -1,24 +1,19 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// TODO: Re-enable Clerk auth for V1 launch
+// Auth is bypassed so the app runs without Clerk env vars during development.
+// To re-enable: restore the clerkMiddleware import and handler below.
+//
+// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+// const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)", "/api/trpc(.*)", "/api/(.*)"]);
+// export default clerkMiddleware(async (auth, request) => {
+//   if (!isPublicRoute(request)) { await auth.protect(); }
+// });
+
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/trpc(.*)",
-  "/api/(.*)",
-]);
-
-export default clerkMiddleware(async (auth, request) => {
-  // Skip auth enforcement if Clerk is not configured
-  if (!process.env.CLERK_SECRET_KEY) {
-    return NextResponse.next();
-  }
-
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-  }
-});
+export default function middleware(_request: NextRequest) {
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
