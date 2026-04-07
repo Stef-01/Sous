@@ -1,24 +1,34 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/api/trpc(.*)",
-  "/api/(.*)",
-]);
+export default async function proxy(request: NextRequest) {
+  // Clerk auth is only enforced when fully configured
+  if (
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.CLERK_SECRET_KEY
+  ) {
+    // Dynamic import so Clerk doesn't crash when env vars are missing
+    const { clerkMiddleware, createRouteMatcher } = await import(
+      "@clerk/nextjs/server"
+    );
 
-export default clerkMiddleware(async (auth, request) => {
-  // Skip auth enforcement if Clerk is not configured
-  if (!process.env.CLERK_SECRET_KEY) {
-    return NextResponse.next();
+    const isPublicRoute = createRouteMatcher([
+      "/",
+      "/sign-in(.*)",
+      "/sign-up(.*)",
+      "/api/trpc(.*)",
+      "/api/(.*)",
+    ]);
+
+    return clerkMiddleware(async (auth, req) => {
+      if (!isPublicRoute(req)) {
+        await auth.protect();
+      }
+    })(request, {} as never);
   }
 
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-  }
-});
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
