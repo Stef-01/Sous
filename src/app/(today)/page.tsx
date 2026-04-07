@@ -15,8 +15,11 @@ import { CameraInput } from "@/components/today/camera-input";
 import { CorrectionChips } from "@/components/today/correction-chips";
 
 import { BreadQuiz } from "@/components/shared/bread-quiz";
+import { CoachQuiz } from "@/components/shared/coach-quiz";
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import type { CoachQuizResult } from "@/data/coach-quiz";
+import type { EffortTolerance } from "@/data/coach-quiz";
 
 type ViewState =
   | { type: "idle" }
@@ -50,15 +53,50 @@ function TodayPageContent() {
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showCoachQuiz, setShowCoachQuiz] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [resetKey, setResetKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
+  const [userPreferences, setUserPreferences] = useState<
+    Record<string, number>
+  >({});
+  const [effortTolerance, setEffortTolerance] = useState<
+    EffortTolerance | undefined
+  >(undefined);
+  const [quizDone, setQuizDone] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats } = useCookSessions();
 
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
+
+  // Load saved quiz preferences from localStorage
+  useEffect(() => {
+    try {
+      const prefs = localStorage.getItem("sous-preferences");
+      if (prefs) setUserPreferences(JSON.parse(prefs) as Record<string, number>);
+      const effort = localStorage.getItem(
+        "sous-effort-tolerance",
+      ) as EffortTolerance | null;
+      if (effort) setEffortTolerance(effort);
+      if (localStorage.getItem("sous-coach-quiz-done")) setQuizDone(true);
+    } catch {
+      // localStorage unavailable
+    }
+  }, []);
+
+  // Auto-show coach quiz for first-time users (after a brief delay so the page settles)
+  useEffect(() => {
+    try {
+      if (!localStorage.getItem("sous-coach-quiz-done")) {
+        const timer = setTimeout(() => setShowCoachQuiz(true), 900);
+        return () => clearTimeout(timer);
+      }
+    } catch {
+      // localStorage unavailable
+    }
+  }, []);
 
   // Auto-open search with sides for a dish (from mission screen "Select sides to pair")
   const selectSidesParam = searchParams.get("selectSides");
@@ -81,9 +119,15 @@ function TodayPageContent() {
   }, [selectSidesParam, router]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // tRPC query
+  // tRPC query — includes quiz preferences so the engine personalises results
   const pairingQuery = trpc.pairing.suggest.useQuery(
-    { mainDish: mainDishQuery, inputMode: "text" },
+    {
+      mainDish: mainDishQuery,
+      inputMode: "text",
+      userPreferences:
+        Object.keys(userPreferences).length > 0 ? userPreferences : undefined,
+      effortTolerance,
+    },
     {
       enabled:
         !!mainDishQuery && (view.type === "loading" || view.type === "results"),
@@ -186,6 +230,26 @@ function TodayPageContent() {
     handleTextSubmit("simple side with basic pantry ingredients");
   }, [handleTextSubmit]);
 
+  const handleCoachQuizComplete = useCallback(
+    (result: CoachQuizResult) => {
+      try {
+        localStorage.setItem(
+          "sous-preferences",
+          JSON.stringify(result.preferences),
+        );
+        localStorage.setItem("sous-effort-tolerance", result.effortTolerance);
+        localStorage.setItem("sous-coach-quiz-done", "true");
+      } catch {
+        // localStorage unavailable
+      }
+      setUserPreferences(result.preferences);
+      setEffortTolerance(result.effortTolerance);
+      setQuizDone(true);
+      setShowCoachQuiz(false);
+    },
+    [],
+  );
+
   // ── Render ────────────────────────────────────────────
 
   return (
@@ -241,6 +305,7 @@ function TodayPageContent() {
           <FallbackActions
             onRescueFridge={handleRescueFridge}
             onPlayGame={() => setShowQuiz(true)}
+            onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
           />
         </div>
 
@@ -389,8 +454,25 @@ function TodayPageContent() {
             onClose={() => setShowQuiz(false)}
             onComplete={() => {
               // Quiz result saved to localStorage by the component itself.
-              // Could trigger a celebratory craving search based on cuisine affinities.
             }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Coach onboarding quiz — full-screen overlay */}
+      <AnimatePresence>
+        {showCoachQuiz && (
+          <CoachQuiz
+            onClose={() => {
+              // Mark as done even if closed early so it doesn't re-appear
+              try {
+                localStorage.setItem("sous-coach-quiz-done", "true");
+              } catch {
+                // localStorage unavailable
+              }
+              setShowCoachQuiz(false);
+            }}
+            onComplete={handleCoachQuizComplete}
           />
         )}
       </AnimatePresence>

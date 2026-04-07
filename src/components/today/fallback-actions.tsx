@@ -1,13 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Refrigerator, Gamepad2, ShoppingCart } from "lucide-react";
+import { Refrigerator, Gamepad2, ShoppingCart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface FallbackActionsProps {
   onRescueFridge?: () => void;
   onPlayGame?: () => void;
   onOrderOut?: () => void;
+  /** Show a "Personalize" chip when the user has already completed the quiz. */
+  onPersonalize?: () => void;
 }
 
 const chips = [
@@ -40,11 +42,31 @@ export function FallbackActions({
   onRescueFridge,
   onPlayGame,
   onOrderOut,
+  onPersonalize,
 }: FallbackActionsProps) {
   const handlers = { onRescueFridge, onPlayGame, onOrderOut };
 
   return (
-    <div className="flex items-center justify-center gap-2 pt-2">
+    <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+      {onPersonalize && (
+        <motion.button
+          onClick={onPersonalize}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.22 }}
+          whileTap={{ scale: 0.92 }}
+          className={cn(
+            "relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium whitespace-nowrap",
+            "text-[var(--nourish-green)] hover:text-[var(--nourish-dark-green)]",
+            "border border-[var(--nourish-green)]/30 hover:border-[var(--nourish-green)]/60",
+            "bg-[var(--nourish-green)]/5 transition-colors duration-150",
+          )}
+          type="button"
+        >
+          <Sparkles size={14} className="text-[var(--nourish-green)]" />
+          Personalize
+        </motion.button>
+      )}
       {chips.map((chip, idx) => {
         const Icon = chip.icon;
         return (
