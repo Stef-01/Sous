@@ -14,8 +14,7 @@
       "Agent(*)",
       "Task(*)",
       "ToolSearch(*)",
-      "mcp__*",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__*"
     ]
   }
 }
