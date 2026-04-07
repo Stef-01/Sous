@@ -73,6 +73,7 @@ src/
 5. **Progressive interface**: New users see only the Today tab. Path reveals after 3 completed cooks. Community after 30 days. This is enforced in the layout, not optional.
 6. **Simplicity-first UI**: When in doubt, remove it. Badges, labels, metadata, and decorative elements should be stripped unless they directly drive the user to cook. The home screen should feel clean and inviting, not information-dense. Every element must earn its pixel space.
 7. **No invented recipes or images**: Never generate new dish entries or images that don't already exist in the dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows to existing meals and sides already present in the data layer. New recipes must come from real, reputable online sources and be added to the existing side/meal catalog first.
+8. **Consult STRATEGY.md before planning new features**: Before designing or implementing any new feature, read STRATEGY.md to ensure the feature aligns with the strategic thesis, strengthens a compounding moat, and passes the feature prioritization criteria. Update STRATEGY.md's decision log when making significant feature decisions.
 
 ## AI integration notes
 

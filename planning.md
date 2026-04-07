@@ -54,6 +54,7 @@ See `documentation.md` for full component inventory.
 8. Every screen gets one dominant CTA only.
 9. If a feature does not help the user cook, learn, or return, it is not phase-critical.
 10. **No invented recipes or images.** Never generate new dish entries or images outside the existing dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows for dishes that already exist in the side/meal catalog. New recipe research must source from real, reputable online sites and be added to the existing data layer first.
+11. Before planning or implementing any new feature, consult STRATEGY.md to verify alignment with the strategic thesis, compounding moats, and feature prioritization matrix. Update STRATEGY.md's decision log for significant decisions.
 
 ---
 
