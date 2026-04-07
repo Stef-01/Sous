@@ -46,7 +46,7 @@ export function SkillDetailSheet({
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -59,7 +59,12 @@ export function SkillDetailSheet({
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 26, stiffness: 350, mass: 0.8 }}
+            transition={{
+              type: "spring",
+              damping: 26,
+              stiffness: 350,
+              mass: 0.8,
+            }}
           >
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -107,7 +112,9 @@ export function SkillDetailSheet({
               animate="visible"
               variants={{
                 hidden: {},
-                visible: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
+                visible: {
+                  transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+                },
               }}
             >
               {/* Description */}

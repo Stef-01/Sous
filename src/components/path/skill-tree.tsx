@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useCallback } from "react";
+import { useRef, useEffect, useMemo, useCallback, useState } from "react";
 import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
@@ -19,8 +19,10 @@ interface SkillTreeProps {
 const ROW_HEIGHT = 120;
 /** Node visual radius for connector calculations */
 const NODE_RADIUS = 32;
-/** Container width used for x-position calculation */
-const TREE_WIDTH = 340;
+/** Horizontal padding so edge nodes aren't clipped */
+const H_PAD = NODE_RADIUS + 4;
+/** Maximum tree width — scales down to fit narrow screens */
+const MAX_TREE_WIDTH = 340;
 /** Extra bottom padding */
 const BOTTOM_PAD = 80;
 
@@ -33,6 +35,25 @@ const BOTTOM_PAD = 80;
  */
 export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Measure actual container width so we can scale the tree to fit any screen
+  const [treeWidth, setTreeWidth] = useState(MAX_TREE_WIDTH);
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const available = el.clientWidth;
+      setTreeWidth(Math.min(available, MAX_TREE_WIDTH));
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Usable drawing width after horizontal padding
+  const drawWidth = treeWidth - H_PAD * 2;
 
   // Compute pixel positions for each node
   const nodePositions = useMemo(() => {
@@ -41,12 +62,13 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
       { cx: number; cy: number; node: NodeWithStatus }
     > = {};
     for (const node of nodes) {
-      const cx = (node.position.x / 100) * TREE_WIDTH;
+      // Map 0-100 → [H_PAD, treeWidth - H_PAD] so edge nodes stay within bounds
+      const cx = H_PAD + (node.position.x / 100) * drawWidth;
       const cy = node.position.y * ROW_HEIGHT + NODE_RADIUS + 40; // 40px top offset
       positions[node.id] = { cx, cy, node };
     }
     return positions;
-  }, [nodes]);
+  }, [nodes, drawWidth]);
 
   // Total canvas height
   const canvasHeight = useMemo(() => {
@@ -149,10 +171,11 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   );
 
   return (
-    <div ref={scrollRef} className="relative w-full overflow-x-hidden">
+    <div ref={containerRef} className="relative w-full overflow-x-hidden">
       <div
+        ref={scrollRef}
         className="relative mx-auto"
-        style={{ width: TREE_WIDTH, height: canvasHeight }}
+        style={{ width: treeWidth, height: canvasHeight }}
       >
         {/* Tier labels */}
         {tierLabels.map((tl) => (
@@ -170,7 +193,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
         {/* SVG connectors */}
         <svg
           className="absolute inset-0 pointer-events-none"
-          width={TREE_WIDTH}
+          width={treeWidth}
           height={canvasHeight}
         >
           {edges.map((edge) => {
