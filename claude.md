@@ -74,6 +74,7 @@ src/
 6. **Simplicity-first UI**: When in doubt, remove it. Badges, labels, metadata, and decorative elements should be stripped unless they directly drive the user to cook. The home screen should feel clean and inviting, not information-dense. Every element must earn its pixel space.
 7. **No invented recipes or images**: Never generate new dish entries or images that don't already exist in the dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows to existing meals and sides already present in the data layer. New recipes must come from real, reputable online sources and be added to the existing side/meal catalog first.
 8. **Consult STRATEGY.md before planning new features**: Before designing or implementing any new feature, read STRATEGY.md to ensure the feature aligns with the strategic thesis, strengthens a compounding moat, and passes the feature prioritization criteria. Update STRATEGY.md's decision log when making significant feature decisions.
+9. **Consult ROADMAP.md for build sequencing**: Before starting development work, read ROADMAP.md to understand what's been built, what's in progress, and what's next. Don't duplicate work that's already done.
 
 ## AI integration notes
 
@@ -96,3 +97,14 @@ The V1 internal database targets 80-100 side dishes across 8-10 cuisine families
 - Run `pnpm lint && pnpm test` before committing.
 - Prefer small, focused PRs. One feature or fix per PR.
 - When adding a new screen or flow, sketch the component tree in a comment before writing code.
+
+## Operational guardrails
+
+1. **Minimize worktree sprawl**: Never run more than 3 code tasks in parallel. Each worktree requires a full pnpm install — keep the count low to avoid bottlenecking on dependency installation.
+2. **Direct file edits over code tasks**: For simple file changes (settings, markdown, config, JSON), edit files directly rather than spawning a code task. Code tasks are for multi-step development work that requires build/test cycles.
+3. **Follow up, don't fork**: When a task needs a correction or additional work, send a follow-up message to the existing task instead of starting a new one. New tasks lose context and create merge conflicts.
+4. **Always merge and push**: After any code task completes, immediately merge its worktree branch to main and push. Never leave work stranded in worktrees.
+5. **Large file edits**: When appending more than 50 lines to a file, write the content to a temporary file first, then use a simple bash append command. Never try to pass 200+ lines of content through an Edit tool call in a code task prompt.
+6. **Permission settings**: The project has a comprehensive allow list in .claude/settings.json and ~/.claude/settings.json. If a new tool triggers a permission prompt, add it to the allow list immediately rather than asking the user.
+7. **Build verification**: Every code task must end with pnpm build passing. If the build fails, fix it before completing. Never push broken code to main.
+8. **Commit and push atomically**: After fixing bugs or completing features, commit and push to main in the same task. Don't leave this as a separate step.
