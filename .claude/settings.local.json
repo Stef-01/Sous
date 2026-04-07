@@ -1,13 +1,25 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find . -not -path */node_modules/* -not -path */.next/* -not -path */.git/*)",
-      "Bash(wc -l /c/Users/stefa/Sous/.claude/worktrees/sleepy-fermi/src/lib/trpc/routers/*.ts)",
-      "Bash(pnpm lint:*)",
-      "Bash(pnpm install:*)",
-      "Bash(pnpm lint:fix)",
       "Bash(pnpm test:*)",
-      "Bash(pnpm build:*)"
+      "Read(//c/Users/stefa/Sous//**)",
+      "Read(//c/Users/stefa/Sous/node_modules/**)",
+      "Read(//c/Users/stefa/Sous/**)",
+      "Bash(npx vitest:*)",
+      "Bash(node_modules/.bin/vitest run:*)",
+      "Bash(ls /c/Users/stefa/Sous/.claude/worktrees/brave-rhodes/src/app/\\\\\\(today\\\\\\)/)",
+      "Bash(ls /c/Users/stefa/Sous/.claude/worktrees/brave-rhodes/src/app/\\\\\\(path\\\\\\)/)",
+      "Bash(python3 -c \"import json; data=json.load\\(open\\(''/c/Users/stefa/Sous/.claude/worktrees/brave-rhodes/src/data/sides.json''\\)\\); urls=set\\(s.get\\(''imageUrl'',''''\\) for s in data if s.get\\(''imageUrl'',''''\\)\\); print\\(''\\\\n''.join\\(sorted\\(urls\\)[:15]\\)\\)\")",
+      "Bash(node -e \"const data=require\\(''/c/Users/stefa/Sous/.claude/worktrees/brave-rhodes/src/data/sides.json''\\); const urls=new Set\\(data.map\\(s=>s.imageUrl\\).filter\\(Boolean\\)\\); console.log\\([...urls].slice\\(0,15\\).join\\(''\\\\n''\\)\\)\")",
+      "Bash(npx eslint:*)",
+      "Bash(node_modules/.bin/eslint /c/Users/stefa/Sous/.claude/worktrees/brave-rhodes/src)",
+      "Bash(\"/c/Users/stefa/Sous/node_modules/.bin/vitest\" run:*)",
+      "Bash(git -C /c/Users/stefa/Sous worktree list)",
+      "Bash(pnpm install:*)",
+      "Bash(node_modules/.bin/eslint .claude/worktrees/brave-rhodes/src)",
+      "Bash(node_modules/.bin/tsc --project .claude/worktrees/brave-rhodes/tsconfig.json --noEmit)",
+      "Bash(node_modules/.bin/next build:*)",
+      "Bash(NEXT_SKIP_LINT=1 \"/c/Users/stefa/Sous/node_modules/.bin/next\" build)"
     ]
   }
 }

@@ -43,19 +43,14 @@ export function MissionScreen({
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="overflow-hidden rounded-2xl"
+          className="relative aspect-[4/3] overflow-hidden rounded-2xl"
         >
-          <div className="w-full aspect-[4/3] overflow-hidden">
-            <Image
-              src={heroImageUrl}
-              alt={dishName}
-              width={480}
-              height={360}
-              unoptimized
-              className="w-full h-full object-cover"
-              priority
-            />
-          </div>
+          <Image
+            src={heroImageUrl}
+            alt={dishName}
+            fill
+            className="object-cover"
+          />
         </motion.div>
       )}
 

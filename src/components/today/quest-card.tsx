@@ -10,6 +10,7 @@ import {
   AnimatePresence,
   type PanInfo,
 } from "framer-motion";
+import Image from "next/image";
 import { Clock, ShoppingBag, X, Heart } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
@@ -112,8 +113,9 @@ const SWIPE_THRESHOLD = 80;
  * QuestCard — swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
  * Swipe right to cook, left to skip. Heart saves to localStorage.
+ * Pass onFindSides to enable "Find sides" flow for non-guided dishes.
  */
-export function QuestCard() {
+export function QuestCard({ onFindSides }: { onFindSides?: (dishName: string) => void }) {
   const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
@@ -122,6 +124,11 @@ export function QuestCard() {
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
+
+  const advance = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % questDishes.length);
+    setExitDirection(null);
+  }, [questDishes.length]);
 
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
@@ -135,36 +142,30 @@ export function QuestCard() {
             router.push(`/cook/${dish.slug}`);
           }, 300);
         } else {
-          // Non-guided dish: save it and advance to next card
-          saveDish(dish.slug, dish.dishName);
-          setSavedToastSlug(dish.slug);
-          setTimeout(() => setSavedToastSlug(null), 1500);
+          // Non-guided dish: open "find sides" search if available, otherwise save
           setExitDirection("right");
           setTimeout(() => {
-            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-            setExitDirection(null);
+            advance();
+            if (onFindSides) {
+              onFindSides(dish.dishName);
+            } else {
+              saveDish(dish.slug, dish.dishName);
+              setSavedToastSlug(dish.slug);
+              setTimeout(() => setSavedToastSlug(null), 1500);
+            }
           }, 250);
         }
       } else {
         setExitDirection("left");
-        setTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-          setExitDirection(null);
-        }, 250);
+        setTimeout(advance, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish],
+    [currentIndex, questDishes, router, saveDish, advance, onFindSides]
   );
 
   const handleStart = useCallback(() => {
-    const dish = questDishes[currentIndex % questDishes.length];
-    if (dish?.hasGuidedCook) {
-      handleSwipe("right");
-    } else {
-      // For non-guided dishes, save and advance
-      handleSwipe("right");
-    }
-  }, [handleSwipe, currentIndex, questDishes]);
+    handleSwipe("right");
+  }, [handleSwipe]);
 
   const handleSkip = useCallback(() => {
     handleSwipe("left");
@@ -355,19 +356,14 @@ function SwipeCard({
         )}
 
         {/* Hero food image */}
-        <div className="relative">
-          <div className="w-full aspect-[3/2] overflow-hidden">
-            <Image
-              src={dish.heroImageUrl}
-              alt={dish.dishName}
-              width={480}
-              height={320}
-              unoptimized
-              className="w-full h-full object-cover"
-              draggable={false}
-              priority
-            />
-          </div>
+        <div className="relative aspect-[3/2]">
+          <Image
+            src={dish.heroImageUrl}
+            alt={dish.dishName}
+            fill
+            className="object-cover"
+            draggable={false}
+          />
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
           {/* Skip (X) button — top right */}
@@ -446,7 +442,7 @@ function SwipeCard({
             </div>
           </div>
 
-          {/* Start cooking — primary CTA */}
+          {/* Primary CTA — cook if guided, find sides otherwise */}
           <motion.button
             onClick={(e) => {
               e.stopPropagation();
@@ -462,7 +458,7 @@ function SwipeCard({
             )}
             type="button"
           >
-            Start cooking
+            {dish.hasGuidedCook ? "Start cooking" : "Find sides"}
           </motion.button>
         </div>
       </div>

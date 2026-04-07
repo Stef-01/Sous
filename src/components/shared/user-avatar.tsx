@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { User } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -37,7 +38,7 @@ function ClerkAvatar({ size = 32, className }: UserAvatarProps) {
   }
 
   return (
-    <img
+    <Image
       src={user.imageUrl}
       alt={user.firstName ?? "Profile"}
       width={size}

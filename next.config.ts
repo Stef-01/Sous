@@ -6,10 +6,14 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
-      { protocol: "https", hostname: "images.unsplash.com" },
-      // Clerk profile images (used when auth is configured)
-      { protocol: "https", hostname: "img.clerk.com" },
-      { protocol: "https", hostname: "images.clerk.dev" },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
     ],
     formats: ["image/avif", "image/webp"],
     deviceSizes: [375, 430, 768, 1024, 1280],

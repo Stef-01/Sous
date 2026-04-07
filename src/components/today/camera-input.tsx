@@ -79,6 +79,7 @@ export function CameraInput({
       <div className="flex flex-1 items-center justify-center px-6">
         {preview ? (
           <div className="relative w-full max-w-sm overflow-hidden rounded-2xl">
+            {/* eslint-disable-next-line @next/next/no-img-element -- preview is a data URL, not optimizable */}
             <img
               src={preview}
               alt="Captured food"
