@@ -4292,6 +4292,154 @@ export const guidedCookData: Record<string, StaticDishData> = {
       },
     ],
   },
+
+  // ── Round 1 addition: Baba Ganoush ──────────────────────
+  "baba-ganoush": {
+    name: "Baba Ganoush",
+    slug: "baba-ganoush",
+    description:
+      "Smoky, fire-roasted eggplant mashed with tahini, garlic, and lemon juice for a velvety, deeply flavoured dip.",
+    cuisineFamily: "mediterranean",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 25,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["smoky", "creamy", "tangy"],
+    temperature: "room",
+    ingredients: [
+      {
+        id: "bg-1",
+        name: "Large globe eggplants",
+        quantity: "2 (about 2 lbs total)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-2",
+        name: "Tahini",
+        quantity: "3 tbsp, well-stirred",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-3",
+        name: "Lemon juice",
+        quantity: "2 tbsp, fresh",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-4",
+        name: "Garlic",
+        quantity: "1-2 cloves, minced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-5",
+        name: "Kosher salt",
+        quantity: "3/4 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-6",
+        name: "Extra-virgin olive oil",
+        quantity: "2-3 tbsp, for finishing",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bg-7",
+        name: "Smoked paprika",
+        quantity: "pinch, for garnish",
+        isOptional: true,
+        substitution: "Aleppo pepper or sumac",
+      },
+      {
+        id: "bg-8",
+        name: "Fresh parsley",
+        quantity: "1 tbsp, chopped, for garnish",
+        isOptional: true,
+        substitution: "Pomegranate seeds",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Place whole eggplants directly on gas burner grates over high flame. Turn with tongs every 3-5 minutes until the skin is completely blackened on all sides and the eggplant has fully collapsed. Total 15-20 minutes. (No gas? Use broiler 3-4 inches from element, turning every 5-7 minutes, 25-35 min total.)",
+        timerSeconds: 1200,
+        mistakeWarning:
+          "Don't stop too early — the eggplant must be COMPLETELY blackened and collapsed like a deflated balloon. Undercharred eggplant means no smoke flavor, and smoke flavor IS the dish.",
+        quickHack:
+          "No gas stove? Pierce eggplant and microwave 3-4 min first to pre-soften, then broil. Add 1/2 tsp smoked paprika to the final mix to boost smokiness.",
+        cuisineFact:
+          "The name 'baba ganoush' roughly translates to 'pampered papa' in Arabic. Fire-charring eggplant is an ancient Middle Eastern technique that predates modern stoves.",
+        donenessCue:
+          "Skin is jet black and papery on all sides — no purple or shiny patches remaining. When squeezed with tongs, the eggplant collapses completely with zero resistance.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Transfer charred eggplants to a colander set over a bowl. Slit them open lengthwise and let drain for 20-30 minutes. Gently press with a spoon to push out excess liquid.",
+        timerSeconds: 1500,
+        mistakeWarning:
+          "Don't rush this step — excess liquid makes the dip watery and bland. The liquid that drains off is bitter; let it go.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Liquid stops actively dripping from the colander. The flesh looks concentrated and thick, not watery or loose.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Scoop the eggplant flesh away from the charred skin with a spoon. Discard the skin. You can leave a few tiny flecks of char for extra smokiness.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "Baba ganoush is a core component of the Middle Eastern mezze spread, always served communally with flatbread for scooping — never eaten with a spoon alone.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "In a bowl, combine the drained eggplant flesh, tahini, lemon juice, minced garlic, and salt. Mash with a fork for a chunky, rustic texture. Do NOT use a food processor — it makes the dip gluey. Taste and adjust: more lemon for brightness, more tahini for richness.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Never use a food processor or blender — overprocessing destroys the texture and turns it into baby food. A fork is all you need.",
+        quickHack:
+          "Mash garlic with salt into a paste first — this tames the raw bite and distributes flavor more evenly through the dip.",
+        cuisineFact: null,
+        donenessCue:
+          "Creamy and pale beige with visible chunks. When you drizzle olive oil on top, it should sit in a pool — if it absorbs instantly, the dip is too dry (add a splash more olive oil).",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Let the dip rest at room temperature for 15 minutes to let flavors meld. Serve in a shallow bowl, drizzled generously with olive oil, and garnished with smoked paprika and parsley. Serve with warm pita.",
+        timerSeconds: 900,
+        mistakeWarning:
+          "Serve at room temperature, not ice cold. Refrigeration mutes both the smoke and tahini flavors.",
+        quickHack:
+          "Baba ganoush keeps 3-4 days in the fridge and actually improves overnight as flavors meld. Make it the day before you need it.",
+        cuisineFact: null,
+        donenessCue:
+          "Distinct smoky flavor up front, followed by tahini richness, finished with lemon brightness. If smoke isn't the dominant note, more charring was needed.",
+        imageUrl: null,
+      },
+    ],
+  },
 };
 
 // ── Meal guided cook data ──────────────────────────────
@@ -5268,6 +5416,401 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
         cuisineFact: null,
         donenessCue:
           "The juices should run clear when you slice, and the meat should look opaque throughout.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  // ── Round 1 addition: Bibimbap ──────────────────────────
+  bibimbap: {
+    name: "Bibimbap",
+    slug: "bibimbap",
+    description:
+      "A vibrant bowl of warm rice topped with an array of seasoned vegetables, gochujang chilli paste, a fried egg, and optional bulgogi beef, mixed together before eating.",
+    cuisineFamily: "korean",
+    prepTimeMinutes: 25,
+    cookTimeMinutes: 20,
+    skillLevel: "intermediate",
+    heroImageUrl: "/food_images/bibimbap.png",
+    flavorProfile: ["savory", "spicy", "nutty", "umami"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "bb-1",
+        name: "Short-grain white rice",
+        quantity: "2 cups (about 4 cups cooked)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-2",
+        name: "Sesame oil",
+        quantity: "2 tbsp, divided",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-3",
+        name: "Fresh spinach",
+        quantity: "200g",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-4",
+        name: "Soybean sprouts",
+        quantity: "200g",
+        isOptional: false,
+        substitution: "Regular bean sprouts",
+      },
+      {
+        id: "bb-5",
+        name: "Carrot",
+        quantity: "1 medium, julienned",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-6",
+        name: "Zucchini",
+        quantity: "1 small, half-moon sliced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-7",
+        name: "Shiitake mushrooms",
+        quantity: "4-5, sliced",
+        isOptional: false,
+        substitution: "Cremini mushrooms",
+      },
+      {
+        id: "bb-8",
+        name: "Ground beef",
+        quantity: "150g",
+        isOptional: true,
+        substitution: "Thinly sliced bulgogi beef or tofu",
+      },
+      {
+        id: "bb-9",
+        name: "Soy sauce",
+        quantity: "2 tbsp, divided",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-10",
+        name: "Garlic",
+        quantity: "3 cloves, minced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-11",
+        name: "Gochujang (Korean red pepper paste)",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-12",
+        name: "Sugar",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: "Honey",
+      },
+      {
+        id: "bb-13",
+        name: "Rice vinegar",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-14",
+        name: "Eggs",
+        quantity: "2",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-15",
+        name: "Toasted sesame seeds",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Cook 2 cups short-grain rice according to package directions (or use a rice cooker). Once done, toss with 1 tbsp sesame oil to coat every grain. Keep warm.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Use short-grain Korean or Japanese rice only — long-grain or jasmine won't stick properly and you'll miss the right texture.",
+        quickHack:
+          "Day-old leftover rice works great — it's actually better for dolsot-style bibimbap because it crisps up more.",
+        cuisineFact:
+          "Bibimbap (비빔밥) literally means 'mixed rice' — bibim (mixed) + bap (rice). The dish has roots in Buddhist temple cooking where monks mixed leftover vegetables with rice.",
+        donenessCue:
+          "Each grain is distinct and slightly glossy from the sesame oil, not clumped or mushy.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Prepare the namul (seasoned vegetables) one at a time. Blanch spinach 30 seconds in boiling water, shock in ice water, squeeze completely dry, then season with 1 tsp sesame oil, 1/2 tsp soy sauce, and 1 minced garlic clove. Blanch bean sprouts 3-4 minutes covered, drain, season the same way.",
+        timerSeconds: null,
+        mistakeWarning:
+          "You MUST squeeze water out of spinach until almost nothing comes out — excess moisture makes the entire bowl soggy.",
+        quickHack:
+          "Blanch spinach and bean sprouts in the microwave (covered, 2 min each) instead of boiling water for faster prep.",
+        cuisineFact: null,
+        donenessCue:
+          "Spinach is bright green and wilted but not slimy. Bean sprouts are translucent but still snappy when bitten.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Sauté the remaining vegetables separately: julienned carrots in 1 tsp oil for 2 min, salted zucchini slices (squeezed dry) for 2-3 min, and mushroom slices with 1 tsp soy sauce and 1 tsp sesame oil for 3-4 min. Season each lightly with salt.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Each vegetable must be cooked and seasoned separately — this gives bibimbap its distinct layered flavors. Don't take the shortcut of stir-frying them together.",
+        quickHack:
+          "Batch-prep all the namul on Sunday — they keep 3-4 days in the fridge and bibimbap becomes a 10-minute weeknight meal.",
+        cuisineFact: null,
+        donenessCue:
+          "Carrots are slightly softened but still have bite (vivid orange). Zucchini is lightly golden on edges, not waterlogged. Mushrooms have caramelized edges, reduced to about half size.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "If using beef: mix with 1 tbsp soy sauce, 1 tsp sugar, 1 tsp sesame oil, and 1 minced garlic clove. Sear in a hot skillet over high heat for 3-4 minutes until caramelized. Set aside.",
+        timerSeconds: 240,
+        mistakeWarning: null,
+        quickHack:
+          "Skip the beef entirely — a fried egg with good gochujang sauce is plenty of protein. Many Koreans eat bibimbap vegetarian.",
+        cuisineFact: null,
+        donenessCue:
+          "Beef has caramelized brown edges, no pink remaining, slightly glossy from the marinade.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Make the bibimbap sauce: whisk together 2 tbsp gochujang, 1 tbsp sesame oil, 1 tbsp sugar, 1 tbsp water, and 1 tsp rice vinegar until smooth.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Start with less sauce per bowl (1 tbsp) and add more to taste — gochujang is intense and it's easy to overpower the delicate namul flavors.",
+        quickHack:
+          "In a pinch, just use gochujang straight from the tub mixed with a splash of sesame oil — no need for the full sauce.",
+        cuisineFact:
+          "Gochujang is a fermented paste of chili, glutinous rice, soybeans, and salt that traditionally takes months to make. It's the defining condiment — without it, it's just mixed rice.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 6,
+        instruction:
+          "Fry 2 eggs sunny-side-up: heat 1 tsp oil in a non-stick pan over medium-low heat, crack eggs in, cover, and cook until whites are fully set but yolks are still runny, about 2-3 minutes.",
+        timerSeconds: 150,
+        mistakeWarning:
+          "Keep the yolk runny — it breaks and coats everything when you mix at the table. That golden yolk moment is the magic of bibimbap.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Whites are fully opaque and set. Yolk jiggles visibly when the pan is gently shaken.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 7,
+        instruction:
+          "Assemble: place warm rice in the bottom of a large bowl. Arrange each namul, beef (if using), and egg on top in separate sections like a clock face — do not mix yet. Sprinkle sesame seeds. Add gochujang sauce to taste, then mix everything together vigorously right before eating.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't break the egg yolk during assembly — it should break dramatically when you mix at the table.",
+        quickHack:
+          "For crispy rice (nurungji): coat a cast iron skillet with sesame oil, press rice in, heat on medium 5-6 min undisturbed until the bottom is golden and crackling.",
+        cuisineFact:
+          "The traditional namul selection covers all five Korean flavor principles and five colors (obangsaek) — rooted in Korean philosophy. The mixing at the table is the whole point of the dish.",
+        donenessCue:
+          "A beautiful, colorful bowl with distinct sections of vegetables. After mixing, everything is evenly coated in the orange-red gochujang sauce with streaks of golden yolk throughout.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  // ── Round 3 addition: Chicken Adobo ─────────────────────
+  "chicken-adobo": {
+    name: "Chicken Adobo",
+    slug: "chicken-adobo",
+    description:
+      "Chicken braised in a bold sauce of vinegar, soy sauce, garlic, bay leaves, and black peppercorns — the Philippines' national dish.",
+    cuisineFamily: "filipino",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 50,
+    skillLevel: "beginner",
+    heroImageUrl:
+      "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&auto=format&fit=crop&q=80",
+    flavorProfile: ["savory", "tangy", "garlicky", "umami"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ca-1",
+        name: "Bone-in, skin-on chicken thighs and drumsticks",
+        quantity: "2 lbs (about 6-8 pieces)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-2",
+        name: "Soy sauce",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-3",
+        name: "White cane vinegar",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: "Distilled white vinegar (not rice or apple cider)",
+      },
+      {
+        id: "ca-4",
+        name: "Garlic",
+        quantity: "1 whole head (10-12 cloves), peeled and crushed",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-5",
+        name: "Water",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-6",
+        name: "Dried bay leaves",
+        quantity: "3",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-7",
+        name: "Whole black peppercorns",
+        quantity: "1 tbsp, cracked",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ca-8",
+        name: "Vegetable oil",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Combine chicken, soy sauce, vinegar, crushed garlic, bay leaves, and peppercorns in a large bowl. Toss to coat, cover, and refrigerate for at least 30 minutes (1-2 hours is ideal).",
+        timerSeconds: 1800,
+        mistakeWarning:
+          "Use Filipino cane vinegar or plain white vinegar only — apple cider or rice vinegar change the flavor profile completely.",
+        quickHack:
+          "Short on time? Skip the marination — combine everything in the pot from the start. The 30-minute braise does most of the flavor work.",
+        cuisineFact:
+          "The vinegar-and-salt preservation method predates Spanish colonization. The word 'adobo' was applied by Spanish colonizers who noted the similarity to their own marinades, but the Filipino technique is indigenous.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Remove chicken from marinade (save the marinade). Pat pieces dry with paper towels. Heat oil in a large heavy-bottomed pan or Dutch oven over medium-high heat. Sear chicken skin-side down for 3-4 minutes per side until golden brown. Work in batches. Set chicken aside.",
+        timerSeconds: 420,
+        mistakeWarning:
+          "Don't crowd the pan — overcrowding leads to steaming instead of browning. The Maillard reaction on the skin is critical for flavor.",
+        quickHack:
+          "Pat the chicken VERY dry — moisture is the enemy of a good sear. Paper towels on both sides make a huge difference.",
+        cuisineFact: null,
+        donenessCue:
+          "Skin is deep golden-brown and releases easily from the pan without sticking. You'll hear an audible sizzle throughout.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "In the same pan, reduce heat to medium. Add garlic from the marinade and sauté until fragrant and just golden, about 1-2 minutes.",
+        timerSeconds: 90,
+        mistakeWarning:
+          "Watch the garlic carefully — it goes from golden to burnt in seconds, and burnt garlic tastes bitter and acrid.",
+        quickHack: null,
+        cuisineFact:
+          "Adobo uses a LOT of garlic — a whole head. This is by design, not excess. The garlic mellows and becomes almost sweet during the long braise.",
+        donenessCue:
+          "Fragrant aroma fills the kitchen. Cloves are light gold, not dark brown.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Return chicken to the pan. Pour in the reserved marinade and 1 cup water. Bring to a boil, then reduce heat to a low simmer. Cover and cook for 30-35 minutes, turning pieces once halfway through.",
+        timerSeconds: 2100,
+        mistakeWarning:
+          "Do NOT stir during the first 5-10 minutes of simmering — stirring raw vinegar into the braise makes the dish taste harsh and metallic. Let the acetic acid cook down undisturbed.",
+        quickHack:
+          "Use a pressure cooker for 12-15 minutes on high with natural release — same result in half the time.",
+        cuisineFact:
+          "Every Filipino family has their own adobo ratio — the soy-to-vinegar balance, amount of garlic, and degree of reduction are all points of lively family debate.",
+        donenessCue:
+          "A fork inserted into the thickest part meets no resistance. Chicken pulls away slightly from the bone.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Remove the lid and increase heat to medium. Simmer uncovered until the sauce reduces by half and becomes thick and glossy, about 8-12 minutes. Baste the chicken frequently with the sauce.",
+        timerSeconds: 600,
+        mistakeWarning:
+          "Don't skip the reduction — under-reduced sauce tastes like seasoned water, not concentrated adobo. Don't add extra salt either, as the sauce becomes saltier as it reduces.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Sauce coats the back of a spoon and holds a line when you drag your finger through it. Color deepens from reddish-brown to dark, glossy mahogany.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 6,
+        instruction:
+          "For crispy skin (optional but recommended): remove chicken from sauce. Heat a thin layer of oil in a separate pan over high heat. Sear skin-side down for 2-3 minutes until deeply caramelized and crispy. Plate and spoon the reduced sauce over the top. Serve with steamed jasmine rice.",
+        timerSeconds: 180,
+        mistakeWarning: null,
+        quickHack:
+          "Skip the pan sear — broil on a sheet pan for 3-4 minutes instead. Easier for large batches and less splatter.",
+        cuisineFact:
+          "Adobo is famously better the next day — the flavors meld and deepen overnight in the fridge. Many Filipinos make a double batch on purpose.",
+        donenessCue:
+          "Skin is dark mahogany to near-black in spots (this is correct, not burnt). Audibly crackly when tapped with tongs.",
         imageUrl: null,
       },
     ],
