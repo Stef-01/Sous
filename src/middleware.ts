@@ -1,18 +1,32 @@
-// TODO: Re-enable Clerk auth for V1 launch
-// Auth is bypassed so the app runs without Clerk env vars during development.
-// To re-enable: restore the clerkMiddleware import and handler below.
-//
-// import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-// const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)", "/api/trpc(.*)", "/api/(.*)"]);
-// export default clerkMiddleware(async (auth, request) => {
-//   if (!isPublicRoute(request)) { await auth.protect(); }
-// });
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { type NextRequest, NextResponse } from "next/server";
 
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/api/trpc(.*)",
+  "/api/(.*)",
+]);
 
-export default function middleware(_request: NextRequest) {
-  return NextResponse.next();
+// Pre-build the Clerk handler at module load time (this does not read env vars yet).
+const clerkHandler = clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect();
+  }
+});
+
+// Guard BEFORE invoking Clerk. Clerk reads NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+// during request processing (not at import time), so checking inside the
+// callback is too late — Clerk throws first and causes MIDDLEWARE_INVOCATION_FAILED.
+export default function middleware(request: NextRequest) {
+  if (
+    !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+    !process.env.CLERK_SECRET_KEY
+  ) {
+    return NextResponse.next();
+  }
+  return clerkHandler(request);
 }
 
 export const config = {
