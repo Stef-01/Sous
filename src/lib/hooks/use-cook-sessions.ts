@@ -13,6 +13,7 @@ export interface CookSessionRecord {
   recipeSlug: string;
   dishName: string;
   cuisineFamily: string;
+  mainDishInput?: string; // what main dish this side was paired with
   startedAt: string;
   completedAt?: string;
   note?: string;
@@ -84,10 +85,12 @@ function loadStats(): CookStats {
 
 function persistStats(stats: CookStats) {
   try {
-    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-    // Notify same-tab listeners (StorageEvent only fires cross-tab)
+    const serialized = JSON.stringify(stats);
+    localStorage.setItem(STATS_KEY, serialized);
+    // Dispatch a synthetic storage event so same-tab listeners (useUnlockStatus) pick up the change.
+    // The native `storage` event only fires in OTHER tabs, not the originating tab.
     window.dispatchEvent(
-      new CustomEvent("sous:stats-updated", { detail: stats }),
+      new StorageEvent("storage", { key: STATS_KEY, newValue: serialized }),
     );
   } catch {
     // localStorage full or unavailable
@@ -134,13 +137,19 @@ export function useCookSessions() {
    * Start a new cook session. Returns the session ID.
    */
   const startSession = useCallback(
-    (recipeSlug: string, dishName: string, cuisineFamily: string): string => {
+    (
+      recipeSlug: string,
+      dishName: string,
+      cuisineFamily: string,
+      mainDishInput?: string,
+    ): string => {
       const sessionId = generateSessionId();
       const session: CookSessionRecord = {
         sessionId,
         recipeSlug,
         dishName,
         cuisineFamily,
+        mainDishInput,
         startedAt: new Date().toISOString(),
         favorite: false,
       };
@@ -225,10 +234,7 @@ export function useCookSessions() {
     (
       sessionId: string,
       updates: Partial<
-        Pick<
-          CookSessionRecord,
-          "note" | "photoUri" | "rating" | "favorite" | "scrapbookSaved"
-        >
+        Pick<CookSessionRecord, "note" | "photoUri" | "rating" | "favorite">
       >,
     ) => {
       const existing = loadSessions();

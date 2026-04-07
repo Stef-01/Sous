@@ -63,8 +63,9 @@ export function SkillNodeComponent({
           status === "in_progress" &&
             "bg-white border-[3px] border-[var(--nourish-green)] shadow-lg",
           status === "available" &&
-            "bg-white border-2 border-neutral-200 hover:border-[var(--nourish-green)]/60 hover:shadow-md hover:shadow-[var(--nourish-green)]/10",
-          status === "locked" && "bg-slate-50 border-2 border-slate-200",
+            "bg-white border-2 border-neutral-200 hover:border-[var(--nourish-green)]/50 hover:shadow-md",
+          status === "locked" &&
+            "bg-neutral-100 border-2 border-neutral-200 opacity-50",
         )}
         style={
           status === "completed"
@@ -169,7 +170,7 @@ export function SkillNodeComponent({
           status === "completed" && "text-[var(--nourish-green)] font-semibold",
           status === "in_progress" && "text-[var(--nourish-dark)]",
           status === "available" && "text-[var(--nourish-subtext)]",
-          status === "locked" && "text-slate-300",
+          status === "locked" && "text-neutral-300",
         )}
       >
         {name}

@@ -99,7 +99,7 @@ export function FriendsStrip() {
               <span className="absolute inset-0 flex items-center justify-center text-lg">
                 🍽️
               </span>
-              <Image
+              <img
                 src={friend.dishImage}
                 alt={friend.dishName}
                 width={56}

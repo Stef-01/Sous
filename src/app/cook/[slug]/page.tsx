@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
@@ -12,7 +12,9 @@ import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
-import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
+import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
+import { getStaticCookData } from "@/data/guided-cook-steps";
+import { findSkillNodeForDish } from "@/data/skill-tree";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import type { PostCookEvaluation } from "@/components/guided-cook/post-cook-evaluate-sheet";
@@ -24,9 +26,14 @@ export default function GuidedCookPage({
 }) {
   const { slug } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Main dish context passed from the Today page (e.g. "Chicken Tikka Masala")
+  const mainDishInput = searchParams.get("main") ?? undefined;
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  const { recordSkillCook } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
@@ -68,9 +75,14 @@ export default function GuidedCookPage({
   // Start session on mount (once data is available)
   useEffect(() => {
     if (data?.dish && !sessionIdRef.current) {
-      sessionIdRef.current = startSession(slug, data.dish.name, cuisine);
+      sessionIdRef.current = startSession(
+        slug,
+        data.dish.name,
+        cuisine,
+        mainDishInput,
+      );
     }
-  }, [data?.dish, slug, cuisine, startSession]);
+  }, [data?.dish, slug, cuisine, mainDishInput, startSession]);
 
   // Filter steps by phase
   const cookSteps = useMemo(
@@ -107,6 +119,11 @@ export default function GuidedCookPage({
           streak: result.newStreak,
           saved: false,
         });
+      }
+      // Record skill progress for this dish (if it maps to a skill node)
+      const skillNode = findSkillNodeForDish(slug);
+      if (skillNode) {
+        recordSkillCook(skillNode.id);
       }
       completeCookPhase();
     } else {
@@ -198,6 +215,28 @@ export default function GuidedCookPage({
     },
     [updateSession],
   );
+
+  const handleAddNote = useCallback(
+    (note: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { note });
+      }
+    },
+    [updateSession],
+  );
+
+  const handleAddPhoto = useCallback(() => {
+    // Photo capture — in V1, placeholder until camera component is integrated
+    if (sessionIdRef.current) {
+      updateSession(sessionIdRef.current, {
+        photoUri: `photo-${Date.now()}-placeholder`,
+      });
+    }
+  }, [updateSession]);
+
+  const handleSave = useCallback(() => {
+    setWinMeta((prev) => ({ ...prev, saved: true }));
+  }, []);
 
   // ── Loading / error states ────────────────────────
 

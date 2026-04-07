@@ -338,6 +338,27 @@ function CombinedCookContent() {
     [updateSession],
   );
 
+  const handleAddNote = useCallback(
+    (note: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { note });
+      }
+    },
+    [updateSession],
+  );
+
+  const handleAddPhoto = useCallback(() => {
+    if (sessionIdRef.current) {
+      updateSession(sessionIdRef.current, {
+        photoUri: `photo-${Date.now()}-placeholder`,
+      });
+    }
+  }, [updateSession]);
+
+  const handleSave = useCallback(() => {
+    setWinMeta((prev) => ({ ...prev, saved: true }));
+  }, []);
+
   // ── Loading / error states ────────────────────────
 
   if (isLoading) {

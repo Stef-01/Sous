@@ -1,568 +1,680 @@
-# Sous — Guided Recipe Database Expansion: System Design & Planning
+# Sous — Forward Build Plan
 
-> **Last updated:** 2026-04-06
-> **Related docs:** `CLAUDE.md` (conventions), `docs/Sous_whitepaper_PRD_v1.docx` (product vision)
-
-## Executive Summary
-
-Sous currently has guided cook steps for only **25 of 203 sides (12%)** and **4 of 76 meals (5%)**. Users clicking "Start cooking" on any uncovered recipe see "This recipe doesn't have guided cook steps yet" — a dead end that kills conversion. This document defines the system for researching, translating, storing, versioning, and scaling guided cook data to 100% coverage, plus a custom recipe system for user modifications.
+> **Last updated:** 2026-04-05
+> **Related docs:** `documentation.md` (what's built), `CLAUDE.md` (conventions), `PIPELINE.md` (pairing data), `PRD.md` (product vision), `data-structure.md` (data schemas)
 
 ---
 
-## 1. Current State Audit
+## 0. Current state summary
 
-### Coverage Gap
+The app is ~70% feature-complete for V1. The core Today experience works end-to-end:
 
-| Category | Total | Has Guided Cook | Missing | Coverage |
-|----------|-------|----------------|---------|----------|
-| Sides | 203 | 25 | 178 | 12% |
-| Meals | 76 | 4 | 72 | 5% |
-| **Total** | **279** | **29** | **250** | **10%** |
+- Craving input (text + camera) -> AI parsing -> Deterministic pairing engine -> 3 ranked results
+- Swipeable quest card stack with drag interactions
+- Full Guided Cook flow (Mission -> Grab -> Cook -> Win) with timers, hacks, mistake warnings, cuisine facts
+- Evaluate mode (ADA plate visualization) with confidence-first appraisal
+- Save/share pairings, heatmap visualizer
+- 93 mains, 203 sides, 924 engine-scored pairings
+- tRPC API with working pairing, recognition, and cook endpoints
+- Database schema defined (7 tables in Drizzle) but not yet seeded
+- Auth integrated (Clerk), state management working (Zustand)
 
-### Sides WITH Guided Cook Steps (25)
-aloo-gobi, arancini, baingan-bharta, bruschetta, caesar-salad, caprese-salad, edamame, elote, esquites, garlic-bread, guacamole, gyoza, karaage, lachha-paratha, mexican-rice, minestrone, miso-soup, onigiri, pico-de-gallo, raita, spring-rolls, tabbouleh, tomato-soup, tzatziki, skillet-cornbread
+**What's NOT built:** Path tab, Community tab, cook session persistence, scrapbook/favorites browsing, coach quiz, journey tracking.
 
-### Meals WITH Guided Cook Steps (4)
-butter-chicken, fish-tacos, pad-thai, pizza-margherita
-
-### Priority Targets (High-traffic meals without coverage)
-tonkotsu-ramen, grilled-salmon, falafel-wrap, pasta-carbonara, sushi-platter, chicken-tikka-masala, bbq-ribs, bibimbap, beef-burger, chicken-shawarma, steak, chicken-katsu, pho-bo, lamb-chops, teriyaki-chicken
-
----
-
-## 2. Recipe Research Pipeline
-
-### 2.1 Source Selection Strategy
-
-**Tier 1 — Gold Standard Sources** (always prefer):
-- Serious Eats (Kenji Lopez-Alt, Stella Parks) — rigorous testing, explains *why*
-- Cook's Illustrated / America's Test Kitchen — tested 30+ variations
-- NYT Cooking — professional recipe development
-- Bon Appetit — clear technique instruction
-
-**Tier 2 — Reliable Community Sources**:
-- AllRecipes (use 4.5+ star, 100+ reviews only)
-- BBC Good Food
-- RecipeTin Eats (Nagi)
-- Budget Bytes
-- Woks of Life (Chinese/Asian authority)
-- Just One Cookbook (Japanese authority)
-
-**Tier 3 — Cultural Authority Sources** (for authenticity):
-- Maangchi (Korean)
-- Hebbar's Kitchen (South Indian)
-- Chinese Cooking Demystified (YouTube + written)
-- Hot Thai Kitchen (Thai)
-- Ottolenghi (Middle Eastern/Mediterranean)
-
-### 2.2 Research Protocol Per Recipe
-
-For each recipe that needs guided cook steps:
-
-```
-STEP 1: Identify 3-5 top-rated recipes from Tier 1-2 sources
-  - Search: "[dish name] recipe site:seriouseats.com OR site:bonappetit.com"
-  - Cross-reference with "[dish name] best recipe" general search
-  - Check YouTube for visual technique references
-
-STEP 2: Analyze commonalities across sources
-  - Core ingredient list (what appears in ALL recipes)
-  - Key technique steps (what every version does)
-  - Points of divergence (where recipes disagree)
-  - Common mistakes mentioned across sources
-
-STEP 3: Synthesize into Sous format
-  - Distill into 4-8 clear cook steps
-  - Each step: one action, one outcome
-  - Extract mistake warnings from recipe notes/comments
-  - Extract quick hacks from "notes" sections
-  - Derive doneness cues from technique descriptions
-  - Add cuisine facts from cultural context
-
-STEP 4: Validate
-  - Steps are logically ordered
-  - Ingredient list matches steps (nothing referenced that isn't listed)
-  - Timer values are realistic
-  - Skill level assessment is accurate
-```
-
-### 2.3 Translation Rules (Web Recipe -> Sous Format)
-
-| Web Recipe Element | Sous Field | Translation Rule |
-|---|---|---|
-| Recipe title | `name` | Keep canonical name, add cuisine qualifier if ambiguous |
-| "Ingredients" section | `ingredients[]` | Decompose into name + quantity + isOptional + substitution |
-| Step paragraphs | `steps[]` | Split multi-action paragraphs into single-action steps |
-| "Tips" / "Notes" | `quickHack` | Attach to most relevant step |
-| "Don't do this" warnings | `mistakeWarning` | Attach to step where mistake would happen |
-| "It should look like..." | `donenessCue` | Attach to step where visual check matters |
-| Cultural background | `cuisineFact` | Add to most relevant step, keep under 2 sentences |
-| Prep + Cook time | `prepTimeMinutes`, `cookTimeMinutes` | Use source values, cross-reference |
-| "Optional" ingredients | `isOptional: true` | Mark and add substitution note |
+See `documentation.md` for complete inventory.
 
 ---
 
-## 3. Data Schema Design
+## 1. Global sequencing rules
 
-### 3.1 Current Schema (What Exists)
+1. Do not introduce any required backend, auth, or cloud database dependency before Phase 2.
+2. Do not introduce AI-dependent user-critical flows before deterministic alternatives work.
+3. Do not add Path tab content before Today is production-stable.
+4. Do not add Community tab in the prototype.
+5. Every phase must leave the app in a shippable, coherent state.
+6. Every phase must preserve the core promise: discover a main -> build a better plate -> optionally evaluate -> cook something tonight.
+7. If a feature can be done deterministically, do it deterministically first.
+8. Every screen gets one dominant CTA only.
+9. If a feature does not help the user cook, learn, or return, it is not phase-critical.
+10. **No invented recipes or images.** Never generate new dish entries or images outside the existing dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows for dishes that already exist in the side/meal catalog. New recipe research must source from real, reputable online sites and be added to the existing data layer first.
+
+---
+
+## 2. Evaluate model: two distinct surfaces
+
+The product has two evaluation moments. They are different surfaces with different purposes.
+
+### Evaluate A — Pre-cook plate evaluation (EXISTS)
+
+**Location:** Results view, after pairing results are shown.
+**Purpose:** Assess the proposed main + sides before cooking. Teach one quick insight. Optionally suggest one better swap.
+**Status:** Built and working (`src/lib/plateAppraisal.ts`, plate UI in `src/components/results/`).
+
+Rules:
+
+- Optional, skippable, no blocking modals
+- No grading language
+- Max one suggestion
+- Confidence-first: always names what's already working before suggesting changes
+
+### Evaluate B — Post-cook reflection (NOT YET BUILT)
+
+**Location:** Win screen after completing Guided Cook.
+**Purpose:** Reflect on the completed result. Save the meal memory. Later: gentle skill and plating improvement.
+
+Rules:
+
+- Optional, supportive, never judgmental
+- Early version is manual and static (photo + note + rating + save)
+- Later version can include photo-informed reflection (Phase 5)
+
+Entry points:
+
+- `Reflect on this meal` button on Win screen
+- `Add photo + note` quick action
+
+Allowed outputs by phase:
+
+- **Phase 2-3:** Photo, note, rating, save to scrapbook
+- **Phase 5:** Plating ratio suggestions, one tiny improvement for next time, cooking craft suggestion
+
+Not allowed early:
+
+- Automatic critique
+- Multimodal AI dependence
+- "You did this wrong" language
+
+---
+
+## 3. Phase 1 — Production polish and Today stability
+
+### Objective
+
+Make the Today page production-ready. Fix remaining rough edges, ensure the core flow is bulletproof.
+
+### Scope
+
+- [ ] Fix remaining visual micro-refinements (button alignment, badge overflow — in progress)
+- [ ] Ensure scrollbar hiding works across all browsers (Windows Chrome, Safari, Firefox)
+- [ ] Expand quest card pool beyond 5 hardcoded dishes — connect to actual side dish data
+- [ ] Connect quest card "Start cooking" to real Guided Cook route with data
+- [ ] Connect quest card heart button to actual save functionality (localStorage)
+- [ ] Replace friends strip mock data with a deterministic rotation or hide until social features exist
+- [ ] Error states for all async paths (pairing failure, recognition failure, network timeout)
+- [ ] Loading skeletons for search popout content
+- [ ] Verify phone frame works at common mobile viewport sizes
+- [ ] Run `pnpm lint && pnpm test` — fix any failures
+
+### Definition of done
+
+A user can: open the app -> see quest cards -> tap "I'm craving" -> type or photograph a dish -> see 3 paired sides -> optionally evaluate -> tap "Cook this" -> complete full Guided Cook -> land on Win screen. No dead ends, no broken states.
+
+---
+
+## 4. Phase 2 — Cook session tracking and Evaluate B shell
+
+### Objective
+
+Turn completed cooks into persistent records. Ship the manual version of post-cook reflection.
+
+### Why this phase exists
+
+The biggest gap between "demo" and "product" is that nothing persists. A user completes a guided cook and there's no record of it. Without persistence, there's no reason to return.
+
+### Scope
+
+- [ ] Seed the database or implement localStorage-based session storage as interim
+- [ ] Implement `cook.start` — creates a session when user enters Guided Cook
+- [ ] Implement `cook.complete` — marks session done, stores rating/note/photo metadata
+- [ ] Win screen: wire up photo capture, note input, and star rating to session completion
+- [ ] Win screen: add "Reflect on this meal" optional action (Evaluate B manual shell)
+- [ ] Evaluate B manual: photo + note + rating + "Save to scrapbook" button
+- [ ] Track `completedCooks` count locally (localStorage until auth is active)
+- [ ] Show completion toast or subtle celebration after saving
+
+### State model
 
 ```typescript
-// cookSteps table (src/lib/db/schema.ts)
-{
-  id: uuid,
-  sideDishId: uuid,        // FK to sideDishes
-  phase: "mission" | "grab" | "cook" | "win",
-  stepNumber: integer,
-  instruction: text,
-  timerSeconds: integer | null,
-  mistakeWarning: text | null,
-  quickHack: text | null,
-  cuisineFact: text | null,
-  donenessCue: text | null,
-  imageUrl: text | null,
-}
-
-// ingredients table
-{
-  id: uuid,
-  sideDishId: uuid,
-  name: text,
-  quantity: text,           // e.g., "1/3 cup shaved"
-  isOptional: boolean,
-  substitution: text | null,
-}
+type CookSessionRecord = {
+  sessionId: string;
+  recipeSlug: string;
+  mainDishInput: string;
+  sideIds: string[];
+  startedAt: string;
+  completedAt?: string;
+  note?: string;
+  photoUri?: string;
+  rating?: number; // 1-5
+  favorite: boolean;
+};
 ```
 
-### 3.2 Critical Appraisal of Current Schema
+### Definition of done
 
-**Strengths:**
-- `mistakeWarning`, `quickHack`, `cuisineFact`, `donenessCue` are *unique differentiators* — no other recipe app or format (Schema.org, Whisk, Mealie, Paprika, Mela) has these as first-class fields. This is what makes Sous feel like a cooking coach, not just a recipe viewer.
-- `phase` enum maps directly to the quest flow (Mission -> Grab -> Cook -> Win). Unique to Sous.
-- Separate `ingredients` table with `substitution` field is good relational design.
-
-**Weaknesses identified:**
-1. **No versioning** — if a recipe step is wrong, editing it loses history
-2. **No source attribution** — we don't track where recipe data came from
-3. **No user customization layer** — users can't modify steps or ingredients
-4. **`quantity` is a plain string** — can't do serving multiplier math
-5. **No step-to-ingredient references** — can't highlight which ingredients are used in which step
-6. **No equipment/tools tracking** — "you need a wok" has nowhere to live
-7. **Steps only attach to `sideDishes`** — meals (mains) need a separate FK or a polymorphic relation
-8. **No `schemaVersion` field** — future migrations have no safety net
-
-### 3.3 Proposed Schema Upgrades
-
-**Priority 1 — Ship now (unblocks recipe expansion):**
-
-```sql
--- Add source tracking to cook_steps
-ALTER TABLE cook_steps ADD COLUMN source_url TEXT;
-ALTER TABLE cook_steps ADD COLUMN source_name TEXT;
-
--- Add schema version for migration safety
-ALTER TABLE side_dishes ADD COLUMN schema_version INTEGER DEFAULT 1;
-
--- Add meal cook steps support (reuse same table)
-ALTER TABLE cook_steps ADD COLUMN meal_id UUID REFERENCES meals(id);
-ALTER TABLE cook_steps ALTER COLUMN side_dish_id DROP NOT NULL;
--- Constraint: exactly one of side_dish_id OR meal_id must be set
-```
-
-**Priority 2 — Ship with user recipes:**
-
-```sql
--- Recipe forks for user customization
-CREATE TABLE user_recipe_forks (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,
-  -- Polymorphic: one of these is set
-  side_dish_id UUID REFERENCES side_dishes(id),
-  meal_id UUID REFERENCES meals(id),
-  -- Delta storage
-  ingredient_overrides JSONB DEFAULT '[]',
-  step_overrides JSONB DEFAULT '[]',
-  custom_notes TEXT,
-  servings_multiplier REAL DEFAULT 1.0,
-  status TEXT DEFAULT 'active', -- 'active' | 'archived'
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Separate table for fully custom user recipes
-CREATE TABLE user_recipes (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL,
-  name TEXT NOT NULL,
-  slug TEXT NOT NULL,
-  description TEXT,
-  cuisine_family TEXT,
-  prep_time_minutes INTEGER,
-  cook_time_minutes INTEGER,
-  skill_level TEXT DEFAULT 'beginner',
-  hero_image_url TEXT,
-  flavor_profile JSONB DEFAULT '[]',
-  temperature TEXT DEFAULT 'hot',
-  is_public BOOLEAN DEFAULT FALSE,
-  schema_version INTEGER DEFAULT 1,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
--- User recipe steps and ingredients reuse cook_steps and ingredients tables
--- with user_recipe_id FK
-```
-
-**Priority 3 — Future polish:**
-
-```typescript
-// Structured ingredient quantities (for serving math)
-interface StructuredQuantity {
-  amount: number;        // 1.5
-  unit: string;          // "cups"
-  displayText: string;   // "1 1/2 cups" (original formatting)
-}
-
-// Step-to-ingredient references
-interface StepIngredientRef {
-  stepId: string;
-  ingredientId: string;
-}
-
-// Equipment tracking
-interface Equipment {
-  id: string;
-  name: string;          // "wok"
-  isEssential: boolean;  // true = can't substitute
-  alternative: string | null; // "large skillet"
-}
-```
-
-### 3.4 Why NOT These Alternatives
-
-| Alternative | Rejected Because |
-|---|---|
-| **Store everything in JSON blobs** | Loses query ability, can't index steps, breaks relational integrity |
-| **Use Schema.org format directly** | Too generic — no fields for mistakeWarning, quickHack, donenessCue, timer |
-| **Cooklang plain-text format** | Great for humans, terrible for programmatic access. Can't query "all steps with timers > 5 min" |
-| **Full recipe copies for user mods** | Wastes storage, loses provenance, can't propagate upstream fixes |
-| **Version every edit** | Over-engineering — recipes aren't documents. Fork + delta is simpler |
+A user can complete a Guided Cook, optionally add a photo and note, save it, and the record persists across page reloads.
 
 ---
 
-## 4. Static Data Layer (Immediate Solution)
+## 5. Phase 3 — Scrapbook, favorites, and minimal Path
 
-While the database schema upgrades are designed, the **immediate priority** is populating the static data file (`src/data/guided-cook-steps.ts`) so users stop seeing "recipe not here yet."
+### Objective
 
-### 4.1 Static Data Format
+Turn saved cooks into visible momentum and replay value. Ship the Path tab.
 
-```typescript
-// Each entry in guidedCookData or guidedCookMeals
-{
-  name: "Chicken Karaage",
-  slug: "karaage",
-  description: "Japanese-style fried chicken...",
-  cuisineFamily: "japanese",
-  prepTimeMinutes: 20,
-  cookTimeMinutes: 15,
-  skillLevel: "intermediate",
-  heroImageUrl: "/food_images/karaage.png",
-  flavorProfile: ["savory", "umami", "crispy"],
-  temperature: "hot",
-  ingredients: [
-    { id: "k-1", name: "Chicken thighs", quantity: "500g", isOptional: false, substitution: null },
-    // ...
-  ],
-  steps: [
-    {
-      phase: "cook",
-      stepNumber: 1,
-      instruction: "Cut chicken thighs into bite-sized pieces...",
-      timerSeconds: null,
-      mistakeWarning: "Don't cut pieces too large — they won't cook through evenly.",
-      quickHack: null,
-      cuisineFact: "Karaage means 'Chinese-style frying' — the technique came to Japan in the 1600s.",
-      donenessCue: null,
-      imageUrl: null,
-    },
-    // ...
-  ],
-}
+### Why this phase exists
+
+Once cooking sessions persist, the next highest-leverage feature is letting users see their history and replay winners. This creates return behavior before any AI enhancement.
+
+### Scope
+
+#### Scrapbook and favorites
+
+- [ ] Scrapbook data model: completed cook sessions + saved pairings merged
+- [ ] Favorites: toggle on any completed cook or saved pairing
+- [ ] Recent cooks list (last 20)
+
+#### Path tab
+
+- [ ] `src/app/(path)/page.tsx` — Path home with 3 blocks max:
+  1. Current journey summary (cooks this week/month)
+  2. Weekly goal card (simple "Cook 3 times this week" target)
+  3. Next unlock preview ("2 more cooks to unlock skill badges")
+- [ ] `src/app/(path)/scrapbook/page.tsx` — Grid of saved meals with photos/notes
+- [ ] `src/app/(path)/favorites/page.tsx` — Filtered view of favorited items
+- [ ] Scrapbook entry card component showing dish name, photo thumbnail, date, rating
+- [ ] Replay flow: tapping a scrapbook entry re-opens the pairer with the original main
+
+#### Progressive unlock
+
+- [ ] Enforce Path tab visibility: hidden until `completedCooks >= 3`
+- [ ] Show "Path unlocked!" celebration on the 3rd completion
+- [ ] Community tab remains hidden/stubbed (unlocks after 30 days, not in prototype scope)
+
+### Component tree
+
+```
+src/components/path/
+  path-home.tsx              # 3-block layout
+  journey-summary.tsx        # Cook count + cuisine diversity
+  weekly-goal-card.tsx       # Simple progress bar
+  next-unlock-card.tsx       # Milestone preview
+  scrapbook-grid.tsx         # Grid of entries
+  scrapbook-entry-card.tsx   # Individual entry
+  favorites-list.tsx         # Filtered favorites
 ```
 
-### 4.2 Batch Population Strategy
+### Path home hard rules
 
-**Phase A — Quick wins (Week 1): 30 most-searched meals**
-Target the meals that appear most in `sidePool` arrays across meals.json.
+- Only 3 main blocks visible at once
+- No charts, no dashboards, no analytics feel
+- "Journey" tone, not "performance" tone
 
-**Phase B — Side coverage (Week 2-3): 100 most-paired sides**
-Start with sides that appear in the most meal pairings.
+### Definition of done
 
-**Phase C — Long tail (Week 4): Remaining 120 recipes**
-Complete coverage of all sides and meals.
-
-### 4.3 Quality Checklist Per Recipe
-
-Before adding any recipe to the static data:
-
-- [ ] 3+ sources consulted and cross-referenced
-- [ ] Ingredients list matches steps (no orphaned ingredients)
-- [ ] Each step is a single clear action
-- [ ] At least 2 mistakeWarnings across all steps
-- [ ] At least 2 quickHacks across all steps
-- [ ] At least 1 cuisineFact
-- [ ] At least 1 donenessCue
-- [ ] Timer values validated against source recipes
-- [ ] Skill level accurately reflects technique complexity
-- [ ] Prep + cook time totals are realistic
+A user who has completed 3+ cooks can tap the Path tab, see their cooking journey, browse saved meals in a scrapbook, favorite winners, and replay a past meal.
 
 ---
 
-## 5. User Custom Recipes System
+## 6. Phase 4 — Deterministic Evaluate A upgrade and plate-learning loop
 
-### 5.1 Three Tiers of Customization
+### Objective
 
-**Tier 1 — Inline Tweaks (no account required)**
-- Stored in localStorage
-- Ingredient substitutions made during Grab phase are remembered
-- Step notes ("I added extra garlic") saved per cook session
-- These are ephemeral — lost if cache clears
+Make the pre-cook evaluation genuinely useful as a teaching tool without adding AI.
 
-**Tier 2 — Recipe Forks (requires account)**
-- User modifies an existing Sous recipe
-- Fork stored as delta (only changed fields) against base recipe
-- User sees their version by default, can "reset to original"
-- If Sous updates the base recipe, user's delta is preserved
+### Why this phase exists
 
-**Tier 3 — Custom Recipes (requires account)**
-- User creates a recipe from scratch
-- Full recipe with all Sous fields (ingredients, steps, tips, etc.)
-- Can optionally be made public (community feature, Phase 5)
-- Renders through the same Mission -> Grab -> Cook -> Win flow
+Evaluate A already works but the appraisal is basic. This phase sharpens it into a real learning moment that users notice and remember.
 
-### 5.2 Fork Data Model
+### Scope
+
+- [x] Upgraded deterministic evaluation engine in `src/lib/engine/`
+  - Category coverage detection (vegetables, protein, carbs)
+  - Signal classification: protein_light, veg_light, carb_heavy, freshness_missing, texture_contrast_missing, balanced
+  - "Already working" list (what's good about the plate)
+  - "One best move" recommendation (swap, add, or keep as-is)
+- [x] Confidence-first appraisal copy: always lead with strengths
+- [x] "Finish my plate" shortcut when one category is obviously missing
+- [x] Compact visual balance state (not a dashboard — just clear iconography)
+- [x] Keep Evaluate A explicitly optional and visually secondary to cooking
+
+### Evaluation schema
 
 ```typescript
-interface RecipeFork {
-  id: string;
-  userId: string;
-  baseRecipeId: string;     // slug of original
-  baseRecipeType: "side" | "meal";
-  ingredientOverrides: Array<{
-    originalId: string;
-    action: "substitute" | "remove" | "modify" | "add";
-    newName?: string;
-    newQuantity?: string;
-    userNote?: string;
+type PlateEvaluation = {
+  status: "balanced" | "good_start" | "needs_improvement";
+  categoryCoverage: { vegetables: boolean; protein: boolean; carbs: boolean };
+  alreadyWorking: string[];
+  oneBestMove?: {
+    type: "swap_side" | "add_category" | "keep_as_is";
+    message: string;
+    targetSideId?: string;
+    replacementSideId?: string;
+  };
+  appraisal: string; // 5-10 words max
+};
+```
+
+### UI hard rules
+
+- Evaluate sheet opens over pairer context, not a new page
+- Only one main CTA
+- Must always include a no-friction exit
+- No charts, no dashboards, no numbers-heavy summaries
+
+### Definition of done
+
+Balanced plates show a positive appraisal. Missing-category plates show one best move. Evaluate can be skipped at any time. Swap suggestion updates plate correctly. No network or AI required.
+
+---
+
+## 7. Phase 5 — Bounded AI enhancement
+
+### Objective
+
+Introduce AI only where it enhances an already-working deterministic product.
+
+### Why this phase exists
+
+At this point the app has: a stable pairer, a real cooking loop, evaluation, memory, and Path. AI can enhance clarity and warmth without being a crutch.
+
+### Scope
+
+#### AI provider abstraction
+
+- [x] `src/lib/ai/contracts.ts` — Provider interface with typed inputs/outputs
+- [x] `src/lib/ai/providers/mock.ts` — Deterministic fallback for every AI surface
+- [x] Keep existing `src/lib/ai/food-recognition.ts` (OpenAI Vision) and `src/lib/ai/craving-parser.ts` (Claude)
+
+#### Bounded AI surfaces
+
+- [x] Pairing explanation rewrite — Claude generates a warmer "why this works" sentence
+- [x] Guided Cook Q&A — user can ask a bounded question about the current step (context-limited to recipe + neighbors)
+- [x] Substitution suggestions — "I don't have X, what can I use?" from approved substitution list
+- [x] Win screen encouragement — Claude generates a short celebratory message personalized to what was cooked
+- [x] Evaluate A confidence summary — Claude rewrites the deterministic appraisal into natural language
+
+#### Prompt discipline
+
+Every AI call must receive:
+
+- Current route context
+- Current meal and side IDs
+- Evaluation state if relevant
+- Current recipe step and neighbors if relevant
+- Allowed substitutions if relevant
+- Required response schema (Zod)
+
+#### Provider contract
+
+```typescript
+export interface AIProvider {
+  explainPairing(input: ExplainPairingInput): Promise<ExplainPairingResult>;
+  answerCookQuestion(input: CookQuestionInput): Promise<CookQuestionResult>;
+  suggestSubstitution(input: SubstitutionInput): Promise<SubstitutionResult>;
+  generateWinMessage(input: WinMessageInput): Promise<WinMessageResult>;
+  rewriteAppraisal(input: AppraisalInput): Promise<AppraisalResult>;
+}
+```
+
+### Hard rules
+
+- If AI is unavailable, mock/fallback responses keep every flow working
+- AI outputs must validate against Zod schema
+- Invalid outputs must not break UI
+- No AI feature becomes a required route gate
+- No open-ended chatbot — all AI is bounded to specific UI triggers
+
+### Definition of done
+
+AI improves clarity and warmth in 5 bounded places. The app remains fully usable if all AI calls fail.
+
+---
+
+## 8. Phase 6 — Evaluate B intelligence and post-cook reflection
+
+### Objective
+
+Add thoughtful post-cook reflection. This is the most complex layer and easiest to overbuild.
+
+### Sub-phases
+
+#### 6A: Manual Evaluate B (pairs with Phase 2 shell)
+
+- Photo capture on Win screen
+- Note input
+- Save to scrapbook
+- Optional 1-5 rating
+
+#### 6B: Photo-informed reflection (requires Phase 5 AI)
+
+- After saving a photo, optionally see 1-2 supportive suggestions:
+  - Plating ratio ideas ("More color contrast next time")
+  - One cooking skill improvement ("Caramelize onions 5 more minutes")
+  - One finishing improvement ("A squeeze of lemon wakes everything up")
+
+### Hard rules
+
+- Evaluate B is always optional
+- The user can always just save and leave
+- Max 2 next-time suggestions
+- Strengths always shown before suggestions
+- Never use failure language
+- Tone is always `encouraging`
+
+### Reflection schema
+
+```typescript
+type PostCookReflection = {
+  strengths: string[];
+  nextTimeSuggestions: Array<{
+    type: "plating" | "ratio" | "technique" | "finish";
+    message: string;
   }>;
-  stepOverrides: Array<{
-    originalStepNumber: number;
-    action: "modify" | "skip" | "add_after";
-    newInstruction?: string;
-    newTimerSeconds?: number;
-    userNote?: string;
-  }>;
-  customNotes: string | null;
-  servingsMultiplier: number;
-  createdAt: Date;
-  lastCookedAt: Date | null;
-  cookCount: number;
-}
+  tone: "encouraging";
+};
 ```
 
-### 5.3 Merge Strategy (Base Update + User Fork)
+### Definition of done
 
-When Sous updates a base recipe (e.g., fixing a mistake):
-
-1. Check if user's fork touches the same fields
-2. If no conflict: apply base update, keep user's delta
-3. If conflict: keep user's version, flag for review
-4. User sees a subtle notification: "The original recipe was updated. Tap to see changes."
+A user can photograph their finished meal, save it, and optionally receive 1-2 kind suggestions. AI suggestions are bounded and non-judgmental. No critique is required for completion.
 
 ---
 
-## 6. Critical Appraisal
+## 9. Features explicitly deferred or rejected
 
-### What This System Gets Right
+### Rejected from AI feedback
 
-1. **Delta-based forks** are the correct pattern. Full copies waste storage and lose provenance. Git-style version chains are over-engineered for recipes where users make 1-3 changes.
+| Suggestion                                  | Verdict              | Reason                                                                                                                                                                                 |
+| ------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Meal readiness screen                       | REJECTED             | Sous pairs sides with mains the user already has. Users aren't discovering mains — they know what they're cooking. A "can you make this tonight?" gate adds friction to the core loop. |
+| `src/lib/pairing/` refactor                 | REJECTED             | Code already uses `src/lib/engine/` which is well-structured with 6 scorers, ranker, explainer, and tests. Renaming would break imports for no benefit.                                |
+| "Gemma" AI provider                         | CORRECTED            | Sous uses Claude (Anthropic) and OpenAI Vision, not Google Gemma. All AI feedback references to "Gemma" should read "Claude."                                                          |
+| Retrieval-backed AI (local embeddings, RAG) | DEFERRED             | With 203 sides and static recipe data, simple DB queries outperform local embeddings. RAG is premature engineering for V1. Reconsider only if content scales to 1000+ items.           |
+| PairerState / MealReadinessState models     | REJECTED             | Duplicate what already exists in `useTodayStore` and `useCookStore` Zustand stores.                                                                                                    |
+| Community tab                               | DEFERRED             | Per CLAUDE.md rules: Community reveals after 30 days. Not in prototype scope.                                                                                                          |
+| "Order missing ingredients" flow            | DEFERRED             | Delivery integration is a separate product concern. Placeholder button exists in fallback actions.                                                                                     |
+| Coach quiz and vibe prompts                 | DEFERRED to Phase 5+ | tRPC stubs exist. Ship when AI provider abstraction is ready.                                                                                                                          |
 
-2. **Static data file as immediate solution** is pragmatic. Waiting for a perfect database migration before fixing the "recipe not here yet" error would delay user value by weeks.
+### Accepted from AI feedback
 
-3. **The Sous step schema is genuinely differentiated.** No other app stores `mistakeWarning`, `quickHack`, `cuisineFact`, and `donenessCue` as first-class fields. This is what transforms recipes from instruction lists into coaching experiences.
-
-4. **Source attribution** is essential for legal protection and quality traceability.
-
-### What Could Go Wrong
-
-1. **Stale static data**: Recipes in `guided-cook-steps.ts` are frozen at build time. Bug fixes require a new deployment. Database migration (Priority 2) is the long-term fix.
-
-2. **Recipe quality variance**: Rushed research produces worse steps than careful curation. The quality checklist in Section 4.3 is the mitigation.
-
-3. **User forks at scale**: 10K users x 50 forks = 500K records. Delta model keeps storage small (~200 bytes per fork), but needs index on `(userId, baseRecipeId)`.
-
-4. **Structured quantities deferred**: Serving multiplier math won't work until quantities are decomposed. Acceptable for v1 — most users cook for default serving size.
-
-### What's Missing (Intentionally Deferred)
-
-- **AI-generated steps**: CLAUDE.md rule #7 prohibits invented recipes. All steps must come from real sources.
-- **Community recipe sharing**: Deferred to Phase 5 (Community tab).
-- **Nutritional calculation**: Requires structured quantities (Priority 3).
-- **Step images**: Requires stock photo sourcing or user contributions.
-- **Video integration**: High value but high complexity.
+| Suggestion                                                          | Integrated into | Rationale                                                                                   |
+| ------------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------------- |
+| Two-surface Evaluate model (A pre-cook, B post-cook)                | §2, §6, §8      | Clean delineation. Evaluate A already exists; Evaluate B is a natural Win screen extension. |
+| Phase sequencing discipline (no backend early, deterministic first) | §1 rules        | Sound engineering principle that matches existing architecture.                             |
+| AI provider abstraction with mock/fallback                          | §7              | Critical for resilience. Every AI surface must work without AI.                             |
+| Scrapbook + favorites + Path as momentum layer                      | §5              | Fills the biggest gap: nothing persists after a cook. Creates return behavior.              |
+| PlateEvaluation schema with categoryCoverage and oneBestMove        | §6              | Stronger than current basic appraisal. Upgrades the existing evaluate without adding AI.    |
+| Prompt discipline (context-bounded, schema-validated)               | §7              | Prevents AI sprawl. Every call gets minimal required context + Zod schema.                  |
+| "One CTA per screen" as standing policy                             | §1 rule 8       | Already in CLAUDE.md, reinforced as a sequencing rule.                                      |
+| PostCookReflection schema (strengths before suggestions)            | §8              | Good UX pattern: lead with what worked, then one kind suggestion.                           |
 
 ---
 
-## 7. Implementation Roadmap
+## 10. Sprint-level implementation order
 
-### Immediate (This Sprint)
-- [ ] Populate 10 high-priority meals with guided cook steps
-- [ ] Populate 20 high-priority sides with guided cook steps
-- [ ] Ensure "Start cooking" works for all recipe-of-the-day candidates
+This maps phases to concrete sprint work. Each sprint leaves the app shippable.
 
-### Next Sprint
-- [ ] Complete guided cook coverage for all 76 meals
-- [ ] Complete guided cook coverage for top 100 sides
-- [ ] Add database migration for `meal_id` on cook_steps table
+### Sprint 1: Production polish (Phase 1)
 
-### Sprint +2
-- [ ] Complete 100% side coverage (remaining ~80 sides)
-- [ ] Implement user recipe fork model (localStorage-first)
-- [ ] Add fork UI in Grab/Cook phases ("Make it yours" button)
+- Fix remaining visual micro-refinements
+- Connect quest cards to real data and routes
+- Error states and loading skeletons
+- Run lint + test, fix failures
 
-### Sprint +3
-- [ ] Migrate forks to database (requires Clerk auth)
-- [ ] Implement custom recipe creation flow
-- [ ] Add source attribution display in Mission screen
+### Sprint 2: Persistence (Phase 2)
+
+- Cook session storage (localStorage or DB)
+- Win screen save flow (photo, note, rating)
+- Evaluate B manual shell
+- Completion counter
+
+### Sprint 3: Path and memory (Phase 3)
+
+- Scrapbook data model
+- Favorites toggle
+- Path tab with 3-block layout
+- Progressive unlock at 3 cooks
+- Replay flow from scrapbook
+
+### Sprint 4: Smarter evaluation (Phase 4)
+
+- Category coverage detection
+- Signal classification
+- Confidence-first appraisal copy
+- "Finish my plate" shortcut
+- One-swap recommendation
+
+### Sprint 5: Bounded AI (Phase 5)
+
+- AI provider abstraction + mock provider
+- 5 bounded AI surfaces (explain, Q&A, substitute, win message, appraisal rewrite)
+- Schema validation on all AI outputs
+- Graceful fallback when AI unavailable
+
+### Sprint 6: Reflection intelligence (Phase 6)
+
+- Evaluate B photo-informed suggestions
+- Post-cook reflection UI
+- Strengths-before-suggestions pattern
+- Scrapbook integration with reflection data
 
 ---
 
-## 8. Recipe Research Process (Step-by-Step for Contributors)
+## 10b. Future development phases (post-V1)
 
-### How to Add a New Recipe
+These phases represent the next evolution of Sous. Each is self-contained and leaves the app shippable.
+
+### Phase 7 — Multi-Side Selection & Reroll Per Side
+
+#### Objective
+
+Let users select which sides to cook (1, 2, or all 3) and reroll individual sides while keeping the ones they want.
+
+#### Scope
+
+- [ ] Redesign `result-stack.tsx` to show all 3 sides as selectable cards with checkboxes
+- [ ] Add per-side reroll icon (🔄) on each individual side card
+- [ ] Reroll replaces only that side with the next-best candidate from the engine
+- [ ] User can select 1, 2, or all 3 sides to cook
+- [ ] Selected sides pass into guided cook flow as a multi-dish cook
+- [ ] "Cook selected" button replaces current single-side "Cook this" flow
+- [ ] Side selection state managed in `useTodayStore`
+
+#### Definition of done
+
+A user can see 3 side suggestions, reroll any individual side, select 1-3 sides, and proceed to cook all selected sides.
+
+---
+
+### Phase 8 — Intelligent Multi-Component Cook Sequencing
+
+#### Objective
+
+When cooking multiple sides + a main, intelligently sequence all steps so everything finishes together and nothing sits cold.
+
+#### Scope
+
+- [ ] `src/lib/engine/cook-sequencer.ts` — Sequencing engine that takes multiple dishes and interleaves steps
+- [ ] Uses `prepTimeMinutes` and `cookTimeMinutes` from each dish to compute optimal start order
+- [ ] Generates a unified step list: e.g., "Start potato in oven" → "Prep asparagus" → "Cook steak" → "Everything done"
+- [ ] Timeline view component showing parallel cooking tracks with progress
+- [ ] Smart step transitions: "While [dish A] bakes, start [dish B]"
+- [ ] Timer integration: floating timers for each dish track independently
+- [ ] Handles temperature dependencies: hot items cook last, cold items prep first
+- [ ] Modified `cook/[slug]/page.tsx` to support multi-dish cook sessions
+
+#### Sequencing rules
+
+1. Cold dishes (salads, dressings) prep first, serve last
+2. Longest-cooking items start first (oven → stovetop → assembly)
+3. Quick-cook items (steaks, stir-fry) start last so they're hot when served
+4. Interleave idle time (baking, simmering) with active prep of other dishes
+5. Never leave a user idle — always suggest the next useful action
+
+#### Definition of done
+
+A user cooking steak + sweet potato + asparagus gets a unified step sequence where the potato goes in the oven first, asparagus cooks mid-way, steak cooks last, and everything finishes within 2 minutes of each other.
+
+---
+
+### Phase 9 — Agentic Sous Assistant
+
+#### Objective
+
+An AI-powered assistant that helps users build their personal recipe collection from real-world inspiration.
+
+#### Scope
+
+- [ ] Sous Assistant modal/sheet accessible from scrapbook and main navigation
+- [ ] Custom recipe creation: manually enter name, ingredients, steps, tags
+- [ ] Save custom recipes to scrapbook alongside completed cooks
+- [ ] Image upload: user photographs favorite restaurant dishes or food photos
+- [ ] Agentic processing: assistant analyzes uploaded images, identifies dishes
+- [ ] Internet search: finds healthy recreations and balanced plate ideas with optimal sides
+- [ ] Results delivered as new recipe cards in scrapbook (async — may take minutes/hours)
+- [ ] Uses existing AI provider abstraction (`src/lib/ai/`) with new agent methods
+- [ ] Background job pattern: upload → queue → process → notify
+- [ ] Status tracking: "Processing your dishes..." with progress indicator
+
+#### Agent capabilities
+
+1. **Image analysis** — Identify dish from photo using Vision API
+2. **Recipe search** — Find healthy recreations via web search
+3. **Plate balancing** — Suggest optimal sides using the existing pairing engine
+4. **Nutritional optimization** — Favor balanced macros and whole ingredients
+5. **Personalization** — Factor in user's cooking history and cuisine preferences
+
+#### Hard rules
+
+- Agent is bounded — only responds to explicit upload triggers, never proactive
+- All recipes go through the same Quest shell (Mission → Grab → Cook → Win)
+- Custom recipes are clearly labeled as "Custom" vs engine-generated
+- User always reviews and approves agent suggestions before they're saved
+
+#### Definition of done
+
+A user can upload 3 photos of restaurant dishes, and within a few hours, find healthy recreation recipes in their scrapbook with balanced side suggestions.
+
+---
+
+### Phase 10 — Instacart Integration
+
+#### Objective
+
+Let users order missing ingredients directly from the Grab screen with one tap.
+
+#### Scope
+
+- [ ] At ingredient selection phase (Grab screen), track which items are unchecked (missing)
+- [ ] "Order with Instacart" button appears when any ingredients are unchecked
+- [ ] Shows estimated delivery time next to button (placeholder: random 25-45 min)
+- [ ] Button shows count of missing ingredients: "Order 4 items · ~35 min"
+- [ ] V1: Placeholder button that shows a "Coming soon" toast
+- [ ] V2: Deep link to Instacart with pre-populated cart (requires Instacart API partnership)
+- [ ] Missing ingredients list auto-computed from unchecked items in the ingredient list
+- [ ] Instacart branding and styling per their partner guidelines
+- [ ] Modified `ingredient-list.tsx` to include the order button below the ingredient list
+
+#### Integration architecture
 
 ```
-1. IDENTIFY the dish
-   - Find its slug in sides.json or meals.json
-   - Note its cuisine family, tags, and description
-
-2. RESEARCH (15-20 min per recipe)
-   - Search Tier 1 sources first (Serious Eats, ATK, NYT, BA)
-   - Then Tier 2 (AllRecipes 4.5+, BBC, RecipeTin Eats)
-   - Open top 3 results, read fully
-   - Note consensus ingredients and technique
-
-3. EXTRACT ingredients
-   - List all ingredients that appear in 2+ sources
-   - Mark optional ingredients (appear in only 1 source)
-   - Find substitutions from recipe "Notes" sections
-   - Format: { name, quantity, isOptional, substitution }
-
-4. SYNTHESIZE steps (most important part)
-   - Combine techniques from all sources into 4-8 clear steps
-   - Each step = one action + one outcome
-   - Write in second person: "Mince the garlic finely"
-   - Add time context: "...for about 3 minutes"
-   - Keep each step under 3 sentences
-
-5. ENRICH with Sous metadata
-   - mistakeWarning: What goes wrong? (from comments, "Tips" sections)
-   - quickHack: Shortcuts? (from "Notes", speed variations)
-   - cuisineFact: Cultural context? (from introductory text)
-   - donenessCue: What does "done" look like? (from technique descriptions)
-   - timerSeconds: Any timed steps? (from explicit timings in recipes)
-
-6. VALIDATE
-   - Read steps aloud — do they flow logically?
-   - Cross-check: every ingredient is used in at least one step
-   - Cross-check: no step references an unlisted ingredient
-   - Verify total time = sum of step times + reasonable gaps
-
-7. FORMAT and add to guided-cook-steps.ts
-   - Follow existing entries as template
-   - Run pnpm build to verify no TypeScript errors
-   - Test in dev: navigate to /cook/[slug] and walk through all phases
+User unchecks ingredients → Missing list computed →
+  "Order with Instacart" button shows →
+    V1: Toast "Coming soon — order manually for now"
+    V2: Deep link to Instacart with items + quantities
 ```
 
----
+#### Definition of done
 
-## 10. iPhone & Mobile Optimisation
-
-> **Applied:** 2026-04-06
-> **Scope:** iOS Safari performance, touch interaction, viewport handling, animation performance
-
-### 10.1 Changes Applied
-
-| # | Optimisation | File | Impact |
-|---|---|---|---|
-| 1 | `touch-action: manipulation` on `html` | `globals.css` | Eliminates 300ms tap delay on iOS; prevents double-tap zoom |
-| 2 | `-webkit-text-size-adjust: 100%` | `globals.css` | Prevents unwanted text inflation on iOS Safari |
-| 3 | `-webkit-font-smoothing: antialiased` | `globals.css` | Crisper, thinner text rendering on iOS |
-| 4 | `overscroll-behavior: none` on `body` | `globals.css` | Prevents body rubber-band for app-like feel |
-| 5 | `font-size: 16px` on inputs | `globals.css` | Prevents iOS auto-zoom when focusing form fields |
-| 6 | `-webkit-tap-highlight-color: transparent` | `globals.css` | Removes grey tap flash; replaced by Framer Motion whileTap |
-| 7 | `overscroll-behavior: contain` on scroll containers | `globals.css` + `skill-tree.tsx` | Prevents scroll chaining in nested scroll areas |
-| 8 | `safe-area-top` / `safe-area-bottom` utilities | `globals.css` | Proper notch and home indicator handling |
-
-### 10.2 Animation Rules (GPU-Only)
-
-**Only animate these properties on mobile** (compositor-friendly, no layout/paint):
-- `transform` (translate, scale, rotate)
-- `opacity`
-- `filter` (blur, brightness)
-
-**Never animate on mobile:**
-- `width`, `height`, `top`, `left`, `margin`, `padding`
-- `border-radius` changes, `box-shadow` changes
-- Use `scale` transform instead of `width`/`height` when possible
-
-**Framer Motion guidelines:**
-- Use `whileTap` instead of `whileHover` on touch (hover does nothing on mobile)
-- Limit `layout` prop animations to small components (never full-page)
-- Use `useReducedMotion()` hook to respect OS accessibility settings
-- Keep micro-interactions under 300ms total
-- Spring animations: `stiffness: 300-400, damping: 20-30` for snappy, physical feel
-
-### 10.3 Viewport & Safe Areas
-
-- Viewport configured with `viewport-fit: cover` in `layout.tsx` (enables safe area insets)
-- Using `min-h-dvh` (dynamic viewport height) — fixes iOS Safari 100vh bug
-- Tab bar uses `safe-area-bottom` class for home indicator padding
-- All scroll containers use `-webkit-overflow-scrolling: touch` (momentum scrolling)
-
-### 10.4 Touch Targets
-
-- Minimum tap target: 44×44px (Apple HIG) / 48×48px (Google)
-- Skill tree nodes: 64×64px ✓
-- Tab bar links: ~48px height ✓
-- Cook flow step buttons: full-width ✓
-- Search input: full-width, 16px font ✓
-
-### 10.5 Remaining iOS Considerations
-
-- [ ] `prefers-reduced-motion` — CSS rules exist in globals.css but Framer Motion components should use `useReducedMotion()` hook
-- [ ] Limit `backdrop-filter: blur()` to max 2 visible elements at once (GPU memory)
-- [ ] Test on actual iPhone hardware for scroll performance with large skill trees
-- [ ] Consider `contain: layout style paint` on independently-animating sections
+A user on the Grab screen who hasn't checked off 4 ingredients sees an "Order with Instacart · ~35 min" button. Pressing it shows a placeholder toast in V1, or opens Instacart with the correct items in V2.
 
 ---
 
-## 11. Bug Fixes Applied
+### Phase 11 — Advanced Path & Skill Progression
 
-### 11.1 Meal Cook Routing (Critical)
+#### Objective
 
-**Bug:** The cook page (`/cook/[slug]`) only checked `getStaticCookData()` (sides dictionary) for guided cook data. ALL meals — including butter-chicken, fish-tacos, bibimbap, etc. — would always show "This recipe doesn't have guided cook steps yet" even when data existed in `guidedCookMeals`.
+Make the skill tree a living progression system that rewards consistent cooking and drives mastery.
 
-**Root cause:** The tRPC `getSteps` endpoint and the client-side cuisine lookup in `cook/[slug]/page.tsx` only imported and used `getStaticCookData()`, never `getStaticMealCookData()`.
+#### Scope
 
-**Fix:** Added fallback: `getStaticCookData(slug) ?? getStaticMealCookData(slug)` in both locations.
+- [ ] Link skill tree progression to actual cook sessions (auto-detect cuisine match)
+- [ ] XP system: earn XP per cook, level up with milestones
+- [ ] Cuisine mastery badges: complete all associated dishes in a cuisine family
+- [ ] Weekly skill challenges: "This week: master a Japanese side" with bonus XP
+- [ ] Skill tree state syncs with cook session history automatically
+- [ ] Streak-based XP multipliers (2x on 7-day streak, 3x on 14-day)
+- [ ] Achievement system: "First Italian dish", "5 cuisines explored", "30-day streak"
+- [ ] Path notifications: "You unlocked Thai Balance!" celebration screen
+- [ ] Skill recommendations: suggest next skill based on user's cooking patterns
 
-**Files changed:** `src/lib/trpc/routers/cook.ts`, `src/app/cook/[slug]/page.tsx`
+#### Definition of done
 
-### 11.2 Recipe Coverage Update
+A user who completes 2 Caesar Salad cooks sees Knife Basics skill progress to "completed", Heat Control unlocks as "available", and their XP increases. Weekly challenges appear and award bonus XP.
 
-After adding bibimbap, baba-ganoush, and chicken-adobo:
+---
 
-| Category | Total | Has Guided Cook | Coverage |
-|----------|-------|----------------|----------|
-| Sides | 203 | 28 (+3) | 14% |
-| Meals | 76 | 6 (+2) | 8% |
-| **Total** | **279** | **34** | **12%** |
+## 11. Standing UI rules (apply to ALL future work)
+
+1. One primary CTA per screen — no two equally-weighted buttons
+2. No more than one hero card above the fold on Today
+3. Max 3 secondary action chips visible at once
+4. Path metrics capped to 3 blocks
+5. Today never becomes a dashboard
+6. Social proof stays below the fold in prototype
+7. Any new feature must prove it helps the user cook tonight, or it belongs elsewhere
+8. New features escalate through: hidden logic → optional chip → secondary sheet → primary surface
+
+---
+
+## 12. Architecture reference (preserved)
+
+The following sections from the original planning document remain valid architecture reference. They describe the target system design and are implemented as described in `documentation.md`.
+
+### Tech stack
+
+See `CLAUDE.md` § Tech stack — Next.js 15, React 19, Tailwind 4, Zustand, TanStack Query, tRPC, Drizzle, Neon Postgres, Clerk, OpenAI Vision, Anthropic Claude, Cloudflare R2, Upstash Redis, Vitest, Playwright.
+
+### Database schema
+
+See `documentation.md` §2.11 and `src/lib/db/schema.ts` — 7 tables: sideDishes, cookSteps, ingredients, users, cookSessions, savedRecipes, quizResponses.
+
+### Pairing engine
+
+See `documentation.md` §2.3 — Two-tier system with Python engine scores and TypeScript deterministic scorers.
+
+### API design
+
+See `documentation.md` §4 — tRPC router with 12 endpoints (6 fully implemented, 6 stubbed).
+
+### Component architecture
+
+See `documentation.md` §2 — 51 component files across today, guided-cook, results, search, layout, shared, heatmap, states, and ui directories.
+
+### Data pipeline
+
+See `PIPELINE.md` — Python engine → pairings.json → pairings.ts → sideBridge.ts → pairing engine → API.
+
+### Content seed structure
+
+See `data-structure.md` — 93 meals, 203 sides, 11 cuisines, guided cook step data.
+
+### Performance targets
+
+| Metric                   | Target          |
+| ------------------------ | --------------- |
+| First Contentful Paint   | < 1.2s          |
+| Time to Interactive      | < 2.0s          |
+| Pairing engine response  | < 200ms         |
+| AI recognition response  | < 3s            |
+| Cook step transition     | < 100ms         |
+| Lighthouse Performance   | > 90            |
+| Bundle size (initial JS) | < 150KB gzipped |
+
+### Testing strategy
+
+**Unit (Vitest):** Pairing engine scorers, ranker, explainer, craving parser, progressive unlock logic, preference vector math.
+
+**Integration (tRPC test client):** pairing.suggest end-to-end, cook.start → complete → stats update, coach.quiz → preference change → re-ranked results.
+
+**E2E (Playwright):** Text craving → results → select → guided cook → complete → win. Photo capture → correction → results. Three cooks → Path tab appears.

@@ -396,6 +396,11 @@ export function getSkillNode(id: string): SkillNode | undefined {
   return skillTreeNodes.find((n) => n.id === id);
 }
 
+/** Find the skill node that counts a given dish slug toward its progress */
+export function findSkillNodeForDish(dishSlug: string): SkillNode | undefined {
+  return skillTreeNodes.find((n) => n.associatedDishes.includes(dishSlug));
+}
+
 /** Get all nodes grouped by tier */
 export function getNodesByTier() {
   return {

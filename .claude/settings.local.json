@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find . -not -path */node_modules/* -not -path */.next/* -not -path */.git/*)",
+      "Bash(wc -l /c/Users/stefa/Sous/.claude/worktrees/sleepy-fermi/src/lib/trpc/routers/*.ts)",
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm lint:fix)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm build:*)"
+    ]
+  }
+}

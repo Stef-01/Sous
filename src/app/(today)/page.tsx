@@ -164,9 +164,12 @@ function TodayPageContent() {
   const handleCookThis = useCallback(
     (side: { slug: string }) => {
       setShowSearch(false);
-      router.push(`/cook/${side.slug}`);
+      const mainParam = mainDishQuery
+        ? `?main=${encodeURIComponent(mainDishQuery)}`
+        : "";
+      router.push(`/cook/${side.slug}${mainParam}`);
     },
-    [router],
+    [router, mainDishQuery],
   );
 
   const handleReroll = useCallback(() => {

@@ -133,35 +133,25 @@ export function SkillDetailSheet({
                   <span className="text-[var(--nourish-subtext)]">
                     Progress
                   </span>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={cn(
-                        "font-semibold",
-                        status === "completed"
-                          ? "text-[var(--nourish-green)]"
-                          : "text-[var(--nourish-dark)]",
-                      )}
-                    >
-                      {cooksCompleted}/{node.cooksRequired} cooks
-                    </span>
-                    <div className="flex items-center gap-0.5 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5">
-                      <Zap
-                        size={9}
-                        className="text-[var(--nourish-green)] fill-[var(--nourish-green)]"
-                      />
-                      <span className="text-[9px] font-bold text-[var(--nourish-green)]">
-                        +50 XP
-                      </span>
-                    </div>
-                  </div>
+                  <span
+                    className={cn(
+                      "font-semibold",
+                      status === "completed"
+                        ? "text-[var(--nourish-green)]"
+                        : "text-[var(--nourish-dark)]",
+                    )}
+                  >
+                    {cooksCompleted}/{node.cooksRequired} cooks
+                  </span>
                 </div>
                 <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
                   <motion.div
-                    className="h-full rounded-full relative overflow-hidden"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)",
-                    }}
+                    className={cn(
+                      "h-full rounded-full",
+                      status === "completed"
+                        ? "bg-[var(--nourish-green)]"
+                        : "bg-[var(--nourish-green)]/70",
+                    )}
                     initial={{ width: 0 }}
                     animate={{
                       width: `${Math.max(progress * 100, progress > 0 ? 4 : 0)}%`,

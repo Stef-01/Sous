@@ -39,6 +39,11 @@ export function ScrapbookEntryCard({
           <h4 className="font-serif text-sm font-semibold text-[var(--nourish-dark)] truncate">
             {session.dishName}
           </h4>
+          {session.mainDishInput && (
+            <p className="text-[10px] text-[var(--nourish-subtext)] truncate">
+              with {session.mainDishInput}
+            </p>
+          )}
           <p className="text-[10px] text-[var(--nourish-subtext)] uppercase tracking-wide">
             {session.cuisineFamily} · {completedDate}
           </p>
