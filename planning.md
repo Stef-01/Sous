@@ -481,3 +481,88 @@ When Sous updates a base recipe (e.g., fixing a mistake):
    - Run pnpm build to verify no TypeScript errors
    - Test in dev: navigate to /cook/[slug] and walk through all phases
 ```
+
+---
+
+## 10. iPhone & Mobile Optimisation
+
+> **Applied:** 2026-04-06
+> **Scope:** iOS Safari performance, touch interaction, viewport handling, animation performance
+
+### 10.1 Changes Applied
+
+| # | Optimisation | File | Impact |
+|---|---|---|---|
+| 1 | `touch-action: manipulation` on `html` | `globals.css` | Eliminates 300ms tap delay on iOS; prevents double-tap zoom |
+| 2 | `-webkit-text-size-adjust: 100%` | `globals.css` | Prevents unwanted text inflation on iOS Safari |
+| 3 | `-webkit-font-smoothing: antialiased` | `globals.css` | Crisper, thinner text rendering on iOS |
+| 4 | `overscroll-behavior: none` on `body` | `globals.css` | Prevents body rubber-band for app-like feel |
+| 5 | `font-size: 16px` on inputs | `globals.css` | Prevents iOS auto-zoom when focusing form fields |
+| 6 | `-webkit-tap-highlight-color: transparent` | `globals.css` | Removes grey tap flash; replaced by Framer Motion whileTap |
+| 7 | `overscroll-behavior: contain` on scroll containers | `globals.css` + `skill-tree.tsx` | Prevents scroll chaining in nested scroll areas |
+| 8 | `safe-area-top` / `safe-area-bottom` utilities | `globals.css` | Proper notch and home indicator handling |
+
+### 10.2 Animation Rules (GPU-Only)
+
+**Only animate these properties on mobile** (compositor-friendly, no layout/paint):
+- `transform` (translate, scale, rotate)
+- `opacity`
+- `filter` (blur, brightness)
+
+**Never animate on mobile:**
+- `width`, `height`, `top`, `left`, `margin`, `padding`
+- `border-radius` changes, `box-shadow` changes
+- Use `scale` transform instead of `width`/`height` when possible
+
+**Framer Motion guidelines:**
+- Use `whileTap` instead of `whileHover` on touch (hover does nothing on mobile)
+- Limit `layout` prop animations to small components (never full-page)
+- Use `useReducedMotion()` hook to respect OS accessibility settings
+- Keep micro-interactions under 300ms total
+- Spring animations: `stiffness: 300-400, damping: 20-30` for snappy, physical feel
+
+### 10.3 Viewport & Safe Areas
+
+- Viewport configured with `viewport-fit: cover` in `layout.tsx` (enables safe area insets)
+- Using `min-h-dvh` (dynamic viewport height) — fixes iOS Safari 100vh bug
+- Tab bar uses `safe-area-bottom` class for home indicator padding
+- All scroll containers use `-webkit-overflow-scrolling: touch` (momentum scrolling)
+
+### 10.4 Touch Targets
+
+- Minimum tap target: 44×44px (Apple HIG) / 48×48px (Google)
+- Skill tree nodes: 64×64px ✓
+- Tab bar links: ~48px height ✓
+- Cook flow step buttons: full-width ✓
+- Search input: full-width, 16px font ✓
+
+### 10.5 Remaining iOS Considerations
+
+- [ ] `prefers-reduced-motion` — CSS rules exist in globals.css but Framer Motion components should use `useReducedMotion()` hook
+- [ ] Limit `backdrop-filter: blur()` to max 2 visible elements at once (GPU memory)
+- [ ] Test on actual iPhone hardware for scroll performance with large skill trees
+- [ ] Consider `contain: layout style paint` on independently-animating sections
+
+---
+
+## 11. Bug Fixes Applied
+
+### 11.1 Meal Cook Routing (Critical)
+
+**Bug:** The cook page (`/cook/[slug]`) only checked `getStaticCookData()` (sides dictionary) for guided cook data. ALL meals — including butter-chicken, fish-tacos, bibimbap, etc. — would always show "This recipe doesn't have guided cook steps yet" even when data existed in `guidedCookMeals`.
+
+**Root cause:** The tRPC `getSteps` endpoint and the client-side cuisine lookup in `cook/[slug]/page.tsx` only imported and used `getStaticCookData()`, never `getStaticMealCookData()`.
+
+**Fix:** Added fallback: `getStaticCookData(slug) ?? getStaticMealCookData(slug)` in both locations.
+
+**Files changed:** `src/lib/trpc/routers/cook.ts`, `src/app/cook/[slug]/page.tsx`
+
+### 11.2 Recipe Coverage Update
+
+After adding bibimbap, baba-ganoush, and chicken-adobo:
+
+| Category | Total | Has Guided Cook | Coverage |
+|----------|-------|----------------|----------|
+| Sides | 203 | 28 (+3) | 14% |
+| Meals | 76 | 6 (+2) | 8% |
+| **Total** | **279** | **34** | **12%** |
