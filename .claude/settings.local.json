@@ -1,8 +1,20 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm build:*)",
-      "Bash(npx next:*)"
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "NotebookEdit(*)",
+      "TodoWrite(*)",
+      "Agent(*)",
+      "Task(*)",
+      "ToolSearch(*)",
+      "mcp__*"
     ]
   }
 }
