@@ -4,19 +4,19 @@
 @custom-variant hover-hover (@media (hover: hover));
 
 :root {
-  --background: #FFFFFF;
-  --foreground: #0D0D0D;
-  --nourish-green: #2D5A3D;
-  --nourish-dark-green: #1A3D25;
-  --nourish-gold: #D4A84B;
-  --nourish-cream: #FAFAF8;
-  --nourish-dark: #0D0D0D;
-  --nourish-input-bg: #F0EDE8;
-  --nourish-subtext: #6B6B6B;
-  --nourish-button: #2D5A3D;
-  --nourish-button-hover: #1A3D25;
-  --nourish-evaluate: #8C1515;
-  --nourish-evaluate-hover: #6F1010;
+  --background: #ffffff;
+  --foreground: #0d0d0d;
+  --nourish-green: #2d5a3d;
+  --nourish-dark-green: #1a3d25;
+  --nourish-gold: #d4a84b;
+  --nourish-cream: #fafaf8;
+  --nourish-dark: #0d0d0d;
+  --nourish-input-bg: #f0ede8;
+  --nourish-subtext: #6b6b6b;
+  --nourish-button: #2d5a3d;
+  --nourish-button-hover: #1a3d25;
+  --nourish-evaluate: #8c1515;
+  --nourish-evaluate-hover: #6f1010;
 }
 
 @theme inline {
@@ -54,12 +54,7 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    #f0ede8 25%,
-    #e8e5e0 50%,
-    #f0ede8 75%
-  );
+  background: linear-gradient(90deg, #f0ede8 25%, #e8e5e0 50%, #f0ede8 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s linear infinite;
 }
@@ -113,8 +108,13 @@ body {
 
 /* Ambient float — subtle breathing motion for settled items */
 @keyframes ambient-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
 }
 
 .ambient-float {
@@ -123,8 +123,13 @@ body {
 
 /* === STREAK FLAME === */
 @keyframes streak-flame {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.15); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 .streak-flame {
@@ -138,12 +143,12 @@ body {
 
 /* === SCROLLBAR HIDE === */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;     /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
   overflow: -moz-scrollbars-none; /* Older Firefox */
 }
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari, Opera */
+  display: none; /* Chrome, Safari, Opera */
   width: 0;
   height: 0;
   background: transparent;

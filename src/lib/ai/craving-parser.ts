@@ -19,8 +19,10 @@ Be precise and concise. If the input is vague, make reasonable assumptions.`;
  * Falls back to heuristic parser otherwise.
  */
 export async function parseCraving(
-  text: string
-): Promise<{ success: true; data: CravingIntent } | { success: false; error: string }> {
+  text: string,
+): Promise<
+  { success: true; data: CravingIntent } | { success: false; error: string }
+> {
   // Only attempt AI parsing if Anthropic key is configured
   if (process.env.ANTHROPIC_API_KEY) {
     try {
@@ -36,7 +38,10 @@ export async function parseCraving(
 
       return { success: true, data: result.object };
     } catch (error) {
-      console.error("Craving parser AI error, falling back to heuristics:", error);
+      console.error(
+        "Craving parser AI error, falling back to heuristics:",
+        error,
+      );
     }
   }
 
@@ -59,28 +64,47 @@ function buildFallbackIntent(text: string): CravingIntent {
 
   // Simple cuisine detection
   const cuisineSignals: string[] = [];
-  if (/curry|masala|tikka|biryani|dal|naan|paneer|tandoori|samosa|chutney|raita/.test(lower)) cuisineSignals.push("indian");
-  if (/sushi|ramen|tempura|teriyaki|miso|gyoza|udon|soba/.test(lower)) cuisineSignals.push("japanese");
-  if (/taco|burrito|enchilada|quesadilla|guacamole|salsa/.test(lower)) cuisineSignals.push("mexican");
-  if (/pasta|pizza|risotto|bruschetta|lasagna|gnocchi|pesto/.test(lower)) cuisineSignals.push("italian");
-  if (/kimchi|bibimbap|bulgogi|korean|japchae/.test(lower)) cuisineSignals.push("korean");
-  if (/pad thai|green curry|tom yum|thai/.test(lower)) cuisineSignals.push("thai");
+  if (
+    /curry|masala|tikka|biryani|dal|naan|paneer|tandoori|samosa|chutney|raita/.test(
+      lower,
+    )
+  )
+    cuisineSignals.push("indian");
+  if (/sushi|ramen|tempura|teriyaki|miso|gyoza|udon|soba/.test(lower))
+    cuisineSignals.push("japanese");
+  if (/taco|burrito|enchilada|quesadilla|guacamole|salsa/.test(lower))
+    cuisineSignals.push("mexican");
+  if (/pasta|pizza|risotto|bruschetta|lasagna|gnocchi|pesto/.test(lower))
+    cuisineSignals.push("italian");
+  if (/kimchi|bibimbap|bulgogi|korean|japchae/.test(lower))
+    cuisineSignals.push("korean");
+  if (/pad thai|green curry|tom yum|thai/.test(lower))
+    cuisineSignals.push("thai");
   if (/pho|banh mi|vietnamese/.test(lower)) cuisineSignals.push("vietnamese");
-  if (/burger|steak|bbq|rib|hot dog|mac and cheese|meatloaf/.test(lower)) cuisineSignals.push("american");
-  if (/falafel|shawarma|hummus|kebab|gyros|tzatziki/.test(lower)) cuisineSignals.push("mediterranean");
-  if (/chicken|roast|grilled|baked|fish|salmon|pork|lamb|beef/.test(lower) && cuisineSignals.length === 0) {
+  if (/burger|steak|bbq|rib|hot dog|mac and cheese|meatloaf/.test(lower))
+    cuisineSignals.push("american");
+  if (/falafel|shawarma|hummus|kebab|gyros|tzatziki/.test(lower))
+    cuisineSignals.push("mediterranean");
+  if (
+    /chicken|roast|grilled|baked|fish|salmon|pork|lamb|beef/.test(lower) &&
+    cuisineSignals.length === 0
+  ) {
     cuisineSignals.push("comfort-classic");
   }
 
   // Effort tolerance
   let effortTolerance: CravingIntent["effortTolerance"] = "moderate";
-  if (/quick|fast|easy|lazy|no effort|simple|tired/.test(lower)) effortTolerance = "minimal";
-  if (/time|fancy|elaborate|scratch|proper/.test(lower)) effortTolerance = "willing";
+  if (/quick|fast|easy|lazy|no effort|simple|tired/.test(lower))
+    effortTolerance = "minimal";
+  if (/time|fancy|elaborate|scratch|proper/.test(lower))
+    effortTolerance = "willing";
 
   // Health orientation
   let healthOrientation: CravingIntent["healthOrientation"] = "balanced";
-  if (/light|healthy|salad|clean|low cal/.test(lower)) healthOrientation = "health-forward";
-  if (/comfort|fried|indulge|cheat|rich|creamy/.test(lower)) healthOrientation = "indulgent";
+  if (/light|healthy|salad|clean|low cal/.test(lower))
+    healthOrientation = "health-forward";
+  if (/comfort|fried|indulge|cheat|rich|creamy/.test(lower))
+    healthOrientation = "indulgent";
 
   // Mood signals
   const moodSignals: string[] = [];

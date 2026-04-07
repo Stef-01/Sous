@@ -98,7 +98,7 @@ export default function Home() {
     setShowPlateMethod((prev) => !prev);
   };
 
-  const handleLoadPairing = (pairing: typeof pairings[number]) => {
+  const handleLoadPairing = (pairing: (typeof pairings)[number]) => {
     setShowSaved(false);
     setQuery(pairing.mealName);
     resetUsed();
@@ -107,7 +107,10 @@ export default function Home() {
 
   const hasResults = status === "success" && meal && sides.length > 0;
   const currentIsSaved = hasResults
-    ? isSaved(meal.name, sides.map((s) => ({ name: s.name })))
+    ? isSaved(
+        meal.name,
+        sides.map((s) => ({ name: s.name })),
+      )
     : false;
 
   const appraisal = useMemo(() => {
@@ -129,10 +132,11 @@ export default function Home() {
         <AnimatePresence>
           {!showPlateMethod && (
             <motion.h1
-              className={`text-nourish-dark font-serif text-center max-w-2xl ${hasResults
-                ? "text-base md:text-lg lg:text-xl mb-2"
-                : "text-xl md:text-2xl lg:text-3xl mb-3"
-                }`}
+              className={`text-nourish-dark font-serif text-center max-w-2xl ${
+                hasResults
+                  ? "text-base md:text-lg lg:text-xl mb-2"
+                  : "text-xl md:text-2xl lg:text-3xl mb-3"
+              }`}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, y: -8, transition: { duration: 0.2 } }}
@@ -143,28 +147,30 @@ export default function Home() {
                 },
               }}
             >
-              {"Find the perfect sides for your favourite meal.".split(" ").map((word, i) => (
-                <motion.span
-                  key={i}
-                  className="inline-block mr-[0.3em]"
-                  variants={{
-                    hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      filter: "blur(0px)",
-                      transition: {
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 20,
-                        mass: 0.8,
+              {"Find the perfect sides for your favourite meal."
+                .split(" ")
+                .map((word, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block mr-[0.3em]"
+                    variants={{
+                      hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        filter: "blur(0px)",
+                        transition: {
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 20,
+                          mass: 0.8,
+                        },
                       },
-                    },
-                  }}
-                >
-                  {word}
-                </motion.span>
-              ))}
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                ))}
             </motion.h1>
           )}
         </AnimatePresence>
@@ -193,7 +199,10 @@ export default function Home() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.25 }}
             >
-              <EmptyState onSelect={handleSuggestionSelect} verifiedOnly={verifiedOnly} />
+              <EmptyState
+                onSelect={handleSuggestionSelect}
+                verifiedOnly={verifiedOnly}
+              />
             </motion.div>
           )}
 
@@ -262,10 +271,7 @@ export default function Home() {
         onRemove={removePairing}
       />
 
-      <HeatmapModal
-        open={showHeatmap}
-        onClose={() => setShowHeatmap(false)}
-      />
+      <HeatmapModal open={showHeatmap} onClose={() => setShowHeatmap(false)} />
 
       <SpinWheel
         open={showSpinWheel}

@@ -43,46 +43,94 @@ export const quizQuestions: QuizQuestion[] = [
   {
     question: "It's Saturday morning. What are you doing?",
     options: [
-      { label: "Farmers market before anyone's awake", maps: ["sourdough", "focaccia"] },
-      { label: "Sleeping in, croissant crumbs on the sheets", maps: ["croissant", "brioche"] },
-      { label: "Already at brunch with 6 friends", maps: ["pretzel", "baguette"] },
-      { label: "Making something cozy in the kitchen", maps: ["banana-bread", "naan"] },
+      {
+        label: "Farmers market before anyone's awake",
+        maps: ["sourdough", "focaccia"],
+      },
+      {
+        label: "Sleeping in, croissant crumbs on the sheets",
+        maps: ["croissant", "brioche"],
+      },
+      {
+        label: "Already at brunch with 6 friends",
+        maps: ["pretzel", "baguette"],
+      },
+      {
+        label: "Making something cozy in the kitchen",
+        maps: ["banana-bread", "naan"],
+      },
     ],
   },
   {
     question: "Pick a holiday vibe.",
     options: [
-      { label: "Tiny village in the south of France", maps: ["baguette", "croissant"] },
+      {
+        label: "Tiny village in the south of France",
+        maps: ["baguette", "croissant"],
+      },
       { label: "Street food crawl through Bangkok", maps: ["naan", "pretzel"] },
-      { label: "Cottage in the woods, no Wi-Fi", maps: ["banana-bread", "sourdough"] },
-      { label: "Rooftop bar overlooking a harbour", maps: ["focaccia", "brioche"] },
+      {
+        label: "Cottage in the woods, no Wi-Fi",
+        maps: ["banana-bread", "sourdough"],
+      },
+      {
+        label: "Rooftop bar overlooking a harbour",
+        maps: ["focaccia", "brioche"],
+      },
     ],
   },
   {
     question: "Your friend cancels dinner plans. You:",
     options: [
-      { label: "Finally make that recipe you bookmarked", maps: ["sourdough", "naan"] },
-      { label: "Order something indulgent, no guilt", maps: ["croissant", "brioche"] },
-      { label: "Call someone else — the night's young", maps: ["pretzel", "baguette"] },
-      { label: "Couch + blanket + comfort food", maps: ["banana-bread", "focaccia"] },
+      {
+        label: "Finally make that recipe you bookmarked",
+        maps: ["sourdough", "naan"],
+      },
+      {
+        label: "Order something indulgent, no guilt",
+        maps: ["croissant", "brioche"],
+      },
+      {
+        label: "Call someone else — the night's young",
+        maps: ["pretzel", "baguette"],
+      },
+      {
+        label: "Couch + blanket + comfort food",
+        maps: ["banana-bread", "focaccia"],
+      },
     ],
   },
   {
     question: "What's your coffee order?",
     options: [
-      { label: "Black, single origin, no milk", maps: ["sourdough", "baguette"] },
-      { label: "Oat latte with a little something extra", maps: ["croissant", "brioche"] },
-      { label: "Whatever's biggest with the most caffeine", maps: ["pretzel", "banana-bread"] },
+      {
+        label: "Black, single origin, no milk",
+        maps: ["sourdough", "baguette"],
+      },
+      {
+        label: "Oat latte with a little something extra",
+        maps: ["croissant", "brioche"],
+      },
+      {
+        label: "Whatever's biggest with the most caffeine",
+        maps: ["pretzel", "banana-bread"],
+      },
       { label: "Chai or something spiced", maps: ["naan", "focaccia"] },
     ],
   },
   {
     question: "You're at a party. Where do you end up?",
     options: [
-      { label: "In the kitchen, tasting everything", maps: ["focaccia", "sourdough"] },
+      {
+        label: "In the kitchen, tasting everything",
+        maps: ["focaccia", "sourdough"],
+      },
       { label: "Centre of the dance floor", maps: ["pretzel", "brioche"] },
       { label: "Deep conversation on the balcony", maps: ["baguette", "naan"] },
-      { label: "Left early, honestly happier at home", maps: ["banana-bread", "croissant"] },
+      {
+        label: "Left early, honestly happier at home",
+        maps: ["banana-bread", "croissant"],
+      },
     ],
   },
   {
@@ -97,16 +145,31 @@ export const quizQuestions: QuizQuestion[] = [
   {
     question: "What's your superpower in the kitchen?",
     options: [
-      { label: "Patience — I'll wait 3 days for the perfect ferment", maps: ["sourdough", "naan"] },
-      { label: "Presentation — it has to look beautiful", maps: ["croissant", "baguette"] },
-      { label: "Flavour instinct — I never measure anything", maps: ["focaccia", "pretzel"] },
-      { label: "Comfort — everything I make feels like a hug", maps: ["banana-bread", "brioche"] },
+      {
+        label: "Patience — I'll wait 3 days for the perfect ferment",
+        maps: ["sourdough", "naan"],
+      },
+      {
+        label: "Presentation — it has to look beautiful",
+        maps: ["croissant", "baguette"],
+      },
+      {
+        label: "Flavour instinct — I never measure anything",
+        maps: ["focaccia", "pretzel"],
+      },
+      {
+        label: "Comfort — everything I make feels like a hug",
+        maps: ["banana-bread", "brioche"],
+      },
     ],
   },
   {
     question: "Finally: pick a colour palette.",
     options: [
-      { label: "Warm neutrals and terracotta", maps: ["sourdough", "focaccia"] },
+      {
+        label: "Warm neutrals and terracotta",
+        maps: ["sourdough", "focaccia"],
+      },
       { label: "Soft pastels and blush pink", maps: ["croissant", "brioche"] },
       { label: "Bold jewel tones", maps: ["naan", "pretzel"] },
       { label: "Forest green and cream", maps: ["banana-bread", "baguette"] },

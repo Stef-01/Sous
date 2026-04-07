@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { router, publicProcedure } from "@/lib/trpc/server";
-import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
+import {
+  getStaticCookData,
+  getStaticMealCookData,
+} from "@/data/guided-cook-steps";
 
 export const cookRouter = router({
   getSteps: publicProcedure
@@ -10,7 +13,8 @@ export const cookRouter = router({
       if (ctx.db && process.env.DATABASE_URL) {
         try {
           const { eq } = await import("drizzle-orm");
-          const { sideDishes, cookSteps, ingredients } = await import("@/lib/db/schema");
+          const { sideDishes, cookSteps, ingredients } =
+            await import("@/lib/db/schema");
           const db = ctx.db as import("@/lib/db").Database;
 
           const dish = await db.query.sideDishes.findFirst({
@@ -105,10 +109,12 @@ export const cookRouter = router({
       z.object({
         mainDishSlug: z.string(),
         sideSlugs: z.array(z.string()),
-      })
+      }),
     )
     .query(({ input }) => {
-      const formatDish = (data: NonNullable<ReturnType<typeof getStaticCookData>>) => ({
+      const formatDish = (
+        data: NonNullable<ReturnType<typeof getStaticCookData>>,
+      ) => ({
         dish: {
           id: data.slug,
           name: data.name,
@@ -143,8 +149,19 @@ export const cookRouter = router({
 
       // Cook order: longest total cook time first (so longest dishes start first)
       const allDishes = [
-        ...(main ? [{ slug: main.dish.slug, totalTime: main.dish.prepTimeMinutes + main.dish.cookTimeMinutes }] : []),
-        ...sides.map((s) => ({ slug: s.dish.slug, totalTime: s.dish.prepTimeMinutes + s.dish.cookTimeMinutes })),
+        ...(main
+          ? [
+              {
+                slug: main.dish.slug,
+                totalTime:
+                  main.dish.prepTimeMinutes + main.dish.cookTimeMinutes,
+              },
+            ]
+          : []),
+        ...sides.map((s) => ({
+          slug: s.dish.slug,
+          totalTime: s.dish.prepTimeMinutes + s.dish.cookTimeMinutes,
+        })),
       ].sort((a, b) => b.totalTime - a.totalTime);
 
       return {
@@ -160,7 +177,7 @@ export const cookRouter = router({
         sideDishId: z.string(),
         mainDishInput: z.string(),
         inputMode: z.enum(["text", "camera"]),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       // If DB + auth available, persist session
@@ -197,7 +214,7 @@ export const cookRouter = router({
         rating: z.number().min(1).max(5).optional(),
         personalNote: z.string().optional(),
         completionPhotoUrl: z.string().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       // If DB + auth available, persist completion
@@ -219,8 +236,8 @@ export const cookRouter = router({
             .where(
               and(
                 eq(cookSessions.id, input.sessionId),
-                eq(cookSessions.userId, ctx.userId)
-              )
+                eq(cookSessions.userId, ctx.userId),
+              ),
             );
 
           await db

@@ -69,11 +69,7 @@ export default function SuggestionChips({
         <SparkleEffect key={suggestion} count={10}>
           <motion.button
             variants={prefersReduced ? reducedChipVariants : chipVariants}
-            whileHover={
-              prefersReduced
-                ? {}
-                : { scale: 1.05, y: -2 }
-            }
+            whileHover={prefersReduced ? {} : { scale: 1.05, y: -2 }}
             whileTap={prefersReduced ? {} : { scale: 0.92 }}
             transition={springs.snappy}
             onClick={() => {

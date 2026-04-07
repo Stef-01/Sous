@@ -13,6 +13,7 @@ export interface CookSessionRecord {
   recipeSlug: string;
   dishName: string;
   cuisineFamily: string;
+  mainDishInput?: string; // what main dish this side was paired with
   startedAt: string;
   completedAt?: string;
   note?: string;
@@ -54,21 +55,42 @@ function persistSessions(sessions: CookSessionRecord[]) {
 
 function loadStats(): CookStats {
   if (typeof window === "undefined") {
-    return { completedCooks: 0, currentStreak: 0, lastCookDate: null, cuisinesCovered: [] };
+    return {
+      completedCooks: 0,
+      currentStreak: 0,
+      lastCookDate: null,
+      cuisinesCovered: [],
+    };
   }
   try {
     const raw = localStorage.getItem(STATS_KEY);
     return raw
       ? JSON.parse(raw)
-      : { completedCooks: 0, currentStreak: 0, lastCookDate: null, cuisinesCovered: [] };
+      : {
+          completedCooks: 0,
+          currentStreak: 0,
+          lastCookDate: null,
+          cuisinesCovered: [],
+        };
   } catch {
-    return { completedCooks: 0, currentStreak: 0, lastCookDate: null, cuisinesCovered: [] };
+    return {
+      completedCooks: 0,
+      currentStreak: 0,
+      lastCookDate: null,
+      cuisinesCovered: [],
+    };
   }
 }
 
 function persistStats(stats: CookStats) {
   try {
-    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+    const serialized = JSON.stringify(stats);
+    localStorage.setItem(STATS_KEY, serialized);
+    // Dispatch a synthetic storage event so same-tab listeners (useUnlockStatus) pick up the change.
+    // The native `storage` event only fires in OTHER tabs, not the originating tab.
+    window.dispatchEvent(
+      new StorageEvent("storage", { key: STATS_KEY, newValue: serialized }),
+    );
   } catch {
     // localStorage full or unavailable
   }
@@ -78,7 +100,10 @@ function persistStats(stats: CookStats) {
  * Calculate whether the streak is still active.
  * A streak stays alive if the user cooked today or yesterday.
  */
-function computeStreak(lastCookDate: string | null, currentStreak: number): number {
+function computeStreak(
+  lastCookDate: string | null,
+  currentStreak: number,
+): number {
   if (!lastCookDate) return 0;
   const last = new Date(lastCookDate);
   const now = new Date();
@@ -111,13 +136,19 @@ export function useCookSessions() {
    * Start a new cook session. Returns the session ID.
    */
   const startSession = useCallback(
-    (recipeSlug: string, dishName: string, cuisineFamily: string): string => {
+    (
+      recipeSlug: string,
+      dishName: string,
+      cuisineFamily: string,
+      mainDishInput?: string,
+    ): string => {
       const sessionId = generateSessionId();
       const session: CookSessionRecord = {
         sessionId,
         recipeSlug,
         dishName,
         cuisineFamily,
+        mainDishInput,
         startedAt: new Date().toISOString(),
         favorite: false,
       };
@@ -132,7 +163,7 @@ export function useCookSessions() {
       setSessions(updated);
       return sessionId;
     },
-    []
+    [],
   );
 
   /**
@@ -147,7 +178,7 @@ export function useCookSessions() {
         rating?: number;
         note?: string;
         photoUri?: string;
-      }
+      },
     ): { pathJustUnlocked: boolean; newStreak: number } => {
       const existing = loadSessions();
       const idx = existing.findIndex((s) => s.sessionId === sessionId);
@@ -170,7 +201,10 @@ export function useCookSessions() {
       // Update stats
       const currentStats = loadStats();
       const today = new Date().toISOString().split("T")[0];
-      const activeStreak = computeStreak(currentStats.lastCookDate, currentStats.currentStreak);
+      const activeStreak = computeStreak(
+        currentStats.lastCookDate,
+        currentStats.currentStreak,
+      );
       const newStreak = activeStreak + 1;
 
       const cuisines = new Set(currentStats.cuisinesCovered);
@@ -189,14 +223,19 @@ export function useCookSessions() {
       const pathJustUnlocked = currentStats.completedCooks === 2; // was 2, now becomes 3
       return { pathJustUnlocked, newStreak };
     },
-    []
+    [],
   );
 
   /**
    * Update an existing session (e.g. add a note or photo after initial save).
    */
   const updateSession = useCallback(
-    (sessionId: string, updates: Partial<Pick<CookSessionRecord, "note" | "photoUri" | "rating" | "favorite">>) => {
+    (
+      sessionId: string,
+      updates: Partial<
+        Pick<CookSessionRecord, "note" | "photoUri" | "rating" | "favorite">
+      >,
+    ) => {
       const existing = loadSessions();
       const idx = existing.findIndex((s) => s.sessionId === sessionId);
       if (idx === -1) return;
@@ -205,7 +244,7 @@ export function useCookSessions() {
       persistSessions(existing);
       setSessions(existing);
     },
-    []
+    [],
   );
 
   /**

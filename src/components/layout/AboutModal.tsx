@@ -36,7 +36,11 @@ const reducedParagraphVariants = {
   animate: { opacity: 1, transition: { duration: 0.15 } },
 };
 
-export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModalProps) {
+export default function AboutModal({
+  open,
+  onClose,
+  onHeatmapClick,
+}: AboutModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
@@ -59,7 +63,12 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
   return (
     <AnimatePresence>
       {open && (
-        <div className="fixed inset-0 z-[100]" role="dialog" aria-modal="true" aria-label="About Sous">
+        <div
+          className="fixed inset-0 z-[100]"
+          role="dialog"
+          aria-modal="true"
+          aria-label="About Sous"
+        >
           {/* Backdrop with blur */}
           <motion.div
             className="fixed inset-0 bg-black/30"
@@ -92,11 +101,7 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
                   ? { opacity: 0 }
                   : { opacity: 0, y: 40, scale: 0.95 }
               }
-              transition={
-                prefersReduced
-                  ? { duration: 0.2 }
-                  : springs.modal
-              }
+              transition={prefersReduced ? { duration: 0.2 } : springs.modal}
             >
               {/* Close button with spin on hover */}
               <motion.button
@@ -118,28 +123,45 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
               >
                 <motion.h2
                   className="text-xl font-semibold text-nourish-dark mb-4"
-                  variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
+                  variants={
+                    prefersReduced
+                      ? reducedParagraphVariants
+                      : paragraphVariants
+                  }
                 >
                   About Sous
                 </motion.h2>
                 <motion.p
                   className="text-nourish-subtext text-sm leading-relaxed mb-4"
-                  variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
+                  variants={
+                    prefersReduced
+                      ? reducedParagraphVariants
+                      : paragraphVariants
+                  }
                 >
                   Sous helps you discover culturally appropriate side dishes to
-                  complement your favourite meals. Simply type a dish you love and
-                  we will suggest perfect pairings.
+                  complement your favourite meals. Simply type a dish you love
+                  and we will suggest perfect pairings.
                 </motion.p>
                 <motion.p
                   className="text-nourish-subtext text-sm leading-relaxed mb-4"
-                  variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
+                  variants={
+                    prefersReduced
+                      ? reducedParagraphVariants
+                      : paragraphVariants
+                  }
                 >
-                  Our suggestions are curated to respect culinary traditions while
-                  encouraging exploration of new flavours and healthy combinations.
+                  Our suggestions are curated to respect culinary traditions
+                  while encouraging exploration of new flavours and healthy
+                  combinations.
                 </motion.p>
                 <motion.p
                   className="text-xs text-nourish-subtext/60 mb-4"
-                  variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
+                  variants={
+                    prefersReduced
+                      ? reducedParagraphVariants
+                      : paragraphVariants
+                  }
                 >
                   This tool is for inspiration only and is not a substitute for
                   professional dietary advice.
@@ -147,7 +169,11 @@ export default function AboutModal({ open, onClose, onHeatmapClick }: AboutModal
                 {onHeatmapClick && (
                   <motion.div
                     className="pt-3 border-t border-gray-100"
-                    variants={prefersReduced ? reducedParagraphVariants : paragraphVariants}
+                    variants={
+                      prefersReduced
+                        ? reducedParagraphVariants
+                        : paragraphVariants
+                    }
                   >
                     <button
                       onClick={onHeatmapClick}

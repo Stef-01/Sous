@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useCallback, useMemo, useRef, useState, useEffect } from "react";
+import {
+  Suspense,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChefHat, ChevronRight } from "lucide-react";
@@ -47,7 +54,7 @@ function CombinedCookContent() {
   const sidesParam = searchParams.get("sides") ?? "";
   const sideSlugs = useMemo(
     () => sidesParam.split(",").filter(Boolean),
-    [sidesParam]
+    [sidesParam],
   );
 
   // Session tracking
@@ -84,7 +91,7 @@ function CombinedCookContent() {
   // Fetch combined data
   const { data, isLoading, error } = trpc.cook.getCombinedSteps.useQuery(
     { mainDishSlug: mainSlug, sideSlugs },
-    { enabled: !!mainSlug && sideSlugs.length > 0 }
+    { enabled: !!mainSlug && sideSlugs.length > 0 },
   );
 
   // Build ordered dish data based on cookOrder
@@ -104,10 +111,9 @@ function CombinedCookContent() {
   // Cook steps for the current dish
   const currentCookSteps = useMemo(
     () =>
-      currentDish?.steps.filter(
-        (s: { phase: string }) => s.phase === "cook"
-      ) ?? [],
-    [currentDish]
+      currentDish?.steps.filter((s: { phase: string }) => s.phase === "cook") ??
+      [],
+    [currentDish],
   );
 
   const currentCookStep = currentCookSteps[currentStepIndex];
@@ -141,7 +147,7 @@ function CombinedCookContent() {
         sessionIdRef.current = startSession(
           firstDish.dish.slug,
           `${orderedDishes.map((d) => d.dish.name).join(" + ")}`,
-          firstDish.dish.cuisineFamily
+          firstDish.dish.cuisineFamily,
         );
       }
     }
@@ -159,17 +165,17 @@ function CombinedCookContent() {
   // Flat ingredients for backward-compat (used by step card)
   const allIngredients = useMemo(
     () => orderedDishes.flatMap((d) => d.ingredients),
-    [orderedDishes]
+    [orderedDishes],
   );
 
   // Combined totals for mission screen
   const totalPrepTime = useMemo(
     () => orderedDishes.reduce((sum, d) => sum + d.dish.prepTimeMinutes, 0),
-    [orderedDishes]
+    [orderedDishes],
   );
   const totalCookTime = useMemo(
     () => orderedDishes.reduce((sum, d) => sum + d.dish.cookTimeMinutes, 0),
-    [orderedDishes]
+    [orderedDishes],
   );
   const allFlavorProfiles = useMemo(() => {
     const set = new Set<string>();
@@ -248,14 +254,14 @@ function CombinedCookContent() {
     (chip: string | null) => {
       toggleChip(chip as "timer" | "mistake" | "hack" | "fact" | null);
     },
-    [toggleChip]
+    [toggleChip],
   );
 
   const handleStartTimer = useCallback(
     (seconds: number) => {
       startTimer(seconds);
     },
-    [startTimer]
+    [startTimer],
   );
 
   const handleBackToday = useCallback(() => {
@@ -323,7 +329,7 @@ function CombinedCookContent() {
         updateSession(sessionIdRef.current, { rating });
       }
     },
-    [updateSession]
+    [updateSession],
   );
 
   const handleAddNote = useCallback(
@@ -332,7 +338,7 @@ function CombinedCookContent() {
         updateSession(sessionIdRef.current, { note });
       }
     },
-    [updateSession]
+    [updateSession],
   );
 
   const handleAddPhoto = useCallback(() => {
@@ -391,22 +397,22 @@ function CombinedCookContent() {
               "rounded-lg p-1.5 transition-colors",
               currentPhase === "win"
                 ? "text-neutral-200 cursor-default"
-                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
             )}
             type="button"
           >
             <ArrowLeft size={20} />
           </button>
-
           <div className="flex flex-col items-center">
             <PhaseIndicator currentPhase={currentPhase} />
-            {currentPhase === "cook" && cookMode === "combined" && dishes.length > 1 && (
-              <p className="text-[10px] text-[var(--nourish-subtext)] mt-0.5">
-                Dish {currentDishIndex + 1} of {dishes.length}
-              </p>
-            )}
+            {currentPhase === "cook" &&
+              cookMode === "combined" &&
+              dishes.length > 1 && (
+                <p className="text-[10px] text-[var(--nourish-subtext)] mt-0.5">
+                  Dish {currentDishIndex + 1} of {dishes.length}
+                </p>
+              )}
           </div>
-
           <div className="w-8" /> {/* Spacer */}
         </div>
       </header>
@@ -445,54 +451,59 @@ function CombinedCookContent() {
           )}
 
           {/* COOK — Step-by-step, one dish at a time */}
-          {currentPhase === "cook" && !showTransition && currentCookStep && currentDish && (
-            <motion.div
-              key={`cook-${currentDishIndex}-${currentStepIndex}`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ type: "spring", stiffness: 260, damping: 25 }}
-            >
-              {/* Current dish label */}
-              {dishes.length > 1 && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 260, damping: 25 }}
-                  className="text-xs font-medium text-[var(--nourish-green)] mb-3"
-                >
-                  {currentDish.dish.name}
-                </motion.p>
-              )}
-              <StepCard
-                stepNumber={currentStepIndex + 1}
-                totalSteps={currentCookSteps.length}
-                instruction={currentCookStep.instruction}
-                recipeName={currentDish.dish.name}
-                previousStep={currentCookSteps[currentStepIndex - 1]?.instruction}
-                nextStep={currentCookSteps[currentStepIndex + 1]?.instruction}
-                ingredients={currentDish.ingredients.map(
-                  (i: { name: string }) => i.name
+          {currentPhase === "cook" &&
+            !showTransition &&
+            currentCookStep &&
+            currentDish && (
+              <motion.div
+                key={`cook-${currentDishIndex}-${currentStepIndex}`}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ type: "spring", stiffness: 260, damping: 25 }}
+              >
+                {/* Current dish label */}
+                {dishes.length > 1 && (
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                    className="text-xs font-medium text-[var(--nourish-green)] mb-3"
+                  >
+                    {currentDish.dish.name}
+                  </motion.p>
                 )}
-                timerSeconds={currentCookStep.timerSeconds}
-                mistakeWarning={currentCookStep.mistakeWarning}
-                quickHack={currentCookStep.quickHack}
-                cuisineFact={currentCookStep.cuisineFact}
-                donenessCue={currentCookStep.donenessCue}
-                imageUrl={currentCookStep.imageUrl}
-                expandedChip={expandedChip}
-                onToggleChip={handleToggleChip}
-                onStartTimer={handleStartTimer}
-                onNext={handleNext}
-                onPrev={handleBack}
-                isFirst={currentStepIndex === 0 && currentDishIndex === 0}
-                isLast={
-                  currentStepIndex === currentCookSteps.length - 1 &&
-                  currentDishIndex === dishes.length - 1
-                }
-              />
-            </motion.div>
-          )}
+                <StepCard
+                  stepNumber={currentStepIndex + 1}
+                  totalSteps={currentCookSteps.length}
+                  instruction={currentCookStep.instruction}
+                  recipeName={currentDish.dish.name}
+                  previousStep={
+                    currentCookSteps[currentStepIndex - 1]?.instruction
+                  }
+                  nextStep={currentCookSteps[currentStepIndex + 1]?.instruction}
+                  ingredients={currentDish.ingredients.map(
+                    (i: { name: string }) => i.name,
+                  )}
+                  timerSeconds={currentCookStep.timerSeconds}
+                  mistakeWarning={currentCookStep.mistakeWarning}
+                  quickHack={currentCookStep.quickHack}
+                  cuisineFact={currentCookStep.cuisineFact}
+                  donenessCue={currentCookStep.donenessCue}
+                  imageUrl={currentCookStep.imageUrl}
+                  expandedChip={expandedChip}
+                  onToggleChip={handleToggleChip}
+                  onStartTimer={handleStartTimer}
+                  onNext={handleNext}
+                  onPrev={handleBack}
+                  isFirst={currentStepIndex === 0 && currentDishIndex === 0}
+                  isLast={
+                    currentStepIndex === currentCookSteps.length - 1 &&
+                    currentDishIndex === dishes.length - 1
+                  }
+                />
+              </motion.div>
+            )}
 
           {/* TRANSITION — Between dishes */}
           {currentPhase === "cook" && showTransition && (
@@ -513,15 +524,16 @@ function CombinedCookContent() {
               dishName={
                 orderedDishes.length > 1
                   ? `${orderedDishes.map((d) => d.dish.name).join(" + ")}`
-                  : orderedDishes[0]?.dish.name ?? ""
+                  : (orderedDishes[0]?.dish.name ?? "")
               }
               sideDishes={orderedDishes.map((d) => d.dish.name)}
               cuisineFamily={mainDish?.cuisineFamily ?? ""}
               isFirstCook={winMeta.streak === 1}
               streak={winMeta.streak}
               totalSteps={orderedDishes.reduce(
-                (sum, d) => sum + d.steps.filter((s) => s.phase === "cook").length,
-                0
+                (sum, d) =>
+                  sum + d.steps.filter((s) => s.phase === "cook").length,
+                0,
               )}
               pathJustUnlocked={winMeta.pathJustUnlocked}
               saved={winMeta.saved}
@@ -594,7 +606,12 @@ function CombinedMissionScreen({
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.1 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 25,
+            delay: 0.1,
+          }}
           className="font-serif text-2xl text-[var(--nourish-dark)]"
         >
           {mainDishName}
@@ -605,7 +622,12 @@ function CombinedMissionScreen({
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.15 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: 0.15,
+            }}
             className="text-sm text-[var(--nourish-subtext)]"
           >
             Cooking with:{" "}
@@ -666,7 +688,12 @@ function CombinedMissionScreen({
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.25 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 25,
+          delay: 0.25,
+        }}
         className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
       >
         {mainDishDescription}
@@ -682,7 +709,7 @@ function CombinedMissionScreen({
         className={cn(
           "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200"
+          "transition-colors duration-200",
         )}
         type="button"
       >
@@ -729,7 +756,12 @@ function DishTransitionCard({
         <motion.h2
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.15 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 25,
+            delay: 0.15,
+          }}
           className="font-serif text-xl text-[var(--nourish-dark)]"
         >
           {completedDishName} done!
@@ -737,7 +769,12 @@ function DishTransitionCard({
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.2 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 25,
+            delay: 0.2,
+          }}
           className="text-sm text-[var(--nourish-subtext)]"
         >
           Up next · dish {currentDishNumber} of {totalDishes}
@@ -745,7 +782,12 @@ function DishTransitionCard({
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.25 }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 25,
+            delay: 0.25,
+          }}
           className="font-serif text-lg font-medium text-[var(--nourish-dark)]"
         >
           {nextDishName}
@@ -761,7 +803,7 @@ function DishTransitionCard({
         className={cn(
           "flex items-center gap-2 rounded-xl px-8 py-3.5 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200"
+          "transition-colors duration-200",
         )}
         type="button"
       >

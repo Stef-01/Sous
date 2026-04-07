@@ -118,7 +118,11 @@ export default function ResultsStage({
 
   // Fire confetti once when a balanced plate is revealed
   useEffect(() => {
-    if (showPlateMethod && appraisal?.tone === "balanced" && !confettiFiredRef.current) {
+    if (
+      showPlateMethod &&
+      appraisal?.tone === "balanced" &&
+      !confettiFiredRef.current
+    ) {
       confettiFiredRef.current = true;
       // Short delay so the plate animates in first
       const timer = setTimeout(() => setShowConfetti(true), 600);
@@ -185,7 +189,9 @@ export default function ResultsStage({
               exit={{ opacity: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <p className={`text-lg md:text-xl font-serif text-center ${appraisalColor}`}>
+              <p
+                className={`text-lg md:text-xl font-serif text-center ${appraisalColor}`}
+              >
                 {appraisal.sentence}
               </p>
 
@@ -204,10 +210,11 @@ export default function ResultsStage({
 
         {/* Desktop layout */}
         <div
-          className={`hidden md:flex items-center ${showPlateMethod
-            ? "justify-center gap-16 lg:gap-24" // Much wider gap for separation
-            : "justify-center gap-10 lg:gap-14"
-            }`}
+          className={`hidden md:flex items-center ${
+            showPlateMethod
+              ? "justify-center gap-16 lg:gap-24" // Much wider gap for separation
+              : "justify-center gap-10 lg:gap-14"
+          }`}
         >
           {/* Inline plate — centered in its column */}
           <AnimatePresence>
@@ -235,8 +242,9 @@ export default function ResultsStage({
           <motion.div
             layout
             transition={{ ...springs.modal, duration: 0.6 }} // Slower, smoother transition
-            className={`relative flex items-center transition-all duration-500 ease-in-out ${showPlateMethod ? "gap-0" : "gap-10 lg:gap-14"
-              }`}
+            className={`relative flex items-center transition-all duration-500 ease-in-out ${
+              showPlateMethod ? "gap-0" : "gap-10 lg:gap-14"
+            }`}
           >
             {/* Subtle shadow pool options — kept but sized correctly */}
             {showPlateMethod && (
@@ -253,15 +261,16 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 self-center ${showPlateMethod ? "-mr-16 lg:-mr-24" : ""
-                }`}
+              className={`flex-shrink-0 self-center ${
+                showPlateMethod ? "-mr-16 lg:-mr-24" : ""
+              }`}
               animate={
                 prefersReduced
                   ? {}
                   : {
-                    rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[0] : 0,
-                    scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                  }
+                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[0] : 0,
+                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                    }
               }
               variants={
                 prefersReduced ? childVariants : getSideContainerVariants(0)
@@ -287,19 +296,18 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 ${showPlateMethod ? "-mx-12 lg:-mx-20" : ""
-                }`}
+              className={`flex-shrink-0 ${
+                showPlateMethod ? "-mx-12 lg:-mx-20" : ""
+              }`}
               animate={
                 prefersReduced
                   ? {}
                   : {
-                    rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[1] : 0,
-                    scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                  }
+                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[1] : 0,
+                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                    }
               }
-              variants={
-                prefersReduced ? childVariants : heroContainerVariants
-              }
+              variants={prefersReduced ? childVariants : heroContainerVariants}
             >
               <AnimatePresence mode="wait">
                 <HeroDish
@@ -315,17 +323,18 @@ export default function ResultsStage({
             <motion.div
               layout
               transition={springs.modal}
-              className={`flex-shrink-0 flex flex-col ${showPlateMethod ? "gap-1 -ml-16 lg:-ml-24" : "gap-4"
-                }`}
+              className={`flex-shrink-0 flex flex-col ${
+                showPlateMethod ? "gap-1 -ml-16 lg:-ml-24" : "gap-4"
+              }`}
             >
               <motion.div
                 animate={
                   prefersReduced
                     ? {}
                     : {
-                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[2] : 0,
-                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                    }
+                        rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[2] : 0,
+                        scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                      }
                 }
                 transition={springs.modal}
                 variants={
@@ -352,9 +361,9 @@ export default function ResultsStage({
                   prefersReduced
                     ? {}
                     : {
-                      rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[3] : 0,
-                      scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
-                    }
+                        rotate: showPlateMethod ? SCRAPBOOK_ROTATIONS[3] : 0,
+                        scale: showPlateMethod ? SCRAPBOOK_SCALE : 1,
+                      }
                 }
                 transition={springs.modal}
                 variants={
@@ -385,25 +394,23 @@ export default function ResultsStage({
           <AnimatePresence>
             {showPlateMethod && appraisal && (
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 className="w-full text-center px-4 mb-2"
               >
-                <p className={`text-sm font-medium ${appraisalColor}`}>{appraisal.sentence}</p>
+                <p className={`text-sm font-medium ${appraisalColor}`}>
+                  {appraisal.sentence}
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
 
           <motion.div
-            variants={
-              prefersReduced ? childVariants : heroContainerVariants
-            }
+            variants={prefersReduced ? childVariants : heroContainerVariants}
           >
             <AnimatePresence mode="wait">
-              <HeroDish
-                key={meal.id}
-                meal={meal}
-                onClick={handleHeroClick}
-              />
+              <HeroDish key={meal.id} meal={meal} onClick={handleHeroClick} />
             </AnimatePresence>
           </motion.div>
 
@@ -434,9 +441,7 @@ export default function ResultsStage({
                 <motion.div
                   key={side.id}
                   variants={
-                    prefersReduced
-                      ? childVariants
-                      : getSideContainerVariants(i)
+                    prefersReduced ? childVariants : getSideContainerVariants(i)
                   }
                   {...(!prefersReduced && {
                     initial: "initial",

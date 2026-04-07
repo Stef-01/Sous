@@ -215,7 +215,10 @@ const PLATE_FOOD = {
     singleSizes: "(max-width: 768px) 96px, (max-width: 1024px) 128px, 144px",
     // Wider section allows more spread
     stackRotate: ["-rotate-6", "rotate-6"],
-    stackOffset: ["-translate-x-1 md:-translate-x-2", "translate-x-1 md:translate-x-2 -ml-6 md:-ml-10"],
+    stackOffset: [
+      "-translate-x-1 md:-translate-x-2",
+      "translate-x-1 md:translate-x-2 -ml-6 md:-ml-10",
+    ],
   },
   quarter: {
     single: "w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24",
@@ -282,37 +285,46 @@ export default function InlinePlate({
       <div className="relative pt-5 pb-5 px-5">
         {/* External label: VEGETABLES — top center with badge */}
         <motion.span
-          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasVegs
+          className={`absolute top-0 left-1/2 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
+            hasVegs
               ? "text-green-700 bg-green-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-            }`}
+          }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
-          <span className="text-xs md:text-sm leading-none">{hasVegs ? "\u2713" : "\u2717"}</span>
+          <span className="text-xs md:text-sm leading-none">
+            {hasVegs ? "\u2713" : "\u2717"}
+          </span>
           Vegetables
         </motion.span>
 
         {/* External label: PROTEIN — bottom-left with badge */}
         <motion.span
-          className={`absolute bottom-0 left-1/4 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasProteins
+          className={`absolute bottom-0 left-1/4 -translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
+            hasProteins
               ? "text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-            }`}
+          }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
-          <span className="text-xs md:text-sm leading-none">{hasProteins ? "\u2713" : "\u2717"}</span>
+          <span className="text-xs md:text-sm leading-none">
+            {hasProteins ? "\u2713" : "\u2717"}
+          </span>
           Protein
         </motion.span>
 
         {/* External label: CARBS — bottom-right with badge */}
         <motion.span
-          className={`absolute bottom-0 right-1/4 translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${hasCarbs
+          className={`absolute bottom-0 right-1/4 translate-x-1/2 text-[10px] md:text-xs lg:text-sm font-sans font-medium uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 ${
+            hasCarbs
               ? "text-orange-700 bg-orange-50 px-2 py-0.5 rounded-full"
               : "text-stone-400"
-            }`}
+          }`}
           variants={prefersReduced ? reducedLabelVariants : labelVariants}
         >
-          <span className="text-xs md:text-sm leading-none">{hasCarbs ? "\u2713" : "\u2717"}</span>
+          <span className="text-xs md:text-sm leading-none">
+            {hasCarbs ? "\u2713" : "\u2717"}
+          </span>
           Carbs
         </motion.span>
 
@@ -376,12 +388,13 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-2xl overflow-hidden ${isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-2xl overflow-hidden ${
+                          isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                          }`}
+                        }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image
@@ -389,7 +402,9 @@ export default function InlinePlate({
                           alt={food.name}
                           fill
                           className="object-contain"
-                          sizes={isStacked ? scale.stackedSizes : scale.singleSizes}
+                          sizes={
+                            isStacked ? scale.stackedSizes : scale.singleSizes
+                          }
                         />
                       </motion.div>
                     );
@@ -420,12 +435,13 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${
+                          isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                          }`}
+                        }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image
@@ -433,7 +449,9 @@ export default function InlinePlate({
                           alt={food.name}
                           fill
                           className="object-contain"
-                          sizes={isStacked ? scale.stackedSizes : scale.singleSizes}
+                          sizes={
+                            isStacked ? scale.stackedSizes : scale.singleSizes
+                          }
                         />
                       </motion.div>
                     );
@@ -464,12 +482,13 @@ export default function InlinePlate({
                     return (
                       <motion.div
                         key={food.name}
-                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${isStacked
+                        className={`relative ${isStacked ? scale.stacked : scale.single} rounded-xl overflow-hidden ${
+                          isStacked
                             ? i === 0
                               ? `${scale.stackRotate[0]} ${scale.stackOffset[0]} z-10`
                               : `${scale.stackRotate[1]} ${scale.stackOffset[1]} z-0`
                             : ""
-                          }`}
+                        }`}
                         variants={prefersReduced ? {} : foodImageVariants}
                       >
                         <Image
@@ -477,7 +496,9 @@ export default function InlinePlate({
                           alt={food.name}
                           fill
                           className="object-contain"
-                          sizes={isStacked ? scale.stackedSizes : scale.singleSizes}
+                          sizes={
+                            isStacked ? scale.stackedSizes : scale.singleSizes
+                          }
                         />
                       </motion.div>
                     );
@@ -495,7 +516,6 @@ export default function InlinePlate({
           </motion.div>
         </div>
       </div>
-
     </motion.div>
   );
 }

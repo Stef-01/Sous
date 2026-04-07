@@ -16,7 +16,7 @@ export const contentRouter = router({
         cuisine: z.string().optional(),
         maxPrepMinutes: z.number().optional(),
         skillLevel: z.string().optional(),
-      })
+      }),
     )
     .query(async () => {
       // TODO: Filtered search of internal side dish database

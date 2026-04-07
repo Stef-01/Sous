@@ -96,7 +96,7 @@ export function useMealSearch() {
         });
       }
     },
-    [query]
+    [query],
   );
 
   const reset = useCallback(() => {

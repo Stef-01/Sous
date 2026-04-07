@@ -39,6 +39,11 @@ export function ScrapbookEntryCard({
           <h4 className="font-serif text-sm font-semibold text-[var(--nourish-dark)] truncate">
             {session.dishName}
           </h4>
+          {session.mainDishInput && (
+            <p className="text-[10px] text-[var(--nourish-subtext)] truncate">
+              with {session.mainDishInput}
+            </p>
+          )}
           <p className="text-[10px] text-[var(--nourish-subtext)] uppercase tracking-wide">
             {session.cuisineFamily} · {completedDate}
           </p>
@@ -51,10 +56,12 @@ export function ScrapbookEntryCard({
             "shrink-0 rounded-lg p-1.5 transition-colors",
             session.favorite
               ? "text-pink-500"
-              : "text-neutral-300 hover:text-pink-400"
+              : "text-neutral-300 hover:text-pink-400",
           )}
           type="button"
-          aria-label={session.favorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={
+            session.favorite ? "Remove from favorites" : "Add to favorites"
+          }
         >
           <Heart size={14} className={session.favorite ? "fill-current" : ""} />
         </button>
@@ -70,7 +77,7 @@ export function ScrapbookEntryCard({
               className={cn(
                 star <= session.rating!
                   ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
-                  : "text-neutral-200"
+                  : "text-neutral-200",
               )}
             />
           ))}

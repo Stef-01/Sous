@@ -33,7 +33,7 @@ export async function getAIProvider(): Promise<AIProvider> {
  */
 export async function withFallback<T>(
   fn: (provider: AIProvider) => Promise<T>,
-  fallbackFn: (provider: AIProvider) => Promise<T>
+  fallbackFn: (provider: AIProvider) => Promise<T>,
 ): Promise<T> {
   const provider = await getAIProvider();
   try {

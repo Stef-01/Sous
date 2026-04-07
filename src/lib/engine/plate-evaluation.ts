@@ -53,7 +53,15 @@ export interface PlateEvaluation {
 
 // ── Flavor analysis helpers ──────────────────────────────────
 
-const FRESH_FLAVORS = ["bright", "fresh", "acidic", "citrus", "herbaceous", "tangy", "zesty"];
+const FRESH_FLAVORS = [
+  "bright",
+  "fresh",
+  "acidic",
+  "citrus",
+  "herbaceous",
+  "tangy",
+  "zesty",
+];
 const CRUNCHY_TEXTURES = ["crunchy", "crispy", "crisp"];
 const CREAMY_TEXTURES = ["creamy", "smooth", "velvety"];
 const RICH_FLAVORS = ["rich", "savory", "umami", "buttery", "hearty"];
@@ -74,7 +82,10 @@ interface EvaluationInput {
   sides: SideDish[];
 }
 
-export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation {
+export function evaluatePlate({
+  meal,
+  sides,
+}: EvaluationInput): PlateEvaluation {
   const mainNutrition = inferMealNutrition(meal);
 
   // ── Step 1: Category coverage ──
@@ -84,8 +95,7 @@ export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation
       mainNutrition.category === "vegetable" || sideCats.includes("vegetable"),
     protein:
       mainNutrition.category === "protein" || sideCats.includes("protein"),
-    carbs:
-      mainNutrition.category === "carb" || sideCats.includes("carb"),
+    carbs: mainNutrition.category === "carb" || sideCats.includes("carb"),
   };
 
   const filledCount = Object.values(categoryCoverage).filter(Boolean).length;
@@ -97,7 +107,10 @@ export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation
   // Carb-heavy detection
   const sideCarbCount = sideCats.filter((c) => c === "carb").length;
   const isMainCarb = mainNutrition.category === "carb";
-  if ((isMainCarb && sideCarbCount >= 1) || (!isMainCarb && sideCarbCount >= 2)) {
+  if (
+    (isMainCarb && sideCarbCount >= 1) ||
+    (!isMainCarb && sideCarbCount >= 2)
+  ) {
     signals.push("carb_heavy");
   }
 
@@ -163,7 +176,8 @@ export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation
     .map((s) => (s as SideDish & { pairingScore?: PairingScore }).pairingScore)
     .filter((s): s is PairingScore => !!s);
   if (scores.length > 0) {
-    const avgScore = scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
+    const avgScore =
+      scores.reduce((sum, s) => sum + s.score, 0) / scores.length;
     if (avgScore >= 70) {
       alreadyWorking.push("Strong pairing chemistry");
     } else if (avgScore >= 50) {
@@ -181,15 +195,12 @@ export function evaluatePlate({ meal, sides }: EvaluationInput): PlateEvaluation
     signals,
     categoryCoverage,
     sides,
-    isMainCarb
+    isMainCarb,
   );
 
   // ── Step 5: Status and appraisal ──
   const status = computeStatus(signals, filledCount);
-  const { appraisal, appraisalTone } = computeAppraisal(
-    status,
-    signals
-  );
+  const { appraisal, appraisalTone } = computeAppraisal(status, signals);
 
   return {
     status,
@@ -208,7 +219,7 @@ function computeOneBestMove(
   signals: PlateSignal[],
   coverage: PlateEvaluation["categoryCoverage"],
   sides: SideDish[],
-  isMainCarb: boolean
+  isMainCarb: boolean,
 ): OneBestMove | undefined {
   // If balanced with no issues, keep as-is
   if (signals.includes("balanced") || signals.length === 0) {
@@ -232,7 +243,9 @@ function computeOneBestMove(
   // Priority 2: Missing vegetables
   if (signals.includes("veg_light")) {
     // Find a non-veg side to suggest swapping
-    const nonVegIdx = sides.findIndex((s) => s.nutritionCategory !== "vegetable");
+    const nonVegIdx = sides.findIndex(
+      (s) => s.nutritionCategory !== "vegetable",
+    );
     if (nonVegIdx !== -1) {
       return {
         type: "swap_side",
@@ -283,7 +296,7 @@ function computeOneBestMove(
 
 function computeStatus(
   signals: PlateSignal[],
-  filledCount: number
+  filledCount: number,
 ): PlateStatus {
   if (signals.includes("balanced")) return "balanced";
   if (filledCount >= 2 && !signals.includes("carb_heavy")) return "good_start";
@@ -294,7 +307,7 @@ function computeStatus(
 
 function computeAppraisal(
   status: PlateStatus,
-  signals: PlateSignal[]
+  signals: PlateSignal[],
 ): { appraisal: string; appraisalTone: "balanced" | "strong" | "needs-work" } {
   switch (status) {
     case "balanced":

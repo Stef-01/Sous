@@ -27,16 +27,18 @@ const ALL_SCORERS: Scorer[] = [
   preferenceScorer,
 ];
 
-export type SuggestSidesResult = {
-  success: true;
-  data: {
-    sides: ScoredCandidate[];
-    totalCandidates: number;
-  };
-} | {
-  success: false;
-  error: string;
-};
+export type SuggestSidesResult =
+  | {
+      success: true;
+      data: {
+        sides: ScoredCandidate[];
+        totalCandidates: number;
+      };
+    }
+  | {
+      success: false;
+      error: string;
+    };
 
 /**
  * Main entry point: suggest the top 3 side dishes for a main dish.
@@ -52,7 +54,7 @@ export function suggestSides(
   candidates: SideDishCandidate[],
   userPreferences?: Record<string, number>,
   weights?: Partial<Record<keyof ScoreBreakdown, number>>,
-  count: number = 3
+  count: number = 3,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -66,7 +68,7 @@ export function suggestSides(
     candidates,
     ALL_SCORERS,
     mergedWeights,
-    userPreferences
+    userPreferences,
   );
 
   // Select top K

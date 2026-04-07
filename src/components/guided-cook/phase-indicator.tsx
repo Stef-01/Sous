@@ -34,7 +34,7 @@ export function PhaseIndicator({ currentPhase }: PhaseIndicatorProps) {
             "h-2.5 w-2.5 rounded-full transition-colors duration-300",
             idx <= currentIndex
               ? "bg-[var(--nourish-green)]"
-              : "bg-neutral-200"
+              : "bg-neutral-200",
           )}
           aria-label={`${phase.label}: ${idx <= currentIndex ? "complete" : "upcoming"}`}
         />

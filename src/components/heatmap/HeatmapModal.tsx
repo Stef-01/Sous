@@ -101,7 +101,7 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
   const handleCellHover = (
     mainIdx: number,
     sideIdx: number,
-    e: React.MouseEvent
+    e: React.MouseEvent,
   ) => {
     if (!filteredData) return;
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -129,8 +129,10 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
     return "#f3f4f6";
   };
 
-  const engineCount = data?.sourceTypes.filter((s) => s === "engine").length ?? 0;
-  const curatedCount = data?.sourceTypes.filter((s) => s === "curated").length ?? 0;
+  const engineCount =
+    data?.sourceTypes.filter((s) => s === "engine").length ?? 0;
+  const curatedCount =
+    data?.sourceTypes.filter((s) => s === "curated").length ?? 0;
 
   return (
     <AnimatePresence>
@@ -171,9 +173,7 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                   ? { opacity: 0 }
                   : { opacity: 0, y: 40, scale: 0.95 }
               }
-              transition={
-                prefersReduced ? { duration: 0.2 } : springs.modal
-              }
+              transition={prefersReduced ? { duration: 0.2 } : springs.modal}
             >
               {/* Close button */}
               <motion.button
@@ -212,13 +212,19 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                               : "text-nourish-subtext hover:text-nourish-dark"
                           }`}
                         >
-                          {f === "all" ? "All" : f === "engine" ? "Scored" : "Curated"}
+                          {f === "all"
+                            ? "All"
+                            : f === "engine"
+                              ? "Scored"
+                              : "Curated"}
                         </button>
                       ))}
                     </div>
                     <button
                       onClick={() =>
-                        setSortBy((s) => (s === "default" ? "score" : "default"))
+                        setSortBy((s) =>
+                          s === "default" ? "score" : "default",
+                        )
                       }
                       className="text-[11px] text-nourish-subtext border border-gray-200 rounded-full px-3 py-1 hover:border-nourish-button hover:text-nourish-button transition-colors"
                     >
@@ -275,11 +281,17 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                                 {main}
                                 <span
                                   className={`inline-block w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                                    filteredData.sourceTypes[rowIdx] === "engine"
+                                    filteredData.sourceTypes[rowIdx] ===
+                                    "engine"
                                       ? "bg-emerald-400"
                                       : "bg-blue-300"
                                   }`}
-                                  title={filteredData.sourceTypes[rowIdx] === "engine" ? "Engine scored" : "Curated"}
+                                  title={
+                                    filteredData.sourceTypes[rowIdx] ===
+                                    "engine"
+                                      ? "Engine scored"
+                                      : "Curated"
+                                  }
                                 />
                               </span>
                             </td>
@@ -316,7 +328,9 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
               {filteredData && (
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 pt-3 border-t border-gray-100">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] text-nourish-subtext">Scored:</span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      Scored:
+                    </span>
                     <div className="flex items-center gap-0.5">
                       {[20, 35, 50, 65, 80, 100].map((score) => (
                         <div
@@ -326,20 +340,30 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                         />
                       ))}
                     </div>
-                    <span className="text-[10px] text-nourish-subtext">low</span>
-                    <span className="text-[10px] text-nourish-subtext">{"\u2192"}</span>
-                    <span className="text-[10px] text-nourish-subtext">excellent</span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      low
+                    </span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      {"\u2192"}
+                    </span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      excellent
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div
                       className="w-5 h-3.5 rounded-sm"
                       style={{ backgroundColor: CURATED_COLOR }}
                     />
-                    <span className="text-[10px] text-nourish-subtext">Curated (in side pool)</span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      Curated (in side pool)
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-5 h-3.5 rounded-sm bg-gray-100" />
-                    <span className="text-[10px] text-nourish-subtext">No pairing</span>
+                    <span className="text-[10px] text-nourish-subtext">
+                      No pairing
+                    </span>
                   </div>
                 </div>
               )}
@@ -361,12 +385,8 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
               >
-                <p className="font-medium text-nourish-dark">
-                  {tooltip.main}
-                </p>
-                <p className="text-nourish-subtext">
-                  + {tooltip.side}
-                </p>
+                <p className="font-medium text-nourish-dark">{tooltip.main}</p>
+                <p className="text-nourish-subtext">+ {tooltip.side}</p>
                 <p className="mt-0.5">
                   {tooltip.score > 0 ? (
                     <>
@@ -381,7 +401,10 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                       </span>
                     </>
                   ) : tooltip.score === -1 ? (
-                    <span style={{ color: CURATED_COLOR }} className="font-medium">
+                    <span
+                      style={{ color: CURATED_COLOR }}
+                      className="font-medium"
+                    >
                       Curated pairing
                     </span>
                   ) : (
@@ -389,7 +412,9 @@ export default function HeatmapModal({ open, onClose }: HeatmapModalProps) {
                   )}
                 </p>
                 <p className="text-[10px] text-nourish-subtext/60 mt-0.5">
-                  {tooltip.source === "engine" ? "Engine scored" : "Curated selection"}
+                  {tooltip.source === "engine"
+                    ? "Engine scored"
+                    : "Curated selection"}
                 </p>
               </motion.div>
             )}

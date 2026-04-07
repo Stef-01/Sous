@@ -38,7 +38,7 @@ export default function PathPage() {
   // Detail sheet state
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const selectedNode = selectedNodeId
-    ? getSkillNode(selectedNodeId) ?? null
+    ? (getSkillNode(selectedNodeId) ?? null)
     : null;
   const selectedStatus = selectedNodeId
     ? getNodeStatus(selectedNodeId)
@@ -56,7 +56,7 @@ export default function PathPage() {
       setSelectedNodeId(null);
       router.push(`/cook/${dishSlug}`);
     },
-    [router]
+    [router],
   );
 
   const handleCloseSheet = useCallback(() => {

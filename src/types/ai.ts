@@ -29,11 +29,7 @@ export type CravingIntent = z.infer<typeof cravingIntentSchema>;
 // ── Food Recognition (OpenAI Vision) ──────────────────
 export const recognitionResultSchema = z.object({
   dishName: z.string().describe("The identified dish name"),
-  confidence: z
-    .number()
-    .min(0)
-    .max(1)
-    .describe("Confidence score 0-1"),
+  confidence: z.number().min(0).max(1).describe("Confidence score 0-1"),
   cuisine: z.string().describe("Detected cuisine family"),
   isHomemade: z
     .boolean()

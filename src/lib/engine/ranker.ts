@@ -21,7 +21,7 @@ export function rankCandidates(
   candidates: SideDishCandidate[],
   scorers: Scorer[],
   weights: Record<keyof ScoreBreakdown, number>,
-  userPreferences?: Record<string, number>
+  userPreferences?: Record<string, number>,
 ): ScoredCandidate[] {
   const scored: ScoredCandidate[] = candidates.map((side) => {
     const scores: Partial<ScoreBreakdown> = {};
@@ -42,7 +42,7 @@ export function rankCandidates(
     const totalScore = Object.entries(weights).reduce(
       (sum, [key, weight]) =>
         sum + fullScores[key as keyof ScoreBreakdown] * weight,
-      0
+      0,
     );
 
     return {
@@ -59,8 +59,10 @@ export function rankCandidates(
     const diff = b.totalScore - a.totalScore;
     if (Math.abs(diff) > 0.001) return diff;
     // Tie-breaking: rotate based on day of year
-    return hashTieBreaker(a.sideDish.slug, dayOfYear) -
-      hashTieBreaker(b.sideDish.slug, dayOfYear);
+    return (
+      hashTieBreaker(a.sideDish.slug, dayOfYear) -
+      hashTieBreaker(b.sideDish.slug, dayOfYear)
+    );
   });
 
   return scored;

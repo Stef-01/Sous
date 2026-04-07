@@ -25,15 +25,28 @@ function inferMainFlavors(main: MainDishIntent): string[] {
   const flavors: string[] = [...main.moodSignals];
   const name = main.dishName.toLowerCase();
 
-  if (name.includes("curry") || name.includes("masala")) flavors.push("spicy", "rich", "saucy");
-  if (name.includes("fried") || name.includes("tempura")) flavors.push("fried", "heavy");
-  if (name.includes("grill") || name.includes("bbq") || name.includes("tandoori")) flavors.push("grilled", "smoky");
-  if (name.includes("cream") || name.includes("butter")) flavors.push("creamy", "rich");
-  if (name.includes("soup") || name.includes("stew")) flavors.push("saucy", "heavy");
-  if (name.includes("salad") || name.includes("poke")) flavors.push("fresh", "light");
-  if (name.includes("burger") || name.includes("pizza")) flavors.push("heavy", "rich");
-  if (name.includes("pasta") || name.includes("carbonara")) flavors.push("rich", "creamy");
-  if (name.includes("ramen") || name.includes("pho")) flavors.push("saucy", "rich");
+  if (name.includes("curry") || name.includes("masala"))
+    flavors.push("spicy", "rich", "saucy");
+  if (name.includes("fried") || name.includes("tempura"))
+    flavors.push("fried", "heavy");
+  if (
+    name.includes("grill") ||
+    name.includes("bbq") ||
+    name.includes("tandoori")
+  )
+    flavors.push("grilled", "smoky");
+  if (name.includes("cream") || name.includes("butter"))
+    flavors.push("creamy", "rich");
+  if (name.includes("soup") || name.includes("stew"))
+    flavors.push("saucy", "heavy");
+  if (name.includes("salad") || name.includes("poke"))
+    flavors.push("fresh", "light");
+  if (name.includes("burger") || name.includes("pizza"))
+    flavors.push("heavy", "rich");
+  if (name.includes("pasta") || name.includes("carbonara"))
+    flavors.push("rich", "creamy");
+  if (name.includes("ramen") || name.includes("pho"))
+    flavors.push("saucy", "rich");
 
   return [...new Set(flavors)];
 }

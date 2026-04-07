@@ -24,7 +24,13 @@ type ViewState =
   | { type: "results"; mainDish: string }
   | { type: "camera" }
   | { type: "recognition"; imageBase64: string }
-  | { type: "correction"; dishName: string; confidence: number; alternates: string[]; cuisine: string };
+  | {
+      type: "correction";
+      dishName: string;
+      confidence: number;
+      alternates: string[];
+      cuisine: string;
+    };
 
 export default function TodayPage() {
   return (
@@ -60,7 +66,10 @@ function TodayPageContent() {
 
   /* eslint-disable react-hooks/set-state-in-effect -- syncs URL search param (external state) into component state */
   useEffect(() => {
-    if (selectSidesParam && selectSidesParam !== handledSelectSidesRef.current) {
+    if (
+      selectSidesParam &&
+      selectSidesParam !== handledSelectSidesRef.current
+    ) {
       handledSelectSidesRef.current = selectSidesParam;
       setShowSearch(true);
       pendingQueryRef.current = selectSidesParam;
@@ -76,8 +85,9 @@ function TodayPageContent() {
   const pairingQuery = trpc.pairing.suggest.useQuery(
     { mainDish: mainDishQuery, inputMode: "text" },
     {
-      enabled: !!mainDishQuery && (view.type === "loading" || view.type === "results"),
-    }
+      enabled:
+        !!mainDishQuery && (view.type === "loading" || view.type === "results"),
+    },
   );
 
   const recognitionMutation = trpc.recognition.identify.useMutation();
@@ -121,40 +131,46 @@ function TodayPageContent() {
     setView({ type: "camera" });
   }, []);
 
-  const handleCameraCapture = useCallback(async (imageBase64: string) => {
-    setView({ type: "recognition", imageBase64 });
+  const handleCameraCapture = useCallback(
+    async (imageBase64: string) => {
+      setView({ type: "recognition", imageBase64 });
 
-    const result = await recognitionMutation.mutateAsync({ imageBase64 });
+      const result = await recognitionMutation.mutateAsync({ imageBase64 });
 
-    if (result.success) {
-      setView({
-        type: "correction",
-        dishName: result.dishName,
-        confidence: result.confidence,
-        alternates: result.alternates,
-        cuisine: result.cuisine,
-      });
-    } else {
-      // Recognition failed — show brief feedback then fall back to text input
-      setRecognitionError(true);
-      setView({ type: "idle" });
-      setTimeout(() => setRecognitionError(false), 4000);
-    }
-  }, [recognitionMutation]);
-
-  const handleCorrectionConfirm = useCallback(
-    (confirmedDish: string) => {
-      pendingQueryRef.current = confirmedDish;
-      setMainDishQuery(confirmedDish);
-      setView({ type: "loading", mainDish: confirmedDish });
+      if (result.success) {
+        setView({
+          type: "correction",
+          dishName: result.dishName,
+          confidence: result.confidence,
+          alternates: result.alternates,
+          cuisine: result.cuisine,
+        });
+      } else {
+        // Recognition failed — show brief feedback then fall back to text input
+        setRecognitionError(true);
+        setView({ type: "idle" });
+        setTimeout(() => setRecognitionError(false), 4000);
+      }
     },
-    []
+    [recognitionMutation],
   );
 
-  const handleCookThis = useCallback((side: { slug: string }) => {
-    setShowSearch(false);
-    router.push(`/cook/${side.slug}`);
-  }, [router]);
+  const handleCorrectionConfirm = useCallback((confirmedDish: string) => {
+    pendingQueryRef.current = confirmedDish;
+    setMainDishQuery(confirmedDish);
+    setView({ type: "loading", mainDish: confirmedDish });
+  }, []);
+
+  const handleCookThis = useCallback(
+    (side: { slug: string }) => {
+      setShowSearch(false);
+      const mainParam = mainDishQuery
+        ? `?main=${encodeURIComponent(mainDishQuery)}`
+        : "";
+      router.push(`/cook/${side.slug}${mainParam}`);
+    },
+    [router, mainDishQuery],
+  );
 
   const handleReroll = useCallback(() => {
     if (mainDishQuery) {
@@ -178,7 +194,9 @@ function TodayPageContent() {
       <header className="border-b border-neutral-100/80 bg-white px-4 py-2">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="flex items-center gap-1.5">
-            <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">Sous</h1>
+            <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+              Sous
+            </h1>
             <StreakCounter streak={stats.currentStreak} />
           </div>
           {/* Owl mascot — profile position */}
@@ -256,13 +274,16 @@ function TodayPageContent() {
         {recognitionError && view.type === "idle" && (
           <div className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center mb-3">
             <p className="text-sm text-amber-700">
-              Couldn&apos;t identify the dish from the photo. Try typing it instead.
+              Couldn&apos;t identify the dish from the photo. Try typing it
+              instead.
             </p>
           </div>
         )}
 
         {/* Search input + results */}
-        {(view.type === "idle" || view.type === "loading" || view.type === "results") && (
+        {(view.type === "idle" ||
+          view.type === "loading" ||
+          view.type === "results") && (
           <>
             <TextPrompt
               key={resetKey}
@@ -315,7 +336,9 @@ function TodayPageContent() {
                     // Navigate to combined cook flow
                     const sideSlugs = sides.map((s) => s.slug).join(",");
                     setShowSearch(false);
-                    router.push(`/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`);
+                    router.push(
+                      `/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`,
+                    );
                   } else {
                     // Fallback: cook the first selected side
                     handleCookThis(sides[0]);
@@ -329,7 +352,8 @@ function TodayPageContent() {
             {pairingQuery.error && (
               <div className="rounded-xl border border-red-100 bg-red-50 p-4 text-center space-y-2">
                 <p className="text-sm text-red-600">
-                  {pairingQuery.error.message?.includes("timed out") || pairingQuery.error.message?.includes("timeout")
+                  {pairingQuery.error.message?.includes("timed out") ||
+                  pairingQuery.error.message?.includes("timeout")
                     ? "The request took too long. Check your connection and try again."
                     : pairingQuery.error.message?.includes("fetch")
                       ? "Couldn\u2019t reach the server. Check your internet connection."

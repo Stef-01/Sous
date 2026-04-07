@@ -23,15 +23,15 @@ The main dish is only used as input to the pairing engine — it has no guided c
 
 ### What exists today
 
-| Layer | Current State |
-|-------|--------------|
-| **Meals data** (`meals.json`) | 93 entries with `id, name, aliases, heroImageUrl, sidePool, cuisine, description` — **no cook steps, no ingredients, no prep/cook times** |
-| **Sides data** (`sides.json`) | 203 entries with lightweight metadata — no cook steps inline |
-| **Guided cook steps** (`guided-cook-steps.ts`) | 31 side dishes with full `StaticDishData`: ingredients, steps, timers, warnings, hacks, facts |
-| **Cook store** (`use-cook-store.ts`) | Single-dish Zustand state: one `currentPhase`, one `currentStepIndex`, one `totalSteps` |
-| **Cook router** (`cook.ts`) | `getSteps` takes a single `sideDishSlug` and returns one dish + its steps + its ingredients |
-| **Cook page** (`cook/[slug]/page.tsx`) | Renders single-dish flow: Mission → Grab → Cook → Win |
-| **Session tracking** (`use-cook-sessions.ts`) | Tracks one recipe per session in localStorage |
+| Layer                                          | Current State                                                                                                                             |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Meals data** (`meals.json`)                  | 93 entries with `id, name, aliases, heroImageUrl, sidePool, cuisine, description` — **no cook steps, no ingredients, no prep/cook times** |
+| **Sides data** (`sides.json`)                  | 203 entries with lightweight metadata — no cook steps inline                                                                              |
+| **Guided cook steps** (`guided-cook-steps.ts`) | 31 side dishes with full `StaticDishData`: ingredients, steps, timers, warnings, hacks, facts                                             |
+| **Cook store** (`use-cook-store.ts`)           | Single-dish Zustand state: one `currentPhase`, one `currentStepIndex`, one `totalSteps`                                                   |
+| **Cook router** (`cook.ts`)                    | `getSteps` takes a single `sideDishSlug` and returns one dish + its steps + its ingredients                                               |
+| **Cook page** (`cook/[slug]/page.tsx`)         | Renders single-dish flow: Mission → Grab → Cook → Win                                                                                     |
+| **Session tracking** (`use-cook-sessions.ts`)  | Tracks one recipe per session in localStorage                                                                                             |
 
 ### What needs to change
 
@@ -47,16 +47,20 @@ The main dish is only used as input to the pairing engine — it has no guided c
 ## Phased Build Plan
 
 ### Phase A: Meal Guided Cook Data (Data Layer)
+
 **Goal:** Add `StaticDishData` entries for main dishes, starting with the most popular meals that already have sides with cook steps.
 
 #### A1. Extend `guided-cook-steps.ts` to support meals
+
 - The existing `StaticDishData` interface works as-is for meals — same shape (name, slug, ingredients, steps, etc.)
 - Add a new export: `guidedCookMeals: Record<string, StaticDishData>` alongside existing `guidedCookData` (which is sides)
 - Add helper: `getStaticMealCookData(slug: string)` alongside existing `getStaticCookData(slug: string)`
 - Add helper: `getAvailableMealCookSlugs(): string[]`
 
 #### A2. Add first batch of meal cook flows (5-8 meals)
+
 Priority meals (most referenced in sidePool, best coverage of cuisines):
+
 - **Pizza Margherita** (Italian) — sides: caesar-salad, garlic-bread, bruschetta, caprese-salad all have cook flows
 - **Butter Chicken** (Indian) — sides: garlic-naan, aloo-gobi, cucumber-raita, masoor-dal have cook flows
 - **Fish Tacos** (Mexican) — sides: guacamole, pico-de-gallo, elote, esquites, mexican-rice have cook flows
@@ -70,9 +74,11 @@ Each meal entry follows `StaticDishData` shape with real, researched recipe inst
 ---
 
 ### Phase B: Combined Cook Router (API Layer)
+
 **Goal:** New tRPC endpoint that returns a main + sides as a combined cook session.
 
 #### B1. New `cook.getCombinedSteps` procedure
+
 ```typescript
 cook.getCombinedSteps
   Input: { mainDishSlug: string, sideSlugs: string[] }
@@ -89,14 +95,17 @@ cook.getCombinedSteps
 - If a side has no cook data, it's excluded from `sides` array
 
 #### B2. Keep existing `cook.getSteps` unchanged
+
 Single-side cook flow stays exactly as-is. No breaking changes.
 
 ---
 
 ### Phase C: Segmented Ingredient List (UI — Earlier Phase)
+
 **Goal:** When cooking combined, the Grab phase shows ingredients segmented by dish.
 
 #### C1. Extend `IngredientList` component
+
 - New prop: `sections?: Array<{ label: string; ingredients: Ingredient[] }>`
 - When `sections` is provided, render each section with a subheading (e.g., "For Pizza Margherita", "For Caesar Salad")
 - When `sections` is absent, render flat list as today (backward-compatible)
@@ -105,6 +114,7 @@ Single-side cook flow stays exactly as-is. No breaking changes.
 - Shared ingredients across sections get a subtle "(also needed for Caesar Salad)" note
 
 #### C2. Ingredient deduplication logic
+
 - Utility function: `deduplicateIngredients(sections)`
 - Matches by normalized ingredient name
 - When same ingredient appears in multiple dishes, show it once in the first dish section with a note showing it's shared
@@ -113,9 +123,11 @@ Single-side cook flow stays exactly as-is. No breaking changes.
 ---
 
 ### Phase D: Combined Cook Store (State)
+
 **Goal:** Extend Zustand store to track multi-dish cook sessions.
 
 #### D1. Add multi-dish state to `use-cook-store.ts`
+
 ```typescript
 interface CookStore {
   // Existing single-dish fields (kept for backward compat)
@@ -140,31 +152,37 @@ interface CookStore {
 ---
 
 ### Phase E: Combined Cook Page (UI — Full Flow)
+
 **Goal:** New route `/cook/combined` that orchestrates the multi-dish flow.
 
 #### E1. Route: `/cook/combined?main=SLUG&sides=SLUG1,SLUG2`
+
 - Reads main + sides from URL params
 - Fetches via `cook.getCombinedSteps`
 - Renders the same Mission → Grab → Cook → Win shell
 
 #### E2. Mission Screen (combined mode)
+
 - Shows the main dish hero image + name
 - Below: "Cooking with: Caesar Salad, Garlic Bread" (side names)
 - Total time: sum of all prep + cook times
 - Single CTA: "Let's gather"
 
 #### E3. Grab Screen (combined mode)
+
 - Uses Phase C's segmented ingredient list
 - Section headers: "🍕 For Pizza Margherita", "🥗 For Caesar Salad"
 - Single CTA at bottom: "I have everything"
 
 #### E4. Cook Screen (combined mode)
+
 - Cooks one dish at a time, in `cookOrder` sequence
 - Between dishes: brief transition card ("✅ Pizza done! Next up: Caesar Salad")
 - Step counter shows: "Caesar Salad · Step 2 of 5"
 - Phase indicator shows: "Dish 1 of 3 · Cook"
 
 #### E5. Win Screen (combined mode)
+
 - Celebrates the full plate: "You cooked a complete meal!"
 - Shows all dishes cooked with their images
 - Single session recorded with all dish slugs
@@ -172,9 +190,11 @@ interface CookStore {
 ---
 
 ### Phase F: Wiring Into Existing Flows
+
 **Goal:** Connect combined cook to the existing user journey.
 
 #### F1. Result Stack "Cook selected" button
+
 - Currently cooks first selected side only
 - When main has guided cook data AND sides are selected:
   - Navigate to `/cook/combined?main=MAIN_SLUG&sides=SIDE1,SIDE2`
@@ -182,10 +202,12 @@ interface CookStore {
   - Keep current behavior (cook first side via `/cook/[slug]`)
 
 #### F2. Quest Card "Start cooking"
+
 - If the dish has guided cook steps → `/cook/[slug]` (side-only, as today)
 - No change needed here — quest cards are for discovering sides
 
 #### F3. "Select sides to pair" from ingredient list
+
 - Currently navigates to `/?selectSides=DISH_NAME`
 - After combined flow is built, could navigate to combined route
 - Deferred to Phase F (not needed for initial build)
@@ -194,14 +216,14 @@ interface CookStore {
 
 ## Execution Priority
 
-| Phase | Effort | Dependency | Ship Independently? |
-|-------|--------|------------|---------------------|
-| **A** (meal cook data) | Medium | None | ✅ Yes — data only, no UI change |
-| **B** (combined router) | Small | A | ✅ Yes — API only, no UI change |
-| **C** (segmented ingredients) | Small | None | ✅ Yes — backward-compatible UI |
-| **D** (combined store) | Small | None | ✅ Yes — backward-compatible state |
-| **E** (combined cook page) | Large | A + B + C + D | ❌ Needs all above |
-| **F** (wiring) | Small | E | ❌ Needs E |
+| Phase                         | Effort | Dependency    | Ship Independently?                |
+| ----------------------------- | ------ | ------------- | ---------------------------------- |
+| **A** (meal cook data)        | Medium | None          | ✅ Yes — data only, no UI change   |
+| **B** (combined router)       | Small  | A             | ✅ Yes — API only, no UI change    |
+| **C** (segmented ingredients) | Small  | None          | ✅ Yes — backward-compatible UI    |
+| **D** (combined store)        | Small  | None          | ✅ Yes — backward-compatible state |
+| **E** (combined cook page)    | Large  | A + B + C + D | ❌ Needs all above                 |
+| **F** (wiring)                | Small  | E             | ❌ Needs E                         |
 
 **Recommended execution order:** A → C → B → D → E → F
 
@@ -214,6 +236,7 @@ Start with **A** (data) and **C** (segmented ingredients) in parallel since they
 **Phase A2 + C1:** Add the first 5 meal guided cook flows to the data layer, and build the segmented ingredient list UI.
 
 This delivers immediate value:
+
 - Meal cook data exists and is testable
 - Ingredient list supports sections (can be previewed in single-dish mode)
 - No breaking changes to the existing flow

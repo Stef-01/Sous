@@ -24,9 +24,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
       <span className="text-[10px] streak-flame" role="img" aria-label="fire">
         🔥
       </span>
-      <span className="text-[10px] font-bold text-amber-700">
-        {streak}
-      </span>
+      <span className="text-[10px] font-bold text-amber-700">{streak}</span>
     </motion.div>
   );
 }

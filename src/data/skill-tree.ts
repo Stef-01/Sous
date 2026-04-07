@@ -152,12 +152,7 @@ const intermediate: SkillNode[] = [
       "Understand complementary and contrasting flavors. Build plates that sing.",
     tier: "intermediate",
     requiredSkills: ["plating-finish"],
-    associatedDishes: [
-      "tabbouleh",
-      "kimchi",
-      "lotus-root-salad",
-      "elote",
-    ],
+    associatedDishes: ["tabbouleh", "kimchi", "lotus-root-salad", "elote"],
     cooksRequired: 3,
     position: { x: 30, y: 9 },
   },
@@ -230,13 +225,7 @@ const specializations: SkillNode[] = [
     tier: "specialization",
     cuisineFamily: "japanese",
     requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "gyoza",
-      "edamame",
-      "tempura",
-      "miso-soup",
-      "takoyaki",
-    ],
+    associatedDishes: ["gyoza", "edamame", "tempura", "miso-soup", "takoyaki"],
     cooksRequired: 4,
     position: { x: 40, y: 12 },
   },
@@ -405,6 +394,11 @@ export const skillTreeNodes: SkillNode[] = [
 /** Look up a node by ID */
 export function getSkillNode(id: string): SkillNode | undefined {
   return skillTreeNodes.find((n) => n.id === id);
+}
+
+/** Find the skill node that counts a given dish slug toward its progress */
+export function findSkillNodeForDish(dishSlug: string): SkillNode | undefined {
+  return skillTreeNodes.find((n) => n.associatedDishes.includes(dishSlug));
 }
 
 /** Get all nodes grouped by tier */

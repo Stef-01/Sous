@@ -57,11 +57,11 @@ export function ResultStack({
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
-    () => new Set(initialSides.map((s) => s.id))
+    () => new Set(initialSides.map((s) => s.id)),
   );
   // Track all IDs that have appeared (for excluding during reroll)
   const [seenIds, setSeenIds] = useState<Set<string>>(
-    () => new Set(initialSides.map((s) => s.id))
+    () => new Set(initialSides.map((s) => s.id)),
   );
   const [rerollingIndex, setRerollingIndex] = useState<number | null>(null);
 
@@ -77,7 +77,7 @@ export function ResultStack({
 
   const selectedSides = useMemo(
     () => sides.filter((s) => selectedIds.has(s.id)),
-    [sides, selectedIds]
+    [sides, selectedIds],
   );
 
   const toggleSelect = useCallback((id: string) => {
@@ -101,7 +101,7 @@ export function ResultStack({
     {
       enabled: rerollingIndex !== null,
       staleTime: 0,
-    }
+    },
   );
 
   // Handle reroll result
@@ -141,14 +141,11 @@ export function ResultStack({
     }
   }
 
-  const handleRerollSide = useCallback(
-    (index: number) => {
-      setRerollingIndex(index);
-      // Force refetch by invalidating
-      setAppliedRerollKey("");
-    },
-    []
-  );
+  const handleRerollSide = useCallback((index: number) => {
+    setRerollingIndex(index);
+    // Force refetch by invalidating
+    setAppliedRerollKey("");
+  }, []);
 
   // Run plate evaluation on selected sides
   const evaluation = useMemo<PlateEvaluation | null>(() => {
@@ -220,14 +217,11 @@ export function ResultStack({
             "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
             "border border-neutral-200 text-[var(--nourish-subtext)]",
             "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
-            "disabled:opacity-50 transition-all duration-200"
+            "disabled:opacity-50 transition-all duration-200",
           )}
           type="button"
         >
-          <RefreshCw
-            size={14}
-            className={isRerolling ? "animate-spin" : ""}
-          />
+          <RefreshCw size={14} className={isRerolling ? "animate-spin" : ""} />
           Reroll all
         </button>
       </div>
@@ -258,7 +252,7 @@ export function ResultStack({
           "flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-all duration-200",
           selectedSides.length > 0
             ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] shadow-sm shadow-[var(--nourish-green)]/20"
-            : "bg-neutral-100 text-neutral-400 cursor-not-allowed"
+            : "bg-neutral-100 text-neutral-400 cursor-not-allowed",
         )}
         type="button"
       >
@@ -281,7 +275,7 @@ export function ResultStack({
             "flex w-full items-center justify-center gap-2 rounded-xl",
             "border border-neutral-200 bg-white py-2.5 text-xs font-medium",
             "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40",
-            "hover:text-[var(--nourish-green)] transition-all duration-200"
+            "hover:text-[var(--nourish-green)] transition-all duration-200",
           )}
           type="button"
         >
@@ -344,7 +338,7 @@ function ResultCard({
       pairingReason: side.pairingReason ?? "",
       tags: side.tags,
     },
-    { enabled: expanded, staleTime: Infinity }
+    { enabled: expanded, staleTime: Infinity },
   );
 
   const displayExplanation =
@@ -360,7 +354,7 @@ function ResultCard({
         "overflow-hidden rounded-xl border bg-white transition-colors",
         selected
           ? "border-[var(--nourish-green)]/30 shadow-sm"
-          : "border-neutral-100 opacity-60"
+          : "border-neutral-100 opacity-60",
       )}
     >
       <div className="flex w-full items-center gap-3 p-4">
@@ -376,11 +370,13 @@ function ResultCard({
             "flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
             selected
               ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-              : "border-neutral-300 bg-white"
+              : "border-neutral-300 bg-white",
           )}
           type="button"
         >
-          {selected && <Check size={12} className="text-white" strokeWidth={3} />}
+          {selected && (
+            <Check size={12} className="text-white" strokeWidth={3} />
+          )}
         </motion.button>
 
         {/* Card content (tappable to expand) */}
@@ -435,7 +431,7 @@ function ResultCard({
             size={16}
             className={cn(
               "shrink-0 text-[var(--nourish-subtext)] transition-transform duration-200",
-              expanded && "rotate-180"
+              expanded && "rotate-180",
             )}
           />
         </button>
@@ -482,10 +478,7 @@ function ResultCard({
                   label="Nutrition"
                   value={side.scores.nutritionBalance}
                 />
-                <ScoreBadge
-                  label="Quick prep"
-                  value={side.scores.prepBurden}
-                />
+                <ScoreBadge label="Quick prep" value={side.scores.prepBurden} />
               </div>
 
               {/* AI-enhanced pairing explanation */}
@@ -503,7 +496,7 @@ function ResultCard({
                   "w-full rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-xs font-medium",
                   "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
                   "transition-colors duration-200",
-                  "flex items-center justify-center gap-2"
+                  "flex items-center justify-center gap-2",
                 )}
                 type="button"
               >
@@ -530,7 +523,7 @@ function ScoreBadge({ label, value }: { label: string; value: number }) {
           ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
           : pct >= 50
             ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
-            : "bg-neutral-100 text-[var(--nourish-subtext)]"
+            : "bg-neutral-100 text-[var(--nourish-subtext)]",
       )}
     >
       {label} {pct}%

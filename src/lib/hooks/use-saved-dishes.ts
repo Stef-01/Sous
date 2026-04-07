@@ -62,7 +62,7 @@ export function useSavedDishes() {
     (slug: string): boolean => {
       return saved.some((d) => d.slug === slug);
     },
-    [saved]
+    [saved],
   );
 
   return { saved, saveDish, removeDish, isDishSaved };

@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
@@ -12,7 +12,9 @@ import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { getStaticCookData } from "@/data/guided-cook-steps";
+import { findSkillNodeForDish } from "@/data/skill-tree";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
@@ -23,9 +25,14 @@ export default function GuidedCookPage({
 }) {
   const { slug } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Main dish context passed from the Today page (e.g. "Chicken Tikka Masala")
+  const mainDishInput = searchParams.get("main") ?? undefined;
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  const { recordSkillCook } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
@@ -55,7 +62,7 @@ export default function GuidedCookPage({
   // Fetch steps from tRPC
   const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
     { sideDishSlug: slug },
-    { enabled: !!slug }
+    { enabled: !!slug },
   );
 
   // Cuisine family for this side dish
@@ -70,15 +77,17 @@ export default function GuidedCookPage({
       sessionIdRef.current = startSession(
         slug,
         data.dish.name,
-        cuisine
+        cuisine,
+        mainDishInput,
       );
     }
-  }, [data?.dish, slug, cuisine, startSession]);
+  }, [data?.dish, slug, cuisine, mainDishInput, startSession]);
 
   // Filter steps by phase
   const cookSteps = useMemo(
-    () => data?.steps?.filter((s: { phase: string }) => s.phase === "cook") ?? [],
-    [data?.steps]
+    () =>
+      data?.steps?.filter((s: { phase: string }) => s.phase === "cook") ?? [],
+    [data?.steps],
   );
 
   const currentCookStep = cookSteps[currentStepIndex];
@@ -110,6 +119,11 @@ export default function GuidedCookPage({
           saved: false,
         });
       }
+      // Record skill progress for this dish (if it maps to a skill node)
+      const skillNode = findSkillNodeForDish(slug);
+      if (skillNode) {
+        recordSkillCook(skillNode.id);
+      }
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -123,14 +137,14 @@ export default function GuidedCookPage({
     (chip: string | null) => {
       toggleChip(chip as "timer" | "mistake" | "hack" | "fact" | null);
     },
-    [toggleChip]
+    [toggleChip],
   );
 
   const handleStartTimer = useCallback(
     (seconds: number) => {
       startTimer(seconds);
     },
-    [startTimer]
+    [startTimer],
   );
 
   const handleBackToday = useCallback(() => {
@@ -165,7 +179,13 @@ export default function GuidedCookPage({
         handleBackToday();
         break;
     }
-  }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data?.ingredients]);
+  }, [
+    currentPhase,
+    currentStepIndex,
+    handleBackToday,
+    setPhase,
+    data?.ingredients,
+  ]);
 
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
@@ -187,7 +207,7 @@ export default function GuidedCookPage({
         updateSession(sessionIdRef.current, { rating });
       }
     },
-    [updateSession]
+    [updateSession],
   );
 
   const handleAddNote = useCallback(
@@ -196,7 +216,7 @@ export default function GuidedCookPage({
         updateSession(sessionIdRef.current, { note });
       }
     },
-    [updateSession]
+    [updateSession],
   );
 
   const handleAddPhoto = useCallback(() => {
@@ -256,7 +276,7 @@ export default function GuidedCookPage({
               "rounded-lg p-1.5 transition-colors",
               currentPhase === "win"
                 ? "text-neutral-200 cursor-default"
-                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
             )}
             type="button"
           >

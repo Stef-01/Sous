@@ -142,7 +142,6 @@ export default function PlateMethodModal({
                   <div className="absolute inset-0 rounded-full bg-gradient-to-b from-gray-100 to-gray-200 shadow-lg" />
                   {/* Inner plate surface */}
                   <div className="absolute inset-2 rounded-full bg-white shadow-inner overflow-hidden">
-
                     {/* Top half — vegetables (50%) */}
                     <div
                       className={`absolute top-0 left-0 right-0 h-1/2 flex flex-col items-center justify-center transition-colors ${
@@ -152,7 +151,10 @@ export default function PlateMethodModal({
                       {hasVegs ? (
                         <div className="flex items-center justify-center gap-1.5 mb-1">
                           {categories.vegs.slice(0, 2).map((food) => (
-                            <div key={food.name} className="relative w-10 h-10 sm:w-12 sm:h-12">
+                            <div
+                              key={food.name}
+                              className="relative w-10 h-10 sm:w-12 sm:h-12"
+                            >
                               <Image
                                 src={food.imageUrl}
                                 alt={food.name}
@@ -164,11 +166,17 @@ export default function PlateMethodModal({
                           ))}
                         </div>
                       ) : null}
-                      <span className={`text-[9px] font-semibold uppercase tracking-wider ${hasVegs ? "text-green-700" : "text-gray-400"}`}>
+                      <span
+                        className={`text-[9px] font-semibold uppercase tracking-wider ${hasVegs ? "text-green-700" : "text-gray-400"}`}
+                      >
                         Vegetables
                       </span>
-                      <p className={`text-[9px] mt-0.5 leading-tight text-center px-4 ${hasVegs ? "text-green-600/80" : "text-gray-400"}`}>
-                        {hasVegs ? categories.vegs.map(f => f.name).join(", ") : "None"}
+                      <p
+                        className={`text-[9px] mt-0.5 leading-tight text-center px-4 ${hasVegs ? "text-green-600/80" : "text-gray-400"}`}
+                      >
+                        {hasVegs
+                          ? categories.vegs.map((f) => f.name).join(", ")
+                          : "None"}
                       </p>
                     </div>
 
@@ -192,11 +200,17 @@ export default function PlateMethodModal({
                           />
                         </div>
                       ) : null}
-                      <span className={`text-[9px] font-semibold uppercase tracking-wider ${hasProteins ? "text-rose-700" : "text-gray-400"}`}>
+                      <span
+                        className={`text-[9px] font-semibold uppercase tracking-wider ${hasProteins ? "text-rose-700" : "text-gray-400"}`}
+                      >
                         Protein
                       </span>
-                      <p className={`text-[8px] mt-0.5 leading-tight text-center px-2 ${hasProteins ? "text-rose-600/80" : "text-gray-400"}`}>
-                        {hasProteins ? categories.proteins.map(f => f.name).join(", ") : "None"}
+                      <p
+                        className={`text-[8px] mt-0.5 leading-tight text-center px-2 ${hasProteins ? "text-rose-600/80" : "text-gray-400"}`}
+                      >
+                        {hasProteins
+                          ? categories.proteins.map((f) => f.name).join(", ")
+                          : "None"}
                       </p>
                     </div>
 
@@ -212,7 +226,10 @@ export default function PlateMethodModal({
                       {hasCarbs ? (
                         <div className="flex items-center justify-center gap-0.5 mb-0.5">
                           {categories.carbs.slice(0, 2).map((food) => (
-                            <div key={food.name} className="relative w-8 h-8 sm:w-10 sm:h-10">
+                            <div
+                              key={food.name}
+                              className="relative w-8 h-8 sm:w-10 sm:h-10"
+                            >
                               <Image
                                 src={food.imageUrl}
                                 alt={food.name}
@@ -224,11 +241,17 @@ export default function PlateMethodModal({
                           ))}
                         </div>
                       ) : null}
-                      <span className={`text-[9px] font-semibold uppercase tracking-wider ${hasCarbs ? "text-amber-700" : "text-gray-400"}`}>
+                      <span
+                        className={`text-[9px] font-semibold uppercase tracking-wider ${hasCarbs ? "text-amber-700" : "text-gray-400"}`}
+                      >
                         Carbs
                       </span>
-                      <p className={`text-[8px] mt-0.5 leading-tight text-center px-2 ${hasCarbs ? "text-amber-600/80" : "text-gray-400"}`}>
-                        {hasCarbs ? categories.carbs.map(f => f.name).join(", ") : "None"}
+                      <p
+                        className={`text-[8px] mt-0.5 leading-tight text-center px-2 ${hasCarbs ? "text-amber-600/80" : "text-gray-400"}`}
+                      >
+                        {hasCarbs
+                          ? categories.carbs.map((f) => f.name).join(", ")
+                          : "None"}
                       </p>
                     </div>
                   </div>
@@ -239,7 +262,18 @@ export default function PlateMethodModal({
               <div className="text-center mb-3">
                 {filledCount === 3 ? (
                   <div className="flex items-center justify-center gap-1.5">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-green-600">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-green-600"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                     <p className="text-sm font-medium text-green-600">
@@ -259,15 +293,21 @@ export default function PlateMethodModal({
               <div className="flex items-center justify-center gap-5">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-green-400/80 ring-1 ring-green-500/20" />
-                  <span className="text-[10px] text-nourish-subtext font-medium">1/2 Veg</span>
+                  <span className="text-[10px] text-nourish-subtext font-medium">
+                    1/2 Veg
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-rose-400/80 ring-1 ring-rose-500/20" />
-                  <span className="text-[10px] text-nourish-subtext font-medium">1/4 Protein</span>
+                  <span className="text-[10px] text-nourish-subtext font-medium">
+                    1/4 Protein
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-amber-400/80 ring-1 ring-amber-500/20" />
-                  <span className="text-[10px] text-nourish-subtext font-medium">1/4 Carbs</span>
+                  <span className="text-[10px] text-nourish-subtext font-medium">
+                    1/4 Carbs
+                  </span>
                 </div>
               </div>
             </motion.div>

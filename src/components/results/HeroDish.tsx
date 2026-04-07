@@ -4,7 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Meal } from "@/types";
-import { springs, spawnScaleKeyframes, squashStretchKeyframes } from "@/lib/motion";
+import {
+  springs,
+  spawnScaleKeyframes,
+  squashStretchKeyframes,
+} from "@/lib/motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 import HoverCard from "./HoverCard";
@@ -93,7 +97,11 @@ const reducedVariants = {
   exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishProps) {
+export default function HeroDish({
+  meal,
+  onClick,
+  hideLabel = false,
+}: HeroDishProps) {
   const [imgError, setImgError] = useState(false);
   const [showGlowRing, setShowGlowRing] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
@@ -157,10 +165,14 @@ export default function HeroDish({ meal, onClick, hideLabel = false }: HeroDishP
 
       <motion.div
         className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden"
-        whileHover={prefersReduced ? {} : {
-          scale: 1.06, // Increased zoom to match new tactile feel
-          y: -8,
-        }}
+        whileHover={
+          prefersReduced
+            ? {}
+            : {
+                scale: 1.06, // Increased zoom to match new tactile feel
+                y: -8,
+              }
+        }
         transition={springs.gentle}
       >
         {/* Squash-stretch inner wrapper */}

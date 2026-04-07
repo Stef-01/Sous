@@ -19,7 +19,12 @@ function formatTime(seconds: number): string {
   return `${s} sec`;
 }
 
-export function TimerChip({ seconds, isExpanded, onToggle, onStart }: TimerChipProps) {
+export function TimerChip({
+  seconds,
+  isExpanded,
+  onToggle,
+  onStart,
+}: TimerChipProps) {
   return (
     <div>
       <button
@@ -29,7 +34,7 @@ export function TimerChip({ seconds, isExpanded, onToggle, onStart }: TimerChipP
           "border transition-all duration-150",
           isExpanded
             ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
-            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300"
+            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
       >

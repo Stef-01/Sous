@@ -91,18 +91,14 @@ export default function SavedPairingsModal({
                   : { opacity: 0, y: 60, scale: 0.9 }
               }
               animate={
-                prefersReduced
-                  ? { opacity: 1 }
-                  : { opacity: 1, y: 0, scale: 1 }
+                prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }
               }
               exit={
                 prefersReduced
                   ? { opacity: 0 }
                   : { opacity: 0, y: 40, scale: 0.95 }
               }
-              transition={
-                prefersReduced ? { duration: 0.2 } : springs.modal
-              }
+              transition={prefersReduced ? { duration: 0.2 } : springs.modal}
             >
               {/* Header */}
               <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-gray-100">
@@ -125,7 +121,8 @@ export default function SavedPairingsModal({
               <div className="flex-1 overflow-y-auto px-6 py-4">
                 {pairings.length === 0 ? (
                   <p className="text-sm text-nourish-subtext text-center py-8">
-                    No saved pairings yet. Find a meal and tap the bookmark to save it.
+                    No saved pairings yet. Find a meal and tap the bookmark to
+                    save it.
                   </p>
                 ) : (
                   <motion.div
@@ -138,9 +135,7 @@ export default function SavedPairingsModal({
                       <motion.div
                         key={pairing.id}
                         variants={
-                          prefersReduced
-                            ? reducedItemVariants
-                            : itemVariants
+                          prefersReduced ? reducedItemVariants : itemVariants
                         }
                         className="group flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-gray-200 hover:bg-gray-50/50 cursor-pointer transition-colors"
                         onClick={() => onSelect(pairing)}

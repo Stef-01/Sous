@@ -27,7 +27,7 @@ export function useSharePlate() {
         setIsGenerating(false);
       }
     },
-    []
+    [],
   );
 
   const downloadImage = useCallback(
@@ -37,7 +37,7 @@ export function useSharePlate() {
       link.href = dataUrl;
       link.click();
     },
-    []
+    [],
   );
 
   const copyToClipboard = useCallback(
@@ -55,7 +55,7 @@ export function useSharePlate() {
         return false;
       }
     },
-    []
+    [],
   );
 
   const shareImage = useCallback(
@@ -63,9 +63,13 @@ export function useSharePlate() {
       try {
         const response = await fetch(dataUrl);
         const blob = await response.blob();
-        const file = new File([blob], `sous-${mealName.toLowerCase().replace(/\s+/g, "-")}.png`, {
-          type: "image/png",
-        });
+        const file = new File(
+          [blob],
+          `sous-${mealName.toLowerCase().replace(/\s+/g, "-")}.png`,
+          {
+            type: "image/png",
+          },
+        );
 
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
           await navigator.share({
@@ -85,7 +89,7 @@ export function useSharePlate() {
         return await copyToClipboard(dataUrl);
       }
     },
-    [copyToClipboard]
+    [copyToClipboard],
   );
 
   return {
