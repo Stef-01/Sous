@@ -37,10 +37,37 @@
   --font-serif: "DM Serif Display", Georgia, serif;
 }
 
+/* === MOBILE OPTIMISATION === */
+html {
+  /* Eliminate 300ms tap delay on iOS while preserving pinch-to-zoom */
+  touch-action: manipulation;
+  /* Prevent text size inflation on iOS Safari */
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  /* Thinner, crisper text rendering on iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent body rubber-band overscroll for app-like feel */
+  overscroll-behavior: none;
+}
+
+/* Prevent iOS auto-zoom on input focus (requires font-size >= 16px) */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* Remove default iOS tap highlight — replaced by Framer Motion whileTap */
+button,
+a,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* === SHIMMER === */
@@ -139,6 +166,16 @@ body {
 /* === SAFE AREA === */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* === SCROLL CONTAINER ISOLATION === */
+/* Prevents scroll chaining — inner scroll hitting boundary won't bounce the outer page */
+.scroll-contain {
+  overscroll-behavior: contain;
 }
 
 /* === SCROLLBAR HIDE === */
