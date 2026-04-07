@@ -113,7 +113,7 @@ export default function PathPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-full bg-[var(--nourish-cream)]">
+      <div className="min-h-dvh bg-[var(--nourish-cream)]">
         <header className="border-b border-neutral-100/80 bg-white px-4 py-3">
           <div className="mx-auto max-w-md">
             <div className="h-6 w-24 rounded bg-neutral-100 animate-pulse" />
@@ -132,7 +132,7 @@ export default function PathPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-full bg-[var(--nourish-cream)]">
+    <div className="min-h-dvh bg-[var(--nourish-cream)]">
       {/* Header with stats */}
       <PathHeader
         streak={stats.currentStreak}

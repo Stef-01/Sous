@@ -1,12 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls -la \"C:\\\\Users\\\\stefa\\\\Sous\\\\.claude\\\\worktrees\\\\naughty-dirac\\\\.claude\\\\hooks\"\" 2>/dev/null || echo \"hooks directory not found \")",
-      "Skill(update-config)",
-      "Skill(update-config:*)",
-      "Bash(node -e \"const fs = require\\(''fs''\\); try { const j = JSON.parse\\(fs.readFileSync\\(''C:/Users/stefa/Sous/.claude/worktrees/naughty-dirac/.claude/settings.json'',''utf8''\\)\\); console.log\\(''Valid JSON. Hook events:'', Object.keys\\(j.hooks\\)\\); } catch\\(e\\) { console.error\\(''INVALID:'', e.message\\); process.exit\\(1\\); }\")",
-      "Bash(where jq:*)",
-      "Bash(node -e \":*)"
+      "Bash(ls -la /c/Users/stefa/Sous/.claude/worktrees/goofy-elion/src/app/\\\\\\(path\\\\\\)/)",
+      "Bash(ls -la /c/Users/stefa/Sous/.claude/worktrees/goofy-elion/src/app/\\\\\\(path\\\\\\)/path/)",
+      "Bash(pnpm build:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }
