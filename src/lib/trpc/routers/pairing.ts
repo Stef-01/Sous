@@ -118,6 +118,12 @@ export const pairingRouter = router({
         mainDish: z.string(),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
+        /** User preference vector from coach quiz (keys: cuisine/flavor/nutrition tags, values -1..1). */
+        userPreferences: z.record(z.number()).optional(),
+        /** Effort tolerance from coach quiz — overrides the parsed intent's value. */
+        effortTolerance: z
+          .enum(["minimal", "moderate", "willing"])
+          .optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -137,9 +143,14 @@ export const pairingRouter = router({
         intent.cuisineSignals.unshift(input.cuisineHint);
       }
 
-      // 2. Run pairing engine
+      // Override effort tolerance from quiz if provided
+      if (input.effortTolerance) {
+        intent.effortTolerance = input.effortTolerance;
+      }
+
+      // 2. Run pairing engine (with optional user preferences from coach quiz)
       const candidates = getCandidates();
-      const result = suggestSides(intent, candidates);
+      const result = suggestSides(intent, candidates, input.userPreferences);
 
       if (!result.success) {
         return { success: false as const, error: result.error, sides: [] };
@@ -192,6 +203,10 @@ export const pairingRouter = router({
         mainDish: z.string(),
         excludeIds: z.array(z.string()),
         cuisineHint: z.string().optional(),
+        userPreferences: z.record(z.number()).optional(),
+        effortTolerance: z
+          .enum(["minimal", "moderate", "willing"])
+          .optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -211,10 +226,19 @@ export const pairingRouter = router({
       ) {
         intent.cuisineSignals.unshift(input.cuisineHint);
       }
+      if (input.effortTolerance) {
+        intent.effortTolerance = input.effortTolerance;
+      }
 
       const excludeSet = new Set(input.excludeIds);
       const candidates = getCandidates().filter((c) => !excludeSet.has(c.id));
-      const result = suggestSides(intent, candidates, undefined, undefined, 1);
+      const result = suggestSides(
+        intent,
+        candidates,
+        input.userPreferences,
+        undefined,
+        1,
+      );
 
       if (!result.success || result.data.sides.length === 0) {
         return {
