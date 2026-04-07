@@ -14,8 +14,6 @@ export function TabBar({
   const tabs = useNavigation(user);
   const pathname = usePathname();
 
-  // Don't show tab bar if only one tab (new user)
-  if (tabs.length <= 1) return null;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 backdrop-blur-sm safe-area-bottom">
