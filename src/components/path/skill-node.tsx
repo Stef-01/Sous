@@ -42,7 +42,10 @@ export function SkillNodeComponent({
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
       whileTap={
         isInteractive
-          ? { scale: 0.88, transition: { type: "spring", stiffness: 400, damping: 15 } }
+          ? {
+              scale: 0.88,
+              transition: { type: "spring", stiffness: 400, damping: 15 },
+            }
           : undefined
       }
       onClick={() => isInteractive && onTap(id)}
@@ -83,7 +86,7 @@ export function SkillNodeComponent({
         {/* Content by state */}
         {status === "completed" ? (
           <>
-            <span className="text-xl">{emoji}</span>
+            <span className="text-2xl leading-none">{emoji}</span>
             {/* Checkmark badge */}
             <motion.div
               initial={{ scale: 0 }}
@@ -105,10 +108,10 @@ export function SkillNodeComponent({
           </>
         ) : status === "in_progress" ? (
           <>
-            <span className="text-xl">{emoji}</span>
+            <span className="text-2xl leading-none">{emoji}</span>
             {/* Progress badge */}
             <div
-              className="absolute -bottom-1 -right-1 flex items-center justify-center rounded-full text-white text-[9px] font-bold min-w-[22px] h-[18px] px-1 shadow-sm"
+              className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center rounded-full text-white text-[9px] font-bold min-w-[22px] h-[20px] px-1.5 shadow-sm"
               style={{
                 background: "linear-gradient(135deg, #22c55e, #16a34a)",
               }}
@@ -135,7 +138,7 @@ export function SkillNodeComponent({
           </>
         ) : status === "available" ? (
           <>
-            <span className="text-xl">{emoji}</span>
+            <span className="text-2xl leading-none">{emoji}</span>
             {/* Breathing glow to signal interactivity */}
             <motion.div
               className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/20"
@@ -156,9 +159,9 @@ export function SkillNodeComponent({
           </>
         ) : (
           /* Locked state */
-          <div className="flex flex-col items-center gap-0.5 opacity-40">
-            <span className="text-base grayscale">{emoji}</span>
-            <Lock size={9} className="text-slate-400" />
+          <div className="flex flex-col items-center justify-center gap-1 opacity-35">
+            <span className="text-xl leading-none grayscale">{emoji}</span>
+            <Lock size={12} className="text-slate-400" />
           </div>
         )}
       </div>

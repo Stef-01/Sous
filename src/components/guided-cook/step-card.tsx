@@ -131,6 +131,7 @@ export function StepCard({
             src={imageUrl}
             alt={`Step ${stepNumber}`}
             fill
+            sizes="(max-width: 768px) 100vw, 448px"
             className="object-cover"
           />
         </div>
@@ -310,7 +311,9 @@ export function StepCard({
             "transition-colors duration-200",
           )}
           type="button"
-          aria-label={isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`}
+          aria-label={
+            isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`
+          }
         >
           {isLast ? "Done! 🎉" : "Next"}
           {!isLast && <ChevronRight size={16} />}
