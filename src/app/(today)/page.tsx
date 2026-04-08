@@ -265,7 +265,12 @@ function TodayPageContent() {
 
         {/* Today's Quest — swipeable card stack */}
         <div className="mb-2">
-          <QuestCard />
+          <QuestCard
+            onFindSides={(dishName) => {
+              setShowSearch(true);
+              handleTextSubmit(dishName);
+            }}
+          />
         </div>
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}

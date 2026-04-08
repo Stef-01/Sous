@@ -12,16 +12,16 @@ interface SearchPopoutProps {
 
 /**
  * Search Popout — bottom-sheet modal containing the search/pairing flow.
- * Triggered by clicking the bird mascot's "I'm craving..." speech bubble.
- * Contains the existing TextPrompt, ResultStack, CameraInput, etc.
  *
- * Note: backdrop and sheet are rendered as separate AnimatePresence children
- * (not inside a Fragment) so exit animations fire correctly for both.
+ * IMPORTANT: position:sticky is broken inside CSS transform elements (Framer Motion
+ * uses translateY for the slide animation). Instead, we use a flex-col layout with
+ * a non-scrolling header and an independently scrollable content area so the X button
+ * is always visible regardless of scroll position.
  */
 export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
   return (
     <>
-      {/* Backdrop — separate AnimatePresence so it exits independently */}
+      {/* Backdrop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -36,7 +36,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
         )}
       </AnimatePresence>
 
-      {/* Bottom sheet — separate AnimatePresence */}
+      {/* Bottom sheet */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -45,16 +45,14 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50
-                       rounded-t-2xl bg-white shadow-2xl
-                       max-h-[85vh] overflow-y-auto"
+            className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-white shadow-2xl max-h-[85vh]"
           >
-            {/* Handle + close */}
-            <div className="sticky top-0 z-10 bg-white rounded-t-2xl px-4 pt-3 pb-2">
+            {/* Fixed header — NEVER scrolls (avoids sticky+transform bug) */}
+            <div className="flex-shrink-0 bg-white rounded-t-2xl px-4 pt-3 pb-2">
               {/* Drag handle */}
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-neutral-300" />
 
-              {/* Close button — plain button avoids Framer Motion gesture interference on mobile */}
+              {/* Title + close */}
               <div className="flex items-center justify-between">
                 <h2 className="font-serif text-lg font-bold text-[var(--nourish-dark)]">
                   What are you craving?
@@ -70,9 +68,11 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
               </div>
             </div>
 
-            {/* Search flow content */}
-            <div className="mx-auto max-w-md px-4 pb-8 pt-2 space-y-4">
-              {children}
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto min-h-0 scroll-contain">
+              <div className="mx-auto max-w-md px-4 pt-2 pb-10 space-y-4">
+                {children}
+              </div>
             </div>
           </motion.div>
         )}
