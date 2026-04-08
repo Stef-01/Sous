@@ -14,13 +14,16 @@ interface SearchPopoutProps {
  * Search Popout — bottom-sheet modal containing the search/pairing flow.
  * Triggered by clicking the bird mascot's "I'm craving..." speech bubble.
  * Contains the existing TextPrompt, ResultStack, CameraInput, etc.
+ *
+ * Note: backdrop and sheet are rendered as separate AnimatePresence children
+ * (not inside a Fragment) so exit animations fire correctly for both.
  */
 export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Backdrop */}
+    <>
+      {/* Backdrop — separate AnimatePresence so it exits independently */}
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
             key="search-backdrop"
             initial={{ opacity: 0 }}
@@ -30,8 +33,12 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             className="fixed inset-0 z-40 bg-black/30"
             onClick={onClose}
           />
+        )}
+      </AnimatePresence>
 
-          {/* Bottom sheet */}
+      {/* Bottom sheet — separate AnimatePresence */}
+      <AnimatePresence>
+        {isOpen && (
           <motion.div
             key="search-sheet"
             initial={{ y: "100%" }}
@@ -47,20 +54,19 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
               {/* Drag handle */}
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-neutral-300" />
 
-              {/* Close button */}
+              {/* Close button — plain button avoids Framer Motion gesture interference on mobile */}
               <div className="flex items-center justify-between">
                 <h2 className="font-serif text-lg font-bold text-[var(--nourish-dark)]">
                   What are you craving?
                 </h2>
-                <motion.button
+                <button
                   onClick={onClose}
-                  whileTap={{ scale: 0.88 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                  className="rounded-lg p-2.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+                  className="rounded-lg p-2.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-90"
                   type="button"
+                  aria-label="Close search"
                 >
                   <X size={20} />
-                </motion.button>
+                </button>
               </div>
             </div>
 
@@ -69,8 +75,8 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
               {children}
             </div>
           </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

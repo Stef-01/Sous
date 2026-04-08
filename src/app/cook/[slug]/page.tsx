@@ -38,6 +38,8 @@ export default function GuidedCookPage({
   const { startSession, completeSession, updateSession } = useCookSessions();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
+  // Guard against rapid double-tap on the "Next step" button
+  const isAdvancingRef = useRef(false);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
     streak: number;
@@ -114,6 +116,11 @@ export default function GuidedCookPage({
   }, [setPhase, setTotalSteps, cookSteps.length]);
 
   const handleNext = useCallback(() => {
+    // Guard against rapid double-tap
+    if (isAdvancingRef.current) return;
+    isAdvancingRef.current = true;
+    setTimeout(() => { isAdvancingRef.current = false; }, 400);
+
     if (currentStepIndex >= cookSteps.length - 1) {
       // Last cook step — complete session, record skill progress, and go to win
       if (sessionIdRef.current) {

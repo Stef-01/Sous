@@ -197,7 +197,7 @@ export function ResultStack({
         ? "text-amber-600"
         : "text-[var(--nourish-subtext)]";
 
-  const handleCookSelected = () => {
+  const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
 
     if (onCookSelected && selectedSides.length > 1) {
@@ -208,7 +208,7 @@ export function ResultStack({
       // Fallback: cook first selected
       onCookThis(selectedSides[0]);
     }
-  };
+  }, [selectedSides, onCookSelected, onCookThis]);
 
   return (
     <motion.div
@@ -372,7 +372,7 @@ function ResultCard({
       )}
     >
       <div className="flex w-full items-center gap-3 p-4">
-        {/* Selection checkbox — min 44px touch target, visual circle stays h-6 w-6 */}
+        {/* Selection checkbox — min 44px touch target wrapping the visual circle */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -380,20 +380,24 @@ function ResultCard({
           }}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className={cn(
-            "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
-            selected
-              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-              : "border-neutral-300 bg-white",
-          )}
+          className="flex h-11 w-11 shrink-0 items-center justify-center -m-3"
           type="button"
           role="checkbox"
           aria-checked={selected}
           aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
-          {selected && (
-            <Check size={10} className="text-white" strokeWidth={3} />
-          )}
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-150",
+              selected
+                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+                : "border-neutral-300 bg-white",
+            )}
+          >
+            {selected && (
+              <Check size={10} className="text-white" strokeWidth={3} />
+            )}
+          </span>
         </motion.button>
 
         {/* Card content (tappable to expand) */}

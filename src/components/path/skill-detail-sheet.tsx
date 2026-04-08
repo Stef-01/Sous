@@ -28,12 +28,15 @@ export function SkillDetailSheet({
   onClose,
   onStartCook,
 }: SkillDetailSheetProps) {
-  if (!node) return null;
-
-  const progress = Math.min(cooksCompleted / node.cooksRequired, 1);
+  // Note: do NOT return null when node is null — AnimatePresence needs to render
+  // to fire the exit animation. The `open` prop and `node` will both be falsy
+  // at the same time (both derived from selectedNodeId), so gating on `open`
+  // inside AnimatePresence is sufficient. Guard node access throughout.
+  const progress = node ? Math.min(cooksCompleted / node.cooksRequired, 1) : 0;
 
   // Pick a random dish from the node's associated dishes
   const handleStartCook = () => {
+    if (!node) return;
     const dishes = node.associatedDishes;
     if (dishes.length === 0) return;
     const randomDish = dishes[Math.floor(Math.random() * dishes.length)];
@@ -83,16 +86,16 @@ export function SkillDetailSheet({
                     status === "locked" && "bg-neutral-100",
                   )}
                 >
-                  <span className="text-2xl">{node.emoji}</span>
+                  <span className="text-2xl">{node?.emoji}</span>
                 </div>
                 <div>
                   <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-                    {node.name}
+                    {node?.name}
                   </h2>
                   <p className="text-[11px] text-[var(--nourish-subtext)] uppercase tracking-wide">
-                    {node.cuisineFamily
+                    {node?.cuisineFamily
                       ? `${node.cuisineFamily} specialization`
-                      : node.tier.replace("-", " ")}
+                      : node?.tier.replace("-", " ")}
                   </p>
                 </div>
               </div>
@@ -125,7 +128,7 @@ export function SkillDetailSheet({
                   visible: { opacity: 1, y: 0 },
                 }}
               >
-                {node.description}
+                {node?.description}
               </motion.p>
 
               {/* Progress bar + XP */}
@@ -148,7 +151,7 @@ export function SkillDetailSheet({
                         : "text-[var(--nourish-dark)]",
                     )}
                   >
-                    {cooksCompleted}/{node.cooksRequired} cooks
+                    {cooksCompleted}/{node?.cooksRequired ?? 0} cooks
                   </span>
                 </div>
                 <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
@@ -196,7 +199,7 @@ export function SkillDetailSheet({
                   Practice dishes
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {node.associatedDishes.map((slug) => (
+                  {(node?.associatedDishes ?? []).map((slug) => (
                     <button
                       key={slug}
                       onClick={() => status !== "locked" && onStartCook(slug)}
@@ -220,13 +223,13 @@ export function SkillDetailSheet({
               </motion.div>
 
               {/* Prerequisites (for locked nodes) */}
-              {status === "locked" && node.requiredSkills.length > 0 && (
+              {status === "locked" && (node?.requiredSkills.length ?? 0) > 0 && (
                 <div className="space-y-2">
                   <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
                     Prerequisites
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {node.requiredSkills.map((reqId) => {
+                    {(node?.requiredSkills ?? []).map((reqId) => {
                       const reqNode = getSkillNode(reqId);
                       if (!reqNode) return null;
                       return (

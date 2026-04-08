@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/providers";
 import { AuthProvider } from "@/components/auth-provider";
 import { DeviceFrame } from "@/components/shared/device-frame";
+import { ErrorBoundary } from "@/components/shared/error-boundary";
 import "./globals.css";
 
 const inter = Inter({
@@ -67,7 +68,9 @@ export default function RootLayout({
           className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}
         >
           <Providers>
-            <DeviceFrame>{children}</DeviceFrame>
+            <ErrorBoundary>
+              <DeviceFrame>{children}</DeviceFrame>
+            </ErrorBoundary>
           </Providers>
           <Analytics />
           <SpeedInsights />
