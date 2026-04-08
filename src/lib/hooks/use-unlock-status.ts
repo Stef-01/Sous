@@ -18,7 +18,7 @@ interface UnlockStatus {
  */
 export function useUnlockStatus(): UnlockStatus {
   const [status, setStatus] = useState<UnlockStatus>({
-    pathUnlocked: false,
+    pathUnlocked: true,
     communityUnlocked: false,
     completedCooks: 0,
   });
@@ -26,7 +26,7 @@ export function useUnlockStatus(): UnlockStatus {
   useEffect(() => {
     const applyStats = (stats: { completedCooks?: number }) => {
       setStatus({
-        pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+        pathUnlocked: true,
         communityUnlocked: false, // deferred
         completedCooks: stats.completedCooks ?? 0,
       });
@@ -46,7 +46,7 @@ export function useUnlockStatus(): UnlockStatus {
         if (raw) {
           const stats = JSON.parse(raw);
           setStatus({
-            pathUnlocked: (stats.completedCooks ?? 0) >= 3,
+            pathUnlocked: true,
             communityUnlocked: false,
             completedCooks: stats.completedCooks ?? 0,
           });
