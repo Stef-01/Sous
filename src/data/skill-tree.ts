@@ -1,13 +1,14 @@
 /**
  * Skill Tree — Sous cooking progression system.
  *
- * Three tiers:
- *   1. Foundation — core cooking fundamentals (linear path)
- *   2. Intermediate — bridging skills (slight branching)
- *   3. Specialization — cuisine-specific mastery (branches)
+ * Four tiers based on real culinary school programs (Le Cordon Bleu, CIA, ICE, JWU, Escoffier):
+ *   1. Foundation     — core fundamentals every cook needs
+ *   2. Intermediate   — building on the basics with more technique
+ *   3. Advanced       — professional-level skills
+ *   4. Pre-Mastery    — capstone and creative skills
  *
  * Positions use a coordinate system: x (0–100), y (row index).
- * The visual tree renders nodes in an S-curve winding pattern.
+ * The visual tree renders nodes in a winding pattern.
  */
 
 export interface SkillNode {
@@ -15,7 +16,7 @@ export interface SkillNode {
   name: string;
   emoji: string;
   description: string;
-  tier: "foundation" | "intermediate" | "specialization";
+  tier: "foundation" | "intermediate" | "advanced" | "pre-mastery";
   cuisineFamily?: string;
   requiredSkills: string[];
   associatedDishes: string[];
@@ -34,110 +35,137 @@ export type SkillNodeStatus =
 
 const foundation: SkillNode[] = [
   {
-    id: "knife-basics",
-    name: "Knife Basics",
-    emoji: "🔪",
+    id: "kitchen-safety",
+    name: "Kitchen Safety & Sanitation",
+    emoji: "🧼",
     description:
-      "Learn to chop, dice, and mince with confidence. The foundation of every great cook.",
+      "Learn proper handwashing, knife safety, and cross-contamination prevention. The non-negotiable foundation of every professional kitchen.",
     tier: "foundation",
     requiredSkills: [],
-    associatedDishes: ["caesar-salad", "tabbouleh", "pico-de-gallo"],
+    associatedDishes: ["caesar-salad", "guacamole", "hummus"],
     cooksRequired: 2,
     position: { x: 50, y: 0 },
   },
   {
-    id: "heat-control",
-    name: "Heat Control",
+    id: "knife-skills",
+    name: "Knife Skills & Cuts",
+    emoji: "🔪",
+    description:
+      "Master brunoise, julienne, chiffonade, and mince. Precise cuts cook evenly and look professional.",
+    tier: "foundation",
+    requiredSkills: ["kitchen-safety"],
+    associatedDishes: ["tabbouleh", "pico-de-gallo", "caesar-salad"],
+    cooksRequired: 3,
+    position: { x: 50, y: 1 },
+  },
+  {
+    id: "mise-en-place",
+    name: "Mise en Place",
+    emoji: "🥡",
+    description:
+      "Everything in its place before you cook. Organize a stir-fry, pasta, or baking setup for stress-free cooking.",
+    tier: "foundation",
+    requiredSkills: ["knife-skills"],
+    associatedDishes: ["stir-fried-rice", "pasta-primavera", "banana-bread"],
+    cooksRequired: 2,
+    position: { x: 50, y: 2 },
+  },
+  {
+    id: "dry-heat-cooking",
+    name: "Dry-Heat Cooking",
     emoji: "🔥",
     description:
-      "Master sauteing, boiling, and simmering. Know when to crank up the heat and when to back off.",
+      "Searing, roasting, and stir-frying — methods that develop color and crust through high heat and no added liquid.",
     tier: "foundation",
-    requiredSkills: ["knife-basics"],
-    associatedDishes: ["garlic-bread", "tomato-soup", "miso-soup"],
-    cooksRequired: 2,
-    position: { x: 30, y: 1 },
-  },
-  {
-    id: "seasoning-101",
-    name: "Seasoning 101",
-    emoji: "🧂",
-    description:
-      "Salt, pepper, herbs, and spices — learn to season with purpose, not guesswork.",
-    tier: "foundation",
-    requiredSkills: ["heat-control"],
-    associatedDishes: ["guacamole", "raita", "hummus"],
-    cooksRequired: 2,
-    position: { x: 70, y: 2 },
-  },
-  {
-    id: "fresh-and-raw",
-    name: "Fresh & Raw",
-    emoji: "🥗",
-    description:
-      "Salads, dressings, and cold preparations. Fresh flavors that brighten any plate.",
-    tier: "foundation",
-    requiredSkills: ["seasoning-101"],
+    requiredSkills: ["mise-en-place"],
     associatedDishes: [
-      "caesar-salad",
-      "mixed-green-salad",
-      "papaya-salad",
-      "fattoush",
+      "pan-seared-chicken",
+      "roasted-vegetables",
+      "stir-fried-rice",
     ],
-    cooksRequired: 2,
-    position: { x: 35, y: 3 },
+    cooksRequired: 3,
+    position: { x: 25, y: 3 },
   },
   {
-    id: "sauce-craft",
-    name: "Sauce Craft",
+    id: "moist-heat-cooking",
+    name: "Moist-Heat Cooking",
+    emoji: "♨️",
+    description:
+      "Poaching, steaming, and simmering — gentle techniques that preserve texture and draw out flavor through liquid.",
+    tier: "foundation",
+    requiredSkills: ["mise-en-place"],
+    associatedDishes: ["poached-eggs", "steamed-broccoli", "tomato-soup"],
+    cooksRequired: 3,
+    position: { x: 75, y: 3 },
+  },
+  {
+    id: "stock-making",
+    name: "Stock Making",
+    emoji: "🍲",
+    description:
+      "Build rich chicken, vegetable, and dashi stocks from scratch. Stock is the foundation of soups, sauces, and braises.",
+    tier: "foundation",
+    requiredSkills: ["moist-heat-cooking"],
+    associatedDishes: ["chicken-stock", "miso-soup", "tomato-soup"],
+    cooksRequired: 2,
+    position: { x: 75, y: 4 },
+  },
+  {
+    id: "mother-sauces",
+    name: "Mother Sauces",
     emoji: "🥄",
     description:
-      "Basic sauces and emulsions. From vinaigrettes to pan sauces, the skill that ties dishes together.",
+      "Master béchamel, velouté, and tomato sauce — the classic French bases that underpin hundreds of dishes.",
     tier: "foundation",
-    requiredSkills: ["fresh-and-raw"],
-    associatedDishes: ["guacamole", "baba-ganoush", "mango-chutney"],
-    cooksRequired: 2,
-    position: { x: 65, y: 4 },
+    requiredSkills: ["stock-making"],
+    associatedDishes: ["mac-and-cheese", "tomato-soup", "pan-gravy"],
+    cooksRequired: 3,
+    position: { x: 25, y: 5 },
   },
   {
-    id: "grain-mastery",
-    name: "Grain Mastery",
-    emoji: "🍚",
+    id: "egg-cookery",
+    name: "Egg Cookery",
+    emoji: "🍳",
     description:
-      "Rice, pasta, bread basics. The backbone of meals across every cuisine.",
+      "French omelettes, soft-boiled eggs, scrambled eggs, and frittata — eggs reveal the precision of a cook's hand.",
     tier: "foundation",
-    requiredSkills: ["sauce-craft"],
+    requiredSkills: ["dry-heat-cooking"],
     associatedDishes: [
-      "basmati-rice",
-      "mexican-rice",
-      "garlic-bread",
-      "naan-bread",
+      "french-omelette",
+      "soft-boiled-eggs",
+      "scrambled-eggs",
+      "frittata",
+    ],
+    cooksRequired: 3,
+    position: { x: 50, y: 4 },
+  },
+  {
+    id: "vegetable-techniques",
+    name: "Vegetable Techniques",
+    emoji: "🥦",
+    description:
+      "Roast, blanch, and sauté vegetables with intention. Each method brings out a different character.",
+    tier: "foundation",
+    requiredSkills: ["dry-heat-cooking", "moist-heat-cooking"],
+    associatedDishes: [
+      "roasted-root-vegetables",
+      "blanched-green-beans",
+      "sauteed-mushrooms",
     ],
     cooksRequired: 2,
-    position: { x: 30, y: 5 },
+    position: { x: 25, y: 4 },
   },
   {
-    id: "protein-prep",
-    name: "Protein Prep",
-    emoji: "🥩",
+    id: "seasoning-tasting",
+    name: "Seasoning & Tasting",
+    emoji: "🧂",
     description:
-      "Handling meat, fish, and tofu. Marinating, searing, and knowing when it's done.",
+      "Salt levels, acid balance, and layering flavor as you cook. Tasting continuously is what separates good cooks from great ones.",
     tier: "foundation",
-    requiredSkills: ["grain-mastery"],
-    associatedDishes: ["gyoza", "satay", "tempura", "samosa"],
+    requiredSkills: ["dry-heat-cooking"],
+    associatedDishes: ["miso-soup", "guacamole", "tomato-soup"],
     cooksRequired: 2,
-    position: { x: 70, y: 6 },
-  },
-  {
-    id: "plating-finish",
-    name: "Plating & Finish",
-    emoji: "🍽️",
-    description:
-      "Assembly, garnish, and presentation. Make your food look as good as it tastes.",
-    tier: "foundation",
-    requiredSkills: ["protein-prep"],
-    associatedDishes: ["bruschetta", "caprese-salad", "edamame"],
-    cooksRequired: 2,
-    position: { x: 50, y: 7 },
+    position: { x: 75, y: 5 },
   },
 ];
 
@@ -145,241 +173,326 @@ const foundation: SkillNode[] = [
 
 const intermediate: SkillNode[] = [
   {
-    id: "flavor-pairing",
-    name: "Flavor Pairing",
-    emoji: "🎨",
+    id: "meat-cookery",
+    name: "Meat Cookery",
+    emoji: "🥩",
     description:
-      "Understand complementary and contrasting flavors. Build plates that sing.",
+      "Sear a steak, roast a pork tenderloin, and braise short ribs. Understand doneness, resting, and carryover cooking.",
     tier: "intermediate",
-    requiredSkills: ["plating-finish"],
-    associatedDishes: ["tabbouleh", "kimchi", "lotus-root-salad", "elote"],
+    requiredSkills: ["dry-heat-cooking", "seasoning-tasting"],
+    associatedDishes: [
+      "pan-seared-steak",
+      "roast-pork-tenderloin",
+      "braised-short-ribs",
+    ],
     cooksRequired: 3,
-    position: { x: 30, y: 9 },
+    position: { x: 50, y: 6 },
   },
   {
-    id: "timing-flow",
-    name: "Timing & Flow",
-    emoji: "⏱️",
+    id: "poultry",
+    name: "Poultry",
+    emoji: "🍗",
     description:
-      "Coordinate multi-component meals so everything lands hot and on time.",
+      "Roast a whole chicken, braise thighs to silky tenderness, and build confidence working with the most versatile protein.",
     tier: "intermediate",
-    requiredSkills: ["plating-finish"],
-    associatedDishes: ["tom-yum-soup", "minestrone", "congee"],
+    requiredSkills: ["meat-cookery"],
+    associatedDishes: ["roast-chicken", "chicken-thigh-braise", "turkey-burger"],
     cooksRequired: 3,
-    position: { x: 70, y: 9 },
+    position: { x: 25, y: 7 },
   },
   {
-    id: "one-pot-wonders",
-    name: "One-Pot Wonders",
-    emoji: "🥘",
+    id: "seafood",
+    name: "Seafood",
+    emoji: "🐟",
     description:
-      "Efficient cooking techniques — stews, braises, and one-pan meals.",
+      "Pan-sear salmon perfectly, make shrimp scampi, and steam mussels open. Fish is unforgiving — nail it here.",
     tier: "intermediate",
-    requiredSkills: ["flavor-pairing"],
-    associatedDishes: ["tomato-soup", "pinakbet", "ginisang-munggo"],
+    requiredSkills: ["meat-cookery"],
+    associatedDishes: ["pan-seared-salmon", "shrimp-scampi", "steamed-mussels"],
+    cooksRequired: 3,
+    position: { x: 75, y: 7 },
+  },
+  {
+    id: "soups",
+    name: "Soups",
+    emoji: "🍜",
+    description:
+      "From clear chicken noodle to velvety cream of mushroom to hearty minestrone — soup is a full lesson in balance.",
+    tier: "intermediate",
+    requiredSkills: ["stock-making", "vegetable-techniques"],
+    associatedDishes: ["chicken-noodle-soup", "cream-of-mushroom", "minestrone"],
+    cooksRequired: 3,
+    position: { x: 25, y: 6 },
+  },
+  {
+    id: "salads-emulsions",
+    name: "Salads & Emulsions",
+    emoji: "🥗",
+    description:
+      "Build classic vinaigrettes, Caesar dressing, and composed salads. Learn what makes an emulsion hold.",
+    tier: "intermediate",
+    requiredSkills: ["seasoning-tasting", "knife-skills"],
+    associatedDishes: ["caesar-salad", "mixed-green-salad", "fattoush"],
+    cooksRequired: 2,
+    position: { x: 75, y: 6 },
+  },
+  {
+    id: "braising-stewing",
+    name: "Braising & Stewing",
+    emoji: "🫕",
+    description:
+      "Low and slow transforms tough cuts into silk. Beef stew, coq au vin, and ratatouille teach patience and depth.",
+    tier: "intermediate",
+    requiredSkills: ["moist-heat-cooking", "meat-cookery"],
+    associatedDishes: ["beef-stew", "coq-au-vin", "ratatouille"],
+    cooksRequired: 3,
+    position: { x: 25, y: 8 },
+  },
+  {
+    id: "pan-sauces-deglazing",
+    name: "Pan Sauces & Deglazing",
+    emoji: "🍷",
+    description:
+      "Those brown bits are gold. Deglaze with wine or stock to build red wine, lemon-butter, and mushroom sauces in minutes.",
+    tier: "intermediate",
+    requiredSkills: ["mother-sauces"],
+    associatedDishes: [
+      "pan-seared-steak",
+      "pan-seared-salmon",
+      "roast-chicken",
+    ],
+    cooksRequired: 3,
+    position: { x: 75, y: 8 },
+  },
+  {
+    id: "grains-pasta",
+    name: "Grains & Pasta",
+    emoji: "🍝",
+    description:
+      "Creamy risotto, fresh pasta from scratch, and perfectly cooked pilaf. Carbs are a craft.",
+    tier: "intermediate",
+    requiredSkills: ["mise-en-place", "seasoning-tasting"],
+    associatedDishes: ["risotto", "pasta-primavera", "basmati-rice"],
+    cooksRequired: 3,
+    position: { x: 50, y: 7 },
+  },
+  {
+    id: "breakfast-cookery",
+    name: "Breakfast Cookery",
+    emoji: "🥞",
+    description:
+      "Fluffy pancakes, silky eggs benedict, and shakshuka. Breakfast demands timing and a gentle hand.",
+    tier: "intermediate",
+    requiredSkills: ["egg-cookery", "mise-en-place"],
+    associatedDishes: ["pancakes", "eggs-benedict", "shakshuka"],
+    cooksRequired: 2,
+    position: { x: 50, y: 8 },
+  },
+  {
+    id: "quick-breads",
+    name: "Quick Breads",
+    emoji: "🍌",
+    description:
+      "Banana bread, buttermilk biscuits, and cornbread — no yeast, fast results, and the foundation of baking intuition.",
+    tier: "intermediate",
+    requiredSkills: ["mise-en-place"],
+    associatedDishes: ["banana-bread", "buttermilk-biscuits", "cornbread"],
+    cooksRequired: 2,
+    position: { x: 75, y: 9 },
+  },
+];
+
+// ── Tier 3: Advanced ────────────────────────────────────────
+
+const advanced: SkillNode[] = [
+  {
+    id: "butchery",
+    name: "Butchery",
+    emoji: "🪓",
+    description:
+      "Break down a whole chicken, portion a fish fillet, and trim a pork loin. Whole-animal thinking saves money and wastes nothing.",
+    tier: "advanced",
+    requiredSkills: ["meat-cookery", "seafood"],
+    associatedDishes: ["roast-chicken", "pan-seared-salmon", "roast-pork-tenderloin"],
     cooksRequired: 3,
     position: { x: 25, y: 10 },
   },
   {
-    id: "global-pantry",
-    name: "Global Pantry",
-    emoji: "🌍",
+    id: "garde-manger",
+    name: "Garde Manger",
+    emoji: "🧀",
     description:
-      "Core ingredients across world cuisines. Stock your pantry for any adventure.",
-    tier: "intermediate",
-    requiredSkills: ["timing-flow"],
-    associatedDishes: ["spring-rolls", "bao-buns", "naan-bread"],
+      "The cold kitchen: pâté, pickled vegetables, and a simple charcuterie board. The art of preserved and prepared foods.",
+    tier: "advanced",
+    requiredSkills: ["salads-emulsions", "seasoning-tasting"],
+    associatedDishes: ["charcuterie-board", "pickled-vegetables", "pate"],
     cooksRequired: 3,
     position: { x: 75, y: 10 },
   },
+  {
+    id: "palate-development",
+    name: "Palate Development",
+    emoji: "👅",
+    description:
+      "Blind tasting exercises and acid-fat-salt-heat balance drills. Train your palate to diagnose and fix a dish by taste alone.",
+    tier: "advanced",
+    requiredSkills: ["seasoning-tasting", "soups"],
+    associatedDishes: ["miso-soup", "caesar-salad", "tomato-soup"],
+    cooksRequired: 2,
+    position: { x: 50, y: 10 },
+  },
+  {
+    id: "yeast-breads",
+    name: "Yeast Breads",
+    emoji: "🍞",
+    description:
+      "Focaccia, sandwich bread, and pizza dough — learn to work with living yeast and understand fermentation timing.",
+    tier: "advanced",
+    requiredSkills: ["quick-breads"],
+    associatedDishes: ["focaccia", "sandwich-bread", "pizza-dough"],
+    cooksRequired: 3,
+    position: { x: 25, y: 11 },
+  },
+  {
+    id: "pastry-fundamentals",
+    name: "Pastry Fundamentals",
+    emoji: "🥐",
+    description:
+      "Flaky pie crust, pâte à choux for cream puffs, and a crisp tart shell. Pastry is precision — every gram matters.",
+    tier: "advanced",
+    requiredSkills: ["quick-breads"],
+    associatedDishes: ["pie-crust", "cream-puffs", "tart-shell"],
+    cooksRequired: 3,
+    position: { x: 75, y: 11 },
+  },
+  {
+    id: "global-flavor-profiles",
+    name: "Global Flavor Profiles",
+    emoji: "🌍",
+    description:
+      "Build Thai curry paste from scratch, a Mexican mole base, and an Indian tadka. Understanding flavor architecture across cultures.",
+    tier: "advanced",
+    requiredSkills: ["seasoning-tasting", "soups"],
+    associatedDishes: ["thai-green-curry", "mole-base", "tadka-dal"],
+    cooksRequired: 3,
+    position: { x: 50, y: 11 },
+  },
+  {
+    id: "plating-presentation",
+    name: "Plating & Presentation",
+    emoji: "🍽️",
+    description:
+      "Compose three different plating styles for the same dish. Learn how height, color, and negative space change the experience.",
+    tier: "advanced",
+    requiredSkills: ["salads-emulsions", "meat-cookery"],
+    associatedDishes: ["pan-seared-salmon", "roast-chicken", "beef-stew"],
+    cooksRequired: 2,
+    position: { x: 25, y: 12 },
+  },
+  {
+    id: "fermentation",
+    name: "Fermentation",
+    emoji: "🫙",
+    description:
+      "Make kimchi, sauerkraut, and yogurt. Fermentation is patience rewarded — and one of the oldest cooking methods on earth.",
+    tier: "advanced",
+    requiredSkills: ["seasoning-tasting", "vegetable-techniques"],
+    associatedDishes: ["kimchi", "sauerkraut", "yogurt"],
+    cooksRequired: 2,
+    position: { x: 75, y: 12 },
+  },
+  {
+    id: "advanced-sauces",
+    name: "Advanced Sauces",
+    emoji: "🫗",
+    description:
+      "Hollandaise, béarnaise, and beurre blanc — the emulsified butter sauces that separate home cooks from professionals.",
+    tier: "advanced",
+    requiredSkills: ["mother-sauces", "pan-sauces-deglazing"],
+    associatedDishes: ["eggs-benedict", "grilled-asparagus", "pan-seared-salmon"],
+    cooksRequired: 3,
+    position: { x: 50, y: 12 },
+  },
+  {
+    id: "live-fire-cooking",
+    name: "Live-Fire Cooking",
+    emoji: "🔥",
+    description:
+      "Grilled fish, smoked ribs, and campfire vegetables. Learn to read and control live fire — a fundamentally different heat source.",
+    tier: "advanced",
+    requiredSkills: ["meat-cookery", "seafood"],
+    associatedDishes: ["grilled-fish", "smoked-ribs", "grilled-vegetables"],
+    cooksRequired: 3,
+    position: { x: 50, y: 13 },
+  },
 ];
 
-// ── Tier 3: Cuisine Specializations ─────────────────────────
+// ── Tier 4: Pre-Mastery ─────────────────────────────────────
 
-const specializations: SkillNode[] = [
+const preMastery: SkillNode[] = [
   {
-    id: "italian-mastery",
-    name: "Italian Mastery",
-    emoji: "🇮🇹",
+    id: "menu-design",
+    name: "Menu Design",
+    emoji: "📋",
     description:
-      "Master the art of Italian cooking — fresh pastas, rich sauces, and elegant simplicity.",
-    tier: "specialization",
-    cuisineFamily: "italian",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "caesar-salad",
-      "garlic-bread",
-      "bruschetta",
-      "minestrone",
-      "caprese-salad",
-    ],
-    cooksRequired: 4,
-    position: { x: 11, y: 12 },
+      "Plan a 3-course dinner with balance and flow. Understand how contrast, season, and pacing shape a complete meal.",
+    tier: "pre-mastery",
+    requiredSkills: ["grains-pasta", "soups", "salads-emulsions", "meat-cookery"],
+    associatedDishes: ["three-course-dinner", "seasonal-menu", "prix-fixe-menu"],
+    cooksRequired: 3,
+    position: { x: 25, y: 14 },
   },
   {
-    id: "japanese-precision",
-    name: "Japanese Precision",
-    emoji: "🇯🇵",
+    id: "recipe-development",
+    name: "Recipe Development",
+    emoji: "✍️",
     description:
-      "Precise cuts, clean flavors, and presentation mastery. The way of Japanese cooking.",
-    tier: "specialization",
-    cuisineFamily: "japanese",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: ["gyoza", "edamame", "tempura", "miso-soup", "takoyaki"],
+      "Create an original dish, then test and iterate until it's repeatable. The creative and analytical work of the working chef.",
+    tier: "pre-mastery",
+    requiredSkills: ["palate-development", "global-flavor-profiles"],
+    associatedDishes: ["original-dish", "flavor-experiment", "ingredient-substitution"],
     cooksRequired: 4,
-    position: { x: 37, y: 12 },
+    position: { x: 75, y: 14 },
   },
   {
-    id: "indian-spice-road",
-    name: "Indian Spice Road",
-    emoji: "🇮🇳",
+    id: "laminated-doughs",
+    name: "Laminated Doughs",
+    emoji: "🥐",
     description:
-      "Spice blending, slow cooking, and bold flavors. Journey through India's regional cuisines.",
-    tier: "specialization",
-    cuisineFamily: "indian",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "naan-bread",
-      "basmati-rice",
-      "raita",
-      "samosa",
-      "mango-chutney",
-    ],
+      "Croissants and rough puff pastry — hundreds of layers of butter folded in. The most technical skill in the pastry kitchen.",
+    tier: "pre-mastery",
+    requiredSkills: ["yeast-breads", "pastry-fundamentals"],
+    associatedDishes: ["croissants", "rough-puff-pastry", "danish-pastry"],
     cooksRequired: 4,
-    position: { x: 63, y: 12 },
+    position: { x: 25, y: 15 },
   },
   {
-    id: "mexican-fiesta",
-    name: "Mexican Fiesta",
-    emoji: "🇲🇽",
+    id: "contemporary-techniques",
+    name: "Contemporary Techniques",
+    emoji: "🧪",
     description:
-      "Fresh salsas, bold spices, and vibrant plates. The heart of Mexican cooking.",
-    tier: "specialization",
-    cuisineFamily: "mexican",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "guacamole",
-      "mexican-rice",
-      "elote",
-      "pico-de-gallo",
-      "refried-beans",
-    ],
-    cooksRequired: 4,
-    position: { x: 89, y: 12 },
+      "Sous vide chicken, infused oils, and herb salts. Modern techniques that deliver precision and new flavor dimensions.",
+    tier: "pre-mastery",
+    requiredSkills: ["meat-cookery", "seafood", "advanced-sauces"],
+    associatedDishes: ["sous-vide-chicken", "infused-oil", "herb-salt"],
+    cooksRequired: 3,
+    position: { x: 75, y: 15 },
   },
   {
-    id: "thai-balance",
-    name: "Thai Balance",
-    emoji: "🇹🇭",
+    id: "kitchen-orchestration",
+    name: "Kitchen Orchestration",
+    emoji: "🎼",
     description:
-      "Sweet, sour, salty, spicy — the four pillars of Thai flavor harmony.",
-    tier: "specialization",
-    cuisineFamily: "thai",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
+      "Cook a 3-course meal with synchronized timing so everything lands hot and at its peak simultaneously.",
+    tier: "pre-mastery",
+    requiredSkills: ["menu-design", "plating-presentation", "braising-stewing"],
     associatedDishes: [
-      "spring-rolls",
-      "tom-yum-soup",
-      "papaya-salad",
-      "satay",
-      "thai-iced-tea",
+      "synchronized-three-course",
+      "dinner-party-menu",
+      "tasting-menu",
     ],
     cooksRequired: 4,
-    position: { x: 11, y: 14 },
-  },
-  {
-    id: "korean-craft",
-    name: "Korean Craft",
-    emoji: "🇰🇷",
-    description:
-      "Fermentation, bold marinades, and communal dining. The soul of Korean cooking.",
-    tier: "specialization",
-    cuisineFamily: "korean",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "kimchi",
-      "korean-pancake",
-      "japchae",
-      "mandu",
-      "bean-sprout-salad",
-    ],
-    cooksRequired: 4,
-    position: { x: 37, y: 14 },
-  },
-  {
-    id: "mediterranean-sun",
-    name: "Mediterranean Sun",
-    emoji: "🌊",
-    description:
-      "Olive oil, fresh herbs, and sun-ripened produce. The diet that's also a lifestyle.",
-    tier: "specialization",
-    cuisineFamily: "mediterranean",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "hummus",
-      "tabbouleh",
-      "baba-ganoush",
-      "fattoush",
-      "stuffed-grape-leaves",
-    ],
-    cooksRequired: 4,
-    position: { x: 63, y: 14 },
-  },
-  {
-    id: "chinese-wok",
-    name: "Chinese Wok",
-    emoji: "🇨🇳",
-    description:
-      "Wok hei, dim sum, and the art of stir-fry. Thousands of years of culinary wisdom.",
-    tier: "specialization",
-    cuisineFamily: "chinese",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "bao-buns",
-      "crispy-wontons",
-      "congee",
-      "sesame-balls",
-      "turnip-cake",
-    ],
-    cooksRequired: 4,
-    position: { x: 89, y: 14 },
-  },
-  {
-    id: "vietnamese-fresh",
-    name: "Vietnamese Fresh",
-    emoji: "🇻🇳",
-    description:
-      "Fresh herbs, delicate broths, and the balance of five elements in every dish.",
-    tier: "specialization",
-    cuisineFamily: "vietnamese",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "banh-mi",
-      "summer-rolls",
-      "lotus-root-salad",
-      "goi-cuon",
-      "vietnamese-coffee",
-    ],
-    cooksRequired: 4,
-    position: { x: 30, y: 16 },
-  },
-  {
-    id: "filipino-home",
-    name: "Filipino Home",
-    emoji: "🇵🇭",
-    description:
-      "Hearty, soulful dishes rooted in family tradition. The warmth of Filipino cooking.",
-    tier: "specialization",
-    cuisineFamily: "filipino",
-    requiredSkills: ["one-pot-wonders", "global-pantry"],
-    associatedDishes: [
-      "ensaladang-talong",
-      "atchara",
-      "pinakbet",
-      "ginisang-munggo",
-      "tortang-talong",
-    ],
-    cooksRequired: 4,
-    position: { x: 70, y: 16 },
+    position: { x: 50, y: 16 },
   },
 ];
 
@@ -388,7 +501,8 @@ const specializations: SkillNode[] = [
 export const skillTreeNodes: SkillNode[] = [
   ...foundation,
   ...intermediate,
-  ...specializations,
+  ...advanced,
+  ...preMastery,
 ];
 
 /** Look up a node by ID */
@@ -406,7 +520,8 @@ export function getNodesByTier() {
   return {
     foundation: skillTreeNodes.filter((n) => n.tier === "foundation"),
     intermediate: skillTreeNodes.filter((n) => n.tier === "intermediate"),
-    specialization: skillTreeNodes.filter((n) => n.tier === "specialization"),
+    advanced: skillTreeNodes.filter((n) => n.tier === "advanced"),
+    "pre-mastery": skillTreeNodes.filter((n) => n.tier === "pre-mastery"),
   };
 }
 
@@ -414,7 +529,8 @@ export function getNodesByTier() {
 export const XP_PER_COOK = {
   foundation: 10,
   intermediate: 15,
-  specialization: 25,
+  advanced: 25,
+  "pre-mastery": 40,
 } as const;
 
 /** Compute level from total XP */

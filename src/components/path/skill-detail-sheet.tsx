@@ -90,9 +90,9 @@ export function SkillDetailSheet({
                     {node.name}
                   </h2>
                   <p className="text-[11px] text-[var(--nourish-subtext)] uppercase tracking-wide">
-                    {node.tier === "specialization" && node.cuisineFamily
+                    {node.cuisineFamily
                       ? `${node.cuisineFamily} specialization`
-                      : node.tier}
+                      : node.tier.replace("-", " ")}
                   </p>
                 </div>
               </div>

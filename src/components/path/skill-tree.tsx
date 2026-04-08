@@ -148,12 +148,17 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
       {
         tier: "intermediate",
         label: "INTERMEDIATE",
-        startY: 9,
+        startY: 6,
       },
       {
-        tier: "specialization",
-        label: "CUISINE MASTERY",
-        startY: 12,
+        tier: "advanced",
+        label: "ADVANCED",
+        startY: 10,
+      },
+      {
+        tier: "pre-mastery",
+        label: "PRE-MASTERY",
+        startY: 14,
       },
     ];
     for (const t of tiers) {
