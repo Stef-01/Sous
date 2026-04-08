@@ -294,6 +294,7 @@ function SwipeCard({
   onSave: () => void;
   exitDirection: "left" | "right" | null;
 }) {
+  const [imgError, setImgError] = useState(false);
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
 
@@ -383,7 +384,7 @@ function SwipeCard({
 
         {/* Hero food image */}
         <div className="relative aspect-[3/2] bg-[var(--nourish-cream)]">
-          {dish.heroImageUrl ? (
+          {dish.heroImageUrl && !imgError ? (
             <Image
               src={dish.heroImageUrl}
               alt={dish.dishName}
@@ -393,9 +394,16 @@ function SwipeCard({
               draggable={false}
               loading={stackIndex === 0 ? "eager" : "lazy"}
               priority={stackIndex === 0}
+              onError={() => setImgError(true)}
             />
           ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[var(--nourish-green)]/15 via-[var(--nourish-cream)] to-[var(--nourish-green)]/8">
+            <div
+              className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+              style={{
+                background:
+                  "linear-gradient(135deg, color-mix(in srgb, var(--nourish-green) 15%, transparent), var(--nourish-cream) 60%, color-mix(in srgb, var(--nourish-green) 8%, transparent))",
+              }}
+            >
               <span className="text-5xl">
                 {getDishEmoji(dish.tags, dish.cuisineFamily)}
               </span>
