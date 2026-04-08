@@ -22,7 +22,7 @@ const NODE_RADIUS = 32;
 /** Horizontal padding so edge nodes aren't clipped */
 const H_PAD = NODE_RADIUS + 4;
 /** Maximum tree width — scales down to fit narrow screens */
-const MAX_TREE_WIDTH = 340;
+const MAX_TREE_WIDTH = 420;
 /** Extra bottom padding */
 const BOTTOM_PAD = 80;
 

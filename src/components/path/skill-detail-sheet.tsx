@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChefHat, Lock, Check, ArrowRight, Zap } from "lucide-react";
+import { X, ChefHat, Lock, Check, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
@@ -46,7 +46,7 @@ export function SkillDetailSheet({
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-black/50"
+            className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -55,7 +55,7 @@ export function SkillDetailSheet({
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[80vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain"
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain safe-area-bottom"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
