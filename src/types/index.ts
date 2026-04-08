@@ -2,7 +2,7 @@ export interface Meal {
   id: string;
   name: string;
   aliases: string[];
-  heroImageUrl: string;
+  heroImageUrl: string | null;
   sidePool: string[];
   cuisine: string;
   description: string;

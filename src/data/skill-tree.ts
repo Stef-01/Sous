@@ -214,7 +214,7 @@ const specializations: SkillNode[] = [
       "caprese-salad",
     ],
     cooksRequired: 4,
-    position: { x: 15, y: 12 },
+    position: { x: 11, y: 12 },
   },
   {
     id: "japanese-precision",
@@ -227,7 +227,7 @@ const specializations: SkillNode[] = [
     requiredSkills: ["one-pot-wonders", "global-pantry"],
     associatedDishes: ["gyoza", "edamame", "tempura", "miso-soup", "takoyaki"],
     cooksRequired: 4,
-    position: { x: 40, y: 12 },
+    position: { x: 37, y: 12 },
   },
   {
     id: "indian-spice-road",
@@ -246,7 +246,7 @@ const specializations: SkillNode[] = [
       "mango-chutney",
     ],
     cooksRequired: 4,
-    position: { x: 65, y: 12 },
+    position: { x: 63, y: 12 },
   },
   {
     id: "mexican-fiesta",
@@ -265,7 +265,7 @@ const specializations: SkillNode[] = [
       "refried-beans",
     ],
     cooksRequired: 4,
-    position: { x: 85, y: 12 },
+    position: { x: 89, y: 12 },
   },
   {
     id: "thai-balance",
@@ -284,7 +284,7 @@ const specializations: SkillNode[] = [
       "thai-iced-tea",
     ],
     cooksRequired: 4,
-    position: { x: 15, y: 14 },
+    position: { x: 11, y: 14 },
   },
   {
     id: "korean-craft",
@@ -303,7 +303,7 @@ const specializations: SkillNode[] = [
       "bean-sprout-salad",
     ],
     cooksRequired: 4,
-    position: { x: 40, y: 14 },
+    position: { x: 37, y: 14 },
   },
   {
     id: "mediterranean-sun",
@@ -322,7 +322,7 @@ const specializations: SkillNode[] = [
       "stuffed-grape-leaves",
     ],
     cooksRequired: 4,
-    position: { x: 65, y: 14 },
+    position: { x: 63, y: 14 },
   },
   {
     id: "chinese-wok",
@@ -341,7 +341,7 @@ const specializations: SkillNode[] = [
       "turnip-cake",
     ],
     cooksRequired: 4,
-    position: { x: 85, y: 14 },
+    position: { x: 89, y: 14 },
   },
   {
     id: "vietnamese-fresh",

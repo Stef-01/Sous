@@ -165,13 +165,21 @@ export default function SharePlateModal({
                   {/* Hero meal — large, centered */}
                   <div className="flex flex-col items-center mb-3">
                     <div className="relative w-28 h-28">
-                      <Image
-                        src={meal.heroImageUrl}
-                        alt={meal.name}
-                        fill
-                        className="object-contain"
-                        sizes="112px"
-                      />
+                      {meal.heroImageUrl ? (
+                        <Image
+                          src={meal.heroImageUrl}
+                          alt={meal.name}
+                          fill
+                          className="object-contain"
+                          sizes="112px"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-nourish-input rounded-xl flex items-center justify-center">
+                          <span className="text-xs text-nourish-subtext text-center px-2">
+                            {meal.name}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <span className="text-xs font-serif text-nourish-dark mt-1.5 text-center">
                       {meal.name}

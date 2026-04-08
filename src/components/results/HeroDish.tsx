@@ -187,7 +187,7 @@ export default function HeroDish({
             <div className="spawn-glow-ring" />
           )}
 
-          {imgError ? (
+          {imgError || !meal.heroImageUrl ? (
             <div className="w-full h-full bg-nourish-input flex items-center justify-center rounded-2xl">
               <span className="text-nourish-subtext text-sm text-center px-4">
                 {meal.name}
