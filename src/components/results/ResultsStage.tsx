@@ -138,7 +138,7 @@ export default function ResultsStage({
   const handleHeroClick = () => {
     setSelectedDish({
       name: meal.name,
-      imageUrl: meal.heroImageUrl,
+      imageUrl: meal.heroImageUrl ?? "",
       description: meal.description,
       cuisine: meal.cuisine,
     });

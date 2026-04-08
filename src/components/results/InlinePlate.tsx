@@ -249,7 +249,8 @@ export default function InlinePlate({
     const carbs: FoodItem[] = [];
 
     // Main dish counts as protein
-    if (meal) proteins.push({ name: meal.name, imageUrl: meal.heroImageUrl });
+    if (meal)
+      proteins.push({ name: meal.name, imageUrl: meal.heroImageUrl ?? "" });
 
     for (const side of sides) {
       const item = { name: side.name, imageUrl: side.imageUrl };
