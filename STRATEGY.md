@@ -1,4 +1,3 @@
-
 # Sous — Strategic Design Document
 
 > **Living document** — updated as features ship and strategy evolves.
@@ -23,14 +22,14 @@ Every food app in the market is trying to be a bigger database, a better search 
 
 ### 1.2 Peter Thiel's Framework Applied
 
-| Principle | Sous Application | Resulting Moat |
-|---|---|---|
-| Create a monopoly in a small market | Cooking-anxious adults aged 22-35 who want to cook but feel overwhelmed by choice | Own the niche before expanding; no one else targets this segment with this approach |
-| Be 10x better, not 10% better | 60-second craving-to-plate vs. 20-minute recipe search and meal planning | Order-of-magnitude reduction in decision friction |
-| Start with a small market and dominate | Side dish pairing for home dinners only. Not lunch, not baking, not meal prep. | Deep expertise in one vertical before horizontal expansion |
-| Proprietary technology | Deterministic pairing engine with 6 weighted scorers, not generic AI recommendations | No one can replicate the scoring logic without rebuilding the domain model from scratch |
-| Network effects | Cook together features, group challenges, shared scrapbooks compound with each user added | Each new user makes the platform more valuable for existing users |
-| Durability (last mover advantage) | Preference memory + cooking history = switching cost that grows every week | After 50 cooks, leaving Sous means abandoning a personalized cooking intelligence |
+| Principle                              | Sous Application                                                                          | Resulting Moat                                                                          |
+| -------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Create a monopoly in a small market    | Cooking-anxious adults aged 22-35 who want to cook but feel overwhelmed by choice         | Own the niche before expanding; no one else targets this segment with this approach     |
+| Be 10x better, not 10% better          | 60-second craving-to-plate vs. 20-minute recipe search and meal planning                  | Order-of-magnitude reduction in decision friction                                       |
+| Start with a small market and dominate | Side dish pairing for home dinners only. Not lunch, not baking, not meal prep.            | Deep expertise in one vertical before horizontal expansion                              |
+| Proprietary technology                 | Deterministic pairing engine with 6 weighted scorers, not generic AI recommendations      | No one can replicate the scoring logic without rebuilding the domain model from scratch |
+| Network effects                        | Cook together features, group challenges, shared scrapbooks compound with each user added | Each new user makes the platform more valuable for existing users                       |
+| Durability (last mover advantage)      | Preference memory + cooking history = switching cost that grows every week                | After 50 cooks, leaving Sous means abandoning a personalized cooking intelligence       |
 
 ---
 
@@ -270,22 +269,22 @@ Every cook is automatically cataloged without the user doing anything beyond com
 
 Every proposed feature is scored on two dimensions: impact on cooking frequency and implementation effort. Only high-impact features earn development time.
 
-| Feature | Category | Impact | Effort |
-|---|---|---|---|
-| Streak system | Engagement | Very High | Medium |
-| Daily quest card personalization | Automation | Very High | Low |
-| Cook Together mode | Network | High | High |
-| Group challenges | Network | High | Medium |
-| Cuisine mastery badges | Engagement | Medium | Low |
-| Recipe gifting | Network | High | Low |
-| Context-aware recommendations | Automation | High | Medium |
-| Household mode | Network | Very High | Very High |
-| Ingredient intelligence | Automation | Medium | High |
-| Cook replay with improvement | Engagement | Medium | Low |
-| Proactive push notifications | Automation | High | Medium |
-| Weekly cooking digest | Automation | Medium | Low |
+| Feature                          | Category   | Impact    | Effort    |
+| -------------------------------- | ---------- | --------- | --------- |
+| Streak system                    | Engagement | Very High | Medium    |
+| Daily quest card personalization | Automation | Very High | Low       |
+| Cook Together mode               | Network    | High      | High      |
+| Group challenges                 | Network    | High      | Medium    |
+| Cuisine mastery badges           | Engagement | Medium    | Low       |
+| Recipe gifting                   | Network    | High      | Low       |
+| Context-aware recommendations    | Automation | High      | Medium    |
+| Household mode                   | Network    | Very High | Very High |
+| Ingredient intelligence          | Automation | Medium    | High      |
+| Cook replay with improvement     | Engagement | Medium    | Low       |
+| Proactive push notifications     | Automation | High      | Medium    |
+| Weekly cooking digest            | Automation | Medium    | Low       |
 
-*Priority order: ship high-impact/low-effort first, then high-impact/medium-effort. Defer high-effort features until user base validates the thesis.*
+_Priority order: ship high-impact/low-effort first, then high-impact/medium-effort. Defer high-effort features until user base validates the thesis._
 
 ---
 
@@ -344,12 +343,13 @@ Metrics to actively avoid optimizing for:
 
 Strategic decisions made, with rationale. Append new decisions as they arise.
 
-| Date | Decision | Rationale |
-|---|---|---|
-| Apr 2026 | Defer auth to production launch | Focus prototype on functionality. Auth adds friction without validating the cooking loop. |
-| Apr 2026 | 203 sides is sufficient for V1 | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size. |
-| Apr 2026 | No open-ended AI chatbot | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability. |
-| Apr 2026 | Social features gated behind 30-day unlock | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn. |
+| Date     | Decision                                    | Rationale                                                                                                                                        |
+| -------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Apr 2026 | Defer auth to production launch             | Focus prototype on functionality. Auth adds friction without validating the cooking loop.                                                        |
+| Apr 2026 | 203 sides is sufficient for V1              | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size.                                    |
+| Apr 2026 | No open-ended AI chatbot                    | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability.                              |
+| Apr 2026 | Social features gated behind 30-day unlock  | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn.                                 |
+| Apr 2026 | Skill tree based on real culinary curricula | Legitimacy matters — users should feel they're learning real chef skills, not playing a game. Researched from Le Cordon Bleu, CIA, ICE programs. |
 
 ---
 
@@ -427,6 +427,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 > **Review cadence:** Review this section monthly. Present top 3 candidates to founder for go/no-go decision.
 
 ### 12.1 AR Plating Guidance
+
 - **Inspiration:** Cooking shows, IKEA Place AR
 - **What:** Camera overlay showing suggested plating arrangement
 - **Why ambitious:** AR framework, 3D models per dish, performance overhead
@@ -436,6 +437,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED
 
 ### 12.2 Voice-Guided Cooking (Hands-Free Mode)
+
 - **Inspiration:** Google Assistant, Alexa recipes
 - **What:** Speech synthesis instructions + voice command navigation
 - **Why ambitious:** Kitchen noise (water, sizzling, vents) degrades speech recognition
@@ -445,6 +447,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** UNDER CONSIDERATION — browser Speech API makes basic version feasible
 
 ### 12.3 AI-Generated Weekly Meal Plans
+
 - **Inspiration:** Mealime, Eat This Much
 - **What:** Full week of pairings optimized for ingredient overlap and variety
 - **Why ambitious:** Contradicts "cook tonight" philosophy. Different mental model.
@@ -454,6 +457,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED — revisit only if research shows demand + way to keep it spontaneous
 
 ### 12.4 Social Recipe Marketplace
+
 - **Inspiration:** Etsy for recipes, Substack for food
 - **What:** Users create and sell custom guided cook flows
 - **Why ambitious:** Payment infra, content moderation, quality control, creator tools
@@ -463,6 +467,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED
 
 ### 12.5 Smart Kitchen Device Integration
+
 - **Inspiration:** Hestan Cue, Anova, smart thermometers
 - **What:** Send timer/temperature commands to connected devices
 - **Why ambitious:** Fragmented ecosystem, pairing complexity, different APIs per brand
@@ -472,6 +477,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED
 
 ### 12.6 Computer Vision Real-Time Cook Feedback
+
 - **Inspiration:** AI fitness form checkers
 - **What:** Camera watches cooking, gives real-time feedback ("oil is smoking, lower heat")
 - **Why ambitious:** Real-time video processing, no cooking-specific CV models exist, massive compute
@@ -481,6 +487,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED — monitor ML advances, revisit 2027+
 
 ### 12.7 Gamified Cooking Tournaments
+
 - **Inspiration:** Competitive gaming, cooking shows
 - **What:** 1v1 or group tournaments, same recipe, community votes on photos
 - **Why ambitious:** Synchronous multiplayer, photo judging, potential toxicity
@@ -490,6 +497,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED — conflicts with supportive tone
 
 ### 12.8 Offline Mode with Full Guided Cook
+
 - **Inspiration:** Spotify offline, Netflix downloads
 - **What:** Download guided cook data for offline use in poor-signal kitchens
 - **Why ambitious:** Service workers, offline-first state, sync conflicts
@@ -499,6 +507,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** UNDER CONSIDERATION — feasible as PWA, high practical value
 
 ### 12.9 White-Label for Cooking Schools / Corporate Wellness
+
 - **Inspiration:** Headspace for Work, Calm Business
 - **What:** Branded Sous for institutions
 - **Why ambitious:** Multi-tenant architecture, admin dashboards, B2B sales motion
@@ -508,6 +517,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Status:** PARKED — revisit after consumer PMF
 
 ### 12.10 Seasonal Ingredient Sourcing Partnerships
+
 - **Inspiration:** Farm-to-table, CSA boxes, Imperfect Foods
 - **What:** Recommend recipes based on locally available seasonal ingredients
 - **Why ambitious:** Geo-specific partnerships, inventory APIs, logistics
@@ -518,5 +528,4 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 
 ---
 
-*— End of Strategic Design Document —*
-
+_— End of Strategic Design Document —_

@@ -615,6 +615,76 @@ A user who completes 2 Caesar Salad cooks sees Knife Basics skill progress to "c
 
 ---
 
+## Phase 13 — Chef Skill Tree Curriculum
+
+**Objective:** Research real culinary school curricula and build a comprehensive skill tree that takes users from complete beginner to chef-level competency. The tree should feel like a legitimate cooking education, not gamified fluff.
+
+**Research requirements:**
+
+- Study curricula from: Le Cordon Bleu, CIA (Culinary Institute of America), Johnson & Wales, ICE (Institute of Culinary Education), community college culinary programs
+- Identify universally accepted foundational skills that every chef learns
+- Map the progression from basic to advanced
+- Ensure skills are practical and achievable in a home kitchen
+
+**Skill tree structure (approximately 30 nodes across 4 tiers):**
+
+### Tier 1: Foundation (Skills 1-8) — "Home Cook Basics"
+
+Current skill tree content lives here. Basic skills every home cook should master:
+
+- Knife skills (cuts, grip, safety)
+- Heat control (sauteing, boiling, simmering)
+- Seasoning fundamentals (salt, acid, fat, heat)
+- Mise en place (prep organization)
+- Basic stock and broth
+- Egg cookery (scramble, fry, boil, poach)
+- Rice and grain cooking
+- Basic salad and vinaigrette
+
+### Tier 2: Intermediate (Skills 9-16) — "Confident Cook"
+
+- Sauce mother sauces (bechamel, veloute, espagnole, hollandaise, tomato)
+- Braising and stewing
+- Roasting and baking fundamentals
+- Pasta from scratch
+- Bread basics (yeast doughs, quick breads)
+- Fish and seafood handling
+- Vegetable techniques (blanching, roasting, grilling, pickling)
+- Flavor building (layers, umami, maillard reaction)
+
+### Tier 3: Advanced (Skills 17-24) — "Skilled Cook"
+
+- Butchery basics (breaking down chicken, portioning fish)
+- Emulsions and foams
+- Fermentation (kimchi, sauerkraut, yogurt)
+- Pastry fundamentals (pate brisee, choux, puff)
+- Wok skills and high-heat cooking
+- Smoking and curing
+- Menu composition and balance
+- Plating and presentation
+
+### Tier 4: Chef Level (Skills 25-30) — "Home Chef"
+
+- Sous vide and precision cooking
+- Advanced pastry (laminated doughs, tempering chocolate)
+- Regional cuisine deep dives (mastering one cuisine family)
+- Recipe development (creating your own dishes)
+- Cooking for groups (scaling, timing, service)
+- Kitchen management (efficiency, waste reduction, pantry strategy)
+
+**Implementation notes:**
+
+- Each skill node has 2-4 practice dishes that teach the skill
+- Completing all practice dishes for a node = skill mastered
+- Skills unlock sequentially within a tier, but Tier 2 unlocks after completing 5/8 Tier 1 skills
+- The skill tree data lives in src/data/skill-tree.ts
+- This is a PROTOTYPE — start with Tier 1 fully fleshed out, Tier 2 partially, and Tiers 3-4 as locked previews that show what's coming
+- All practice dishes must already exist in the meals/sides database or be added with real recipes from reputable sources
+
+**Status:** Research phase — curriculum study needed before implementation
+
+---
+
 ## 11. Standing UI rules (apply to ALL future work)
 
 1. One primary CTA per screen — no two equally-weighted buttons
