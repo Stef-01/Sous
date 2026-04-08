@@ -7,7 +7,6 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { QuestCard } from "@/components/today/quest-card";
 import { FallbackActions } from "@/components/today/fallback-actions";
-import { FriendsStrip } from "@/components/today/friends-strip";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
@@ -308,16 +307,7 @@ function TodayPageContent() {
           />
         </div>
 
-        {/* Subtle divider */}
-        <div className="mx-8 border-t border-neutral-100/60 mb-4" />
-
-        {/* Friends cooked recently */}
-        <FriendsStrip
-          onDishSelect={(dishName) => {
-            setShowSearch(true);
-            handleTextSubmit(dishName);
-          }}
-        />
+        {/* Friends strip hidden — uses mock data, re-enable when real social graph exists */}
       </main>
 
       {/* Search popout — slides up from bottom */}

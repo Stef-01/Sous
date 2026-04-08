@@ -65,8 +65,8 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        className="flex w-full items-center gap-3 rounded-2xl border border-[var(--nourish-green)]/20 bg-white px-4 py-3 shadow-sm
-                   hover:shadow-md hover:border-[var(--nourish-green)]/40
+        className="flex w-full items-center gap-3 rounded-2xl border border-[var(--nourish-green)]/30 bg-white px-4 py-3.5 shadow-sm
+                   hover:shadow-md hover:border-[var(--nourish-green)]/50 active:scale-[0.99]
                    transition-all duration-200 text-left group"
         type="button"
       >
@@ -74,10 +74,10 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
           <Search size={15} className="text-[var(--nourish-green)]" />
         </div>
         <span className="text-sm font-medium text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
-          What are you craving?
+          What&apos;s for dinner?
         </span>
-        <span className="ml-auto text-xs text-[var(--nourish-green)]/60 font-medium hidden sm:inline">
-          Tap to search
+        <span className="ml-auto text-xs text-[var(--nourish-green)] font-semibold hidden sm:inline">
+          Find sides →
         </span>
       </motion.button>
     </motion.div>
