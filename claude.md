@@ -75,6 +75,15 @@ src/
 7. **No invented recipes or images**: Never generate new dish entries or images that don't already exist in the dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows to existing meals and sides already present in the data layer. New recipes must come from real, reputable online sources and be added to the existing side/meal catalog first.
 8. **Consult STRATEGY.md before planning new features**: Before designing or implementing any new feature, read STRATEGY.md to ensure the feature aligns with the strategic thesis, strengthens a compounding moat, and passes the feature prioritization criteria. Update STRATEGY.md's decision log when making significant feature decisions.
 9. **Consult ROADMAP.md for build sequencing**: Before starting development work, read ROADMAP.md to understand what's been built, what's in progress, and what's next. Don't duplicate work that's already done.
+10. **No-scroll navigation**: The primary CTA and all navigation elements on every screen must be visible without scrolling on a 375px × 667px viewport (iPhone SE). If content pushes the CTA below the fold, use flex layout with `mt-auto` to pin it to the bottom. This is non-negotiable.
+11. **Current feature state (do not revert)**: The following features are intentional design decisions and must not be removed or changed without explicit user approval:
+    - Path tab is ALWAYS visible in the tab bar (no progressive unlock gate)
+    - Friends social meals section is on the Today page, BELOW the fold (scroll to see)
+    - Coach quiz runs on first visit only
+    - Cuisine mastery paths (8 cuisines) are in the skill tree as a separate grid section
+    - Kitchen Sanitation is NOT in the skill tree (removed intentionally)
+    - All image URLs are null with gradient+emoji fallback (no external image URLs)
+    - Clerk auth is bypassed with mock user (re-enable for production only)
 
 ## AI integration notes
 
