@@ -749,3 +749,166 @@ See `data-structure.md` — 93 meals, 203 sides, 11 cuisines, guided cook step d
 **Integration (tRPC test client):** pairing.suggest end-to-end, cook.start → complete → stats update, coach.quiz → preference change → re-ranked results.
 
 **E2E (Playwright):** Text craving → results → select → guided cook → complete → win. Photo capture → correction → results. Three cooks → Path tab appears.
+
+---
+
+## Phase 14 — Cooking Games Arcade
+
+**Objective:** Create a beautiful, artsy game selection menu and multiple mini-games that make cooking knowledge fun, social, and addictive. Games should teach food literacy while feeling like a treat, not homework. The arcade should feel like opening a beautifully illustrated children's book — warm, inviting, handcrafted.
+
+**Entry point:** "Play a game" chip on Today page → opens the Games Arcade screen
+
+### 14.1 Game Menu Design — "The Kitchen Shelf"
+
+The game selection screen should feel like looking at a cozy kitchen shelf with illustrated game "boxes" arranged artfully. Not a grid of cards — an actual shelf with personality.
+
+**Visual concept:**
+- Warm cream/paper texture background (matches Sous brand)
+- Each game appears as a hand-illustrated "recipe card" or "cookbook" on the shelf
+- Subtle parallax tilt when scrolling — cards shift slightly like physical objects
+- Each game card shows: illustrated icon, game name, "Best: [score]" in handwritten font, play count
+- Tap a card → it lifts off the shelf with a satisfying scale animation → game loads
+- Background music: optional gentle kitchen ambience (utensils clinking, soft humming) — toggle off with one tap
+
+**Navigation:** Single scrollable shelf. Max 6-8 games visible. No tabs, no categories, no filters. Just pick one and play.
+
+### 14.2 Game 1: "What's Cooking?" — The Food Guessing Game
+
+**Concept:** You're given cryptic, poetic clues about a dish that start obscure and get progressively easier. Guess the dish before running out of clues.
+
+**Mechanics:**
+- 5 clues per round, revealed one at a time
+- Clue 1: Very abstract/poetic ("I was born in fire and cooled by the sea")
+- Clue 2: Cultural/historical ("Fishermen in Naples made me famous 200 years ago")
+- Clue 3: Ingredient hint ("My foundation is flour, water, and patience")
+- Clue 4: More specific ("I come in thin crust and deep dish varieties")
+- Clue 5: Almost giving it away ("Mozzarella is my best friend")
+- Answer: Pizza
+
+**Scoring:**
+- Guess after clue 1: 500 points (genius!)
+- Guess after clue 2: 400 points
+- Guess after clue 3: 300 points
+- Guess after clue 4: 200 points
+- Guess after clue 5: 100 points
+- Wrong guess: lose one clue (auto-reveals next)
+
+**UI:**
+- Beautiful illustrated card that "unfolds" to reveal each clue
+- Handwritten-style clue text on parchment/paper texture
+- Type-ahead guess input with fuzzy matching (pizza, piza, pitza all match)
+- Correct guess: confetti + the dish illustration appears in full color
+- Streak counter: how many in a row you've guessed correctly
+
+**Content:** 100+ dishes from the Sous database, each with 5 hand-crafted clues. Clues emphasize culture, history, and sensory description — teaching food literacy naturally.
+
+### 14.3 Game 2: "Flavor Pairs" — The Matching Game
+
+**Concept:** Match ingredients that pair well together. Think memory card game meets food science.
+
+**Mechanics:**
+- 12 cards face-down (6 pairs)
+- Each card shows an ingredient with a cute illustration
+- Flip two cards: if they're a great flavor pair (tomato + basil, chocolate + sea salt, lemon + butter), they stay face-up with a sparkle animation
+- If they don't pair, they flip back with a gentle wobble
+- Complete all 6 pairs to win
+- Timer running — faster = more points
+
+**Difficulty levels:**
+- Easy: Classic obvious pairs (peanut butter + jelly, chips + salsa)
+- Medium: Culinary pairs (miso + caramel, fig + prosciutto)
+- Hard: Unexpected science-backed pairs (strawberry + balsamic, watermelon + feta, chocolate + chili)
+
+**UI:**
+- Cards have watercolor-style ingredient illustrations
+- Matched pairs glow with a warm golden border
+- Background: wooden cutting board texture
+- Sound: satisfying "clink" when a pair matches, like wine glasses toasting
+
+### 14.4 Game 3: "Speed Chop" — The Ingredient Sorting Game
+
+**Concept:** Ingredients fly across the screen and you swipe them into the right category before time runs out. Think Fruit Ninja meets food education.
+
+**Mechanics:**
+- Ingredients float up from the bottom of the screen
+- Swipe left for one category, right for the other
+- Round 1: "Fruit vs Vegetable" (is a tomato a fruit? yes!)
+- Round 2: "Protein vs Carb"
+- Round 3: "Grows above ground vs below ground"
+- Round 4: "Needs refrigeration vs pantry stable"
+- Gets faster as you progress
+- 3 lives — wrong swipe loses a life
+
+**UI:**
+- Ingredients are cute illustrated characters with tiny faces (kawaii style)
+- Correct swipe: ingredient bounces happily into a basket
+- Wrong swipe: ingredient makes a sad face and drops
+- Streak multiplier visual: flames around the score counter
+- Background: kitchen counter with two baskets
+
+### 14.5 Game 4: "Plate It Up" — The Plating Composition Game
+
+**Concept:** Drag and drop dish components onto a plate to create the most visually balanced arrangement. Teaches plating principles through play.
+
+**Mechanics:**
+- Given a main dish + 2-3 sides + a garnish
+- Drag them onto an empty plate
+- AI scores your plating on: balance, color distribution, negative space, garnish placement
+- Three-star rating system
+- "Chef's version" revealed after you plate — see how a pro would do it
+
+**UI:**
+- Clean white plate in center of screen
+- Components in a tray at the bottom
+- Drag with satisfying physics (slight bounce, shadow under dragged item)
+- Scoring appears as a gentle watercolor wash over the plate (gold for great, silver for good, bronze for okay)
+
+### 14.6 Game 5: "Cuisine Compass" — The Geography Game
+
+**Concept:** A dish appears and you tap the region of the world it comes from on a stylized map.
+
+**Mechanics:**
+- Illustrated world map (not realistic — artistic, warm, with food icons in each region)
+- Dish name + photo appears at top
+- Tap the region you think it's from
+- Closer to the exact country = more points
+- After answering: a fun fact about that dish's origin appears
+- 10 rounds per game
+
+**UI:**
+- Hand-drawn map with warm colors (not Google Maps — think illustrated atlas)
+- Correct: region glows green, dotted line connects dish to origin with a little airplane animation
+- Wrong: gentle pulse on the correct region to show you where it actually comes from
+- Score based on distance: "You were 2 countries away!"
+
+### 14.7 Implementation Plan
+
+**Phase 14A (MVP — build first):**
+- Game menu shelf UI (the selection screen)
+- "What's Cooking?" (text-based, needs only clue data + fuzzy matching)
+- "Flavor Pairs" (card flip mechanics + pair data)
+
+**Phase 14B (second wave):**
+- "Speed Chop" (gesture-based, needs ingredient categorization data)
+- "Cuisine Compass" (needs illustrated map component + dish origin data)
+
+**Phase 14C (polish):**
+- "Plate It Up" (drag-and-drop, needs plating scoring system)
+- Leaderboards (personal best, friends if social features active)
+- Daily game rotation: one game highlighted each day with bonus XP
+
+**Technical notes:**
+- All games render in React with Framer Motion for animations
+- No external game engine needed — these are UI-driven mini-games
+- Game data (clues, pairs, categories, origins) lives in src/data/games/
+- Each game is a separate route: /games/whats-cooking, /games/flavor-pairs, etc.
+- Scores saved to localStorage (same as cook sessions)
+- Games should load instantly — no heavy assets, use CSS/SVG illustrations
+
+**Strategy alignment:**
+- Games strengthen the behavioral moat (another reason to open the app daily)
+- "What's Cooking?" and "Cuisine Compass" build food literacy (content moat)
+- "Flavor Pairs" teaches the pairing principles the engine uses (engine moat)
+- All games are solo-first but shareable (screenshot your score)
+- Games are bite-sized (2-5 minutes) — they fill the "not cooking tonight but still engaging" gap
+- NO games require cooking — they're for days when you just want to play
