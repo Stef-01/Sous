@@ -8,6 +8,8 @@ interface UnlockStatus {
   pathUnlocked: boolean;
   communityUnlocked: boolean;
   completedCooks: number;
+  /** True once localStorage has been read — guards against premature redirects */
+  isLoaded: boolean;
 }
 
 /**
@@ -21,6 +23,7 @@ export function useUnlockStatus(): UnlockStatus {
     pathUnlocked: true,
     communityUnlocked: false,
     completedCooks: 0,
+    isLoaded: false,
   });
 
   useEffect(() => {
@@ -29,14 +32,21 @@ export function useUnlockStatus(): UnlockStatus {
         pathUnlocked: true,
         communityUnlocked: false, // deferred
         completedCooks: stats.completedCooks ?? 0,
+        isLoaded: true,
       });
     };
 
     try {
       const raw = localStorage.getItem(STATS_KEY);
-      if (raw) applyStats(JSON.parse(raw));
+      if (raw) {
+        applyStats(JSON.parse(raw));
+      } else {
+        // No stats yet — mark as loaded so callers know the answer is "not unlocked"
+        setStatus((prev) => ({ ...prev, isLoaded: true }));
+      }
     } catch {
-      // localStorage unavailable
+      // localStorage unavailable — mark loaded so we don't block forever
+      setStatus((prev) => ({ ...prev, isLoaded: true }));
     }
 
     // Re-read stats from localStorage (used by both listeners)
@@ -49,6 +59,7 @@ export function useUnlockStatus(): UnlockStatus {
             pathUnlocked: true,
             communityUnlocked: false,
             completedCooks: stats.completedCooks ?? 0,
+            isLoaded: true,
           });
         }
       } catch {
