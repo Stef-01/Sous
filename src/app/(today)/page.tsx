@@ -309,6 +309,7 @@ function TodayPageContent() {
           {/* Camera overlay */}
           {(view.type === "camera" || view.type === "recognition") && (
             <CameraInput
+              key="camera-input"
               onCapture={handleCameraCapture}
               onClose={() => setView({ type: "idle" })}
               isProcessing={view.type === "recognition"}

@@ -65,6 +65,8 @@ function CombinedCookContent() {
   const { startSession, completeSession, updateSession } = useCookSessions();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const sessionIdRef = useRef<string | null>(null);
+  // Guard against rapid double-tap on the "Next step" button
+  const isAdvancingRef = useRef(false);
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
     streak: number;
@@ -215,6 +217,11 @@ function CombinedCookContent() {
   }, [currentDish, setPhase, setTotalSteps]);
 
   const handleNext = useCallback(() => {
+    // Guard against rapid double-tap
+    if (isAdvancingRef.current) return;
+    isAdvancingRef.current = true;
+    setTimeout(() => { isAdvancingRef.current = false; }, 400);
+
     if (currentStepIndex >= currentCookSteps.length - 1) {
       // Completed the current dish's cook steps
       const justCompletedName = currentDish?.dish.name ?? "";
