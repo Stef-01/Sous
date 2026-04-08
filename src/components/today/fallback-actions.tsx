@@ -30,7 +30,6 @@ const chips = [
     icon: ShoppingCart,
     label: "Order out",
     handler: "onOrderOut" as const,
-    badge: "30% off",
   },
 ] as const;
 
@@ -97,11 +96,6 @@ export function FallbackActions({
           >
             <Icon size={14} className="text-[var(--nourish-green)]" />
             {chip.label}
-            {"badge" in chip && chip.badge && (
-              <span className="absolute -top-2 -right-1.5 rounded-full bg-[var(--nourish-gold)] px-1.5 py-0.5 text-[8px] font-bold text-white leading-none shadow-sm">
-                {chip.badge}
-              </span>
-            )}
           </motion.button>
         );
       })}

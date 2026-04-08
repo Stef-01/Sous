@@ -25,16 +25,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sous — Meal Explorer",
+  title: "Sous — Cook Confidently Tonight",
   description:
-    "Find the perfect sides for your favourite meal. Discover culturally appropriate side dishes with beautiful interactive pairing.",
+    "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://sous.vercel.app",
   ),
   openGraph: {
-    title: "Sous — Meal Explorer",
+    title: "Sous — Cook Confidently Tonight",
     description:
-      "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
+      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
     siteName: "Sous",
     type: "website",
     images: [
@@ -42,15 +42,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Sous — ADA Plate Method visualization with culturally diverse foods",
+        alt: "Sous — cooking confidence app with guided recipes and smart side dish pairing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sous — Meal Explorer",
+    title: "Sous — Cook Confidently Tonight",
     description:
-      "Discover culturally authentic side dishes for any meal. Visualize balanced plates with the ADA Plate Method.",
+      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
     images: ["/og-image.png"],
   },
 };
