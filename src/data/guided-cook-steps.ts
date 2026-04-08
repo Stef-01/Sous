@@ -5259,7 +5259,7 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
     prepTimeMinutes: 5,
     cookTimeMinutes: 18,
     skillLevel: "beginner",
-    heroImageUrl: "/food_images/chicken_teriyaki.png",
+    heroImageUrl: null,
     flavorProfile: ["savory", "sweet", "umami"],
     temperature: "hot",
     ingredients: [

@@ -18,7 +18,6 @@ import { CoachQuiz } from "@/components/shared/coach-quiz";
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import type { CoachQuizResult } from "@/data/coach-quiz";
-import type { EffortTolerance } from "@/data/coach-quiz";
 
 type ViewState =
   | { type: "idle" }
@@ -57,12 +56,6 @@ function TodayPageContent() {
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
-  const [userPreferences, setUserPreferences] = useState<
-    Record<string, number>
-  >({});
-  const [effortTolerance, setEffortTolerance] = useState<
-    EffortTolerance | undefined
-  >(undefined);
   const [quizDone, setQuizDone] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -71,16 +64,9 @@ function TodayPageContent() {
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
 
-  // Load saved quiz preferences from localStorage
+  // Load saved quiz state from localStorage
   useEffect(() => {
     try {
-      const prefs = localStorage.getItem("sous-preferences");
-      if (prefs)
-        setUserPreferences(JSON.parse(prefs) as Record<string, number>);
-      const effort = localStorage.getItem(
-        "sous-effort-tolerance",
-      ) as EffortTolerance | null;
-      if (effort) setEffortTolerance(effort);
       if (localStorage.getItem("sous-coach-quiz-done")) setQuizDone(true);
     } catch {
       // localStorage unavailable
@@ -242,8 +228,6 @@ function TodayPageContent() {
     } catch {
       // localStorage unavailable
     }
-    setUserPreferences(result.preferences);
-    setEffortTolerance(result.effortTolerance);
     setQuizDone(true);
     setShowCoachQuiz(false);
   }, []);
@@ -275,12 +259,7 @@ function TodayPageContent() {
 
         {/* Today's Quest — swipeable card stack */}
         <div className="mb-2">
-          <QuestCard
-            onFindSides={(dishName) => {
-              setShowSearch(true);
-              handleTextSubmit(dishName);
-            }}
-          />
+          <QuestCard />
         </div>
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}

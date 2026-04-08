@@ -128,13 +128,8 @@ function getDishEmoji(tags: string[], cuisine: string): string {
  * QuestCard — swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
  * Swipe right to cook, left to skip. Heart saves to localStorage.
- * Pass onFindSides to enable "Find sides" flow for non-guided dishes.
  */
-export function QuestCard({
-  onFindSides,
-}: {
-  onFindSides?: (dishName: string) => void;
-}) {
+export function QuestCard() {
   const questDishes = useMemo(() => buildQuestDishes(), []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
@@ -160,11 +155,6 @@ export function QuestCard({
     timersRef.current.push(id);
     return id;
   }, []);
-
-  const advance = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-    setExitDirection(null);
-  }, [questDishes.length]);
 
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
