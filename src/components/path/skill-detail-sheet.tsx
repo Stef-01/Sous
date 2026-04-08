@@ -44,21 +44,27 @@ export function SkillDetailSheet({
   };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Backdrop */}
+    <>
+      {/* Backdrop — separate AnimatePresence */}
+      <AnimatePresence>
+        {open && (
           <motion.div
+            key="skill-detail-backdrop"
             className="fixed inset-0 z-[55] bg-black/55 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
+        )}
+      </AnimatePresence>
 
-          {/* Sheet */}
+      {/* Sheet — separate AnimatePresence; flex-col avoids sticky+transform bug */}
+      <AnimatePresence>
+        {open && (
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-[60] max-h-[80vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain safe-area-bottom"
+            key="skill-detail-sheet"
+            className="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[80vh] rounded-t-3xl bg-white shadow-2xl safe-area-bottom"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -69,13 +75,15 @@ export function SkillDetailSheet({
               mass: 0.8,
             }}
           >
-            {/* Drag handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-10 rounded-full bg-neutral-200" />
-            </div>
+            {/* Fixed header (never scrolls) */}
+            <div className="flex-shrink-0 rounded-t-3xl bg-white">
+              {/* Drag handle */}
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="h-1 w-10 rounded-full bg-neutral-200" />
+              </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 pt-2 pb-3">
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pt-2 pb-3">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
@@ -101,14 +109,17 @@ export function SkillDetailSheet({
               </div>
               <button
                 onClick={onClose}
-                className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+                className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-90"
                 type="button"
                 aria-label="Close"
               >
                 <X size={20} />
               </button>
             </div>
+            </div>{/* end fixed header */}
 
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto min-h-0">
             <motion.div
               className="px-5 pb-24 space-y-5"
               initial="hidden"
@@ -288,9 +299,10 @@ export function SkillDetailSheet({
                 </button>
               )}
             </motion.div>
+            </div>{/* end scrollable content */}
           </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

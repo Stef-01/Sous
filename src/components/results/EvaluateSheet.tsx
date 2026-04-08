@@ -71,46 +71,57 @@ export function EvaluateSheet({
   const config = statusConfig[evaluation.status];
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          {/* Backdrop */}
+    <>
+      {/* Backdrop — separate AnimatePresence */}
+      <AnimatePresence>
+        {open && (
           <motion.div
+            key="evaluate-backdrop"
             className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
           />
+        )}
+      </AnimatePresence>
 
-          {/* Sheet */}
+      {/* Sheet — separate AnimatePresence; flex-col avoids sticky+transform bug */}
+      <AnimatePresence>
+        {open && (
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white shadow-2xl"
+            key="evaluate-sheet"
+            className="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[85vh] rounded-t-2xl bg-white shadow-2xl"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
           >
-            {/* Drag handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-10 rounded-full bg-neutral-200" />
+            {/* Fixed header (never scrolls) */}
+            <div className="flex-shrink-0 rounded-t-2xl bg-white">
+              {/* Drag handle */}
+              <div className="flex justify-center pt-3 pb-1">
+                <div className="h-1 w-10 rounded-full bg-neutral-200" />
+              </div>
+
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pt-2 pb-3">
+                <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+                  Plate check
+                </h2>
+                <button
+                  onClick={onClose}
+                  className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-90"
+                  type="button"
+                  aria-label="Close"
+                >
+                  <X size={20} />
+                </button>
+              </div>
             </div>
 
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 pt-2 pb-3">
-              <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-                Plate check
-              </h2>
-              <button
-                onClick={onClose}
-                className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
-                type="button"
-                aria-label="Close"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto min-h-0">
             <div className="px-5 pb-24 space-y-5">
               {/* Appraisal headline */}
               <div
@@ -227,10 +238,11 @@ export function EvaluateSheet({
                 </button>
               </div>
             </div>
+            </div>
           </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
