@@ -39,7 +39,7 @@ export function TabBar({
                 {isActive && (
                   <motion.div
                     layoutId="tab-indicator"
-                    className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/8"
+                    className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/12"
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
                 )}

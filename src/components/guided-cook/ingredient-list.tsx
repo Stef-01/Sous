@@ -146,9 +146,9 @@ export function IngredientList({
           onClick={onReady}
           className={cn(
             "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-            "transition-all duration-200",
+            "shadow-sm transition-all duration-200",
             allChecked
-              ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]"
+              ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)] shadow-[var(--nourish-green)]/20"
               : "bg-[var(--nourish-green)]/80 hover:bg-[var(--nourish-green)]",
           )}
           type="button"
@@ -226,14 +226,24 @@ function IngredientRow({
           checked && "opacity-60",
         )}
       >
-        {/* Checkbox */}
-        <button onClick={onToggle} className="mt-0.5 shrink-0" type="button">
+        {/* Checkbox — 44px touch target wraps 20px visual circle */}
+        <button
+          onClick={onToggle}
+          className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center"
+          type="button"
+          aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
+        >
           {checked ? (
-            <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-[var(--nourish-green)]">
+            <motion.div
+              initial={{ scale: 0.6 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--nourish-green)]"
+            >
               <Check size={12} className="text-white" strokeWidth={3} />
-            </div>
+            </motion.div>
           ) : (
-            <Circle size={18} className="text-neutral-300" />
+            <Circle size={20} className="text-neutral-300" />
           )}
         </button>
 
@@ -270,12 +280,12 @@ function IngredientRow({
           )}
         </button>
 
-        {/* Substitution toggle */}
+        {/* Substitution toggle — 44px touch target */}
         {!checked && !item.isOptional && (
           <button
             onClick={onAskSub}
             className={cn(
-              "mt-0.5 shrink-0 rounded-md p-1 transition-colors",
+              "flex h-11 w-9 shrink-0 -m-1 items-center justify-center rounded-md transition-colors",
               showingSub
                 ? "text-[var(--nourish-green)] bg-[var(--nourish-green)]/10"
                 : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
