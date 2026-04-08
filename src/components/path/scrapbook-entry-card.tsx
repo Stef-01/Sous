@@ -45,7 +45,10 @@ export function ScrapbookEntryCard({
             </p>
           )}
           <p className="text-[10px] text-[var(--nourish-subtext)] uppercase tracking-wide">
-            {session.cuisineFamily} · {completedDate}
+            {session.cuisineFamily && session.cuisineFamily !== "unknown"
+              ? `${session.cuisineFamily} · `
+              : ""}
+            {completedDate}
           </p>
         </div>
 

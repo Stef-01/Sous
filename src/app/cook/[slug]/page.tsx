@@ -280,15 +280,23 @@ export default function GuidedCookPage({
 
   if (error || !data?.dish) {
     return (
-      <div className="min-h-full flex flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-[var(--nourish-subtext)]">
-          {data?.dish === null
-            ? "This recipe doesn't have guided cook steps yet."
-            : "Something went wrong loading the recipe."}
-        </p>
+      <div className="min-h-full flex flex-col items-center justify-center gap-5 px-6 text-center bg-[var(--nourish-cream)]">
+        <span className="text-4xl">{data?.dish === null ? "🥄" : "😕"}</span>
+        <div className="space-y-1.5">
+          <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+            {data?.dish === null
+              ? "Cook steps coming soon"
+              : "Couldn\u2019t load the recipe"}
+          </p>
+          <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
+            {data?.dish === null
+              ? "This dish doesn\u2019t have a guided cook flow yet. Try another from the Today page."
+              : "Something went wrong. Check your connection and try again."}
+          </p>
+        </div>
         <button
           onClick={handleBackToday}
-          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-medium text-white"
+          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
           type="button"
         >
           Back to Today

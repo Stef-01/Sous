@@ -41,7 +41,7 @@ export function TextPrompt({
   return (
     <div className="space-y-3">
       <label className="block text-sm font-medium text-[var(--nourish-subtext)]">
-        What&apos;s on your plate?
+        What&apos;s your main dish?
       </label>
 
       <div className="relative">
@@ -52,6 +52,7 @@ export function TextPrompt({
           onKeyDown={handleKeyDown}
           placeholder="Roast chicken, gyros, pizza..."
           disabled={isLoading}
+          autoFocus
           className={cn(
             "w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-4 py-3.5 pr-24 text-base",
             "placeholder:text-[var(--nourish-subtext)]/60",

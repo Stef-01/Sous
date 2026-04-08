@@ -60,13 +60,24 @@ export default function ScrapbookPage() {
             />
           ))
         ) : (
-          <div className="rounded-xl border border-neutral-100 bg-white p-8 text-center mt-8">
-            <p className="text-sm text-[var(--nourish-subtext)]">
-              Your scrapbook is empty.
-            </p>
-            <p className="text-xs text-[var(--nourish-subtext)] mt-1">
-              Complete a guided cook to start collecting memories.
-            </p>
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-neutral-100 bg-white px-6 py-12 text-center mt-8">
+            <span className="text-4xl">📖</span>
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+                Your scrapbook is empty
+              </p>
+              <p className="text-xs text-[var(--nourish-subtext)] max-w-[220px]">
+                Finish a guided cook and it&apos;ll appear here — with your
+                rating, notes, and date.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/")}
+              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
+              type="button"
+            >
+              Start cooking
+            </button>
           </div>
         )}
       </main>
