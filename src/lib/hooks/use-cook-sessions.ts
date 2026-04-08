@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 const SESSIONS_KEY = "sous-cook-sessions";
 const STATS_KEY = "sous-cook-stats";
@@ -65,14 +65,23 @@ function loadStats(): CookStats {
   }
   try {
     const raw = localStorage.getItem(STATS_KEY);
-    return raw
-      ? JSON.parse(raw)
-      : {
-          completedCooks: 0,
-          currentStreak: 0,
-          lastCookDate: null,
-          cuisinesCovered: [],
-        };
+    if (!raw) {
+      return {
+        completedCooks: 0,
+        currentStreak: 0,
+        lastCookDate: null,
+        cuisinesCovered: [],
+      };
+    }
+    const parsed = JSON.parse(raw);
+    return {
+      completedCooks: parsed.completedCooks ?? 0,
+      currentStreak: parsed.currentStreak ?? 0,
+      lastCookDate: parsed.lastCookDate ?? null,
+      cuisinesCovered: Array.isArray(parsed.cuisinesCovered)
+        ? parsed.cuisinesCovered
+        : [],
+    };
   } catch {
     return {
       completedCooks: 0,
@@ -130,15 +139,14 @@ const DEFAULT_STATS: CookStats = {
 };
 
 export function useCookSessions() {
-  const [sessions, setSessions] = useState<CookSessionRecord[]>([]);
-  const [stats, setStats] = useState<CookStats>(DEFAULT_STATS);
-
-  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount */
-  useEffect(() => {
-    setSessions(loadSessions());
-    setStats(loadStats());
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  const [sessions, setSessions] = useState<CookSessionRecord[]>(() => {
+    if (typeof window === "undefined") return [];
+    return loadSessions();
+  });
+  const [stats, setStats] = useState<CookStats>(() => {
+    if (typeof window === "undefined") return DEFAULT_STATS;
+    return loadStats();
+  });
 
   /**
    * Start a new cook session. Returns the session ID.
