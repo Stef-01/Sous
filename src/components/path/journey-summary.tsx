@@ -104,18 +104,18 @@ export function JourneySummary({ stats }: JourneySummaryProps) {
         <div className="h-10 w-px bg-neutral-100" />
 
         <StatBlock
-          value={stats.cuisinesCovered.length}
+          value={(stats.cuisinesCovered ?? []).length}
           label="Cuisines"
           delay={0.15}
         />
       </div>
 
       {/* Cuisine tags — deduplicate by normalized name */}
-      {stats.cuisinesCovered.length > 0 && (
+      {(stats.cuisinesCovered ?? []).length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-0.5">
           {[
             ...new Set(
-              stats.cuisinesCovered.map(
+              (stats.cuisinesCovered ?? []).map(
                 (c) => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase(),
               ),
             ),
@@ -137,9 +137,9 @@ export function JourneySummary({ stats }: JourneySummaryProps) {
                 {cuisine}
               </motion.span>
             ))}
-          {stats.cuisinesCovered.length > 5 && (
+          {(stats.cuisinesCovered ?? []).length > 5 && (
             <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-subtext)]">
-              +{stats.cuisinesCovered.length - 5} more
+              +{(stats.cuisinesCovered ?? []).length - 5} more
             </span>
           )}
         </div>
