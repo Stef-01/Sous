@@ -46,7 +46,7 @@ export function SkillDetailSheet({
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-black/55 backdrop-blur-sm"
+            className="fixed inset-0 z-[55] bg-black/55 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -55,7 +55,7 @@ export function SkillDetailSheet({
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain safe-area-bottom"
+            className="fixed inset-x-0 bottom-0 z-[60] max-h-[80vh] overflow-y-auto rounded-t-3xl bg-white shadow-2xl scroll-contain safe-area-bottom"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -107,7 +107,7 @@ export function SkillDetailSheet({
             </div>
 
             <motion.div
-              className="px-5 pb-8 space-y-5"
+              className="px-5 pb-24 space-y-5"
               initial="hidden"
               animate="visible"
               variants={{
