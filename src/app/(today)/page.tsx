@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { QuestCard } from "@/components/today/quest-card";
@@ -235,7 +235,12 @@ function TodayPageContent() {
   // ── Render ────────────────────────────────────────────
 
   return (
-    <div className="min-h-full bg-[var(--nourish-cream)]">
+    <motion.div
+      className="min-h-full bg-[var(--nourish-cream)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.18 }}
+    >
       {/* Header — Sous + streak chip + bird */}
       <header className="border-b border-neutral-100/80 bg-white px-4 py-2">
         <div className="mx-auto flex max-w-md items-center justify-between">
@@ -265,11 +270,13 @@ function TodayPageContent() {
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}
         <div className="space-y-2.5 mb-4 overflow-visible">
           <p className="text-center">
-            <button
+            <motion.button
               onClick={() => {
                 setShowSearch(true);
                 handleTextSubmit("something quick and easy, I'm tired");
               }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className="text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
               type="button"
             >
@@ -277,7 +284,7 @@ function TodayPageContent() {
               <span className="underline underline-offset-2 decoration-[var(--nourish-green)]/50">
                 Make something in 15 minutes
               </span>
-            </button>
+            </motion.button>
           </p>
           <FallbackActions
             onRescueFridge={handleRescueFridge}
@@ -467,6 +474,6 @@ function TodayPageContent() {
           />
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }

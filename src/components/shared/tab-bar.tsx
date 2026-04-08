@@ -28,41 +28,51 @@ export function TabBar({
                 : pathname.startsWith(tab.href);
 
             return (
-              <Link
+              <motion.div
                 key={tab.id}
-                href={tab.href}
-                className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
-                aria-current={isActive ? "page" : undefined}
-                aria-label={tab.label}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                style={{ WebkitTapHighlightColor: "transparent" }}
               >
-                {/* Sliding active indicator */}
-                {isActive && (
-                  <motion.div
-                    layoutId="tab-indicator"
-                    className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/12"
-                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  />
-                )}
-                <motion.div
-                  className="relative z-10 flex flex-col items-center gap-0.5"
-                  animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
-                  transition={
-                    isActive ? { duration: 0.3, ease: "easeInOut" } : {}
-                  }
+                <Link
+                  href={tab.href}
+                  className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
+                  aria-current={isActive ? "page" : undefined}
+                  aria-label={tab.label}
                 >
-                  <TabIcon id={tab.id} active={isActive} />
-                  <span
-                    className={cn(
-                      "transition-colors duration-200",
-                      isActive
-                        ? "text-[var(--nourish-green)]"
-                        : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                    )}
+                  {/* Sliding active indicator */}
+                  {isActive && (
+                    <motion.div
+                      layoutId="tab-indicator"
+                      className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/12"
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25,
+                      }}
+                    />
+                  )}
+                  <motion.div
+                    className="relative z-10 flex flex-col items-center gap-0.5"
+                    animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
+                    transition={
+                      isActive ? { duration: 0.3, ease: "easeInOut" } : {}
+                    }
                   >
-                    {tab.label}
-                  </span>
-                </motion.div>
-              </Link>
+                    <TabIcon id={tab.id} active={isActive} />
+                    <span
+                      className={cn(
+                        "transition-colors duration-200",
+                        isActive
+                          ? "text-[var(--nourish-green)]"
+                          : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                      )}
+                    >
+                      {tab.label}
+                    </span>
+                  </motion.div>
+                </Link>
+              </motion.div>
             );
           })}
         </div>

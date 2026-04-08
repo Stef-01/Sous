@@ -195,8 +195,10 @@ export function StepCard({
 
       {/* Cook Q&A — bounded AI question */}
       <div className="space-y-2">
-        <button
+        <motion.button
           onClick={() => setShowQA(!showQA)}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium",
             "border transition-all duration-150",
@@ -208,7 +210,7 @@ export function StepCard({
         >
           <MessageCircleQuestion size={14} />
           Ask about this step
-        </button>
+        </motion.button>
 
         <AnimatePresence>
           {showQA && (

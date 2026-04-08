@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
+
 import { Search, Camera } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -60,17 +61,21 @@ export function TextPrompt({
           )}
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-          <button
+          <motion.button
             onClick={onCameraClick}
+            whileTap={{ scale: 0.88 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className="rounded-lg p-2 text-[var(--nourish-subtext)] hover:bg-neutral-200/60 transition-colors"
             aria-label="Take a photo"
             type="button"
           >
             <Camera size={18} />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             onClick={handleSubmit}
             disabled={!text.trim() || isLoading}
+            whileTap={text.trim() && !isLoading ? { scale: 0.88 } : undefined}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
               "rounded-lg p-2 transition-all duration-200",
               text.trim() && !isLoading
@@ -81,7 +86,7 @@ export function TextPrompt({
             type="button"
           >
             <Search size={18} />
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -93,12 +98,14 @@ export function TextPrompt({
           className="flex flex-wrap gap-2"
         >
           {suggestions.map((suggestion) => (
-            <button
+            <motion.button
               key={suggestion}
               onClick={() => {
                 setText(suggestion);
                 onSubmit(suggestion);
               }}
+              whileTap={{ scale: 0.93 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
                 "rounded-full border border-neutral-200 px-3 py-1.5 text-sm",
                 "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
@@ -107,7 +114,7 @@ export function TextPrompt({
               type="button"
             >
               {suggestion}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
       )}

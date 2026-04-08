@@ -2,7 +2,7 @@
 
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
@@ -302,12 +302,19 @@ export default function GuidedCookPage({
   // ── Render ────────────────────────────────────────
 
   return (
-    <div className="min-h-full bg-[var(--nourish-cream)]">
+    <motion.div
+      className="min-h-full bg-[var(--nourish-cream)]"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       {/* Header with back button + phase indicator */}
       <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
-          <button
+          <motion.button
             onClick={currentPhase === "win" ? undefined : handleBack}
+            whileTap={currentPhase !== "win" ? { scale: 0.88 } : undefined}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
               "rounded-lg p-1.5 transition-colors",
               currentPhase === "win"
@@ -317,7 +324,7 @@ export default function GuidedCookPage({
             type="button"
           >
             <ArrowLeft size={20} />
-          </button>
+          </motion.button>
           <PhaseIndicator currentPhase={currentPhase} />
           <div className="w-8" /> {/* Spacer */}
         </div>
@@ -402,6 +409,6 @@ export default function GuidedCookPage({
 
       {/* Floating timer */}
       <CookTimer />
-    </div>
+    </motion.div>
   );
 }

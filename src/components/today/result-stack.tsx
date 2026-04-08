@@ -421,7 +421,13 @@ function ResultCard({
                 onError={() => setImgError(true)}
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-lg bg-[var(--nourish-green)]/8">
+              <div
+                className="flex h-full w-full items-center justify-center text-lg"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(45,90,61,0.12) 0%, #fafaf8 100%)",
+                }}
+              >
                 🍽️
               </div>
             )}

@@ -401,7 +401,7 @@ function SwipeCard({
               className="absolute inset-0 flex flex-col items-center justify-center gap-2"
               style={{
                 background:
-                  "linear-gradient(135deg, color-mix(in srgb, var(--nourish-green) 15%, transparent), var(--nourish-cream) 60%, color-mix(in srgb, var(--nourish-green) 8%, transparent))",
+                  "linear-gradient(135deg, rgba(45,90,61,0.15) 0%, #fafaf8 55%, rgba(45,90,61,0.08) 100%)",
               }}
             >
               <span className="text-5xl">

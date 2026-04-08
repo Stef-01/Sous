@@ -52,13 +52,15 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
                 <h2 className="font-serif text-lg font-bold text-[var(--nourish-dark)]">
                   What are you craving?
                 </h2>
-                <button
+                <motion.button
                   onClick={onClose}
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   className="rounded-lg p-2.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
                   type="button"
                 >
                   <X size={20} />
-                </button>
+                </motion.button>
               </div>
             </div>
 

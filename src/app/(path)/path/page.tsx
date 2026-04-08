@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { BookOpen, Heart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { JourneySummary } from "@/components/path/journey-summary";
@@ -132,7 +133,12 @@ export default function PathPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-[var(--nourish-cream)]">
+    <motion.div
+      className="min-h-dvh bg-[var(--nourish-cream)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.18 }}
+    >
       {/* Header with stats */}
       <PathHeader
         streak={stats.currentStreak}
@@ -159,20 +165,32 @@ export default function PathPage() {
       {/* Quick links at bottom (above tab bar) */}
       <div className="px-4 pb-24 pt-2">
         <div className="mx-auto max-w-md flex gap-2">
-          <Link
-            href="/path/scrapbook"
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+          <motion.div
+            className="flex-1"
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
           >
-            <BookOpen size={14} />
-            Scrapbook
-          </Link>
-          <Link
-            href="/path/favorites"
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+            <Link
+              href="/path/scrapbook"
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+            >
+              <BookOpen size={14} />
+              Scrapbook
+            </Link>
+          </motion.div>
+          <motion.div
+            className="flex-1"
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
           >
-            <Heart size={14} />
-            Favorites
-          </Link>
+            <Link
+              href="/path/favorites"
+              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+            >
+              <Heart size={14} />
+              Favorites
+            </Link>
+          </motion.div>
         </div>
       </div>
 
@@ -185,6 +203,6 @@ export default function PathPage() {
         onClose={handleCloseSheet}
         onStartCook={handleStartCook}
       />
-    </div>
+    </motion.div>
   );
 }

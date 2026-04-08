@@ -345,13 +345,15 @@ export function WinScreen({
             className="w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2.5 text-sm placeholder:text-[var(--nourish-subtext)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20 resize-none"
           />
           {note.trim() && (
-            <button
+            <motion.button
               onClick={() => onAddNote(note)}
+              whileTap={{ scale: 0.93 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className="text-xs font-medium text-[var(--nourish-green)]"
               type="button"
             >
               Save note
-            </button>
+            </motion.button>
           )}
         </motion.div>
       )}
@@ -492,14 +494,16 @@ export function WinScreen({
         </motion.button>
 
         {/* Secondary — visually subordinate */}
-        <button
+        <motion.button
           onClick={onCookAgain}
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className="flex w-full items-center justify-center gap-1.5 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
           type="button"
         >
           <RotateCcw size={12} />
           Cook again
-        </button>
+        </motion.button>
       </div>
     </motion.div>
   );
