@@ -279,14 +279,14 @@ export function StepCard({
       </div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between pt-2">
+      <div className="flex items-center gap-3 pt-2">
         <motion.button
           onClick={onPrev}
           disabled={isFirst}
           whileTap={isFirst ? undefined : { scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
-            "flex items-center gap-1 rounded-lg px-4 py-2.5 text-sm font-medium",
+            "flex shrink-0 items-center justify-center gap-1 rounded-xl px-4 py-3 text-sm font-medium",
             "border border-neutral-200 transition-colors duration-150",
             isFirst
               ? "text-neutral-300 border-neutral-100 cursor-not-allowed opacity-40"
@@ -301,22 +301,26 @@ export function StepCard({
 
         <motion.button
           onClick={onNext}
-          whileTap={{ scale: isLast ? 0.92 : 0.95 }}
+          whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
-            "flex items-center gap-1 rounded-lg text-sm font-semibold",
-            isLast
-              ? "px-8 py-3 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] shadow-md shadow-[var(--nourish-green)]/20"
-              : "px-6 py-2.5 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-            "transition-colors duration-200",
+            "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3.5 text-sm font-semibold",
+            "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
+            "shadow-sm shadow-[var(--nourish-green)]/20 transition-colors duration-200",
           )}
           type="button"
           aria-label={
             isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`
           }
         >
-          {isLast ? "Done! 🎉" : "Next"}
-          {!isLast && <ChevronRight size={16} />}
+          {isLast ? (
+            "Done! 🎉"
+          ) : (
+            <>
+              Next
+              <ChevronRight size={16} />
+            </>
+          )}
         </motion.button>
       </div>
     </motion.div>

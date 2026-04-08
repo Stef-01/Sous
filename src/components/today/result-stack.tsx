@@ -341,6 +341,7 @@ function ResultCard({
   onCookThis: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   // AI-enhanced pairing explanation — fires when expanded
   const aiExplanation = trpc.ai.explainPairing.useQuery(
@@ -410,16 +411,17 @@ function ResultCard({
                   className="animate-spin text-[var(--nourish-green)]"
                 />
               </div>
-            ) : side.imageUrl ? (
+            ) : side.imageUrl && !imgError ? (
               <Image
                 src={side.imageUrl}
                 alt={side.name}
                 fill
                 sizes="44px"
                 className="object-cover"
+                onError={() => setImgError(true)}
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-lg">
+              <div className="flex h-full w-full items-center justify-center text-lg bg-[var(--nourish-green)]/8">
                 🍽️
               </div>
             )}

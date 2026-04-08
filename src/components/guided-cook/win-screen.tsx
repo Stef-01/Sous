@@ -132,16 +132,18 @@ export function WinScreen({
         className="space-y-2"
       >
         <motion.div
-          animate={{ rotate: [0, -10, 10, -10, 10, 0] }}
-          transition={{ delay: 0.4, duration: 0.6, ease: "easeInOut" }}
-          className="text-4xl"
+          animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.1, 1] }}
+          transition={{ delay: 0.4, duration: 0.7, ease: "easeInOut" }}
+          className="text-5xl"
         >
           🎉
         </motion.div>
-        <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
+        <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)]">
           {headline}
         </h1>
-        <p className="text-[var(--nourish-subtext)]">{message}</p>
+        <p className="text-[var(--nourish-subtext)] text-sm leading-relaxed">
+          {message}
+        </p>
       </motion.div>
 
       {/* Streak + skill progress */}

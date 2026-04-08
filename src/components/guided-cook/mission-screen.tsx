@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
@@ -29,6 +30,7 @@ export function MissionScreen({
   hasIngredients = true,
   onStart,
 }: MissionScreenProps) {
+  const [imgError, setImgError] = useState(false);
   const totalTime = prepTimeMinutes + cookTimeMinutes;
 
   return (
@@ -38,13 +40,13 @@ export function MissionScreen({
       className="flex flex-col gap-5"
     >
       {/* Hero image */}
-      {heroImageUrl && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="relative aspect-[4/3] overflow-hidden rounded-2xl"
-        >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25 }}
+        className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+      >
+        {heroImageUrl && !imgError ? (
           <Image
             src={heroImageUrl}
             alt={dishName}
@@ -52,9 +54,23 @@ export function MissionScreen({
             sizes="(max-width: 768px) 100vw, 448px"
             priority
             className="object-cover"
+            onError={() => setImgError(true)}
           />
-        </motion.div>
-      )}
+        ) : (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+            style={{
+              background:
+                "linear-gradient(135deg, color-mix(in srgb, var(--nourish-green) 15%, transparent), var(--nourish-cream) 60%, color-mix(in srgb, var(--nourish-green) 8%, transparent))",
+            }}
+          >
+            <span className="text-6xl">🍽️</span>
+            <span className="text-sm font-medium text-[var(--nourish-subtext)]">
+              {dishName}
+            </span>
+          </div>
+        )}
+      </motion.div>
 
       {/* Dish name + flavor badges */}
       <div className="space-y-3">
