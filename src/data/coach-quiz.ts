@@ -125,7 +125,12 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
       {
         label: "Asian (Japanese, Korean, Thai)",
         emoji: "🍜",
-        preferenceUpdates: { japanese: 0.8, korean: 0.7, thai: 0.7, indian: 0.2 },
+        preferenceUpdates: {
+          japanese: 0.8,
+          korean: 0.7,
+          thai: 0.7,
+          indian: 0.2,
+        },
       },
       {
         label: "Mediterranean & Italian",

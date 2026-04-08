@@ -54,7 +54,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
                 </h2>
                 <button
                   onClick={onClose}
-                  className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+                  className="rounded-lg p-2.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
                   type="button"
                 >
                   <X size={20} />
