@@ -27,15 +27,88 @@ const MAX_TREE_WIDTH = 420;
 const BOTTOM_PAD = 80;
 
 /**
+ * Cuisine mastery card — shown in the grid section below the skill tree.
+ * Wider card format rather than a circular node since these are parallel paths.
+ */
+function MasteryCuisineCard({
+  node,
+  onTap,
+}: {
+  node: NodeWithStatus;
+  onTap: (id: string) => void;
+}) {
+  const isInteractive = node.status !== "locked";
+
+  return (
+    <button
+      type="button"
+      onClick={() => isInteractive && onTap(node.id)}
+      disabled={!isInteractive}
+      className={[
+        "flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 w-full",
+        node.status === "completed"
+          ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5"
+          : node.status === "in_progress"
+            ? "border-[var(--nourish-green)]/50 bg-white shadow-md"
+            : node.status === "available"
+              ? "border-neutral-200 bg-white active:scale-95"
+              : "border-neutral-100 bg-neutral-50 opacity-40 cursor-default",
+      ].join(" ")}
+    >
+      <span className="text-3xl leading-none">{node.emoji}</span>
+      <span
+        className={[
+          "text-[11px] font-semibold leading-tight",
+          node.status === "locked"
+            ? "text-neutral-300"
+            : "text-[var(--nourish-dark)]",
+        ].join(" ")}
+      >
+        {node.name}
+      </span>
+      {node.status === "in_progress" && (
+        <span className="text-[10px] text-[var(--nourish-green)] font-medium">
+          {node.progress.cooksCompleted}/{node.cooksRequired} dishes
+        </span>
+      )}
+      {node.status === "completed" && (
+        <span className="text-[10px] font-bold text-[var(--nourish-green)]">
+          ✓ Mastered
+        </span>
+      )}
+      {node.status === "available" && (
+        <span className="text-[10px] text-[var(--nourish-subtext)]">
+          {node.cooksRequired} dishes
+        </span>
+      )}
+      {node.status === "locked" && (
+        <span className="text-[10px] text-neutral-300">Locked</span>
+      )}
+    </button>
+  );
+}
+
+/**
  * Skill Tree — vertically scrollable node map.
  *
  * Renders SVG connector lines behind positioned node buttons.
  * Nodes are placed on a grid using their position.x (0–100) and position.y (row).
  * Auto-scrolls to the first available or in-progress node on mount.
+ * Mastery-tier nodes render below in a 2-column grid, not in the tree.
  */
 export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Split mastery (grid) from the rest (tree)
+  const treeNodes = useMemo(
+    () => nodes.filter((n) => n.tier !== "mastery"),
+    [nodes],
+  );
+  const masteryNodes = useMemo(
+    () => nodes.filter((n) => n.tier === "mastery"),
+    [nodes],
+  );
 
   // Measure actual container width so we can scale the tree to fit any screen
   const [treeWidth, setTreeWidth] = useState(MAX_TREE_WIDTH);
@@ -55,36 +128,35 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   // Usable drawing width after horizontal padding
   const drawWidth = treeWidth - H_PAD * 2;
 
-  // Compute pixel positions for each node
+  // Compute pixel positions for each tree node
   const nodePositions = useMemo(() => {
     const positions: Record<
       string,
       { cx: number; cy: number; node: NodeWithStatus }
     > = {};
-    for (const node of nodes) {
-      // Map 0-100 → [H_PAD, treeWidth - H_PAD] so edge nodes stay within bounds
+    for (const node of treeNodes) {
       const cx = H_PAD + (node.position.x / 100) * drawWidth;
-      const cy = node.position.y * ROW_HEIGHT + NODE_RADIUS + 40; // 40px top offset
+      const cy = node.position.y * ROW_HEIGHT + NODE_RADIUS + 40;
       positions[node.id] = { cx, cy, node };
     }
     return positions;
-  }, [nodes, drawWidth]);
+  }, [treeNodes, drawWidth]);
 
-  // Total canvas height
+  // Total canvas height — based on tree nodes only
   const canvasHeight = useMemo(() => {
-    if (nodes.length === 0) return 300;
-    const maxY = Math.max(...nodes.map((n) => n.position.y));
+    if (treeNodes.length === 0) return 300;
+    const maxY = Math.max(...treeNodes.map((n) => n.position.y));
     return (maxY + 1) * ROW_HEIGHT + BOTTOM_PAD + 80;
-  }, [nodes]);
+  }, [treeNodes]);
 
-  // Build connector edges: parent → child
+  // Build connector edges: parent → child (tree nodes only)
   const edges = useMemo(() => {
     const result: Array<{
       from: string;
       to: string;
       targetStatus: SkillNodeStatus;
     }> = [];
-    for (const node of nodes) {
+    for (const node of treeNodes) {
       for (const reqId of node.requiredSkills) {
         if (nodePositions[reqId]) {
           result.push({
@@ -96,22 +168,19 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
       }
     }
     return result;
-  }, [nodes, nodePositions]);
+  }, [treeNodes, nodePositions]);
 
   // Auto-scroll to first available/in-progress node on mount.
-  // Walks up to the nearest scrollable ancestor (phone frame on desktop)
-  // and falls back to window scroll (real mobile).
   useEffect(() => {
     const target =
-      nodes.find((n) => n.status === "in_progress") ||
-      nodes.find((n) => n.status === "available");
+      treeNodes.find((n) => n.status === "in_progress") ||
+      treeNodes.find((n) => n.status === "available");
     if (target && scrollRef.current) {
       const pos = nodePositions[target.id];
       if (pos) {
         requestAnimationFrame(() => {
           if (!scrollRef.current) return;
           const scrollTarget = Math.max(0, pos.cy - 200);
-          // Find nearest scrollable ancestor (e.g. the phone frame inner div)
           let ancestor: Element | null = scrollRef.current.parentElement;
           while (ancestor && ancestor !== document.body) {
             const overflow = window.getComputedStyle(ancestor).overflowY;
@@ -124,7 +193,6 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
             }
             ancestor = ancestor.parentElement;
           }
-          // Fallback: real mobile — scroll the window
           const containerTop =
             scrollRef.current.getBoundingClientRect().top + window.scrollY;
           window.scrollTo({
@@ -134,38 +202,19 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
         });
       }
     }
-  }, [nodes, nodePositions]);
+  }, [treeNodes, nodePositions]);
 
-  // Tier separator labels
+  // Tier separator labels (tree tiers only)
   const tierLabels = useMemo(() => {
     const labels: Array<{ label: string; y: number }> = [];
     const tiers = [
-      {
-        tier: "foundation",
-        label: "FOUNDATION",
-        startY: 0,
-      },
-      {
-        tier: "intermediate",
-        label: "INTERMEDIATE",
-        startY: 6,
-      },
-      {
-        tier: "advanced",
-        label: "ADVANCED",
-        startY: 10,
-      },
-      {
-        tier: "pre-mastery",
-        label: "PRE-MASTERY",
-        startY: 14,
-      },
+      { label: "FOUNDATION", startY: 0 },
+      { label: "INTERMEDIATE", startY: 5 },
+      { label: "ADVANCED", startY: 9 },
+      { label: "PRE-MASTERY", startY: 13 },
     ];
     for (const t of tiers) {
-      labels.push({
-        label: t.label,
-        y: t.startY * ROW_HEIGHT + 12,
-      });
+      labels.push({ label: t.label, y: t.startY * ROW_HEIGHT + 12 });
     }
     return labels;
   }, []);
@@ -177,6 +226,7 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
 
   return (
     <div ref={containerRef} className="relative w-full overflow-x-hidden">
+      {/* ── Sequential skill tree ─────────────────────────── */}
       <div
         ref={scrollRef}
         className="relative mx-auto"
@@ -218,8 +268,8 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
           })}
         </svg>
 
-        {/* Nodes */}
-        {nodes.map((node) => {
+        {/* Tree nodes */}
+        {treeNodes.map((node) => {
           const pos = nodePositions[node.id];
           if (!pos) return null;
           return (
@@ -241,6 +291,26 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
           );
         })}
       </div>
+
+      {/* ── Cuisine Mastery grid ───────────────────────────── */}
+      {masteryNodes.length > 0 && (
+        <div className="px-4 pb-8 pt-2">
+          <div className="mb-4 text-center">
+            <span className="text-[10px] font-bold tracking-[0.15em] text-[var(--nourish-subtext)] uppercase">
+              CUISINE MASTERY — Choose Your Path
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {masteryNodes.map((node) => (
+              <MasteryCuisineCard
+                key={node.id}
+                node={node}
+                onTap={handleNodeTap}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
