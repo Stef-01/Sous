@@ -507,4 +507,436 @@ When cooking multiple sides + a main, intelligently sequence all steps so everyt
 #### Sequencing rules
 
 1. Cold dishes (salads, dressings) prep first, serve last
-2. Longest-cooking items start fir
+2. Longest-cooking items start first (oven → stovetop → assembly)
+3. Quick-cook items (steaks, stir-fry) start last so they're hot when served
+4. Interleave idle time (baking, simmering) with active prep of other dishes
+5. Never leave a user idle — always suggest the next useful action
+
+#### Definition of done
+
+A user cooking steak + sweet potato + asparagus gets a unified step sequence where the potato goes in the oven first, asparagus cooks mid-way, steak cooks last, and everything finishes within 2 minutes of each other.
+
+---
+
+### Phase 9 — Agentic Sous Assistant
+
+#### Objective
+
+An AI-powered assistant that helps users build their personal recipe collection from real-world inspiration.
+
+#### Scope
+
+- [ ] Sous Assistant modal/sheet accessible from scrapbook and main navigation
+- [ ] Custom recipe creation: manually enter name, ingredients, steps, tags
+- [ ] Save custom recipes to scrapbook alongside completed cooks
+- [ ] Image upload: user photographs favorite restaurant dishes or food photos
+- [ ] Agentic processing: assistant analyzes uploaded images, identifies dishes
+- [ ] Internet search: finds healthy recreations and balanced plate ideas with optimal sides
+- [ ] Results delivered as new recipe cards in scrapbook (async — may take minutes/hours)
+- [ ] Uses existing AI provider abstraction (`src/lib/ai/`) with new agent methods
+- [ ] Background job pattern: upload → queue → process → notify
+- [ ] Status tracking: "Processing your dishes..." with progress indicator
+
+#### Agent capabilities
+
+1. **Image analysis** — Identify dish from photo using Vision API
+2. **Recipe search** — Find healthy recreations via web search
+3. **Plate balancing** — Suggest optimal sides using the existing pairing engine
+4. **Nutritional optimization** — Favor balanced macros and whole ingredients
+5. **Personalization** — Factor in user's cooking history and cuisine preferences
+
+#### Hard rules
+
+- Agent is bounded — only responds to explicit upload triggers, never proactive
+- All recipes go through the same Quest shell (Mission → Grab → Cook → Win)
+- Custom recipes are clearly labeled as "Custom" vs engine-generated
+- User always reviews and approves agent suggestions before they're saved
+
+#### Definition of done
+
+A user can upload 3 photos of restaurant dishes, and within a few hours, find healthy recreation recipes in their scrapbook with balanced side suggestions.
+
+---
+
+### Phase 10 — Instacart Integration
+
+#### Objective
+
+Let users order missing ingredients directly from the Grab screen with one tap.
+
+#### Scope
+
+- [ ] At ingredient selection phase (Grab screen), track which items are unchecked (missing)
+- [ ] "Order with Instacart" button appears when any ingredients are unchecked
+- [ ] Shows estimated delivery time next to button (placeholder: random 25-45 min)
+- [ ] Button shows count of missing ingredients: "Order 4 items · ~35 min"
+- [ ] V1: Placeholder button that shows a "Coming soon" toast
+- [ ] V2: Deep link to Instacart with pre-populated cart (requires Instacart API partnership)
+- [ ] Missing ingredients list auto-computed from unchecked items in the ingredient list
+- [ ] Instacart branding and styling per their partner guidelines
+- [ ] Modified `ingredient-list.tsx` to include the order button below the ingredient list
+
+#### Integration architecture
+
+```
+User unchecks ingredients → Missing list computed →
+  "Order with Instacart" button shows →
+    V1: Toast "Coming soon — order manually for now"
+    V2: Deep link to Instacart with items + quantities
+```
+
+#### Definition of done
+
+A user on the Grab screen who hasn't checked off 4 ingredients sees an "Order with Instacart · ~35 min" button. Pressing it shows a placeholder toast in V1, or opens Instacart with the correct items in V2.
+
+---
+
+### Phase 11 — Advanced Path & Skill Progression
+
+#### Objective
+
+Make the skill tree a living progression system that rewards consistent cooking and drives mastery.
+
+#### Scope
+
+- [ ] Link skill tree progression to actual cook sessions (auto-detect cuisine match)
+- [ ] XP system: earn XP per cook, level up with milestones
+- [ ] Cuisine mastery badges: complete all associated dishes in a cuisine family
+- [ ] Weekly skill challenges: "This week: master a Japanese side" with bonus XP
+- [ ] Skill tree state syncs with cook session history automatically
+- [ ] Streak-based XP multipliers (2x on 7-day streak, 3x on 14-day)
+- [ ] Achievement system: "First Italian dish", "5 cuisines explored", "30-day streak"
+- [ ] Path notifications: "You unlocked Thai Balance!" celebration screen
+- [ ] Skill recommendations: suggest next skill based on user's cooking patterns
+
+#### Definition of done
+
+A user who completes 2 Caesar Salad cooks sees Knife Basics skill progress to "completed", Heat Control unlocks as "available", and their XP increases. Weekly challenges appear and award bonus XP.
+
+---
+
+## Phase 13 — Chef Skill Tree Curriculum
+
+**Objective:** Research real culinary school curricula and build a comprehensive skill tree that takes users from complete beginner to chef-level competency. The tree should feel like a legitimate cooking education, not gamified fluff.
+
+**Research requirements:**
+
+- Study curricula from: Le Cordon Bleu, CIA (Culinary Institute of America), Johnson & Wales, ICE (Institute of Culinary Education), community college culinary programs
+- Identify universally accepted foundational skills that every chef learns
+- Map the progression from basic to advanced
+- Ensure skills are practical and achievable in a home kitchen
+
+**Skill tree structure (approximately 30 nodes across 4 tiers):**
+
+### Tier 1: Foundation (Skills 1-8) — "Home Cook Basics"
+
+Current skill tree content lives here. Basic skills every home cook should master:
+
+- Knife skills (cuts, grip, safety)
+- Heat control (sauteing, boiling, simmering)
+- Seasoning fundamentals (salt, acid, fat, heat)
+- Mise en place (prep organization)
+- Basic stock and broth
+- Egg cookery (scramble, fry, boil, poach)
+- Rice and grain cooking
+- Basic salad and vinaigrette
+
+### Tier 2: Intermediate (Skills 9-16) — "Confident Cook"
+
+- Sauce mother sauces (bechamel, veloute, espagnole, hollandaise, tomato)
+- Braising and stewing
+- Roasting and baking fundamentals
+- Pasta from scratch
+- Bread basics (yeast doughs, quick breads)
+- Fish and seafood handling
+- Vegetable techniques (blanching, roasting, grilling, pickling)
+- Flavor building (layers, umami, maillard reaction)
+
+### Tier 3: Advanced (Skills 17-24) — "Skilled Cook"
+
+- Butchery basics (breaking down chicken, portioning fish)
+- Emulsions and foams
+- Fermentation (kimchi, sauerkraut, yogurt)
+- Pastry fundamentals (pate brisee, choux, puff)
+- Wok skills and high-heat cooking
+- Smoking and curing
+- Menu composition and balance
+- Plating and presentation
+
+### Tier 4: Chef Level (Skills 25-30) — "Home Chef"
+
+- Sous vide and precision cooking
+- Advanced pastry (laminated doughs, tempering chocolate)
+- Regional cuisine deep dives (mastering one cuisine family)
+- Recipe development (creating your own dishes)
+- Cooking for groups (scaling, timing, service)
+- Kitchen management (efficiency, waste reduction, pantry strategy)
+
+**Implementation notes:**
+
+- Each skill node has 2-4 practice dishes that teach the skill
+- Completing all practice dishes for a node = skill mastered
+- Skills unlock sequentially within a tier, but Tier 2 unlocks after completing 5/8 Tier 1 skills
+- The skill tree data lives in src/data/skill-tree.ts
+- This is a PROTOTYPE — start with Tier 1 fully fleshed out, Tier 2 partially, and Tiers 3-4 as locked previews that show what's coming
+- All practice dishes must already exist in the meals/sides database or be added with real recipes from reputable sources
+
+**Status:** Research phase — curriculum study needed before implementation
+
+---
+
+## 11. Standing UI rules (apply to ALL future work)
+
+1. One primary CTA per screen — no two equally-weighted buttons
+2. No more than one hero card above the fold on Today
+3. Max 3 secondary action chips visible at once
+4. Path metrics capped to 3 blocks
+5. Today never becomes a dashboard
+6. Social proof stays below the fold in prototype
+7. Any new feature must prove it helps the user cook tonight, or it belongs elsewhere
+8. New features escalate through: hidden logic → optional chip → secondary sheet → primary surface
+
+---
+
+## 12. Architecture reference (preserved)
+
+The following sections from the original planning document remain valid architecture reference. They describe the target system design and are implemented as described in `documentation.md`.
+
+### Tech stack
+
+See `CLAUDE.md` § Tech stack — Next.js 15, React 19, Tailwind 4, Zustand, TanStack Query, tRPC, Drizzle, Neon Postgres, Clerk, OpenAI Vision, Anthropic Claude, Cloudflare R2, Upstash Redis, Vitest, Playwright.
+
+### Database schema
+
+See `documentation.md` §2.11 and `src/lib/db/schema.ts` — 7 tables: sideDishes, cookSteps, ingredients, users, cookSessions, savedRecipes, quizResponses.
+
+### Pairing engine
+
+See `documentation.md` §2.3 — Two-tier system with Python engine scores and TypeScript deterministic scorers.
+
+### API design
+
+See `documentation.md` §4 — tRPC router with 12 endpoints (6 fully implemented, 6 stubbed).
+
+### Component architecture
+
+See `documentation.md` §2 — 51 component files across today, guided-cook, results, search, layout, shared, heatmap, states, and ui directories.
+
+### Data pipeline
+
+See `PIPELINE.md` — Python engine → pairings.json → pairings.ts → sideBridge.ts → pairing engine → API.
+
+### Content seed structure
+
+See `data-structure.md` — 93 meals, 203 sides, 11 cuisines, guided cook step data.
+
+### Performance targets
+
+| Metric                   | Target          |
+| ------------------------ | --------------- |
+| First Contentful Paint   | < 1.2s          |
+| Time to Interactive      | < 2.0s          |
+| Pairing engine response  | < 200ms         |
+| AI recognition response  | < 3s            |
+| Cook step transition     | < 100ms         |
+| Lighthouse Performance   | > 90            |
+| Bundle size (initial JS) | < 150KB gzipped |
+
+### Testing strategy
+
+**Unit (Vitest):** Pairing engine scorers, ranker, explainer, craving parser, progressive unlock logic, preference vector math.
+
+**Integration (tRPC test client):** pairing.suggest end-to-end, cook.start → complete → stats update, coach.quiz → preference change → re-ranked results.
+
+**E2E (Playwright):** Text craving → results → select → guided cook → complete → win. Photo capture → correction → results. Three cooks → Path tab appears.
+
+## Phase 14 — Cooking Games Arcade
+
+**Objective:** Create a beautiful, artsy game selection menu and multiple mini-games that make cooking knowledge fun, social, and addictive. Games should teach food literacy while feeling like a treat, not homework. The arcade should feel like opening a beautifully illustrated children's book — warm, inviting, handcrafted.
+
+**Entry point:** "Play a game" chip on Today page → opens the Games Arcade screen
+
+### 14.1 Game Menu Design — "The Kitchen Shelf"
+
+The game selection screen should feel like looking at a cozy kitchen shelf with illustrated game "boxes" arranged artfully. Not a grid of cards — an actual shelf with personality.
+
+**Visual concept:**
+
+- Warm cream/paper texture background (matches Sous brand)
+- Each game appears as a hand-illustrated "recipe card" or "cookbook" on the shelf
+- Subtle parallax tilt when scrolling — cards shift slightly like physical objects
+- Each game card shows: illustrated icon, game name, "Best: [score]" in handwritten font, play count
+- Tap a card → it lifts off the shelf with a satisfying scale animation → game loads
+- Background music: optional gentle kitchen ambience (utensils clinking, soft humming) — toggle off with one tap
+
+**Navigation:** Single scrollable shelf. Max 6-8 games visible. No tabs, no categories, no filters. Just pick one and play.
+
+### 14.2 Game 1: "What's Cooking?" — The Food Guessing Game
+
+**Concept:** You're given cryptic, poetic clues about a dish that start obscure and get progressively easier. Guess the dish before running out of clues.
+
+**Mechanics:**
+
+- 5 clues per round, revealed one at a time
+- Clue 1: Very abstract/poetic ("I was born in fire and cooled by the sea")
+- Clue 2: Cultural/historical ("Fishermen in Naples made me famous 200 years ago")
+- Clue 3: Ingredient hint ("My foundation is flour, water, and patience")
+- Clue 4: More specific ("I come in thin crust and deep dish varieties")
+- Clue 5: Almost giving it away ("Mozzarella is my best friend")
+- Answer: Pizza
+
+**Scoring:**
+
+- Guess after clue 1: 500 points (genius!)
+- Guess after clue 2: 400 points
+- Guess after clue 3: 300 points
+- Guess after clue 4: 200 points
+- Guess after clue 5: 100 points
+- Wrong guess: lose one clue (auto-reveals next)
+
+**UI:**
+
+- Beautiful illustrated card that "unfolds" to reveal each clue
+- Handwritten-style clue text on parchment/paper texture
+- Type-ahead guess input with fuzzy matching (pizza, piza, pitza all match)
+- Correct guess: confetti + the dish illustration appears in full color
+- Streak counter: how many in a row you've guessed correctly
+
+**Content:** 100+ dishes from the Sous database, each with 5 hand-crafted clues. Clues emphasize culture, history, and sensory description — teaching food literacy naturally.
+
+### 14.3 Game 2: "Flavor Pairs" — The Matching Game
+
+**Concept:** Match ingredients that pair well together. Think memory card game meets food science.
+
+**Mechanics:**
+
+- 12 cards face-down (6 pairs)
+- Each card shows an ingredient with a cute illustration
+- Flip two cards: if they're a great flavor pair (tomato + basil, chocolate + sea salt, lemon + butter), they stay face-up with a sparkle animation
+- If they don't pair, they flip back with a gentle wobble
+- Complete all 6 pairs to win
+- Timer running — faster = more points
+
+**Difficulty levels:**
+
+- Easy: Classic obvious pairs (peanut butter + jelly, chips + salsa)
+- Medium: Culinary pairs (miso + caramel, fig + prosciutto)
+- Hard: Unexpected science-backed pairs (strawberry + balsamic, watermelon + feta, chocolate + chili)
+
+**UI:**
+
+- Cards have watercolor-style ingredient illustrations
+- Matched pairs glow with a warm golden border
+- Background: wooden cutting board texture
+- Sound: satisfying "clink" when a pair matches, like wine glasses toasting
+
+### 14.4 Game 3: "Speed Chop" — The Ingredient Sorting Game
+
+**Concept:** Ingredients fly across the screen and you swipe them into the right category before time runs out. Think Fruit Ninja meets food education.
+
+**Mechanics:**
+
+- Ingredients float up from the bottom of the screen
+- Swipe left for one category, right for the other
+- Round 1: "Fruit vs Vegetable" (is a tomato a fruit? yes!)
+- Round 2: "Protein vs Carb"
+- Round 3: "Grows above ground vs below ground"
+- Round 4: "Needs refrigeration vs pantry stable"
+- Gets faster as you progress
+- 3 lives — wrong swipe loses a life
+
+**UI:**
+
+- Ingredients are cute illustrated characters with tiny faces (kawaii style)
+- Correct swipe: ingredient bounces happily into a basket
+- Wrong swipe: ingredient makes a sad face and drops
+- Streak multiplier visual: flames around the score counter
+- Background: kitchen counter with two baskets
+
+### 14.5 Game 4: "Plate It Up" — The Plating Composition Game
+
+**Concept:** Drag and drop dish components onto a plate to create the most visually balanced arrangement. Teaches plating principles through play.
+
+**Mechanics:**
+
+- Given a main dish + 2-3 sides + a garnish
+- Drag them onto an empty plate
+- AI scores your plating on: balance, color distribution, negative space, garnish placement
+- Three-star rating system
+- "Chef's version" revealed after you plate — see how a pro would do it
+
+**UI:**
+
+- Clean white plate in center of screen
+- Components in a tray at the bottom
+- Drag with satisfying physics (slight bounce, shadow under dragged item)
+- Scoring appears as a gentle watercolor wash over the plate (gold for great, silver for good, bronze for okay)
+
+### 14.6 Game 5: "Cuisine Compass" — The Geography Game
+
+**Concept:** A dish appears and you tap the region of the world it comes from on a stylized map.
+
+**Mechanics:**
+
+- Illustrated world map (not realistic — artistic, warm, with food icons in each region)
+- Dish name + photo appears at top
+- Tap the region you think it's from
+- Closer to the exact country = more points
+- After answering: a fun fact about that dish's origin appears
+- 10 rounds per game
+
+**UI:**
+
+- Hand-drawn map with warm colors (not Google Maps — think illustrated atlas)
+- Correct: region glows green, dotted line connects dish to origin with a little airplane animation
+- Wrong: gentle pulse on the correct region to show you where it actually comes from
+- Score based on distance: "You were 2 countries away!"
+
+### 14.7 Implementation Plan
+
+**Phase 14A (MVP — build first):**
+
+- Game menu shelf UI (the selection screen)
+- "What's Cooking?" (text-based, needs only clue data + fuzzy matching)
+- "Flavor Pairs" (card flip mechanics + pair data)
+
+**Phase 14B (second wave):**
+
+- "Speed Chop" (gesture-based, needs ingredient categorization data)
+- "Cuisine Compass" (needs illustrated map component + dish origin data)
+
+**Phase 14C (polish):**
+
+- "Plate It Up" (drag-and-drop, needs plating scoring system)
+- Leaderboards (personal best, friends if social features active)
+- Daily game rotation: one game highlighted each day with bonus XP
+
+**Technical notes:**
+
+- All games render in React with Framer Motion for animations
+- No external game engine needed — these are UI-driven mini-games
+- Game data (clues, pairs, categories, origins) lives in src/data/games/
+- Each game is a separate route: /games/whats-cooking, /games/flavor-pairs, etc.
+- Scores saved to localStorage (same as cook sessions)
+- Games should load instantly — no heavy assets, use CSS/SVG illustrations
+
+**Strategy alignment:**
+
+- Games strengthen the behavioral moat (another reason to open the app daily)
+- "What's Cooking?" and "Cuisine Compass" build food literacy (content moat)
+- "Flavor Pairs" teaches the pairing principles the engine uses (engine moat)
+- All games are solo-first but shareable (screenshot your score)
+- Games are bite-sized (2-5 minutes) — they fill the "not cooking tonight but still engaging" gap
+- NO games require cooking — they're for days when you just want to play
+
+## FEEDBACK — Skill Tree Fixes Needed (from user screenshot Apr 8 2026)
+
+1. **Path tab must be unlocked from the start** — no gate requiring completed cooks. Remove the progressive unlock entirely for the Path tab. It should always be visible and navigable from day one.
+
+2. **Prerequisite enforcement on skill tree** — even if a later skill shows as "unlocked" in the data, it must render as LOCKED in the UI if prerequisite skills above it are not completed. The skill tree must enforce strict top-down progression: you cannot start Tier 2 skills until the required Tier 1 skills are done. Check src/data/skill-tree.ts prerequisite logic and src/lib/hooks/use-skill-progress.ts status computation.
+
+3. **Visual state clarity** — each skill node should have exactly one of these states with clear visual distinction:
+   - Completed (green checkmark, filled green circle)
+   - In Progress (pulsing/active border, partially filled)
+   - Available (outlined circle, ready to tap)
+   - Locked (gray, lock icon, slightly transparent) — even if data says "unlocked", show locked if prerequisites aren't met
