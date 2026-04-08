@@ -110,25 +110,33 @@ export function JourneySummary({ stats }: JourneySummaryProps) {
         />
       </div>
 
-      {/* Cuisine tags */}
+      {/* Cuisine tags — deduplicate by normalized name */}
       {stats.cuisinesCovered.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-0.5">
-          {stats.cuisinesCovered.slice(0, 5).map((cuisine, idx) => (
-            <motion.span
-              key={cuisine}
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 18,
-                delay: 0.3 + idx * 0.06,
-              }}
-              className="rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)] capitalize"
-            >
-              {cuisine}
-            </motion.span>
-          ))}
+          {[
+            ...new Set(
+              stats.cuisinesCovered.map(
+                (c) => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase(),
+              ),
+            ),
+          ]
+            .slice(0, 5)
+            .map((cuisine, idx) => (
+              <motion.span
+                key={cuisine}
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 18,
+                  delay: 0.3 + idx * 0.06,
+                }}
+                className="rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)] capitalize"
+              >
+                {cuisine}
+              </motion.span>
+            ))}
           {stats.cuisinesCovered.length > 5 && (
             <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-subtext)]">
               +{stats.cuisinesCovered.length - 5} more

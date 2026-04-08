@@ -146,7 +146,12 @@ export function ResultStack({
         setRerollingIndex(null);
       }
     }
-  }, [rerollingIndex, lastRerollData, rerollQuery.isFetching, appliedRerollKey]);
+  }, [
+    rerollingIndex,
+    lastRerollData,
+    rerollQuery.isFetching,
+    appliedRerollKey,
+  ]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleRerollSide = useCallback((index: number) => {
@@ -378,14 +383,16 @@ function ResultCard({
             "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-150",
             selected
               ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-              : "border-neutral-300 bg-white"
+              : "border-neutral-300 bg-white",
           )}
           type="button"
           role="checkbox"
           aria-checked={selected}
           aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
-          {selected && <Check size={10} className="text-white" strokeWidth={3} />}
+          {selected && (
+            <Check size={10} className="text-white" strokeWidth={3} />
+          )}
         </motion.button>
 
         {/* Card content (tappable to expand) */}
@@ -395,7 +402,7 @@ function ResultCard({
           type="button"
         >
           {/* Side dish image */}
-          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
             {isRerolling ? (
               <div className="flex h-full w-full items-center justify-center">
                 <RefreshCw
@@ -403,15 +410,18 @@ function ResultCard({
                   className="animate-spin text-[var(--nourish-green)]"
                 />
               </div>
+            ) : side.imageUrl ? (
+              <Image
+                src={side.imageUrl}
+                alt={side.name}
+                fill
+                sizes="44px"
+                className="object-cover"
+              />
             ) : (
-              side.imageUrl && (
-                <Image
-                  src={side.imageUrl}
-                  alt={side.name}
-                  fill
-                  className="object-cover"
-                />
-              )
+              <div className="flex h-full w-full items-center justify-center text-lg">
+                🍽️
+              </div>
             )}
           </div>
 
@@ -420,7 +430,7 @@ function ResultCard({
             <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
               {side.name}
             </h3>
-            {(rank === 1 && selected || side.hasGuidedCook) && (
+            {((rank === 1 && selected) || side.hasGuidedCook) && (
               <div className="flex items-center gap-1.5 mt-0.5">
                 {rank === 1 && selected && (
                   <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">

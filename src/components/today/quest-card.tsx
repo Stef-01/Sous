@@ -106,6 +106,24 @@ function buildQuestDishes(): QuestDish[] {
 
 const SWIPE_THRESHOLD = 80;
 
+/** Map dish tags/cuisine to a relevant emoji for the image placeholder. */
+function getDishEmoji(tags: string[], cuisine: string): string {
+  const all = [...tags.map((t) => t.toLowerCase()), cuisine.toLowerCase()];
+  if (all.some((t) => ["salad", "fresh", "raw", "green"].includes(t)))
+    return "🥗";
+  if (all.some((t) => ["soup", "broth", "stew"].includes(t))) return "🍲";
+  if (all.some((t) => ["rice", "fried rice"].includes(t))) return "🍚";
+  if (all.some((t) => ["bread", "toast", "baked"].includes(t))) return "🍞";
+  if (all.some((t) => ["pasta", "noodle", "italian"].includes(t))) return "🍝";
+  if (all.some((t) => ["mexican", "taco", "wrap"].includes(t))) return "🌮";
+  if (all.some((t) => ["indian", "curry", "spicy"].includes(t))) return "🍛";
+  if (all.some((t) => ["japanese", "korean", "asian", "sushi"].includes(t)))
+    return "🍱";
+  if (all.some((t) => ["sweet", "dessert"].includes(t))) return "🍮";
+  if (all.some((t) => ["roasted", "grilled"].includes(t))) return "🥘";
+  return "🍽️";
+}
+
 /**
  * QuestCard — swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
@@ -374,18 +392,23 @@ function SwipeCard({
         )}
 
         {/* Hero food image */}
-        <div className="relative aspect-[3/2]">
+        <div className="relative aspect-[3/2] bg-[var(--nourish-cream)]">
           {dish.heroImageUrl ? (
             <Image
               src={dish.heroImageUrl}
               alt={dish.dishName}
               fill
+              sizes="(max-width: 768px) 100vw, 448px"
               className="object-cover"
               draggable={false}
+              loading={stackIndex === 0 ? "eager" : "lazy"}
+              priority={stackIndex === 0}
             />
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-gradient-to-br from-[var(--nourish-green)]/15 via-[var(--nourish-cream)] to-[var(--nourish-green)]/8">
-              <span className="text-5xl">🍽️</span>
+              <span className="text-5xl">
+                {getDishEmoji(dish.tags, dish.cuisineFamily)}
+              </span>
               <span className="text-xs font-medium text-[var(--nourish-subtext)] text-center px-4 leading-tight">
                 {dish.dishName}
               </span>

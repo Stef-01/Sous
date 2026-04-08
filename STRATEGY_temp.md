@@ -1,4 +1,3 @@
-
 # Sous — Strategic Design Document
 
 > **Living document** — updated as features ship and strategy evolves.
@@ -23,14 +22,14 @@ Every food app in the market is trying to be a bigger database, a better search 
 
 ### 1.2 Peter Thiel's Framework Applied
 
-| Principle | Sous Application | Resulting Moat |
-|---|---|---|
-| Create a monopoly in a small market | Cooking-anxious adults aged 22-35 who want to cook but feel overwhelmed by choice | Own the niche before expanding; no one else targets this segment with this approach |
-| Be 10x better, not 10% better | 60-second craving-to-plate vs. 20-minute recipe search and meal planning | Order-of-magnitude reduction in decision friction |
-| Start with a small market and dominate | Side dish pairing for home dinners only. Not lunch, not baking, not meal prep. | Deep expertise in one vertical before horizontal expansion |
-| Proprietary technology | Deterministic pairing engine with 6 weighted scorers, not generic AI recommendations | No one can replicate the scoring logic without rebuilding the domain model from scratch |
-| Network effects | Cook together features, group challenges, shared scrapbooks compound with each user added | Each new user makes the platform more valuable for existing users |
-| Durability (last mover advantage) | Preference memory + cooking history = switching cost that grows every week | After 50 cooks, leaving Sous means abandoning a personalized cooking intelligence |
+| Principle                              | Sous Application                                                                          | Resulting Moat                                                                          |
+| -------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Create a monopoly in a small market    | Cooking-anxious adults aged 22-35 who want to cook but feel overwhelmed by choice         | Own the niche before expanding; no one else targets this segment with this approach     |
+| Be 10x better, not 10% better          | 60-second craving-to-plate vs. 20-minute recipe search and meal planning                  | Order-of-magnitude reduction in decision friction                                       |
+| Start with a small market and dominate | Side dish pairing for home dinners only. Not lunch, not baking, not meal prep.            | Deep expertise in one vertical before horizontal expansion                              |
+| Proprietary technology                 | Deterministic pairing engine with 6 weighted scorers, not generic AI recommendations      | No one can replicate the scoring logic without rebuilding the domain model from scratch |
+| Network effects                        | Cook together features, group challenges, shared scrapbooks compound with each user added | Each new user makes the platform more valuable for existing users                       |
+| Durability (last mover advantage)      | Preference memory + cooking history = switching cost that grows every week                | After 50 cooks, leaving Sous means abandoning a personalized cooking intelligence       |
 
 ---
 
@@ -270,22 +269,22 @@ Every cook is automatically cataloged without the user doing anything beyond com
 
 Every proposed feature is scored on two dimensions: impact on cooking frequency and implementation effort. Only high-impact features earn development time.
 
-| Feature | Category | Impact | Effort |
-|---|---|---|---|
-| Streak system | Engagement | Very High | Medium |
-| Daily quest card personalization | Automation | Very High | Low |
-| Cook Together mode | Network | High | High |
-| Group challenges | Network | High | Medium |
-| Cuisine mastery badges | Engagement | Medium | Low |
-| Recipe gifting | Network | High | Low |
-| Context-aware recommendations | Automation | High | Medium |
-| Household mode | Network | Very High | Very High |
-| Ingredient intelligence | Automation | Medium | High |
-| Cook replay with improvement | Engagement | Medium | Low |
-| Proactive push notifications | Automation | High | Medium |
-| Weekly cooking digest | Automation | Medium | Low |
+| Feature                          | Category   | Impact    | Effort    |
+| -------------------------------- | ---------- | --------- | --------- |
+| Streak system                    | Engagement | Very High | Medium    |
+| Daily quest card personalization | Automation | Very High | Low       |
+| Cook Together mode               | Network    | High      | High      |
+| Group challenges                 | Network    | High      | Medium    |
+| Cuisine mastery badges           | Engagement | Medium    | Low       |
+| Recipe gifting                   | Network    | High      | Low       |
+| Context-aware recommendations    | Automation | High      | Medium    |
+| Household mode                   | Network    | Very High | Very High |
+| Ingredient intelligence          | Automation | Medium    | High      |
+| Cook replay with improvement     | Engagement | Medium    | Low       |
+| Proactive push notifications     | Automation | High      | Medium    |
+| Weekly cooking digest            | Automation | Medium    | Low       |
 
-*Priority order: ship high-impact/low-effort first, then high-impact/medium-effort. Defer high-effort features until user base validates the thesis.*
+_Priority order: ship high-impact/low-effort first, then high-impact/medium-effort. Defer high-effort features until user base validates the thesis._
 
 ---
 
@@ -344,11 +343,11 @@ Metrics to actively avoid optimizing for:
 
 Strategic decisions made, with rationale. Append new decisions as they arise.
 
-| Date | Decision | Rationale |
-|---|---|---|
-| Apr 2026 | Defer auth to production launch | Focus prototype on functionality. Auth adds friction without validating the cooking loop. |
-| Apr 2026 | 203 sides is sufficient for V1 | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size. |
-| Apr 2026 | No open-ended AI chatbot | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability. |
-| Apr 2026 | Social features gated behind 30-day unlock | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn. |
+| Date     | Decision                                   | Rationale                                                                                                           |
+| -------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Apr 2026 | Defer auth to production launch            | Focus prototype on functionality. Auth adds friction without validating the cooking loop.                           |
+| Apr 2026 | 203 sides is sufficient for V1             | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size.       |
+| Apr 2026 | No open-ended AI chatbot                   | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability. |
+| Apr 2026 | Social features gated behind 30-day unlock | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn.    |
 
 ---

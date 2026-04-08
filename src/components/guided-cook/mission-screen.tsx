@@ -49,6 +49,8 @@ export function MissionScreen({
             src={heroImageUrl}
             alt={dishName}
             fill
+            sizes="(max-width: 768px) 100vw, 448px"
+            priority
             className="object-cover"
           />
         </motion.div>

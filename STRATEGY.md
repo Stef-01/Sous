@@ -343,13 +343,12 @@ Metrics to actively avoid optimizing for:
 
 Strategic decisions made, with rationale. Append new decisions as they arise.
 
-| Date     | Decision                                    | Rationale                                                                                                                                        |
-| -------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Apr 2026 | Defer auth to production launch             | Focus prototype on functionality. Auth adds friction without validating the cooking loop.                                                        |
-| Apr 2026 | 203 sides is sufficient for V1              | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size.                                    |
-| Apr 2026 | No open-ended AI chatbot                    | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability.                              |
-| Apr 2026 | Social features gated behind 30-day unlock  | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn.                                 |
-| Apr 2026 | Skill tree based on real culinary curricula | Legitimacy matters — users should feel they're learning real chef skills, not playing a game. Researched from Le Cordon Bleu, CIA, ICE programs. |
+| Date     | Decision                                   | Rationale                                                                                                           |
+| -------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Apr 2026 | Defer auth to production launch            | Focus prototype on functionality. Auth adds friction without validating the cooking loop.                           |
+| Apr 2026 | 203 sides is sufficient for V1             | Combinatorial variety (93 mains x 203 sides x context) creates perceived variety far beyond raw catalog size.       |
+| Apr 2026 | No open-ended AI chatbot                   | Bounded AI surfaces are controllable and testable. Open-ended chat creates unpredictable experiences and liability. |
+| Apr 2026 | Social features gated behind 30-day unlock | Solo cooking habit must be established before social features are introduced. Social without solo habit = churn.    |
 
 ---
 

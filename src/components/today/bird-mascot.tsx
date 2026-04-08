@@ -51,8 +51,8 @@ export function OwlAvatar({ onClick }: { onClick: () => void }) {
 }
 
 /**
- * CravingSearchBar — standalone centered search trigger.
- * "I'm craving..." speech bubble without the bird mascot attached.
+ * CravingSearchBar — full-width search trigger.
+ * The primary action on the Today page. Inviting and prominent.
  */
 export function CravingSearchBar({ onClick }: { onClick: () => void }) {
   return (
@@ -60,23 +60,24 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.1 }}
-      className="flex justify-center"
     >
       <motion.button
         onClick={onClick}
-        whileTap={{ scale: 0.97 }}
+        whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        className="flex items-center gap-2 rounded-2xl border border-[var(--nourish-green)]/15 bg-white px-5 py-2.5 shadow-sm
-                   hover:shadow-md hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/3
+        className="flex w-full items-center gap-3 rounded-2xl border border-[var(--nourish-green)]/20 bg-white px-4 py-3 shadow-sm
+                   hover:shadow-md hover:border-[var(--nourish-green)]/40
                    transition-all duration-200 text-left group"
         type="button"
       >
-        <Search
-          size={15}
-          className="text-[var(--nourish-subtext)] opacity-50 group-hover:text-[var(--nourish-green)] group-hover:opacity-100 transition-all shrink-0"
-        />
-        <span className="text-sm text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
-          I&apos;m craving...
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
+          <Search size={15} className="text-[var(--nourish-green)]" />
+        </div>
+        <span className="text-sm font-medium text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
+          What are you craving?
+        </span>
+        <span className="ml-auto text-xs text-[var(--nourish-green)]/60 font-medium hidden sm:inline">
+          Tap to search
         </span>
       </motion.button>
     </motion.div>

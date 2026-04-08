@@ -65,7 +65,11 @@ function buildFriendCooks(count: number): FriendCook[] {
  * Uses real side dish images with deterministic daily rotation.
  * onDishSelect opens the pairing search for that dish as the main.
  */
-export function FriendsStrip({ onDishSelect }: { onDishSelect?: (dishName: string) => void }) {
+export function FriendsStrip({
+  onDishSelect,
+}: {
+  onDishSelect?: (dishName: string) => void;
+}) {
   const friends = useMemo(() => buildFriendCooks(4), []);
 
   return (
@@ -87,7 +91,12 @@ export function FriendsStrip({ onDishSelect }: { onDishSelect?: (dishName: strin
             animate={{ opacity: 1, scale: 1 }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.35 + idx * 0.08 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 20,
+              delay: 0.35 + idx * 0.08,
+            }}
             onClick={() => onDishSelect?.(friend.dishName)}
             className="flex flex-col items-center gap-1 group cursor-pointer"
           >
@@ -97,6 +106,7 @@ export function FriendsStrip({ onDishSelect }: { onDishSelect?: (dishName: strin
                 src={friend.dishImage}
                 alt={friend.dishName}
                 fill
+                sizes="56px"
                 className="object-cover"
               />
             </div>
