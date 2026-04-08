@@ -37,14 +37,14 @@ export function MissionScreen({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image */}
+      {/* Hero image — fixed height so CTA stays above fold on 375px phones */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 25 }}
-        className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+        className="relative h-[160px] overflow-hidden rounded-2xl"
       >
         {heroImageUrl && !imgError ? (
           <Image
@@ -121,17 +121,17 @@ export function MissionScreen({
         </div>
       </div>
 
-      {/* Description */}
+      {/* Description — clamped to 3 lines so CTA is never pushed off-screen */}
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.2 }}
-        className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
+        className="text-sm text-[var(--nourish-subtext)] leading-relaxed line-clamp-3"
       >
         {description}
       </motion.p>
 
-      {/* CTA */}
+      {/* CTA — mt-auto pins to bottom of the flex container */}
       <motion.button
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -144,7 +144,7 @@ export function MissionScreen({
         whileTap={{ scale: 0.96 }}
         onClick={onStart}
         className={cn(
-          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
+          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
           "transition-colors duration-200",
         )}
