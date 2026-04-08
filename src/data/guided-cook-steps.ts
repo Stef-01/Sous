@@ -5660,8 +5660,7 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
     prepTimeMinutes: 10,
     cookTimeMinutes: 50,
     skillLevel: "beginner",
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=600&auto=format&fit=crop&q=80",
+    heroImageUrl: null,
     flavorProfile: ["savory", "tangy", "garlicky", "umami"],
     temperature: "hot",
     ingredients: [
