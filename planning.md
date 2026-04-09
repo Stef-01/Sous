@@ -929,6 +929,139 @@ The game selection screen should feel like looking at a cozy kitchen shelf with 
 - Games are bite-sized (2-5 minutes) — they fill the "not cooking tonight but still engaging" gap
 - NO games require cooking — they're for days when you just want to play
 
+## Phase 15 — Recipe Data Pipeline and Storage Architecture
+
+**Objective:** Populate all 178 missing guided cook flows using automated browser-based research, and design a recipe storage architecture that supports future user modifications while preserving originals.
+
+**The Problem:** 178 out of 203 side dishes have no guided cook steps. Tapping "Start cooking" on these dishes hits a dead end. This is the single biggest gap in the prototype.
+
+**Solution: Three-layer recipe architecture**
+
+### 15.1 Storage Architecture — "Base + Overlay" Pattern
+
+Inspired by how Docker layers and git commits work. Three layers, from bottom to top:
+
+**Layer 1: Curated Base (immutable)**
+- Location: `src/data/sides.json`, `src/data/meals.json`, `src/data/guided-cook-steps.ts`
+- Contents: The original researched recipes from reputable sources
+- Rule: NEVER modified by users. This is the source of truth.
+- Updated only by the recipe-research skill or manual curation by the developer.
+
+**Layer 2: User Overlay (mutable, per-user)**
+- Location: localStorage key `sous-recipe-overrides`
+- Contents: User modifications stored as diffs against the base layer
+- Structure: `{ [dishId]: { steps?: StepOverride[], notes?: string, substitutions?: Sub[] } }`
+- When a user tweaks a step (e.g., changes "3 minutes" to "5 minutes" because their stove runs cool), only the diff is stored
+- When rendering a recipe, the overlay is merged on top of the base at read time
+
+**Layer 3: User Originals (mutable, per-user)**
+- Location: localStorage key `sous-user-recipes`
+- Contents: Completely new recipes created by users (Phase 9 — Agentic Assistant)
+- These go through the same Quest shell (Mission → Grab → Cook → Win) but are flagged as "Your recipe"
+
+**Merge logic (at render time):**
+```
+finalRecipe = deepMerge(baseRecipe, userOverlay[dishId] ?? {})
+```
+If the user has overrides, they see their version. If not, they see the original. A "Reset to original" button restores the base version by clearing the overlay.
+
+### 15.2 UI Design — Invisible by Default
+
+The storage architecture must be invisible to the user in normal use. No "edit recipe" buttons cluttering the cook flow. Modifications happen through natural interactions:
+
+**During Guided Cook:**
+- Long-press a step → "Adjust this step" appears. User can change time or add a personal note. Saved as an overlay.
+- "This worked better at [X] minutes" prompt on the win screen → overlay saved.
+
+**On the Win Screen (Evaluate B):**
+- "Next time, I'd change..." free text → parsed and saved as overlay suggestions
+- Rating + notes already saved → these inform future recommendations
+
+**In the Scrapbook (replay):**
+- "Your version" badge appears if overlays exist for this dish
+- "Reset to original" available but not prominent
+
+**What this is NOT:**
+- No recipe editor screen
+- No settings page for recipe preferences
+- No version history UI
+- No diff viewer
+- Modifications are captured through cooking, not through editing
+
+### 15.3 Recipe Research Pipeline
+
+**Skill:** `.claude/skills/recipe-research/SKILL.md` — a reusable Claude skill that:
+1. Identifies dishes missing guided cook steps
+2. Searches the web for the best-rated version from Serious Eats, ATK, NYT Cooking, Bon Appetit
+3. Translates the recipe into Sous guided cook format (steps, timers, mistake warnings, hack chips, cuisine facts)
+4. Validates against quality standards (4-12 steps, 2+ timers, 1+ mistake warning, specific temps/times)
+5. Commits in batches of 5 dishes
+
+**Scheduled task:** `recipe-research-populate` runs daily at 9am, using this skill to fill gaps.
+
+**Quality standards per dish:**
+- 4-12 guided cook steps (simple sides: 4-6, complex: 8-12)
+- At least 2 timer triggers with exact minutes
+- At least 1 mistake warning (the real common failure point)
+- At least 1 hack chip (genuinely useful pro tip)
+- Specific temperatures ("medium-high heat, about 375°F")
+- Specific times with sensory cues ("sauté 3-4 minutes until golden and fragrant")
+- Source attribution in a `sourceUrl` field (credit the original recipe)
+
+### 15.4 Data Model Changes
+
+Add to the side dish type:
+```typescript
+interface GuidedCookStep {
+  step: number;
+  phase: "prep" | "cook" | "finish";
+  instruction: string;
+  duration: number; // minutes
+  timerTrigger: boolean;
+  timerMinutes?: number;
+  mistakeWarning: string | null;
+  hackChip: string | null;
+  cuisineFact: string | null;
+}
+
+interface RecipeSource {
+  url: string;
+  siteName: string;
+  author?: string;
+  dateAccessed: string;
+}
+
+// Added to each side/meal:
+guidedCookSteps: GuidedCookStep[];
+recipeSource?: RecipeSource;
+
+// User overlay (localStorage):
+interface RecipeOverride {
+  dishId: string;
+  stepOverrides: { [stepNumber: number]: Partial<GuidedCookStep> };
+  personalNotes: string;
+  substitutions: { original: string; replacement: string; reason: string }[];
+  lastModified: string;
+}
+```
+
+### 15.5 Implementation Order
+
+1. **Phase 15A — Fill the gaps (immediate):** Run the recipe-research skill on all 178 missing dishes. Target: 100% coverage within 2 weeks via daily scheduled runs.
+2. **Phase 15B — Source attribution:** Add `recipeSource` field to every dish with a populated cook flow. Credit where the recipe came from.
+3. **Phase 15C — Overlay infrastructure (later):** Build the merge logic, localStorage overlay store, and "Adjust this step" long-press interaction. Only build when the base layer is 100% populated.
+4. **Phase 15D — Scrapbook integration (later):** "Your version" badge, "Reset to original" button. Only build after overlays are working.
+
+### 15.6 Strategy Alignment
+
+This architecture follows the strategy principles:
+- **Zero friction:** Modifications happen through cooking, not editing. No new screens.
+- **Compounding:** Every cook potentially improves the recipe for next time. User overlays compound over dozens of cooks.
+- **Minimalism:** The overlay system is invisible until the user naturally wants to change something. No UI clutter.
+- **Data moat:** User overlays are non-portable. Your personalized recipe adjustments don't transfer to a competitor.
+
+---
+
 ## FEEDBACK — Skill Tree Fixes Needed (from user screenshot Apr 8 2026)
 
 1. **Path tab must be unlocked from the start** — no gate requiring completed cooks. Remove the progressive unlock entirely for the Path tab. It should always be visible and navigable from day one.
