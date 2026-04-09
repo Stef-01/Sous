@@ -6565,6 +6565,1329 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
       },
     ],
   },
+
+  "hummus": {
+    name: "Hummus",
+    slug: "hummus",
+    description:
+      "Silky smooth chickpea dip blended with tahini, lemon, and garlic, drizzled with olive oil and paprika.",
+    cuisineFamily: "middle-eastern",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["creamy", "nutty", "savory"],
+    temperature: "room-temp",
+    ingredients: [
+      {
+        id: "hm-1",
+        name: "Canned chickpeas",
+        quantity: "1 can (400g), drained",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "hm-2",
+        name: "Tahini",
+        quantity: "3 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "hm-3",
+        name: "Lemon",
+        quantity: "1 large, juiced",
+        isOptional: false,
+        substitution: "2 tbsp bottled lemon juice",
+      },
+      {
+        id: "hm-4",
+        name: "Garlic",
+        quantity: "1-2 cloves",
+        isOptional: false,
+        substitution: "1/4 tsp garlic powder",
+      },
+      {
+        id: "hm-5",
+        name: "Olive oil",
+        quantity: "2 tbsp, plus more to serve",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "hm-6",
+        name: "Ice water",
+        quantity: "3-4 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "hm-7",
+        name: "Salt",
+        quantity: "1/2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "hm-8",
+        name: "Paprika",
+        quantity: "pinch, for serving",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Drain and rinse the chickpeas. For extra-smooth hummus, rub them between your hands and remove the thin skins — they slip right off. Discard the skins.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't skip peeling if you want restaurant-quality smoothness. Unpeeled hummus tastes fine but has a slightly grainy texture.",
+        quickHack:
+          "Buy pre-peeled chickpeas, or skip peeling entirely for a more rustic hummus — still delicious.",
+        cuisineFact:
+          "Hummus means 'chickpeas' in Arabic. The full name 'hummus bi tahini' means chickpeas with sesame paste — a dish traced back to 13th-century Egypt.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add tahini and lemon juice to a food processor. Blend for 1 minute until the tahini lightens in color and looks fluffy. This is the secret to silky hummus.",
+        timerSeconds: 60,
+        mistakeWarning:
+          "Don't rush this step. Blending tahini alone first — before anything else — creates a creamier base.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The tahini mixture should be pale, thick, and look like whipped cream cheese.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Add the chickpeas, garlic, olive oil, and salt. Blend for 2 minutes, scraping down the sides occasionally.",
+        timerSeconds: 120,
+        mistakeWarning: "Taste before adding all the garlic — raw garlic is powerful. Start with 1 clove.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "With the processor running, drizzle in the ice water 1 tablespoon at a time until the hummus reaches your desired consistency. Blend for another minute until completely smooth.",
+        timerSeconds: 60,
+        mistakeWarning:
+          "Cold water (not warm) keeps the emulsion stable and makes the hummus lighter.",
+        quickHack:
+          "Add a pinch of cumin for a warm, earthy depth that elevates plain hummus instantly.",
+        cuisineFact: null,
+        donenessCue:
+          "The hummus should be smooth, creamy, and hold its shape when scooped.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Taste and adjust: more lemon for brightness, more salt for depth, more tahini for nuttiness. Transfer to a bowl, make a well with the back of a spoon, and drizzle with olive oil. Dust with paprika. Serve with warm pita.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Swirl in a spoonful of harissa or sprinkle with za'atar for an instant upgrade.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "kimchi": {
+    name: "Kimchi",
+    slug: "kimchi",
+    description:
+      "Fermented napa cabbage seasoned with Korean chili paste, garlic, ginger, and fish sauce — tangy, spicy, and crunchy.",
+    cuisineFamily: "korean",
+    prepTimeMinutes: 40,
+    cookTimeMinutes: 0,
+    skillLevel: "intermediate",
+    heroImageUrl: null,
+    flavorProfile: ["spicy", "tangy", "fermented", "crunchy"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "km-1",
+        name: "Napa cabbage",
+        quantity: "1 medium head (about 2kg)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "km-2",
+        name: "Kosher salt",
+        quantity: "1/4 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "km-3",
+        name: "Gochugaru (Korean red pepper flakes)",
+        quantity: "1/4 cup",
+        isOptional: false,
+        substitution: "2 tbsp regular chili flakes (less spicy)",
+      },
+      {
+        id: "km-4",
+        name: "Garlic",
+        quantity: "6 cloves, minced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "km-5",
+        name: "Fresh ginger",
+        quantity: "1 tbsp, grated",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "km-6",
+        name: "Fish sauce",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "Soy sauce (for vegan version)",
+      },
+      {
+        id: "km-7",
+        name: "Green onions",
+        quantity: "4 stalks, cut into 1-inch pieces",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "km-8",
+        name: "Daikon radish",
+        quantity: "1/2 cup, julienned",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Quarter the cabbage lengthwise and cut into 2-inch pieces. Place in a large bowl. Sprinkle with salt and toss well, getting salt between every leaf. Let sit for 1-2 hours, turning every 30 minutes, until the cabbage wilts and releases water.",
+        timerSeconds: 3600,
+        mistakeWarning:
+          "Don't skimp on the salting time. Under-salted cabbage won't ferment properly and stays limp instead of pleasantly crunchy.",
+        quickHack:
+          "Speed up salting by massaging the cabbage vigorously with your hands — reduces wilting time to 30-40 minutes.",
+        cuisineFact:
+          "Kimchi has been made in Korea for over 2,000 years. There are an estimated 250 varieties across the country, varying by region and season.",
+        donenessCue:
+          "The cabbage should bend easily without breaking and have released at least 1 cup of liquid.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Rinse the cabbage thoroughly under cold water 3 times to remove excess salt. Taste a piece — it should be pleasantly salty but not overwhelming. Squeeze out as much water as possible and set aside.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Under-rinsing leaves kimchi too salty. Over-rinsing washes away flavor. Three thorough rinses is the sweet spot.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Make the paste: In a bowl, mix gochugaru, minced garlic, grated ginger, and fish sauce until it forms a rough paste.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Wear gloves when handling gochugaru — the red pigment stains everything it touches.",
+        quickHack:
+          "Add 1 tsp sugar to the paste to help jump-start fermentation and balance the heat.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Add the drained cabbage, green onions, and daikon (if using) to the paste. Using gloved hands, massage everything together until every piece of cabbage is coated bright red.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The cabbage should be uniformly red with no pale patches.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Pack the kimchi tightly into a clean glass jar or airtight container, pressing down firmly so the brine rises to cover the cabbage. Leave 1 inch of headspace. Seal and leave at room temperature for 1-2 days to ferment, then refrigerate.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Press out all air pockets when packing — exposure to air causes mold, not fermentation.",
+        quickHack:
+          "For same-day eating, skip the fermentation and serve as 'fresh kimchi' (geotjeori) — still delicious, just brighter and crunchier.",
+        cuisineFact:
+          "Kimchi fermentation is driven by lactic acid bacteria naturally present on cabbage leaves. The same process used to make yogurt and sourdough bread.",
+        donenessCue:
+          "After 1-2 days at room temperature, tiny bubbles will appear and the kimchi will smell pleasantly sour. It's ready.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "tom-yum-soup": {
+    name: "Tom Yum Soup",
+    slug: "tom-yum-soup",
+    description:
+      "Thailand's iconic hot and sour broth with lemongrass, kaffir lime leaves, galangal, mushrooms, and shrimp.",
+    cuisineFamily: "thai",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 15,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["sour", "spicy", "aromatic", "umami"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ty-1",
+        name: "Chicken or shrimp stock",
+        quantity: "4 cups",
+        isOptional: false,
+        substitution: "Water + 1 tsp fish sauce",
+      },
+      {
+        id: "ty-2",
+        name: "Lemongrass stalks",
+        quantity: "2 stalks, bruised and cut into 2-inch pieces",
+        isOptional: false,
+        substitution: "2 tsp lemongrass paste",
+      },
+      {
+        id: "ty-3",
+        name: "Galangal",
+        quantity: "4-5 thin slices",
+        isOptional: false,
+        substitution: "Fresh ginger (different flavor but works)",
+      },
+      {
+        id: "ty-4",
+        name: "Kaffir lime leaves",
+        quantity: "4 leaves, torn",
+        isOptional: false,
+        substitution: "1 tsp lime zest",
+      },
+      {
+        id: "ty-5",
+        name: "Thai bird's eye chilies",
+        quantity: "2-4, bruised",
+        isOptional: false,
+        substitution: "1/2 tsp chili flakes",
+      },
+      {
+        id: "ty-6",
+        name: "Mushrooms",
+        quantity: "200g, sliced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ty-7",
+        name: "Shrimp",
+        quantity: "200g, peeled and deveined",
+        isOptional: false,
+        substitution: "Tofu or chicken breast strips",
+      },
+      {
+        id: "ty-8",
+        name: "Fish sauce",
+        quantity: "2-3 tbsp",
+        isOptional: false,
+        substitution: "Soy sauce",
+      },
+      {
+        id: "ty-9",
+        name: "Lime juice",
+        quantity: "3 tbsp (about 2 limes)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ty-10",
+        name: "Fresh cilantro",
+        quantity: "small handful, to serve",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Bruise the lemongrass by smashing it firmly with the flat of a knife — this releases the oils. Cut into 2-inch pieces. Slice the galangal. Tear the kaffir lime leaves in half. Bruise the chilies.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't cut lemongrass into tiny pieces — it's not meant to be eaten. Larger pieces are easy to fish out before serving.",
+        quickHack:
+          "Tom yum paste (sold in jars) can replace the aromatics in a pinch. Use 1-2 tbsp and skip steps 1-2.",
+        cuisineFact:
+          "Tom Yum is Thailand's most famous dish internationally. 'Tom' means 'to boil' and 'Yum' means 'mixed' or 'salad-like' — referring to the bold combination of flavors.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Bring stock to a boil in a medium saucepan. Add lemongrass, galangal, kaffir lime leaves, and chilies. Simmer for 5 minutes to infuse the broth with aromatics.",
+        timerSeconds: 300,
+        mistakeWarning:
+          "Keep the heat at a gentle boil, not a rolling boil — aggressive boiling makes the broth cloudy and muddy-tasting.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The broth should smell intensely aromatic — citrusy, herbal, and spicy.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Add the sliced mushrooms and cook for 3 minutes. Then add the shrimp and cook just until they turn pink and curl, about 2-3 minutes.",
+        timerSeconds: 180,
+        mistakeWarning:
+          "Don't overcook the shrimp — they go rubbery fast. Pull them the moment they turn fully pink.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Shrimp should be pink throughout and curled into a 'C' shape (not a tight 'O' which means overcooked).",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Remove from heat. Season with fish sauce and lime juice. Taste and balance: more fish sauce for saltiness, more lime for sourness, more chili for heat. Ladle into bowls and top with cilantro. Leave the lemongrass and galangal in — they add aroma but diners eat around them.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Always add lime juice off the heat — heat destroys its bright flavor and makes it bitter.",
+        quickHack:
+          "Stir in 1 tbsp coconut milk for Tom Kha Gai, the creamier cousin of Tom Yum.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "greek-salad": {
+    name: "Greek Salad",
+    slug: "greek-salad",
+    description:
+      "Chunky tomatoes, cucumber, red onion, Kalamata olives, and creamy feta dressed with olive oil and dried oregano.",
+    cuisineFamily: "greek",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["fresh", "briny", "tangy", "savory"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "gs-1",
+        name: "Ripe tomatoes",
+        quantity: "3 medium, cut into wedges",
+        isOptional: false,
+        substitution: "Cherry tomatoes, halved",
+      },
+      {
+        id: "gs-2",
+        name: "Cucumber",
+        quantity: "1 large English cucumber",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-3",
+        name: "Red onion",
+        quantity: "1/2 small, thinly sliced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-4",
+        name: "Kalamata olives",
+        quantity: "1/2 cup, pitted",
+        isOptional: false,
+        substitution: "Any good quality black olives",
+      },
+      {
+        id: "gs-5",
+        name: "Feta cheese",
+        quantity: "150g block",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-6",
+        name: "Extra virgin olive oil",
+        quantity: "3 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-7",
+        name: "Dried oregano",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: "Fresh oregano",
+      },
+      {
+        id: "gs-8",
+        name: "Red wine vinegar",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: "Lemon juice",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Cut tomatoes into large irregular wedges. Halve the cucumber lengthwise, then slice into thick half-moons. Slice the red onion as thin as possible.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Cut everything chunky — traditional Greek salad uses large pieces, not a fine chop. The rustic size is part of the dish's identity.",
+        quickHack:
+          "Soak sliced red onion in cold water for 5 minutes to tame the sharp bite while keeping the crunch.",
+        cuisineFact:
+          "In Greece, this dish is called 'Horiatiki' (village salad). It never contains lettuce — that's a Western modification. The authentic version is all about the chunky vegetables and the feta block.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Combine tomatoes, cucumber, and red onion in a large bowl. Add the Kalamata olives.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Drizzle with olive oil and red wine vinegar. Season with salt and a generous pinch of dried oregano. Toss gently — you want to coat everything without breaking up the tomatoes.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't over-toss. The goal is coated vegetables, not a bruised mush. Two or three gentle folds is enough.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Place the block of feta on top — don't crumble it into the salad. Drizzle a little more olive oil directly over the feta and finish with a final pinch of oregano. Serve immediately.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Always add feta last, on top, as a whole slab or large chunks. Pre-crumbled feta turns the whole salad into a mushy mess.",
+        quickHack:
+          "Let the dressed salad sit for 5 minutes before serving — the tomatoes release juices that become part of the dressing.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "mac-and-cheese": {
+    name: "Mac & Cheese",
+    slug: "mac-and-cheese",
+    description:
+      "Creamy baked macaroni smothered in a sharp cheddar and gruyère cheese sauce with a golden breadcrumb topping.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 30,
+    skillLevel: "intermediate",
+    heroImageUrl: null,
+    flavorProfile: ["creamy", "rich", "savory", "cheesy"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "mc-1",
+        name: "Elbow macaroni",
+        quantity: "300g",
+        isOptional: false,
+        substitution: "Any short pasta",
+      },
+      {
+        id: "mc-2",
+        name: "Butter",
+        quantity: "3 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mc-3",
+        name: "All-purpose flour",
+        quantity: "3 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mc-4",
+        name: "Whole milk",
+        quantity: "2 cups",
+        isOptional: false,
+        substitution: "2% milk",
+      },
+      {
+        id: "mc-5",
+        name: "Sharp cheddar cheese",
+        quantity: "200g, freshly grated",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mc-6",
+        name: "Gruyère cheese",
+        quantity: "100g, freshly grated",
+        isOptional: true,
+        substitution: "More cheddar",
+      },
+      {
+        id: "mc-7",
+        name: "Dijon mustard",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mc-8",
+        name: "Breadcrumbs",
+        quantity: "1/4 cup panko",
+        isOptional: true,
+        substitution: "Crushed crackers",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Cook the macaroni in well-salted boiling water until 2 minutes shy of al dente — it will finish cooking in the oven. Drain and set aside. Preheat oven to 375°F / 190°C.",
+        timerSeconds: 480,
+        mistakeWarning:
+          "Undercook the pasta slightly — overcooked pasta becomes mushy after baking. It should still have a firm bite when you drain it.",
+        quickHack:
+          "Salt the pasta water generously — it should taste like mild seawater. This is the only chance to season the pasta itself.",
+        cuisineFact:
+          "Mac and cheese was popularized in the US by Thomas Jefferson, who encountered it in France and Italy and brought a pasta machine home to Monticello.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Make the béchamel: Melt butter in a large saucepan over medium heat. Add flour and whisk constantly for 1-2 minutes until it smells nutty and looks pale golden.",
+        timerSeconds: 90,
+        mistakeWarning:
+          "Cook the flour long enough to remove the raw flour taste, but don't let it brown — golden is the limit.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The roux (butter + flour mixture) should bubble and smell faintly of cooked dough, not raw flour.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Gradually whisk in the milk, a splash at a time, until smooth. Switch to stirring with a wooden spoon and cook over medium heat, stirring constantly, until the sauce thickens enough to coat the back of the spoon — about 5-7 minutes.",
+        timerSeconds: 420,
+        mistakeWarning:
+          "Add milk slowly at first — adding too much at once creates lumps that are hard to smooth out.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Run your finger across the back of the spoon — the line should hold without the sauce running through it.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Remove sauce from heat. Stir in Dijon mustard. Add the grated cheeses a handful at a time, stirring until fully melted before adding the next handful. Season with salt and pepper.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Always take the sauce off the heat before adding cheese — too much heat makes the proteins in cheese seize up, turning the sauce grainy.",
+        quickHack:
+          "Add a pinch of cayenne or smoked paprika for depth. It won't taste spicy, just more complex.",
+        cuisineFact: null,
+        donenessCue:
+          "The sauce should be glossy, smooth, and thick — like a rich nacho cheese sauce.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Stir the drained pasta into the cheese sauce until coated. Pour into a buttered baking dish. If using, top with panko breadcrumbs mixed with a small knob of melted butter. Bake for 20-25 minutes until bubbling and the top is golden.",
+        timerSeconds: 1500,
+        mistakeWarning: null,
+        quickHack:
+          "Broil for the last 2 minutes to get the breadcrumb topping extra crispy.",
+        cuisineFact: null,
+        donenessCue:
+          "The top should be golden and the edges bubbling. A skewer inserted in the center should come out hot.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "mashed-potatoes": {
+    name: "Mashed Potatoes",
+    slug: "mashed-potatoes",
+    description:
+      "Buttery, creamy mashed potatoes made with Yukon Gold potatoes, warm cream, and plenty of butter.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 20,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["creamy", "buttery", "savory", "comforting"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "mp-1",
+        name: "Yukon Gold potatoes",
+        quantity: "1kg",
+        isOptional: false,
+        substitution: "Russet potatoes",
+      },
+      {
+        id: "mp-2",
+        name: "Butter",
+        quantity: "6 tbsp (85g), cut into pieces",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mp-3",
+        name: "Heavy cream or whole milk",
+        quantity: "1/2 cup, warmed",
+        isOptional: false,
+        substitution: "Half-and-half",
+      },
+      {
+        id: "mp-4",
+        name: "Salt",
+        quantity: "to taste",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "mp-5",
+        name: "White pepper or black pepper",
+        quantity: "pinch",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Peel the potatoes and cut into even 2-inch chunks. Place in a large pot, cover with cold salted water by 1 inch. Bring to a boil over high heat.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Start potatoes in cold water, not boiling — this ensures they cook through evenly from the outside in.",
+        quickHack:
+          "Yukon Gold potatoes have a natural buttery flavor and make creamier mash than russets without as much butter.",
+        cuisineFact:
+          "The French connection is real — the technique of making silky-smooth pommes purée was perfected by Joël Robuchon, who used a 1:1 ratio of potato to butter. The French take their mashed potatoes very seriously.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Once boiling, reduce to a steady simmer. Cook uncovered for 15-18 minutes until a fork slides into the potato with zero resistance.",
+        timerSeconds: 1080,
+        mistakeWarning:
+          "Don't boil hard the entire time — rolling boil breaks the potatoes apart and makes them waterlogged.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "A fork should slide in and out of the center with absolutely no resistance.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Drain the potatoes thoroughly. Return them to the hot pot over low heat and let them steam-dry for 1-2 minutes, shaking the pot occasionally.",
+        timerSeconds: 120,
+        mistakeWarning:
+          "Wet potatoes make watery mash. The steam-dry step is quick but important.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The potatoes should look dry and floury on the surface, with steam rising off them.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Rice the potatoes (preferred) or mash with a potato masher. Add the butter pieces and stir vigorously until melted and incorporated. Gradually add the warm cream, stirring between additions, until you reach your desired consistency. Season generously with salt.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't use a food processor or hand blender — over-worked potatoes release starch and become gluey. A masher or ricer only.",
+        quickHack:
+          "Warm your cream and butter before adding — cold dairy drops the potato temperature and makes the mash gluey.",
+        cuisineFact: null,
+        donenessCue:
+          "Smooth, glossy, holds its shape when mounded but ripples easily with a spoon.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "coleslaw": {
+    name: "Coleslaw",
+    slug: "coleslaw",
+    description:
+      "Crisp shredded cabbage and carrot tossed in a creamy, tangy dressing — the essential BBQ and sandwich companion.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["creamy", "tangy", "crunchy", "fresh"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "cl-1",
+        name: "Green cabbage",
+        quantity: "1/2 medium head (about 500g)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cl-2",
+        name: "Carrots",
+        quantity: "2 medium, peeled",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cl-3",
+        name: "Mayonnaise",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: "Greek yogurt for a lighter version",
+      },
+      {
+        id: "cl-4",
+        name: "Apple cider vinegar",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "White wine vinegar",
+      },
+      {
+        id: "cl-5",
+        name: "Sugar",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: "Honey",
+      },
+      {
+        id: "cl-6",
+        name: "Dijon mustard",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cl-7",
+        name: "Celery seeds",
+        quantity: "1/2 tsp",
+        isOptional: true,
+        substitution: null,
+      },
+      {
+        id: "cl-8",
+        name: "Salt and pepper",
+        quantity: "to taste",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Remove the outer leaves from the cabbage. Quarter and core it. Slice as thin as possible with a sharp knife or mandoline — you want thin ribbons, not chunks. Grate the carrots on the large holes of a box grater.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Thick-cut cabbage stays harsh and tough. Thin slices wilt just enough into the dressing and taste much better.",
+        quickHack:
+          "Buy a pre-shredded coleslaw mix from the store — it saves 10 minutes and the result is identical.",
+        cuisineFact:
+          "The word 'coleslaw' comes from the Dutch 'koolsla' meaning 'cabbage salad.' Dutch settlers brought it to America in the 18th century where it became a BBQ staple.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Salt the shredded cabbage: toss with 1 tsp salt in a colander and let sit for 10 minutes. Then squeeze out as much liquid as possible with your hands.",
+        timerSeconds: 600,
+        mistakeWarning:
+          "Skipping the salting step leads to watery coleslaw — the cabbage releases its liquid into the dressing and makes it thin.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The cabbage will have wilted slightly and released a visible amount of liquid.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Make the dressing: whisk together mayonnaise, apple cider vinegar, sugar, Dijon mustard, and celery seeds (if using). Season with salt and pepper. Taste — it should be creamy, tangy, and slightly sweet.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Add a tiny splash of pickle brine for an extra tangy kick that tastes surprisingly complex.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Combine the squeezed cabbage and grated carrot in a large bowl. Pour over the dressing and toss well until everything is coated. Taste and adjust seasoning. Refrigerate for at least 30 minutes before serving — this is non-negotiable for the best flavor.",
+        timerSeconds: 1800,
+        mistakeWarning:
+          "Don't serve immediately — resting time lets the cabbage absorb the dressing and the flavors meld. Coleslaw made a day ahead is better than fresh.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "After resting, the coleslaw should look glossy and slightly wilted but still have plenty of crunch.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "cornbread": {
+    name: "Cornbread",
+    slug: "cornbread",
+    description:
+      "Golden skillet cornbread with a crispy crust, tender crumb, and a touch of honey — the classic Southern American side.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 20,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["savory", "slightly-sweet", "warm", "crumbly"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "cb-1",
+        name: "Yellow cornmeal",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cb-2",
+        name: "All-purpose flour",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cb-3",
+        name: "Baking powder",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cb-4",
+        name: "Salt",
+        quantity: "1/2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cb-5",
+        name: "Buttermilk",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: "1 cup milk + 1 tbsp vinegar, rested 5 minutes",
+      },
+      {
+        id: "cb-6",
+        name: "Eggs",
+        quantity: "2 large",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "cb-7",
+        name: "Honey",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "Sugar",
+      },
+      {
+        id: "cb-8",
+        name: "Butter",
+        quantity: "4 tbsp, melted",
+        isOptional: false,
+        substitution: "Vegetable oil",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Preheat oven to 425°F / 220°C. Place a 10-inch cast-iron skillet (or an 8-inch square baking pan) in the oven while it preheats — a screaming hot pan creates the crispy bottom crust.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Don't skip preheating the pan. A cold pan produces a pale, soft bottom. The hot pan sizzle when you pour in the batter is the signature of great skillet cornbread.",
+        quickHack:
+          "No cast iron? Use a regular baking dish — you'll lose the crispy bottom crust but the interior will still be great.",
+        cuisineFact:
+          "Cornbread is a staple of Native American cooking that predates European contact. Indigenous peoples across North America ground corn into meal and baked it on hot stones for thousands of years.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "In a large bowl, whisk together cornmeal, flour, baking powder, and salt. In a separate bowl, whisk together buttermilk, eggs, honey, and 3 tbsp of the melted butter.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Pour the wet ingredients into the dry ingredients and stir with a spatula until just combined — a few lumps are fine. Don't overmix.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Overmixing develops gluten and makes cornbread dense and tough. Stop stirring the moment you don't see dry flour.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Carefully remove the hot skillet from the oven. Add the remaining 1 tbsp butter and swirl to coat the bottom and sides — it will sizzle. Immediately pour in the batter. Return to the oven.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Use oven mitts — the cast iron is very hot. Work quickly so the pan doesn't cool down before the batter goes in.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Bake for 18-22 minutes until the top is golden and a toothpick inserted in the center comes out clean. Let cool for 5 minutes before cutting into wedges or squares. Serve with honey butter.",
+        timerSeconds: 1200,
+        mistakeWarning: null,
+        quickHack:
+          "Honey butter: mix 2 tbsp softened butter with 1 tbsp honey. Spread on warm cornbread for a simple but transformative finish.",
+        cuisineFact: null,
+        donenessCue:
+          "The top should be deep golden-brown and spring back when lightly pressed. The edges will have pulled slightly from the pan sides.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "steamed-broccoli": {
+    name: "Steamed Broccoli",
+    slug: "steamed-broccoli",
+    description:
+      "Tender-crisp broccoli florets steamed to bright green perfection and finished with lemon zest and flaky salt.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 7,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["fresh", "clean", "light", "vegetable"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "sb-1",
+        name: "Broccoli",
+        quantity: "1 large head (about 500g)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sb-2",
+        name: "Lemon",
+        quantity: "1/2, zested and juiced",
+        isOptional: true,
+        substitution: null,
+      },
+      {
+        id: "sb-3",
+        name: "Olive oil or butter",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: null,
+      },
+      {
+        id: "sb-4",
+        name: "Flaky salt",
+        quantity: "pinch",
+        isOptional: false,
+        substitution: "Regular salt",
+      },
+      {
+        id: "sb-5",
+        name: "Garlic",
+        quantity: "1 clove, minced (optional)",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Cut broccoli into florets of similar size — roughly 1.5 to 2 inches. Peel and slice the thick stalk into coins (it's delicious and people throw it away unnecessarily). Rinse under cold water.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Uneven floret sizes mean some will be overcooked while others are still raw. Take a moment to cut them to similar size.",
+        quickHack:
+          "Don't discard the broccoli stem — it tastes identical to the florets when peeled. More food, less waste.",
+        cuisineFact:
+          "Broccoli was cultivated by ancient Romans in southern Italy. The name comes from the Italian 'broccolo' meaning 'the flowering top of a cabbage.'",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add 1 inch of water to a pot and bring to a boil. Place a steamer basket inside. Add the broccoli florets and stems, cover tightly, and steam for 4-6 minutes.",
+        timerSeconds: 360,
+        mistakeWarning:
+          "Steam with the lid on — lifting it repeatedly lets heat escape and doubles your cooking time.",
+        quickHack:
+          "No steamer basket? Place broccoli directly in 1/4 inch of water, cover, and cook the same way. It works.",
+        cuisineFact: null,
+        donenessCue:
+          "The broccoli should be vibrant, bright green. A fork should slide in with gentle resistance — not mushy, not hard.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Transfer immediately to a plate or bowl. If finishing with garlic: quickly sauté the minced garlic in butter or olive oil for 30 seconds until fragrant, then drizzle over the broccoli. Finish with lemon zest, a squeeze of lemon juice, and a pinch of flaky salt.",
+        timerSeconds: 30,
+        mistakeWarning:
+          "Don't rinse the broccoli with cold water after steaming — it stops the cooking but also washes away flavor. Just time it right and pull it off heat.",
+        quickHack:
+          "A pinch of red chili flakes and a splash of soy sauce turns plain steamed broccoli into something you'll actually crave.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "baked-beans": {
+    name: "Baked Beans",
+    slug: "baked-beans",
+    description:
+      "Slow-cooked navy beans in a smoky, sweet molasses and tomato sauce — a hearty American BBQ and breakfast classic.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 60,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["smoky", "sweet", "savory", "hearty"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "bb-1",
+        name: "Canned navy beans or white beans",
+        quantity: "2 cans (800g total), drained",
+        isOptional: false,
+        substitution: "Pinto beans",
+      },
+      {
+        id: "bb-2",
+        name: "Bacon",
+        quantity: "4 rashers, chopped",
+        isOptional: true,
+        substitution: "Smoked paprika (1 tsp) for vegetarian version",
+      },
+      {
+        id: "bb-3",
+        name: "Onion",
+        quantity: "1 medium, finely diced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-4",
+        name: "Tomato paste",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-5",
+        name: "Molasses",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "Dark brown sugar",
+      },
+      {
+        id: "bb-6",
+        name: "Dijon mustard",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: "Yellow mustard",
+      },
+      {
+        id: "bb-7",
+        name: "Apple cider vinegar",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-8",
+        name: "Worcestershire sauce",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bb-9",
+        name: "Chicken or vegetable stock",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: "Water",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Preheat oven to 325°F / 160°C. In a Dutch oven or oven-safe pot, cook the bacon over medium heat until crispy and the fat has rendered, about 5 minutes. Remove the bacon and set aside, leaving the fat in the pot.",
+        timerSeconds: 300,
+        mistakeWarning:
+          "Don't discard the bacon fat — it's the flavor base for everything else.",
+        quickHack:
+          "For a vegetarian version, skip the bacon and add 1 tsp smoked paprika with the onions for that smoky depth.",
+        cuisineFact:
+          "Baked beans have roots in Native American cooking — the Iroquois and other tribes cooked beans with maple syrup and bear fat in clay pots buried with hot coals. European settlers adopted the technique, switching to molasses and pork.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add the diced onion to the bacon fat and cook over medium heat until soft and translucent, about 5 minutes. Add the tomato paste and cook for 1 more minute, stirring constantly, until it darkens slightly.",
+        timerSeconds: 360,
+        mistakeWarning:
+          "Cook the tomato paste until it deepens from bright red to brick red — this step caramelizes it and removes the tinny raw taste.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Add molasses, Dijon mustard, apple cider vinegar, Worcestershire sauce, and stock. Stir to combine. Add the drained beans and the reserved bacon. Stir gently.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Cover the pot and bake for 45 minutes. Remove the lid and bake for a further 15 minutes to thicken the sauce. Taste and adjust: more molasses for sweetness, more vinegar for tang, salt and pepper to taste.",
+        timerSeconds: 3600,
+        mistakeWarning:
+          "Don't rush the baking time — slow oven cooking transforms the sauce from a thin liquid into a glossy, thick coating for the beans.",
+        quickHack:
+          "Short on time? Simmer on the stovetop with the lid off for 20-25 minutes, stirring frequently. Not quite the same depth but very close.",
+        cuisineFact: null,
+        donenessCue:
+          "The sauce should be thick and glossy, coating the beans heavily. It will thicken further as it cools.",
+        imageUrl: null,
+      },
+    ],
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────
