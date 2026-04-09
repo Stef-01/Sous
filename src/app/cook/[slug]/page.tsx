@@ -281,8 +281,34 @@ export default function GuidedCookPage({
 
   if (isLoading) {
     return (
-      <div className="min-h-full flex items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-[var(--nourish-green)]" />
+      <div className="min-h-full bg-[var(--nourish-cream)]">
+        {/* Header skeleton */}
+        <div className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3">
+          <div className="mx-auto flex max-w-md items-center justify-between animate-pulse">
+            <div className="h-8 w-8 rounded-lg bg-neutral-200" />
+            <div className="flex gap-2">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="h-2 w-10 rounded-full bg-neutral-200" />
+              ))}
+            </div>
+            <div className="w-8" />
+          </div>
+        </div>
+        {/* Content skeleton */}
+        <div className="mx-auto max-w-md px-4 py-6 space-y-4 animate-pulse">
+          <div className="h-48 w-full rounded-2xl bg-neutral-200" />
+          <div className="space-y-2">
+            <div className="h-7 w-48 rounded bg-neutral-200" />
+            <div className="h-4 w-full rounded bg-neutral-200" />
+            <div className="h-4 w-3/4 rounded bg-neutral-200" />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-6 w-20 rounded-full bg-neutral-200" />
+            ))}
+          </div>
+          <div className="h-12 w-full rounded-xl bg-neutral-200" />
+        </div>
       </div>
     );
   }

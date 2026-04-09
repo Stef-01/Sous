@@ -123,17 +123,35 @@ export default function PathPage() {
   if (!mounted) {
     return (
       <div className="min-h-dvh bg-[var(--nourish-cream)]">
+        {/* Header skeleton */}
         <header className="border-b border-neutral-100/80 bg-white px-4 py-3">
-          <div className="mx-auto max-w-md">
-            <div className="h-6 w-24 rounded bg-neutral-100 animate-pulse" />
+          <div className="mx-auto max-w-md flex items-center justify-between">
+            <div className="h-5 w-20 rounded bg-neutral-200 animate-pulse" />
+            <div className="flex gap-3">
+              <div className="h-5 w-12 rounded-full bg-neutral-200 animate-pulse" />
+              <div className="h-5 w-12 rounded-full bg-neutral-200 animate-pulse" />
+            </div>
           </div>
         </header>
-        <div className="mx-auto max-w-md px-4 pt-8 space-y-8 animate-pulse">
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="mx-auto w-16 h-16 rounded-full bg-neutral-100"
-            />
+        {/* Stats cards skeleton */}
+        <div className="mx-auto max-w-md px-4 pt-4 space-y-3 animate-pulse">
+          <div className="h-16 rounded-2xl bg-neutral-200" />
+          <div className="h-16 rounded-2xl bg-neutral-200" />
+        </div>
+        {/* Skill tree nodes skeleton — alternating offsets to mimic real layout */}
+        <div className="mx-auto max-w-md px-4 pt-8 pb-8 animate-pulse">
+          {[
+            "mx-auto",
+            "ml-auto mr-12",
+            "mx-auto",
+            "ml-12",
+            "mx-auto",
+          ].map((cls, i) => (
+            <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
+              <div
+                className={`w-16 h-16 rounded-full bg-neutral-200 ${cls}`}
+              />
+            </div>
           ))}
         </div>
       </div>
