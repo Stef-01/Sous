@@ -66,16 +66,16 @@ export default function FavoritesPage() {
                 No favorites yet
               </p>
               <p className="text-xs text-[var(--nourish-subtext)] max-w-[220px]">
-                After a cook, tap the heart on any entry in your Scrapbook to
-                save it here.
+                Tap the heart on any dish to save it here — your go-to cooks,
+                always one tap away.
               </p>
             </div>
             <button
-              onClick={() => router.push("/path/scrapbook")}
-              className="mt-1 rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
+              onClick={() => router.push("/")}
+              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
               type="button"
             >
-              View scrapbook
+              Find something to cook →
             </button>
           </div>
         )}

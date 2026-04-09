@@ -67,8 +67,8 @@ export default function ScrapbookPage() {
                 Your scrapbook is empty
               </p>
               <p className="text-xs text-[var(--nourish-subtext)] max-w-[220px]">
-                Finish a guided cook and it&apos;ll appear here — with your
-                rating, notes, and date.
+                Complete your first cook to add a memory here — with your
+                rating, notes, and the date you made it.
               </p>
             </div>
             <button
@@ -76,7 +76,7 @@ export default function ScrapbookPage() {
               className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
               type="button"
             >
-              Start cooking
+              Cook something now →
             </button>
           </div>
         )}

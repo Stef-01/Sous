@@ -414,8 +414,26 @@ function TodayPageContent() {
               </div>
             )}
 
+            {/* Results — no sides returned */}
+            {view.type === "results" &&
+              pairingQuery.data?.success &&
+              pairingQuery.data.sides.length === 0 && (
+                <div className="rounded-xl border border-neutral-100 bg-white p-6 text-center space-y-3">
+                  <span className="text-3xl block">🤔</span>
+                  <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+                    Hmm, we couldn&apos;t find a match
+                  </p>
+                  <p className="text-xs text-[var(--nourish-subtext)]">
+                    Try a different craving — like &ldquo;pasta&rdquo;,
+                    &ldquo;tacos&rdquo;, or &ldquo;chicken stir-fry&rdquo;.
+                  </p>
+                </div>
+              )}
+
             {/* Results */}
-            {view.type === "results" && pairingQuery.data?.success && (
+            {view.type === "results" &&
+              pairingQuery.data?.success &&
+              pairingQuery.data.sides.length > 0 && (
               <ResultStack
                 mainDish={view.mainDish}
                 sides={pairingQuery.data.sides}
