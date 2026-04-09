@@ -11,10 +11,25 @@
       "sourceType": "github",
       "computedHash": "d7109d58f721a0bf59620c69b6ae073c60dde85e971012d95a5e410002f28c64"
     },
+    "qmd-sessions": {
+      "source": "wbelk/claude-qmd-sessions",
+      "sourceType": "github",
+      "computedHash": "751b0f5e5d03d573a8e84a7c4302c254ffc1e3a9c172c78415b2fd8e6e0b9d35"
+    },
     "release": {
       "source": "tobi/qmd",
       "sourceType": "github",
       "computedHash": "c602a2db14fa40fe5fd9c7865d79118bfe86a31b23bf9e7282414a732e5363f4"
+    },
+    "super-save": {
+      "source": "supermemoryai/claude-supermemory",
+      "sourceType": "github",
+      "computedHash": "85fb74e3a48e30fd90878eba566793a3ff489e09e049f2382ea40b1fbaf7be1f"
+    },
+    "super-search": {
+      "source": "supermemoryai/claude-supermemory",
+      "sourceType": "github",
+      "computedHash": "55b7ed5baa4fec9e66baedab7788f486229eca83f7eb644825b540b1ec58862b"
     }
   }
 }
