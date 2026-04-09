@@ -18,6 +18,7 @@ import {
 } from "@/data/guided-cook-steps";
 import { sides } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
+import { useHaptic } from "@/lib/hooks/use-haptic";
 
 interface QuestDish {
   dishName: string;
@@ -224,6 +225,7 @@ export function QuestCard({
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
+  const haptic = useHaptic();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // Clean up all pending timeouts on unmount
@@ -245,6 +247,7 @@ export function QuestCard({
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
       if (questDishes.length === 0) return;
+      haptic();
 
       if (direction === "right") {
         const dish = questDishes[currentIndex % questDishes.length];
@@ -277,7 +280,7 @@ export function QuestCard({
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish, scheduleTimeout, onFindSides],
+    [currentIndex, questDishes, router, saveDish, scheduleTimeout, onFindSides, haptic],
   );
 
   const handleStart = useCallback(() => {

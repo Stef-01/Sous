@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, LayoutGroup } from "framer-motion";
 import { useNavigation } from "@/lib/hooks/use-navigation";
+import { useHaptic } from "@/lib/hooks/use-haptic";
 import { cn } from "@/lib/utils/cn";
 
 export function TabBar({
@@ -13,6 +14,7 @@ export function TabBar({
 }) {
   const tabs = useNavigation(user);
   const pathname = usePathname();
+  const haptic = useHaptic();
 
   return (
     <nav
@@ -33,6 +35,7 @@ export function TabBar({
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 style={{ WebkitTapHighlightColor: "transparent" }}
+                onTapStart={haptic}
               >
                 <Link
                   href={tab.href}

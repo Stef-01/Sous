@@ -3,6 +3,7 @@
 import { useRef, useEffect, useMemo, useCallback, useState } from "react";
 import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
+import { useHaptic } from "@/lib/hooks/use-haptic";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 
 interface NodeWithStatus extends SkillNode {
@@ -99,6 +100,7 @@ function MasteryCuisineCard({
 export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const haptic = useHaptic();
 
   // Split mastery (grid) from the rest (tree)
   const treeNodes = useMemo(
@@ -220,8 +222,11 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   }, []);
 
   const handleNodeTap = useCallback(
-    (nodeId: string) => onNodeTap(nodeId),
-    [onNodeTap],
+    (nodeId: string) => {
+      haptic();
+      onNodeTap(nodeId);
+    },
+    [onNodeTap, haptic],
   );
 
   return (
