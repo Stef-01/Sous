@@ -321,8 +321,8 @@ export function QuestCard({
         </h2>
       </div>
 
-      {/* Card stack container */}
-      <div className="relative" style={{ minHeight: 380 }}>
+      {/* Card stack container — minHeight 460 pushes action chips below fold at 375×667 */}
+      <div className="relative" style={{ minHeight: 460 }}>
         <AnimatePresence mode="popLayout">
           {visibleCards
             .slice()

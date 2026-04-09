@@ -318,7 +318,7 @@ function TodayPageContent() {
       )}
 
       {/* Header — Sous + streak chip + bird */}
-      <header className="border-b border-neutral-100/80 bg-white px-4 py-2">
+      <header className="border-b border-neutral-100/80 bg-white px-4 py-1.5">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="flex items-center gap-1.5">
             <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
