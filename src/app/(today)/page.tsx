@@ -18,6 +18,7 @@ import { BreadQuiz } from "@/components/shared/bread-quiz";
 import { CoachQuiz } from "@/components/shared/coach-quiz";
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import type { CoachQuizResult } from "@/data/coach-quiz";
 
 type ViewState =
@@ -56,6 +57,7 @@ function TodayPageContent() {
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
+  const [questKey, setQuestKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
   const [userPreferences, setUserPreferences] = useState<
@@ -67,6 +69,11 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats } = useCookSessions();
+
+  const { pullState, setRef: setPullRef } = usePullToRefresh({
+    onRefresh: () => setQuestKey((k) => k + 1),
+    disabled: showSearch,
+  });
 
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
@@ -272,11 +279,44 @@ function TodayPageContent() {
 
   return (
     <motion.div
+      ref={(el) => setPullRef(el as HTMLElement | null)}
       className="min-h-full bg-[var(--nourish-cream)]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.18 }}
     >
+      {/* Pull-to-refresh indicator */}
+      {pullState.pulling && (
+        <div
+          className="flex items-center justify-center overflow-hidden transition-all duration-150"
+          style={{ height: pullState.progress * 48 }}
+        >
+          <div
+            className="flex items-center gap-2 text-xs font-medium text-[var(--nourish-subtext)]"
+            style={{ opacity: pullState.progress }}
+          >
+            <svg
+              className="text-[var(--nourish-green)]"
+              style={{
+                transform: `rotate(${pullState.triggered ? 180 : pullState.progress * 180}deg)`,
+                transition: "transform 0.15s ease",
+              }}
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+            {pullState.triggered ? "Release to refresh" : "Pull to refresh"}
+          </div>
+        </div>
+      )}
+
       {/* Header — Sous + streak chip + bird */}
       <header className="border-b border-neutral-100/80 bg-white px-4 py-2">
         <div className="mx-auto flex max-w-md items-center justify-between">
@@ -301,6 +341,7 @@ function TodayPageContent() {
         {/* Today's Quest — swipeable card stack */}
         <div className="mb-2">
           <QuestCard
+            key={questKey}
             onFindSides={(dishName) => {
               setShowSearch(true);
               handleTextSubmit(dishName);
