@@ -126,20 +126,20 @@ export default function PathPage() {
         {/* Header skeleton */}
         <header className="border-b border-neutral-100/80 bg-white px-4 py-3">
           <div className="mx-auto max-w-md flex items-center justify-between">
-            <div className="h-5 w-20 rounded bg-neutral-200 animate-pulse" />
+            <div className="h-5 w-20 rounded shimmer" />
             <div className="flex gap-3">
-              <div className="h-5 w-12 rounded-full bg-neutral-200 animate-pulse" />
-              <div className="h-5 w-12 rounded-full bg-neutral-200 animate-pulse" />
+              <div className="h-5 w-12 rounded-full shimmer" />
+              <div className="h-5 w-12 rounded-full shimmer" />
             </div>
           </div>
         </header>
         {/* Stats cards skeleton */}
-        <div className="mx-auto max-w-md px-4 pt-4 space-y-3 animate-pulse">
-          <div className="h-16 rounded-2xl bg-neutral-200" />
-          <div className="h-16 rounded-2xl bg-neutral-200" />
+        <div className="mx-auto max-w-md px-4 pt-4 space-y-3">
+          <div className="h-16 rounded-2xl shimmer" />
+          <div className="h-16 rounded-2xl shimmer" />
         </div>
         {/* Skill tree nodes skeleton — alternating offsets to mimic real layout */}
-        <div className="mx-auto max-w-md px-4 pt-8 pb-8 animate-pulse">
+        <div className="mx-auto max-w-md px-4 pt-8 pb-8">
           {[
             "mx-auto",
             "ml-auto mr-12",
@@ -149,7 +149,7 @@ export default function PathPage() {
           ].map((cls, i) => (
             <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
               <div
-                className={`w-16 h-16 rounded-full bg-neutral-200 ${cls}`}
+                className={`w-16 h-16 rounded-full shimmer ${cls}`}
               />
             </div>
           ))}
