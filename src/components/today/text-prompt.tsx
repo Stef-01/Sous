@@ -99,7 +99,7 @@ export function TextPrompt({
   onSubmit,
   onCameraClick,
   isLoading,
-  suggestions = ["Pasta", "Stir Fry", "Salad", "Curry", "Tacos", "Soup"],
+  suggestions = ["Pasta", "Stir Fry", "Salad", "Curry", "Tacos", "Soup", "Rice", "Chicken"],
 }: TextPromptProps) {
   const [text, setText] = useState("");
   const [localResults, setLocalResults] = useState<LocalResult[]>([]);
