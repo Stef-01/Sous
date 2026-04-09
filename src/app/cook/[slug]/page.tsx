@@ -119,7 +119,9 @@ export default function GuidedCookPage({
     // Guard against rapid double-tap
     if (isAdvancingRef.current) return;
     isAdvancingRef.current = true;
-    setTimeout(() => { isAdvancingRef.current = false; }, 400);
+    setTimeout(() => {
+      isAdvancingRef.current = false;
+    }, 400);
 
     if (currentStepIndex >= cookSteps.length - 1) {
       // Last cook step — complete session, record skill progress, and go to win

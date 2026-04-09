@@ -140,7 +140,11 @@ export function FriendsStrip({
           >
             {/* Emoji */}
             <div className="flex items-center justify-center w-full flex-1">
-              <span style={{ fontSize: 44, lineHeight: 1 }} role="img" aria-label={friend.dishName}>
+              <span
+                style={{ fontSize: 44, lineHeight: 1 }}
+                role="img"
+                aria-label={friend.dishName}
+              >
                 {friend.emoji}
               </span>
             </div>

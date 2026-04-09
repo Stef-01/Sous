@@ -195,7 +195,7 @@ export function QuestCard({
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish, scheduleTimeout],
+    [currentIndex, questDishes, router, saveDish, scheduleTimeout, onFindSides],
   );
 
   const handleStart = useCallback(() => {

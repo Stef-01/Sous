@@ -58,6 +58,12 @@ function TodayPageContent() {
   const [resetKey, setResetKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
+  const [userPreferences, setUserPreferences] = useState<
+    Record<string, number> | undefined
+  >(undefined);
+  const [effortTolerance, setEffortTolerance] = useState<
+    "minimal" | "moderate" | "willing" | undefined
+  >(undefined);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats } = useCookSessions();
@@ -65,10 +71,20 @@ function TodayPageContent() {
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
 
-  // Load saved quiz state from localStorage
+  // Load saved quiz state and preferences from localStorage
   useEffect(() => {
     try {
       if (localStorage.getItem("sous-coach-quiz-done")) setQuizDone(true);
+      const prefs = localStorage.getItem("sous-preferences");
+      if (prefs) setUserPreferences(JSON.parse(prefs));
+      const effort = localStorage.getItem("sous-effort-tolerance");
+      if (
+        effort === "minimal" ||
+        effort === "moderate" ||
+        effort === "willing"
+      ) {
+        setEffortTolerance(effort);
+      }
     } catch {
       // localStorage unavailable
     }
@@ -111,6 +127,8 @@ function TodayPageContent() {
       mainDish: mainDishQuery,
       inputMode: "text",
       _rerollSeed: rerollSeed || undefined,
+      userPreferences,
+      effortTolerance,
     },
     {
       enabled:
@@ -229,6 +247,8 @@ function TodayPageContent() {
     } catch {
       // localStorage unavailable
     }
+    setUserPreferences(result.preferences);
+    setEffortTolerance(result.effortTolerance);
     setQuizDone(true);
     setShowCoachQuiz(false);
   }, []);

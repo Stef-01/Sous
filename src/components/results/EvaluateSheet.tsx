@@ -122,122 +122,122 @@ export function EvaluateSheet({
 
             {/* Scrollable content */}
             <div className="flex-1 overflow-y-auto min-h-0">
-            <div className="px-5 pb-24 space-y-5">
-              {/* Appraisal headline */}
-              <div
-                className={cn(
-                  "flex items-center gap-2.5 rounded-xl border px-4 py-3",
-                  config.bg,
-                  config.border,
-                )}
-              >
-                {config.icon}
-                <div>
-                  <p className={cn("text-sm font-semibold", config.color)}>
-                    {displayAppraisal}
-                  </p>
-                  <p className="text-[11px] text-[var(--nourish-subtext)] mt-0.5">
-                    {config.label}
-                  </p>
+              <div className="px-5 pb-24 space-y-5">
+                {/* Appraisal headline */}
+                <div
+                  className={cn(
+                    "flex items-center gap-2.5 rounded-xl border px-4 py-3",
+                    config.bg,
+                    config.border,
+                  )}
+                >
+                  {config.icon}
+                  <div>
+                    <p className={cn("text-sm font-semibold", config.color)}>
+                      {displayAppraisal}
+                    </p>
+                    <p className="text-[11px] text-[var(--nourish-subtext)] mt-0.5">
+                      {config.label}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* Category coverage */}
-              <div className="space-y-2">
-                <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-                  Food groups
-                </h3>
-                <div className="flex gap-2">
-                  <CategoryPill
-                    label="Vegetables"
-                    filled={evaluation.categoryCoverage.vegetables}
-                    color="emerald"
-                  />
-                  <CategoryPill
-                    label="Protein"
-                    filled={evaluation.categoryCoverage.protein}
-                    color="blue"
-                  />
-                  <CategoryPill
-                    label="Grains"
-                    filled={evaluation.categoryCoverage.carbs}
-                    color="amber"
-                  />
-                </div>
-              </div>
-
-              {/* Already working — strengths first */}
-              {evaluation.alreadyWorking.length > 0 && (
+                {/* Category coverage */}
                 <div className="space-y-2">
                   <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-                    What&apos;s working
+                    Food groups
                   </h3>
-                  <ul className="space-y-1.5">
-                    {evaluation.alreadyWorking.map((strength, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-2 text-sm text-[var(--nourish-dark)]"
-                      >
-                        <Check
-                          size={14}
-                          className="mt-0.5 shrink-0 text-[var(--nourish-green)]"
-                        />
-                        {strength}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="flex gap-2">
+                    <CategoryPill
+                      label="Vegetables"
+                      filled={evaluation.categoryCoverage.vegetables}
+                      color="emerald"
+                    />
+                    <CategoryPill
+                      label="Protein"
+                      filled={evaluation.categoryCoverage.protein}
+                      color="blue"
+                    />
+                    <CategoryPill
+                      label="Grains"
+                      filled={evaluation.categoryCoverage.carbs}
+                      color="amber"
+                    />
+                  </div>
                 </div>
-              )}
 
-              {/* One best move — only if not keep_as_is */}
-              {evaluation.oneBestMove &&
-                evaluation.oneBestMove.type !== "keep_as_is" && (
+                {/* Already working — strengths first */}
+                {evaluation.alreadyWorking.length > 0 && (
                   <div className="space-y-2">
                     <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-                      One idea
+                      What&apos;s working
                     </h3>
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-3.5">
-                      <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
-                        {evaluation.oneBestMove.message}
-                      </p>
-                    </div>
+                    <ul className="space-y-1.5">
+                      {evaluation.alreadyWorking.map((strength, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-sm text-[var(--nourish-dark)]"
+                        >
+                          <Check
+                            size={14}
+                            className="mt-0.5 shrink-0 text-[var(--nourish-green)]"
+                          />
+                          {strength}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
 
-              {/* CTA */}
-              <div className="pt-1">
-                {evaluation.oneBestMove?.type === "swap_side" &&
-                onFinishPlate ? (
-                  <button
-                    onClick={onFinishPlate}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
-                    type="button"
-                  >
-                    Finish my plate
-                    <ArrowRight size={16} />
-                  </button>
-                ) : (
+                {/* One best move — only if not keep_as_is */}
+                {evaluation.oneBestMove &&
+                  evaluation.oneBestMove.type !== "keep_as_is" && (
+                    <div className="space-y-2">
+                      <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
+                        One idea
+                      </h3>
+                      <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-3.5">
+                        <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
+                          {evaluation.oneBestMove.message}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                {/* CTA */}
+                <div className="pt-1">
+                  {evaluation.oneBestMove?.type === "swap_side" &&
+                  onFinishPlate ? (
+                    <button
+                      onClick={onFinishPlate}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                      type="button"
+                    >
+                      Finish my plate
+                      <ArrowRight size={16} />
+                    </button>
+                  ) : (
+                    <button
+                      onClick={onClose}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                      type="button"
+                    >
+                      {evaluation.status === "balanced"
+                        ? "Looks great — let's cook"
+                        : "Got it — let's cook"}
+                    </button>
+                  )}
+
+                  {/* Skip link — always available */}
                   <button
                     onClick={onClose}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                    className="mt-2 w-full text-center text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
                     type="button"
                   >
-                    {evaluation.status === "balanced"
-                      ? "Looks great — let's cook"
-                      : "Got it — let's cook"}
+                    Skip evaluation
                   </button>
-                )}
-
-                {/* Skip link — always available */}
-                <button
-                  onClick={onClose}
-                  className="mt-2 w-full text-center text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
-                  type="button"
-                >
-                  Skip evaluation
-                </button>
+                </div>
               </div>
-            </div>
             </div>
           </motion.div>
         )}

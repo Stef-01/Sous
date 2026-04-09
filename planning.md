@@ -946,15 +946,18 @@ The game selection screen should feel like looking at a cozy kitchen shelf with 
 These are locked decisions made after deliberate product review. Do not change any of these without explicit user approval. They exist because earlier implementations were reverted or drifted — this section prevents that.
 
 ### Navigation & Tab Bar
+
 - Tab bar always shows **Today + Path** (Community hidden until a later phase)
 - Path tab is visible from day one — progressive unlock was removed intentionally (curiosity > gatekeeping)
 - `pathUnlocked` is hardcoded to `true` in the Path layout — no cook count gate
 
 ### Today Page
+
 - Friends social meals section is present on the Today page, positioned **below the fold** (users scroll to see it)
 - Coach quiz runs on **first visit only** — not on every load
 
 ### Skill Tree (src/data/skill-tree.ts)
+
 - **42 nodes total**: 9 Foundation + 10 Intermediate + 10 Advanced + 5 Pre-Mastery + 8 Cuisine Mastery
 - **Kitchen Sanitation is NOT in the tree** — removed intentionally; it's boring and doesn't belong in a cooking app
 - **Knife Skills** is the entry point (no prerequisites)
@@ -962,16 +965,19 @@ These are locked decisions made after deliberate product review. Do not change a
 - Cuisine mastery paths are parallel (independent) — users can work multiple cuisines at once
 
 ### Mission Screen (src/components/guided-cook/mission-screen.tsx)
+
 - Hero image is capped at **`h-[160px]`** (not aspect-ratio-based) so it doesn't push the CTA off-screen
 - CTA button has **`mt-auto`** — it is pinned to the bottom of the flex container
 - Outer container uses **`min-h-[calc(100dvh-160px)] flex flex-col`** — ensures CTA is visible without scrolling on 375×667px
 - Description text uses **`line-clamp-3`** to prevent long descriptions from pushing CTA below fold
 
 ### No-Scroll Navigation Principle
+
 - Every primary CTA must be visible without scrolling on a **375px × 667px** viewport (iPhone SE / iPhone 8)
 - The pattern: `flex flex-col` container + `mt-auto` on the CTA + `min-h-[calc(100dvh-Npx)]` where N accounts for header + padding + tab bar
 - Violating this is a UX failure — users who can't see how to proceed will not cook
 
 ### Images
+
 - All hero image URLs are `null` — gradient + emoji fallback is the intentional visual style
 - Do not add external image URLs or attempt to load remote images

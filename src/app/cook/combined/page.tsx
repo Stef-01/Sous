@@ -220,7 +220,9 @@ function CombinedCookContent() {
     // Guard against rapid double-tap
     if (isAdvancingRef.current) return;
     isAdvancingRef.current = true;
-    setTimeout(() => { isAdvancingRef.current = false; }, 400);
+    setTimeout(() => {
+      isAdvancingRef.current = false;
+    }, 400);
 
     if (currentStepIndex >= currentCookSteps.length - 1) {
       // Completed the current dish's cook steps

@@ -5814,6 +5814,127 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
       },
     ],
   },
+  roti: {
+    name: "Roti",
+    slug: "roti",
+    description:
+      "Soft, puffed Indian flatbread made with whole wheat flour — the perfect vessel for curries and dal.",
+    cuisineFamily: "indian",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 15,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/roti.png",
+    flavorProfile: ["warm", "nutty", "wholesome"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ro-1",
+        name: "Whole wheat flour (atta)",
+        quantity: "2 cups",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-2",
+        name: "Water",
+        quantity: "3/4 cup warm",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-3",
+        name: "Salt",
+        quantity: "1/2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-4",
+        name: "Ghee",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: "Butter or oil",
+      },
+      {
+        id: "ro-5",
+        name: "Extra flour for dusting",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Mix the flour and salt in a bowl. Add warm water gradually, mixing with your hand until a soft dough forms. Knead for 5 minutes until smooth and elastic, then cover with a damp cloth and rest for 10 minutes.",
+        timerSeconds: 600,
+        mistakeWarning:
+          "Don't add all the water at once — add it a tablespoon at a time near the end. Too-wet dough sticks to everything.",
+        quickHack:
+          "Don't stress about perfect circles — even irregular roti taste just as good.",
+        cuisineFact:
+          "Roti has been a daily staple in South Asia for over 5,000 years. In many Indian households, the ability to make perfectly round roti is considered a rite of passage.",
+        donenessCue:
+          "The dough should be smooth, soft, and not sticky — it should spring back slightly when poked.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Divide the dough into 8 equal balls. Dust each ball in flour, then roll out on a floured surface into a thin circle, about 6 inches across. Roll from the center outward, rotating the dough as you go.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Apply even pressure while rolling — pressing harder on one side makes lopsided roti that won't puff evenly.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The rolled roti should be thin enough to almost see through, with even thickness throughout.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Heat a flat skillet (tawa) over medium-high heat until a drop of water sizzles and evaporates instantly. Place the rolled roti on the dry skillet — no oil needed. Cook for about 30-45 seconds until bubbles form on the surface, then flip.",
+        timerSeconds: 45,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Small bubbles appear on the surface and the underside has light brown spots.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "After flipping, cook the second side for 30 seconds, then use tongs to place the roti directly over an open flame for a few seconds per side — it should puff up like a balloon. If you don't have a gas stove, press gently with a cloth on the skillet to encourage puffing.",
+        timerSeconds: 30,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "The dramatic puffing happens because trapped steam inside the two layers of dough expands rapidly — a perfectly puffed roti means the layers separated evenly during rolling.",
+        donenessCue:
+          "The roti puffs up fully with both sides showing golden-brown spots. It should feel light and hollow when tapped.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Brush the hot roti with a touch of ghee and stack them in a towel-lined container to keep warm and soft. Repeat with remaining dough balls. Serve warm alongside dal, curry, or any saucy dish.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
 };
 
 // ── Helpers ─────────────────────────────────────────────
