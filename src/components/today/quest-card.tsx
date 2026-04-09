@@ -31,12 +31,49 @@ interface QuestDish {
   hasGuidedCook: boolean;
 }
 
+const CUISINE_TAGS = [
+  "italian",
+  "indian",
+  "japanese",
+  "korean",
+  "thai",
+  "chinese",
+  "mexican",
+  "mediterranean",
+  "vietnamese",
+  "filipino",
+];
+
+/**
+ * Score a dish against the user's preference vector.
+ * Checks dish tags + cuisine family against preference keys.
+ */
+function scoreDishForPreferences(
+  dish: QuestDish,
+  prefs: Record<string, number>,
+): number {
+  let score = 0;
+  const allTags = [
+    ...dish.tags.map((t) => t.toLowerCase()),
+    dish.cuisineFamily.toLowerCase(),
+  ];
+  for (const [key, value] of Object.entries(prefs)) {
+    if (value > 0 && allTags.some((t) => t.includes(key.toLowerCase()))) {
+      score += value;
+    }
+  }
+  return score;
+}
+
 /**
  * Build quest dish list from ALL side dishes in the catalog.
- * Guided-cook dishes appear first, then the rest of the 200+ sides.
+ * Guided-cook dishes appear first, sorted by preference match when preferences
+ * are available, or shuffled daily for variety when no preferences are set.
  * Uses deterministic daily shuffle so the feed feels fresh each day.
  */
-function buildQuestDishes(): QuestDish[] {
+function buildQuestDishes(
+  userPreferences?: Record<string, number>,
+): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
   const guidedDishes: QuestDish[] = [];
   const catalogDishes: QuestDish[] = [];
@@ -65,20 +102,7 @@ function buildQuestDishes(): QuestDish[] {
         ? staticData.prepTimeMinutes + staticData.cookTimeMinutes
         : 15,
       cuisineFamily: (
-        side.tags.find((t) =>
-          [
-            "italian",
-            "indian",
-            "japanese",
-            "korean",
-            "thai",
-            "chinese",
-            "mexican",
-            "mediterranean",
-            "vietnamese",
-            "filipino",
-          ].includes(t.toLowerCase()),
-        ) ?? "Classic"
+        side.tags.find((t) => CUISINE_TAGS.includes(t.toLowerCase())) ?? "Classic"
       ).replace(/^\w/, (c) => c.toUpperCase()),
       description: side.description,
       tags,
@@ -93,6 +117,25 @@ function buildQuestDishes(): QuestDish[] {
     }
   }
 
+  // Sort or shuffle guided dishes
+  const hasPrefs =
+    userPreferences && Object.keys(userPreferences).length > 0;
+
+  if (hasPrefs) {
+    // Sort by preference score so favored-flavor dishes appear first
+    guidedDishes.sort(
+      (a, b) =>
+        scoreDishForPreferences(b, userPreferences!) -
+        scoreDishForPreferences(a, userPreferences!),
+    );
+  } else {
+    // Deterministic daily shuffle so the first card rotates each day
+    for (let i = guidedDishes.length - 1; i > 0; i--) {
+      const j = (dayOfYear * 13 + i * 7) % (i + 1);
+      [guidedDishes[i], guidedDishes[j]] = [guidedDishes[j], guidedDishes[i]];
+    }
+  }
+
   // Deterministic daily shuffle of catalog dishes
   const shuffled = catalogDishes.slice();
   for (let i = shuffled.length - 1; i > 0; i--) {
@@ -100,7 +143,7 @@ function buildQuestDishes(): QuestDish[] {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
-  // Guided dishes first, then shuffled catalog
+  // Guided dishes first (with guided cook flows), then shuffled catalog
   return [...guidedDishes, ...shuffled];
 }
 
@@ -128,13 +171,19 @@ function getDishEmoji(tags: string[], cuisine: string): string {
  * QuestCard — swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
  * Swipe right to cook, left to skip. Heart saves to localStorage.
+ * Pass userPreferences to surface preference-matched dishes first.
  */
 export function QuestCard({
   onFindSides,
+  userPreferences,
 }: {
   onFindSides?: (dishName: string) => void;
+  userPreferences?: Record<string, number>;
 }) {
-  const questDishes = useMemo(() => buildQuestDishes(), []);
+  const questDishes = useMemo(
+    () => buildQuestDishes(userPreferences),
+    [userPreferences],
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
@@ -423,6 +472,12 @@ function SwipeCard({
           )}
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
+          {/* Cuisine family badge — bottom left of hero image */}
+          <div className="absolute bottom-2 left-3 rounded-full bg-black/30 backdrop-blur-sm px-2.5 py-0.5">
+            <span className="text-[10px] font-semibold text-white tracking-wide">
+              {dish.cuisineFamily}
+            </span>
+          </div>
           {/* Skip (X) button — top right, min 44px touch target */}
           {isTop && (
             <button

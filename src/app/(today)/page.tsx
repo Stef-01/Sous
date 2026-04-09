@@ -305,6 +305,7 @@ function TodayPageContent() {
               setShowSearch(true);
               handleTextSubmit(dishName);
             }}
+            userPreferences={userPreferences}
           />
         </div>
 
