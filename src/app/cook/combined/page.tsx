@@ -503,6 +503,37 @@ function CombinedCookContent() {
             />
           )}
 
+          {/* COOK — Empty steps guard */}
+          {currentPhase === "cook" &&
+            !showTransition &&
+            !currentCookStep &&
+            currentDish && (
+              <motion.div
+                key="cook-empty"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center gap-5 py-12 text-center"
+              >
+                <span className="text-4xl">🥄</span>
+                <div className="space-y-1.5">
+                  <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+                    Steps coming soon
+                  </p>
+                  <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
+                    Guided cook steps for {currentDish.dish.name} aren&apos;t
+                    available yet.
+                  </p>
+                </div>
+                <button
+                  onClick={handleBackToday}
+                  className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm"
+                  type="button"
+                >
+                  Back to Today
+                </button>
+              </motion.div>
+            )}
+
           {/* COOK — Step-by-step, one dish at a time */}
           {currentPhase === "cook" &&
             !showTransition &&
