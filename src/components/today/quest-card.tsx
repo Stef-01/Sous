@@ -45,21 +45,49 @@ const CUISINE_TAGS = [
 ];
 
 /**
+ * Quiz answer → cuisine family boost map.
+ * "Bold and spicy" (spicy:0.8) also covers Mexican/Thai/Indian families.
+ * "Fresh and bright" (fresh:0.7) also covers Mediterranean/Japanese.
+ * "Rich and indulgent" (rich:0.7) also covers Italian/comfort.
+ * "Light and healthy" (vegetable:0.6) deprioritizes fried/carb-heavy.
+ */
+const PREF_KEY_TO_CUISINES: Record<string, string[]> = {
+  spicy: ["mexican", "thai", "indian", "korean", "chinese"],
+  fresh: ["mediterranean", "japanese", "vietnamese"],
+  rich: ["italian", "comfort-classic"],
+  creamy: ["italian", "comfort-classic"],
+  vegetable: ["mediterranean", "japanese", "vietnamese"],
+  japanese: ["japanese"],
+  korean: ["korean"],
+  thai: ["thai"],
+  indian: ["indian"],
+  mediterranean: ["mediterranean"],
+  italian: ["italian"],
+  mexican: ["mexican"],
+};
+
+/**
  * Score a dish against the user's preference vector.
- * Checks dish tags + cuisine family against preference keys.
+ * Checks dish tags, cuisine family, and explicit quiz-answer cuisine mappings.
  */
 function scoreDishForPreferences(
   dish: QuestDish,
   prefs: Record<string, number>,
 ): number {
   let score = 0;
-  const allTags = [
-    ...dish.tags.map((t) => t.toLowerCase()),
-    dish.cuisineFamily.toLowerCase(),
-  ];
+  const cuisine = dish.cuisineFamily.toLowerCase();
+  const allTags = [...dish.tags.map((t) => t.toLowerCase()), cuisine];
+
   for (const [key, value] of Object.entries(prefs)) {
-    if (value > 0 && allTags.some((t) => t.includes(key.toLowerCase()))) {
+    if (value <= 0) continue;
+    // Direct tag/cuisine match
+    if (allTags.some((t) => t.includes(key.toLowerCase()))) {
       score += value;
+    }
+    // Indirect cuisine family boost from quiz key
+    const linkedCuisines = PREF_KEY_TO_CUISINES[key.toLowerCase()];
+    if (linkedCuisines && linkedCuisines.includes(cuisine)) {
+      score += value * 0.5; // Half-weight indirect boost
     }
   }
   return score;
@@ -117,34 +145,39 @@ function buildQuestDishes(
     }
   }
 
-  // Sort or shuffle guided dishes
+  // Stable sort by slug so order is deterministic regardless of insertion order
+  guidedDishes.sort((a, b) => a.slug.localeCompare(b.slug));
+
   const hasPrefs =
     userPreferences && Object.keys(userPreferences).length > 0;
 
+  let orderedGuided: QuestDish[];
   if (hasPrefs) {
-    // Sort by preference score so favored-flavor dishes appear first
-    guidedDishes.sort(
+    // Preference mode: stable sort by score descending, guided dishes with best match first
+    orderedGuided = [...guidedDishes].sort(
       (a, b) =>
         scoreDishForPreferences(b, userPreferences!) -
         scoreDishForPreferences(a, userPreferences!),
     );
   } else {
-    // Deterministic daily shuffle so the first card rotates each day
-    for (let i = guidedDishes.length - 1; i > 0; i--) {
-      const j = (dayOfYear * 13 + i * 7) % (i + 1);
-      [guidedDishes[i], guidedDishes[j]] = [guidedDishes[j], guidedDishes[i]];
-    }
+    // Daily rotation: dayOfYear % count picks today's starting index.
+    // Same dish all day, different dish tomorrow, cycles through all guided dishes.
+    const startIdx = dayOfYear % guidedDishes.length;
+    orderedGuided = [
+      ...guidedDishes.slice(startIdx),
+      ...guidedDishes.slice(0, startIdx),
+    ];
   }
 
-  // Deterministic daily shuffle of catalog dishes
+  // Deterministic daily shuffle of catalog dishes (shown after all guided dishes)
   const shuffled = catalogDishes.slice();
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = (dayOfYear * 31 + i * 17) % (i + 1);
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
 
-  // Guided dishes first (with guided cook flows), then shuffled catalog
-  return [...guidedDishes, ...shuffled];
+  // Guided dishes first (always have cook flows), then shuffled catalog
+  return [...orderedGuided, ...shuffled];
 }
 
 const SWIPE_THRESHOLD = 80;
