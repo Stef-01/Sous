@@ -94,56 +94,80 @@ export function IngredientList({
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-5"
+      className="flex flex-col"
+      style={{ minHeight: "calc(100dvh - 180px)" }}
     >
-      <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
-        Gather these
-      </h2>
+      {/* Scrollable ingredient list */}
+      <div className="flex-1 overflow-y-auto min-h-0 space-y-5 pb-4">
+        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
+          Gather these
+        </h2>
 
-      {effectiveSections.map((section, sectionIdx) => {
-        const sectionStartIdx = sectionStartIndices[sectionIdx];
+        {effectiveSections.map((section, sectionIdx) => {
+          const sectionStartIdx = sectionStartIndices[sectionIdx];
 
-        return (
-          <div
-            key={section.label || `section-${sectionIdx}`}
-            className="space-y-1"
-          >
-            {/* Section header — only shown in segmented mode */}
-            {isSegmented && section.label && (
-              <motion.h3
-                initial={{ opacity: 0, x: -4 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: sectionStartIdx * 0.04 }}
-                className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide px-3 pt-3 pb-1"
-              >
-                {section.label}
-              </motion.h3>
-            )}
+          return (
+            <div
+              key={section.label || `section-${sectionIdx}`}
+              className="space-y-1"
+            >
+              {/* Section header — only shown in segmented mode */}
+              {isSegmented && section.label && (
+                <motion.h3
+                  initial={{ opacity: 0, x: -4 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: sectionStartIdx * 0.04 }}
+                  className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide px-3 pt-3 pb-1"
+                >
+                  {section.label}
+                </motion.h3>
+              )}
 
-            {section.ingredients.map((item, idx) => (
-              <IngredientRow
-                key={item.id}
-                item={item}
-                idx={sectionStartIdx + idx}
-                checked={checked.has(item.id)}
-                showingSub={askingSub === item.id}
-                recipeName={recipeName}
-                cuisineFamily={cuisineFamily}
-                onToggle={() => toggleItem(item.id)}
-                onAskSub={() =>
-                  setAskingSub(askingSub === item.id ? null : item.id)
-                }
-              />
-            ))}
-          </div>
-        );
-      })}
+              {section.ingredients.map((item, idx) => (
+                <IngredientRow
+                  key={item.id}
+                  item={item}
+                  idx={sectionStartIdx + idx}
+                  checked={checked.has(item.id)}
+                  showingSub={askingSub === item.id}
+                  recipeName={recipeName}
+                  cuisineFamily={cuisineFamily}
+                  onToggle={() => toggleItem(item.id)}
+                  onAskSub={() =>
+                    setAskingSub(askingSub === item.id ? null : item.id)
+                  }
+                />
+              ))}
+            </div>
+          );
+        })}
 
-      {/* CTAs */}
-      <div className="space-y-2">
+        {/* "Got everything?" message when all checked */}
+        <AnimatePresence>
+          {allChecked && (
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/25 bg-[var(--nourish-green)]/5 px-4 py-3"
+            >
+              <span className="text-lg">✅</span>
+              <p className="text-sm font-medium text-[var(--nourish-green)]">
+                Got everything! Ready to cook.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Pinned CTAs — always visible, no scroll required */}
+      <div className="mt-auto pt-3 space-y-2">
         {/* Primary: Proceed to cook */}
-        <button
+        <motion.button
           onClick={onReady}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
             "shadow-sm transition-all duration-200",
@@ -153,8 +177,8 @@ export function IngredientList({
           )}
           type="button"
         >
-          {allChecked ? "Let\u2019s cook!" : "I have everything"}
-        </button>
+          {allChecked ? "Let\u2019s cook! 🍳" : "I have everything"}
+        </motion.button>
 
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (

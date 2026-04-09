@@ -17,6 +17,8 @@ import { FactChip } from "./fact-chip";
 import { trpc } from "@/lib/trpc/client";
 
 interface StepCardProps {
+  /** +1 when advancing forward, -1 when going back. Controls slide direction. */
+  direction?: 1 | -1;
   stepNumber: number;
   totalSteps: number;
   instruction: string;
@@ -44,6 +46,7 @@ interface StepCardProps {
  * The core of the Cook phase. Shows instruction text + expandable chips.
  */
 export function StepCard({
+  direction = 1,
   stepNumber,
   totalSteps,
   instruction,
@@ -100,20 +103,29 @@ export function StepCard({
 
   const progress = stepNumber / totalSteps;
 
+  const slideX = 56 * direction;
+
   return (
     <motion.div
       key={stepNumber}
-      initial={{ opacity: 0, x: 20 }}
+      custom={direction}
+      initial={{ opacity: 0, x: slideX }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+      exit={{ opacity: 0, x: -slideX }}
+      transition={{ type: "spring", stiffness: 300, damping: 28 }}
       className="flex flex-col gap-5"
     >
       {/* Step counter + progress bar */}
       <div className="space-y-1.5">
-        <p className="text-sm text-[var(--nourish-subtext)]">
+        <motion.p
+          key={`step-label-${stepNumber}`}
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 18, delay: 0.05 }}
+          className="text-sm font-semibold text-[var(--nourish-subtext)]"
+        >
           Step {stepNumber} of {totalSteps}
-        </p>
+        </motion.p>
         <div className="h-1 w-full rounded-full bg-neutral-100 overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-[var(--nourish-green)]"

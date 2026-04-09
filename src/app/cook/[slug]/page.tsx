@@ -46,6 +46,7 @@ export default function GuidedCookPage({
     saved: boolean;
     skillProgress: SkillProgressEntry[];
   }>({ pathJustUnlocked: false, streak: 0, saved: false, skillProgress: [] });
+  const [stepDirection, setStepDirection] = useState<1 | -1>(1);
 
   // Cook store
   const {
@@ -123,6 +124,7 @@ export default function GuidedCookPage({
       isAdvancingRef.current = false;
     }, 400);
 
+    setStepDirection(1);
     if (currentStepIndex >= cookSteps.length - 1) {
       // Last cook step — complete session, record skill progress, and go to win
       if (sessionIdRef.current) {
@@ -204,6 +206,7 @@ export default function GuidedCookPage({
         break;
       case "cook":
         if (currentStepIndex > 0) {
+          setStepDirection(-1);
           useCookStore.setState({
             currentStepIndex: currentStepIndex - 1,
             expandedChip: null,
@@ -431,6 +434,7 @@ export default function GuidedCookPage({
           {currentPhase === "cook" && currentCookStep && (
             <StepCard
               key={`cook-${currentStepIndex}`}
+              direction={stepDirection}
               stepNumber={currentStepIndex + 1}
               totalSteps={cookSteps.length}
               instruction={currentCookStep.instruction}
