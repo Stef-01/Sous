@@ -4440,6 +4440,757 @@ export const guidedCookData: Record<string, StaticDishData> = {
       },
     ],
   },
+  roti: {
+    name: "Roti",
+    slug: "roti",
+    description:
+      "Soft, puffed Indian flatbread made with whole wheat flour — the perfect vessel for curries and dal.",
+    cuisineFamily: "indian",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 15,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/roti.png",
+    flavorProfile: ["warm", "nutty", "wholesome"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ro-1",
+        name: "Whole wheat flour (atta)",
+        quantity: "2 cups",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-2",
+        name: "Water",
+        quantity: "3/4 cup warm",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-3",
+        name: "Salt",
+        quantity: "1/2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ro-4",
+        name: "Ghee",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: "Butter or oil",
+      },
+      {
+        id: "ro-5",
+        name: "Extra flour for dusting",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Mix the flour and salt in a bowl. Add warm water gradually, mixing with your hand until a soft dough forms. Knead for 5 minutes until smooth and elastic, then cover with a damp cloth and rest for 10 minutes.",
+        timerSeconds: 600,
+        mistakeWarning:
+          "Don't add all the water at once — add it a tablespoon at a time near the end. Too-wet dough sticks to everything.",
+        quickHack:
+          "Don't stress about perfect circles — even irregular roti taste just as good.",
+        cuisineFact:
+          "Roti has been a daily staple in South Asia for over 5,000 years. In many Indian households, the ability to make perfectly round roti is considered a rite of passage.",
+        donenessCue:
+          "The dough should be smooth, soft, and not sticky — it should spring back slightly when poked.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Divide the dough into 8 equal balls. Dust each ball in flour, then roll out on a floured surface into a thin circle, about 6 inches across. Roll from the center outward, rotating the dough as you go.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Apply even pressure while rolling — pressing harder on one side makes lopsided roti that won't puff evenly.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The rolled roti should be thin enough to almost see through, with even thickness throughout.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Heat a flat skillet (tawa) over medium-high heat until a drop of water sizzles and evaporates instantly. Place the rolled roti on the dry skillet — no oil needed. Cook for about 30-45 seconds until bubbles form on the surface, then flip.",
+        timerSeconds: 45,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Small bubbles appear on the surface and the underside has light brown spots.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "After flipping, cook the second side for 30 seconds, then use tongs to place the roti directly over an open flame for a few seconds per side — it should puff up like a balloon. If you don't have a gas stove, press gently with a cloth on the skillet to encourage puffing.",
+        timerSeconds: 30,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "The dramatic puffing happens because trapped steam inside the two layers of dough expands rapidly — a perfectly puffed roti means the layers separated evenly during rolling.",
+        donenessCue:
+          "The roti puffs up fully with both sides showing golden-brown spots. It should feel light and hollow when tapped.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Brush the hot roti with a touch of ghee and stack them in a towel-lined container to keep warm and soft. Repeat with remaining dough balls. Serve warm alongside dal, curry, or any saucy dish.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+  tempura: {
+    name: "Tempura",
+    slug: "tempura",
+    description:
+      "Light, crispy Japanese batter-fried vegetables and shrimp with a delicate, shattering crunch.",
+    cuisineFamily: "japanese",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 10,
+    skillLevel: "intermediate",
+    heroImageUrl: "/food_images/tempura.png",
+    flavorProfile: ["crispy", "light", "delicate"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "tp-1",
+        name: "Mixed vegetables (sweet potato, broccoli, bell pepper)",
+        quantity: "2 cups sliced",
+        isOptional: false,
+        substitution: "Shrimp or zucchini",
+      },
+      {
+        id: "tp-2",
+        name: "All-purpose flour",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tp-3",
+        name: "Ice-cold sparkling water",
+        quantity: "3/4 cup",
+        isOptional: false,
+        substitution: "Ice-cold still water",
+      },
+      {
+        id: "tp-4",
+        name: "Egg",
+        quantity: "1 large",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tp-5",
+        name: "Neutral oil (vegetable or canola)",
+        quantity: "3 cups for frying",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tp-6",
+        name: "Soy sauce",
+        quantity: "2 tbsp for dipping",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Prep the vegetables: slice sweet potato into 1/4 inch rounds, cut broccoli into small florets, slice bell pepper into strips. Pat everything completely dry — moisture is the enemy of crispy tempura.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Wet vegetables will cause the oil to splatter and the batter won't stick. Use paper towels to thoroughly dry each piece.",
+        quickHack: null,
+        cuisineFact:
+          "Tempura was introduced to Japan by Portuguese missionaries in the 16th century. The word comes from the Latin 'tempora,' referring to Lenten fasting periods when fried food replaced meat.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Make the batter: whisk the egg in a bowl, add ice-cold sparkling water, then dump in the flour all at once. Stir just 3-4 times with chopsticks — the batter should be lumpy with visible flour streaks. Do NOT overmix.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Overmixing develops gluten and makes the coating chewy instead of crispy. Lumps are good — they create the signature crackly texture.",
+        quickHack:
+          "Keep the batter bowl nested in a larger bowl of ice to keep it cold while you fry.",
+        cuisineFact: null,
+        donenessCue:
+          "The batter should be thin and drip freely from chopsticks. If it coats thickly, add a splash more ice water.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Heat oil to 340-360°F (170-180°C) in a deep pot. Test by dropping a small bit of batter — it should sink halfway, then float up sizzling. Dip each vegetable piece in batter, let excess drip off, and gently lower into the oil. Fry 3-4 pieces at a time, about 2 minutes per side.",
+        timerSeconds: 120,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The tempura is done when the bubbling around each piece slows significantly and the coating is pale golden — not dark brown. It should feel almost weightless when lifted.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Transfer finished pieces to a wire rack (not paper towels — that traps steam and kills the crunch). Serve immediately with soy sauce or tentsuyu dipping sauce. Tempura waits for no one.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "In Japan, tempura restaurants serve each piece one at a time, straight from the fryer. The 30-second window after frying is when the texture is at its absolute peak.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+  "refried-beans": {
+    name: "Refried Beans",
+    slug: "refried-beans",
+    description:
+      "Creamy, smoky Mexican frijoles refritos — mashed pinto beans cooked in lard or oil until silky smooth.",
+    cuisineFamily: "mexican",
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 15,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/refried_beans.png",
+    flavorProfile: ["creamy", "savory", "smoky"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "rb-1",
+        name: "Canned pinto beans",
+        quantity: "2 cans (15 oz each), drained",
+        isOptional: false,
+        substitution: "Black beans",
+      },
+      {
+        id: "rb-2",
+        name: "Lard or vegetable oil",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "Butter",
+      },
+      {
+        id: "rb-3",
+        name: "Onion",
+        quantity: "1/2 medium, diced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "rb-4",
+        name: "Garlic",
+        quantity: "2 cloves, minced",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "rb-5",
+        name: "Cumin",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "rb-6",
+        name: "Salt",
+        quantity: "to taste",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Heat the lard or oil in a large skillet over medium heat. Add the diced onion and cook until soft and translucent, about 3 minutes. Add garlic and cumin, stir for 30 seconds until fragrant.",
+        timerSeconds: 210,
+        mistakeWarning: null,
+        quickHack:
+          "Skip the onion and garlic — just heat beans with oil and cumin for a 5-minute version.",
+        cuisineFact:
+          "Despite the name, refried beans are only fried once. 'Refritos' actually means 'well-fried' in Spanish, not 're-fried.'",
+        donenessCue:
+          "Onions are soft and edges are just starting to turn golden.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add the drained beans and about 1/4 cup of water. Mash with a potato masher or the back of a fork, leaving some beans chunky for texture. Stir and cook for 5-7 minutes, adding splashes of water if the mixture gets too thick.",
+        timerSeconds: 420,
+        mistakeWarning:
+          "Don't add too much water at once — it's easier to thin the beans than to thicken them. Add a tablespoon at a time.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The beans should be creamy and hold their shape on a spoon without being runny. They thicken as they cool, so err on the side of slightly loose.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Taste and adjust salt. Serve hot alongside tacos, burritos, or rice. Top with crumbled queso fresco or a squeeze of lime if you like.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "In Mexican home cooking, the rendered fat from cooking chorizo is often used instead of plain lard — it adds an incredible smoky depth.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+  "basmati-rice": {
+    name: "Basmati Rice",
+    slug: "basmati-rice",
+    description:
+      "Perfectly fluffy, long-grained basmati rice with each grain separate and aromatic.",
+    cuisineFamily: "indian",
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 20,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/basmati_rice.png",
+    flavorProfile: ["aromatic", "light", "nutty"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "br-1",
+        name: "Basmati rice",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: "Jasmine rice",
+      },
+      {
+        id: "br-2",
+        name: "Water",
+        quantity: "1.5 cups",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "br-3",
+        name: "Salt",
+        quantity: "1/2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "br-4",
+        name: "Ghee or butter",
+        quantity: "1 tsp",
+        isOptional: true,
+        substitution: "Oil",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Rinse the rice in a fine mesh strainer under cold running water until the water runs clear — this removes excess starch and prevents the rice from becoming gummy. Soak in water for 15 minutes if you have time (optional but makes fluffier rice).",
+        timerSeconds: null,
+        mistakeWarning:
+          "Skipping the rinse is the #1 reason for sticky, clumpy basmati. Rinse at least 3-4 times.",
+        quickHack:
+          "No time to soak? The rinse alone will still give you good results.",
+        cuisineFact:
+          "The word 'basmati' comes from Hindi meaning 'fragrant one.' Aged basmati (1-2 years) is prized because the grains expand more and cook fluffier.",
+        donenessCue:
+          "The rinse water should go from milky white to nearly clear.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "In a heavy-bottomed pot, add the rinsed rice, water, salt, and ghee. Bring to a boil over high heat, then immediately reduce to the lowest possible heat. Cover tightly and cook for 15 minutes. Do not lift the lid.",
+        timerSeconds: 900,
+        mistakeWarning:
+          "Do not stir or lift the lid while cooking — the steam is doing the work. Every peek lets out steam and results in unevenly cooked rice.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Turn off the heat and let the rice sit covered for 5 minutes — this finishing steam is what makes each grain perfectly tender. Then fluff gently with a fork, lifting and separating the grains. Never stir with a spoon.",
+        timerSeconds: 300,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "In Persian and Indian cooking, the golden crust at the bottom of the pot (tahdig/khurchan) is considered the best part and is served separately as a delicacy.",
+        donenessCue:
+          "Each grain should be separate, elongated, and tender but not mushy. The rice should feel light and airy when fluffed.",
+        imageUrl: null,
+      },
+    ],
+  },
+  "sweet-potato-fries": {
+    name: "Sweet Potato Fries",
+    slug: "sweet-potato-fries",
+    description:
+      "Crispy, caramelized sweet potato fries baked to perfection — healthier than regular fries with more flavor.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 25,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/sweet_potato_fries.png",
+    flavorProfile: ["sweet", "crispy", "savory"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "sp-1",
+        name: "Sweet potatoes",
+        quantity: "2 large",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sp-2",
+        name: "Olive oil",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: "Avocado oil",
+      },
+      {
+        id: "sp-3",
+        name: "Cornstarch",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sp-4",
+        name: "Smoked paprika",
+        quantity: "1 tsp",
+        isOptional: true,
+        substitution: "Regular paprika",
+      },
+      {
+        id: "sp-5",
+        name: "Salt and pepper",
+        quantity: "to taste",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Preheat oven to 425°F (220°C). Cut sweet potatoes into even 1/4 inch sticks — consistency is key for even cooking. Soak in cold water for 10 minutes, then drain and pat completely dry.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Uneven cuts mean some fries burn while others stay soggy. Take the time to cut them the same size.",
+        quickHack:
+          "Skip the soaking step if you're short on time — just make sure to dry them thoroughly.",
+        cuisineFact:
+          "Sweet potatoes are not actually related to regular potatoes. They're in the morning glory family and are native to Central and South America.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Toss the dry fries with oil, cornstarch, paprika, salt, and pepper in a large bowl until evenly coated. The cornstarch is the secret to crispiness — it absorbs moisture and creates a crunchy shell.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Every fry should have a thin, even coating — no wet spots or dry patches.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Spread the fries in a single layer on a parchment-lined baking sheet. Leave space between each fry — crowding causes steaming instead of crisping. Bake for 15 minutes, flip each fry, then bake 10 more minutes.",
+        timerSeconds: 900,
+        mistakeWarning:
+          "Do NOT pile the fries on top of each other. Use two baking sheets if needed. Crowded fries will be limp and sad.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Edges are dark and caramelized, the surface feels firm when tapped, and they lift easily from the parchment without sticking.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Season with a final pinch of flaky salt immediately out of the oven. Serve right away — sweet potato fries lose their crunch faster than regular fries.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+  "seaweed-salad": {
+    name: "Seaweed Salad",
+    slug: "seaweed-salad",
+    description:
+      "Refreshing Japanese wakame salad dressed with sesame oil, rice vinegar, and a hint of ginger.",
+    cuisineFamily: "japanese",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/seaweed_salad.png",
+    flavorProfile: ["fresh", "savory", "tangy"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "sw-1",
+        name: "Dried wakame seaweed",
+        quantity: "1 oz (about 1/4 cup dry)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sw-2",
+        name: "Rice vinegar",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sw-3",
+        name: "Soy sauce",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: "Tamari for gluten-free",
+      },
+      {
+        id: "sw-4",
+        name: "Sesame oil",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "sw-5",
+        name: "Fresh ginger",
+        quantity: "1 tsp grated",
+        isOptional: false,
+        substitution: "1/4 tsp ground ginger",
+      },
+      {
+        id: "sw-6",
+        name: "Sesame seeds",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Soak the dried wakame in cold water for 5 minutes — it will expand to about 4 times its dry volume. Once rehydrated, drain well and gently squeeze out excess water. If the pieces are large, cut them into bite-sized strips.",
+        timerSeconds: 300,
+        mistakeWarning:
+          "Don't soak longer than 5 minutes — over-soaked wakame turns slimy and falls apart.",
+        quickHack: null,
+        cuisineFact:
+          "Wakame is one of the most nutritious sea vegetables, packed with iodine, calcium, and omega-3 fatty acids. In Japan, it's been cultivated for over 1,000 years.",
+        donenessCue:
+          "The wakame should be soft, silky, and deep green — not still crunchy or translucent.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Make the dressing: whisk together rice vinegar, soy sauce, sesame oil, and grated ginger in a small bowl until combined.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The dressing should be well emulsified — not separating into oil and vinegar layers.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Toss the drained wakame with the dressing until evenly coated. Sprinkle with sesame seeds. Let it sit for 5 minutes so the flavors meld, then serve chilled or at room temperature.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "In Japanese restaurants, seaweed salad is often served as a palate cleanser between courses. The acidity and umami prepare your taste buds for the next dish.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+  churros: {
+    name: "Churros",
+    slug: "churros",
+    description:
+      "Golden, crispy Mexican churros rolled in cinnamon sugar — crunchy outside, soft and airy inside.",
+    cuisineFamily: "mexican",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 15,
+    skillLevel: "intermediate",
+    heroImageUrl: "/food_images/churros.png",
+    flavorProfile: ["sweet", "crunchy", "warm"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ch-1",
+        name: "Water",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-2",
+        name: "Butter",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-3",
+        name: "Sugar",
+        quantity: "1/4 cup + 1/2 cup for coating",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-4",
+        name: "All-purpose flour",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-5",
+        name: "Egg",
+        quantity: "1 large",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-6",
+        name: "Cinnamon",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ch-7",
+        name: "Neutral oil for frying",
+        quantity: "2 cups",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "In a saucepan, bring water, butter, 1/4 cup sugar, and a pinch of salt to a boil. Remove from heat and add flour all at once. Stir vigorously with a wooden spoon until a smooth dough ball forms and pulls away from the sides of the pan.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Add ALL the flour at once and stir fast — adding it slowly creates lumps that are impossible to smooth out.",
+        quickHack: null,
+        cuisineFact:
+          "Churros originated in Spain, where shepherds invented them as a portable snack they could fry over campfires in the mountains.",
+        donenessCue:
+          "The dough should be smooth, glossy, and pull cleanly from the sides of the pan into a ball.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Let the dough cool for 2 minutes, then beat in the egg until fully incorporated. The dough will break apart at first — keep stirring and it will come back together into a smooth, pipe-able dough. Load into a piping bag with a large star tip.",
+        timerSeconds: null,
+        mistakeWarning:
+          "If you add the egg while the dough is too hot, it will cook the egg and create scrambled bits. Let it cool until you can touch the pan.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The dough should be thick enough to hold its shape when piped, but smooth enough to squeeze out of the bag.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Heat oil to 375°F (190°C). Pipe 4-5 inch lengths of dough directly into the oil, cutting with scissors. Fry 3-4 at a time for about 2 minutes per side until deep golden brown. Drain on a wire rack.",
+        timerSeconds: 120,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "The star-shaped tip isn't just decorative — the ridges create more surface area, which means more crunch in every bite.",
+        donenessCue:
+          "Deep golden brown on all sides. If they're pale inside when you break one open, the oil wasn't hot enough — increase temperature and fry a bit longer.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Mix 1/2 cup sugar with cinnamon on a plate. While the churros are still warm and slightly oily, roll each one in the cinnamon sugar until completely coated. Serve immediately — they're best within 10 minutes of frying.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
 };
 
 // ── Meal guided cook data ──────────────────────────────
@@ -5810,127 +6561,6 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
           "Adobo is famously better the next day — the flavors meld and deepen overnight in the fridge. Many Filipinos make a double batch on purpose.",
         donenessCue:
           "Skin is dark mahogany to near-black in spots (this is correct, not burnt). Audibly crackly when tapped with tongs.",
-        imageUrl: null,
-      },
-    ],
-  },
-  roti: {
-    name: "Roti",
-    slug: "roti",
-    description:
-      "Soft, puffed Indian flatbread made with whole wheat flour — the perfect vessel for curries and dal.",
-    cuisineFamily: "indian",
-    prepTimeMinutes: 15,
-    cookTimeMinutes: 15,
-    skillLevel: "beginner",
-    heroImageUrl: "/food_images/roti.png",
-    flavorProfile: ["warm", "nutty", "wholesome"],
-    temperature: "hot",
-    ingredients: [
-      {
-        id: "ro-1",
-        name: "Whole wheat flour (atta)",
-        quantity: "2 cups",
-        isOptional: false,
-        substitution: null,
-      },
-      {
-        id: "ro-2",
-        name: "Water",
-        quantity: "3/4 cup warm",
-        isOptional: false,
-        substitution: null,
-      },
-      {
-        id: "ro-3",
-        name: "Salt",
-        quantity: "1/2 tsp",
-        isOptional: false,
-        substitution: null,
-      },
-      {
-        id: "ro-4",
-        name: "Ghee",
-        quantity: "1 tbsp",
-        isOptional: true,
-        substitution: "Butter or oil",
-      },
-      {
-        id: "ro-5",
-        name: "Extra flour for dusting",
-        quantity: "2 tbsp",
-        isOptional: false,
-        substitution: null,
-      },
-    ],
-    steps: [
-      {
-        phase: "cook",
-        stepNumber: 1,
-        instruction:
-          "Mix the flour and salt in a bowl. Add warm water gradually, mixing with your hand until a soft dough forms. Knead for 5 minutes until smooth and elastic, then cover with a damp cloth and rest for 10 minutes.",
-        timerSeconds: 600,
-        mistakeWarning:
-          "Don't add all the water at once — add it a tablespoon at a time near the end. Too-wet dough sticks to everything.",
-        quickHack:
-          "Don't stress about perfect circles — even irregular roti taste just as good.",
-        cuisineFact:
-          "Roti has been a daily staple in South Asia for over 5,000 years. In many Indian households, the ability to make perfectly round roti is considered a rite of passage.",
-        donenessCue:
-          "The dough should be smooth, soft, and not sticky — it should spring back slightly when poked.",
-        imageUrl: null,
-      },
-      {
-        phase: "cook",
-        stepNumber: 2,
-        instruction:
-          "Divide the dough into 8 equal balls. Dust each ball in flour, then roll out on a floured surface into a thin circle, about 6 inches across. Roll from the center outward, rotating the dough as you go.",
-        timerSeconds: null,
-        mistakeWarning:
-          "Apply even pressure while rolling — pressing harder on one side makes lopsided roti that won't puff evenly.",
-        quickHack: null,
-        cuisineFact: null,
-        donenessCue:
-          "The rolled roti should be thin enough to almost see through, with even thickness throughout.",
-        imageUrl: null,
-      },
-      {
-        phase: "cook",
-        stepNumber: 3,
-        instruction:
-          "Heat a flat skillet (tawa) over medium-high heat until a drop of water sizzles and evaporates instantly. Place the rolled roti on the dry skillet — no oil needed. Cook for about 30-45 seconds until bubbles form on the surface, then flip.",
-        timerSeconds: 45,
-        mistakeWarning: null,
-        quickHack: null,
-        cuisineFact: null,
-        donenessCue:
-          "Small bubbles appear on the surface and the underside has light brown spots.",
-        imageUrl: null,
-      },
-      {
-        phase: "cook",
-        stepNumber: 4,
-        instruction:
-          "After flipping, cook the second side for 30 seconds, then use tongs to place the roti directly over an open flame for a few seconds per side — it should puff up like a balloon. If you don't have a gas stove, press gently with a cloth on the skillet to encourage puffing.",
-        timerSeconds: 30,
-        mistakeWarning: null,
-        quickHack: null,
-        cuisineFact:
-          "The dramatic puffing happens because trapped steam inside the two layers of dough expands rapidly — a perfectly puffed roti means the layers separated evenly during rolling.",
-        donenessCue:
-          "The roti puffs up fully with both sides showing golden-brown spots. It should feel light and hollow when tapped.",
-        imageUrl: null,
-      },
-      {
-        phase: "cook",
-        stepNumber: 5,
-        instruction:
-          "Brush the hot roti with a touch of ghee and stack them in a towel-lined container to keep warm and soft. Repeat with remaining dough balls. Serve warm alongside dal, curry, or any saucy dish.",
-        timerSeconds: null,
-        mistakeWarning: null,
-        quickHack: null,
-        cuisineFact: null,
-        donenessCue: null,
         imageUrl: null,
       },
     ],
