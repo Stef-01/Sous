@@ -1,10 +1,92 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { motion } from "framer-motion";
-
+import { useState, useCallback, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Search, Camera } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { sides, meals } from "@/data";
+
+interface LocalResult {
+  name: string;
+  cuisine: string;
+  emoji: string;
+}
+
+function getDishEmoji(tags: string[], cuisine: string): string {
+  const all = [...tags.map((t) => t.toLowerCase()), cuisine.toLowerCase()];
+  if (all.some((t) => ["salad", "raw", "greens"].includes(t))) return "🥗";
+  if (all.some((t) => ["soup", "broth", "stew"].includes(t))) return "🍲";
+  if (all.some((t) => ["rice"].includes(t))) return "🍚";
+  if (all.some((t) => ["bread", "toast", "baked"].includes(t))) return "🍞";
+  if (all.some((t) => ["pasta", "noodle"].includes(t))) return "🍝";
+  if (all.some((t) => ["mexican", "taco", "wrap"].includes(t))) return "🌮";
+  if (all.some((t) => ["indian", "curry"].includes(t))) return "🍛";
+  if (all.some((t) => ["japanese", "korean", "sushi"].includes(t))) return "🍱";
+  if (all.some((t) => ["thai", "chinese", "asian"].includes(t))) return "🍜";
+  if (all.some((t) => ["mediterranean", "italian"].includes(t))) return "🫒";
+  if (all.some((t) => ["sweet", "dessert"].includes(t))) return "🍮";
+  if (all.some((t) => ["roasted", "grilled"].includes(t))) return "🥘";
+  return "🍽️";
+}
+
+function getCuisineFromTags(tags: string[]): string {
+  const cuisineTags = [
+    "italian",
+    "indian",
+    "japanese",
+    "korean",
+    "thai",
+    "chinese",
+    "mexican",
+    "mediterranean",
+    "vietnamese",
+    "filipino",
+  ];
+  const found = tags.find((t) => cuisineTags.includes(t.toLowerCase()));
+  if (found) return found.charAt(0).toUpperCase() + found.slice(1);
+  return "Classic";
+}
+
+function searchLocal(query: string): LocalResult[] {
+  const q = query.toLowerCase().trim();
+  if (q.length < 1) return [];
+
+  const results: LocalResult[] = [];
+  const seen = new Set<string>();
+
+  // Search meals first (main dishes)
+  for (const meal of meals) {
+    const matches =
+      meal.name.toLowerCase().includes(q) ||
+      meal.aliases.some((a) => a.toLowerCase().includes(q));
+    if (matches && !seen.has(meal.id)) {
+      seen.add(meal.id);
+      results.push({
+        name: meal.name,
+        cuisine: meal.cuisine,
+        emoji: getDishEmoji([meal.cuisine.toLowerCase()], meal.cuisine),
+      });
+    }
+  }
+
+  // Search sides
+  for (const side of sides) {
+    const matches =
+      side.name.toLowerCase().includes(q) ||
+      side.tags.some((t) => t.toLowerCase().includes(q));
+    if (matches && !seen.has(side.id)) {
+      seen.add(side.id);
+      const cuisine = getCuisineFromTags(side.tags);
+      results.push({
+        name: side.name,
+        cuisine,
+        emoji: getDishEmoji(side.tags, cuisine),
+      });
+    }
+  }
+
+  return results.slice(0, 6);
+}
 
 interface TextPromptProps {
   onSubmit: (text: string) => void;
@@ -17,16 +99,39 @@ export function TextPrompt({
   onSubmit,
   onCameraClick,
   isLoading,
-  suggestions = ["Roast chicken", "Butter chicken", "Fish tacos", "Pad thai"],
+  suggestions = ["Pasta", "Stir Fry", "Salad", "Curry", "Tacos", "Soup"],
 }: TextPromptProps) {
   const [text, setText] = useState("");
+  const [localResults, setLocalResults] = useState<LocalResult[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSubmit = useCallback(() => {
-    const trimmed = text.trim();
-    if (trimmed && !isLoading) {
-      onSubmit(trimmed);
+  // Debounced local catalog search
+  useEffect(() => {
+    if (!text.trim()) {
+      setLocalResults([]);
+      setHasSearched(false);
+      return;
     }
-  }, [text, isLoading, onSubmit]);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      setLocalResults(searchLocal(text));
+      setHasSearched(true);
+    }, 300);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [text]);
+
+  const handleSubmit = useCallback(
+    (value?: string) => {
+      const trimmed = (value ?? text).trim();
+      if (trimmed && !isLoading) {
+        onSubmit(trimmed);
+      }
+    },
+    [text, isLoading, onSubmit],
+  );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -37,6 +142,18 @@ export function TextPrompt({
     },
     [handleSubmit],
   );
+
+  const handleSelectResult = useCallback(
+    (name: string) => {
+      setText(name);
+      handleSubmit(name);
+    },
+    [handleSubmit],
+  );
+
+  // Show local search results when: user has typed, not loading, debounce fired
+  const showResults = !!text && !isLoading && hasSearched;
+  const showSuggestions = !text && suggestions.length > 0;
 
   return (
     <div className="space-y-3">
@@ -50,7 +167,7 @@ export function TextPrompt({
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Roast chicken, gyros, pizza..."
+          placeholder="Roast chicken, pasta, curry..."
           disabled={isLoading}
           autoFocus
           className={cn(
@@ -73,7 +190,7 @@ export function TextPrompt({
             <Camera size={18} />
           </motion.button>
           <motion.button
-            onClick={handleSubmit}
+            onClick={() => handleSubmit()}
             disabled={!text.trim() || isLoading}
             whileTap={text.trim() && !isLoading ? { scale: 0.88 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
@@ -91,34 +208,80 @@ export function TextPrompt({
         </div>
       </div>
 
-      {/* Suggestion chips */}
-      {!text && suggestions.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-wrap gap-2"
-        >
-          {suggestions.map((suggestion) => (
-            <motion.button
-              key={suggestion}
-              onClick={() => {
-                setText(suggestion);
-                onSubmit(suggestion);
-              }}
-              whileTap={{ scale: 0.93 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className={cn(
-                "rounded-full border border-neutral-200 px-3 py-1.5 text-sm",
-                "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
-                "transition-colors duration-150",
-              )}
-              type="button"
-            >
-              {suggestion}
-            </motion.button>
-          ))}
-        </motion.div>
-      )}
+      {/* Popular suggestion chips — shown when input is empty */}
+      <AnimatePresence mode="wait">
+        {showSuggestions && (
+          <motion.div
+            key="suggestions"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="flex flex-wrap gap-2"
+          >
+            {suggestions.map((suggestion) => (
+              <motion.button
+                key={suggestion}
+                onClick={() => handleSelectResult(suggestion)}
+                whileTap={{ scale: 0.93 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                className={cn(
+                  "rounded-full border border-neutral-200 px-3 py-1.5 text-sm",
+                  "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
+                  "transition-colors duration-150",
+                )}
+                type="button"
+              >
+                {suggestion}
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+
+        {/* Local search results */}
+        {showResults && (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+          >
+            {localResults.length > 0 ? (
+              <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
+                {localResults.map((result, idx) => (
+                  <motion.button
+                    key={result.name}
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.04 }}
+                    onClick={() => handleSelectResult(result.name)}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--nourish-green)]/5 transition-colors"
+                    type="button"
+                  >
+                    <span className="text-xl shrink-0 w-7 text-center">
+                      {result.emoji}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-[var(--nourish-dark)] truncate">
+                        {result.name}
+                      </p>
+                      <p className="text-[11px] text-[var(--nourish-subtext)]">
+                        {result.cuisine} · ~15 min
+                      </p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-center text-[var(--nourish-subtext)] py-4">
+                No dishes match that craving. Try something like &ldquo;pasta&rdquo; or &ldquo;stir fry&rdquo;
+              </p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
