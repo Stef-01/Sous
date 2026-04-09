@@ -37,6 +37,8 @@ export function TimerChip({
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
+        aria-label={isExpanded ? `Hide ${formatTime(seconds)} timer` : `Set ${formatTime(seconds)} timer`}
+        aria-expanded={isExpanded}
       >
         <Timer size={16} />
         Start {formatTime(seconds)}
@@ -56,6 +58,7 @@ export function TimerChip({
                 onClick={onStart}
                 className="w-full rounded-lg bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition-colors"
                 type="button"
+                aria-label={`Start ${formatTime(seconds)} countdown timer`}
               >
                 Start {formatTime(seconds)} timer
               </button>

@@ -252,6 +252,7 @@ function IngredientRow({
           onClick={onToggle}
           className="flex-1 min-w-0 text-left"
           type="button"
+          aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
           <div className="flex items-baseline gap-2">
             <span
@@ -291,6 +292,7 @@ function IngredientRow({
                 : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
             )}
             type="button"
+            aria-label={`Find substitute for ${item.name}`}
             title="I don't have this"
           >
             <ArrowRightLeft size={14} />

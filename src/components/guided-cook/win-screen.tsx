@@ -312,6 +312,7 @@ export function WinScreen({
               : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
+          aria-label={photoAdded ? "Photo already added" : "Add a photo of your dish"}
         >
           <Camera size={14} />
           {photoAdded ? "Photo added" : "Add photo"}
@@ -323,6 +324,8 @@ export function WinScreen({
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
           type="button"
+          aria-label={showNote ? "Hide note" : "Add a cook note"}
+          aria-expanded={showNote}
         >
           <StickyNote size={14} />
           Note
@@ -371,6 +374,8 @@ export function WinScreen({
               : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
           type="button"
+          aria-label={showReflection ? "Hide meal reflection" : "Reflect on this meal"}
+          aria-expanded={showReflection}
         >
           <Sparkles size={14} />
           Reflect on this meal
@@ -476,6 +481,7 @@ export function WinScreen({
               : "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
           )}
           type="button"
+          aria-label={saved ? "Already saved to scrapbook" : "Save this cook to your scrapbook"}
         >
           <BookmarkPlus size={16} />
           {saved ? "Saved to scrapbook" : "Save to scrapbook"}

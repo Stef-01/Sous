@@ -23,6 +23,8 @@ export function FactChip({ fact, isExpanded, onToggle }: FactChipProps) {
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
+        aria-label={isExpanded ? "Hide cuisine fact" : "Show cuisine fact"}
+        aria-expanded={isExpanded}
       >
         <BookOpen size={16} />
         Cuisine fact

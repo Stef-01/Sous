@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "skills": {
+    "karpathy-llm-wiki": {
+      "source": "Astro-Han/karpathy-llm-wiki",
+      "sourceType": "github",
+      "computedHash": "4d582603d56cde7325e8528e12bb0f64ae3e2b19e85bdb4a8eca6d5403dd6c14"
+    },
+    "qmd": {
+      "source": "tobi/qmd",
+      "sourceType": "github",
+      "computedHash": "d7109d58f721a0bf59620c69b6ae073c60dde85e971012d95a5e410002f28c64"
+    },
+    "release": {
+      "source": "tobi/qmd",
+      "sourceType": "github",
+      "computedHash": "c602a2db14fa40fe5fd9c7865d79118bfe86a31b23bf9e7282414a732e5363f4"
+    }
+  }
+}

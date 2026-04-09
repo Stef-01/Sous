@@ -27,6 +27,8 @@ export function MistakeChip({
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
+        aria-label={isExpanded ? "Hide common mistake warning" : "Show common mistake warning"}
+        aria-expanded={isExpanded}
       >
         <AlertTriangle size={16} />
         Common mistake

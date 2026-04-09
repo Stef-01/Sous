@@ -23,6 +23,8 @@ export function HackChip({ hack, isExpanded, onToggle }: HackChipProps) {
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
+        aria-label={isExpanded ? "Hide quick hack" : "Show quick hack"}
+        aria-expanded={isExpanded}
       >
         <Lightbulb size={16} />
         Quick hack
