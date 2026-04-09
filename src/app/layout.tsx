@@ -54,6 +54,11 @@ export const metadata: Metadata = {
       "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
     images: ["/og-image.png"],
   },
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/icon.svg",
+    apple: "/icons/icon.svg",
+  },
 };
 
 export default function RootLayout({

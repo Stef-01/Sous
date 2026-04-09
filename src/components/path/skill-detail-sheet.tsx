@@ -13,6 +13,8 @@ interface SkillDetailSheetProps {
   open: boolean;
   onClose: () => void;
   onStartCook: (dishSlug: string) => void;
+  /** Called when user taps a practice dish chip — passes display name for search pre-fill */
+  onPracticeDish?: (displayName: string) => void;
 }
 
 /**
@@ -27,6 +29,7 @@ export function SkillDetailSheet({
   open,
   onClose,
   onStartCook,
+  onPracticeDish,
 }: SkillDetailSheetProps) {
   // Note: do NOT return null when node is null — AnimatePresence needs to render
   // to fire the exit animation. The `open` prop and `node` will both be falsy
@@ -215,26 +218,36 @@ export function SkillDetailSheet({
                     Practice dishes
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {(node?.associatedDishes ?? []).map((slug) => (
-                      <button
-                        key={slug}
-                        onClick={() => status !== "locked" && onStartCook(slug)}
-                        disabled={status === "locked"}
-                        className={cn(
-                          "rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-                          status === "locked"
-                            ? "border-neutral-100 text-neutral-300 cursor-default"
-                            : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer",
-                        )}
-                        type="button"
-                      >
-                        <ChefHat size={12} className="inline mr-1 -mt-0.5" />
-                        {slug
-                          .split("-")
-                          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                          .join(" ")}
-                      </button>
-                    ))}
+                    {(node?.associatedDishes ?? []).map((slug) => {
+                      const displayName = slug
+                        .split("-")
+                        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                        .join(" ");
+                      return (
+                        <button
+                          key={slug}
+                          onClick={() => {
+                            if (status === "locked") return;
+                            if (onPracticeDish) {
+                              onPracticeDish(displayName);
+                            } else {
+                              onStartCook(slug);
+                            }
+                          }}
+                          disabled={status === "locked"}
+                          className={cn(
+                            "rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                            status === "locked"
+                              ? "border-neutral-100 text-neutral-300 cursor-default"
+                              : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer",
+                          )}
+                          type="button"
+                        >
+                          <ChefHat size={12} className="inline mr-1 -mt-0.5" />
+                          {displayName}
+                        </button>
+                      );
+                    })}
                   </div>
                 </motion.div>
 

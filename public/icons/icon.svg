@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="114" fill="#2D6A4F"/>
+  <!-- Chef hat / spoon symbol: simple bowl and steam suggesting cooking -->
+  <text x="256" y="340" font-size="260" text-anchor="middle" font-family="system-ui, sans-serif">🍽️</text>
+</svg>

@@ -121,6 +121,21 @@ function TodayPageContent() {
     }
   }, [selectSidesParam, router]);
 
+  // Auto-open search pre-filled with a dish name (from Path "practice dish" chips)
+  const cravingParam = searchParams.get("craving");
+  const handledCravingRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (cravingParam && cravingParam !== handledCravingRef.current) {
+      handledCravingRef.current = cravingParam;
+      setShowSearch(true);
+      pendingQueryRef.current = cravingParam;
+      setMainDishQuery(cravingParam);
+      setView({ type: "loading", mainDish: cravingParam });
+      router.replace("/", { scroll: false });
+    }
+  }, [cravingParam, router]);
+
   // tRPC query — rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
     {

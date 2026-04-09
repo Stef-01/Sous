@@ -108,6 +108,14 @@ export default function PathPage() {
     [router],
   );
 
+  const handlePracticeDish = useCallback(
+    (displayName: string) => {
+      setSelectedNodeId(null);
+      router.push(`/?craving=${encodeURIComponent(displayName)}`);
+    },
+    [router],
+  );
+
   const handleCloseSheet = useCallback(() => {
     setSelectedNodeId(null);
   }, []);
@@ -202,6 +210,7 @@ export default function PathPage() {
         open={selectedNodeId !== null}
         onClose={handleCloseSheet}
         onStartCook={handleStartCook}
+        onPracticeDish={handlePracticeDish}
       />
     </motion.div>
   );

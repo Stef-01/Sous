@@ -1,0 +1,36 @@
+{
+  "name": "Sous — Cook Confidently Tonight",
+  "short_name": "Sous",
+  "description": "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking in 60 seconds.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FEFAF6",
+  "theme_color": "#2D6A4F",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "What are you craving?",
+      "short_name": "Search",
+      "description": "Find sides to pair with your main dish",
+      "url": "/?search=true",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "My Path",
+      "short_name": "Path",
+      "description": "View your cooking skill tree",
+      "url": "/path",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any" }]
+    }
+  ]
+}
