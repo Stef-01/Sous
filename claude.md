@@ -106,6 +106,9 @@ The V1 internal database targets 80-100 side dishes across 8-10 cuisine families
 - Run `pnpm lint && pnpm test` before committing.
 - Prefer small, focused PRs. One feature or fix per PR.
 - When adding a new screen or flow, sketch the component tree in a comment before writing code.
+- **Before answering questions about the codebase**, use `qmd search "query"` to find relevant docs across the sous collection, Stefan-Brain wiki, and strategy documents.
+- **When planning new features**, search strategy and planning docs via QMD first: `qmd search "feature topic"` for keyword matches, `qmd vsearch "feature topic"` for semantic matches.
+- QMD collections available: `sous` (all Sous markdown), `stefan-brain` (wiki), `optimus` (Optimus docs).
 
 ## Operational guardrails
 
