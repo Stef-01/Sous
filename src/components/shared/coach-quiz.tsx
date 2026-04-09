@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, ChevronRight, Sparkles } from "lucide-react";
+import { X, ArrowLeft, ChevronRight, Sparkles, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
   coachQuizQuestions,
@@ -25,13 +25,50 @@ const EFFORT_LABELS: Record<string, string> = {
   willing: "All in",
 };
 
+/** Progress dots — filled circles for completed, outlined for upcoming */
+function ProgressDots({
+  total,
+  current,
+}: {
+  total: number;
+  current: number;
+}) {
+  return (
+    <div className="flex items-center justify-center gap-1.5">
+      {Array.from({ length: total }).map((_, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            scale: i === current ? 1.25 : 1,
+            backgroundColor:
+              i < current
+                ? "var(--nourish-green)"
+                : i === current
+                  ? "var(--nourish-green)"
+                  : "transparent",
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          className={cn(
+            "rounded-full border transition-colors",
+            i <= current
+              ? "border-[var(--nourish-green)]"
+              : "border-neutral-300",
+          )}
+          style={{ width: i === current ? 10 : 8, height: i === current ? 10 : 8 }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /**
  * CoachQuiz — onboarding preference quiz.
  *
- * Full-screen overlay. 5 questions about cooking style, flavor, diet,
- * cuisine, and goals. Produces a preference vector for the pairing engine.
+ * Flow: welcome screen → 5 questions → "You're all set!" result screen.
+ * Slide transitions between questions. Progress dots + bar at top.
  */
 export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
+  const [phase, setPhase] = useState<"welcome" | "quiz" | "result">("welcome");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(TOTAL_QUESTIONS).fill(null),
@@ -44,12 +81,12 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
 
   const advance = useCallback(
     (optionIdx: number | null, newAnswers: (number | null)[]) => {
-      void optionIdx; // may be null for skip
-
+      void optionIdx;
       if (currentQ >= TOTAL_QUESTIONS - 1) {
         const computed = computePreferencesFromAnswers(newAnswers);
         setResult(computed);
         onComplete?.(computed);
+        setPhase("result");
       } else {
         setDirection(1);
         setCurrentQ((q) => q + 1);
@@ -61,7 +98,6 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
   const handleSelect = useCallback(
     (optionIdx: number) => {
       setSelectedOption(optionIdx);
-
       setTimeout(() => {
         const newAnswers = [...answers];
         newAnswers[currentQ] = optionIdx;
@@ -75,7 +111,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
 
   const handleSkip = useCallback(() => {
     const newAnswers = [...answers];
-    newAnswers[currentQ] = null; // skipped
+    newAnswers[currentQ] = null;
     setAnswers(newAnswers);
     setDirection(1);
     advance(null, newAnswers);
@@ -86,17 +122,105 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
       setDirection(-1);
       setCurrentQ((q) => q - 1);
       setSelectedOption(null);
+    } else {
+      setPhase("welcome");
     }
   }, [currentQ]);
 
-  const progress = result
-    ? 100
-    : ((currentQ + (selectedOption !== null ? 0.5 : 0)) / TOTAL_QUESTIONS) *
-      100;
+  const progress =
+    phase === "result"
+      ? 100
+      : ((currentQ + (selectedOption !== null ? 0.5 : 0)) / TOTAL_QUESTIONS) *
+        100;
+
+  // ── Welcome screen ────────────────────────────────────
+
+  if (phase === "welcome") {
+    return (
+      <motion.div
+        key="welcome"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex flex-col bg-[var(--nourish-cream)]"
+      >
+        <div className="px-4 pt-4 flex justify-end">
+          <button
+            onClick={onClose}
+            className="rounded-full p-2 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+            type="button"
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="flex-1 flex flex-col items-center justify-center px-8 pb-12 text-center">
+          <motion.div
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 12,
+              delay: 0.1,
+            }}
+            className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--nourish-green)]/10"
+          >
+            <ChefHat size={40} className="text-[var(--nourish-green)]" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, type: "spring", stiffness: 260, damping: 25 }}
+            className="font-serif text-3xl text-[var(--nourish-dark)] mb-3"
+          >
+            Welcome to Sous
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-base text-[var(--nourish-subtext)] mb-2 leading-relaxed"
+          >
+            Cook confidently tonight.
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="text-sm text-[var(--nourish-subtext)]/70 mb-8 max-w-xs leading-relaxed"
+          >
+            Answer 5 quick questions so we can personalise every suggestion to
+            your taste.
+          </motion.p>
+
+          <motion.button
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => setPhase("quiz")}
+            className={cn(
+              "w-full max-w-xs rounded-xl py-4 text-sm font-semibold text-white",
+              "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+              "transition-colors duration-200 shadow-sm shadow-[var(--nourish-green)]/20",
+            )}
+            type="button"
+          >
+            Let&apos;s get started
+          </motion.button>
+        </div>
+      </motion.div>
+    );
+  }
 
   // ── Result screen ─────────────────────────────────────
 
-  if (result) {
+  if (phase === "result" && result) {
     const cuisines = topCuisines(result.preferences);
     const flavors = topFlavors(result.preferences);
     const effortLabel =
@@ -104,24 +228,26 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
 
     return (
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        key="result"
+        initial={{ opacity: 0, scale: 0.97 }}
+        animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25 }}
         className="fixed inset-0 z-50 flex flex-col bg-[var(--nourish-cream)]"
       >
-        {/* Close */}
         <div className="px-4 pt-4 flex justify-end">
           <button
             onClick={onClose}
             className="rounded-full p-2 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
             type="button"
+            aria-label="Close"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center px-6 pb-12 text-center">
-          {/* Icon */}
+          {/* Animated checkmark */}
           <motion.div
             initial={{ scale: 0, rotate: -20 }}
             animate={{ scale: 1, rotate: 0 }}
@@ -136,19 +262,22 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             <Sparkles size={36} className="text-[var(--nourish-green)]" />
           </motion.div>
 
-          {/* Headline */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="mb-2 text-3xl"
+          >
+            🎉
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: 0.25,
-              type: "spring",
-              stiffness: 260,
-              damping: 25,
-            }}
+            transition={{ delay: 0.25, type: "spring", stiffness: 260, damping: 25 }}
             className="font-serif text-2xl text-[var(--nourish-dark)] mb-2"
           >
-            Your taste profile is set!
+            You&apos;re all set!
           </motion.h1>
 
           <motion.p
@@ -157,7 +286,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             transition={{ delay: 0.4 }}
             className="text-sm text-[var(--nourish-subtext)] mb-6 max-w-xs leading-relaxed"
           >
-            Sous will now personalise every suggestion to match your vibe.
+            Sous will personalise every suggestion to match your vibe.
           </motion.p>
 
           {/* Preference chips */}
@@ -188,7 +317,6 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             </span>
           </motion.div>
 
-          {/* CTA */}
           <motion.button
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -202,7 +330,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             )}
             type="button"
           >
-            Let&apos;s cook
+            Let&apos;s cook 🍳
           </motion.button>
         </div>
       </motion.div>
@@ -215,6 +343,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
 
   return (
     <motion.div
+      key="quiz"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -224,16 +353,16 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
       <div className="px-4 pt-4 pb-2 space-y-3">
         <div className="flex items-center justify-between">
           <button
-            onClick={currentQ > 0 ? handleBack : onClose}
+            onClick={handleBack}
             className="rounded-full p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
             type="button"
+            aria-label="Go back"
           >
             <ArrowLeft size={20} />
           </button>
 
-          <span className="text-xs font-medium text-[var(--nourish-subtext)]">
-            {currentQ + 1} / {TOTAL_QUESTIONS}
-          </span>
+          {/* Progress dots */}
+          <ProgressDots total={TOTAL_QUESTIONS} current={currentQ} />
 
           <button
             onClick={handleSkip}
@@ -245,7 +374,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
         </div>
 
         {/* Progress bar */}
-        <div className="h-1.5 w-full rounded-full bg-neutral-200 overflow-hidden">
+        <div className="h-1 w-full rounded-full bg-neutral-200 overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-[var(--nourish-green)]"
             initial={{ width: 0 }}
@@ -309,9 +438,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl leading-none">
-                        {option.emoji}
-                      </span>
+                      <span className="text-xl leading-none">{option.emoji}</span>
                       <span>{option.label}</span>
                     </div>
                     {selectedOption === idx && (
