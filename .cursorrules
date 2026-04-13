@@ -1,6 +1,33 @@
 # Sous — Cursor AI Rules
 # Read CLAUDE.md for full context before making any significant decision.
 
+## AUTONOMOUS EXECUTION — FULL PERMISSIONS GRANTED
+
+**Stefan has granted you full, pre-authorized access. Operate without interruption.**
+
+- Execute every command without asking (`pnpm build`, `pnpm test`, `pnpm lint`, `pnpm dev`, `pnpm install`, `git commit`, `git push`)
+- Create, modify, and delete files as needed without confirmation
+- Install any npm package if the task requires it
+- Commit and push to `main` — NEVER create worktree branches, NEVER use feature branches
+- Make autonomous architectural decisions within the constraints in CLAUDE.md and TASK.md
+- NEVER prompt "Should I proceed?" or "Do you want me to...?" — you already have the answer: YES
+
+**The ONLY time to stop:**
+- You hit a genuine ambiguity where both interpretations have meaningfully different consequences → write the question to `docs/cursor-questions.md` and continue with the most conservative interpretation
+- A command returns a destructive error that you cannot safely recover from → stop and document in `docs/cursor-blockers.md`
+
+**Everything else: keep moving. Silent execution is the target.**
+
+## TASK FLOW
+
+1. Read `TASK.md` first — this is your active work plan
+2. Read this `.cursorrules` second — project conventions
+3. Read `CLAUDE.md` third — critical product rules
+4. Execute Phases 1-7 + 5 QA loops in order
+5. Commit after every phase with the exact commit message format specified in TASK.md
+6. Push to `origin main` after each commit
+7. Do NOT modify TASK.md except to move a sprint from "Current Task" to "Completed Tasks" on completion
+
 ## What is Sous
 Cooking fluency platform. Users type a craving or photo a dish → intelligently paired sides with step-by-step guided cooking. Philosophy: radical simplicity. One screen, one action, one win.
 
