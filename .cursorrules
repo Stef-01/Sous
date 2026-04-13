@@ -1,0 +1,73 @@
+# Sous — Cursor AI Rules
+# Read CLAUDE.md for full context before making any significant decision.
+
+## What is Sous
+Cooking fluency platform. Users type a craving or photo a dish → intelligently paired sides with step-by-step guided cooking. Philosophy: radical simplicity. One screen, one action, one win.
+
+## Tech Stack
+- Next.js 15 (App Router), TypeScript, React 19
+- Tailwind CSS 4, shadcn/ui, Framer Motion
+- Zustand (client state), TanStack Query + tRPC (server state)
+- Drizzle ORM, PostgreSQL (Neon)
+- Vercel AI SDK, OpenAI Vision API, Anthropic Claude
+- Clerk (auth), Cloudflare R2 (images), Upstash Redis (cache/rate limiting)
+- Vitest, Playwright, React Testing Library
+
+## Project Structure
+```
+src/app/          # App Router pages: (today)/, (path)/, (community)/, api/
+src/components/   # ui/ (shadcn), today/, guided-cook/, path/, shared/
+src/lib/          # ai/, db/, engine/, hooks/, utils/
+src/types/        # Zod schemas (source of truth) + inferred TS types
+```
+
+## Code Conventions
+- Files: kebab-case (`quest-card.tsx`). Components: PascalCase (`QuestCard`)
+- Named exports for components/utils. Default exports only for pages.
+- Zod schemas as source of truth — infer TypeScript types from them
+- Function components only. Props interface inline unless shared. `cn()` for conditional classes.
+- Server Components fetch by default. Client Components use TanStack Query via tRPC hooks.
+- Result pattern for engine functions: `{ success: true, data } | { success: false, error }`
+- Try/catch only at API boundaries.
+- Unit tests co-located as `*.test.ts`. E2E in `/tests/e2e/`. Test behavior, not implementation.
+
+## Critical Rules (non-negotiable)
+1. **The Sous Test**: Every Today-page component must pass — "Does this make the user cook?" If no → Path or Community.
+2. **One primary CTA per screen** — never two equally-weighted buttons.
+3. **No settings pages** — preferences learned from behavior or coach interactions only.
+4. **Quest shell consistency** — every recipe renders through Mission → Grab → Cook → Win.
+5. **No-scroll navigation** — all primary CTAs and nav must be visible at 375×667px (iPhone SE). Use `mt-auto` to pin.
+6. **Simplicity-first UI** — when in doubt, remove it. Every element earns its pixel.
+7. **No invented recipes or images** — only add cook steps to existing entries in sides.json / meals.json.
+
+## Current Feature State (do not revert)
+- Path tab always visible (no progressive unlock gate)
+- Friends section on Today page, below the fold
+- Coach quiz runs on first visit only
+- 8 cuisine mastery paths in skill tree
+- Kitchen Sanitation NOT in skill tree (removed intentionally)
+- All image URLs are null — gradient+emoji fallback
+- Clerk auth bypassed with mock user (re-enable for production only)
+
+## Operational Guardrails
+- Max 3 parallel worktrees at once
+- Every code task must end with `pnpm build` passing
+- Commit and push atomically — don't leave work stranded
+- Prefer editing existing files over creating new ones
+
+## Karpathy Coding Principles
+1. **Think Before Coding** — state assumptions, surface tradeoffs, ask when unclear
+2. **Simplicity First** — minimum code that solves the problem. If 200 lines could be 50, rewrite it.
+3. **Surgical Changes** — touch only what you must. Don't clean up adjacent code.
+4. **Goal-Driven Execution** — define success criteria before starting; loop independently toward them.
+
+## Commands
+```
+pnpm dev          # localhost:3000
+pnpm build        # must pass before any commit
+pnpm test         # vitest unit tests
+pnpm test:e2e     # playwright
+pnpm lint:fix     # auto-fix
+pnpm db:push      # push drizzle schema
+pnpm db:seed      # seed side-dish DB
+```
