@@ -68,7 +68,7 @@ function TodayPageContent() {
   >(undefined);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { stats } = useCookSessions();
+  const { stats, completedSessions } = useCookSessions();
 
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
@@ -359,6 +359,7 @@ function TodayPageContent() {
               handleTextSubmit(dishName);
             }}
             userPreferences={userPreferences}
+            cookHistory={stats}
           />
         </div>
 
@@ -390,6 +391,7 @@ function TodayPageContent() {
 
         {/* Friends social meals — below fold, social proof */}
         <FriendsStrip
+          sessions={completedSessions}
           onDishSelect={(dishName) => {
             setShowSearch(true);
             handleTextSubmit(dishName);

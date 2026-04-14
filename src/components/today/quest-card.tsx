@@ -103,9 +103,11 @@ function scoreDishForPreferences(
  * Users want to cook main dishes first, then find sides.
  * Meals with images float to the top. Guided-cook items prioritized.
  * Uses deterministic daily shuffle so the feed feels fresh each day.
+ * After 10+ cooks, silently biases toward cuisines the user hasn't explored.
  */
 function buildQuestDishes(
   userPreferences?: Record<string, number>,
+  cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
 ): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
 
@@ -165,6 +167,17 @@ function buildQuestDishes(
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
+  // Progressive difficulty: after 10+ cooks, boost cuisines the user hasn't tried
+  const noveltyBonus =
+    cookHistory && cookHistory.completedCooks >= 10
+      ? (cuisine: string) => {
+          const covered = cookHistory.cuisinesCovered.map((c) =>
+            c.toLowerCase(),
+          );
+          return covered.includes(cuisine.toLowerCase()) ? 0 : 4;
+        }
+      : () => 0;
+
   // Score and sort meals: prefer meals with images, then verified, then preference match
   const scoredMeals = mealDishes
     .map((m) => ({
@@ -173,7 +186,8 @@ function buildQuestDishes(
         (m.heroImageUrl ? 10 : 0) +
         (m.isVerified ? 3 : 0) +
         (m.hasGuidedCook ? 5 : 0) +
-        (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0),
+        (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
+        noveltyBonus(m.cuisineFamily),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -186,7 +200,8 @@ function buildQuestDishes(
       dish: s,
       score:
         (s.heroImageUrl ? 10 : 0) +
-        (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0),
+        (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0) +
+        noveltyBonus(s.cuisineFamily),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -288,13 +303,15 @@ function buildMealTags(
 export function QuestCard({
   onFindSides,
   userPreferences,
+  cookHistory,
 }: {
   onFindSides?: (dishName: string) => void;
   userPreferences?: Record<string, number>;
+  cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
 }) {
   const questDishes = useMemo(
-    () => buildQuestDishes(userPreferences),
-    [userPreferences],
+    () => buildQuestDishes(userPreferences, cookHistory),
+    [userPreferences, cookHistory],
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(

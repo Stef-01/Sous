@@ -2,93 +2,9 @@
 
 import { useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-
-interface FriendCook {
-  name: string;
-  dishName: string;
-  emoji: string;
-  timeAgo: string;
-}
-
-// Real dish names from sides.json paired with appropriate emojis
-const DISH_POOL: Array<{ name: string; emoji: string }> = [
-  { name: "Caesar Salad", emoji: "🥗" },
-  { name: "Garlic Bread", emoji: "🍞" },
-  { name: "Roasted Broccoli", emoji: "🥦" },
-  { name: "Miso Soup", emoji: "🍜" },
-  { name: "Steamed Jasmine Rice", emoji: "🍚" },
-  { name: "Bruschetta", emoji: "🍅" },
-  { name: "Corn on the Cob", emoji: "🌽" },
-  { name: "Guacamole", emoji: "🥑" },
-  { name: "Cucumber Raita", emoji: "🥒" },
-  { name: "Sautéed Mushrooms", emoji: "🍄" },
-  { name: "Coleslaw", emoji: "🥬" },
-  { name: "Tzatziki", emoji: "🫙" },
-  { name: "Tomato Soup", emoji: "🍲" },
-  { name: "Roasted Sweet Potatoes", emoji: "🍠" },
-  { name: "Edamame", emoji: "🫛" },
-  { name: "Pickled Vegetables", emoji: "🥒" },
-  { name: "Naan Bread", emoji: "🫓" },
-  { name: "Steamed Bok Choy", emoji: "🥬" },
-];
-
-const FRIEND_NAMES = [
-  "Zainab",
-  "Hieu",
-  "Kenji",
-  "Beatriz",
-  "Priya",
-  "Carlos",
-  "Mei",
-  "Omar",
-  "Sofia",
-  "Jin",
-];
-
-const TIME_AGO_OPTIONS = [
-  "just now",
-  "5m ago",
-  "12m ago",
-  "23m ago",
-  "1h ago",
-  "2h ago",
-  "3h ago",
-  "yesterday",
-];
-
-/**
- * Build deterministic daily rotation of "friends cooked" entries.
- */
-function buildFriendCooks(count: number): FriendCook[] {
-  const now = new Date();
-  const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
-  );
-
-  const friends: FriendCook[] = [];
-  const usedDishes = new Set<number>();
-
-  for (let i = 0; i < count; i++) {
-    const nameIdx = (dayOfYear + i * 3) % FRIEND_NAMES.length;
-    const timeIdx = (dayOfYear + i * 5) % TIME_AGO_OPTIONS.length;
-
-    let dishIdx = (dayOfYear * 7 + i * 13) % DISH_POOL.length;
-    // Avoid repeating dishes
-    while (usedDishes.has(dishIdx)) {
-      dishIdx = (dishIdx + 1) % DISH_POOL.length;
-    }
-    usedDishes.add(dishIdx);
-
-    friends.push({
-      name: FRIEND_NAMES[nameIdx],
-      dishName: DISH_POOL[dishIdx].name,
-      emoji: DISH_POOL[dishIdx].emoji,
-      timeAgo: TIME_AGO_OPTIONS[timeIdx],
-    });
-  }
-
-  return friends;
-}
+import { RotateCcw } from "lucide-react";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -104,37 +20,58 @@ const cardVariants = {
   }),
 };
 
+function formatTimeAgo(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "yesterday";
+  if (days < 7) return `${days}d ago`;
+  return `${Math.floor(days / 7)}w ago`;
+}
+
 /**
- * Friends Strip — social proof section below the fold on Today page.
- * Shows what "friends" recently cooked as a horizontal scrollable card row.
- * Uses deterministic daily rotation against real dish names.
+ * FriendsStrip — shows the user's recent completed cooks as a horizontal
+ * scrollable card row. Replaces the earlier mock friend data with real
+ * cook session history for honest social proof and replay motivation.
+ * Hidden entirely when the user has no completed cooks.
  */
 export function FriendsStrip({
+  sessions,
   onDishSelect,
 }: {
+  sessions: CookSessionRecord[];
   onDishSelect?: (dishName: string) => void;
 }) {
-  const friends = useMemo(() => buildFriendCooks(6), []);
+  const recent = useMemo(
+    () => sessions.filter((s) => s.completedAt).slice(0, 8),
+    [sessions],
+  );
+
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  if (recent.length === 0) return null;
 
   return (
     <div ref={ref} className="space-y-2.5">
       <h3 className="text-[10px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase px-1">
-        Friends cooked recently
+        Your recent cooks
       </h3>
 
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
-        {friends.map((friend, idx) => (
+        {recent.map((session, idx) => (
           <motion.button
-            key={`${friend.name}-${friend.dishName}`}
+            key={session.sessionId}
             type="button"
             custom={idx}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={cardVariants}
             whileTap={{ scale: 0.95 }}
-            onClick={() => onDishSelect?.(friend.dishName)}
+            onClick={() => onDishSelect?.(session.dishName)}
             className="flex flex-col items-center justify-between gap-1.5 rounded-xl bg-white shadow-sm border border-neutral-100/80 p-3 shrink-0 snap-start cursor-pointer transition-shadow hover:shadow-md"
             style={{ width: 136, height: 152 }}
           >
@@ -143,24 +80,28 @@ export function FriendsStrip({
               <span
                 style={{ fontSize: 44, lineHeight: 1 }}
                 role="img"
-                aria-label={friend.dishName}
+                aria-label={session.dishName}
               >
-                {friend.emoji}
+                {getDishEmoji(
+                  [session.cuisineFamily.toLowerCase()],
+                  session.cuisineFamily,
+                )}
               </span>
             </div>
 
             {/* Dish name */}
             <span className="text-[11px] font-semibold text-[var(--nourish-dark)] text-center leading-tight line-clamp-2 w-full">
-              {friend.dishName}
+              {session.dishName}
             </span>
 
-            {/* Friend + time */}
+            {/* Rating + time */}
             <div className="flex items-center justify-between w-full gap-1">
-              <span className="text-[10px] text-[var(--nourish-subtext)] font-medium truncate">
-                {friend.name}
+              <span className="text-[10px] text-[var(--nourish-subtext)] font-medium truncate flex items-center gap-0.5">
+                <RotateCcw size={9} />
+                Cook again
               </span>
               <span className="text-[9px] text-[var(--nourish-subtext)]/60 shrink-0">
-                {friend.timeAgo}
+                {session.completedAt ? formatTimeAgo(session.completedAt) : ""}
               </span>
             </div>
           </motion.button>

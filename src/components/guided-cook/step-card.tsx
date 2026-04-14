@@ -8,6 +8,8 @@ import {
   ChevronRight,
   MessageCircleQuestion,
   Send,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { TimerChip } from "./timer-chip";
@@ -70,10 +72,31 @@ export function StepCard({
 }: StepCardProps) {
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [lastAnswer, setLastAnswer] = useState<{
     answer: string;
     confidence: string;
   } | null>(null);
+
+  const handleReadAloud = () => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    const text = instruction + (donenessCue ? `. ${donenessCue}` : "");
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.9;
+    utterance.pitch = 1;
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    setIsSpeaking(true);
+  };
 
   const askMutation = trpc.ai.askCookQuestion.useMutation({
     onSuccess: (data) => {
@@ -115,22 +138,42 @@ export function StepCard({
       transition={{ type: "spring", stiffness: 300, damping: 28 }}
       className="flex flex-col gap-5"
     >
-      {/* Step counter + progress bar */}
+      {/* Step counter + progress bar + read-aloud */}
       <div className="space-y-1.5">
-        <motion.p
-          key={`step-label-${stepNumber}`}
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 18,
-            delay: 0.05,
-          }}
-          className="text-sm font-semibold text-[var(--nourish-subtext)]"
-        >
-          Step {stepNumber} of {totalSteps}
-        </motion.p>
+        <div className="flex items-center justify-between">
+          <motion.p
+            key={`step-label-${stepNumber}`}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 400,
+              damping: 18,
+              delay: 0.05,
+            }}
+            className="text-sm font-semibold text-[var(--nourish-subtext)]"
+          >
+            Step {stepNumber} of {totalSteps}
+          </motion.p>
+          {typeof window !== "undefined" && window.speechSynthesis && (
+            <motion.button
+              onClick={handleReadAloud}
+              whileTap={{ scale: 0.88 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className={cn(
+                "flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium transition-all",
+                isSpeaking
+                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                  : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
+              )}
+              type="button"
+              aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
+            >
+              {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              {isSpeaking ? "Stop" : "Read aloud"}
+            </motion.button>
+          )}
+        </div>
         <div className="h-1 w-full rounded-full bg-neutral-100 overflow-hidden">
           <motion.div
             className="h-full rounded-full bg-[var(--nourish-green)]"

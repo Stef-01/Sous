@@ -130,6 +130,60 @@ function ConfettiLayer() {
   );
 }
 
+interface Milestone {
+  emoji: string;
+  headline: string;
+  message: string;
+}
+
+function detectMilestone(ctx: {
+  isFirstCook: boolean;
+  streak: number;
+  cuisineFamily: string;
+  dishName: string;
+}): Milestone {
+  if (ctx.isFirstCook) {
+    return {
+      emoji: "🌟",
+      headline: "Your first cook!",
+      message: `${ctx.dishName} — and your cooking journey begins.`,
+    };
+  }
+  if (ctx.streak === 7) {
+    return {
+      emoji: "🔥",
+      headline: "7-day streak!",
+      message: `${ctx.dishName} done. A full week of cooking — you're unstoppable.`,
+    };
+  }
+  if (ctx.streak === 14) {
+    return {
+      emoji: "⚡",
+      headline: "14-day streak!",
+      message: `${ctx.dishName} done. Two straight weeks. This is becoming a superpower.`,
+    };
+  }
+  if (ctx.streak === 30) {
+    return {
+      emoji: "👨‍🍳",
+      headline: "30-day streak!",
+      message: `${ctx.dishName} done. A full month of cooking — you're a chef now.`,
+    };
+  }
+  if (ctx.streak > 0 && ctx.streak % 10 === 0) {
+    return {
+      emoji: "🏆",
+      headline: `${ctx.streak}-day streak!`,
+      message: `${ctx.dishName} done. ${ctx.streak} days strong.`,
+    };
+  }
+  return {
+    emoji: "🎉",
+    headline: `You cooked ${ctx.dishName}!`,
+    message: `${ctx.dishName} is ready to eat.`,
+  };
+}
+
 /**
  * Win Screen — celebration after completing a cook.
  *
@@ -172,8 +226,14 @@ export function WinScreen({
     { staleTime: Infinity },
   );
 
-  const headline = winMessage.data?.headline ?? `You cooked ${dishName}!`;
-  const message = winMessage.data?.message ?? `${dishName} is ready to eat.`;
+  const milestone = detectMilestone({
+    isFirstCook,
+    streak,
+    cuisineFamily,
+    dishName,
+  });
+  const headline = winMessage.data?.headline ?? milestone.headline;
+  const message = winMessage.data?.message ?? milestone.message;
 
   const reflection = trpc.ai.generateReflection.useQuery(
     {
@@ -228,7 +288,7 @@ export function WinScreen({
             transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
             className="text-5xl"
           >
-            🎉
+            {milestone.emoji}
           </motion.div>
           <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)] leading-snug">
             {headline}
