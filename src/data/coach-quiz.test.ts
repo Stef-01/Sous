@@ -66,6 +66,33 @@ describe("Coach Quiz — Preference Computation", () => {
   });
 });
 
+describe("Coach Quiz — Edge Cases", () => {
+  it("handles empty answers array", () => {
+    const result = computePreferencesFromAnswers([]);
+    expect(result.effortTolerance).toBe("moderate");
+    expect(Object.keys(result.preferences)).toHaveLength(0);
+  });
+
+  it("handles all same answer (rapid-click through)", () => {
+    const allZeroes = coachQuizQuestions.map(() => 0);
+    const result = computePreferencesFromAnswers(allZeroes);
+    expect(result.effortTolerance).toBeDefined();
+    expect(result.preferences).toBeDefined();
+  });
+
+  it("handles out-of-range answer indices gracefully", () => {
+    const answers: (number | null)[] = [99, -1, null, null, null];
+    const result = computePreferencesFromAnswers(answers);
+    expect(result.effortTolerance).toBe("moderate");
+  });
+
+  it("handles more answers than questions", () => {
+    const answers = Array(coachQuizQuestions.length + 5).fill(0);
+    const result = computePreferencesFromAnswers(answers);
+    expect(result.preferences).toBeDefined();
+  });
+});
+
 describe("Coach Quiz — Summary Helpers", () => {
   it("topCuisines returns labels for positive cuisine preferences", () => {
     const prefs = { japanese: 0.8, indian: 0.5, mexican: -0.2 };

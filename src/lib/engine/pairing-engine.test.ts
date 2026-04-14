@@ -332,6 +332,59 @@ describe("Explainer", () => {
   });
 });
 
+// ── Edge case tests ───────────────────────────────────
+
+describe("Edge Cases", () => {
+  it("handles main dish with empty name", () => {
+    const emptyMain: MainDishIntent = {
+      ...chickenMain,
+      dishName: "",
+    };
+    const result = suggestSides(emptyMain, allCandidates);
+    expect(result.success).toBe(true);
+  });
+
+  it("handles main dish with very long name", () => {
+    const longMain: MainDishIntent = {
+      ...chickenMain,
+      dishName: "A".repeat(1000),
+    };
+    const result = suggestSides(longMain, allCandidates);
+    expect(result.success).toBe(true);
+  });
+
+  it("handles main dish with no cuisine signals", () => {
+    const noCuisine: MainDishIntent = {
+      ...chickenMain,
+      cuisineSignals: [],
+    };
+    const result = suggestSides(noCuisine, allCandidates);
+    expect(result.success).toBe(true);
+  });
+
+  it("handles main dish with no mood signals", () => {
+    const noMood: MainDishIntent = {
+      ...chickenMain,
+      moodSignals: [],
+    };
+    const result = suggestSides(noMood, allCandidates);
+    expect(result.success).toBe(true);
+  });
+
+  it("handles single candidate", () => {
+    const result = suggestSides(chickenMain, [naan]);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.sides).toHaveLength(1);
+    }
+  });
+
+  it("handles duplicate candidates", () => {
+    const result = suggestSides(chickenMain, [naan, naan, naan]);
+    expect(result.success).toBe(true);
+  });
+});
+
 // ── Integration: suggestSides ──────────────────────────
 
 describe("suggestSides (integration)", () => {
