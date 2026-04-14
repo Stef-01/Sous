@@ -74,10 +74,10 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
           <Search size={15} className="text-[var(--nourish-green)]" />
         </div>
         <span className="text-sm font-medium text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
-          What&apos;s for dinner?
+          What are you craving?
         </span>
         <span className="ml-auto text-xs text-[var(--nourish-green)] font-semibold">
-          Find sides →
+          Go →
         </span>
       </motion.button>
     </motion.div>

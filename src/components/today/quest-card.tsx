@@ -32,6 +32,7 @@ interface QuestDish {
   ingredientCount: number;
   hasGuidedCook: boolean;
   isMeal: boolean;
+  isVerified: boolean;
 }
 
 const CUISINE_TAGS = [
@@ -125,10 +126,11 @@ function buildQuestDishes(
         : 30,
       cuisineFamily: meal.cuisine,
       description: meal.description,
-      tags: [meal.cuisine, ...(meal.sidePool.length > 6 ? ["Popular"] : [])].slice(0, 3),
+      tags: buildMealTags(meal.cuisine, meal.description, meal.sidePool.length),
       ingredientCount: mealCookData ? mealCookData.ingredients.length : 8,
       hasGuidedCook: hasCook,
       isMeal: true,
+      isVerified: !!meal.nourishVerified,
     };
   });
 
@@ -156,21 +158,25 @@ function buildQuestDishes(
       ingredientCount: staticData ? staticData.ingredients.length : 5,
       hasGuidedCook: guidedSlugs.has(side.id),
       isMeal: false,
+      isVerified: false,
     };
   });
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
-  // Score and sort meals: prefer meals with images, then preference match, then daily rotation
+  // Score and sort meals: prefer meals with images, then verified, then preference match
   const scoredMeals = mealDishes
     .map((m) => ({
       dish: m,
       score:
         (m.heroImageUrl ? 10 : 0) +
+        (m.isVerified ? 3 : 0) +
         (m.hasGuidedCook ? 5 : 0) +
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0),
     }))
-    .sort((a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug));
+    .sort(
+      (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
+    );
 
   // Score and sort sides similarly
   const scoredSides = sideDishes
@@ -181,7 +187,9 @@ function buildQuestDishes(
         (s.heroImageUrl ? 10 : 0) +
         (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0),
     }))
-    .sort((a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug));
+    .sort(
+      (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
+    );
 
   // Daily rotation offset
   const mealOffset = dayOfYear % Math.max(1, scoredMeals.length);
@@ -215,21 +223,64 @@ function buildQuestDishes(
 
 const SWIPE_THRESHOLD = 80;
 
+/** Extract descriptive tags for a meal from its description. */
+function buildMealTags(
+  cuisine: string,
+  description: string,
+  poolSize: number,
+): string[] {
+  const tags = [cuisine];
+  const desc = description.toLowerCase();
+  const flavorWords: [string, string][] = [
+    ["spicy", "Spicy"],
+    ["creamy", "Creamy"],
+    ["crispy", "Crispy"],
+    ["smoky", "Smoky"],
+    ["tangy", "Tangy"],
+    ["savory", "Savory"],
+    ["rich", "Rich"],
+    ["fresh", "Fresh"],
+    ["aromatic", "Aromatic"],
+    ["tender", "Tender"],
+    ["grilled", "Grilled"],
+    ["braised", "Braised"],
+    ["fried", "Fried"],
+    ["steamed", "Steamed"],
+    ["roasted", "Roasted"],
+  ];
+  for (const [word, label] of flavorWords) {
+    if (desc.includes(word) && tags.length < 3) tags.push(label);
+  }
+  if (tags.length < 3 && poolSize > 6) tags.push("Popular");
+  return tags.slice(0, 3);
+}
+
 /** Map dish tags/cuisine to a relevant emoji for the image placeholder. */
 function getDishEmoji(tags: string[], cuisine: string): string {
   const all = [...tags.map((t) => t.toLowerCase()), cuisine.toLowerCase()];
+  // Cuisine-specific emoji for main meals
+  if (all.includes("japanese")) return "🍱";
+  if (all.includes("korean")) return "🍲";
+  if (all.includes("thai")) return "🍜";
+  if (all.includes("chinese")) return "🥡";
+  if (all.includes("vietnamese")) return "🍜";
+  if (all.includes("filipino")) return "🍛";
+  if (all.includes("indian")) return "🍛";
+  if (all.includes("italian")) return "🍝";
+  if (all.includes("mexican")) return "🌮";
+  if (all.includes("mediterranean")) return "🥘";
+  // Type-specific
   if (all.some((t) => ["salad", "fresh", "raw", "green"].includes(t)))
     return "🥗";
   if (all.some((t) => ["soup", "broth", "stew"].includes(t))) return "🍲";
   if (all.some((t) => ["rice", "fried rice"].includes(t))) return "🍚";
   if (all.some((t) => ["bread", "toast", "baked"].includes(t))) return "🍞";
-  if (all.some((t) => ["pasta", "noodle", "italian"].includes(t))) return "🍝";
-  if (all.some((t) => ["mexican", "taco", "wrap"].includes(t))) return "🌮";
-  if (all.some((t) => ["indian", "curry", "spicy"].includes(t))) return "🍛";
-  if (all.some((t) => ["japanese", "korean", "asian", "sushi"].includes(t)))
-    return "🍱";
   if (all.some((t) => ["sweet", "dessert"].includes(t))) return "🍮";
-  if (all.some((t) => ["roasted", "grilled"].includes(t))) return "🥘";
+  if (all.some((t) => ["roasted", "grilled", "bbq"].includes(t))) return "🥘";
+  if (all.some((t) => ["fish", "seafood", "shrimp"].includes(t))) return "🐟";
+  if (all.some((t) => ["chicken", "poultry"].includes(t))) return "🍗";
+  if (all.some((t) => ["beef", "pork", "meat", "lamb"].includes(t)))
+    return "🥩";
   return "🍽️";
 }
 
@@ -573,9 +624,30 @@ function SwipeCard({
 
         {/* Dish info */}
         <div className="px-4 pt-2.5 pb-1.5 space-y-1">
-          <h3 className="font-serif text-base font-bold text-[var(--nourish-dark)]">
+          <h3 className="font-serif text-base font-bold text-[var(--nourish-dark)] flex items-center gap-1.5">
             {dish.dishName}
+            {dish.isVerified && (
+              <span
+                className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[var(--nourish-green)] shrink-0"
+                title="Nourish Verified"
+              >
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M4 8.5L7 11.5L12 5"
+                    stroke="white"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            )}
           </h3>
+          {dish.isMeal && dish.description && (
+            <p className="text-[11px] text-[var(--nourish-subtext)] line-clamp-1 leading-relaxed">
+              {dish.description}
+            </p>
+          )}
           <div className="flex items-center gap-3 text-[11px] text-[var(--nourish-subtext)]">
             <span className="flex items-center gap-1">
               <Clock size={13} className="text-[var(--nourish-green)]" />
@@ -647,7 +719,11 @@ function SwipeCard({
             )}
             type="button"
           >
-            {dish.isMeal ? "Find sides →" : dish.hasGuidedCook ? "Start cooking" : "Find sides"}
+            {dish.isMeal
+              ? "Find sides →"
+              : dish.hasGuidedCook
+                ? "Start cooking"
+                : "Find sides"}
           </motion.button>
         </div>
       </div>

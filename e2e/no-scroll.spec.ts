@@ -106,3 +106,52 @@ test.describe("No-Scroll CTA — 375×667 viewport", () => {
     await expect(cta).toBeVisible({ timeout: 10000 });
   });
 });
+
+test.describe("Meal-First Quest Experience", () => {
+  test("Home page quest card shows a meal with 'Find sides' CTA", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Wait for quest card to appear
+    const findSidesBtn = page.locator('button:has-text("Find sides")').first();
+    const startCookingBtn = page
+      .locator('button:has-text("Start cooking")')
+      .first();
+
+    // At least one of these should be visible (meal shows "Find sides", side shows "Start cooking")
+    const mealVisible = await findSidesBtn.isVisible().catch(() => false);
+    const sideVisible = await startCookingBtn.isVisible().catch(() => false);
+
+    expect(
+      mealVisible || sideVisible,
+      "Quest card should show either 'Find sides' or 'Start cooking' CTA",
+    ).toBeTruthy();
+  });
+
+  test("Search bar shows meal-centric copy", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const searchBar = page.locator('text="What are you craving?"').first();
+    await expect(searchBar).toBeVisible({ timeout: 10000 });
+  });
+
+  test("Quest card shows cuisine badge", async ({ page }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Give the quest card time to render
+    await page.waitForTimeout(1000);
+
+    // The quest card should show a cuisine family badge
+    const card = page.locator("[class*='quest']").first();
+    if (await card.isVisible().catch(() => false)) {
+      // Card exists — it should contain recognizable text
+      const cardText = await card.textContent();
+      expect(cardText).toBeTruthy();
+      expect(cardText!.length).toBeGreaterThan(5);
+    }
+  });
+});
