@@ -2937,6 +2937,26 @@
     "nourishVerified": true
   },
   {
+    "id": "mint-raita",
+    "name": "Mint Raita",
+    "imageUrl": "/food_images/mint_raita.png",
+    "tags": ["raita", "yogurt", "indian"],
+    "description": "A refreshing yogurt dip loaded with fresh mint, a hint of cumin, and a squeeze of lemon — perfect alongside kebabs and biryanis.",
+    "pairingReason": "minty coolness to cut through rich grills",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
+    "id": "cucumber-tomato-raita",
+    "name": "Cucumber Tomato Raita",
+    "imageUrl": "/food_images/cucumber_tomato_raita.png",
+    "tags": ["raita", "yogurt", "indian"],
+    "description": "A chunky yogurt side with diced cucumber, tomato, and onion seasoned with roasted cumin and chaat masala.",
+    "pairingReason": "crunchy, cool yogurt to tame spicy mains",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": true
+  },
+  {
     "id": "plain-dahi",
     "name": "Plain Dahi (Set Curd)",
     "imageUrl": "/food_images/plain_dahi.png",
