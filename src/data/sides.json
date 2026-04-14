@@ -427,7 +427,97 @@
     "description": "Soft, pillowy Indian flatbread baked in a tandoor oven, brushed with butter and perfect for scooping up curries.",
     "pairingReason": "warm bread to scoop up rich curry sauces",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "In a small bowl, combine 1 teaspoon instant yeast, 1/2 cup warm water (about 105°F), and 1 tablespoon sugar. Stir gently, cover, and let sit for 10 minutes until foamy and bubbly on top.",
+        "duration": 10,
+        "timerTrigger": true,
+        "timerMinutes": 10,
+        "mistakeWarning": "If the water is too hot (above 120°F), it will kill the yeast. Use a thermometer or test on your wrist — it should feel warm, not hot.",
+        "hackChip": "Instant yeast produces slightly fluffier naan than active dry. If using active dry, let it proof for 15 minutes instead of 10.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "In a large bowl, sift together 1 3/4 cups bread flour and 1/2 teaspoon salt. Make a well in the center. Add the yeast mixture, 2 tablespoons milk, and 1 1/2 tablespoons beaten egg. Mix until a shaggy dough forms, then knead on a floured surface for 5-6 minutes until smooth and slightly tacky.",
+        "duration": 6,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't add too much extra flour while kneading — a slightly sticky dough makes softer naan. The dough should spring back when poked.",
+        "hackChip": "Bread flour gives a chewier, more bubbly naan than all-purpose. If using all-purpose, the naan will still be good but slightly less pillowy.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Lightly oil the dough ball and place it back in the bowl. Cover with a damp towel or plastic wrap and let rise in a warm spot for 60-90 minutes until doubled in size.",
+        "duration": 75,
+        "timerTrigger": true,
+        "timerMinutes": 60,
+        "mistakeWarning": null,
+        "hackChip": "If your kitchen is cold, preheat the oven to 200°F, turn it off, then place the covered bowl inside. The residual warmth speeds up the rise.",
+        "cuisineFact": "Traditional naan is cooked in a tandoor oven at 900°F, where it sticks to the clay walls and bakes in under 2 minutes. The stovetop method mimics that intense direct heat."
+      },
+      {
+        "step": 4,
+        "phase": "prep",
+        "instruction": "Punch down the dough and divide into 6 equal pieces. Roll each into a smooth ball, place on a lightly floured tray, cover loosely, and let rest for 15 minutes.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 15,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "prep",
+        "instruction": "On a lightly floured surface, roll each ball into an oval or teardrop shape about 6 inches long and 3-4mm thick. Don't worry about perfection — irregular shapes are traditional.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Rolling too thin makes cracker-like naan. Too thick and the inside stays doughy. Aim for about 3-4mm — roughly the thickness of two stacked coins.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "cook",
+        "instruction": "Heat a cast-iron skillet over high heat until it's smoking hot — about 2 minutes. Place one naan on the dry skillet. Cook for 1-1.5 minutes until the bottom is deep golden with charred spots and large bubbles form on top.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "If the pan isn't hot enough, the naan won't bubble and will turn out flat and tough. Wait until you see wisps of smoke before adding the dough.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 7,
+        "phase": "cook",
+        "instruction": "Flip the naan and cook the second side for about 1 minute until golden brown with charred spots. Repeat with remaining dough, adjusting heat between medium-high and high to prevent burning.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "Keep finished naan warm by wrapping in a clean kitchen towel while you cook the rest. They steam each other and stay soft.",
+        "cuisineFact": null
+      },
+      {
+        "step": 8,
+        "phase": "finish",
+        "instruction": "Immediately brush each hot naan generously with melted ghee or butter. Optionally sprinkle with nigella seeds, minced garlic, or chopped cilantro. Serve warm.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "For garlic naan, mix 2 minced garlic cloves into the melted ghee before brushing. The residual heat cooks the garlic just enough.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "basmati-rice",
@@ -437,7 +527,64 @@
     "description": "Long-grain aromatic rice steamed to fluffy perfection, with each grain separate and delicately fragrant.",
     "pairingReason": "fluffy base to absorb and carry bold spices",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Place 1 cup basmati rice in a fine-mesh strainer. Rinse under cold running water, swirling gently with your hand, until the water runs clear — usually 4-5 rinses. This removes excess surface starch.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Skipping the rinse is the most common cause of gummy, sticky basmati. The starch on the surface glues grains together. Always rinse until clear.",
+        "hackChip": null,
+        "cuisineFact": "Basmati means 'queen of fragrance' in Hindi. The grains elongate up to twice their length when cooked — more than any other rice variety."
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Optional but recommended: soak the rinsed rice in cold water for 20 minutes, then drain completely. Soaking allows the grains to absorb water gradually, so they cook more evenly and stay long and fluffy.",
+        "duration": 20,
+        "timerTrigger": true,
+        "timerMinutes": 20,
+        "mistakeWarning": null,
+        "hackChip": "If you're short on time, you can skip soaking — the rice will still be good, just slightly less elongated. Soaking is the difference between good and great.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "Place the drained rice and 1 1/2 cups cold water in a medium saucepan. Set over medium-high heat and bring to a simmer without a lid — you'll see the edges start to bubble and the surface foam slightly.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "The 1:1.5 ratio (1 cup rice to 1.5 cups water) is the key to fluffy, separate grains. More water makes mushy rice.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "As soon as it reaches a simmer, place a tight-fitting lid on the pan and reduce heat to low. Cook for exactly 12 minutes without lifting the lid — the steam trapped inside does the real work.",
+        "duration": 12,
+        "timerTrigger": true,
+        "timerMinutes": 12,
+        "mistakeWarning": "Do not lift the lid during cooking. Every time you peek, steam escapes and the cooking time extends. Trust the timer.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Remove from heat and let the rice sit covered for 5-10 minutes — this resting period redistributes moisture so every grain is evenly fluffy. Then remove the lid and gently fluff with a fork, never a spoon.",
+        "duration": 5,
+        "timerTrigger": true,
+        "timerMinutes": 5,
+        "mistakeWarning": "Using a spoon to fluff will smash the delicate grains. A fork separates them gently without breaking them.",
+        "hackChip": "For extra aroma, add a cinnamon stick, 2 cardamom pods, and a bay leaf to the water before cooking. Remove before serving.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "raita",
@@ -447,7 +594,53 @@
     "description": "A cool, creamy yogurt condiment with grated cucumber, cumin, and fresh mint that tempers the heat of spicy dishes.",
     "pairingReason": "cool yoghurt to calm the heat of spice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Peel and grate 1 medium cucumber using the large holes of a box grater. Gather the grated cucumber in a clean kitchen towel, twist tightly, and squeeze out as much liquid as possible over the sink.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "If you skip squeezing the cucumber, the raita will turn watery within minutes. This is the single most important step.",
+        "hackChip": "English (seedless) cucumbers have less water than regular ones, so they need less squeezing. They're ideal for raita.",
+        "cuisineFact": "Raita has been part of Indian cuisine for centuries — the cooling yogurt was traditionally used to balance the heat of spicy dishes, a principle rooted in Ayurvedic food philosophy."
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "In a medium bowl, whisk 1 cup full-fat plain yogurt until smooth. Add the squeezed cucumber, 1/2 teaspoon roasted cumin powder, 1/4 teaspoon chaat masala (if available), a pinch of salt, and a pinch of sugar.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "To roast cumin powder at home: toast 1 tablespoon whole cumin seeds in a dry pan over medium heat for 2 minutes until fragrant and slightly darkened, then grind. The flavor difference is huge.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Add 2 tablespoons finely chopped fresh cilantro and 1 tablespoon finely chopped fresh mint (if available). For heat, mince 1 small green chili (Thai or serrano) and fold it in.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "Gently fold everything together until just combined — don't over-mix or the yogurt will thin out. Taste and adjust salt. Cover and refrigerate for at least 15 minutes to let the flavors meld. Serve chilled.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 15,
+        "mistakeWarning": "Vigorous stirring breaks down the yogurt's structure and makes raita thin and runny. Use gentle folding motions.",
+        "hackChip": "A pinch of kala namak (Himalayan black salt) adds an authentic tangy, sulfurous depth that regular salt can't replicate. Find it at Indian grocery stores.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "mango-chutney",
@@ -477,7 +670,86 @@
     "description": "Tender potatoes and cauliflower florets gently spiced with turmeric, cumin, and coriander in a dry-style curry.",
     "pairingReason": "dry vegetable dish to complement saucy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Cut 1 small head of cauliflower into small, bite-sized florets (about 1/2 inch). Peel 2 medium potatoes and dice into 1/2-inch cubes. Keep the potatoes submerged in a bowl of water until ready to use to prevent browning.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Cut the potatoes and cauliflower to similar sizes so they cook at the same rate. Large, uneven pieces mean some will be mushy while others are still raw.",
+        "hackChip": null,
+        "cuisineFact": "Aloo Gobi is one of the most popular vegetarian dishes in North India and Pakistan. 'Aloo' means potato and 'gobi' means cauliflower in Hindi."
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "Heat 2 tablespoons oil (mustard oil is traditional) in a large heavy-bottomed pan or wok over medium-high heat. Drain the potatoes, pat dry, and add to the hot oil. Pan-fry for 3-4 minutes, stirring occasionally, until light golden spots appear. Remove and set aside.",
+        "duration": 4,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Dry the potatoes thoroughly before adding to hot oil — wet potatoes will splatter dangerously and won't brown properly.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "In the same pan, add the cauliflower florets and pan-fry over medium-high heat for 2-3 minutes until they develop a few golden-brown spots. Remove and set aside with the potatoes.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "Pre-frying the vegetables separately is the secret to great aloo gobi. It seals the outside so they hold their shape instead of turning to mush in the spice mixture.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "Add 2 teaspoons oil to the same pan. Once hot, add 1/2 teaspoon cumin seeds and let them sizzle for 10 seconds. Add 1 finely chopped onion and cook for 2-3 minutes until translucent. Stir in 1 1/2 teaspoons ginger-garlic paste and cook for 1 minute until the raw smell disappears.",
+        "duration": 4,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "cook",
+        "instruction": "Add 2 finely chopped tomatoes and cook for 2-3 minutes until soft and pulpy. Then add the spices: 1/2 teaspoon turmeric, 1/4 teaspoon red chili powder, 1 teaspoon coriander powder, and 1/2 teaspoon amchur (dry mango powder). Stir well for 30 seconds.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Add the ground spices after the tomatoes have softened — raw spices in dry heat burn instantly and taste bitter.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "cook",
+        "instruction": "Return the pan-fried potatoes and cauliflower to the pan. Add 3/4 teaspoon salt, mix gently to coat everything in the spice mixture, and sprinkle 2-3 tablespoons of water around the edges of the pan. Cover and cook on low heat for 8-10 minutes, stirring gently every 2 minutes, until the vegetables are fork-tender but not mushy.",
+        "duration": 10,
+        "timerTrigger": true,
+        "timerMinutes": 8,
+        "mistakeWarning": "Stir gently — aggressive stirring will break the cauliflower into crumbs. And don't overcook — the vegetables should have a slight bite, not fall apart.",
+        "hackChip": "If the mixture sticks to the pan, add water 1 tablespoon at a time. You want a dry dish, not a curry, so use water sparingly.",
+        "cuisineFact": null
+      },
+      {
+        "step": 7,
+        "phase": "finish",
+        "instruction": "Remove from heat and sprinkle with 1/4 teaspoon garam masala and a generous pinch of crushed kasuri methi (dried fenugreek leaves). Cover and let sit for 5 minutes — the residual heat blooms the final spices. Garnish with chopped cilantro and a squeeze of lemon juice before serving.",
+        "duration": 5,
+        "timerTrigger": true,
+        "timerMinutes": 5,
+        "mistakeWarning": null,
+        "hackChip": "Crushing kasuri methi between your palms before adding it releases far more aroma than sprinkling it whole. This one ingredient transforms the dish.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "dal-tadka",
@@ -487,7 +759,97 @@
     "description": "Creamy yellow lentils simmered until soft and finished with a sizzling temper of cumin, garlic, and dried chillies.",
     "pairingReason": "protein-rich lentils to round out the plate",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Rinse 1 cup chana dal (yellow split peas) in cold water until it runs clear. Soak in fresh water for 1 hour, then drain. This softens the lentils and cuts the cooking time nearly in half.",
+        "duration": 60,
+        "timerTrigger": true,
+        "timerMinutes": 60,
+        "mistakeWarning": "Skipping the soak means the dal will take much longer to cook and may not break down to the right creamy consistency.",
+        "hackChip": "In a hurry? Use a mix of red lentils (masoor dal) and yellow lentils (toor dal) — they cook in 20-25 minutes without soaking.",
+        "cuisineFact": "Dal is the most eaten dish in India — nearly 60 million tons of pulses are consumed annually. Every region has its own signature dal recipe."
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "Heat 2 tablespoons ghee in a heavy-bottomed saucepan over high heat. Add 2 deseeded green chilies (cut into chunks) and fry for about 1 minute until they start to blister.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "Add 1 finely chopped onion and cook over medium heat for 3-4 minutes until softened and translucent. Then add 6 finely chopped garlic cloves, 1 tablespoon finely chopped ginger, and 8 fresh curry leaves. Stir for about 1 minute until the garlic turns golden and the kitchen smells incredible.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Burnt garlic tastes bitter and will ruin the dal. Keep the heat at medium and stir constantly once you add it.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "Add 1 chopped tomato and 1/2 teaspoon ground cumin. Cook for 2 minutes, stirring occasionally, until the tomato breaks down into a paste-like consistency.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "cook",
+        "instruction": "Add the drained lentils, 4 cups water, 1/2 teaspoon turmeric, and 3/4 teaspoon salt. Bring to a simmer, then cover and cook gently on low heat for about 1 hour, stirring 2-3 times to prevent sticking.",
+        "duration": 60,
+        "timerTrigger": true,
+        "timerMinutes": 60,
+        "mistakeWarning": "Keep the heat low — a gentle simmer. Rapid boiling can cause the dal to stick and burn on the bottom.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "cook",
+        "instruction": "Remove the lid and continue simmering gently for 20-30 minutes, stirring occasionally, until the dal reaches a thick, porridge-like consistency. Some lentils should be broken down while others hold their shape. Stir in 1/8 teaspoon garam masala.",
+        "duration": 25,
+        "timerTrigger": true,
+        "timerMinutes": 25,
+        "mistakeWarning": null,
+        "hackChip": "Use a whisk or the back of a wooden spoon to mash some of the lentils against the side of the pot — this creates a creamier texture while leaving some whole lentils for texture contrast.",
+        "cuisineFact": null
+      },
+      {
+        "step": 7,
+        "phase": "finish",
+        "instruction": "Make the tadka: In a small pan, heat 1 1/2 tablespoons ghee over medium-high heat until shimmering. Add 1 teaspoon cumin seeds and 1/2 teaspoon black mustard seeds — they should crackle and pop within 20 seconds. Add 3 dried red chilies (seeds removed) and stir for 10 seconds, then add a sliced shallot and cook until lightly golden, about 1 minute.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "The tadka happens fast — have all your spices measured and within arm's reach before heating the ghee. Once the mustard seeds start popping, you have seconds before the spices burn.",
+        "hackChip": null,
+        "cuisineFact": "'Tadka' (also called tempering or 'chaunk') is a technique where whole spices are bloomed in hot fat to release their essential oils. It's what gives dal its signature nutty, aromatic finish."
+      },
+      {
+        "step": 8,
+        "phase": "finish",
+        "instruction": "Immediately pour the sizzling tadka over the cooked dal — it should hiss and spit dramatically. Stir through gently. Garnish with fresh cilantro and serve over steamed basmati rice or with warm naan.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "Pour the tadka into the dal, not the other way around. The narrow stream of hot fat hitting the broad surface of the dal creates more flavor distribution.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "papadum",
