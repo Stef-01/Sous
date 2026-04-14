@@ -104,8 +104,9 @@ src/
     - Coach quiz runs on first visit only
     - Cuisine mastery paths (8 cuisines) are in the skill tree as a separate grid section
     - Kitchen Sanitation is NOT in the skill tree (removed intentionally)
-    - Meals: 43/76 have heroImageUrl (food_images/*.png), rest use gradient+emoji fallback
-    - Sides: 96/203 have imageUrl (food_images/*.png), rest use gradient+emoji fallback
+    - Meals: 35/76 have heroImageUrl (food_images/\*.png), rest use gradient+emoji fallback
+    - Sides: 96/203 have imageUrl (food_images/\*.png), rest use gradient+emoji fallback
+    - Do NOT generate new images — that is handled by a separate AI pipeline
     - Clerk auth is bypassed with mock user (re-enable for production only)
 
 ## AI integration notes
