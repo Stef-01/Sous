@@ -15,8 +15,9 @@ import { cn } from "@/lib/utils/cn";
 import {
   getAvailableCookSlugs,
   getStaticCookData,
+  getStaticMealCookData,
 } from "@/data/guided-cook-steps";
-import { sides } from "@/data";
+import { sides, meals } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 
@@ -30,6 +31,7 @@ interface QuestDish {
   tags: string[];
   ingredientCount: number;
   hasGuidedCook: boolean;
+  isMeal: boolean;
 }
 
 const CUISINE_TAGS = [
@@ -95,35 +97,50 @@ function scoreDishForPreferences(
 }
 
 /**
- * Build quest dish list from ALL side dishes in the catalog.
- * Guided-cook dishes appear first, sorted by preference match when preferences
- * are available, or shuffled daily for variety when no preferences are set.
+ * Build quest dish list: 80% main meals, 20% sides.
+ * Users want to cook main dishes first, then find sides.
+ * Meals with images float to the top. Guided-cook items prioritized.
  * Uses deterministic daily shuffle so the feed feels fresh each day.
  */
 function buildQuestDishes(
   userPreferences?: Record<string, number>,
 ): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
-  const guidedDishes: QuestDish[] = [];
-  const catalogDishes: QuestDish[] = [];
 
-  // Day-based seed for deterministic daily shuffle
   const now = new Date();
   const dayOfYear = Math.floor(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
   );
 
-  // Add all sides from the catalog
-  for (const side of sides) {
+  // Build meal quest dishes
+  const mealDishes: QuestDish[] = meals.map((meal) => {
+    const mealCookData = getStaticMealCookData(meal.id);
+    const hasCook = !!mealCookData || guidedSlugs.has(meal.id);
+    return {
+      dishName: meal.name,
+      slug: meal.id,
+      heroImageUrl: meal.heroImageUrl ?? null,
+      cookTimeMinutes: mealCookData
+        ? mealCookData.prepTimeMinutes + mealCookData.cookTimeMinutes
+        : 30,
+      cuisineFamily: meal.cuisine,
+      description: meal.description,
+      tags: [meal.cuisine, ...(meal.sidePool.length > 6 ? ["Popular"] : [])].slice(0, 3),
+      ingredientCount: mealCookData ? mealCookData.ingredients.length : 8,
+      hasGuidedCook: hasCook,
+      isMeal: true,
+    };
+  });
+
+  // Build side quest dishes
+  const sideDishes: QuestDish[] = sides.map((side) => {
     const staticData = guidedSlugs.has(side.id)
       ? getStaticCookData(side.id)
       : null;
-
     const tags = side.tags
       .slice(0, 3)
       .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
-
-    const dish: QuestDish = {
+    return {
       dishName: side.name,
       slug: side.id,
       heroImageUrl: side.imageUrl ?? null,
@@ -138,47 +155,62 @@ function buildQuestDishes(
       tags,
       ingredientCount: staticData ? staticData.ingredients.length : 5,
       hasGuidedCook: guidedSlugs.has(side.id),
+      isMeal: false,
     };
-
-    if (guidedSlugs.has(side.id)) {
-      guidedDishes.push(dish);
-    } else {
-      catalogDishes.push(dish);
-    }
-  }
-
-  // Stable sort by slug so order is deterministic regardless of insertion order
-  guidedDishes.sort((a, b) => a.slug.localeCompare(b.slug));
+  });
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
-  let orderedGuided: QuestDish[];
-  if (hasPrefs) {
-    // Preference mode: stable sort by score descending, guided dishes with best match first
-    orderedGuided = [...guidedDishes].sort(
-      (a, b) =>
-        scoreDishForPreferences(b, userPreferences!) -
-        scoreDishForPreferences(a, userPreferences!),
-    );
-  } else {
-    // Daily rotation: dayOfYear % count picks today's starting index.
-    // Same dish all day, different dish tomorrow, cycles through all guided dishes.
-    const startIdx = dayOfYear % guidedDishes.length;
-    orderedGuided = [
-      ...guidedDishes.slice(startIdx),
-      ...guidedDishes.slice(0, startIdx),
-    ];
+  // Score and sort meals: prefer meals with images, then preference match, then daily rotation
+  const scoredMeals = mealDishes
+    .map((m) => ({
+      dish: m,
+      score:
+        (m.heroImageUrl ? 10 : 0) +
+        (m.hasGuidedCook ? 5 : 0) +
+        (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0),
+    }))
+    .sort((a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug));
+
+  // Score and sort sides similarly
+  const scoredSides = sideDishes
+    .filter((s) => s.hasGuidedCook)
+    .map((s) => ({
+      dish: s,
+      score:
+        (s.heroImageUrl ? 10 : 0) +
+        (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0),
+    }))
+    .sort((a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug));
+
+  // Daily rotation offset
+  const mealOffset = dayOfYear % Math.max(1, scoredMeals.length);
+  const sideOffset = dayOfYear % Math.max(1, scoredSides.length);
+
+  const rotatedMeals = [
+    ...scoredMeals.slice(mealOffset),
+    ...scoredMeals.slice(0, mealOffset),
+  ].map((s) => s.dish);
+
+  const rotatedSides = [
+    ...scoredSides.slice(sideOffset),
+    ...scoredSides.slice(0, sideOffset),
+  ].map((s) => s.dish);
+
+  // Interleave: 4 meals then 1 side, repeating (80/20 ratio)
+  const result: QuestDish[] = [];
+  let mi = 0;
+  let si = 0;
+  while (mi < rotatedMeals.length || si < rotatedSides.length) {
+    for (let k = 0; k < 4 && mi < rotatedMeals.length; k++) {
+      result.push(rotatedMeals[mi++]);
+    }
+    if (si < rotatedSides.length) {
+      result.push(rotatedSides[si++]);
+    }
   }
 
-  // Deterministic daily shuffle of catalog dishes (shown after all guided dishes)
-  const shuffled = catalogDishes.slice();
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = (dayOfYear * 31 + i * 17) % (i + 1);
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-
-  // Guided dishes first (always have cook flows), then shuffled catalog
-  return [...orderedGuided, ...shuffled];
+  return result;
 }
 
 const SWIPE_THRESHOLD = 80;
@@ -251,13 +283,21 @@ export function QuestCard({
 
       if (direction === "right") {
         const dish = questDishes[currentIndex % questDishes.length];
-        if (dish.hasGuidedCook) {
+        if (dish.isMeal && onFindSides) {
+          // Meal card: trigger the pairing flow to find sides
+          onFindSides(dish.dishName);
+          setExitDirection("right");
+          scheduleTimeout(() => {
+            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
+            setExitDirection(null);
+          }, 250);
+        } else if (dish.hasGuidedCook && !dish.isMeal) {
+          // Side dish with guided cook: go straight to cook flow
           setExitDirection("right");
           scheduleTimeout(() => {
             router.push(`/cook/${dish.slug}`);
           }, 300);
         } else if (onFindSides) {
-          // Non-guided dish: open search with this dish as the main course
           onFindSides(dish.dishName);
           setExitDirection("right");
           scheduleTimeout(() => {
@@ -265,7 +305,6 @@ export function QuestCard({
             setExitDirection(null);
           }, 250);
         } else {
-          // Fallback: just advance to next card
           setExitDirection("right");
           scheduleTimeout(() => {
             setCurrentIndex((prev) => (prev + 1) % questDishes.length);
@@ -608,7 +647,7 @@ function SwipeCard({
             )}
             type="button"
           >
-            {dish.hasGuidedCook ? "Start cooking" : "Find sides"}
+            {dish.isMeal ? "Find sides →" : dish.hasGuidedCook ? "Start cooking" : "Find sides"}
           </motion.button>
         </div>
       </div>
