@@ -2,7 +2,11 @@
   {
     "id": "pizza-margherita",
     "name": "Pizza Margherita",
-    "aliases": ["margherita pizza", "margherita", "cheese pizza"],
+    "aliases": [
+      "margherita pizza",
+      "margherita",
+      "cheese pizza"
+    ],
     "heroImageUrl": "/food_images/pizza_margherita.png",
     "sidePool": [
       "caesar-salad",
@@ -21,7 +25,11 @@
   {
     "id": "butter-chicken",
     "name": "Butter Chicken",
-    "aliases": ["murgh makhani", "makhani chicken", "chicken makhani"],
+    "aliases": [
+      "murgh makhani",
+      "makhani chicken",
+      "chicken makhani"
+    ],
     "heroImageUrl": "/food_images/butter_chicken.png",
     "sidePool": [
       "naan-bread",
@@ -46,7 +54,11 @@
   {
     "id": "fish-tacos",
     "name": "Fish Tacos",
-    "aliases": ["baja tacos", "taco de pescado", "seafood tacos"],
+    "aliases": [
+      "baja tacos",
+      "taco de pescado",
+      "seafood tacos"
+    ],
     "heroImageUrl": "/food_images/fish_tacos.png",
     "sidePool": [
       "guacamole",
@@ -65,7 +77,11 @@
   {
     "id": "tonkotsu-ramen",
     "name": "Tonkotsu Ramen",
-    "aliases": ["pork ramen", "ramen", "japanese ramen"],
+    "aliases": [
+      "pork ramen",
+      "ramen",
+      "japanese ramen"
+    ],
     "heroImageUrl": "/food_images/tonkotsu_ramen.png",
     "sidePool": [
       "gyoza",
@@ -84,7 +100,11 @@
   {
     "id": "grilled-salmon",
     "name": "Grilled Salmon",
-    "aliases": ["salmon fillet", "baked salmon", "pan-seared salmon"],
+    "aliases": [
+      "salmon fillet",
+      "baked salmon",
+      "pan-seared salmon"
+    ],
     "heroImageUrl": "/food_images/grilled_salmon.png",
     "sidePool": [
       "roasted-asparagus",
@@ -103,7 +123,11 @@
   {
     "id": "falafel-wrap",
     "name": "Falafel Wrap",
-    "aliases": ["falafel pita", "falafel sandwich", "falafel"],
+    "aliases": [
+      "falafel pita",
+      "falafel sandwich",
+      "falafel"
+    ],
     "heroImageUrl": "/food_images/falafel_wrap.png",
     "sidePool": [
       "hummus",
@@ -122,7 +146,11 @@
   {
     "id": "pad-thai",
     "name": "Pad Thai",
-    "aliases": ["thai noodles", "thai stir fry", "phat thai"],
+    "aliases": [
+      "thai noodles",
+      "thai stir fry",
+      "phat thai"
+    ],
     "heroImageUrl": "/food_images/pad_thai.png",
     "sidePool": [
       "spring-rolls",
@@ -141,7 +169,10 @@
   {
     "id": "pasta-carbonara",
     "name": "Pasta Carbonara",
-    "aliases": ["carbonara", "spaghetti carbonara"],
+    "aliases": [
+      "carbonara",
+      "spaghetti carbonara"
+    ],
     "heroImageUrl": "/food_images/pasta_carbonara.png",
     "sidePool": [
       "garlic-bread",
@@ -160,7 +191,12 @@
   {
     "id": "sushi-platter",
     "name": "Sushi Platter",
-    "aliases": ["sushi", "sashimi", "nigiri", "maki rolls"],
+    "aliases": [
+      "sushi",
+      "sashimi",
+      "nigiri",
+      "maki rolls"
+    ],
     "heroImageUrl": "/food_images/sushi_platter.png",
     "sidePool": [
       "dal-tadka",
@@ -177,7 +213,10 @@
   {
     "id": "chicken-tikka-masala",
     "name": "Chicken Tikka Masala",
-    "aliases": ["chicken tikka", "tikka masala"],
+    "aliases": [
+      "chicken tikka",
+      "tikka masala"
+    ],
     "heroImageUrl": "/food_images/chicken_tikka_masala.png",
     "sidePool": [
       "naan-bread",
@@ -202,7 +241,11 @@
   {
     "id": "bbq-ribs",
     "name": "BBQ Ribs",
-    "aliases": ["barbecue ribs", "pork ribs", "baby back ribs"],
+    "aliases": [
+      "barbecue ribs",
+      "pork ribs",
+      "baby back ribs"
+    ],
     "heroImageUrl": "/food_images/bbq_ribs.png",
     "sidePool": [
       "coleslaw",
@@ -221,7 +264,10 @@
   {
     "id": "bibimbap",
     "name": "Bibimbap",
-    "aliases": ["korean rice bowl", "mixed rice"],
+    "aliases": [
+      "korean rice bowl",
+      "mixed rice"
+    ],
     "heroImageUrl": "/food_images/bibimbap.png",
     "sidePool": [
       "kimchi",
@@ -240,7 +286,11 @@
   {
     "id": "beef-burger",
     "name": "Beef Burger",
-    "aliases": ["hamburger", "cheeseburger", "burger"],
+    "aliases": [
+      "hamburger",
+      "cheeseburger",
+      "burger"
+    ],
     "heroImageUrl": "/food_images/beef_burger.png",
     "sidePool": [
       "french-fries",
@@ -259,7 +309,10 @@
   {
     "id": "chicken-shawarma",
     "name": "Chicken Shawarma",
-    "aliases": ["shawarma", "shawarma wrap"],
+    "aliases": [
+      "shawarma",
+      "shawarma wrap"
+    ],
     "heroImageUrl": "/food_images/chicken_shawarma.png",
     "sidePool": [
       "hummus",
@@ -278,7 +331,11 @@
   {
     "id": "pho",
     "name": "Pho",
-    "aliases": ["vietnamese pho", "beef pho", "pho bo"],
+    "aliases": [
+      "vietnamese pho",
+      "beef pho",
+      "pho bo"
+    ],
     "heroImageUrl": "/food_images/pho.png",
     "sidePool": [
       "spring-rolls",
@@ -322,7 +379,11 @@
   {
     "id": "tacos-al-pastor",
     "name": "Tacos al Pastor",
-    "aliases": ["al pastor", "pastor tacos", "tacos"],
+    "aliases": [
+      "al pastor",
+      "pastor tacos",
+      "tacos"
+    ],
     "heroImageUrl": "/food_images/tacos_al_pastor.png",
     "sidePool": [
       "guacamole",
@@ -341,7 +402,11 @@
   {
     "id": "chicken-biryani",
     "name": "Chicken Biryani",
-    "aliases": ["biryani", "dum biryani", "hyderabadi biryani"],
+    "aliases": [
+      "biryani",
+      "dum biryani",
+      "hyderabadi biryani"
+    ],
     "heroImageUrl": "/food_images/chicken_biryani.png",
     "sidePool": [
       "raita",
@@ -364,7 +429,10 @@
   {
     "id": "moussaka",
     "name": "Moussaka",
-    "aliases": ["greek moussaka", "eggplant moussaka"],
+    "aliases": [
+      "greek moussaka",
+      "eggplant moussaka"
+    ],
     "heroImageUrl": "/food_images/moussaka.png",
     "sidePool": [
       "greek-salad",
@@ -383,7 +451,11 @@
   {
     "id": "dim-sum",
     "name": "Dim Sum",
-    "aliases": ["chinese dumplings", "har gow", "siu mai"],
+    "aliases": [
+      "chinese dumplings",
+      "har gow",
+      "siu mai"
+    ],
     "heroImageUrl": "/food_images/dim_sum.png",
     "sidePool": [
       "spring-rolls",
@@ -402,7 +474,11 @@
   {
     "id": "lamb-chops",
     "name": "Lamb Chops",
-    "aliases": ["grilled lamb", "lamb cutlets", "rack of lamb"],
+    "aliases": [
+      "grilled lamb",
+      "lamb cutlets",
+      "rack of lamb"
+    ],
     "heroImageUrl": "/food_images/lamb_chops.png",
     "sidePool": [
       "roasted-asparagus",
@@ -421,7 +497,11 @@
   {
     "id": "enchiladas",
     "name": "Enchiladas",
-    "aliases": ["chicken enchiladas", "cheese enchiladas", "beef enchiladas"],
+    "aliases": [
+      "chicken enchiladas",
+      "cheese enchiladas",
+      "beef enchiladas"
+    ],
     "heroImageUrl": "/food_images/enchiladas.png",
     "sidePool": [
       "guacamole",
@@ -440,7 +520,11 @@
   {
     "id": "bell-pepper-curry",
     "name": "Bell Pepper Curry",
-    "aliases": ["capsicum curry", "shimla mirch curry", "bell pepper sabzi"],
+    "aliases": [
+      "capsicum curry",
+      "shimla mirch curry",
+      "bell pepper sabzi"
+    ],
     "heroImageUrl": "/food_images/bell_pepper_curry.png",
     "sidePool": [
       "naan-bread",
@@ -483,7 +567,11 @@
   {
     "id": "eggplant-methi",
     "name": "Eggplant Methi",
-    "aliases": ["baingan methi", "eggplant fenugreek", "brinjal methi"],
+    "aliases": [
+      "baingan methi",
+      "eggplant fenugreek",
+      "brinjal methi"
+    ],
     "heroImageUrl": "/food_images/eggplant_methi.png",
     "sidePool": [
       "phulka",
@@ -502,7 +590,12 @@
   {
     "id": "kadhi",
     "name": "Kadhi",
-    "aliases": ["kadhi pakora", "yogurt curry", "besan kadhi", "karhi"],
+    "aliases": [
+      "kadhi pakora",
+      "yogurt curry",
+      "besan kadhi",
+      "karhi"
+    ],
     "heroImageUrl": "/food_images/kadhi.png",
     "sidePool": [
       "instant-pot-jeera-rice",
@@ -521,7 +614,11 @@
   {
     "id": "marathi-moong-curry",
     "name": "Marathi Moong Curry",
-    "aliases": ["moong dal curry", "mung bean curry", "moong chi usal"],
+    "aliases": [
+      "moong dal curry",
+      "mung bean curry",
+      "moong chi usal"
+    ],
     "heroImageUrl": "/food_images/marathi_moong_curry.png",
     "sidePool": [
       "instant-pot-jeera-rice",
@@ -540,7 +637,11 @@
   {
     "id": "masoor-dal",
     "name": "Masoor Dal",
-    "aliases": ["red lentil dal", "masoor ki dal", "red lentil curry"],
+    "aliases": [
+      "red lentil dal",
+      "masoor ki dal",
+      "red lentil curry"
+    ],
     "heroImageUrl": "/food_images/masoor_dal.png",
     "sidePool": [
       "instant-pot-jeera-rice",
@@ -585,7 +686,11 @@
   {
     "id": "mixed-veg-paneer",
     "name": "Mixed Veg + Paneer",
-    "aliases": ["mixed vegetable paneer", "veg paneer curry", "paneer sabzi"],
+    "aliases": [
+      "mixed vegetable paneer",
+      "veg paneer curry",
+      "paneer sabzi"
+    ],
     "heroImageUrl": "/food_images/mixed_veg_paneer.png",
     "sidePool": [
       "naan-bread",
@@ -604,7 +709,11 @@
   {
     "id": "mumbai-pav-bhaji",
     "name": "Mumbai Pav Bhaji",
-    "aliases": ["pav bhaji", "pav bhaaji", "bread and curry"],
+    "aliases": [
+      "pav bhaji",
+      "pav bhaaji",
+      "bread and curry"
+    ],
     "heroImageUrl": "/food_images/mumbai_pav_bhaji.png",
     "sidePool": [
       "buttered-ladi-pav",
@@ -623,7 +732,11 @@
   {
     "id": "mushroom-masala",
     "name": "Mushroom Masala",
-    "aliases": ["mushroom curry", "mushroom sabzi", "masala mushroom"],
+    "aliases": [
+      "mushroom curry",
+      "mushroom sabzi",
+      "masala mushroom"
+    ],
     "heroImageUrl": "/food_images/mushroom_masala.png",
     "sidePool": [
       "naan-bread",
@@ -645,7 +758,12 @@
   {
     "id": "sambar",
     "name": "Sambar",
-    "aliases": ["sambhar", "lentil stew", "sambar rice", "south indian sambar"],
+    "aliases": [
+      "sambhar",
+      "lentil stew",
+      "sambar rice",
+      "south indian sambar"
+    ],
     "heroImageUrl": "/food_images/sambar.png",
     "sidePool": [
       "uttapam",
@@ -687,7 +805,11 @@
   {
     "id": "tofu-bhurji",
     "name": "Tofu Bhurji",
-    "aliases": ["scrambled tofu", "tofu scramble", "tofu bhurji masala"],
+    "aliases": [
+      "scrambled tofu",
+      "tofu scramble",
+      "tofu bhurji masala"
+    ],
     "heroImageUrl": "/food_images/tofu_bhurji.png",
     "sidePool": [
       "phulka",
@@ -706,8 +828,11 @@
   {
     "id": "teriyaki-salmon",
     "name": "Teriyaki Salmon",
-    "aliases": ["salmon teriyaki", "grilled salmon teriyaki"],
-    "heroImageUrl": null,
+    "aliases": [
+      "salmon teriyaki",
+      "grilled salmon teriyaki"
+    ],
+    "heroImageUrl": "/food_images/teriyaki_salmon.png",
     "sidePool": [
       "goma-ae-spinach",
       "sunomono",
@@ -728,8 +853,12 @@
   {
     "id": "chicken-katsu",
     "name": "Chicken Katsu",
-    "aliases": ["katsu", "tonkatsu", "chicken cutlet"],
-    "heroImageUrl": null,
+    "aliases": [
+      "katsu",
+      "tonkatsu",
+      "chicken cutlet"
+    ],
+    "heroImageUrl": "/food_images/chicken_katsu.png",
     "sidePool": [
       "sunomono",
       "miso-soup",
@@ -749,8 +878,12 @@
   {
     "id": "gyudon",
     "name": "Gyudon (Beef Bowl)",
-    "aliases": ["gyudon", "beef rice bowl", "yoshinoya"],
-    "heroImageUrl": null,
+    "aliases": [
+      "gyudon",
+      "beef rice bowl",
+      "yoshinoya"
+    ],
+    "heroImageUrl": "/food_images/gyudon.png",
     "sidePool": [
       "miso-soup",
       "tsukemono",
@@ -769,8 +902,11 @@
   {
     "id": "yakitori",
     "name": "Yakitori",
-    "aliases": ["chicken skewers", "grilled chicken skewers japanese"],
-    "heroImageUrl": null,
+    "aliases": [
+      "chicken skewers",
+      "grilled chicken skewers japanese"
+    ],
+    "heroImageUrl": "/food_images/yakitori.png",
     "sidePool": [
       "edamame",
       "sunomono",
@@ -790,8 +926,12 @@
   {
     "id": "miso-cod",
     "name": "Miso-Glazed Black Cod",
-    "aliases": ["miso cod", "black cod miso", "nobu cod"],
-    "heroImageUrl": null,
+    "aliases": [
+      "miso cod",
+      "black cod miso",
+      "nobu cod"
+    ],
+    "heroImageUrl": "/food_images/miso_cod.png",
     "sidePool": [
       "goma-ae-spinach",
       "sunomono",
@@ -811,8 +951,12 @@
   {
     "id": "tempura-udon",
     "name": "Tempura Udon",
-    "aliases": ["udon", "udon noodles", "nabeyaki udon"],
-    "heroImageUrl": null,
+    "aliases": [
+      "udon",
+      "udon noodles",
+      "nabeyaki udon"
+    ],
+    "heroImageUrl": "/food_images/tempura_udon.png",
     "sidePool": [
       "tsukemono",
       "edamame",
@@ -832,8 +976,11 @@
   {
     "id": "kimchi-jjigae",
     "name": "Kimchi Jjigae",
-    "aliases": ["kimchi stew", "kimchi soup"],
-    "heroImageUrl": null,
+    "aliases": [
+      "kimchi stew",
+      "kimchi soup"
+    ],
+    "heroImageUrl": "/food_images/kimchi_jjigae.png",
     "sidePool": [
       "kimchi",
       "kongnamul",
@@ -853,8 +1000,12 @@
   {
     "id": "bulgogi",
     "name": "Bulgogi",
-    "aliases": ["korean bbq beef", "fire meat", "bulgogi beef"],
-    "heroImageUrl": null,
+    "aliases": [
+      "korean bbq beef",
+      "fire meat",
+      "bulgogi beef"
+    ],
+    "heroImageUrl": "/food_images/bulgogi.png",
     "sidePool": [
       "kimchi",
       "kongnamul",
@@ -875,7 +1026,11 @@
   {
     "id": "soondubu-jjigae",
     "name": "Soondubu Jjigae (Soft Tofu Stew)",
-    "aliases": ["sundubu", "tofu stew", "soft tofu stew"],
+    "aliases": [
+      "sundubu",
+      "tofu stew",
+      "soft tofu stew"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "kimchi",
@@ -896,7 +1051,11 @@
   {
     "id": "japchae-main",
     "name": "Japchae (Glass Noodle Stir-Fry)",
-    "aliases": ["japchae", "glass noodle stir fry", "sweet potato noodles"],
+    "aliases": [
+      "japchae",
+      "glass noodle stir fry",
+      "sweet potato noodles"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "kimchi",
@@ -917,7 +1076,11 @@
   {
     "id": "dakgalbi",
     "name": "Dakgalbi (Spicy Chicken Stir-Fry)",
-    "aliases": ["dak galbi", "chuncheon chicken", "spicy chicken"],
+    "aliases": [
+      "dak galbi",
+      "chuncheon chicken",
+      "spicy chicken"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "kimchi",
@@ -938,7 +1101,10 @@
   {
     "id": "green-curry",
     "name": "Thai Green Curry",
-    "aliases": ["gaeng keow wan", "green curry chicken"],
+    "aliases": [
+      "gaeng keow wan",
+      "green curry chicken"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "som-tum",
@@ -959,7 +1125,11 @@
   {
     "id": "massaman-curry",
     "name": "Massaman Curry",
-    "aliases": ["massaman", "muslim curry", "kaeng massaman"],
+    "aliases": [
+      "massaman",
+      "muslim curry",
+      "kaeng massaman"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "som-tum",
@@ -980,7 +1150,11 @@
   {
     "id": "tom-kha-gai",
     "name": "Tom Kha Gai",
-    "aliases": ["coconut chicken soup", "tom kha", "galangal soup"],
+    "aliases": [
+      "coconut chicken soup",
+      "tom kha",
+      "galangal soup"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "som-tum",
@@ -1001,7 +1175,11 @@
   {
     "id": "khao-pad",
     "name": "Khao Pad (Thai Fried Rice)",
-    "aliases": ["thai fried rice", "khao pad", "kao pad"],
+    "aliases": [
+      "thai fried rice",
+      "khao pad",
+      "kao pad"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "som-tum",
@@ -1022,7 +1200,11 @@
   {
     "id": "basil-chicken",
     "name": "Pad Kra Pao (Thai Basil Chicken)",
-    "aliases": ["pad krapao", "basil chicken", "holy basil stir fry"],
+    "aliases": [
+      "pad krapao",
+      "basil chicken",
+      "holy basil stir fry"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "som-tum",
@@ -1043,7 +1225,10 @@
   {
     "id": "kung-pao-chicken",
     "name": "Kung Pao Chicken",
-    "aliases": ["gong bao chicken", "kung pao"],
+    "aliases": [
+      "gong bao chicken",
+      "kung pao"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "bok-choy-garlic",
@@ -1064,7 +1249,11 @@
   {
     "id": "char-siu",
     "name": "Char Siu (BBQ Pork)",
-    "aliases": ["chinese bbq pork", "roast pork", "cha siu"],
+    "aliases": [
+      "chinese bbq pork",
+      "roast pork",
+      "cha siu"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "bok-choy-garlic",
@@ -1085,7 +1274,11 @@
   {
     "id": "mapo-tofu-main",
     "name": "Mapo Tofu (Sichuan)",
-    "aliases": ["mapo doufu", "spicy tofu", "sichuan tofu"],
+    "aliases": [
+      "mapo doufu",
+      "spicy tofu",
+      "sichuan tofu"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "bok-choy-garlic",
@@ -1106,7 +1299,11 @@
   {
     "id": "steamed-fish-cantonese",
     "name": "Cantonese Steamed Fish",
-    "aliases": ["steamed fish", "cantonese fish", "zheng yu"],
+    "aliases": [
+      "steamed fish",
+      "cantonese fish",
+      "zheng yu"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "bok-choy-garlic",
@@ -1127,7 +1324,11 @@
   {
     "id": "wonton-noodle-soup",
     "name": "Wonton Noodle Soup",
-    "aliases": ["wonton soup", "wanton mee", "won ton noodles"],
+    "aliases": [
+      "wonton soup",
+      "wanton mee",
+      "won ton noodles"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "bok-choy-garlic",
@@ -1148,7 +1349,11 @@
   {
     "id": "bun-bo-hue",
     "name": "Bún Bò Huế",
-    "aliases": ["hue beef noodle soup", "bun bo", "spicy beef noodle"],
+    "aliases": [
+      "hue beef noodle soup",
+      "bun bo",
+      "spicy beef noodle"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "goi-cuon",
@@ -1169,7 +1374,11 @@
   {
     "id": "com-tam",
     "name": "Cơm Tấm (Broken Rice)",
-    "aliases": ["com tam", "broken rice", "saigon rice"],
+    "aliases": [
+      "com tam",
+      "broken rice",
+      "saigon rice"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "goi-cuon",
@@ -1188,7 +1397,11 @@
   {
     "id": "banh-xeo",
     "name": "Bánh Xèo (Vietnamese Crêpe)",
-    "aliases": ["banh xeo", "sizzling crepe", "vietnamese pancake"],
+    "aliases": [
+      "banh xeo",
+      "sizzling crepe",
+      "vietnamese pancake"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "goi-cuon",
@@ -1208,7 +1421,11 @@
   {
     "id": "ca-kho-to",
     "name": "Cá Kho Tộ (Caramelized Fish)",
-    "aliases": ["ca kho to", "claypot fish", "caramel fish"],
+    "aliases": [
+      "ca kho to",
+      "claypot fish",
+      "caramel fish"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "rau-muong-xao-toi",
@@ -1227,7 +1444,11 @@
   {
     "id": "chicken-adobo",
     "name": "Chicken Adobo",
-    "aliases": ["adobo", "adobong manok", "filipino adobo"],
+    "aliases": [
+      "adobo",
+      "adobong manok",
+      "filipino adobo"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1247,7 +1468,11 @@
   {
     "id": "sinigang-na-baboy",
     "name": "Sinigang na Baboy",
-    "aliases": ["sinigang", "pork sinigang", "sour soup pork"],
+    "aliases": [
+      "sinigang",
+      "pork sinigang",
+      "sour soup pork"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1266,7 +1491,11 @@
   {
     "id": "kare-kare",
     "name": "Kare-Kare",
-    "aliases": ["kare kare", "peanut stew", "oxtail stew"],
+    "aliases": [
+      "kare kare",
+      "peanut stew",
+      "oxtail stew"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1309,7 +1538,11 @@
   {
     "id": "bistek-tagalog",
     "name": "Bistek Tagalog",
-    "aliases": ["bistek", "filipino beef steak", "bistek tagalog"],
+    "aliases": [
+      "bistek",
+      "filipino beef steak",
+      "bistek tagalog"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1328,7 +1561,10 @@
   {
     "id": "eggplant-adobo",
     "name": "Eggplant Adobo",
-    "aliases": ["adobong talong", "vegetable adobo"],
+    "aliases": [
+      "adobong talong",
+      "vegetable adobo"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1371,7 +1607,10 @@
   {
     "id": "open-lumpia-bowl",
     "name": "Open Lumpia Bowl",
-    "aliases": ["lumpia bowl", "deconstructed lumpia"],
+    "aliases": [
+      "lumpia bowl",
+      "deconstructed lumpia"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1391,7 +1630,10 @@
   {
     "id": "grilled-pompano",
     "name": "Grilled Pompano",
-    "aliases": ["inihaw na pompano", "grilled fish filipino"],
+    "aliases": [
+      "inihaw na pompano",
+      "grilled fish filipino"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1411,7 +1653,11 @@
   {
     "id": "arroz-caldo",
     "name": "Arroz Caldo",
-    "aliases": ["arroz caldo", "filipino chicken congee", "lugaw"],
+    "aliases": [
+      "arroz caldo",
+      "filipino chicken congee",
+      "lugaw"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1431,7 +1677,10 @@
   {
     "id": "open-face-pandesal-sandwich",
     "name": "Open-Face Pandesal Sandwich",
-    "aliases": ["pandesal sandwich", "filipino breakfast sandwich"],
+    "aliases": [
+      "pandesal sandwich",
+      "filipino breakfast sandwich"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1475,7 +1724,11 @@
   {
     "id": "bbq-chicken-filipino",
     "name": "Filipino BBQ Chicken",
-    "aliases": ["bbq chicken", "inihaw na manok", "filipino grilled chicken"],
+    "aliases": [
+      "bbq chicken",
+      "inihaw na manok",
+      "filipino grilled chicken"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1495,7 +1748,11 @@
   {
     "id": "veg-pancit",
     "name": "Veg Pancit",
-    "aliases": ["pancit guisado", "vegetable pancit", "filipino noodles"],
+    "aliases": [
+      "pancit guisado",
+      "vegetable pancit",
+      "filipino noodles"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1515,7 +1772,10 @@
   {
     "id": "filipino-grilled-shrimp",
     "name": "Filipino Grilled Shrimp",
-    "aliases": ["inihaw na hipon", "grilled shrimp filipino"],
+    "aliases": [
+      "inihaw na hipon",
+      "grilled shrimp filipino"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
@@ -1535,7 +1795,11 @@
   {
     "id": "tocino-rice-bowl",
     "name": "Tocino Rice Bowl",
-    "aliases": ["tocino", "tocilog", "sweet cured pork"],
+    "aliases": [
+      "tocino",
+      "tocilog",
+      "sweet cured pork"
+    ],
     "heroImageUrl": null,
     "sidePool": [
       "ensaladang-talong",
