@@ -15400,7 +15400,8 @@ export const guidedCookData: Record<string, StaticDishData> = {
         name: "Water spinach (morning glory)",
         quantity: "1 large bunch (300g)",
         isOptional: false,
-        substitution: "Regular spinach or Chinese broccoli (different but works)",
+        substitution:
+          "Regular spinach or Chinese broccoli (different but works)",
       },
       {
         id: "pb-2",

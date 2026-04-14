@@ -121,7 +121,12 @@ export function StepCard({
           key={`step-label-${stepNumber}`}
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 400, damping: 18, delay: 0.05 }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 18,
+            delay: 0.05,
+          }}
           className="text-sm font-semibold text-[var(--nourish-subtext)]"
         >
           Step {stepNumber} of {totalSteps}

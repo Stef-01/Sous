@@ -26,13 +26,7 @@ const EFFORT_LABELS: Record<string, string> = {
 };
 
 /** Progress dots — filled circles for completed, outlined for upcoming */
-function ProgressDots({
-  total,
-  current,
-}: {
-  total: number;
-  current: number;
-}) {
+function ProgressDots({ total, current }: { total: number; current: number }) {
   return (
     <div className="flex items-center justify-center gap-1.5">
       {Array.from({ length: total }).map((_, i) => (
@@ -54,7 +48,10 @@ function ProgressDots({
               ? "border-[var(--nourish-green)]"
               : "border-neutral-300",
           )}
-          style={{ width: i === current ? 10 : 8, height: i === current ? 10 : 8 }}
+          style={{
+            width: i === current ? 10 : 8,
+            height: i === current ? 10 : 8,
+          }}
         />
       ))}
     </div>
@@ -173,7 +170,12 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, type: "spring", stiffness: 260, damping: 25 }}
+            transition={{
+              delay: 0.25,
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+            }}
             className="font-serif text-3xl text-[var(--nourish-dark)] mb-3"
           >
             Welcome to Sous
@@ -274,7 +276,12 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25, type: "spring", stiffness: 260, damping: 25 }}
+            transition={{
+              delay: 0.25,
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+            }}
             className="font-serif text-2xl text-[var(--nourish-dark)] mb-2"
           >
             You&apos;re all set!
@@ -438,7 +445,9 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-xl leading-none">{option.emoji}</span>
+                      <span className="text-xl leading-none">
+                        {option.emoji}
+                      </span>
                       <span>{option.label}</span>
                     </div>
                     {selectedOption === idx && (

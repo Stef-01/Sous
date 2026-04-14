@@ -131,11 +131,9 @@ function CombinedCookContent() {
   useEffect(() => {
     reset();
     return () => {
-      // Cleanup on unmount — reset for next page
       reset();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reset]);
 
   // Initialize the combined session once data loads
   useEffect(() => {

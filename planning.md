@@ -942,12 +942,14 @@ The game selection screen should feel like looking at a cozy kitchen shelf with 
 Inspired by how Docker layers and git commits work. Three layers, from bottom to top:
 
 **Layer 1: Curated Base (immutable)**
+
 - Location: `src/data/sides.json`, `src/data/meals.json`, `src/data/guided-cook-steps.ts`
 - Contents: The original researched recipes from reputable sources
 - Rule: NEVER modified by users. This is the source of truth.
 - Updated only by the recipe-research skill or manual curation by the developer.
 
 **Layer 2: User Overlay (mutable, per-user)**
+
 - Location: localStorage key `sous-recipe-overrides`
 - Contents: User modifications stored as diffs against the base layer
 - Structure: `{ [dishId]: { steps?: StepOverride[], notes?: string, substitutions?: Sub[] } }`
@@ -955,14 +957,17 @@ Inspired by how Docker layers and git commits work. Three layers, from bottom to
 - When rendering a recipe, the overlay is merged on top of the base at read time
 
 **Layer 3: User Originals (mutable, per-user)**
+
 - Location: localStorage key `sous-user-recipes`
 - Contents: Completely new recipes created by users (Phase 9 — Agentic Assistant)
 - These go through the same Quest shell (Mission → Grab → Cook → Win) but are flagged as "Your recipe"
 
 **Merge logic (at render time):**
+
 ```
 finalRecipe = deepMerge(baseRecipe, userOverlay[dishId] ?? {})
 ```
+
 If the user has overrides, they see their version. If not, they see the original. A "Reset to original" button restores the base version by clearing the overlay.
 
 ### 15.2 UI Design — Invisible by Default
@@ -970,18 +975,22 @@ If the user has overrides, they see their version. If not, they see the original
 The storage architecture must be invisible to the user in normal use. No "edit recipe" buttons cluttering the cook flow. Modifications happen through natural interactions:
 
 **During Guided Cook:**
+
 - Long-press a step → "Adjust this step" appears. User can change time or add a personal note. Saved as an overlay.
 - "This worked better at [X] minutes" prompt on the win screen → overlay saved.
 
 **On the Win Screen (Evaluate B):**
+
 - "Next time, I'd change..." free text → parsed and saved as overlay suggestions
 - Rating + notes already saved → these inform future recommendations
 
 **In the Scrapbook (replay):**
+
 - "Your version" badge appears if overlays exist for this dish
 - "Reset to original" available but not prominent
 
 **What this is NOT:**
+
 - No recipe editor screen
 - No settings page for recipe preferences
 - No version history UI
@@ -991,6 +1000,7 @@ The storage architecture must be invisible to the user in normal use. No "edit r
 ### 15.3 Recipe Research Pipeline
 
 **Skill:** `.claude/skills/recipe-research/SKILL.md` — a reusable Claude skill that:
+
 1. Identifies dishes missing guided cook steps
 2. Searches the web for the best-rated version from Serious Eats, ATK, NYT Cooking, Bon Appetit
 3. Translates the recipe into Sous guided cook format (steps, timers, mistake warnings, hack chips, cuisine facts)
@@ -1000,6 +1010,7 @@ The storage architecture must be invisible to the user in normal use. No "edit r
 **Scheduled task:** `recipe-research-populate` runs daily at 9am, using this skill to fill gaps.
 
 **Quality standards per dish:**
+
 - 4-12 guided cook steps (simple sides: 4-6, complex: 8-12)
 - At least 2 timer triggers with exact minutes
 - At least 1 mistake warning (the real common failure point)
@@ -1011,6 +1022,7 @@ The storage architecture must be invisible to the user in normal use. No "edit r
 ### 15.4 Data Model Changes
 
 Add to the side dish type:
+
 ```typescript
 interface GuidedCookStep {
   step: number;
@@ -1055,6 +1067,7 @@ interface RecipeOverride {
 ### 15.6 Strategy Alignment
 
 This architecture follows the strategy principles:
+
 - **Zero friction:** Modifications happen through cooking, not editing. No new screens.
 - **Compounding:** Every cook potentially improves the recipe for next time. User overlays compound over dozens of cooks.
 - **Minimalism:** The overlay system is invisible until the user naturally wants to change something. No UI clutter.

@@ -99,7 +99,16 @@ export function TextPrompt({
   onSubmit,
   onCameraClick,
   isLoading,
-  suggestions = ["Pasta", "Stir Fry", "Salad", "Curry", "Tacos", "Soup", "Rice", "Chicken"],
+  suggestions = [
+    "Pasta",
+    "Stir Fry",
+    "Salad",
+    "Curry",
+    "Tacos",
+    "Soup",
+    "Rice",
+    "Chicken",
+  ],
 }: TextPromptProps) {
   const [text, setText] = useState("");
   const [localResults, setLocalResults] = useState<LocalResult[]>([]);
@@ -108,11 +117,7 @@ export function TextPrompt({
 
   // Debounced local catalog search
   useEffect(() => {
-    if (!text.trim()) {
-      setLocalResults([]);
-      setHasSearched(false);
-      return;
-    }
+    if (!text.trim()) return;
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
       setLocalResults(searchLocal(text));
@@ -122,6 +127,10 @@ export function TextPrompt({
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
   }, [text]);
+
+  // Derive empty state outside effect to avoid synchronous setState in effects
+  const effectiveResults = text.trim() ? localResults : [];
+  const effectiveHasSearched = text.trim() ? hasSearched : false;
 
   const handleSubmit = useCallback(
     (value?: string) => {
@@ -151,8 +160,7 @@ export function TextPrompt({
     [handleSubmit],
   );
 
-  // Show local search results when: user has typed, not loading, debounce fired
-  const showResults = !!text && !isLoading && hasSearched;
+  const showResults = !!text && !isLoading && effectiveHasSearched;
   const showSuggestions = !text && suggestions.length > 0;
 
   return (
@@ -247,9 +255,9 @@ export function TextPrompt({
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
           >
-            {localResults.length > 0 ? (
+            {effectiveResults.length > 0 ? (
               <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
-                {localResults.map((result, idx) => (
+                {effectiveResults.map((result, idx) => (
                   <motion.button
                     key={result.name}
                     initial={{ opacity: 0, x: -6 }}
@@ -276,7 +284,8 @@ export function TextPrompt({
               </div>
             ) : (
               <p className="text-sm text-center text-[var(--nourish-subtext)] py-4">
-                No dishes match that craving. Try something like &ldquo;pasta&rdquo; or &ldquo;stir fry&rdquo;
+                No dishes match that craving. Try something like
+                &ldquo;pasta&rdquo; or &ldquo;stir fry&rdquo;
               </p>
             )}
           </motion.div>

@@ -354,7 +354,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 | Apr 2026 | Path tab always visible from day one                     | Progressive unlock removed — users should see the full app structure immediately. Curiosity about locked content is more motivating than being blocked from seeing it exists.                                                                              |
 | Apr 2026 | Kitchen Sanitation removed from skill tree               | Boring, doesn't belong in a cooking app. Knife Skills is the entry point. The skill tree should inspire cooks, not remind them of food safety posters.                                                                                                     |
 | Apr 2026 | 8 cuisine mastery paths added as parallel branching tier | Italian, Japanese, French, Mexican, Indian, Thai, Chinese, Mediterranean — each with 5 signature practice dishes. These are independent paths (not sequential), gating on global-flavor-profiles. Render as a grid, not tree nodes, to signal parallelism. |
-| Apr 2026 | Base+Overlay recipe architecture | Recipes are immutable base layers with transparent user overlays. Modifications happen through cooking, not editing. No recipe editor screen. |
+| Apr 2026 | Base+Overlay recipe architecture                         | Recipes are immutable base layers with transparent user overlays. Modifications happen through cooking, not editing. No recipe editor screen.                                                                                                              |
 
 ---
 

@@ -27,14 +27,14 @@ The skill walks through all setup interactively — output directory, conversion
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| `SKILL.md` | Skill definition — step-by-step setup with user prompts |
-| `convert-sessions.js` | Conversion script (bulk + `--session` modes) |
-| `hook.js` | PreCompact/SessionEnd/SessionStart hook — converts session, restores context, updates qmd index |
-| `lib.js` | Shared utilities: config, pgrep guard, qmd update+embed, session file lookup, turn extraction |
-| `refresh.js` | Outputs CLAUDE.md files + recent turns from multiple sessions to stdout |
-| `config.json` | Persisted output directory + `loadContextOnStartup` flag |
+| File                  | Purpose                                                                                         |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| `SKILL.md`            | Skill definition — step-by-step setup with user prompts                                         |
+| `convert-sessions.js` | Conversion script (bulk + `--session` modes)                                                    |
+| `hook.js`             | PreCompact/SessionEnd/SessionStart hook — converts session, restores context, updates qmd index |
+| `lib.js`              | Shared utilities: config, pgrep guard, qmd update+embed, session file lookup, turn extraction   |
+| `refresh.js`          | Outputs CLAUDE.md files + recent turns from multiple sessions to stdout                         |
+| `config.json`         | Persisted output directory + `loadContextOnStartup` flag                                        |
 
 ## Usage
 

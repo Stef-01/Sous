@@ -131,7 +131,8 @@ function buildQuestDishes(
         ? staticData.prepTimeMinutes + staticData.cookTimeMinutes
         : 15,
       cuisineFamily: (
-        side.tags.find((t) => CUISINE_TAGS.includes(t.toLowerCase())) ?? "Classic"
+        side.tags.find((t) => CUISINE_TAGS.includes(t.toLowerCase())) ??
+        "Classic"
       ).replace(/^\w/, (c) => c.toUpperCase()),
       description: side.description,
       tags,
@@ -149,8 +150,7 @@ function buildQuestDishes(
   // Stable sort by slug so order is deterministic regardless of insertion order
   guidedDishes.sort((a, b) => a.slug.localeCompare(b.slug));
 
-  const hasPrefs =
-    userPreferences && Object.keys(userPreferences).length > 0;
+  const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
   let orderedGuided: QuestDish[];
   if (hasPrefs) {
@@ -280,7 +280,7 @@ export function QuestCard({
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, saveDish, scheduleTimeout, onFindSides, haptic],
+    [currentIndex, questDishes, router, scheduleTimeout, onFindSides, haptic],
   );
 
   const handleStart = useCallback(() => {

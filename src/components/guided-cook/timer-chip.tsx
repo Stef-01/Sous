@@ -37,7 +37,11 @@ export function TimerChip({
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
         )}
         type="button"
-        aria-label={isExpanded ? `Hide ${formatTime(seconds)} timer` : `Set ${formatTime(seconds)} timer`}
+        aria-label={
+          isExpanded
+            ? `Hide ${formatTime(seconds)} timer`
+            : `Set ${formatTime(seconds)} timer`
+        }
         aria-expanded={isExpanded}
       >
         <Timer size={16} />

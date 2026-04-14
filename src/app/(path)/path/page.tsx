@@ -140,19 +140,13 @@ export default function PathPage() {
         </div>
         {/* Skill tree nodes skeleton — alternating offsets to mimic real layout */}
         <div className="mx-auto max-w-md px-4 pt-8 pb-8">
-          {[
-            "mx-auto",
-            "ml-auto mr-12",
-            "mx-auto",
-            "ml-12",
-            "mx-auto",
-          ].map((cls, i) => (
-            <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
-              <div
-                className={`w-16 h-16 rounded-full shimmer ${cls}`}
-              />
-            </div>
-          ))}
+          {["mx-auto", "ml-auto mr-12", "mx-auto", "ml-12", "mx-auto"].map(
+            (cls, i) => (
+              <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
+                <div className={`w-16 h-16 rounded-full shimmer ${cls}`} />
+              </div>
+            ),
+          )}
         </div>
       </div>
     );

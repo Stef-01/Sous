@@ -7,6 +7,7 @@
 ## MANDATE
 
 You are authorized to:
+
 - Read and modify any file in this repo
 - Install npm packages without asking
 - Run pnpm build, pnpm test, pnpm lint, pnpm dev without asking
@@ -15,6 +16,7 @@ You are authorized to:
 - Make autonomous architectural decisions within the constraints below
 
 You are NOT authorized to:
+
 - Modify CLAUDE.md critical rules 1-11 (read-only governance)
 - Delete recipe data files (sides.json, meals.json)
 - Change the tech stack (Next.js 15, React 19, Tailwind 4)
@@ -38,6 +40,7 @@ You are NOT authorized to:
 ## CURRENT STATE (Sous V1 Audit — April 13, 2026)
 
 **Infrastructure:**
+
 - Next.js 15 App Router, React 19, Tailwind 4, Zustand, TanStack Query, tRPC
 - Static data layer (sides.json, meals.json, guided-cook-steps.ts)
 - Drizzle + Neon configured in package.json but **no .env files exist** — runs entirely on static JSON
@@ -46,11 +49,13 @@ You are NOT authorized to:
 - Engine: pairing-engine, plate-evaluation, ranker, explainer — with real tests
 
 **Data:**
+
 - 203 sides, 76 meals
 - 97 guided cook entries, 85 match side IDs (41% coverage), 12 orphans (no matching side)
 - All imageUrl fields are null — gradient+emoji fallback everywhere (intentional per CLAUDE.md rule 11)
 
 **Routes (existing):**
+
 - `(today)/page.tsx` — Today (home)
 - `(path)/path/page.tsx` — Path tab
 - `(path)/path/favorites/page.tsx`
@@ -60,11 +65,13 @@ You are NOT authorized to:
 - `api/heatmap/*`, `api/search/*`, `api/trpc/*`
 
 **Routes (missing):**
+
 - `(community)/*` — does not exist (intentional for V1 per critical rule 5)
 
 **Components:** 63 .tsx files across 10 directories (guided-cook, heatmap, layout, path, results, search, shared, states, today, ui)
 
 **Tech debt flags:**
+
 - Only 1 TODO in codebase (lib/trpc/server.ts: "Re-enable Clerk auth" — intentional)
 - 1 file uses `any` type — should audit
 - No E2E tests despite @playwright/test in node_modules
@@ -196,6 +203,7 @@ Each loop must complete fully before the next starts. Commit after each.
 ### Loop 1: Feature Completeness Walk-Through
 
 For each CLAUDE.md rule (1-11), verify in code:
+
 - **Rule 1 (Sous Test):** Walk every component in `components/today/` — does it drive the user to cook? List each, pass/fail
 - **Rule 2 (One Primary Action):** Walk every page, count dominant CTAs per screen. Must be exactly 1
 - **Rule 3 (No settings pages):** Grep for `/settings`, settings components. Must be zero
@@ -214,6 +222,7 @@ Commit: `test: QA Loop 1 - feature completeness (Phase 6.1)`
 ### Loop 2: Edge Case Testing
 
 **Today page:**
+
 - Empty state (no meals)
 - Error state (API failure)
 - Loading state (slow network)
@@ -221,6 +230,7 @@ Commit: `test: QA Loop 1 - feature completeness (Phase 6.1)`
 - Quest card with null imageUrl (does fallback render?)
 
 **Search:**
+
 - Empty query
 - Only whitespace
 - Special chars (emoji, accents, SQL-injection)
@@ -229,6 +239,7 @@ Commit: `test: QA Loop 1 - feature completeness (Phase 6.1)`
 - Very long query (1000+ chars)
 
 **Guided cook flow:**
+
 - Side with 1 step
 - Side with 20+ steps
 - Timer with 0 seconds
@@ -237,11 +248,13 @@ Commit: `test: QA Loop 1 - feature completeness (Phase 6.1)`
 - Refresh mid-cook
 
 **Path tab:**
+
 - Zero cooks completed
 - 100+ cooks completed
 - Skill tree all unlocked / none unlocked
 
 **Coach quiz:**
+
 - Skip every question
 - Answer every question the same
 - Rapid-click through

@@ -64,8 +64,7 @@ export default function GuidedCookPage({
   // Reset store on mount to ensure clean state (handles direct navigation from combined cook)
   useEffect(() => {
     reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [reset]);
 
   // Fetch steps from tRPC
   const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
@@ -109,7 +108,7 @@ export default function GuidedCookPage({
       setTotalSteps(cookSteps.length);
       setPhase("cook");
     }
-  }, [data?.ingredients, setPhase, setTotalSteps, cookSteps.length]);
+  }, [data, setPhase, setTotalSteps, cookSteps.length]);
 
   const handleGrabReady = useCallback(() => {
     setTotalSteps(cookSteps.length);
@@ -224,19 +223,13 @@ export default function GuidedCookPage({
         handleBackToday();
         break;
     }
-  }, [
-    currentPhase,
-    currentStepIndex,
-    handleBackToday,
-    setPhase,
-    data?.ingredients,
-  ]);
+  }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data]);
 
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
     reset();
     router.push(`/?selectSides=${encodeURIComponent(data.dish.name)}`);
-  }, [data?.dish, reset, router]);
+  }, [data, reset, router]);
 
   const handleCookAgain = useCallback(() => {
     sessionIdRef.current = null;

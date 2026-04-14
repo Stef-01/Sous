@@ -148,13 +148,17 @@ The V1 internal database targets 80-100 side dishes across 8-10 cuisine families
 Behavioral guidelines to reduce common LLM coding mistakes.
 
 ### 1. Think Before Coding
+
 Before implementing: state assumptions explicitly, surface tradeoffs, push back on complexity, stop and ask when unclear. Don't pick silently between interpretations.
 
 ### 2. Simplicity First
+
 Minimum code that solves the problem. No features beyond what was asked. No abstractions for single-use code. No speculative flexibility. If you write 200 lines and it could be 50, rewrite it.
 
 ### 3. Surgical Changes
+
 Touch only what you must. Don't improve adjacent code, refactor things that aren't broken, or clean up pre-existing dead code. Every changed line should trace directly to the user's request. Remove only imports/variables/functions that YOUR changes made unused.
 
 ### 4. Goal-Driven Execution
+
 Transform tasks into verifiable goals. For multi-step tasks, state a brief plan with verify steps. Define success criteria before starting so you can loop independently without constant clarification.

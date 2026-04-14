@@ -83,7 +83,10 @@ export function usePullToRefresh({
   const setRef = useCallback(
     (el: HTMLElement | null) => {
       if (containerRef.current) {
-        containerRef.current.removeEventListener("touchstart", handleTouchStart);
+        containerRef.current.removeEventListener(
+          "touchstart",
+          handleTouchStart,
+        );
         containerRef.current.removeEventListener("touchmove", handleTouchMove);
         containerRef.current.removeEventListener("touchend", handleTouchEnd);
       }
@@ -101,7 +104,10 @@ export function usePullToRefresh({
   useEffect(() => {
     return () => {
       if (containerRef.current) {
-        containerRef.current.removeEventListener("touchstart", handleTouchStart);
+        containerRef.current.removeEventListener(
+          "touchstart",
+          handleTouchStart,
+        );
         containerRef.current.removeEventListener("touchmove", handleTouchMove);
         containerRef.current.removeEventListener("touchend", handleTouchEnd);
       }

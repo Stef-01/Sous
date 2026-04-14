@@ -22,8 +22,6 @@ export function UserAvatar({ size = 32, className }: UserAvatarProps) {
 }
 
 function ClerkAvatar({ size = 32, className }: UserAvatarProps) {
-  // Safe to call useUser here — this component only renders
-  // when ClerkProvider is in the tree (env var is set).
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useUser } = require("@clerk/nextjs") as {
     useUser: () => {
@@ -31,6 +29,7 @@ function ClerkAvatar({ size = 32, className }: UserAvatarProps) {
       isLoaded: boolean;
     };
   };
+  // eslint-disable-next-line react-compiler/react-compiler -- Clerk is conditionally loaded via dynamic require; hook reference is stable within a given build
   const { user, isLoaded } = useUser();
 
   if (!isLoaded || !user?.imageUrl) {

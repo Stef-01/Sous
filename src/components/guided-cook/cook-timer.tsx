@@ -17,10 +17,11 @@ export function CookTimer() {
   const [totalSeconds, setTotalSeconds] = useState(0);
   const [showDone, setShowDone] = useState(false);
 
-  // Capture the initial duration when the timer starts so we can draw the ring
+  // Capture the initial duration when the timer starts
   useEffect(() => {
     if (timerActive && timerRemaining > 0 && timerRemaining > totalSeconds) {
-      setTotalSeconds(timerRemaining);
+      const id = setTimeout(() => setTotalSeconds(timerRemaining), 0);
+      return () => clearTimeout(id);
     }
   }, [timerActive, timerRemaining, totalSeconds]);
 
@@ -33,21 +34,26 @@ export function CookTimer() {
 
   // Completion: vibrate, flash "Done!", then dismiss
   useEffect(() => {
-    if (timerActive && timerRemaining === 0) {
-      try {
-        if (typeof navigator !== "undefined" && navigator.vibrate) {
-          navigator.vibrate([200, 100, 200, 100, 200]);
-        }
-      } catch { /* unsupported */ }
+    if (!timerActive || timerRemaining !== 0) return;
 
-      setShowDone(true);
-      const t = setTimeout(() => {
-        setShowDone(false);
-        setTotalSeconds(0);
-        stopTimer();
-      }, 1800);
-      return () => clearTimeout(t);
+    try {
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate([200, 100, 200, 100, 200]);
+      }
+    } catch {
+      /* unsupported */
     }
+
+    const showId = setTimeout(() => setShowDone(true), 0);
+    const hideId = setTimeout(() => {
+      setShowDone(false);
+      setTotalSeconds(0);
+      stopTimer();
+    }, 1800);
+    return () => {
+      clearTimeout(showId);
+      clearTimeout(hideId);
+    };
   }, [timerActive, timerRemaining, stopTimer]);
 
   if (!timerActive && timerRemaining <= 0) return null;
@@ -60,8 +66,7 @@ export function CookTimer() {
       : `${timerRemaining}s`;
 
   // Ring fill: fraction remaining
-  const fraction =
-    totalSeconds > 0 ? timerRemaining / totalSeconds : 1;
+  const fraction = totalSeconds > 0 ? timerRemaining / totalSeconds : 1;
   const strokeDash = fraction * CIRCUMFERENCE;
   const isLow = timerRemaining <= 10 && timerRemaining > 0;
   const isDone = timerRemaining === 0;
@@ -92,7 +97,10 @@ export function CookTimer() {
         className="flex items-center gap-4 rounded-2xl bg-[var(--nourish-dark)] px-5 py-3 shadow-xl"
       >
         {/* Circular progress ring */}
-        <div className="relative flex items-center justify-center" style={{ width: 72, height: 72 }}>
+        <div
+          className="relative flex items-center justify-center"
+          style={{ width: 72, height: 72 }}
+        >
           <svg width="72" height="72" className="-rotate-90">
             {/* Track */}
             <circle

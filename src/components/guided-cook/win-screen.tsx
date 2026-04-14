@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star,
@@ -65,25 +65,27 @@ interface ConfettiParticle {
   rotation: number;
 }
 
+function generateConfetti(): ConfettiParticle[] {
+  return Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+    delay: Math.random() * 0.8,
+    duration: 1.2 + Math.random() * 1,
+    size: 6 + Math.random() * 6,
+    rotation: Math.random() * 360,
+  }));
+}
+
 function ConfettiLayer() {
-  const particles = useRef<ConfettiParticle[]>(
-    Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      delay: Math.random() * 0.8,
-      duration: 1.2 + Math.random() * 1,
-      size: 6 + Math.random() * 6,
-      rotation: Math.random() * 360,
-    })),
-  );
+  const [particles] = useState(generateConfetti);
 
   return (
     <div
       className="pointer-events-none absolute inset-0 overflow-hidden"
       aria-hidden
     >
-      {particles.current.map((p) => (
+      {particles.map((p) => (
         <motion.div
           key={p.id}
           initial={{
@@ -200,7 +202,12 @@ export function WinScreen({
         <motion.div
           initial={{ scale: 0.85, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 12 }}
+          transition={{
+            delay: 0.15,
+            type: "spring",
+            stiffness: 200,
+            damping: 12,
+          }}
           className="space-y-1.5"
         >
           <motion.div
@@ -223,7 +230,12 @@ export function WinScreen({
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35, type: "spring", stiffness: 200, damping: 12 }}
+            transition={{
+              delay: 0.35,
+              type: "spring",
+              stiffness: 200,
+              damping: 12,
+            }}
             className="flex flex-wrap items-center justify-center gap-2"
           >
             {streak > 0 && (
@@ -231,34 +243,34 @@ export function WinScreen({
                 {streak} day streak 🔥
               </span>
             )}
-            {skillProgress.length > 0
-              ? skillProgress.map((sp, i) => (
-                  <motion.span
-                    key={sp.nodeId}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{
-                      delay: 0.45 + i * 0.08,
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 12,
-                    }}
-                    className={cn(
-                      "rounded-full px-3 py-1.5 text-sm font-medium",
-                      sp.justCompleted
-                        ? "bg-[var(--nourish-gold)]/20 text-[var(--nourish-gold)]"
-                        : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]",
-                    )}
-                  >
-                    {sp.emoji} {sp.name} {sp.newCount}/{sp.required}
-                    {sp.justCompleted && " ✓"}
-                  </motion.span>
-                ))
-              : (
-                  <span className="rounded-full bg-[var(--nourish-gold)]/15 px-3 py-1.5 text-sm font-medium text-[var(--nourish-gold)]">
-                    +1 skill
-                  </span>
-                )}
+            {skillProgress.length > 0 ? (
+              skillProgress.map((sp, i) => (
+                <motion.span
+                  key={sp.nodeId}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{
+                    delay: 0.45 + i * 0.08,
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 12,
+                  }}
+                  className={cn(
+                    "rounded-full px-3 py-1.5 text-sm font-medium",
+                    sp.justCompleted
+                      ? "bg-[var(--nourish-gold)]/20 text-[var(--nourish-gold)]"
+                      : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]",
+                  )}
+                >
+                  {sp.emoji} {sp.name} {sp.newCount}/{sp.required}
+                  {sp.justCompleted && " ✓"}
+                </motion.span>
+              ))
+            ) : (
+              <span className="rounded-full bg-[var(--nourish-gold)]/15 px-3 py-1.5 text-sm font-medium text-[var(--nourish-gold)]">
+                +1 skill
+              </span>
+            )}
           </motion.div>
         )}
 
@@ -267,7 +279,12 @@ export function WinScreen({
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 12 }}
+            transition={{
+              delay: 0.5,
+              type: "spring",
+              stiffness: 200,
+              damping: 12,
+            }}
             className="rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 py-3"
           >
             <p className="text-sm font-semibold text-[var(--nourish-green)]">
@@ -288,7 +305,10 @@ export function WinScreen({
           role="group"
           aria-label="Rate this cook"
         >
-          <p className="text-xs text-[var(--nourish-subtext)]" id="rating-label">
+          <p
+            className="text-xs text-[var(--nourish-subtext)]"
+            id="rating-label"
+          >
             How did it turn out?
           </p>
           <div
@@ -361,7 +381,11 @@ export function WinScreen({
                 : "border-[var(--nourish-green)] text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
             )}
             type="button"
-            aria-label={saved ? "Already saved to scrapbook" : "Save this cook to your scrapbook"}
+            aria-label={
+              saved
+                ? "Already saved to scrapbook"
+                : "Save this cook to your scrapbook"
+            }
           >
             <BookmarkPlus size={16} />
             {saved ? "Saved to scrapbook ✓" : "Save to scrapbook"}
@@ -402,7 +426,9 @@ export function WinScreen({
                 : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
             )}
             type="button"
-            aria-label={photoAdded ? "Photo already added" : "Add a photo of your dish"}
+            aria-label={
+              photoAdded ? "Photo already added" : "Add a photo of your dish"
+            }
           >
             <Camera size={14} />
             {photoAdded ? "Photo added" : "Add photo"}
@@ -479,7 +505,9 @@ export function WinScreen({
                 : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
             )}
             type="button"
-            aria-label={showReflection ? "Hide meal reflection" : "Reflect on this meal"}
+            aria-label={
+              showReflection ? "Hide meal reflection" : "Reflect on this meal"
+            }
             aria-expanded={showReflection}
           >
             <Sparkles size={14} />
@@ -514,7 +542,11 @@ export function WinScreen({
                     <motion.div
                       initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 260,
+                        damping: 25,
+                      }}
                       className="space-y-3"
                     >
                       <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">

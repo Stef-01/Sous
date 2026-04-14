@@ -78,23 +78,26 @@ function TodayPageContent() {
   // Track which query we're waiting for to prevent stale data transitions
   const pendingQueryRef = useRef<string>("");
 
-  // Load saved quiz state and preferences from localStorage
+  // Load saved quiz state and preferences from localStorage (deferred to avoid synchronous setState in effect)
   useEffect(() => {
-    try {
-      if (localStorage.getItem("sous-coach-quiz-done")) setQuizDone(true);
-      const prefs = localStorage.getItem("sous-preferences");
-      if (prefs) setUserPreferences(JSON.parse(prefs));
-      const effort = localStorage.getItem("sous-effort-tolerance");
-      if (
-        effort === "minimal" ||
-        effort === "moderate" ||
-        effort === "willing"
-      ) {
-        setEffortTolerance(effort);
+    const id = setTimeout(() => {
+      try {
+        if (localStorage.getItem("sous-coach-quiz-done")) setQuizDone(true);
+        const prefs = localStorage.getItem("sous-preferences");
+        if (prefs) setUserPreferences(JSON.parse(prefs));
+        const effort = localStorage.getItem("sous-effort-tolerance");
+        if (
+          effort === "minimal" ||
+          effort === "moderate" ||
+          effort === "willing"
+        ) {
+          setEffortTolerance(effort);
+        }
+      } catch {
+        // localStorage unavailable
       }
-    } catch {
-      // localStorage unavailable
-    }
+    }, 0);
+    return () => clearTimeout(id);
   }, []);
 
   // Auto-show coach quiz for first-time users (after a brief delay so the page settles)
@@ -119,12 +122,14 @@ function TodayPageContent() {
       selectSidesParam !== handledSelectSidesRef.current
     ) {
       handledSelectSidesRef.current = selectSidesParam;
-      setShowSearch(true);
-      pendingQueryRef.current = selectSidesParam;
-      setMainDishQuery(selectSidesParam);
-      setView({ type: "loading", mainDish: selectSidesParam });
-      // Clean up the URL param
-      router.replace("/", { scroll: false });
+      const id = setTimeout(() => {
+        setShowSearch(true);
+        pendingQueryRef.current = selectSidesParam;
+        setMainDishQuery(selectSidesParam);
+        setView({ type: "loading", mainDish: selectSidesParam });
+        router.replace("/", { scroll: false });
+      }, 0);
+      return () => clearTimeout(id);
     }
   }, [selectSidesParam, router]);
 
@@ -135,11 +140,14 @@ function TodayPageContent() {
   useEffect(() => {
     if (cravingParam && cravingParam !== handledCravingRef.current) {
       handledCravingRef.current = cravingParam;
-      setShowSearch(true);
-      pendingQueryRef.current = cravingParam;
-      setMainDishQuery(cravingParam);
-      setView({ type: "loading", mainDish: cravingParam });
-      router.replace("/", { scroll: false });
+      const id = setTimeout(() => {
+        setShowSearch(true);
+        pendingQueryRef.current = cravingParam;
+        setMainDishQuery(cravingParam);
+        setView({ type: "loading", mainDish: cravingParam });
+        router.replace("/", { scroll: false });
+      }, 0);
+      return () => clearTimeout(id);
     }
   }, [cravingParam, router]);
 
@@ -169,8 +177,10 @@ function TodayPageContent() {
       pairingQuery.data &&
       pendingQueryRef.current === mainDishQuery
     ) {
-      // Transition to results regardless of success/failure — the results view handles both
-      setView({ type: "results", mainDish: view.mainDish });
+      const id = setTimeout(() => {
+        setView({ type: "results", mainDish: view.mainDish });
+      }, 0);
+      return () => clearTimeout(id);
     }
   }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
 
@@ -199,34 +209,36 @@ function TodayPageContent() {
     setView({ type: "camera" });
   }, []);
 
-  const handleCameraCapture = useCallback(async (imageBase64: string) => {
-    setView({ type: "recognition", imageBase64 });
+  const handleCameraCapture = useCallback(
+    async (imageBase64: string) => {
+      setView({ type: "recognition", imageBase64 });
 
-    try {
-      const result = await recognitionMutation.mutateAsync({ imageBase64 });
+      try {
+        const result = await recognitionMutation.mutateAsync({ imageBase64 });
 
-      if (result.success) {
-        setView({
-          type: "correction",
-          dishName: result.dishName,
-          confidence: result.confidence,
-          alternates: result.alternates,
-          cuisine: result.cuisine,
-        });
-      } else {
-        // Recognition failed — show brief feedback then fall back to text input
+        if (result.success) {
+          setView({
+            type: "correction",
+            dishName: result.dishName,
+            confidence: result.confidence,
+            alternates: result.alternates,
+            cuisine: result.cuisine,
+          });
+        } else {
+          // Recognition failed — show brief feedback then fall back to text input
+          setRecognitionError(true);
+          setView({ type: "idle" });
+          setTimeout(() => setRecognitionError(false), 4000);
+        }
+      } catch {
+        // Network or server error — show feedback and fall back to text input
         setRecognitionError(true);
         setView({ type: "idle" });
         setTimeout(() => setRecognitionError(false), 4000);
       }
-    } catch {
-      // Network or server error — show feedback and fall back to text input
-      setRecognitionError(true);
-      setView({ type: "idle" });
-      setTimeout(() => setRecognitionError(false), 4000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- recognitionMutation is stable (tRPC hook)
-  }, []);
+    },
+    [recognitionMutation],
+  );
 
   const handleCorrectionConfirm = useCallback((confirmedDish: string) => {
     pendingQueryRef.current = confirmedDish;
@@ -476,35 +488,35 @@ function TodayPageContent() {
             {view.type === "results" &&
               pairingQuery.data?.success &&
               pairingQuery.data.sides.length > 0 && (
-              <ResultStack
-                mainDish={view.mainDish}
-                sides={pairingQuery.data.sides}
-                onCookThis={handleCookThis}
-                onCookSelected={(sides) => {
-                  if (sides.length === 0) return;
+                <ResultStack
+                  mainDish={view.mainDish}
+                  sides={pairingQuery.data.sides}
+                  onCookThis={handleCookThis}
+                  onCookSelected={(sides) => {
+                    if (sides.length === 0) return;
 
-                  // Check if the main dish has guided cook data for combined flow
-                  const queryData = pairingQuery.data;
-                  const mealSlug =
-                    queryData && "resolvedMealSlug" in queryData
-                      ? (queryData.resolvedMealSlug as string | null)
-                      : null;
+                    // Check if the main dish has guided cook data for combined flow
+                    const queryData = pairingQuery.data;
+                    const mealSlug =
+                      queryData && "resolvedMealSlug" in queryData
+                        ? (queryData.resolvedMealSlug as string | null)
+                        : null;
 
-                  if (mealSlug && sides.length >= 1) {
-                    // Navigate to combined cook flow
-                    const sideSlugs = sides.map((s) => s.slug).join(",");
-                    setShowSearch(false);
-                    router.push(
-                      `/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`,
-                    );
-                  } else {
-                    // Fallback: cook the first selected side
-                    handleCookThis(sides[0]);
-                  }
-                }}
-                onReroll={handleReroll}
-              />
-            )}
+                    if (mealSlug && sides.length >= 1) {
+                      // Navigate to combined cook flow
+                      const sideSlugs = sides.map((s) => s.slug).join(",");
+                      setShowSearch(false);
+                      router.push(
+                        `/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`,
+                      );
+                    } else {
+                      // Fallback: cook the first selected side
+                      handleCookThis(sides[0]);
+                    }
+                  }}
+                  onReroll={handleReroll}
+                />
+              )}
 
             {/* Engine returned success: false (e.g. unparseable craving) */}
             {view.type === "results" &&
