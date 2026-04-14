@@ -1,5 +1,27 @@
 # CLAUDE.md — Sous
 
+## ⚡ BULLETPROOF — BOIL THE OCEAN ⚡
+
+**The marginal cost of completeness is near zero with AI. Do the whole thing.**
+
+Do it right. Do it with tests. Do it with documentation. Do it so well that Stefan is genuinely impressed — not politely satisfied, actually impressed. Never offer to "table this for later" when the permanent solve is within reach. Never leave a dangling thread when tying it off takes five more minutes. Never present a workaround when the real fix exists. The standard isn't "good enough" — it's "holy shit, that's done." Search before building. Test before shipping. Ship the complete thing. When Stefan asks for something, the answer is the finished product, not a plan to build it. Time is not an excuse. Fatigue is not an excuse. Complexity is not an excuse. **Boil the ocean.**
+
+---
+
+## ⚡ BULLETPROOF — ALWAYS COMMIT TO MAIN ⚡
+
+**Always commit directly to main and push. Always. When in doubt, commit.**
+
+- Commit after every meaningful edit. Never leave work uncommitted.
+- Never create worktree branches. Never use feature branches.
+- Every code task ends with: `git add -A && git commit -m "<msg>" && git push origin main`
+- GitHub reversion (`git revert`, `git reset`, PR history) handles any mistakes — there is ZERO downside to committing.
+- The only real risk is work stranded in worktrees or uncommitted changes. Always commit > uncommitted.
+- Partial work still gets committed with a WIP message. Don't save it for later.
+- This rule OVERRIDES any pattern suggesting "wait until complete" or "save for later."
+
+---
+
 ## What is Sous
 
 Sous is a cooking fluency platform. Users type a craving or photograph a dish, and the app returns intelligently paired side dishes with step-by-step guided cooking. The product philosophy is radical simplicity: one screen, one action, one win. Think Duolingo for cooking confidence, not another recipe database.

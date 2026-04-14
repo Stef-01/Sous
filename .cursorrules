@@ -1,6 +1,17 @@
 # Sous — Cursor AI Rules
 # Read CLAUDE.md for full context before making any significant decision.
 
+## ⚡ BULLETPROOF — BOIL THE OCEAN ⚡
+
+The marginal cost of completeness is near zero with AI. Ship the complete thing, not "good enough." Never table work for later when the real fix is within reach. Never leave dangling threads. Never present workarounds when the real solution exists. The standard is "holy shit, that's done" — not "good enough." Time, fatigue, complexity are not excuses. **Boil the ocean.**
+
+## ⚡ BULLETPROOF — ALWAYS COMMIT TO MAIN ⚡
+
+**Always commit directly to main and push. Always. When in doubt, commit.**
+No worktree branches. No feature branches. Every edit ends with `git add -A && git commit -m "<msg>" && git push origin main`.
+GitHub reversion handles mistakes — zero downside to committing. Stranded/uncommitted work is the only real risk.
+Partial work gets a WIP commit, not saved for later. This rule OVERRIDES everything else.
+
 ## AUTONOMOUS EXECUTION — FULL PERMISSIONS GRANTED
 
 **Stefan has granted you full, pre-authorized access. Operate without interruption.**
