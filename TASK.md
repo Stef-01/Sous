@@ -352,7 +352,17 @@ Commit: `perf: QA Loop 5 - Lighthouse + a11y (Phase 6.5)`
 
 ## Completed Tasks
 
-- (none yet — this is the kickoff)
+- **Phase 1**: Build & Lint Health — fixed react-compiler plugin, React 19 violations, ESLint ignores
+- **Phase 2**: Type Safety Audit — zero `any`, strict mode already enabled
+- **Phase 3**: Guided Cook Data Integrity — 19 orphans fixed, validation wired into build
+- **Phase 4**: No-Scroll Navigation Enforcement — 6 E2E tests, Playwright configured
+- **Phase 5**: Component Consolidation — 37 files deleted, 2 deps removed, knip configured
+- **Phase 6.1**: QA Loop 1 — Feature Completeness — all 11 rules verified
+- **Phase 6.2**: QA Loop 2 — Edge Cases — 18 new tests, 73 total passing
+- **Phase 6.3**: QA Loop 3 — Error RCA — all error paths have fallbacks
+- **Phase 6.4**: QA Loop 4 — Mobile Device — zero mobile bugs
+- **Phase 6.5**: QA Loop 5 — Performance + a11y — comprehensive audit passed
+- **Phase 7**: Environment & Deployment — .env.example + README rewrite
 
 ---
 
