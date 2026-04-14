@@ -2,31 +2,31 @@
 
 ## Rule 1 — The Sous Test (Does it make them cook?)
 
-| Component | Purpose | Pass? |
-|-----------|---------|-------|
-| `text-prompt.tsx` | Craving input → triggers pairing | PASS |
-| `camera-input.tsx` | Photo recognition → dish identification | PASS |
-| `quest-card.tsx` | Displays meal quest → tap to start cook | PASS |
-| `result-stack.tsx` | Shows paired sides → tap to start guided cook | PASS |
-| `bird-mascot.tsx` | Visual encouragement mascot | PASS |
-| `streak-counter.tsx` | Cooking streak → motivates continued cooking | PASS |
-| `correction-chips.tsx` | Fixes misidentified dishes → corrects toward cook | PASS |
-| `search-popout.tsx` | Search for specific dishes → leads to cook | PASS |
-| `fallback-actions.tsx` | Fallback when no result → suggests alternatives | PASS |
-| `friends-strip.tsx` | Social motivation (below fold per Rule 11) | PASS |
+| Component              | Purpose                                           | Pass? |
+| ---------------------- | ------------------------------------------------- | ----- |
+| `text-prompt.tsx`      | Craving input → triggers pairing                  | PASS  |
+| `camera-input.tsx`     | Photo recognition → dish identification           | PASS  |
+| `quest-card.tsx`       | Displays meal quest → tap to start cook           | PASS  |
+| `result-stack.tsx`     | Shows paired sides → tap to start guided cook     | PASS  |
+| `bird-mascot.tsx`      | Visual encouragement mascot                       | PASS  |
+| `streak-counter.tsx`   | Cooking streak → motivates continued cooking      | PASS  |
+| `correction-chips.tsx` | Fixes misidentified dishes → corrects toward cook | PASS  |
+| `search-popout.tsx`    | Search for specific dishes → leads to cook        | PASS  |
+| `fallback-actions.tsx` | Fallback when no result → suggests alternatives   | PASS  |
+| `friends-strip.tsx`    | Social motivation (below fold per Rule 11)        | PASS  |
 
 **Result: 10/10 PASS** — Every Today component drives toward cooking.
 
 ## Rule 2 — One Primary Action Per Screen
 
-| Screen | Primary CTA | Secondary | Pass? |
-|--------|-------------|-----------|-------|
-| `/` (Today) | "What are you cooking?" text prompt | Camera, search | PASS |
-| `/path` | Skill tree exploration | Favorites, scrapbook tabs | PASS |
-| `/path/favorites` | Saved dish cards → cook | Back navigation | PASS |
-| `/path/scrapbook` | Scrapbook entries | Back navigation | PASS |
-| `/cook/[slug]` | Phase-dependent (Start/Ready/Next Step/Done) | Back button | PASS |
-| `/cook/combined` | Phase-dependent combined cook CTA | Back button | PASS |
+| Screen            | Primary CTA                                  | Secondary                 | Pass? |
+| ----------------- | -------------------------------------------- | ------------------------- | ----- |
+| `/` (Today)       | "What are you cooking?" text prompt          | Camera, search            | PASS  |
+| `/path`           | Skill tree exploration                       | Favorites, scrapbook tabs | PASS  |
+| `/path/favorites` | Saved dish cards → cook                      | Back navigation           | PASS  |
+| `/path/scrapbook` | Scrapbook entries                            | Back navigation           | PASS  |
+| `/cook/[slug]`    | Phase-dependent (Start/Ready/Next Step/Done) | Back button               | PASS  |
+| `/cook/combined`  | Phase-dependent combined cook CTA            | Back button               | PASS  |
 
 **Result: 6/6 PASS**
 
@@ -79,15 +79,15 @@
 
 ## Rule 11 — Current Feature State
 
-| Feature | Expected | Actual | Pass? |
-|---------|----------|--------|-------|
-| Path tab always visible | `visible: true` | `visible: true` in use-navigation.ts | PASS |
-| Friends below fold | Below fold on Today | Rendered after main content | PASS |
-| Coach quiz on first visit | localStorage check | Auto-shows after 900ms if no `sous-coach-quiz-done` | PASS |
-| 8 cuisines in skill tree | 8 cuisine paths | Italian, Japanese, French, Mexican, Indian, Thai, Chinese, Mediterranean | PASS |
-| Kitchen Sanitation removed | Not in skill tree | Zero matches for "kitchen sanitation" | PASS |
-| All image URLs null | Gradient+emoji fallback | All `imageUrl` in sides.json are null | PASS |
-| Clerk auth bypassed | Mock user | `protectedProcedure` disabled, auth-provider uses mock | PASS |
+| Feature                    | Expected                | Actual                                                                   | Pass? |
+| -------------------------- | ----------------------- | ------------------------------------------------------------------------ | ----- |
+| Path tab always visible    | `visible: true`         | `visible: true` in use-navigation.ts                                     | PASS  |
+| Friends below fold         | Below fold on Today     | Rendered after main content                                              | PASS  |
+| Coach quiz on first visit  | localStorage check      | Auto-shows after 900ms if no `sous-coach-quiz-done`                      | PASS  |
+| 8 cuisines in skill tree   | 8 cuisine paths         | Italian, Japanese, French, Mexican, Indian, Thai, Chinese, Mediterranean | PASS  |
+| Kitchen Sanitation removed | Not in skill tree       | Zero matches for "kitchen sanitation"                                    | PASS  |
+| All image URLs null        | Gradient+emoji fallback | All `imageUrl` in sides.json are null                                    | PASS  |
+| Clerk auth bypassed        | Mock user               | `protectedProcedure` disabled, auth-provider uses mock                   | PASS  |
 
 **Result: 7/7 PASS**
 

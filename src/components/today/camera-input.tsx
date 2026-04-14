@@ -66,6 +66,7 @@ export function CameraInput({
           onClick={onClose}
           className="rounded-lg p-2 text-white/80 hover:text-white"
           type="button"
+          aria-label="Close camera"
         >
           <X size={24} />
         </button>

@@ -68,9 +68,9 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
               </div>
             </div>
 
-            {/* Scrollable content area */}
+            {/* Scrollable content area — pb-24 ensures CTA clears the tab bar */}
             <div className="flex-1 overflow-y-auto min-h-0 scroll-contain">
-              <div className="mx-auto max-w-md px-4 pt-2 pb-10 space-y-4">
+              <div className="mx-auto max-w-md px-4 pt-2 pb-24 space-y-4">
                 {children}
               </div>
             </div>

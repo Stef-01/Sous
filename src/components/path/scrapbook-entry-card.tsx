@@ -56,7 +56,7 @@ export function ScrapbookEntryCard({
         <button
           onClick={() => onToggleFavorite(session.sessionId)}
           className={cn(
-            "shrink-0 rounded-lg p-1.5 transition-colors",
+            "shrink-0 rounded-lg p-1.5 transition-all active:scale-90",
             session.favorite
               ? "text-pink-500"
               : "text-neutral-300 hover:text-pink-400",
@@ -97,7 +97,7 @@ export function ScrapbookEntryCard({
       {/* Replay button */}
       <button
         onClick={() => onReplay(session.recipeSlug)}
-        className="flex items-center gap-1 text-[11px] font-medium text-[var(--nourish-green)] hover:underline"
+        className="flex items-center gap-1 text-[11px] font-medium text-[var(--nourish-green)] hover:underline transition-all active:scale-95"
         type="button"
       >
         <RotateCcw size={11} />

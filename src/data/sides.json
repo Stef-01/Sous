@@ -3,11 +3,7 @@
     "id": "caesar-salad",
     "name": "Caesar Salad",
     "imageUrl": "/food_images/caesar_salad.png",
-    "tags": [
-      "salad",
-      "classic",
-      "italian"
-    ],
+    "tags": ["salad", "classic", "italian"],
     "description": "Crisp romaine lettuce tossed with creamy Caesar dressing, shaved Parmesan, and crunchy garlic croutons.",
     "pairingReason": "crisp greens to cut through rich, heavy mains",
     "nutritionCategory": "vegetable",
@@ -85,11 +81,7 @@
     "id": "garlic-bread",
     "name": "Garlic Bread",
     "imageUrl": "/food_images/garlic_bread.png",
-    "tags": [
-      "bread",
-      "italian",
-      "baked"
-    ],
+    "tags": ["bread", "italian", "baked"],
     "description": "Golden-toasted baguette slices brushed with garlic butter and fresh herbs, crisp on the outside and soft within.",
     "pairingReason": "warm bread to soak up sauces and juices",
     "nutritionCategory": "carb",
@@ -156,11 +148,7 @@
     "id": "tomato-soup",
     "name": "Tomato Soup",
     "imageUrl": "/food_images/tomato_soup.png",
-    "tags": [
-      "soup",
-      "warm",
-      "classic"
-    ],
+    "tags": ["soup", "warm", "classic"],
     "description": "A velvety smooth soup made from ripe tomatoes, onion, and a swirl of cream, perfect for dipping bread into.",
     "pairingReason": "comforting warmth alongside cheesy or baked dishes",
     "nutritionCategory": "vegetable",
@@ -170,11 +158,7 @@
     "id": "mixed-green-salad",
     "name": "Mixed Green Salad",
     "imageUrl": "/food_images/mixed_green_salad.png",
-    "tags": [
-      "salad",
-      "healthy",
-      "green"
-    ],
+    "tags": ["salad", "healthy", "green"],
     "description": "A light, refreshing medley of baby greens, cherry tomatoes, cucumber, and a zesty vinaigrette.",
     "pairingReason": "light freshness to balance richer proteins",
     "nutritionCategory": "vegetable",
@@ -184,11 +168,7 @@
     "id": "bruschetta",
     "name": "Bruschetta",
     "imageUrl": "/food_images/bruschetta.png",
-    "tags": [
-      "appetizer",
-      "italian",
-      "tomato"
-    ],
+    "tags": ["appetizer", "italian", "tomato"],
     "description": "Toasted ciabatta topped with a vibrant mix of diced tomatoes, fresh basil, garlic, and a drizzle of balsamic glaze.",
     "pairingReason": "bright tomato acidity to complement Italian mains",
     "nutritionCategory": "vegetable",
@@ -266,11 +246,7 @@
     "id": "minestrone",
     "name": "Minestrone",
     "imageUrl": "/food_images/minestrone.png",
-    "tags": [
-      "soup",
-      "italian",
-      "vegetable"
-    ],
+    "tags": ["soup", "italian", "vegetable"],
     "description": "A hearty Italian vegetable soup brimming with beans, pasta, zucchini, and tomatoes in a savoury broth.",
     "pairingReason": "hearty vegetable soup for a complete Italian meal",
     "nutritionCategory": "vegetable",
@@ -280,11 +256,7 @@
     "id": "caprese-salad",
     "name": "Caprese Salad",
     "imageUrl": "/food_images/caprese_salad.png",
-    "tags": [
-      "salad",
-      "italian",
-      "fresh"
-    ],
+    "tags": ["salad", "italian", "fresh"],
     "description": "Thick slices of ripe tomato and creamy mozzarella layered with fresh basil, olive oil, and a pinch of sea salt.",
     "pairingReason": "fresh mozzarella and tomato to echo Italian flavours",
     "nutritionCategory": "vegetable",
@@ -351,11 +323,7 @@
     "id": "arancini",
     "name": "Arancini",
     "imageUrl": "/food_images/arancini.png",
-    "tags": [
-      "fried",
-      "italian",
-      "rice"
-    ],
+    "tags": ["fried", "italian", "rice"],
     "description": "Crispy deep-fried risotto balls filled with gooey mozzarella, coated in golden breadcrumbs and served piping hot.",
     "pairingReason": "crispy fried bite for textural contrast",
     "nutritionCategory": "carb",
@@ -455,11 +423,7 @@
     "id": "naan-bread",
     "name": "Naan Bread",
     "imageUrl": "/food_images/garlic_naan.png",
-    "tags": [
-      "bread",
-      "indian",
-      "baked"
-    ],
+    "tags": ["bread", "indian", "baked"],
     "description": "Soft, pillowy Indian flatbread baked in a tandoor oven, brushed with butter and perfect for scooping up curries.",
     "pairingReason": "warm bread to scoop up rich curry sauces",
     "nutritionCategory": "carb",
@@ -559,11 +523,7 @@
     "id": "basmati-rice",
     "name": "Basmati Rice",
     "imageUrl": "/food_images/basmati_rice.png",
-    "tags": [
-      "rice",
-      "indian",
-      "grain"
-    ],
+    "tags": ["rice", "indian", "grain"],
     "description": "Long-grain aromatic rice steamed to fluffy perfection, with each grain separate and delicately fragrant.",
     "pairingReason": "fluffy base to absorb and carry bold spices",
     "nutritionCategory": "carb",
@@ -630,11 +590,7 @@
     "id": "raita",
     "name": "Raita",
     "imageUrl": "/food_images/cucumber_raita.png",
-    "tags": [
-      "condiment",
-      "indian",
-      "yogurt"
-    ],
+    "tags": ["condiment", "indian", "yogurt"],
     "description": "A cool, creamy yogurt condiment with grated cucumber, cumin, and fresh mint that tempers the heat of spicy dishes.",
     "pairingReason": "cool yoghurt to calm the heat of spice",
     "nutritionCategory": "vegetable",
@@ -690,11 +646,7 @@
     "id": "mango-chutney",
     "name": "Mango Chutney",
     "imageUrl": "/food_images/mango_chutney.png",
-    "tags": [
-      "condiment",
-      "indian",
-      "sweet"
-    ],
+    "tags": ["condiment", "indian", "sweet"],
     "description": "A sweet and tangy preserve made from ripe mangoes, vinegar, sugar, and warming spices like ginger and mustard seed.",
     "pairingReason": "sweet-tangy contrast to savoury curries",
     "nutritionCategory": "vegetable",
@@ -704,11 +656,7 @@
     "id": "samosa",
     "name": "Samosa",
     "imageUrl": null,
-    "tags": [
-      "fried",
-      "indian",
-      "snack"
-    ],
+    "tags": ["fried", "indian", "snack"],
     "description": "A crispy, golden-fried pastry triangle stuffed with spiced potatoes, peas, and cumin, served with tamarind chutney.",
     "pairingReason": "crispy spiced pastry to start the meal",
     "nutritionCategory": "carb",
@@ -718,11 +666,7 @@
     "id": "aloo-gobi",
     "name": "Aloo Gobi",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "indian",
-      "curry"
-    ],
+    "tags": ["vegetable", "indian", "curry"],
     "description": "Tender potatoes and cauliflower florets gently spiced with turmeric, cumin, and coriander in a dry-style curry.",
     "pairingReason": "dry vegetable dish to complement saucy mains",
     "nutritionCategory": "vegetable",
@@ -811,11 +755,7 @@
     "id": "dal-tadka",
     "name": "Dal Tadka",
     "imageUrl": null,
-    "tags": [
-      "lentil",
-      "indian",
-      "protein"
-    ],
+    "tags": ["lentil", "indian", "protein"],
     "description": "Creamy yellow lentils simmered until soft and finished with a sizzling temper of cumin, garlic, and dried chillies.",
     "pairingReason": "protein-rich lentils to round out the plate",
     "nutritionCategory": "protein",
@@ -915,11 +855,7 @@
     "id": "papadum",
     "name": "Papadum",
     "imageUrl": null,
-    "tags": [
-      "crispy",
-      "indian",
-      "snack"
-    ],
+    "tags": ["crispy", "indian", "snack"],
     "description": "Thin, crispy lentil wafers that shatter satisfyingly with each bite, often served with pickles and chutneys.",
     "pairingReason": "shattering crunch to contrast soft curries",
     "nutritionCategory": "carb",
@@ -929,11 +865,7 @@
     "id": "guacamole",
     "name": "Guacamole",
     "imageUrl": "/food_images/guacamole.png",
-    "tags": [
-      "dip",
-      "mexican",
-      "avocado"
-    ],
+    "tags": ["dip", "mexican", "avocado"],
     "description": "Ripe avocados mashed with lime juice, cilantro, diced onion, and a kick of jalapeño for a creamy, zesty dip.",
     "pairingReason": "creamy richness to cool spicy fillings",
     "nutritionCategory": "vegetable",
@@ -989,11 +921,7 @@
     "id": "mexican-rice",
     "name": "Mexican Rice",
     "imageUrl": "/food_images/mexican_rice.png",
-    "tags": [
-      "rice",
-      "mexican",
-      "grain"
-    ],
+    "tags": ["rice", "mexican", "grain"],
     "description": "Fluffy rice toasted until golden, then simmered with tomatoes, garlic, and chicken broth for a savoury side.",
     "pairingReason": "savoury tomato rice to soak up bold salsas",
     "nutritionCategory": "carb",
@@ -1060,11 +988,7 @@
     "id": "elote",
     "name": "Elote",
     "imageUrl": "/food_images/elote.png",
-    "tags": [
-      "corn",
-      "mexican",
-      "grilled"
-    ],
+    "tags": ["corn", "mexican", "grilled"],
     "description": "Chargrilled corn on the cob slathered with creamy mayo, cotija cheese, chilli powder, and a squeeze of lime.",
     "pairingReason": "charred sweetness to balance smoky meats",
     "nutritionCategory": "vegetable",
@@ -1131,11 +1055,7 @@
     "id": "pico-de-gallo",
     "name": "Pico de Gallo",
     "imageUrl": "/food_images/pico_de_gallo.png",
-    "tags": [
-      "salsa",
-      "mexican",
-      "fresh"
-    ],
+    "tags": ["salsa", "mexican", "fresh"],
     "description": "A fresh, chunky salsa of diced tomatoes, white onion, jalapeño, cilantro, and lime juice — bright and vibrant.",
     "pairingReason": "bright, raw freshness to lift heavy dishes",
     "nutritionCategory": "vegetable",
@@ -1191,11 +1111,7 @@
     "id": "refried-beans",
     "name": "Refried Beans",
     "imageUrl": "/food_images/refried_beans.png",
-    "tags": [
-      "beans",
-      "mexican",
-      "protein"
-    ],
+    "tags": ["beans", "mexican", "protein"],
     "description": "Pinto beans cooked until tender, then mashed and fried with onion and lard for a rich, creamy, savoury side.",
     "pairingReason": "creamy protein to make the meal substantial",
     "nutritionCategory": "protein",
@@ -1273,11 +1189,7 @@
     "id": "churros",
     "name": "Churros",
     "imageUrl": "/food_images/churros.png",
-    "tags": [
-      "dessert",
-      "mexican",
-      "fried"
-    ],
+    "tags": ["dessert", "mexican", "fried"],
     "description": "Golden, ridged sticks of fried dough rolled in cinnamon sugar, crispy outside and soft inside, served with chocolate sauce.",
     "pairingReason": "sweet finish to close a savoury meal",
     "nutritionCategory": "carb",
@@ -1287,11 +1199,7 @@
     "id": "esquites",
     "name": "Esquites",
     "imageUrl": "/food_images/esquites.png",
-    "tags": [
-      "corn",
-      "mexican",
-      "street-food"
-    ],
+    "tags": ["corn", "mexican", "street-food"],
     "description": "Mexican street corn kernels served in a cup with mayo, cotija cheese, chilli, lime, and a sprinkle of tajín.",
     "pairingReason": "tangy street-food corn for textural variety",
     "nutritionCategory": "vegetable",
@@ -1301,11 +1209,7 @@
     "id": "tortilla-chips",
     "name": "Tortilla Chips",
     "imageUrl": "/food_images/tortilla_chips.png",
-    "tags": [
-      "snack",
-      "mexican",
-      "crispy"
-    ],
+    "tags": ["snack", "mexican", "crispy"],
     "description": "Thin wedges of corn tortilla fried or baked until perfectly crunchy, ideal for scooping salsa, guac, or queso.",
     "pairingReason": "crunchy scoop for dips and salsas alongside",
     "nutritionCategory": "carb",
@@ -1315,11 +1219,7 @@
     "id": "gyoza",
     "name": "Gyoza",
     "imageUrl": "/food_images/gyoza.png",
-    "tags": [
-      "dumpling",
-      "japanese",
-      "fried"
-    ],
+    "tags": ["dumpling", "japanese", "fried"],
     "description": "Japanese pan-fried dumplings with a crispy golden bottom and juicy pork-and-cabbage filling, served with soy-vinegar dip.",
     "pairingReason": "crispy-bottomed dumplings for a savoury starter",
     "nutritionCategory": "protein",
@@ -1397,11 +1297,7 @@
     "id": "edamame",
     "name": "Edamame",
     "imageUrl": "/food_images/edamame.png",
-    "tags": [
-      "snack",
-      "japanese",
-      "protein"
-    ],
+    "tags": ["snack", "japanese", "protein"],
     "description": "Steamed young soybeans in their fuzzy pods, lightly salted — a simple, addictive snack packed with plant protein.",
     "pairingReason": "light, salty snack to nibble before the main",
     "nutritionCategory": "protein",
@@ -1457,11 +1353,7 @@
     "id": "tempura",
     "name": "Tempura",
     "imageUrl": "/food_images/tempura.png",
-    "tags": [
-      "fried",
-      "japanese",
-      "light"
-    ],
+    "tags": ["fried", "japanese", "light"],
     "description": "Vegetables and prawns dipped in a light, ice-cold batter and flash-fried until shatteringly crisp and airy.",
     "pairingReason": "airy crunch to contrast brothy, soupy dishes",
     "nutritionCategory": "vegetable",
@@ -1550,11 +1442,7 @@
     "id": "miso-soup",
     "name": "Miso Soup",
     "imageUrl": "/food_images/miso_soup.png",
-    "tags": [
-      "soup",
-      "japanese",
-      "fermented"
-    ],
+    "tags": ["soup", "japanese", "fermented"],
     "description": "A warming dashi broth enriched with fermented miso paste, silky tofu cubes, and wisps of wakame seaweed.",
     "pairingReason": "warming umami broth to open the palate",
     "nutritionCategory": "vegetable",
@@ -1621,11 +1509,7 @@
     "id": "takoyaki",
     "name": "Takoyaki",
     "imageUrl": "/food_images/takoyaki.png",
-    "tags": [
-      "snack",
-      "japanese",
-      "octopus"
-    ],
+    "tags": ["snack", "japanese", "octopus"],
     "description": "Golden, ball-shaped batter bites filled with diced octopus, drizzled with takoyaki sauce, mayo, and dancing bonito flakes.",
     "pairingReason": "playful street-food bites alongside noodles",
     "nutritionCategory": "protein",
@@ -1635,11 +1519,7 @@
     "id": "seaweed-salad",
     "name": "Seaweed Salad",
     "imageUrl": "/food_images/seaweed_salad.png",
-    "tags": [
-      "salad",
-      "japanese",
-      "healthy"
-    ],
+    "tags": ["salad", "japanese", "healthy"],
     "description": "Emerald-green wakame dressed in a tangy sesame-soy vinaigrette with a sprinkle of toasted sesame seeds.",
     "pairingReason": "mineral-rich seaweed for oceanic depth",
     "nutritionCategory": "vegetable",
@@ -1649,11 +1529,7 @@
     "id": "karaage",
     "name": "Karaage",
     "imageUrl": "/food_images/karaage.png",
-    "tags": [
-      "fried",
-      "japanese",
-      "chicken"
-    ],
+    "tags": ["fried", "japanese", "chicken"],
     "description": "Bite-sized chicken thigh pieces marinated in soy, ginger, and garlic, then fried to an ultra-crispy, juicy finish.",
     "pairingReason": "juicy fried chicken for a hearty pairing",
     "nutritionCategory": "protein",
@@ -1731,11 +1607,7 @@
     "id": "onigiri",
     "name": "Onigiri",
     "imageUrl": "/food_images/onigiri.png",
-    "tags": [
-      "rice",
-      "japanese",
-      "snack"
-    ],
+    "tags": ["rice", "japanese", "snack"],
     "description": "Hand-pressed rice triangles wrapped in nori, filled with savoury ingredients like salmon, umeboshi, or tuna mayo.",
     "pairingReason": "portable rice bites to complement broth dishes",
     "nutritionCategory": "carb",
@@ -1745,11 +1617,7 @@
     "id": "roasted-asparagus",
     "name": "Roasted Asparagus",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "roasted",
-      "healthy"
-    ],
+    "tags": ["vegetable", "roasted", "healthy"],
     "description": "Tender asparagus spears roasted with olive oil and sea salt until their tips turn delicately crispy and caramelised.",
     "pairingReason": "elegant green vegetable for fine dining mains",
     "nutritionCategory": "vegetable",
@@ -1759,11 +1627,7 @@
     "id": "mashed-potatoes",
     "name": "Mashed Potatoes",
     "imageUrl": null,
-    "tags": [
-      "potato",
-      "comfort",
-      "classic"
-    ],
+    "tags": ["potato", "comfort", "classic"],
     "description": "Buttery, cloud-like mashed potatoes whipped with cream and a pinch of nutmeg for the ultimate comfort side.",
     "pairingReason": "velvety comfort to catch gravies and jus",
     "nutritionCategory": "carb",
@@ -1773,11 +1637,7 @@
     "id": "coleslaw",
     "name": "Coleslaw",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "cabbage",
-      "american"
-    ],
+    "tags": ["salad", "cabbage", "american"],
     "description": "Crunchy shredded cabbage and carrots tossed in a creamy, tangy dressing with a hint of celery seed.",
     "pairingReason": "cool crunch to offset smoky, grilled meats",
     "nutritionCategory": "vegetable",
@@ -1855,11 +1715,7 @@
     "id": "corn-on-cob",
     "name": "Corn on the Cob",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "grilled",
-      "american"
-    ],
+    "tags": ["vegetable", "grilled", "american"],
     "description": "Sweet summer corn grilled or boiled until tender, slathered in melted butter and sprinkled with salt.",
     "pairingReason": "buttery sweetness alongside barbecue and grills",
     "nutritionCategory": "vegetable",
@@ -1915,11 +1771,7 @@
     "id": "wild-rice",
     "name": "Wild Rice",
     "imageUrl": null,
-    "tags": [
-      "rice",
-      "grain",
-      "healthy"
-    ],
+    "tags": ["rice", "grain", "healthy"],
     "description": "Nutty, chewy wild rice with an earthy flavour, rich in fibre and protein — a wholesome alternative to white rice.",
     "pairingReason": "nutty grain to ground delicate fish or meat",
     "nutritionCategory": "carb",
@@ -1929,11 +1781,7 @@
     "id": "steamed-broccoli",
     "name": "Steamed Broccoli",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "healthy",
-      "steamed"
-    ],
+    "tags": ["vegetable", "healthy", "steamed"],
     "description": "Bright green broccoli florets steamed until just tender-crisp, finished with a squeeze of lemon and a pat of butter.",
     "pairingReason": "simple green for a nutritionally balanced plate",
     "nutritionCategory": "vegetable",
@@ -1943,11 +1791,7 @@
     "id": "hummus",
     "name": "Hummus",
     "imageUrl": null,
-    "tags": [
-      "dip",
-      "mediterranean",
-      "chickpea"
-    ],
+    "tags": ["dip", "mediterranean", "chickpea"],
     "description": "Silky-smooth chickpea purée blended with tahini, lemon juice, and garlic, swirled with olive oil and a dusting of paprika.",
     "pairingReason": "creamy dip to spread on wraps and pitas",
     "nutritionCategory": "protein",
@@ -1957,11 +1801,7 @@
     "id": "tabbouleh",
     "name": "Tabbouleh",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "mediterranean",
-      "herb"
-    ],
+    "tags": ["salad", "mediterranean", "herb"],
     "description": "A bright herb salad of finely chopped parsley, mint, bulgur wheat, tomato, and lemon-olive oil dressing.",
     "pairingReason": "herby, lemony freshness to lighten the plate",
     "nutritionCategory": "vegetable",
@@ -1971,11 +1811,7 @@
     "id": "baba-ganoush",
     "name": "Baba Ganoush",
     "imageUrl": null,
-    "tags": [
-      "dip",
-      "mediterranean",
-      "eggplant"
-    ],
+    "tags": ["dip", "mediterranean", "eggplant"],
     "description": "Smoky, fire-roasted eggplant mashed with tahini, garlic, and lemon juice for a velvety, deeply flavoured dip.",
     "pairingReason": "smoky depth from fire-roasted eggplant",
     "nutritionCategory": "vegetable",
@@ -1985,11 +1821,7 @@
     "id": "fattoush",
     "name": "Fattoush",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "mediterranean",
-      "crispy"
-    ],
+    "tags": ["salad", "mediterranean", "crispy"],
     "description": "A Levantine bread salad with crispy pita shards, fresh vegetables, herbs, and a tangy sumac-lemon dressing.",
     "pairingReason": "crispy pita salad for crunch and tang",
     "nutritionCategory": "vegetable",
@@ -1999,11 +1831,7 @@
     "id": "stuffed-grape-leaves",
     "name": "Stuffed Grape Leaves",
     "imageUrl": null,
-    "tags": [
-      "appetizer",
-      "mediterranean",
-      "rice"
-    ],
+    "tags": ["appetizer", "mediterranean", "rice"],
     "description": "Tender vine leaves wrapped around a fragrant filling of herbed rice, pine nuts, and a splash of lemon juice.",
     "pairingReason": "delicate herbed bites for a traditional spread",
     "nutritionCategory": "vegetable",
@@ -2013,11 +1841,7 @@
     "id": "tzatziki",
     "name": "Tzatziki",
     "imageUrl": null,
-    "tags": [
-      "dip",
-      "greek",
-      "yogurt"
-    ],
+    "tags": ["dip", "greek", "yogurt"],
     "description": "A refreshing Greek dip of thick strained yogurt, grated cucumber, garlic, dill, and a drizzle of olive oil.",
     "pairingReason": "cool cucumber dip to tame grilled meats",
     "nutritionCategory": "vegetable",
@@ -2027,11 +1851,7 @@
     "id": "pita-chips",
     "name": "Pita Chips",
     "imageUrl": null,
-    "tags": [
-      "snack",
-      "mediterranean",
-      "crispy"
-    ],
+    "tags": ["snack", "mediterranean", "crispy"],
     "description": "Pita bread cut into triangles and baked until golden and crunchy, seasoned with olive oil, salt, and za'atar.",
     "pairingReason": "crunchy za'atar chips for scooping dips",
     "nutritionCategory": "carb",
@@ -2041,11 +1861,7 @@
     "id": "pickled-turnips",
     "name": "Pickled Turnips",
     "imageUrl": null,
-    "tags": [
-      "pickle",
-      "mediterranean",
-      "tangy"
-    ],
+    "tags": ["pickle", "mediterranean", "tangy"],
     "description": "Vibrant pink-hued turnips pickled in vinegar and beet juice, offering a crunchy, tangy contrast to rich dishes.",
     "pairingReason": "tangy pickle to cut through fatty, rich bites",
     "nutritionCategory": "vegetable",
@@ -2055,11 +1871,7 @@
     "id": "spring-rolls",
     "name": "Spring Rolls",
     "imageUrl": "/food_images/spring_rolls.png",
-    "tags": [
-      "fried",
-      "thai",
-      "appetizer"
-    ],
+    "tags": ["fried", "thai", "appetizer"],
     "description": "Crispy, golden-fried rolls filled with vegetables and glass noodles, served with a sweet chilli dipping sauce.",
     "pairingReason": "crispy fried starter to open a Thai meal",
     "nutritionCategory": "vegetable",
@@ -2069,11 +1881,7 @@
     "id": "tom-yum-soup",
     "name": "Tom Yum Soup",
     "imageUrl": null,
-    "tags": [
-      "soup",
-      "thai",
-      "spicy"
-    ],
+    "tags": ["soup", "thai", "spicy"],
     "description": "A hot-and-sour Thai soup bursting with lemongrass, galangal, kaffir lime, prawns, and fiery bird's eye chillies.",
     "pairingReason": "hot-sour broth to awaken the appetite",
     "nutritionCategory": "vegetable",
@@ -2083,11 +1891,7 @@
     "id": "papaya-salad",
     "name": "Papaya Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "thai",
-      "spicy"
-    ],
+    "tags": ["salad", "thai", "spicy"],
     "description": "Shredded green papaya pounded with tomatoes, peanuts, dried shrimp, lime, and chilli in a spicy-sour dressing.",
     "pairingReason": "spicy-sour crunch to contrast noodle dishes",
     "nutritionCategory": "vegetable",
@@ -2097,11 +1901,7 @@
     "id": "thai-iced-tea",
     "name": "Thai Iced Tea",
     "imageUrl": null,
-    "tags": [
-      "drink",
-      "thai",
-      "sweet"
-    ],
+    "tags": ["drink", "thai", "sweet"],
     "description": "A creamy, bright-orange iced tea made from strongly brewed Ceylon tea, sweetened condensed milk, and crushed ice.",
     "pairingReason": "sweet, creamy drink to cool spicy heat",
     "nutritionCategory": "carb",
@@ -2111,11 +1911,7 @@
     "id": "satay",
     "name": "Satay",
     "imageUrl": null,
-    "tags": [
-      "grilled",
-      "thai",
-      "peanut"
-    ],
+    "tags": ["grilled", "thai", "peanut"],
     "description": "Tender, marinated chicken or pork skewers grilled over charcoal and served with a rich, spiced peanut dipping sauce.",
     "pairingReason": "chargrilled skewers with nutty peanut sauce",
     "nutritionCategory": "protein",
@@ -2125,11 +1921,7 @@
     "id": "sticky-rice",
     "name": "Sticky Rice",
     "imageUrl": null,
-    "tags": [
-      "rice",
-      "thai",
-      "grain"
-    ],
+    "tags": ["rice", "thai", "grain"],
     "description": "Glutinous rice steamed until beautifully sticky and chewy, the perfect vessel for soaking up rich Thai curries and sauces.",
     "pairingReason": "chewy, sticky rice to absorb bold sauces",
     "nutritionCategory": "carb",
@@ -2139,11 +1931,7 @@
     "id": "larb",
     "name": "Larb",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "thai",
-      "meat"
-    ],
+    "tags": ["salad", "thai", "meat"],
     "description": "A zesty Thai minced meat salad seasoned with lime, fish sauce, toasted rice powder, chilli, and fresh herbs.",
     "pairingReason": "zesty meat salad for a punch of herbs",
     "nutritionCategory": "protein",
@@ -2153,11 +1941,7 @@
     "id": "coconut-soup",
     "name": "Coconut Soup",
     "imageUrl": null,
-    "tags": [
-      "soup",
-      "thai",
-      "coconut"
-    ],
+    "tags": ["soup", "thai", "coconut"],
     "description": "A silky, aromatic soup made with creamy coconut milk, galangal, lemongrass, mushrooms, and a hint of lime.",
     "pairingReason": "velvety coconut broth to round out spice",
     "nutritionCategory": "vegetable",
@@ -2167,11 +1951,7 @@
     "id": "pickled-ginger",
     "name": "Pickled Ginger",
     "imageUrl": "/food_images/pickled_ginger.png",
-    "tags": [
-      "condiment",
-      "japanese",
-      "pickle"
-    ],
+    "tags": ["condiment", "japanese", "pickle"],
     "description": "Paper-thin slices of young ginger pickled in sweet rice vinegar, turning a delicate pink — a palate cleanser between bites.",
     "pairingReason": "palate cleanser between different flavours",
     "nutritionCategory": "vegetable",
@@ -2181,11 +1961,7 @@
     "id": "french-fries",
     "name": "French Fries",
     "imageUrl": null,
-    "tags": [
-      "fried",
-      "american",
-      "potato"
-    ],
+    "tags": ["fried", "american", "potato"],
     "description": "Twice-fried potato sticks with a shattering golden crust and fluffy interior, generously seasoned with salt.",
     "pairingReason": "salty, crispy classic alongside burgers",
     "nutritionCategory": "carb",
@@ -2263,11 +2039,7 @@
     "id": "onion-rings",
     "name": "Onion Rings",
     "imageUrl": null,
-    "tags": [
-      "fried",
-      "american",
-      "snack"
-    ],
+    "tags": ["fried", "american", "snack"],
     "description": "Thick-cut onion slices dipped in seasoned batter and fried until the coating turns crispy and deep golden brown.",
     "pairingReason": "sweet-savoury crunch for a diner-style pairing",
     "nutritionCategory": "carb",
@@ -2356,11 +2128,7 @@
     "id": "sweet-potato-fries",
     "name": "Sweet Potato Fries",
     "imageUrl": "/food_images/sweet_potato_fries.png",
-    "tags": [
-      "fried",
-      "american",
-      "sweet"
-    ],
+    "tags": ["fried", "american", "sweet"],
     "description": "Crispy-on-the-outside, soft-inside sweet potato sticks with a natural caramel sweetness and a hint of sea salt.",
     "pairingReason": "natural sweetness for a lighter fry option",
     "nutritionCategory": "carb",
@@ -2460,11 +2228,7 @@
     "id": "potato-salad",
     "name": "Potato Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "american",
-      "potato"
-    ],
+    "tags": ["salad", "american", "potato"],
     "description": "Tender potato chunks folded with mayo, mustard, crunchy celery, hard-boiled eggs, and a scatter of fresh dill.",
     "pairingReason": "creamy potato side for outdoor cookouts",
     "nutritionCategory": "carb",
@@ -2542,11 +2306,7 @@
     "id": "cornbread",
     "name": "Cornbread",
     "imageUrl": null,
-    "tags": [
-      "bread",
-      "american",
-      "baked"
-    ],
+    "tags": ["bread", "american", "baked"],
     "description": "Warm, golden cornbread with a slightly sweet crumb and a buttery crust, baked in a cast-iron skillet.",
     "pairingReason": "sweet, crumbly bread to mop up barbecue sauce",
     "nutritionCategory": "carb",
@@ -2635,11 +2395,7 @@
     "id": "baked-beans",
     "name": "Baked Beans",
     "imageUrl": null,
-    "tags": [
-      "beans",
-      "american",
-      "bbq"
-    ],
+    "tags": ["beans", "american", "bbq"],
     "description": "Navy beans slow-baked in a smoky, sweet molasses and tomato sauce with bits of bacon and brown sugar.",
     "pairingReason": "smoky-sweet beans for a classic barbecue spread",
     "nutritionCategory": "protein",
@@ -2728,11 +2484,7 @@
     "id": "mac-and-cheese",
     "name": "Mac & Cheese",
     "imageUrl": null,
-    "tags": [
-      "pasta",
-      "american",
-      "comfort"
-    ],
+    "tags": ["pasta", "american", "comfort"],
     "description": "Elbow pasta swimming in a luscious, three-cheese sauce, topped with buttery breadcrumbs and baked until bubbly.",
     "pairingReason": "indulgent cheese comfort for hearty meals",
     "nutritionCategory": "carb",
@@ -2810,11 +2562,7 @@
     "id": "pickles",
     "name": "Pickles",
     "imageUrl": null,
-    "tags": [
-      "pickle",
-      "american",
-      "tangy"
-    ],
+    "tags": ["pickle", "american", "tangy"],
     "description": "Crunchy dill pickle spears brined in vinegar, garlic, and dill — a tangy, refreshing palate cleanser.",
     "pairingReason": "sharp tang to cut through greasy, rich bites",
     "nutritionCategory": "vegetable",
@@ -2892,11 +2640,7 @@
     "id": "kimchi",
     "name": "Kimchi",
     "imageUrl": null,
-    "tags": [
-      "fermented",
-      "korean",
-      "spicy"
-    ],
+    "tags": ["fermented", "korean", "spicy"],
     "description": "Spicy, tangy fermented napa cabbage seasoned with gochugaru, garlic, ginger, and fish sauce — Korea's iconic side.",
     "pairingReason": "fermented funk and heat with every Korean meal",
     "nutritionCategory": "protein",
@@ -2906,11 +2650,7 @@
     "id": "korean-pancake",
     "name": "Korean Pancake",
     "imageUrl": null,
-    "tags": [
-      "pancake",
-      "korean",
-      "crispy"
-    ],
+    "tags": ["pancake", "korean", "crispy"],
     "description": "A crispy, savoury pancake loaded with scallions, seafood, or kimchi, pan-fried until golden and served with soy dip.",
     "pairingReason": "crispy savoury pancake for sharing",
     "nutritionCategory": "carb",
@@ -2920,11 +2660,7 @@
     "id": "japchae",
     "name": "Japchae",
     "imageUrl": null,
-    "tags": [
-      "noodle",
-      "korean",
-      "sweet"
-    ],
+    "tags": ["noodle", "korean", "sweet"],
     "description": "Glassy sweet potato noodles stir-fried with colourful vegetables, beef, and a sweet soy-sesame sauce.",
     "pairingReason": "sweet glassy noodles for textural contrast",
     "nutritionCategory": "carb",
@@ -2934,11 +2670,7 @@
     "id": "mandu",
     "name": "Mandu",
     "imageUrl": null,
-    "tags": [
-      "dumpling",
-      "korean",
-      "steamed"
-    ],
+    "tags": ["dumpling", "korean", "steamed"],
     "description": "Korean dumplings filled with seasoned pork, tofu, and vegetables, either steamed, boiled, or pan-fried until crispy.",
     "pairingReason": "juicy dumplings to complement rice bowls",
     "nutritionCategory": "protein",
@@ -2948,11 +2680,7 @@
     "id": "bean-sprout-salad",
     "name": "Bean Sprout Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "korean",
-      "healthy"
-    ],
+    "tags": ["salad", "korean", "healthy"],
     "description": "Blanched bean sprouts tossed in sesame oil, garlic, scallions, and a pinch of salt — a simple, nutty banchan.",
     "pairingReason": "simple banchan for a balanced Korean table",
     "nutritionCategory": "vegetable",
@@ -2962,11 +2690,7 @@
     "id": "tteokbokki",
     "name": "Tteokbokki",
     "imageUrl": null,
-    "tags": [
-      "rice-cake",
-      "korean",
-      "spicy"
-    ],
+    "tags": ["rice-cake", "korean", "spicy"],
     "description": "Chewy cylindrical rice cakes simmered in a fiery, sweet gochujang sauce — Korea's beloved street food snack.",
     "pairingReason": "chewy, spicy rice cakes for bold flavour",
     "nutritionCategory": "carb",
@@ -2976,11 +2700,7 @@
     "id": "seaweed-soup",
     "name": "Seaweed Soup",
     "imageUrl": null,
-    "tags": [
-      "soup",
-      "korean",
-      "healthy"
-    ],
+    "tags": ["soup", "korean", "healthy"],
     "description": "A light, nourishing Korean soup made with tender wakame seaweed in a clear beef or anchovy broth with sesame oil.",
     "pairingReason": "nourishing broth to sip between bites",
     "nutritionCategory": "vegetable",
@@ -2990,11 +2710,7 @@
     "id": "pickled-radish",
     "name": "Pickled Radish",
     "imageUrl": null,
-    "tags": [
-      "pickle",
-      "korean",
-      "sweet"
-    ],
+    "tags": ["pickle", "korean", "sweet"],
     "description": "Bright yellow cubes of Korean radish pickled in a sweet vinegar brine — crunchy, tangy, and palate-cleansing.",
     "pairingReason": "crunchy palate cleanser between bold bites",
     "nutritionCategory": "vegetable",
@@ -3004,11 +2720,7 @@
     "id": "banh-mi",
     "name": "Banh Mi",
     "imageUrl": null,
-    "tags": [
-      "sandwich",
-      "vietnamese",
-      "bread"
-    ],
+    "tags": ["sandwich", "vietnamese", "bread"],
     "description": "A crusty baguette filled with savoury meats, pâté, pickled daikon and carrots, cilantro, and sliced jalapeños.",
     "pairingReason": "crusty baguette sandwich for variety",
     "nutritionCategory": "carb",
@@ -3018,11 +2730,7 @@
     "id": "vietnamese-coffee",
     "name": "Vietnamese Coffee",
     "imageUrl": null,
-    "tags": [
-      "drink",
-      "vietnamese",
-      "coffee"
-    ],
+    "tags": ["drink", "vietnamese", "coffee"],
     "description": "Bold, dark-roast Vietnamese coffee brewed slowly through a phin filter over sweetened condensed milk, served iced.",
     "pairingReason": "rich, sweet iced coffee to close the meal",
     "nutritionCategory": "carb",
@@ -3032,11 +2740,7 @@
     "id": "bao-buns",
     "name": "Bao Buns",
     "imageUrl": null,
-    "tags": [
-      "bun",
-      "chinese",
-      "steamed"
-    ],
+    "tags": ["bun", "chinese", "steamed"],
     "description": "Fluffy, cloud-like steamed buns folded around tender braised pork, pickled vegetables, and a drizzle of hoisin.",
     "pairingReason": "pillowy buns for a textural change of pace",
     "nutritionCategory": "carb",
@@ -3046,11 +2750,7 @@
     "id": "crispy-wontons",
     "name": "Crispy Wontons",
     "imageUrl": null,
-    "tags": [
-      "fried",
-      "chinese",
-      "snack"
-    ],
+    "tags": ["fried", "chinese", "snack"],
     "description": "Thin wonton wrappers filled with seasoned pork or cream cheese, deep-fried until shatteringly crispy and golden.",
     "pairingReason": "shatteringly crispy bites for variety",
     "nutritionCategory": "carb",
@@ -3060,11 +2760,7 @@
     "id": "lotus-root-salad",
     "name": "Lotus Root Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "vietnamese",
-      "crunchy"
-    ],
+    "tags": ["salad", "vietnamese", "crunchy"],
     "description": "Thinly sliced lotus root with a satisfying crunch, tossed with shrimp, herbs, and a tangy Vietnamese dressing.",
     "pairingReason": "crunchy lotus root for a refreshing contrast",
     "nutritionCategory": "vegetable",
@@ -3074,11 +2770,7 @@
     "id": "summer-rolls",
     "name": "Summer Rolls",
     "imageUrl": null,
-    "tags": [
-      "fresh",
-      "vietnamese",
-      "healthy"
-    ],
+    "tags": ["fresh", "vietnamese", "healthy"],
     "description": "Translucent rice paper rolls filled with fresh herbs, vermicelli, prawns, and vegetables, served with peanut sauce.",
     "pairingReason": "light, fresh rolls to balance rich broths",
     "nutritionCategory": "vegetable",
@@ -3088,11 +2780,7 @@
     "id": "creamed-spinach",
     "name": "Creamed Spinach",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "cream",
-      "classic"
-    ],
+    "tags": ["vegetable", "cream", "classic"],
     "description": "Tender spinach leaves wilted and folded into a rich, garlicky cream sauce with a hint of nutmeg.",
     "pairingReason": "rich, creamy greens alongside steak",
     "nutritionCategory": "vegetable",
@@ -3102,11 +2790,7 @@
     "id": "baked-potato",
     "name": "Baked Potato",
     "imageUrl": null,
-    "tags": [
-      "potato",
-      "baked",
-      "classic"
-    ],
+    "tags": ["potato", "baked", "classic"],
     "description": "A russet potato baked until the skin is crispy and the inside is fluffy, split open and loaded with butter and sour cream.",
     "pairingReason": "loaded baked potato for a hearty companion",
     "nutritionCategory": "carb",
@@ -3116,11 +2800,7 @@
     "id": "greek-salad",
     "name": "Greek Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "greek",
-      "feta"
-    ],
+    "tags": ["salad", "greek", "feta"],
     "description": "Juicy tomatoes, cucumber, red onion, Kalamata olives, and a slab of creamy feta, dressed in olive oil and oregano.",
     "pairingReason": "classic Mediterranean salad for freshness",
     "nutritionCategory": "vegetable",
@@ -3130,11 +2810,7 @@
     "id": "spanakopita",
     "name": "Spanakopita",
     "imageUrl": null,
-    "tags": [
-      "pastry",
-      "greek",
-      "spinach"
-    ],
+    "tags": ["pastry", "greek", "spinach"],
     "description": "Flaky layers of buttery phyllo pastry encasing a savoury filling of spinach, feta cheese, dill, and scallions.",
     "pairingReason": "flaky phyllo pastry for an indulgent side",
     "nutritionCategory": "carb",
@@ -3144,11 +2820,7 @@
     "id": "mirchi-ka-salan",
     "name": "Mirchi Ka Salan",
     "imageUrl": "/food_images/mirchi_ka_salan.png",
-    "tags": [
-      "curry",
-      "indian",
-      "spicy"
-    ],
+    "tags": ["curry", "indian", "spicy"],
     "description": "A tangy Hyderabadi curry of green chillies simmered in a rich gravy of peanuts, sesame seeds, coconut, and tamarind.",
     "pairingReason": "tangy chilli curry, the classic biryani partner",
     "nutritionCategory": "vegetable",
@@ -3158,11 +2830,7 @@
     "id": "congee",
     "name": "Congee",
     "imageUrl": null,
-    "tags": [
-      "porridge",
-      "chinese",
-      "comfort"
-    ],
+    "tags": ["porridge", "chinese", "comfort"],
     "description": "A soothing rice porridge slow-cooked until silky and thick, topped with shredded ginger, scallions, and crispy shallots.",
     "pairingReason": "soothing rice porridge for comforting warmth",
     "nutritionCategory": "carb",
@@ -3172,11 +2840,7 @@
     "id": "sesame-balls",
     "name": "Sesame Balls",
     "imageUrl": null,
-    "tags": [
-      "dessert",
-      "chinese",
-      "fried"
-    ],
+    "tags": ["dessert", "chinese", "fried"],
     "description": "Chewy glutinous rice balls coated in sesame seeds and deep-fried, filled with sweet red bean or lotus paste.",
     "pairingReason": "sweet, chewy dessert to end on a high note",
     "nutritionCategory": "carb",
@@ -3186,11 +2850,7 @@
     "id": "turnip-cake",
     "name": "Turnip Cake",
     "imageUrl": null,
-    "tags": [
-      "dim-sum",
-      "chinese",
-      "pan-fried"
-    ],
+    "tags": ["dim-sum", "chinese", "pan-fried"],
     "description": "Savoury steamed radish cake sliced and pan-fried until golden and crispy outside, soft and fragrant with dried shrimp inside.",
     "pairingReason": "crispy-soft dim sum classic for the table",
     "nutritionCategory": "carb",
@@ -3200,11 +2860,7 @@
     "id": "chinese-broccoli",
     "name": "Chinese Broccoli",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "chinese",
-      "stir-fry"
-    ],
+    "tags": ["vegetable", "chinese", "stir-fry"],
     "description": "Jade-green gai lan blanched and drizzled with oyster sauce and a splash of sesame oil for a simple, elegant side.",
     "pairingReason": "simple greens to balance fried dim sum",
     "nutritionCategory": "vegetable",
@@ -3214,11 +2870,7 @@
     "id": "egg-tart",
     "name": "Egg Tart",
     "imageUrl": null,
-    "tags": [
-      "dessert",
-      "chinese",
-      "pastry"
-    ],
+    "tags": ["dessert", "chinese", "pastry"],
     "description": "A flaky, buttery pastry shell cradling a smooth, jiggly egg custard filling caramelised to a golden blush on top.",
     "pairingReason": "silky custard tart for a sweet ending",
     "nutritionCategory": "carb",
@@ -3228,11 +2880,7 @@
     "id": "avocado-raita",
     "name": "Avocado Raita",
     "imageUrl": "/food_images/avocado_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "Creamy mashed avocado folded into chilled yogurt with cumin, cilantro, and a hint of green chili for a rich, cooling dip.",
     "pairingReason": "creamy coolness to tame spicy mains",
     "nutritionCategory": "vegetable",
@@ -3242,11 +2890,7 @@
     "id": "beet-cucumber-raita",
     "name": "Beet + Cucumber Raita",
     "imageUrl": "/food_images/beet_cucumber_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "Vibrant pink-hued yogurt raita with grated beetroot and cool cucumber, seasoned with roasted cumin and fresh mint.",
     "pairingReason": "colorful cooling contrast for spicy curries",
     "nutritionCategory": "vegetable",
@@ -3256,11 +2900,7 @@
     "id": "boondi-raita",
     "name": "Boondi Raita",
     "imageUrl": "/food_images/boondi_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "Chilled yogurt mixed with tiny crispy chickpea-flour boondi pearls, tempered with cumin and garnished with cilantro.",
     "pairingReason": "crunchy boondi bits in cool yogurt",
     "nutritionCategory": "vegetable",
@@ -3270,11 +2910,7 @@
     "id": "burani-raita",
     "name": "Burani Raita",
     "imageUrl": "/food_images/burani_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "A Mughlai-style garlic-infused yogurt raita with fried onions, mint, and a drizzle of tempered oil on top.",
     "pairingReason": "garlicky richness alongside biryani",
     "nutritionCategory": "vegetable",
@@ -3284,11 +2920,7 @@
     "id": "onion-raita",
     "name": "Onion Raita",
     "imageUrl": "/food_images/onion_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "Finely diced raw onions stirred into thick yogurt with roasted cumin, chili powder, and a squeeze of lemon juice.",
     "pairingReason": "sharp onion bite to cut rich biryani",
     "nutritionCategory": "vegetable",
@@ -3298,11 +2930,7 @@
     "id": "pumpkin-raita",
     "name": "Pumpkin Raita",
     "imageUrl": "/food_images/pumpkin_raita.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "Sweet roasted pumpkin mashed into seasoned yogurt with mustard seeds, curry leaves, and a touch of jaggery.",
     "pairingReason": "sweet pumpkin mellows fiery dishes",
     "nutritionCategory": "vegetable",
@@ -3312,11 +2940,7 @@
     "id": "plain-dahi",
     "name": "Plain Dahi (Set Curd)",
     "imageUrl": "/food_images/plain_dahi.png",
-    "tags": [
-      "dairy",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["dairy", "yogurt", "indian"],
     "description": "Fresh, thick-set Indian curd served chilled as a simple, probiotic-rich accompaniment to any meal.",
     "pairingReason": "plain yogurt to balance every thali",
     "nutritionCategory": "vegetable",
@@ -3326,11 +2950,7 @@
     "id": "cilantro-mint-chutney",
     "name": "Cilantro Mint Chutney",
     "imageUrl": "/food_images/cilantro_mint_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A bright, vibrant green chutney blended from fresh cilantro, mint, green chili, and lemon juice.",
     "pairingReason": "herbaceous zing for snacks and chaat",
     "nutritionCategory": "vegetable",
@@ -3340,11 +2960,7 @@
     "id": "coconut-chutney",
     "name": "Coconut Chutney",
     "imageUrl": "/food_images/coconut_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A smooth South Indian chutney made from fresh coconut, roasted chana dal, green chili, and tempered with mustard seeds.",
     "pairingReason": "creamy coconut dip for dosa and idli",
     "nutritionCategory": "vegetable",
@@ -3354,11 +2970,7 @@
     "id": "dry-chutneys",
     "name": "Dry Chutneys (Assorted)",
     "imageUrl": "/food_images/dry_chutneys.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "Assorted dry powdered chutneys made from roasted peanuts, garlic, sesame, or flaxseeds blended with red chili.",
     "pairingReason": "nutty dry powder to sprinkle on bread",
     "nutritionCategory": "vegetable",
@@ -3368,11 +2980,7 @@
     "id": "green-tomato-chutney",
     "name": "Green Tomato Chutney",
     "imageUrl": "/food_images/green_tomato_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A tangy, slightly spicy chutney cooked from unripe green tomatoes with mustard seeds, curry leaves, and jaggery.",
     "pairingReason": "tart tanginess to brighten any plate",
     "nutritionCategory": "vegetable",
@@ -3382,11 +2990,7 @@
     "id": "red-dosa-chutney",
     "name": "Red Dosa Chutney",
     "imageUrl": "/food_images/red_dosa_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A fiery South Indian chutney made from dried red chilies, roasted chana dal, tamarind, and garlic.",
     "pairingReason": "bold red heat for dosa and idli",
     "nutritionCategory": "vegetable",
@@ -3396,11 +3000,7 @@
     "id": "tamarind-date-chutney",
     "name": "Tamarind Date Chutney",
     "imageUrl": "/food_images/tamarind_date_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A thick, dark sweet-and-sour chutney simmered from tamarind pulp, dates, jaggery, and warming spices.",
     "pairingReason": "sweet-sour depth for chaat and samosas",
     "nutritionCategory": "vegetable",
@@ -3410,11 +3010,7 @@
     "id": "tomato-chutney",
     "name": "Tomato Chutney",
     "imageUrl": "/food_images/tomato_chutney.png",
-    "tags": [
-      "chutney",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["chutney", "condiment", "indian"],
     "description": "A tangy, mildly spiced chutney made from ripe tomatoes cooked down with onion, red chili, and a mustard seed tempering.",
     "pairingReason": "versatile tomato tang for any spread",
     "nutritionCategory": "vegetable",
@@ -3424,11 +3020,7 @@
     "id": "aam-ka-achar",
     "name": "Aam Ka Achar (Mango Pickle)",
     "imageUrl": "/food_images/aam_ka_achar.png",
-    "tags": [
-      "pickle",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["pickle", "condiment", "indian"],
     "description": "A bold, pungent Indian pickle of raw mango chunks preserved in mustard oil with fenugreek, fennel, and red chili.",
     "pairingReason": "pungent punch to liven up dal-rice",
     "nutritionCategory": "vegetable",
@@ -3438,11 +3030,7 @@
     "id": "hari-mirch-achar",
     "name": "Hari Mirch Achar (Green Chili Pickle)",
     "imageUrl": "/food_images/hari_mirch_achar.png",
-    "tags": [
-      "pickle",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["pickle", "condiment", "indian"],
     "description": "Slit green chilies stuffed with a tangy spice mix of mustard, fennel, and amchur, preserved in mustard oil.",
     "pairingReason": "fiery chili kick for bold eaters",
     "nutritionCategory": "vegetable",
@@ -3452,11 +3040,7 @@
     "id": "nimbu-achar",
     "name": "Nimbu Achar (Lemon Pickle)",
     "imageUrl": "/food_images/nimbu_achar.png",
-    "tags": [
-      "pickle",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["pickle", "condiment", "indian"],
     "description": "Sun-ripened lemon wedges pickled with salt, turmeric, red chili, and mustard seeds for an intensely sour-spicy condiment.",
     "pairingReason": "sour-spicy spark for every meal",
     "nutritionCategory": "vegetable",
@@ -3466,11 +3050,7 @@
     "id": "sirke-wale-pyaaz",
     "name": "Sirke Wale Pyaaz (Pickled Onions)",
     "imageUrl": "/food_images/sirke_wale_pyaaz.png",
-    "tags": [
-      "pickle",
-      "condiment",
-      "indian"
-    ],
+    "tags": ["pickle", "condiment", "indian"],
     "description": "Thinly sliced onion rings pickled in vinegar with beetroot juice, turning them a vibrant pink with a sharp tangy bite.",
     "pairingReason": "tangy pink onions alongside kebabs",
     "nutritionCategory": "vegetable",
@@ -3480,11 +3060,7 @@
     "id": "beet-koshimbir",
     "name": "Beet Koshimbir",
     "imageUrl": "/food_images/beet_koshimbir.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "A Maharashtrian raw beetroot salad with grated coconut, roasted peanuts, lemon juice, and a mustard seed tempering.",
     "pairingReason": "earthy beet crunch for thali balance",
     "nutritionCategory": "vegetable",
@@ -3494,11 +3070,7 @@
     "id": "beetroot-salad",
     "name": "Beetroot Salad",
     "imageUrl": "/food_images/beetroot_salad.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "Boiled and diced beetroot tossed with onion, green chili, lemon juice, and fresh cilantro for a simple, vibrant salad.",
     "pairingReason": "sweet beet freshness with every meal",
     "nutritionCategory": "vegetable",
@@ -3508,11 +3080,7 @@
     "id": "cabbage-salad-with-indian-tadka",
     "name": "Cabbage Salad with Indian Tadka",
     "imageUrl": "/food_images/cabbage_salad_tadka.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "Shredded raw cabbage dressed with lemon and topped with a sizzling tadka of mustard seeds, curry leaves, and dried chili.",
     "pairingReason": "crunchy tempered slaw for the thali",
     "nutritionCategory": "vegetable",
@@ -3522,11 +3090,7 @@
     "id": "kachumber",
     "name": "Kachumber",
     "imageUrl": "/food_images/kachumber.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "A classic Indian chopped salad of diced cucumber, tomato, and onion dressed with lemon juice, salt, and chili.",
     "pairingReason": "refreshing raw crunch with every bite",
     "nutritionCategory": "vegetable",
@@ -3536,11 +3100,7 @@
     "id": "kakdi-koshimbir",
     "name": "Kakdi Koshimbir",
     "imageUrl": "/food_images/kakdi_koshimbir.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "A Maharashtrian cucumber salad with grated coconut, roasted peanuts, and a tempering of mustard seeds and green chili.",
     "pairingReason": "cool cucumber for a Maharashtrian thali",
     "nutritionCategory": "vegetable",
@@ -3550,11 +3110,7 @@
     "id": "laccha-pyaz",
     "name": "Laccha Pyaz (Onion-Lemon Salad)",
     "imageUrl": "/food_images/laccha_pyaz.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "Thinly sliced onion rings soaked in lemon juice with a sprinkle of chaat masala, salt, and chopped green chili.",
     "pairingReason": "sharp onion rings for tandoori meats",
     "nutritionCategory": "vegetable",
@@ -3564,11 +3120,7 @@
     "id": "vibrant-apple-beet-carrot-salad",
     "name": "Vibrant Apple Beet Carrot (ABC) Salad",
     "imageUrl": "/food_images/abc_salad.png",
-    "tags": [
-      "salad",
-      "fresh",
-      "indian"
-    ],
+    "tags": ["salad", "fresh", "indian"],
     "description": "A colorful raw salad of grated apple, beetroot, and carrot tossed with lemon, chaat masala, and fresh herbs.",
     "pairingReason": "vibrant sweetness to lighten heavy mains",
     "nutritionCategory": "vegetable",
@@ -3578,11 +3130,7 @@
     "id": "air-fryer-broccoli",
     "name": "Air Fryer Broccoli",
     "imageUrl": "/food_images/air_fryer_broccoli.png",
-    "tags": [
-      "vegetable",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["vegetable", "healthy", "indian"],
     "description": "Broccoli florets tossed with Indian spices and air-fried until charred and crispy at the edges yet tender inside.",
     "pairingReason": "crispy spiced greens for healthy pairing",
     "nutritionCategory": "vegetable",
@@ -3592,11 +3140,7 @@
     "id": "air-fryer-brussels-sprouts",
     "name": "Air Fryer Brussels Sprouts",
     "imageUrl": "/food_images/air_fryer_brussels_sprouts.png",
-    "tags": [
-      "vegetable",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["vegetable", "healthy", "indian"],
     "description": "Halved Brussels sprouts air-fried with cumin, turmeric, and garlic until deeply caramelized and nutty.",
     "pairingReason": "caramelized sprouts for textural contrast",
     "nutritionCategory": "vegetable",
@@ -3606,11 +3150,7 @@
     "id": "air-fryer-corn-on-the-cob",
     "name": "Air Fryer Corn on the Cob",
     "imageUrl": "/food_images/air_fryer_corn.png",
-    "tags": [
-      "vegetable",
-      "snack",
-      "indian"
-    ],
+    "tags": ["vegetable", "snack", "indian"],
     "description": "Whole corn cobs brushed with spiced butter and air-fried until charred, finished with chaat masala and lime.",
     "pairingReason": "charred masala corn for bold flavor",
     "nutritionCategory": "vegetable",
@@ -3620,11 +3160,7 @@
     "id": "air-fryer-green-beans",
     "name": "Air Fryer Green Beans",
     "imageUrl": "/food_images/air_fryer_green_beans.png",
-    "tags": [
-      "vegetable",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["vegetable", "healthy", "indian"],
     "description": "Crisp green beans air-fried with mustard seeds, curry leaves, and grated coconut for a South Indian-inspired side.",
     "pairingReason": "snappy beans with coconut and spice",
     "nutritionCategory": "vegetable",
@@ -3634,11 +3170,7 @@
     "id": "asparagus-stir-fry-subzi",
     "name": "Asparagus Stir Fry Subzi",
     "imageUrl": "/food_images/asparagus_stir_fry.png",
-    "tags": [
-      "vegetable",
-      "stir-fry",
-      "indian"
-    ],
+    "tags": ["vegetable", "stir-fry", "indian"],
     "description": "Fresh asparagus spears stir-fried with cumin, mustard seeds, and green chili for a quick Indian-style sabzi.",
     "pairingReason": "quick veggie stir-fry for lighter meals",
     "nutritionCategory": "vegetable",
@@ -3648,11 +3180,7 @@
     "id": "bagara-baingan",
     "name": "Bagara Baingan",
     "imageUrl": "/food_images/bagara_baingan.png",
-    "tags": [
-      "vegetable",
-      "curry",
-      "indian"
-    ],
+    "tags": ["vegetable", "curry", "indian"],
     "description": "Hyderabadi baby eggplants simmered in a rich, tangy gravy of peanuts, sesame, coconut, and tamarind.",
     "pairingReason": "rich eggplant curry for biryani nights",
     "nutritionCategory": "vegetable",
@@ -3662,11 +3190,7 @@
     "id": "baingan-bharta",
     "name": "Baingan Bharta",
     "imageUrl": "/food_images/baingan_bharta.png",
-    "tags": [
-      "vegetable",
-      "smoky",
-      "indian"
-    ],
+    "tags": ["vegetable", "smoky", "indian"],
     "description": "Fire-roasted eggplant mashed and cooked with onions, tomatoes, green chilies, and aromatic spices for a smoky, hearty dish.",
     "pairingReason": "smoky mashed eggplant with warm rotis",
     "nutritionCategory": "vegetable",
@@ -3676,11 +3200,7 @@
     "id": "batata-bhaji",
     "name": "Batata Bhaji",
     "imageUrl": "/food_images/batata_bhaji.png",
-    "tags": [
-      "vegetable",
-      "potato",
-      "indian"
-    ],
+    "tags": ["vegetable", "potato", "indian"],
     "description": "A simple Maharashtrian dry potato dish tempered with mustard seeds, turmeric, curry leaves, and green chili.",
     "pairingReason": "humble spiced potatoes for poori meals",
     "nutritionCategory": "vegetable",
@@ -3690,11 +3210,7 @@
     "id": "beans-poriyal",
     "name": "Beans Poriyal",
     "imageUrl": "/food_images/beans_poriyal.png",
-    "tags": [
-      "vegetable",
-      "stir-fry",
-      "indian"
-    ],
+    "tags": ["vegetable", "stir-fry", "indian"],
     "description": "Finely chopped green beans stir-fried with urad dal, mustard seeds, curry leaves, and freshly grated coconut.",
     "pairingReason": "South Indian coconut-green bean classic",
     "nutritionCategory": "vegetable",
@@ -3704,11 +3220,7 @@
     "id": "cabbage-poriyal",
     "name": "Cabbage Poriyal",
     "imageUrl": "/food_images/cabbage_poriyal.png",
-    "tags": [
-      "vegetable",
-      "stir-fry",
-      "indian"
-    ],
+    "tags": ["vegetable", "stir-fry", "indian"],
     "description": "Shredded cabbage sauteed with mustard seeds, urad dal, curry leaves, and finished with fresh grated coconut.",
     "pairingReason": "light cabbage stir-fry for sambar rice",
     "nutritionCategory": "vegetable",
@@ -3718,11 +3230,7 @@
     "id": "peanut-thecha",
     "name": "Peanut Thecha (Kharda)",
     "imageUrl": "/food_images/peanut_thecha.png",
-    "tags": [
-      "condiment",
-      "spicy",
-      "indian"
-    ],
+    "tags": ["condiment", "spicy", "indian"],
     "description": "A coarse, fiery Maharashtrian chutney of crushed roasted peanuts, garlic, and green chilies pounded in a mortar.",
     "pairingReason": "fiery peanut punch for bhakri meals",
     "nutritionCategory": "vegetable",
@@ -3732,11 +3240,7 @@
     "id": "roasted-carrots-and-pearl-onions",
     "name": "Roasted Carrots and Pearl Onions",
     "imageUrl": "/food_images/roasted_carrots_onions.png",
-    "tags": [
-      "vegetable",
-      "roasted",
-      "indian"
-    ],
+    "tags": ["vegetable", "roasted", "indian"],
     "description": "Carrots and pearl onions roasted with cumin, coriander, and a drizzle of ghee until caramelized and tender.",
     "pairingReason": "sweet caramelized veggies with Indian spice",
     "nutritionCategory": "vegetable",
@@ -3746,11 +3250,7 @@
     "id": "stuffed-tomatoes",
     "name": "Stuffed Tomatoes",
     "imageUrl": "/food_images/stuffed_tomatoes.png",
-    "tags": [
-      "vegetable",
-      "stuffed",
-      "indian"
-    ],
+    "tags": ["vegetable", "stuffed", "indian"],
     "description": "Ripe tomatoes hollowed and stuffed with a spiced peanut-coconut filling, then pan-cooked until soft and fragrant.",
     "pairingReason": "spiced stuffed tomatoes for dal meals",
     "nutritionCategory": "vegetable",
@@ -3760,11 +3260,7 @@
     "id": "vellarika-pachadi",
     "name": "Vellarika Pachadi",
     "imageUrl": "/food_images/vellarika_pachadi.png",
-    "tags": [
-      "raita",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["raita", "yogurt", "indian"],
     "description": "A Kerala-style cucumber-yogurt dish tempered with coconut, mustard seeds, and curry leaves in a creamy base.",
     "pairingReason": "Kerala-style cooling side for Onam feast",
     "nutritionCategory": "vegetable",
@@ -3774,11 +3270,7 @@
     "id": "instant-pot-brown-rice",
     "name": "Instant Pot Brown Rice",
     "imageUrl": "/food_images/brown_rice.png",
-    "tags": [
-      "rice",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["rice", "healthy", "indian"],
     "description": "Nutty whole-grain brown rice pressure-cooked in an Instant Pot for perfectly fluffy, fiber-rich results every time.",
     "pairingReason": "wholesome grain base for curries",
     "nutritionCategory": "carb",
@@ -3788,11 +3280,7 @@
     "id": "instant-pot-jasmine-rice",
     "name": "Instant Pot Jasmine Rice",
     "imageUrl": "/food_images/jasmine_rice.png",
-    "tags": [
-      "rice",
-      "aromatic",
-      "indian"
-    ],
+    "tags": ["rice", "aromatic", "indian"],
     "description": "Fragrant jasmine rice steamed in an Instant Pot until each grain is soft, fluffy, and delicately perfumed.",
     "pairingReason": "fragrant fluffy rice for saucy dishes",
     "nutritionCategory": "carb",
@@ -3802,11 +3290,7 @@
     "id": "instant-pot-jeera-rice",
     "name": "Instant Pot Jeera Rice",
     "imageUrl": "/food_images/jeera_rice.png",
-    "tags": [
-      "rice",
-      "aromatic",
-      "indian"
-    ],
+    "tags": ["rice", "aromatic", "indian"],
     "description": "Basmati rice cooked with whole cumin seeds and ghee in an Instant Pot for an aromatic, everyday Indian side.",
     "pairingReason": "cumin-scented rice for dal pairing",
     "nutritionCategory": "carb",
@@ -3816,11 +3300,7 @@
     "id": "instant-pot-quinoa",
     "name": "Instant Pot Quinoa",
     "imageUrl": "/food_images/quinoa.png",
-    "tags": [
-      "grain",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["grain", "healthy", "indian"],
     "description": "Protein-rich quinoa pressure-cooked to fluffy perfection, a nutritious modern alternative to traditional rice.",
     "pairingReason": "protein-packed grain swap for rice",
     "nutritionCategory": "carb",
@@ -3830,11 +3310,7 @@
     "id": "lachha-paratha",
     "name": "Lachha Paratha",
     "imageUrl": "/food_images/lachha_paratha.png",
-    "tags": [
-      "bread",
-      "layered",
-      "indian"
-    ],
+    "tags": ["bread", "layered", "indian"],
     "description": "A flaky, multi-layered Indian flatbread with crispy spiraling layers, cooked on a tawa with ghee until golden.",
     "pairingReason": "flaky layers to scoop up rich gravies",
     "nutritionCategory": "carb",
@@ -3844,11 +3320,7 @@
     "id": "phulka",
     "name": "Phulka (Roti)",
     "imageUrl": "/food_images/phulka.png",
-    "tags": [
-      "bread",
-      "flatbread",
-      "indian"
-    ],
+    "tags": ["bread", "flatbread", "indian"],
     "description": "A thin, puffed whole wheat flatbread cooked directly on the flame until it balloons up, light and soft inside.",
     "pairingReason": "puffed light bread for everyday meals",
     "nutritionCategory": "carb",
@@ -3858,11 +3330,7 @@
     "id": "puri",
     "name": "Puri",
     "imageUrl": "/food_images/puri.png",
-    "tags": [
-      "bread",
-      "fried",
-      "indian"
-    ],
+    "tags": ["bread", "fried", "indian"],
     "description": "Deep-fried whole wheat bread that puffs up into a golden, crispy balloon, traditionally served with aloo sabzi or halwa.",
     "pairingReason": "crispy fried puffs for festive meals",
     "nutritionCategory": "carb",
@@ -3872,11 +3340,7 @@
     "id": "roti",
     "name": "Roti",
     "imageUrl": "/food_images/roti.png",
-    "tags": [
-      "bread",
-      "flatbread",
-      "indian"
-    ],
+    "tags": ["bread", "flatbread", "indian"],
     "description": "A simple, soft whole wheat flatbread cooked on a hot tawa, the essential accompaniment to any Indian curry.",
     "pairingReason": "everyday bread to pair with any curry",
     "nutritionCategory": "carb",
@@ -3886,11 +3350,7 @@
     "id": "buttered-ladi-pav",
     "name": "Buttered Ladi Pav",
     "imageUrl": "/food_images/buttered_ladi_pav.png",
-    "tags": [
-      "bread",
-      "bun",
-      "indian"
-    ],
+    "tags": ["bread", "bun", "indian"],
     "description": "Soft, pillowy Bombay dinner rolls toasted with a generous slather of butter, the classic partner for pav bhaji.",
     "pairingReason": "buttery rolls for pav bhaji and curries",
     "nutritionCategory": "carb",
@@ -3900,11 +3360,7 @@
     "id": "medu-vada",
     "name": "Medu Vada",
     "imageUrl": "/food_images/medu_vada.png",
-    "tags": [
-      "fried",
-      "south-indian",
-      "indian"
-    ],
+    "tags": ["fried", "south-indian", "indian"],
     "description": "Crispy, golden doughnut-shaped fritters made from urad dal batter, crunchy outside and fluffy inside, served with sambar.",
     "pairingReason": "crispy lentil fritters with sambar",
     "nutritionCategory": "carb",
@@ -3914,11 +3370,7 @@
     "id": "oats-idli",
     "name": "Oats Idli",
     "imageUrl": "/food_images/oats_idli.png",
-    "tags": [
-      "steamed",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["steamed", "healthy", "indian"],
     "description": "A healthy twist on the classic idli, made with oats and semolina, steamed into soft cakes with a light, fluffy texture.",
     "pairingReason": "healthy steamed cakes for light meals",
     "nutritionCategory": "carb",
@@ -3928,11 +3380,7 @@
     "id": "plain-dosa",
     "name": "Plain Dosa",
     "imageUrl": "/food_images/plain_dosa.png",
-    "tags": [
-      "crepe",
-      "south-indian",
-      "indian"
-    ],
+    "tags": ["crepe", "south-indian", "indian"],
     "description": "A thin, crispy fermented rice-and-lentil crepe cooked until golden on a hot griddle, served with chutney and sambar.",
     "pairingReason": "crispy crepe for chutney and sambar",
     "nutritionCategory": "carb",
@@ -3942,11 +3390,7 @@
     "id": "plain-idli",
     "name": "Plain Idli (or Mini Idli)",
     "imageUrl": "/food_images/plain_idli.png",
-    "tags": [
-      "steamed",
-      "south-indian",
-      "indian"
-    ],
+    "tags": ["steamed", "south-indian", "indian"],
     "description": "Soft, pillowy steamed rice-and-lentil cakes that are light on the stomach and perfect for soaking up sambar and chutney.",
     "pairingReason": "soft steamed cakes to soak up sambar",
     "nutritionCategory": "carb",
@@ -3956,11 +3400,7 @@
     "id": "uttapam",
     "name": "Uttapam",
     "imageUrl": "/food_images/uttapam.png",
-    "tags": [
-      "pancake",
-      "south-indian",
-      "indian"
-    ],
+    "tags": ["pancake", "south-indian", "indian"],
     "description": "A thick, spongy South Indian pancake topped with onions, tomatoes, and green chilies, cooked on a griddle until golden.",
     "pairingReason": "thick veggie pancake for a filling side",
     "nutritionCategory": "carb",
@@ -3970,11 +3410,7 @@
     "id": "air-fryer-sweet-potato-fries",
     "name": "Air Fryer Sweet Potato Fries",
     "imageUrl": "/food_images/sweet_potato_fries.png",
-    "tags": [
-      "fries",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["fries", "healthy", "indian"],
     "description": "Crispy sweet potato fries seasoned with chaat masala and air-fried for a guilt-free Indian-spiced snack.",
     "pairingReason": "masala-spiced fries for fusion meals",
     "nutritionCategory": "carb",
@@ -3984,11 +3420,7 @@
     "id": "curd-rice",
     "name": "Curd Rice (Oats)",
     "imageUrl": "/food_images/curd_rice_oats.png",
-    "tags": [
-      "rice",
-      "yogurt",
-      "indian"
-    ],
+    "tags": ["rice", "yogurt", "indian"],
     "description": "Cooling South Indian comfort food of rice mixed with creamy yogurt, tempered with mustard seeds, curry leaves, and ginger.",
     "pairingReason": "cooling curd rice to end a spicy meal",
     "nutritionCategory": "carb",
@@ -3998,11 +3430,7 @@
     "id": "masala-fries",
     "name": "Masala Fries",
     "imageUrl": "/food_images/masala_fries.png",
-    "tags": [
-      "fries",
-      "spicy",
-      "indian"
-    ],
+    "tags": ["fries", "spicy", "indian"],
     "description": "Golden crispy fries tossed with a bold blend of chaat masala, red chili powder, and a squeeze of fresh lime.",
     "pairingReason": "spiced fries for Indian street-food vibes",
     "nutritionCategory": "carb",
@@ -4012,11 +3440,7 @@
     "id": "masala-papad",
     "name": "Masala Papad",
     "imageUrl": "/food_images/masala_papad.png",
-    "tags": [
-      "crispy",
-      "snack",
-      "indian"
-    ],
+    "tags": ["crispy", "snack", "indian"],
     "description": "Roasted or fried papad topped with a zesty mix of diced onion, tomato, green chili, cilantro, and chaat masala.",
     "pairingReason": "crunchy topped papad as a thali starter",
     "nutritionCategory": "carb",
@@ -4026,11 +3450,7 @@
     "id": "millet-khichdi",
     "name": "Millet Khichdi",
     "imageUrl": "/food_images/millet_khichdi.png",
-    "tags": [
-      "grain",
-      "healthy",
-      "indian"
-    ],
+    "tags": ["grain", "healthy", "indian"],
     "description": "A wholesome one-pot dish of millet and lentils cooked with turmeric, cumin, and ghee for a nourishing, light meal.",
     "pairingReason": "nourishing millet-lentil comfort bowl",
     "nutritionCategory": "carb",
@@ -4040,11 +3460,7 @@
     "id": "roasted-papad",
     "name": "Roasted Papad (Urad/Jeera)",
     "imageUrl": "/food_images/roasted_papad.png",
-    "tags": [
-      "crispy",
-      "snack",
-      "indian"
-    ],
+    "tags": ["crispy", "snack", "indian"],
     "description": "Thin urad or jeera papad roasted over an open flame until blistered and crispy, a staple crunch on every Indian thali.",
     "pairingReason": "essential crispy cracker for the thali",
     "nutritionCategory": "carb",
@@ -4054,11 +3470,7 @@
     "id": "upma",
     "name": "Upma",
     "imageUrl": "/food_images/upma.png",
-    "tags": [
-      "semolina",
-      "breakfast",
-      "indian"
-    ],
+    "tags": ["semolina", "breakfast", "indian"],
     "description": "A savory South Indian porridge of roasted semolina cooked with mustard seeds, curry leaves, onions, and vegetables.",
     "pairingReason": "savory semolina for a filling side",
     "nutritionCategory": "carb",
@@ -4068,11 +3480,7 @@
     "id": "indian-egg-bites",
     "name": "Indian Egg Bites",
     "imageUrl": "/food_images/indian_egg_bites.png",
-    "tags": [
-      "egg",
-      "protein",
-      "indian"
-    ],
+    "tags": ["egg", "protein", "indian"],
     "description": "Fluffy baked egg bites seasoned with turmeric, cumin, green chili, and cilantro for a protein-packed Indian-spiced snack.",
     "pairingReason": "protein-rich spiced eggs for any meal",
     "nutritionCategory": "protein",
@@ -4082,11 +3490,7 @@
     "id": "goma-ae-spinach",
     "name": "Goma-ae (Sesame Spinach)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "japanese",
-      "sesame"
-    ],
+    "tags": ["vegetable", "japanese", "sesame"],
     "description": "Blanched spinach dressed in a sweet, nutty sesame sauce with a hint of soy and mirin.",
     "pairingReason": "nutty sesame greens to balance grilled proteins",
     "nutritionCategory": "vegetable",
@@ -4096,11 +3500,7 @@
     "id": "hiyayakko",
     "name": "Hiyayakko (Chilled Tofu)",
     "imageUrl": null,
-    "tags": [
-      "tofu",
-      "japanese",
-      "cold"
-    ],
+    "tags": ["tofu", "japanese", "cold"],
     "description": "Silky chilled tofu topped with grated ginger, scallions, bonito flakes, and a drizzle of soy sauce.",
     "pairingReason": "cool, silky protein with minimal carbs",
     "nutritionCategory": "protein",
@@ -4110,11 +3510,7 @@
     "id": "kinpira-gobo",
     "name": "Kinpira Gobo (Braised Burdock)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "japanese",
-      "root"
-    ],
+    "tags": ["vegetable", "japanese", "root"],
     "description": "Julienned burdock root and carrot stir-fried in soy sauce, mirin, and sesame oil until tender-crisp.",
     "pairingReason": "earthy root crunch to ground noodle dishes",
     "nutritionCategory": "vegetable",
@@ -4124,11 +3520,7 @@
     "id": "sunomono",
     "name": "Sunomono (Cucumber Vinegar Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "japanese",
-      "pickle"
-    ],
+    "tags": ["salad", "japanese", "pickle"],
     "description": "Paper-thin cucumber slices in a tangy rice vinegar dressing with toasted sesame and wakame seaweed.",
     "pairingReason": "refreshing acidity to cleanse a rich palate",
     "nutritionCategory": "vegetable",
@@ -4138,11 +3530,7 @@
     "id": "nasu-dengaku",
     "name": "Nasu Dengaku (Miso-Glazed Eggplant)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "japanese",
-      "miso"
-    ],
+    "tags": ["vegetable", "japanese", "miso"],
     "description": "Tender roasted eggplant halves glazed with a sweet white miso paste, caramelized under a broiler.",
     "pairingReason": "sweet-savory miso depth with every bite",
     "nutritionCategory": "vegetable",
@@ -4152,11 +3540,7 @@
     "id": "tamagoyaki",
     "name": "Tamagoyaki (Rolled Omelette)",
     "imageUrl": null,
-    "tags": [
-      "egg",
-      "japanese",
-      "protein"
-    ],
+    "tags": ["egg", "japanese", "protein"],
     "description": "A layered Japanese omelette gently seasoned with dashi, soy, and mirin, rolled into a golden log.",
     "pairingReason": "light, sweet egg protein to round the plate",
     "nutritionCategory": "protein",
@@ -4166,11 +3550,7 @@
     "id": "tsukemono",
     "name": "Tsukemono (Japanese Pickles)",
     "imageUrl": null,
-    "tags": [
-      "pickle",
-      "japanese",
-      "fermented"
-    ],
+    "tags": ["pickle", "japanese", "fermented"],
     "description": "An assortment of salt-pickled and vinegar-pickled vegetables — daikon, cucumber, eggplant — served as a palate cleanser.",
     "pairingReason": "crunchy, tangy pickles between every bite",
     "nutritionCategory": "vegetable",
@@ -4180,11 +3560,7 @@
     "id": "agedashi-tofu",
     "name": "Agedashi Tofu",
     "imageUrl": null,
-    "tags": [
-      "tofu",
-      "japanese",
-      "fried"
-    ],
+    "tags": ["tofu", "japanese", "fried"],
     "description": "Lightly fried tofu cubes in a warm dashi-soy broth topped with grated daikon, ginger, and bonito flakes.",
     "pairingReason": "crispy-soft tofu in savory dashi broth",
     "nutritionCategory": "protein",
@@ -4194,11 +3570,7 @@
     "id": "ohitashi",
     "name": "Ohitashi (Dashi-Soaked Greens)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "japanese",
-      "dashi"
-    ],
+    "tags": ["vegetable", "japanese", "dashi"],
     "description": "Blanched spinach or komatsuna soaked in a light dashi and soy dressing, topped with bonito flakes.",
     "pairingReason": "delicate umami greens to pair with rice",
     "nutritionCategory": "vegetable",
@@ -4208,11 +3580,7 @@
     "id": "soba-noodles",
     "name": "Soba Noodles (Buckwheat)",
     "imageUrl": null,
-    "tags": [
-      "noodle",
-      "japanese",
-      "grain"
-    ],
+    "tags": ["noodle", "japanese", "grain"],
     "description": "Nutty buckwheat noodles served chilled with a dashi-soy dipping sauce, scallions, and wasabi.",
     "pairingReason": "low-GI buckwheat noodles for a lighter carb",
     "nutritionCategory": "carb",
@@ -4222,11 +3590,7 @@
     "id": "sigeumchi-namul",
     "name": "Sigeumchi Namul (Sesame Spinach)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["vegetable", "korean", "banchan"],
     "description": "Blanched spinach seasoned with sesame oil, garlic, soy sauce, and toasted sesame seeds.",
     "pairingReason": "classic banchan greens for every Korean meal",
     "nutritionCategory": "vegetable",
@@ -4236,11 +3600,7 @@
     "id": "kongnamul",
     "name": "Kongnamul (Soybean Sprouts)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["vegetable", "korean", "banchan"],
     "description": "Soybean sprouts blanched and tossed with sesame oil, garlic, and a pinch of gochugaru chili flakes.",
     "pairingReason": "crunchy sprouts to refresh between bold bites",
     "nutritionCategory": "vegetable",
@@ -4250,11 +3610,7 @@
     "id": "hobak-bokkeum",
     "name": "Hobak Bokkeum (Zucchini Stir Fry)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["vegetable", "korean", "banchan"],
     "description": "Thinly sliced zucchini quickly stir-fried with garlic, sesame oil, and a pinch of salt until just tender.",
     "pairingReason": "quick veggie banchan for balanced Korean meals",
     "nutritionCategory": "vegetable",
@@ -4264,11 +3620,7 @@
     "id": "gamja-jorim",
     "name": "Gamja Jorim (Braised Potatoes)",
     "imageUrl": null,
-    "tags": [
-      "potato",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["potato", "korean", "banchan"],
     "description": "Bite-sized potatoes braised in a sweet soy sauce glaze with garlic and sesame seeds until glossy and tender.",
     "pairingReason": "sweet-savory glazed potatoes for the table",
     "nutritionCategory": "carb",
@@ -4278,11 +3630,7 @@
     "id": "musaengchae",
     "name": "Musaengchae (Spicy Radish Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["salad", "korean", "banchan"],
     "description": "Matchstick-cut Korean radish dressed in gochugaru, vinegar, garlic, and a touch of sugar for a crisp, tangy bite.",
     "pairingReason": "crunchy, spicy radish to cut through rich stews",
     "nutritionCategory": "vegetable",
@@ -4292,11 +3640,7 @@
     "id": "miyeok-muchim",
     "name": "Miyeok Muchim (Seaweed Side Salad)",
     "imageUrl": null,
-    "tags": [
-      "seaweed",
-      "korean",
-      "banchan"
-    ],
+    "tags": ["seaweed", "korean", "banchan"],
     "description": "Rehydrated wakame seaweed tossed in a tangy sesame-vinegar dressing with garlic and chili flakes.",
     "pairingReason": "mineral-rich seaweed for oceanic balance",
     "nutritionCategory": "vegetable",
@@ -4306,11 +3650,7 @@
     "id": "dubu-jorim",
     "name": "Dubu Jorim (Braised Tofu)",
     "imageUrl": null,
-    "tags": [
-      "tofu",
-      "korean",
-      "protein"
-    ],
+    "tags": ["tofu", "korean", "protein"],
     "description": "Pan-fried tofu slices braised in a spicy soy-gochugaru sauce with scallions and sesame seeds.",
     "pairingReason": "spicy braised tofu for plant protein",
     "nutritionCategory": "protein",
@@ -4320,11 +3660,7 @@
     "id": "som-tum",
     "name": "Som Tum (Green Papaya Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "thai",
-      "spicy"
-    ],
+    "tags": ["salad", "thai", "spicy"],
     "description": "Shredded green papaya pounded with tomatoes, green beans, peanuts, dried shrimp, lime, and bird's eye chili.",
     "pairingReason": "spicy-sour crunch as the quintessential Thai side",
     "nutritionCategory": "vegetable",
@@ -4334,11 +3670,7 @@
     "id": "nam-tok",
     "name": "Nam Tok (Waterfall Beef Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "thai",
-      "protein"
-    ],
+    "tags": ["salad", "thai", "protein"],
     "description": "Grilled sliced beef tossed with toasted rice powder, lime, fish sauce, shallots, mint, and chili flakes.",
     "pairingReason": "herbaceous grilled beef for a protein-rich side",
     "nutritionCategory": "protein",
@@ -4348,11 +3680,7 @@
     "id": "pak-boong",
     "name": "Pak Boong (Stir-Fried Morning Glory)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "thai",
-      "stir-fry"
-    ],
+    "tags": ["vegetable", "thai", "stir-fry"],
     "description": "Water spinach flash-fried in a blazing wok with garlic, soybean paste, and Thai chili for a smoky, spicy green.",
     "pairingReason": "fiery wok-charred greens in seconds",
     "nutritionCategory": "vegetable",
@@ -4362,11 +3690,7 @@
     "id": "gai-yang",
     "name": "Gai Yang (Thai Grilled Chicken)",
     "imageUrl": null,
-    "tags": [
-      "grilled",
-      "thai",
-      "protein"
-    ],
+    "tags": ["grilled", "thai", "protein"],
     "description": "Lemongrass-marinated chicken grilled over charcoal until smoky and charred, served with sweet chili dip.",
     "pairingReason": "smoky charcoal chicken alongside sticky rice",
     "nutritionCategory": "protein",
@@ -4376,11 +3700,7 @@
     "id": "yum-woon-sen",
     "name": "Yum Woon Sen (Glass Noodle Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "thai",
-      "noodle"
-    ],
+    "tags": ["salad", "thai", "noodle"],
     "description": "Tangy glass noodle salad with minced pork, shrimp, celery, onion, peanuts, and a fiery lime dressing.",
     "pairingReason": "tangy, slippery noodle salad for textural contrast",
     "nutritionCategory": "carb",
@@ -4390,11 +3710,7 @@
     "id": "pla-rad-prik",
     "name": "Pla Rad Prik (Crispy Fish with Chili Sauce)",
     "imageUrl": null,
-    "tags": [
-      "seafood",
-      "thai",
-      "fried"
-    ],
+    "tags": ["seafood", "thai", "fried"],
     "description": "Whole deep-fried fish draped in a sweet-sour-spicy tamarind and chili sauce with crispy shallots.",
     "pairingReason": "crispy whole fish for an impressive shared side",
     "nutritionCategory": "protein",
@@ -4404,11 +3720,7 @@
     "id": "tod-mun-pla",
     "name": "Tod Mun Pla (Thai Fish Cakes)",
     "imageUrl": null,
-    "tags": [
-      "seafood",
-      "thai",
-      "fried"
-    ],
+    "tags": ["seafood", "thai", "fried"],
     "description": "Bouncy, fragrant fish cakes loaded with red curry paste, kaffir lime, and green beans, served with cucumber relish.",
     "pairingReason": "herbal, bouncy fish cakes for a Thai starter",
     "nutritionCategory": "protein",
@@ -4418,11 +3730,7 @@
     "id": "mapo-tofu",
     "name": "Mapo Tofu",
     "imageUrl": null,
-    "tags": [
-      "tofu",
-      "chinese",
-      "spicy"
-    ],
+    "tags": ["tofu", "chinese", "spicy"],
     "description": "Silken tofu simmered in a fiery sauce of doubanjiang, Sichuan peppercorns, minced pork, and fermented black beans.",
     "pairingReason": "numbing-spicy tofu for bold Sichuan pairing",
     "nutritionCategory": "protein",
@@ -4432,11 +3740,7 @@
     "id": "bok-choy-garlic",
     "name": "Garlic Bok Choy",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "chinese",
-      "stir-fry"
-    ],
+    "tags": ["vegetable", "chinese", "stir-fry"],
     "description": "Baby bok choy halves seared in a hot wok with garlic, a splash of soy, and a drizzle of sesame oil.",
     "pairingReason": "quick garlic greens for every Chinese meal",
     "nutritionCategory": "vegetable",
@@ -4446,11 +3750,7 @@
     "id": "smashed-cucumber-salad",
     "name": "Smashed Cucumber Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "chinese",
-      "cold"
-    ],
+    "tags": ["salad", "chinese", "cold"],
     "description": "Cucumbers smashed to absorb a bold dressing of garlic, chili oil, black vinegar, and toasted sesame.",
     "pairingReason": "garlicky, spicy crunch to cut through oily dishes",
     "nutritionCategory": "vegetable",
@@ -4460,11 +3760,7 @@
     "id": "hot-and-sour-soup",
     "name": "Hot and Sour Soup",
     "imageUrl": null,
-    "tags": [
-      "soup",
-      "chinese",
-      "spicy"
-    ],
+    "tags": ["soup", "chinese", "spicy"],
     "description": "A silky egg-drop soup thickened with tofu, wood ear mushrooms, bamboo shoots, and balanced with vinegar and white pepper.",
     "pairingReason": "warming sour-spicy broth to open the meal",
     "nutritionCategory": "vegetable",
@@ -4474,11 +3770,7 @@
     "id": "dan-dan-noodles",
     "name": "Dan Dan Noodles",
     "imageUrl": null,
-    "tags": [
-      "noodle",
-      "chinese",
-      "spicy"
-    ],
+    "tags": ["noodle", "chinese", "spicy"],
     "description": "Thin wheat noodles in a nutty, spicy sesame-chili sauce topped with preserved vegetables and minced pork.",
     "pairingReason": "numbing-spicy noodles for a Sichuan feast",
     "nutritionCategory": "carb",
@@ -4488,11 +3780,7 @@
     "id": "xiao-long-bao",
     "name": "Xiao Long Bao (Soup Dumplings)",
     "imageUrl": null,
-    "tags": [
-      "dumpling",
-      "chinese",
-      "steamed"
-    ],
+    "tags": ["dumpling", "chinese", "steamed"],
     "description": "Delicate steamed dumplings filled with seasoned pork and a burst of hot, savory broth inside each bite.",
     "pairingReason": "soupy dumplings for an elegant dim sum starter",
     "nutritionCategory": "protein",
@@ -4502,11 +3790,7 @@
     "id": "wood-ear-mushroom-salad",
     "name": "Wood Ear Mushroom Salad",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "chinese",
-      "cold"
-    ],
+    "tags": ["salad", "chinese", "cold"],
     "description": "Sliced wood ear mushrooms tossed in a tangy dressing of black vinegar, chili oil, cilantro, and garlic.",
     "pairingReason": "crunchy mushrooms for a refreshing cold dish",
     "nutritionCategory": "vegetable",
@@ -4516,11 +3800,7 @@
     "id": "steamed-fish-ginger",
     "name": "Steamed Fish with Ginger & Scallion",
     "imageUrl": null,
-    "tags": [
-      "seafood",
-      "chinese",
-      "steamed"
-    ],
+    "tags": ["seafood", "chinese", "steamed"],
     "description": "A whole white fish steamed to perfection with julienned ginger, scallions, and a drizzle of hot soy-sesame oil.",
     "pairingReason": "clean, delicate steamed fish for a healthy plate",
     "nutritionCategory": "protein",
@@ -4530,11 +3810,7 @@
     "id": "goi-cuon",
     "name": "Gỏi Cuốn (Fresh Spring Rolls)",
     "imageUrl": null,
-    "tags": [
-      "fresh",
-      "vietnamese",
-      "healthy"
-    ],
+    "tags": ["fresh", "vietnamese", "healthy"],
     "description": "Translucent rice paper rolls stuffed with shrimp, vermicelli, herbs, lettuce, and served with peanut hoisin dip.",
     "pairingReason": "light, fresh rolls to start any Vietnamese meal",
     "nutritionCategory": "vegetable",
@@ -4544,11 +3820,7 @@
     "id": "rau-muong-xao-toi",
     "name": "Rau Muống Xào Tỏi (Garlic Water Spinach)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "vietnamese",
-      "stir-fry"
-    ],
+    "tags": ["vegetable", "vietnamese", "stir-fry"],
     "description": "Water spinach wok-tossed with garlic in high heat, finished with fish sauce and a squeeze of lime.",
     "pairingReason": "garlicky greens — Vietnam's everyday veggie",
     "nutritionCategory": "vegetable",
@@ -4558,11 +3830,7 @@
     "id": "canh-chua",
     "name": "Canh Chua (Vietnamese Sour Soup)",
     "imageUrl": null,
-    "tags": [
-      "soup",
-      "vietnamese",
-      "sour"
-    ],
+    "tags": ["soup", "vietnamese", "sour"],
     "description": "A tangy tamarind-based soup with catfish, tomatoes, pineapple, bean sprouts, and fresh herbs.",
     "pairingReason": "sour-sweet soup for a balanced Vietnamese table",
     "nutritionCategory": "vegetable",
@@ -4572,11 +3840,7 @@
     "id": "bun-cha",
     "name": "Bún Chả (Grilled Pork Noodles)",
     "imageUrl": null,
-    "tags": [
-      "noodle",
-      "vietnamese",
-      "grilled"
-    ],
+    "tags": ["noodle", "vietnamese", "grilled"],
     "description": "Charcoal-grilled pork patties and sliced belly served over rice vermicelli with herbs and sweet fish sauce dip.",
     "pairingReason": "smoky grilled pork for a Hanoi classic",
     "nutritionCategory": "protein",
@@ -4586,11 +3850,7 @@
     "id": "goi-ga",
     "name": "Gỏi Gà (Vietnamese Chicken Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "vietnamese",
-      "protein"
-    ],
+    "tags": ["salad", "vietnamese", "protein"],
     "description": "Shredded poached chicken tossed with cabbage, Vietnamese coriander, onion, lime, and fried shallots.",
     "pairingReason": "herbaceous chicken salad for fresh contrast",
     "nutritionCategory": "protein",
@@ -4600,11 +3860,7 @@
     "id": "cha-gio",
     "name": "Chả Giò (Fried Spring Rolls)",
     "imageUrl": null,
-    "tags": [
-      "fried",
-      "vietnamese",
-      "appetizer"
-    ],
+    "tags": ["fried", "vietnamese", "appetizer"],
     "description": "Crispy, golden-fried rice paper rolls stuffed with pork, shrimp, mushrooms, and glass noodles, served with nuoc cham.",
     "pairingReason": "crispy golden rolls for a crunchy contrast",
     "nutritionCategory": "protein",
@@ -4614,11 +3870,7 @@
     "id": "ensaladang-talong",
     "name": "Ensaladang Talong (Eggplant Salad)",
     "imageUrl": null,
-    "tags": [
-      "salad",
-      "filipino",
-      "vegetable"
-    ],
+    "tags": ["salad", "filipino", "vegetable"],
     "description": "Char-grilled eggplant peeled and dressed with vinegar, onions, tomatoes, and a drizzle of bagoong.",
     "pairingReason": "smoky eggplant to brighten any Filipino meal",
     "nutritionCategory": "vegetable",
@@ -4628,11 +3880,7 @@
     "id": "atchara",
     "name": "Atchara (Green Papaya Pickle)",
     "imageUrl": null,
-    "tags": [
-      "pickle",
-      "filipino",
-      "condiment"
-    ],
+    "tags": ["pickle", "filipino", "condiment"],
     "description": "Sweet and tangy pickled green papaya with carrots, bell peppers, ginger, and raisins in a vinegar brine.",
     "pairingReason": "sweet-sour pickle to cut through rich grilled meats",
     "nutritionCategory": "vegetable",
@@ -4642,11 +3890,7 @@
     "id": "pinakbet",
     "name": "Pinakbet",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "filipino",
-      "stew"
-    ],
+    "tags": ["vegetable", "filipino", "stew"],
     "description": "An Ilocano medley of bitter melon, eggplant, squash, okra, and string beans simmered with bagoong shrimp paste.",
     "pairingReason": "vegetable stew bursting with Filipino flavors",
     "nutritionCategory": "vegetable",
@@ -4656,11 +3900,7 @@
     "id": "ginisang-munggo",
     "name": "Ginisang Munggo (Mung Bean Stew)",
     "imageUrl": null,
-    "tags": [
-      "beans",
-      "filipino",
-      "protein"
-    ],
+    "tags": ["beans", "filipino", "protein"],
     "description": "Hearty mung bean stew sauteed with garlic, onions, tomatoes, and leafy greens like malunggay or ampalaya leaves.",
     "pairingReason": "fiber-rich bean stew for a nutritious pairing",
     "nutritionCategory": "protein",
@@ -4670,11 +3910,7 @@
     "id": "tortang-talong",
     "name": "Tortang Talong (Eggplant Omelette)",
     "imageUrl": null,
-    "tags": [
-      "egg",
-      "filipino",
-      "protein"
-    ],
+    "tags": ["egg", "filipino", "protein"],
     "description": "Charred eggplant flattened and coated in beaten egg, pan-fried until golden — a simple Filipino breakfast staple.",
     "pairingReason": "eggy charred eggplant for protein and fiber",
     "nutritionCategory": "protein",
@@ -4684,11 +3920,7 @@
     "id": "laing",
     "name": "Laing (Taro Leaves in Coconut Milk)",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "filipino",
-      "coconut"
-    ],
+    "tags": ["vegetable", "filipino", "coconut"],
     "description": "Dried taro leaves slow-simmered in rich coconut milk with chili, ginger, and shrimp paste until meltingly tender.",
     "pairingReason": "creamy, spicy coconut greens for Bicolano flair",
     "nutritionCategory": "vegetable",
@@ -4698,11 +3930,7 @@
     "id": "lumpiang-sariwa",
     "name": "Lumpiang Sariwa (Fresh Lumpia)",
     "imageUrl": null,
-    "tags": [
-      "fresh",
-      "filipino",
-      "vegetable"
-    ],
+    "tags": ["fresh", "filipino", "vegetable"],
     "description": "Fresh crepe wrappers filled with julienned jicama, carrots, green beans, and tofu, topped with a sweet peanut sauce.",
     "pairingReason": "fresh vegetable rolls with a sweet-savory drizzle",
     "nutritionCategory": "vegetable",
@@ -4712,11 +3940,7 @@
     "id": "brown-rice-bowl",
     "name": "Brown Rice Bowl",
     "imageUrl": null,
-    "tags": [
-      "rice",
-      "healthy",
-      "grain"
-    ],
+    "tags": ["rice", "healthy", "grain"],
     "description": "Nutty, chewy brown rice served plain as a fiber-rich, lower-GI alternative to white rice for any Asian cuisine.",
     "pairingReason": "wholesome grain base that slows blood sugar rise",
     "nutritionCategory": "carb",
@@ -4726,11 +3950,7 @@
     "id": "cauliflower-rice",
     "name": "Cauliflower Rice",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "healthy",
-      "low-carb"
-    ],
+    "tags": ["vegetable", "healthy", "low-carb"],
     "description": "Finely riced cauliflower sauteed with a touch of oil and salt — a near-zero-carb swap for traditional rice.",
     "pairingReason": "ultra-low-carb rice alternative for any curry",
     "nutritionCategory": "vegetable",
@@ -4740,11 +3960,7 @@
     "id": "shirataki-noodles",
     "name": "Shirataki Noodles",
     "imageUrl": null,
-    "tags": [
-      "noodle",
-      "japanese",
-      "low-carb"
-    ],
+    "tags": ["noodle", "japanese", "low-carb"],
     "description": "Translucent, gelatinous noodles made from konjac yam with virtually zero calories and carbs, absorbing any sauce.",
     "pairingReason": "zero-carb noodle swap for ramen or stir-fries",
     "nutritionCategory": "vegetable",
@@ -4754,12 +3970,7 @@
     "id": "chaas",
     "name": "Chaas (Spiced Buttermilk)",
     "imageUrl": null,
-    "tags": [
-      "south-asian",
-      "drink",
-      "probiotic",
-      "cooling"
-    ],
+    "tags": ["south-asian", "drink", "probiotic", "cooling"],
     "description": "A refreshing spiced buttermilk drink seasoned with roasted cumin, curry leaves, and fresh cilantro — the quintessential cooling companion to any Indian meal.",
     "pairingReason": "cooling probiotic drink to balance spicy mains",
     "nutritionCategory": "dairy",
@@ -4769,12 +3980,7 @@
     "id": "bellpepper-curry",
     "name": "Bellpepper Curry",
     "imageUrl": null,
-    "tags": [
-      "south-asian",
-      "curry",
-      "vegetable",
-      "colorful"
-    ],
+    "tags": ["south-asian", "curry", "vegetable", "colorful"],
     "description": "Vibrant bell peppers simmered in a fragrant onion-tomato masala with cumin, coriander, and a hint of turmeric — a colorful, mild curry.",
     "pairingReason": "mild, colorful vegetable curry to add variety",
     "nutritionCategory": "vegetable",
@@ -4784,12 +3990,7 @@
     "id": "egg-drop-soup-with-veggies",
     "name": "Egg Drop Soup with Veggies",
     "imageUrl": null,
-    "tags": [
-      "filipino",
-      "soup",
-      "light",
-      "egg"
-    ],
+    "tags": ["filipino", "soup", "light", "egg"],
     "description": "A light, savory broth with silky ribbons of egg and tender mixed vegetables — a warm, nourishing Filipino staple.",
     "pairingReason": "light brothy warmth alongside heartier Filipino mains",
     "nutritionCategory": "protein",
@@ -4799,12 +4000,7 @@
     "id": "bhindi-fry-side",
     "name": "Bhindi Fry (Side)",
     "imageUrl": "/food_images/bhindi_masala.png",
-    "tags": [
-      "vegetable",
-      "indian",
-      "low-carb",
-      "healthy"
-    ],
+    "tags": ["vegetable", "indian", "low-carb", "healthy"],
     "description": "Crispy okra stir-fried with cumin, turmeric, and dry mango powder — a crunchy, fiber-rich side perfect for blood sugar balance.",
     "pairingReason": "crunchy green side to balance soft curries",
     "nutritionCategory": "vegetable",
@@ -4814,12 +4010,7 @@
     "id": "baingan-bharta-side",
     "name": "Baingan Bharta (Side)",
     "imageUrl": "/food_images/eggplant_methi.png",
-    "tags": [
-      "vegetable",
-      "indian",
-      "low-carb",
-      "smoky"
-    ],
+    "tags": ["vegetable", "indian", "low-carb", "smoky"],
     "description": "Smoky mashed eggplant cooked with onions, tomatoes, and green chilies. A flavorful, low-glycemic vegetable side.",
     "pairingReason": "smoky flavor depth for rich meals",
     "nutritionCategory": "vegetable",
@@ -4829,12 +4020,7 @@
     "id": "cabbage-thoran",
     "name": "Cabbage Thoran",
     "imageUrl": "/food_images/cabbage_salad_tadka.png",
-    "tags": [
-      "vegetable",
-      "indian",
-      "coconut",
-      "healthy"
-    ],
+    "tags": ["vegetable", "indian", "coconut", "healthy"],
     "description": "Finely chopped cabbage stir-fried with fresh coconut, mustard seeds, and curry leaves. Light, crunchy, and nutritious.",
     "pairingReason": "sweet crunch of coconut cabbage cleanses the palate",
     "nutritionCategory": "vegetable",
@@ -4844,12 +4030,7 @@
     "id": "palak-corn",
     "name": "Palak Corn",
     "imageUrl": null,
-    "tags": [
-      "vegetable",
-      "indian",
-      "spinach",
-      "healthy"
-    ],
+    "tags": ["vegetable", "indian", "spinach", "healthy"],
     "description": "Creamy spinach curry studded with sweet corn kernels and a garlic tempering. Packed with iron and fiber.",
     "pairingReason": "creamy greens to add iron and fiber",
     "nutritionCategory": "vegetable",

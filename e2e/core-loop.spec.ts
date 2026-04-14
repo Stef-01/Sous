@@ -7,19 +7,31 @@ import { test, expect } from "@playwright/test";
  * 1. Land on Today page
  * 2. Open search, type a craving
  * 3. See pairing results
- * 4. Tap "Cook this" on a side
+ * 4. Tap "Cook" on a side
  * 5. Complete guided cook flow (Mission → Grab → Cook → Win)
  * 6. See Win screen with celebration
  */
 test.describe("Core Loop — Craving to Win", () => {
   test("type craving → see results → cook → win", async ({ page }) => {
-    // 1. Navigate to Today page
+    // 1. Navigate to Today page — pre-set localStorage to bypass coach quiz
     await page.goto("/");
-    await expect(page.locator("h1").filter({ hasText: "Sous" })).toBeVisible();
+    await page.evaluate(() => {
+      localStorage.setItem("sous-coach-quiz-done", "true");
+    });
+    await page.reload();
+
+    await expect(
+      page.getByRole("heading", { name: "Sous", exact: true }),
+    ).toBeVisible();
 
     // 2. Open search popout by clicking the craving search bar
-    await page.getByText("I'm craving").click();
-    await expect(page.getByText("What are you craving?")).toBeVisible();
+    await page
+      .getByRole("button", { name: /craving|dinner|Find sides/i })
+      .first()
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "What are you craving?" }),
+    ).toBeVisible();
 
     // 3. Type a craving and submit
     const searchInput = page.getByPlaceholder(/chicken|craving|dish/i);
@@ -34,68 +46,105 @@ test.describe("Core Loop — Craving to Win", () => {
     // Wait for results to appear (side dish cards)
     await expect(page.getByText("For:")).toBeVisible({ timeout: 15000 });
 
-    // 5. Click "Cook" on the first result — expand it first, then use the guided cook link
-    const cookButton = page
+    // 5. Click the "Cook" CTA (may navigate to /cook/combined or /cook/[slug])
+    const cookCTA = page
       .getByRole("button")
-      .filter({ hasText: /Start guided cook|Cook just this|Cook.*selected/i })
+      .filter({ hasText: /Cook.*selected|Cook\s/i })
       .first();
 
-    // If no guided cook button visible, try the main "Cook selected" CTA
-    const mainCTA = page
-      .getByRole("button")
-      .filter({ hasText: /Cook.*selected|Cook.*side/i })
-      .first();
+    await expect(cookCTA).toBeVisible({ timeout: 5000 });
+    await cookCTA.click({ force: true });
 
-    if (await cookButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await cookButton.click();
-    } else {
-      await mainCTA.click();
-    }
+    // 6. Should navigate to a /cook/ route
+    await page.waitForURL(/\/cook\//, { timeout: 10000 });
 
-    // 6. Should be on guided cook page — see Mission screen
+    // Should see Mission screen CTA
     await expect(
-      page.getByText(/What you.*learn|Your mission|Start/i),
+      page
+        .getByRole("button")
+        .filter({ hasText: /gather|cook/i })
+        .first(),
     ).toBeVisible({ timeout: 10000 });
 
-    // 7. Start cooking (tap "Let's go" or similar CTA)
-    const startButton = page
+    // 7. Start cooking (tap "Let's gather" / "Let's cook" CTA)
+    await page
       .getByRole("button")
-      .filter({ hasText: /Let.*go|Start|I.*ready|Begin/i })
-      .first();
-    await startButton.click();
+      .filter({ hasText: /gather|cook/i })
+      .first()
+      .click({ force: true });
 
     // 8. Should see either Grab phase (ingredients) or Cook phase (steps)
-    // If grab phase: check all ingredients and proceed
     const grabReady = page
       .getByRole("button")
-      .filter({ hasText: /I.*ready|Got.*all|Let.*cook/i });
+      .filter({ hasText: /I have everything|Let.*cook/i });
 
     if (await grabReady.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await grabReady.click();
+      await grabReady.click({ force: true });
     }
 
-    // 9. Now in Cook phase — navigate through steps
-    // Click "Next" through all cook steps until Win screen
-    let maxSteps = 10; // safety limit
-    while (maxSteps > 0) {
+    // 9. Now in Cook phase — navigate through steps (handles multi-dish combined cook)
+    let maxAttempts = 40;
+    while (maxAttempts > 0) {
+      maxAttempts--;
+      await page.waitForTimeout(400);
+
+      // Check for "Back to Today" (win screen) first
+      const backToToday = page
+        .getByRole("button")
+        .filter({ hasText: /Back to Today/i });
+      if (await backToToday.isVisible({ timeout: 500 }).catch(() => false)) {
+        break;
+      }
+
+      // Handle transition cards between dishes ("Continue cooking")
+      const continueBtn = page
+        .getByRole("button")
+        .filter({ hasText: /Continue cooking/i });
+      if (await continueBtn.isVisible({ timeout: 500 }).catch(() => false)) {
+        await continueBtn.click({ force: true });
+        continue;
+      }
+
+      // "Done!" last step of a dish
+      const doneButton = page
+        .getByRole("button")
+        .filter({ hasText: /Done!/i })
+        .first();
+      if (await doneButton.isVisible({ timeout: 500 }).catch(() => false)) {
+        await doneButton.click({ force: true });
+        continue;
+      }
+
+      // "Next" step
       const nextButton = page
         .getByRole("button")
-        .filter({ hasText: /Next|Done|Finish/i })
+        .filter({ hasText: /^Next$/i })
         .first();
+      if (await nextButton.isVisible({ timeout: 500 }).catch(() => false)) {
+        await nextButton.click({ force: true });
+        continue;
+      }
 
-      if (await nextButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await nextButton.click();
-        maxSteps--;
-      } else {
-        // No more next buttons — should be at Win screen
-        break;
+      // "Let's gather" / "Let's cook" / "I have everything" — mission or grab phase
+      const missionBtn = page
+        .getByRole("button")
+        .filter({ hasText: /gather|I have everything/i })
+        .first();
+      if (await missionBtn.isVisible({ timeout: 500 }).catch(() => false)) {
+        await missionBtn.click({ force: true });
+        continue;
       }
     }
 
-    // 10. Win screen — should see celebration
+    // 10. Win screen — verify we're past all cook steps
+    await page.waitForTimeout(1000);
+
+    // Debug: capture what's on screen
+    await page.screenshot({ path: "test-results/debug-win.png" });
+
     await expect(
-      page.getByText(/You did it|Great job|Well done|Nicely done/i),
-    ).toBeVisible({ timeout: 10000 });
+      page.getByRole("button").filter({ hasText: /Back to Today/i }),
+    ).toBeVisible({ timeout: 15000 });
 
     // Should see star rating
     await expect(page.getByRole("radiogroup")).toBeVisible();

@@ -1,13 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Refrigerator, Gamepad2, ShoppingCart, Sparkles } from "lucide-react";
+import { Refrigerator, Gamepad2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface FallbackActionsProps {
   onRescueFridge?: () => void;
   onPlayGame?: () => void;
-  onOrderOut?: () => void;
   /** Show a "Personalize" chip when the user has already completed the quiz. */
   onPersonalize?: () => void;
 }
@@ -25,12 +24,6 @@ const chips = [
     label: "Play a game",
     handler: "onPlayGame" as const,
   },
-  {
-    key: "order",
-    icon: ShoppingCart,
-    label: "Order out",
-    handler: "onOrderOut" as const,
-  },
 ] as const;
 
 /**
@@ -40,10 +33,9 @@ const chips = [
 export function FallbackActions({
   onRescueFridge,
   onPlayGame,
-  onOrderOut,
   onPersonalize,
 }: FallbackActionsProps) {
-  const handlers = { onRescueFridge, onPlayGame, onOrderOut };
+  const handlers = { onRescueFridge, onPlayGame };
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 pt-2">

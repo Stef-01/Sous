@@ -32,6 +32,7 @@ export default function ScrapbookPage() {
             onClick={() => router.push("/path")}
             className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
             type="button"
+            aria-label="Back to Path"
           >
             <ArrowLeft size={20} />
           </button>

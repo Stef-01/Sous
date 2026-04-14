@@ -327,7 +327,7 @@ export default function GuidedCookPage({
         </div>
         <button
           onClick={handleBackToday}
-          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
+          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
           type="button"
         >
           Back to Today
@@ -361,6 +361,8 @@ export default function GuidedCookPage({
                 : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
             )}
             type="button"
+            aria-label="Go back"
+            aria-disabled={currentPhase === "win"}
           >
             <ArrowLeft size={20} />
           </motion.button>
@@ -416,7 +418,7 @@ export default function GuidedCookPage({
               </div>
               <button
                 onClick={handleBackToday}
-                className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm"
+                className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
                 type="button"
               >
                 Back to Today

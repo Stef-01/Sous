@@ -236,10 +236,10 @@ export function SkillDetailSheet({
                           }}
                           disabled={status === "locked"}
                           className={cn(
-                            "rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                            "rounded-lg border px-3 py-2 text-xs font-medium transition-all",
                             status === "locked"
                               ? "border-neutral-100 text-neutral-300 cursor-default"
-                              : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer",
+                              : "border-neutral-200 text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/30 hover:bg-[var(--nourish-green)]/5 cursor-pointer active:scale-95",
                           )}
                           type="button"
                         >
@@ -294,7 +294,7 @@ export function SkillDetailSheet({
                 {status !== "locked" && status !== "completed" && (
                   <button
                     onClick={handleStartCook}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white transition-all hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                     type="button"
                   >
                     Start cooking
@@ -311,7 +311,7 @@ export function SkillDetailSheet({
                 {status === "completed" && (
                   <button
                     onClick={handleStartCook}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 py-3 text-sm font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 py-3 text-sm font-medium text-[var(--nourish-subtext)] transition-all hover:border-neutral-300 active:scale-[0.97]"
                     type="button"
                   >
                     Practice again

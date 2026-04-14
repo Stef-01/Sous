@@ -24,15 +24,15 @@ Copy `.env.example` to `.env.local` for optional features:
 cp .env.example .env.local
 ```
 
-| Variable | Required for V1? | Purpose |
-|----------|-----------------|---------|
-| `DATABASE_URL` | No | PostgreSQL (Neon) for persistent data |
-| `ANTHROPIC_API_KEY` | No | AI-powered craving parsing + coach |
-| `OPENAI_API_KEY` | No | Camera-based food recognition |
-| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | No | Auth (disabled in V1) |
-| `CLERK_SECRET_KEY` | No | Auth (disabled in V1) |
-| `NEXT_PUBLIC_APP_URL` | No | Defaults to `http://localhost:3000` |
-| `NEXT_PUBLIC_SITE_URL` | No | Defaults to `https://sous.vercel.app` |
+| Variable                            | Required for V1? | Purpose                               |
+| ----------------------------------- | ---------------- | ------------------------------------- |
+| `DATABASE_URL`                      | No               | PostgreSQL (Neon) for persistent data |
+| `ANTHROPIC_API_KEY`                 | No               | AI-powered craving parsing + coach    |
+| `OPENAI_API_KEY`                    | No               | Camera-based food recognition         |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | No               | Auth (disabled in V1)                 |
+| `CLERK_SECRET_KEY`                  | No               | Auth (disabled in V1)                 |
+| `NEXT_PUBLIC_APP_URL`               | No               | Defaults to `http://localhost:3000`   |
+| `NEXT_PUBLIC_SITE_URL`              | No               | Defaults to `https://sous.vercel.app` |
 
 ## Commands
 
