@@ -58,23 +58,33 @@ const CONFETTI_COLORS = [
 interface ConfettiParticle {
   id: number;
   x: number;
+  xEnd: number;
   color: string;
   delay: number;
   duration: number;
   size: number;
   rotation: number;
+  isCircle: boolean;
+  isSquare: boolean;
 }
 
 function generateConfetti(): ConfettiParticle[] {
-  return Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    x: 40 + (Math.random() - 0.5) * 60,
-    color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    delay: Math.random() * 0.5,
-    duration: 1.8 + Math.random() * 1.2,
-    size: 5 + Math.random() * 8,
-    rotation: Math.random() * 360,
-  }));
+  return Array.from({ length: 50 }, (_, i) => {
+    const startX = 40 + (Math.random() - 0.5) * 60;
+    const drift = (i % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15);
+    return {
+      id: i,
+      x: startX,
+      xEnd: startX + drift,
+      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      delay: Math.random() * 0.5,
+      duration: 1.8 + Math.random() * 1.2,
+      size: 5 + Math.random() * 8,
+      rotation: Math.random() * 360,
+      isCircle: i % 4 === 0,
+      isSquare: i % 3 !== 0,
+    };
+  });
 }
 
 function ConfettiLayer() {
@@ -96,7 +106,7 @@ function ConfettiLayer() {
             scale: 0,
           }}
           animate={{
-            x: `${p.x + (p.id % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15)}vw`,
+            x: `${p.xEnd}vw`,
             y: "110vh",
             rotate: p.rotation + 360 * 3,
             opacity: [0, 1, 1, 0],
@@ -110,9 +120,9 @@ function ConfettiLayer() {
           style={{
             position: "absolute",
             width: p.size,
-            height: p.id % 3 === 0 ? p.size : p.size * 0.5,
+            height: p.isSquare ? p.size * 0.5 : p.size,
             backgroundColor: p.color,
-            borderRadius: p.id % 4 === 0 ? "50%" : 2,
+            borderRadius: p.isCircle ? "50%" : 2,
           }}
         />
       ))}

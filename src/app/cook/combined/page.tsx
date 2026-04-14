@@ -679,10 +679,9 @@ function CombinedMissionScreen({
           <Image
             src={mainDishHeroImage}
             alt={mainDishName}
-            width={480}
-            height={360}
-            unoptimized
-            className="w-full aspect-[4/3] object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 448px"
+            className="object-cover"
           />
         </motion.div>
       )}

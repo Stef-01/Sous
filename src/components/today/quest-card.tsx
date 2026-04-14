@@ -12,6 +12,7 @@ import {
 import Image from "next/image";
 import { Clock, ShoppingBag, X, Heart } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import {
   getAvailableCookSlugs,
   getStaticCookData,
@@ -278,35 +279,6 @@ function buildMealTags(
   return tags.slice(0, 3);
 }
 
-/** Map dish tags/cuisine to a relevant emoji for the image placeholder. */
-function getDishEmoji(tags: string[], cuisine: string): string {
-  const all = [...tags.map((t) => t.toLowerCase()), cuisine.toLowerCase()];
-  // Cuisine-specific emoji for main meals
-  if (all.includes("japanese")) return "🍱";
-  if (all.includes("korean")) return "🍲";
-  if (all.includes("thai")) return "🍜";
-  if (all.includes("chinese")) return "🥡";
-  if (all.includes("vietnamese")) return "🍜";
-  if (all.includes("filipino")) return "🍛";
-  if (all.includes("indian")) return "🍛";
-  if (all.includes("italian")) return "🍝";
-  if (all.includes("mexican")) return "🌮";
-  if (all.includes("mediterranean")) return "🥘";
-  // Type-specific
-  if (all.some((t) => ["salad", "fresh", "raw", "green"].includes(t)))
-    return "🥗";
-  if (all.some((t) => ["soup", "broth", "stew"].includes(t))) return "🍲";
-  if (all.some((t) => ["rice", "fried rice"].includes(t))) return "🍚";
-  if (all.some((t) => ["bread", "toast", "baked"].includes(t))) return "🍞";
-  if (all.some((t) => ["sweet", "dessert"].includes(t))) return "🍮";
-  if (all.some((t) => ["roasted", "grilled", "bbq"].includes(t))) return "🥘";
-  if (all.some((t) => ["fish", "seafood", "shrimp"].includes(t))) return "🐟";
-  if (all.some((t) => ["chicken", "poultry"].includes(t))) return "🍗";
-  if (all.some((t) => ["beef", "pork", "meat", "lamb"].includes(t)))
-    return "🥩";
-  return "🍽️";
-}
-
 /**
  * QuestCard — swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
@@ -560,6 +532,8 @@ function SwipeCard({
           "overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm",
           isTop && "cursor-grab active:cursor-grabbing shadow-md",
         )}
+        role="article"
+        aria-label={`${dish.dishName} — ${dish.cuisineFamily}${dish.isVerified ? ", Nourish Verified" : ""}`}
       >
         {/* Swipe feedback overlays — only on top card */}
         {isTop && (
@@ -740,6 +714,7 @@ function SwipeCard({
               "transition-colors duration-200 cta-glow",
             )}
             type="button"
+            aria-label={`${dish.isMeal ? "Find sides for" : dish.hasGuidedCook ? "Start cooking" : "Find sides for"} ${dish.dishName}`}
           >
             {dish.isMeal
               ? "Find sides →"

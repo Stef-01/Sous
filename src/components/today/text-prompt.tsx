@@ -4,29 +4,13 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Camera } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { sides, meals } from "@/data";
 
 interface LocalResult {
   name: string;
   cuisine: string;
   emoji: string;
-}
-
-function getDishEmoji(tags: string[], cuisine: string): string {
-  const all = [...tags.map((t) => t.toLowerCase()), cuisine.toLowerCase()];
-  if (all.some((t) => ["salad", "raw", "greens"].includes(t))) return "🥗";
-  if (all.some((t) => ["soup", "broth", "stew"].includes(t))) return "🍲";
-  if (all.some((t) => ["rice"].includes(t))) return "🍚";
-  if (all.some((t) => ["bread", "toast", "baked"].includes(t))) return "🍞";
-  if (all.some((t) => ["pasta", "noodle"].includes(t))) return "🍝";
-  if (all.some((t) => ["mexican", "taco", "wrap"].includes(t))) return "🌮";
-  if (all.some((t) => ["indian", "curry"].includes(t))) return "🍛";
-  if (all.some((t) => ["japanese", "korean", "sushi"].includes(t))) return "🍱";
-  if (all.some((t) => ["thai", "chinese", "asian"].includes(t))) return "🍜";
-  if (all.some((t) => ["mediterranean", "italian"].includes(t))) return "🫒";
-  if (all.some((t) => ["sweet", "dessert"].includes(t))) return "🍮";
-  if (all.some((t) => ["roasted", "grilled"].includes(t))) return "🥘";
-  return "🍽️";
 }
 
 function getCuisineFromTags(tags: string[]): string {
