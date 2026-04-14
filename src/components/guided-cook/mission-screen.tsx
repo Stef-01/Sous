@@ -58,14 +58,14 @@ export function MissionScreen({
           />
         ) : (
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+            className="absolute inset-0 flex items-center justify-center gap-3"
             style={{
               background:
-                "linear-gradient(135deg, rgba(45,90,61,0.15) 0%, #fafaf8 55%, rgba(45,90,61,0.08) 100%)",
+                "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
             }}
           >
-            <span className="text-6xl">🍽️</span>
-            <span className="text-sm font-medium text-[var(--nourish-subtext)]">
+            <span className="text-5xl drop-shadow-sm">🍽️</span>
+            <span className="text-lg font-serif font-bold text-white/90 drop-shadow-sm">
               {dishName}
             </span>
           </div>

@@ -66,13 +66,13 @@ interface ConfettiParticle {
 }
 
 function generateConfetti(): ConfettiParticle[] {
-  return Array.from({ length: 30 }, (_, i) => ({
+  return Array.from({ length: 50 }, (_, i) => ({
     id: i,
-    x: Math.random() * 100,
+    x: 40 + (Math.random() - 0.5) * 60,
     color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-    delay: Math.random() * 0.8,
-    duration: 1.2 + Math.random() * 1,
-    size: 6 + Math.random() * 6,
+    delay: Math.random() * 0.5,
+    duration: 1.8 + Math.random() * 1.2,
+    size: 5 + Math.random() * 8,
     rotation: Math.random() * 360,
   }));
 }
@@ -93,23 +93,26 @@ function ConfettiLayer() {
             y: -20,
             rotate: p.rotation,
             opacity: 1,
+            scale: 0,
           }}
           animate={{
+            x: `${p.x + (p.id % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15)}vw`,
             y: "110vh",
-            rotate: p.rotation + 360 * 2,
-            opacity: [1, 1, 0],
+            rotate: p.rotation + 360 * 3,
+            opacity: [0, 1, 1, 0],
+            scale: [0, 1.2, 1, 0.8],
           }}
           transition={{
             duration: p.duration,
             delay: p.delay,
-            ease: "easeIn",
+            ease: [0.25, 0.46, 0.45, 0.94],
           }}
           style={{
             position: "absolute",
             width: p.size,
-            height: p.size * 0.6,
+            height: p.id % 3 === 0 ? p.size : p.size * 0.5,
             backgroundColor: p.color,
-            borderRadius: 2,
+            borderRadius: p.id % 4 === 0 ? "50%" : 2,
           }}
         />
       ))}
@@ -178,7 +181,7 @@ export function WinScreen({
   );
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 2500);
+    const timer = setTimeout(() => setShowConfetti(false), 3500);
     return () => clearTimeout(timer);
   }, []);
 

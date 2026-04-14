@@ -223,6 +223,29 @@ function buildQuestDishes(
 
 const SWIPE_THRESHOLD = 80;
 
+/** Cuisine-specific gradient backgrounds for cards without images. */
+function getCuisineGradient(cuisine: string): string {
+  const c = cuisine.toLowerCase();
+  const gradients: Record<string, string> = {
+    japanese: "linear-gradient(135deg, #c0392b 0%, #e74c3c 30%, #f39c12 100%)",
+    korean: "linear-gradient(135deg, #d63031 0%, #e17055 40%, #fdcb6e 100%)",
+    thai: "linear-gradient(135deg, #00b894 0%, #55efc4 40%, #ffeaa7 100%)",
+    chinese: "linear-gradient(135deg, #d63031 0%, #e74c3c 35%, #f9ca24 100%)",
+    vietnamese:
+      "linear-gradient(135deg, #27ae60 0%, #2ecc71 40%, #f1c40f 100%)",
+    filipino: "linear-gradient(135deg, #e17055 0%, #fab1a0 40%, #ffeaa7 100%)",
+    indian: "linear-gradient(135deg, #e67e22 0%, #f39c12 35%, #f1c40f 100%)",
+    italian: "linear-gradient(135deg, #27ae60 0%, #f1f1f1 50%, #e74c3c 100%)",
+    mexican: "linear-gradient(135deg, #00b894 0%, #f1f1f1 50%, #d63031 100%)",
+    mediterranean:
+      "linear-gradient(135deg, #0984e3 0%, #74b9ff 40%, #ffeaa7 100%)",
+  };
+  return (
+    gradients[c] ??
+    "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)"
+  );
+}
+
 /** Extract descriptive tags for a meal from its description. */
 function buildMealTags(
   cuisine: string,
@@ -582,16 +605,15 @@ function SwipeCard({
             />
           ) : (
             <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+              className="absolute inset-0 flex flex-col items-center justify-center gap-3"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(45,90,61,0.15) 0%, #fafaf8 55%, rgba(45,90,61,0.08) 100%)",
+                background: getCuisineGradient(dish.cuisineFamily),
               }}
             >
-              <span className="text-5xl">
+              <span className="text-6xl drop-shadow-sm">
                 {getDishEmoji(dish.tags, dish.cuisineFamily)}
               </span>
-              <span className="text-xs font-medium text-[var(--nourish-subtext)] text-center px-4 leading-tight">
+              <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
                 {dish.dishName}
               </span>
             </div>
@@ -715,7 +737,7 @@ function SwipeCard({
               "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
               "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
               "shadow-sm shadow-[var(--nourish-green)]/20",
-              "transition-colors duration-200",
+              "transition-colors duration-200 cta-glow",
             )}
             type="button"
           >

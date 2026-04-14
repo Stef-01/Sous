@@ -429,10 +429,10 @@ function ResultCard({
                 className="flex h-full w-full items-center justify-center text-lg"
                 style={{
                   background:
-                    "linear-gradient(135deg, rgba(45,90,61,0.12) 0%, #fafaf8 100%)",
+                    "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 60%, #a8d8b9 100%)",
                 }}
               >
-                🍽️
+                <span className="drop-shadow-sm">🍽️</span>
               </div>
             )}
           </div>

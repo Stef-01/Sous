@@ -283,10 +283,15 @@ export function TextPrompt({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-center text-[var(--nourish-subtext)] py-4">
-                No dishes match that craving. Try something like
-                &ldquo;pasta&rdquo; or &ldquo;stir fry&rdquo;
-              </p>
+              <div className="text-center py-6 space-y-2">
+                <span className="text-3xl">🔍</span>
+                <p className="text-sm text-[var(--nourish-subtext)]">
+                  No dishes match &ldquo;{text.trim()}&rdquo;
+                </p>
+                <p className="text-xs text-[var(--nourish-subtext)]/70">
+                  Hit search to find sides for any dish
+                </p>
+              </div>
             )}
           </motion.div>
         )}

@@ -163,6 +163,21 @@ a,
   animation: streak-flame 2s ease-in-out infinite;
 }
 
+/* === CTA GLOW === */
+@keyframes cta-glow {
+  0%,
+  100% {
+    box-shadow: 0 2px 8px -2px rgba(45, 90, 61, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 16px -2px rgba(45, 90, 61, 0.4);
+  }
+}
+
+.cta-glow {
+  animation: cta-glow 2.5s ease-in-out infinite;
+}
+
 /* === SAFE AREA === */
 .safe-area-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -211,6 +226,10 @@ a,
   }
 
   .streak-flame {
+    animation: none;
+  }
+
+  .cta-glow {
     animation: none;
   }
 
