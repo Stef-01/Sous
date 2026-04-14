@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ChefHat, ChevronRight } from "lucide-react";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
@@ -666,16 +667,16 @@ function CombinedMissionScreen({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-5 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image */}
-      {mainDishHeroImage && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="relative aspect-[4/3] overflow-hidden rounded-2xl"
-        >
+      {/* Hero image — gradient+emoji fallback when no image */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25 }}
+        className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+      >
+        {mainDishHeroImage ? (
           <Image
             src={mainDishHeroImage}
             alt={mainDishName}
@@ -683,8 +684,23 @@ function CombinedMissionScreen({
             sizes="(max-width: 768px) 100vw, 448px"
             className="object-cover"
           />
-        </motion.div>
-      )}
+        ) : (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+            style={{
+              background:
+                "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
+            }}
+          >
+            <span className="text-6xl drop-shadow-sm">
+              {getDishEmoji(flavorProfile, mainDishName)}
+            </span>
+            <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
+              {mainDishName}
+            </span>
+          </div>
+        )}
+      </motion.div>
 
       {/* Dish name + companion info */}
       <div className="space-y-3">
@@ -784,7 +800,7 @@ function CombinedMissionScreen({
         {mainDishDescription}
       </motion.p>
 
-      {/* CTA */}
+      {/* CTA — mt-auto pins to bottom for no-scroll compliance at 375×667 */}
       <motion.button
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -792,7 +808,7 @@ function CombinedMissionScreen({
         whileTap={{ scale: 0.96 }}
         onClick={onStart}
         className={cn(
-          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
+          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
           "transition-colors duration-200",
         )}

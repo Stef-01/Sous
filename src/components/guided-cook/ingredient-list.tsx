@@ -253,7 +253,7 @@ function IngredientRow({
         {/* Checkbox — 44px touch target wraps 20px visual circle */}
         <button
           onClick={onToggle}
-          className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center"
+          className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center active:scale-90 transition-transform"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
@@ -274,7 +274,7 @@ function IngredientRow({
         {/* Ingredient info */}
         <button
           onClick={onToggle}
-          className="flex-1 min-w-0 text-left"
+          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >

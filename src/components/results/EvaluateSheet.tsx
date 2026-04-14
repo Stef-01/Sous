@@ -210,7 +210,7 @@ export function EvaluateSheet({
                   onFinishPlate ? (
                     <button
                       onClick={onFinishPlate}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                       type="button"
                     >
                       Finish my plate
@@ -219,7 +219,7 @@ export function EvaluateSheet({
                   ) : (
                     <button
                       onClick={onClose}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                       type="button"
                     >
                       {evaluation.status === "balanced"

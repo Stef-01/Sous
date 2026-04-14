@@ -73,7 +73,7 @@ export default function FavoritesPage() {
             </div>
             <button
               onClick={() => router.push("/")}
-              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"
+              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-95"
               type="button"
             >
               Find something to cook →

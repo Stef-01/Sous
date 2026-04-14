@@ -413,26 +413,43 @@ function TodayPageContent() {
           )}
         </AnimatePresence>
 
-        {/* Correction chips after photo recognition */}
-        {view.type === "correction" && (
-          <CorrectionChips
-            dishName={view.dishName}
-            confidence={view.confidence}
-            alternates={view.alternates}
-            onConfirm={handleCorrectionConfirm}
-            onCustom={() => setView({ type: "idle" })}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          {/* Correction chips after photo recognition */}
+          {view.type === "correction" && (
+            <motion.div
+              key="correction-chips"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+            >
+              <CorrectionChips
+                dishName={view.dishName}
+                confidence={view.confidence}
+                alternates={view.alternates}
+                onConfirm={handleCorrectionConfirm}
+                onCustom={() => setView({ type: "idle" })}
+              />
+            </motion.div>
+          )}
 
-        {/* Recognition failure feedback */}
-        {recognitionError && view.type === "idle" && (
-          <div className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center mb-3">
-            <p className="text-sm text-amber-700">
-              Couldn&apos;t identify the dish from the photo. Try typing it
-              instead.
-            </p>
-          </div>
-        )}
+          {/* Recognition failure feedback */}
+          {recognitionError && view.type === "idle" && (
+            <motion.div
+              key="recognition-error"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="rounded-xl border border-amber-100 bg-amber-50 p-3 text-center mb-3"
+            >
+              <p className="text-sm text-amber-700">
+                Couldn&apos;t identify the dish from the photo. Try typing it
+                instead.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Search input + results */}
         {(view.type === "idle" ||

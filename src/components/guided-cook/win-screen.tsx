@@ -434,37 +434,14 @@ export function WinScreen({
           </AnimatePresence>
         </motion.div>
 
-        {/* ── Primary CTAs ── */}
+        {/* ── CTAs — primary action first ── */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           className="w-full space-y-2"
         >
-          {/* Save to scrapbook — green bordered */}
-          <motion.button
-            onClick={onSave}
-            disabled={saved}
-            whileTap={saved ? undefined : { scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition-colors border-2",
-              saved
-                ? "border-[var(--nourish-green)]/40 bg-[var(--nourish-green)]/10 text-[var(--nourish-green)] cursor-default"
-                : "border-[var(--nourish-green)] text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
-            )}
-            type="button"
-            aria-label={
-              saved
-                ? "Already saved to scrapbook"
-                : "Save this cook to your scrapbook"
-            }
-          >
-            <BookmarkPlus size={16} />
-            {saved ? "Saved to scrapbook ✓" : "Save to scrapbook"}
-          </motion.button>
-
-          {/* Back to Today — dominant green */}
+          {/* Back to Today — dominant green, always first */}
           <motion.button
             onClick={onBackToday}
             whileTap={{ scale: 0.96 }}
@@ -474,6 +451,29 @@ export function WinScreen({
           >
             <Home size={14} />
             Back to Today
+          </motion.button>
+
+          {/* Save to scrapbook — visually subordinate text link */}
+          <motion.button
+            onClick={onSave}
+            disabled={saved}
+            whileTap={saved ? undefined : { scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm transition-colors",
+              saved
+                ? "text-[var(--nourish-green)]/60 cursor-default"
+                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]",
+            )}
+            type="button"
+            aria-label={
+              saved
+                ? "Already saved to scrapbook"
+                : "Save this cook to your scrapbook"
+            }
+          >
+            <BookmarkPlus size={14} />
+            {saved ? "Saved ✓" : "Save to scrapbook"}
           </motion.button>
         </motion.div>
 

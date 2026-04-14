@@ -57,9 +57,9 @@ export function FriendsStrip({
 
   return (
     <div ref={ref} className="space-y-2.5">
-      <h3 className="text-[10px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase px-1">
+      <h2 className="text-[10px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase px-1">
         Your recent cooks
-      </h3>
+      </h2>
 
       <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
         {recent.map((session, idx) => (

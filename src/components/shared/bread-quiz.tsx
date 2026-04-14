@@ -99,8 +99,9 @@ export function BreadQuiz({ onClose, onComplete }: BreadQuizProps) {
         <div className="px-4 pt-4 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-full p-2 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+            className="rounded-full p-2 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-90"
             type="button"
+            aria-label="Close quiz results"
           >
             <X size={20} />
           </button>
