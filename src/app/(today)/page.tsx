@@ -392,7 +392,7 @@ function TodayPageContent() {
           </p>
           <FallbackActions
             onRescueFridge={handleRescueFridge}
-            onPlayGame={() => setShowQuiz(true)}
+            onPlayGame={() => router.push("/games")}
             onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
           />
         </div>
