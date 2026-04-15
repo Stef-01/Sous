@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,6 +13,9 @@ import { SkillTree } from "@/components/path/skill-tree";
 import { SkillDetailSheet } from "@/components/path/skill-detail-sheet";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useAchievements } from "@/lib/hooks/use-achievements";
+import { useXPSystem } from "@/lib/hooks/use-xp-system";
+import { AchievementsGrid } from "@/components/path/achievements-grid";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
 /**
@@ -35,7 +38,33 @@ export default function PathPage() {
   } = useSkillProgress();
 
   const { stats, completedSessions } = useCookSessions();
+  const { unlockedAchievements, lockedAchievements, checkAchievements } =
+    useAchievements();
+  const { level: xpLevel } = useXPSystem();
   const router = useRouter();
+
+  // Check achievements whenever stats change
+  useEffect(() => {
+    if (!mounted) return;
+    checkAchievements({
+      cooksCompleted: stats.completedCooks,
+      cuisinesExplored: stats.cuisinesCovered?.length ?? 0,
+      streakDays: stats.currentStreak,
+      skillsCompleted,
+      dishesRated: completedSessions.filter((s) => s.rating).length,
+      photosAdded: completedSessions.filter((s) => s.photoUri).length,
+      xpEarned: totalXP,
+      level: xpLevel,
+    });
+  }, [
+    mounted,
+    stats,
+    skillsCompleted,
+    completedSessions,
+    totalXP,
+    xpLevel,
+    checkAchievements,
+  ]);
 
   // Compute the next skill to unlock for NextUnlockCard
   const nextUnlockData = useMemo(() => {
@@ -178,6 +207,14 @@ export default function PathPage() {
         />
         <WeeklyGoalCard completedSessions={completedSessions} />
       </div>
+
+      {/* Achievements */}
+      {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
+        <AchievementsGrid
+          unlocked={unlockedAchievements}
+          locked={lockedAchievements}
+        />
+      )}
 
       {/* Skill tree */}
       <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
