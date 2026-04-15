@@ -41,6 +41,8 @@ interface StepCardProps {
   onPrev: () => void;
   isFirst: boolean;
   isLast: boolean;
+  personalNote?: string;
+  onAddPersonalNote?: (note: string) => void;
 }
 
 /**
@@ -69,6 +71,8 @@ export function StepCard({
   onPrev,
   isFirst,
   isLast,
+  personalNote,
+  onAddPersonalNote,
 }: StepCardProps) {
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
@@ -208,6 +212,29 @@ export function StepCard({
       <p className="text-lg text-[var(--nourish-dark)] leading-relaxed">
         {instruction}
       </p>
+
+      {/* Personal note overlay indicator */}
+      {personalNote && (
+        <div className="rounded-lg bg-amber-50 border border-amber-200/50 px-3 py-2">
+          <p className="text-xs text-amber-800">
+            <span className="font-medium">Your note:</span> {personalNote}
+          </p>
+        </div>
+      )}
+
+      {/* Add personal note button */}
+      {onAddPersonalNote && !personalNote && (
+        <button
+          type="button"
+          onClick={() => {
+            const note = window.prompt("Add a personal note for this step:");
+            if (note?.trim()) onAddPersonalNote(note.trim());
+          }}
+          className="self-start text-[10px] text-[var(--nourish-subtext)] underline underline-offset-2 hover:text-[var(--nourish-dark)]"
+        >
+          + Add a note
+        </button>
+      )}
 
       {/* Doneness cue */}
       {donenessCue && (
