@@ -8,7 +8,7 @@ export default function CommunityPage() {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[var(--nourish-cream)] px-5 py-6">
+    <div className="flex min-h-full flex-col bg-[var(--nourish-cream)] px-5 py-6">
       <button
         onClick={() => router.back()}
         className="mb-6 flex items-center gap-1.5 text-sm text-[var(--nourish-subtext)] active:scale-95 transition-transform"

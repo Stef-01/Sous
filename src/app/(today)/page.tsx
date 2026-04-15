@@ -59,6 +59,8 @@ function TodayPageContent() {
   const [resetKey, setResetKey] = useState(0);
   const [questKey, setQuestKey] = useState(0);
   const [recognitionError, setRecognitionError] = useState(false);
+  const recognitionTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(recognitionTimerRef.current), []);
   const [quizDone, setQuizDone] = useState(false);
   const [userPreferences, setUserPreferences] = useState<
     Record<string, number> | undefined
@@ -225,16 +227,22 @@ function TodayPageContent() {
             cuisine: result.cuisine,
           });
         } else {
-          // Recognition failed — show brief feedback then fall back to text input
           setRecognitionError(true);
           setView({ type: "idle" });
-          setTimeout(() => setRecognitionError(false), 4000);
+          clearTimeout(recognitionTimerRef.current);
+          recognitionTimerRef.current = setTimeout(
+            () => setRecognitionError(false),
+            4000,
+          );
         }
       } catch {
-        // Network or server error — show feedback and fall back to text input
         setRecognitionError(true);
         setView({ type: "idle" });
-        setTimeout(() => setRecognitionError(false), 4000);
+        clearTimeout(recognitionTimerRef.current);
+        recognitionTimerRef.current = setTimeout(
+          () => setRecognitionError(false),
+          4000,
+        );
       }
     },
     [recognitionMutation],
