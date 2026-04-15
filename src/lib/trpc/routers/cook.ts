@@ -4,6 +4,10 @@ import {
   getStaticCookData,
   getStaticMealCookData,
 } from "@/data/guided-cook-steps";
+import {
+  buildSequencerDish,
+  sequenceDishes,
+} from "@/lib/engine/cook-sequencer";
 
 export const cookRouter = router({
   getSteps: publicProcedure
@@ -166,10 +170,51 @@ export const cookRouter = router({
         })),
       ].sort((a, b) => b.totalTime - a.totalTime);
 
+      // Build sequencer hints for parallel cooking
+      const sequencerDishes = [
+        ...(main
+          ? [
+              buildSequencerDish({
+                slug: main.dish.slug,
+                name: main.dish.name,
+                prepTimeMinutes: main.dish.prepTimeMinutes,
+                cookTimeMinutes: main.dish.cookTimeMinutes,
+                temperature: main.dish.temperature,
+                steps: main.steps.map((s) => ({
+                  instruction: s.instruction,
+                  timerSeconds: s.timerSeconds,
+                })),
+              }),
+            ]
+          : []),
+        ...sides.map((s) =>
+          buildSequencerDish({
+            slug: s.dish.slug,
+            name: s.dish.name,
+            prepTimeMinutes: s.dish.prepTimeMinutes,
+            cookTimeMinutes: s.dish.cookTimeMinutes,
+            temperature: s.dish.temperature,
+            steps: s.steps.map((st) => ({
+              instruction: st.instruction,
+              timerSeconds: st.timerSeconds,
+            })),
+          }),
+        ),
+      ];
+      const sequence = sequenceDishes(sequencerDishes);
+
       return {
         main,
         sides,
         cookOrder: allDishes.map((d) => d.slug),
+        sequencerHints: sequence.steps
+          .filter((s) => s.parallelHint)
+          .map((s) => ({
+            dishSlug: s.dishSlug,
+            stepIndex: s.stepIndex,
+            hint: s.parallelHint!,
+          })),
+        totalEstimatedMinutes: sequence.totalEstimatedMinutes,
       };
     }),
 

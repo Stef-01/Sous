@@ -175,6 +175,25 @@ function CombinedCookContent() {
     [orderedDishes],
   );
 
+  // Sequencer parallel hints: map of "dishSlug-stepIndex" -> hint text
+  const parallelHintMap = useMemo(() => {
+    const map = new Map<string, string>();
+    if (data?.sequencerHints) {
+      for (const h of data.sequencerHints) {
+        map.set(`${h.dishSlug}-${h.stepIndex}`, h.hint);
+      }
+    }
+    return map;
+  }, [data]);
+
+  // Current step parallel hint
+  const currentParallelHint =
+    currentDish && currentCookStep
+      ? parallelHintMap.get(
+          `${currentDish.dish.slug}-${currentStepIndex}`,
+        ) ?? null
+      : null;
+
   // Combined totals for mission screen
   const totalPrepTime = useMemo(
     () => orderedDishes.reduce((sum, d) => sum + d.dish.prepTimeMinutes, 0),
@@ -485,6 +504,7 @@ function CombinedCookContent() {
               flavorProfile={allFlavorProfiles}
               prepTimeMinutes={totalPrepTime}
               cookTimeMinutes={totalCookTime}
+              sequencerEstimate={data.totalEstimatedMinutes}
               hasIngredients={allIngredients.length > 0}
               onStart={handleMissionStart}
             />
@@ -555,6 +575,25 @@ function CombinedCookContent() {
                   >
                     {currentDish.dish.name}
                   </motion.p>
+                )}
+
+                {/* Parallel cooking hint from sequencer */}
+                {currentParallelHint && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 25,
+                    }}
+                    className="mb-3 rounded-xl bg-amber-50 border border-amber-200/60 px-3.5 py-2.5 flex items-start gap-2"
+                  >
+                    <span className="text-base leading-none mt-0.5">⏱️</span>
+                    <p className="text-xs text-amber-800 leading-relaxed">
+                      {currentParallelHint}
+                    </p>
+                  </motion.div>
                 )}
                 <StepCard
                   stepNumber={currentStepIndex + 1}
@@ -652,6 +691,7 @@ function CombinedMissionScreen({
   flavorProfile,
   prepTimeMinutes,
   cookTimeMinutes,
+  sequencerEstimate,
   hasIngredients,
   onStart,
 }: {
@@ -662,10 +702,15 @@ function CombinedMissionScreen({
   flavorProfile: string[];
   prepTimeMinutes: number;
   cookTimeMinutes: number;
+  sequencerEstimate?: number;
   hasIngredients: boolean;
   onStart: () => void;
 }) {
   const totalTime = prepTimeMinutes + cookTimeMinutes;
+  const displayTime =
+    sequencerEstimate && sequencerEstimate < totalTime
+      ? sequencerEstimate
+      : totalTime;
 
   return (
     <motion.div
@@ -771,7 +816,7 @@ function CombinedMissionScreen({
             }}
             className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]"
           >
-            {totalTime} min total
+            {displayTime} min{sequencerEstimate && sequencerEstimate < totalTime ? " (parallel)" : " total"}
           </motion.span>
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
