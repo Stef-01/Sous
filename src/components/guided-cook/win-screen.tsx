@@ -400,7 +400,7 @@ export function WinScreen({
                   ease: "easeInOut",
                   delay: star <= rating ? idx * 0.05 : 0,
                 }}
-                className="p-1"
+                className="flex items-center justify-center min-h-11 min-w-11"
                 type="button"
                 role="radio"
                 aria-checked={star === rating}

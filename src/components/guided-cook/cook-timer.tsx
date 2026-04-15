@@ -163,7 +163,7 @@ export function CookTimer() {
             setTotalSeconds(0);
             stopTimer();
           }}
-          className="rounded-full p-1.5 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex items-center justify-center rounded-full min-h-11 min-w-11 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           aria-label="Stop timer"
           type="button"
         >

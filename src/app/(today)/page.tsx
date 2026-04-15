@@ -514,23 +514,39 @@ function TodayPageContent() {
                   onCookSelected={(sides) => {
                     if (sides.length === 0) return;
 
-                    // Check if the main dish has guided cook data for combined flow
+                    if (sides.length === 1) {
+                      handleCookThis(sides[0]);
+                      return;
+                    }
+
                     const queryData = pairingQuery.data;
                     const mealSlug =
                       queryData && "resolvedMealSlug" in queryData
                         ? (queryData.resolvedMealSlug as string | null)
                         : null;
 
-                    if (mealSlug && sides.length >= 1) {
-                      // Navigate to combined cook flow
-                      const sideSlugs = sides.map((s) => s.slug).join(",");
+                    const guidedSides = sides.filter((s) => s.hasGuidedCook);
+
+                    if (guidedSides.length >= 2) {
+                      const sideSlugs = guidedSides
+                        .map((s) => s.slug)
+                        .join(",");
+                      setShowSearch(false);
+                      router.push(
+                        mealSlug
+                          ? `/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`
+                          : `/cook/combined?sides=${encodeURIComponent(sideSlugs)}`,
+                      );
+                    } else if (mealSlug && guidedSides.length >= 1) {
+                      const sideSlugs = guidedSides
+                        .map((s) => s.slug)
+                        .join(",");
                       setShowSearch(false);
                       router.push(
                         `/cook/combined?main=${encodeURIComponent(mealSlug)}&sides=${encodeURIComponent(sideSlugs)}`,
                       );
                     } else {
-                      // Fallback: cook the first selected side
-                      handleCookThis(sides[0]);
+                      handleCookThis(guidedSides[0] ?? sides[0]);
                     }
                   }}
                   onReroll={handleReroll}

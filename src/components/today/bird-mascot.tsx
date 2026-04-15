@@ -14,7 +14,7 @@ export function OwlAvatar({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       whileTap={{ scale: 0.85 }}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
-      className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 border border-[var(--nourish-green)]/15 ambient-float"
+      className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 border border-[var(--nourish-green)]/15 ambient-float"
       type="button"
       aria-label="Open search"
     >

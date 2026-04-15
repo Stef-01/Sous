@@ -350,7 +350,7 @@ export default function GuidedCookPage({
             whileTap={currentPhase !== "win" ? { scale: 0.88 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "rounded-lg p-1.5 transition-colors",
+              "flex items-center justify-center rounded-lg min-h-11 min-w-11 transition-colors",
               currentPhase === "win"
                 ? "text-neutral-200 cursor-default"
                 : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",

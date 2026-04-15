@@ -100,7 +100,7 @@ function CombinedCookContent() {
   // Fetch combined data
   const { data, isLoading, error } = trpc.cook.getCombinedSteps.useQuery(
     { mainDishSlug: mainSlug, sideSlugs },
-    { enabled: !!mainSlug && sideSlugs.length > 0 },
+    { enabled: sideSlugs.length > 0 },
   );
 
   // Build ordered dish data based on cookOrder
@@ -412,8 +412,8 @@ function CombinedCookContent() {
     return (
       <div className="min-h-full flex flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-[var(--nourish-subtext)]">
-          {!mainSlug || sideSlugs.length === 0
-            ? "Missing main dish or sides in URL."
+          {sideSlugs.length === 0
+            ? "Missing side dishes in URL."
             : "No guided cook data found for this combination."}
         </p>
         <button
@@ -446,7 +446,7 @@ function CombinedCookContent() {
             whileTap={currentPhase !== "win" ? { scale: 0.88 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "rounded-lg p-1.5 transition-colors",
+              "flex items-center justify-center rounded-lg min-h-11 min-w-11 transition-colors",
               currentPhase === "win"
                 ? "text-neutral-200 cursor-default"
                 : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
