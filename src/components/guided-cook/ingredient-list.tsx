@@ -2,7 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Circle, ArrowRightLeft, Utensils } from "lucide-react";
+import {
+  Check,
+  Circle,
+  ArrowRightLeft,
+  Utensils,
+  ShoppingCart,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
@@ -78,6 +84,8 @@ export function IngredientList({
   };
 
   const allChecked = checked.size >= totalIngredients;
+  const missingCount = totalIngredients - checked.size;
+  const [instacartToast, setInstacartToast] = useState(false);
 
   // Precompute running index offsets for stagger animation delay
   const sectionStartIndices = useMemo(() => {
@@ -161,6 +169,23 @@ export function IngredientList({
         </AnimatePresence>
       </div>
 
+      {/* Instacart toast */}
+      <AnimatePresence>
+        {instacartToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            className="fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-sm rounded-xl bg-neutral-900 px-4 py-3 text-center shadow-lg"
+          >
+            <p className="text-sm text-white">
+              Instacart ordering coming soon! For now, jot these down. 🛒
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Pinned CTAs — always visible, no scroll required */}
       <div className="mt-auto pt-3 space-y-2">
         {/* Primary: Proceed to cook */}
@@ -179,6 +204,35 @@ export function IngredientList({
         >
           {allChecked ? "Let\u2019s cook! 🍳" : "I have everything"}
         </motion.button>
+
+        {/* Instacart: Order missing ingredients */}
+        {!allChecked && missingCount > 0 && (
+          <motion.button
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: 0.1,
+            }}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => {
+              setInstacartToast(true);
+              setTimeout(() => setInstacartToast(false), 3000);
+            }}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium",
+              "text-[#003D29] bg-[#003D29]/5 border border-[#003D29]/15",
+              "hover:bg-[#003D29]/10 transition-colors duration-200",
+            )}
+            type="button"
+          >
+            <ShoppingCart size={15} />
+            Order {missingCount} item{missingCount !== 1 ? "s" : ""} with
+            Instacart · ~35 min
+          </motion.button>
+        )}
 
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (
