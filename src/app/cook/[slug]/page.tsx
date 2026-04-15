@@ -13,6 +13,8 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
+import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
+import { LevelUpToast } from "@/components/shared/level-up-toast";
 import {
   getStaticCookData,
   getStaticMealCookData,
@@ -37,6 +39,12 @@ export default function GuidedCookPage({
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
+  const {
+    awardXP,
+    levelUpPending,
+    dismissLevelUp,
+    title: levelTitle,
+  } = useXPSystem();
   const sessionIdRef = useRef<string | null>(null);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
@@ -153,6 +161,7 @@ export default function GuidedCookPage({
           saved: false,
           skillProgress: skillEntries,
         });
+        awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
       }
       completeCookPhase();
     } else {
@@ -238,27 +247,29 @@ export default function GuidedCookPage({
     (note: string) => {
       if (sessionIdRef.current) {
         updateSession(sessionIdRef.current, { note });
+        awardXP("add_note", XP_AWARDS.ADD_NOTE);
       }
     },
-    [updateSession],
+    [updateSession, awardXP],
   );
 
   const handleAddPhoto = useCallback(() => {
-    // Photo capture — in V1, placeholder until camera component is integrated
     if (sessionIdRef.current) {
       updateSession(sessionIdRef.current, {
         photoUri: `photo-${Date.now()}-placeholder`,
       });
+      awardXP("add_photo", XP_AWARDS.ADD_PHOTO);
     }
-  }, [updateSession]);
+  }, [updateSession, awardXP]);
 
   const handleRate = useCallback(
     (stars: number) => {
       if (sessionIdRef.current) {
         updateSession(sessionIdRef.current, { rating: stars });
+        awardXP("rate_dish", XP_AWARDS.RATE_DISH);
       }
     },
-    [updateSession],
+    [updateSession, awardXP],
   );
 
   const handleSave = useCallback(() => {
@@ -473,6 +484,11 @@ export default function GuidedCookPage({
 
       {/* Floating timer */}
       <CookTimer />
+      <LevelUpToast
+        level={levelUpPending}
+        title={levelTitle}
+        onDismiss={dismissLevelUp}
+      />
     </motion.div>
   );
 }
