@@ -457,7 +457,7 @@ export default function GuidedCookPage({
             <WinScreen
               key="win"
               dishName={dish.name}
-              sideDishes={[dish.name]}
+              sideDishes={mainDishInput ? [mainDishInput] : []}
               cuisineFamily={cuisine}
               isFirstCook={winMeta.streak === 1}
               streak={winMeta.streak}

@@ -90,9 +90,13 @@ const WIN_HEADLINES = [
 
 const WIN_MESSAGES = [
   (dish: string, sides: string[]) =>
-    `Your ${dish} with ${sides[0] || "sides"} is ready to enjoy. Every cook makes the next one easier.`,
+    sides.length > 0
+      ? `Your ${dish} with ${sides[0]} is ready to enjoy. Every cook makes the next one easier.`
+      : `Your ${dish} is ready to enjoy. Every cook makes the next one easier.`,
   (dish: string, sides: string[]) =>
-    `${dish} paired with ${sides.join(" and ")} — a plate worth remembering.`,
+    sides.length > 0
+      ? `${dish} paired with ${sides.join(" and ")} — a plate worth remembering.`
+      : `${dish} — a plate worth remembering.`,
   (dish: string) =>
     `Another ${dish} in the books. The more you cook, the more confident you get.`,
 ];
