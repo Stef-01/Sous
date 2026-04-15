@@ -3,38 +3,68 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
+import {
+  getCurrentChallenge,
+  getWeekStart,
+  getDaysRemainingInWeek,
+} from "@/data/weekly-challenges";
 
 interface WeeklyGoalCardProps {
   completedSessions: CookSessionRecord[];
-  weeklyTarget?: number;
 }
 
-/**
- * Weekly goal — dot-based progress toward "Cook N times this week".
- * Gamified: each dot fills with a satisfying spring animation.
- */
-export function WeeklyGoalCard({
-  completedSessions,
-  weeklyTarget = 3,
-}: WeeklyGoalCardProps) {
-  const cooksThisWeek = useMemo(() => {
-    const now = new Date();
-    const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - now.getDay()); // Sunday
-    weekStart.setHours(0, 0, 0, 0);
+export function WeeklyGoalCard({ completedSessions }: WeeklyGoalCardProps) {
+  const challenge = getCurrentChallenge();
+  const weekStart = getWeekStart();
+  const daysRemaining = getDaysRemainingInWeek();
 
-    return completedSessions.filter((s) => {
-      if (!s.completedAt) return false;
-      return new Date(s.completedAt) >= weekStart;
-    }).length;
-  }, [completedSessions]);
+  const weekSessions = useMemo(
+    () =>
+      completedSessions.filter(
+        (s) => s.completedAt && new Date(s.completedAt) >= weekStart,
+      ),
+    [completedSessions, weekStart],
+  );
 
-  const isComplete = cooksThisWeek >= weeklyTarget;
-  const remaining = Math.max(weeklyTarget - cooksThisWeek, 0);
+  const progress = useMemo(() => {
+    const goal = challenge.goal;
+    switch (goal.type) {
+      case "cook_count":
+        return { current: weekSessions.length, target: goal.target };
+      case "cuisine_cook":
+        return {
+          current: weekSessions.filter(
+            (s) =>
+              s.cuisineFamily?.toLowerCase() === goal.cuisine.toLowerCase(),
+          ).length,
+          target: goal.target,
+        };
+      case "unique_dishes":
+        return {
+          current: new Set(weekSessions.map((s) => s.recipeSlug)).size,
+          target: goal.target,
+        };
+      case "rate_dishes":
+        return {
+          current: weekSessions.filter((s) => s.rating).length,
+          target: goal.target,
+        };
+      case "streak_days": {
+        const uniqueDays = new Set(
+          weekSessions.map((s) =>
+            new Date(s.completedAt!).toDateString(),
+          ),
+        ).size;
+        return { current: uniqueDays, target: goal.target };
+      }
+    }
+  }, [challenge.goal, weekSessions]);
 
-  // Build dots array
-  const dots = Array.from({ length: weeklyTarget }, (_, i) => ({
-    filled: i < cooksThisWeek,
+  const isComplete = progress.current >= progress.target;
+  const remaining = Math.max(progress.target - progress.current, 0);
+
+  const dots = Array.from({ length: progress.target }, (_, i) => ({
+    filled: i < progress.current,
     index: i,
   }));
 
@@ -47,11 +77,14 @@ export function WeeklyGoalCard({
     >
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-[var(--nourish-dark)]">
-            Weekly goal
-          </h3>
+          <div className="flex items-center gap-2">
+            <span className="text-lg">{challenge.emoji}</span>
+            <h3 className="text-sm font-semibold text-[var(--nourish-dark)]">
+              {challenge.title}
+            </h3>
+          </div>
           <p className="text-xs text-[var(--nourish-subtext)] mt-0.5">
-            Cook {weeklyTarget}× this week
+            {challenge.description}
           </p>
         </div>
         {isComplete ? (
@@ -59,14 +92,22 @@ export function WeeklyGoalCard({
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 12 }}
-            className="text-2xl"
+            className="flex flex-col items-center"
           >
-            🎉
+            <span className="text-2xl">🎉</span>
+            <span className="text-[9px] font-bold text-[var(--nourish-green)]">
+              +{challenge.bonusXP} XP
+            </span>
           </motion.div>
         ) : (
-          <span className="text-xs font-medium text-[var(--nourish-subtext)] tabular-nums">
-            {cooksThisWeek}/{weeklyTarget}
-          </span>
+          <div className="flex flex-col items-end">
+            <span className="text-xs font-medium text-[var(--nourish-subtext)] tabular-nums">
+              {progress.current}/{progress.target}
+            </span>
+            <span className="text-[10px] text-[var(--nourish-subtext)]/60">
+              {daysRemaining}d left
+            </span>
+          </div>
         )}
       </div>
 
@@ -111,13 +152,12 @@ export function WeeklyGoalCard({
         ))}
       </div>
 
-      {/* Message */}
       <p className="text-[11px] text-[var(--nourish-subtext)]">
         {isComplete
-          ? "Week complete! Incredible consistency 🔥"
-          : cooksThisWeek > 0
-            ? `${remaining} more to hit your goal — keep it up!`
-            : "Start your first cook of the week!"}
+          ? `Challenge complete! +${challenge.bonusXP} XP earned 🔥`
+          : progress.current > 0
+            ? `${remaining} more to go — ${daysRemaining} days left!`
+            : "A new challenge awaits — start cooking!"}
       </p>
     </motion.div>
   );
