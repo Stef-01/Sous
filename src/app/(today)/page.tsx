@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { QuestCard } from "@/components/today/quest-card";
-import { FallbackActions } from "@/components/today/fallback-actions";
+import { FallbackActions } from "@/components/today/quick-actions";
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
