@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "framer-motion";
 import type { CookStats } from "@/lib/hooks/use-cook-sessions";
 
@@ -54,7 +55,7 @@ function StatBlock({
  * Journey summary — stats card with animated number reveals.
  * Journey tone, not performance pressure.
  */
-export function JourneySummary({ stats }: JourneySummaryProps) {
+export const JourneySummary = memo(function JourneySummary({ stats }: JourneySummaryProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -146,4 +147,4 @@ export function JourneySummary({ stats }: JourneySummaryProps) {
       )}
     </motion.div>
   );
-}
+});

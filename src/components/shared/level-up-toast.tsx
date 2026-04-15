@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface LevelUpToastProps {
@@ -8,7 +9,7 @@ interface LevelUpToastProps {
   onDismiss: () => void;
 }
 
-export function LevelUpToast({ level, title, onDismiss }: LevelUpToastProps) {
+export const LevelUpToast = memo(function LevelUpToast({ level, title, onDismiss }: LevelUpToastProps) {
   return (
     <AnimatePresence>
       {level !== null && (
@@ -70,4 +71,4 @@ export function LevelUpToast({ level, title, onDismiss }: LevelUpToastProps) {
       )}
     </AnimatePresence>
   );
-}
+});

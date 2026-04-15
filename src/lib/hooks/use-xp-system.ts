@@ -169,6 +169,11 @@ export function useXPSystem() {
     [state.totalXP],
   );
 
+  const recentEvents = useMemo(
+    () => state.events.slice(-10),
+    [state.events],
+  );
+
   return {
     mounted,
     totalXP: state.totalXP,
@@ -178,6 +183,6 @@ export function useXPSystem() {
     levelUpPending,
     awardXP,
     dismissLevelUp,
-    recentEvents: state.events.slice(-10),
+    recentEvents,
   };
 }

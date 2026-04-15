@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 import type { Achievement } from "@/data/achievements";
@@ -9,7 +10,7 @@ interface AchievementsGridProps {
   locked: Achievement[];
 }
 
-export function AchievementsGrid({ unlocked, locked }: AchievementsGridProps) {
+export const AchievementsGrid = memo(function AchievementsGrid({ unlocked, locked }: AchievementsGridProps) {
   const total = unlocked.length + locked.length;
 
   return (
@@ -66,4 +67,4 @@ export function AchievementsGrid({ unlocked, locked }: AchievementsGridProps) {
       </div>
     </div>
   );
-}
+});

@@ -164,16 +164,19 @@ export function useAchievements() {
     setNewlyUnlocked([]);
   }, []);
 
-  const unlockedAchievements = useMemo(
-    () =>
-      achievements.filter((a) => state.unlocked.includes(a.id)),
+  const unlockedSet = useMemo(
+    () => new Set(state.unlocked),
     [state.unlocked],
   );
 
+  const unlockedAchievements = useMemo(
+    () => achievements.filter((a) => unlockedSet.has(a.id)),
+    [unlockedSet],
+  );
+
   const lockedAchievements = useMemo(
-    () =>
-      achievements.filter((a) => !state.unlocked.includes(a.id)),
-    [state.unlocked],
+    () => achievements.filter((a) => !unlockedSet.has(a.id)),
+    [unlockedSet],
   );
 
   return {

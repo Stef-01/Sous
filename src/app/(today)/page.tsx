@@ -14,8 +14,14 @@ import { ResultStack } from "@/components/today/result-stack";
 import { CameraInput } from "@/components/today/camera-input";
 import { CorrectionChips } from "@/components/today/correction-chips";
 
-import { BreadQuiz } from "@/components/shared/bread-quiz";
-import { CoachQuiz } from "@/components/shared/coach-quiz";
+import dynamic from "next/dynamic";
+
+const BreadQuiz = dynamic(() =>
+  import("@/components/shared/bread-quiz").then((m) => m.BreadQuiz),
+);
+const CoachQuiz = dynamic(() =>
+  import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
+);
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";

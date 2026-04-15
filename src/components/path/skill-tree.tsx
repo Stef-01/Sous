@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useMemo, useCallback, useState } from "react";
+import { useRef, useEffect, useMemo, useCallback, useState, memo } from "react";
 import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -97,7 +97,7 @@ function MasteryCuisineCard({
  * Auto-scrolls to the first available or in-progress node on mount.
  * Mastery-tier nodes render below in a 2-column grid, not in the tree.
  */
-export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
+export const SkillTree = memo(function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const haptic = useHaptic();
@@ -318,4 +318,4 @@ export function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
       )}
     </div>
   );
-}
+});

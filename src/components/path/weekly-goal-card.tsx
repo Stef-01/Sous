@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import {
@@ -13,7 +13,7 @@ interface WeeklyGoalCardProps {
   completedSessions: CookSessionRecord[];
 }
 
-export function WeeklyGoalCard({ completedSessions }: WeeklyGoalCardProps) {
+export const WeeklyGoalCard = memo(function WeeklyGoalCard({ completedSessions }: WeeklyGoalCardProps) {
   const challenge = getCurrentChallenge();
   const weekStart = getWeekStart();
   const daysRemaining = getDaysRemainingInWeek();
@@ -161,4 +161,4 @@ export function WeeklyGoalCard({ completedSessions }: WeeklyGoalCardProps) {
       </p>
     </motion.div>
   );
-}
+});
