@@ -110,17 +110,79 @@ These features exist as real, substantial code — not stubs.
 - **Coach quiz** (`src/components/shared/coach-quiz.tsx`) — this-or-that preference quiz, updates preference vector for quest card ranking and pairing scoring. Working.
 - **Navbar** (`src/components/layout/Navbar.tsx`) — working.
 
+#### Cook Sequencer Engine (Phase 8)
+
+- **Cook sequencer** (`src/lib/engine/cook-sequencer.ts`) — Interleaves steps from multiple dishes in combined cooks. Classifies passive steps (bake, simmer) to identify parallel cooking opportunities. Working.
+- **Sequencer integration** — Combined cook page (`/cook/combined`) displays parallel cooking hints and sequencer-estimated total time. Working.
+- **Unit tests** — 9 tests covering single dish, multi-dish sorting, parallel hints, and interleaving.
+
+#### Instacart Integration (Phase 10 — V1 Placeholder)
+
+- **Instacart button** on Grab screen (`ingredient-list.tsx`) — Shows "Order N items with Instacart" when ingredients are unchecked. V1 shows a "Coming soon" toast. Working.
+
+#### XP & Leveling System (Phase 11)
+
+- **XP system hook** (`src/lib/hooks/use-xp-system.ts`) — Tracks XP events, computes levels (1 per 100 XP), level titles, streak-based multipliers (2x at 7 days, 3x at 14 days). Persists in localStorage. Working.
+- **XP awards** — Cook complete (+25), rate dish (+5), add note (+5), add photo (+10), weekly challenge (+50), game win (+15).
+- **Level-up toast** (`src/components/shared/level-up-toast.tsx`) — Celebratory notification on level up. Working.
+- **Integrated** into both single-dish and combined cook flows.
+
+#### Achievement System
+
+- **Achievement definitions** (`src/data/achievements.ts`) — Milestones based on cooks completed, cuisines explored, streaks, skills, ratings, photos, XP, and levels. Working.
+- **Achievement hook** (`src/lib/hooks/use-achievements.ts`) — Tracks unlocked achievements against user stats, persists in localStorage. Uses Set-based O(1) lookups. Working.
+- **Achievement toast** (`src/components/shared/achievement-toast.tsx`) — Notification on achievement unlock. Working.
+- **Achievements grid** (`src/components/path/achievements-grid.tsx`) — Displayed on Path page showing unlocked and locked achievements.
+
+#### Weekly Challenges
+
+- **Weekly challenges** (`src/data/weekly-challenges.ts`) — Rotating pool of challenges (cook count, cuisine-specific, unique dishes, rate dishes, streak days) with bonus XP. Deterministically selected per calendar week. Working.
+- **Weekly goal card** updated to display the current dynamic challenge with progress tracking.
+
+#### Games Arcade (Phase 14)
+
+- **Arcade menu** (`/games`) — "Kitchen Arcade" with 4 game cards, high scores, and play counts. Working.
+- **What's Cooking?** (`/games/whats-cooking`) — 5-clue food guessing game with fuzzy matching, scoring, streaks. 20 dishes with hand-crafted clues. Working.
+- **Flavor Pairs** (`/games/flavor-pairs`) — Memory-style matching game with easy/medium/hard difficulty, timer, and "why they pair" educational hints. Working.
+- **Speed Chop** (`/games/speed-chop`) — Ingredient sorting game with categories, lives, streaks, fun facts, increasing difficulty. Working.
+- **Cuisine Compass** (`/games/cuisine-compass`) — Geography game: identify dish origins on a region map. 8 rounds per game with fun facts. Working.
+- **Game scores hook** (`src/lib/hooks/use-game-scores.ts`) — Persists best scores and play counts per game in localStorage. Working.
+- **Today page integration** — "Play a game" button navigates to `/games`.
+
+#### Recipe Overlay Infrastructure (Phase 15C)
+
+- **Recipe overlays hook** (`src/lib/hooks/use-recipe-overlays.ts`) — "Base + Overlay" pattern for user recipe modifications. Stores step overrides, personal notes, and substitutions in localStorage. Working.
+- **`mergeStepWithOverlay` utility** — Merges base step data with user overlay at read time.
+- **Personal step notes** — Step card allows users to add notes to individual cooking steps via overlay system. Working.
+
+#### Cuisine Mastery & Streak Progression
+
+- **Cuisine mastery** integrated into skill tree — 8 cuisine paths (Italian, Japanese, French, Mexican, Indian, Thai, Chinese, Mediterranean) as parallel progression tracks.
+- **Streak multipliers** — XP system applies 2x multiplier at 7-day streak, 3x at 14-day streak.
+
+#### Source Attribution
+
+- **Recipe source tracking** — Guided cook steps include source attribution metadata for proper recipe crediting.
+
 #### Testing
 
-- **Unit tests** — 6 test files, 93 tests covering pairing engine, plate evaluation, ranker, normalization, cook sessions, and coach quiz.
+- **Unit tests** — 7 test files, 102 tests covering pairing engine, plate evaluation, ranker, normalization, cook sessions, coach quiz, and cook sequencer.
 - **E2E smoke tests** (`e2e/core-loop.spec.ts`) — 5 Playwright scenarios covering Today page, search flow, full cook loop, quest card save, and Path tab unlock.
+- **E2E games arcade tests** (`e2e/games-arcade.spec.ts`) — 5 tests covering arcade menu and all 4 game initial screens.
+- **E2E path features tests** (`e2e/path-features.spec.ts`) — 4 tests covering achievements section, weekly challenge card, scrapbook, and favorites pages.
 - **Playwright config** — Chromium + Mobile Safari, auto-starts dev server, HTML reporter.
+
+#### Performance Optimizations
+
+- **Dynamic imports** — BreadQuiz and CoachQuiz lazy-loaded via `next/dynamic` to reduce initial bundle.
+- **React.memo** — Applied to AchievementsGrid, WeeklyGoalCard, JourneySummary, SkillTree, LevelUpToast to prevent unnecessary re-renders.
+- **Memoization** — Set-based achievement lookups (O(1) vs O(n)), memoized recentEvents in XP system.
 
 ---
 
 ### What Remains for the Prototype
 
-> **Last audit:** 2026-04-15. Most Sprint 1-5 items are now complete.
+> **Last audit:** 2026-04-15. Sprints 1-6 complete. Phases 8, 10, 11, 14, 15C implemented.
 
 #### Sprint 1: Polish and Connect (Phase 1 remaining) — COMPLETE
 
@@ -164,18 +226,20 @@ These features exist as real, substantial code — not stubs.
 
 These are intentionally out of scope for Stage 1:
 
-| Feature                                | Reason                                                                         |
+| Feature                                | Status                                                                         |
 | -------------------------------------- | ------------------------------------------------------------------------------ |
 | Community tab                          | Unlocks after 30 days. Always hidden in prototype.                             |
 | Clerk auth enforcement                 | Auth is integrated but not required. No login wall.                            |
 | Real database (Neon Postgres)          | Everything uses localStorage. DB schema is defined and ready.                  |
 | Cloudflare R2 image storage            | Images use Unsplash URLs.                                                      |
 | Upstash Redis cache/rate limiting      | Not needed at prototype scale.                                                 |
-| Instacart integration                  | Placeholder button exists in fallback actions. V1 shows a "coming soon" toast. |
-| Multi-side selection + per-side reroll | Phase 7 in planning.md — post-V1.                                              |
-| Intelligent cook sequencer             | Phase 8 — post-V1.                                                             |
+| ~~Instacart integration~~              | **DONE (V1)** — Placeholder button with "Coming soon" toast on Grab screen.   |
+| ~~Multi-side selection + per-side reroll~~ | **DONE** — Sprint 6. Full multi-side selection and per-side reroll working. |
+| ~~Intelligent cook sequencer~~         | **DONE** — Phase 8 implemented. Parallel hints in combined cook flow.          |
 | Agentic recipe assistant               | Phase 9 — post-V1.                                                             |
-| Advanced skill progression / XP system | Phase 11 — post-V1. Skill tree nodes exist but XP is local-only.               |
+| ~~Advanced skill progression / XP system~~ | **DONE** — Phase 11. XP, levels, achievements, weekly challenges, streak multipliers. |
+| ~~Games Arcade~~                       | **DONE** — Phase 14. 4 mini-games with scoring and XP integration.             |
+| ~~Recipe overlay infrastructure~~      | **DONE** — Phase 15C. Base + Overlay pattern with personal step notes.         |
 
 ---
 
@@ -278,13 +342,15 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ## Summary
 
-|               | Stage 1 (Prototype)                  | Stage 2 (Production)               |
-| ------------- | ------------------------------------ | ---------------------------------- |
-| **Auth**      | None (anonymous)                     | Clerk, enforced                    |
-| **Data**      | localStorage + static JSON           | Neon Postgres, seeded              |
-| **AI**        | Working (mock fallback)              | Rate-limited, cached, monitored    |
-| **Images**    | Unsplash URLs                        | Cloudflare R2                      |
-| **Testing**   | Engine unit tests + 1 E2E smoke test | Full CI pipeline, Playwright suite |
-| **Errors**    | Console.warn fallbacks               | Sentry, alert rules                |
-| **Analytics** | Vercel Analytics (basic)             | Full funnel tracking               |
-| **Deploy**    | Vercel (already live)                | Vercel + hardened config           |
+|               | Stage 1 (Prototype)                                            | Stage 2 (Production)               |
+| ------------- | -------------------------------------------------------------- | ---------------------------------- |
+| **Auth**      | None (anonymous)                                               | Clerk, enforced                    |
+| **Data**      | localStorage + static JSON                                     | Neon Postgres, seeded              |
+| **AI**        | Working (mock fallback)                                        | Rate-limited, cached, monitored    |
+| **Images**    | Unsplash URLs                                                  | Cloudflare R2                      |
+| **Testing**   | 102 unit tests + 14 E2E tests (core loop, games, path)        | Full CI pipeline, Playwright suite |
+| **Errors**    | Console.warn fallbacks                                         | Sentry, alert rules                |
+| **Analytics** | Vercel Analytics (basic)                                       | Full funnel tracking               |
+| **Deploy**    | Vercel (already live)                                          | Vercel + hardened config           |
+| **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games  | Leaderboards, social sharing       |
+| **Recipes**   | 126 guided cook flows, overlay system, personal notes          | Full 203 coverage, cloud sync      |
