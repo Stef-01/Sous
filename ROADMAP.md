@@ -1,6 +1,6 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-05
+> **Updated:** 2026-04-15
 > **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions)
 
 ---
@@ -18,15 +18,15 @@ These features exist as real, substantial code — not stubs.
 #### Core Experience (Today Tab)
 
 - **Today page** (`src/app/(today)/page.tsx`) — full state machine: idle → loading → results | camera → recognition → correction. Working.
-- **Quest card stack** (`src/components/today/quest-card.tsx`) — swipeable Tinder-style cards, drag overlays, heart/X buttons. Working, but pool is **5 hardcoded dishes** (not connected to real data).
+- **Quest card stack** (`src/components/today/quest-card.tsx`) — swipeable Tinder-style cards, drag overlays, heart/X buttons. Pool draws from all 76 meals + 119 guided-cook sides with smart scoring, daily rotation, and preference matching. Working.
 - **Bird mascot + craving trigger** (`src/components/today/bird-mascot.tsx`) — speech bubble "I'm craving…" interaction. Working.
 - **Search popout** (`src/components/today/search-popout.tsx`) — bottom sheet for text/camera input. Working.
 - **Text prompt** (`src/components/today/text-prompt.tsx`) — freeform craving input. Working.
 - **Camera input** (`src/components/today/camera-input.tsx`) — photo capture flow. Working.
 - **Correction chips** (`src/components/today/correction-chips.tsx`) — dish confirmation after photo recognition. Working.
 - **Result stack** (`src/components/today/result-stack.tsx`) — 3 ranked side dish cards. Working.
-- **Fallback actions** (`src/components/today/fallback-actions.tsx`) — rescue fridge / play game / order out. Working.
-- **Friends strip** (`src/components/today/friends-strip.tsx`) — social proof row. Working, but uses **mock data**.
+- **Quick actions** (`src/components/today/quick-actions.tsx`) — rescue fridge / play game / personalize. Working.
+- **Friends strip** (`src/components/today/friends-strip.tsx`) — shows user's recent completed cooks as scrollable cards. Uses real cook session data. Hidden when no cooks. Working.
 - **Streak counter** (`src/components/today/streak-counter.tsx`) — working, reads from localStorage.
 
 #### Pairing Engine
@@ -107,44 +107,56 @@ These features exist as real, substantial code — not stubs.
 - **Heatmap** (`src/components/heatmap/HeatmapModal.tsx`) — 35+ mains × 148+ sides compatibility matrix. Working.
 - **Vercel Analytics** (`src/lib/analytics.ts`) — integrated (stub events).
 - **Spin wheel** (`src/components/layout/SpinWheel.tsx`), **About modal**, **Bread quiz** (`src/components/shared/bread-quiz.tsx`) — working.
+- **Coach quiz** (`src/components/shared/coach-quiz.tsx`) — this-or-that preference quiz, updates preference vector for quest card ranking and pairing scoring. Working.
 - **Navbar** (`src/components/layout/Navbar.tsx`) — working.
+
+#### Testing
+
+- **Unit tests** — 6 test files, 93 tests covering pairing engine, plate evaluation, ranker, normalization, cook sessions, and coach quiz.
+- **E2E smoke tests** (`e2e/core-loop.spec.ts`) — 5 Playwright scenarios covering Today page, search flow, full cook loop, quest card save, and Path tab unlock.
+- **Playwright config** — Chromium + Mobile Safari, auto-starts dev server, HTML reporter.
 
 ---
 
 ### What Remains for the Prototype
 
-These are the specific gaps between the current state and a fully demoable prototype.
+> **Last audit:** 2026-04-15. Most Sprint 1-5 items are now complete.
 
-#### Sprint 1: Polish and Connect (Phase 1 remaining)
+#### Sprint 1: Polish and Connect (Phase 1 remaining) — COMPLETE
 
-- [ ] **Quest card pool** — Replace the 5 hardcoded dishes in `quest-card.tsx` with a real rotating selection drawn from `src/data/sides.json`. Each card should navigate to a real `/cook/[slug]` route with data.
-- [ ] **Quest card save button** — Wire the heart button on quest cards to `useSavedPairings` or `useCookSessions` so it actually persists.
-- [ ] **Friends strip** — Either replace mock data with a deterministic rotation from cook sessions, or hide the strip entirely until social features exist. Don't show fake user avatars.
-- [ ] **Error states** — Add user-visible error UI for: pairing failure, recognition failure, network timeout, and empty search results. Currently most failures fail silently.
-- [ ] **Loading skeletons** — Add shimmer placeholders inside the search popout while pairing results load.
-- [ ] **Cross-browser scrollbar hiding** — Verify the DeviceFrame inner scroll works on Windows Chrome, Safari, and Firefox. The current CSS may only hide scrollbars on WebKit.
-- [ ] **`pnpm lint && pnpm test`** — Fix any outstanding failures before demo.
+- [x] **Quest card pool** — `buildQuestDishes()` draws from all 76 meals + 119 guided-cook sides with smart scoring, daily rotation, preference matching, and novelty bonus. 80/20 meal:side ratio.
+- [x] **Quest card save button** — Heart wired to `useSavedDishes` (localStorage, max 50, toast notification).
+- [x] **Friends strip** — Replaced mock data with real cook session history via `FriendsStrip({ sessions })`. Hidden when no completed cooks.
+- [x] **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
+- [x] **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
+- [x] **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
+- [x] **`pnpm lint && pnpm test`** — 93 tests passing, lint clean.
 
-#### Sprint 2: Post-Cook Reflection (Phase 6A)
+#### Sprint 2: Post-Cook Reflection (Phase 6A) — COMPLETE
 
-- [ ] **Evaluate B reflection UI** — The Win screen has a `showReflection` toggle state, but the actual reflection panel needs to be built: strengths display, next-time suggestions, "Save to scrapbook" CTA. Wire to `ai.generateReflection` (mock fallback already exists).
-- [ ] **Win screen → scrapbook save** — Verify the full save path: rate → note → photo → `completeSession()` → scrapbook entry appears. Confirm `pathJustUnlocked` banner fires on the 3rd completion.
-- [ ] **Journey tRPC endpoints** — `journey.recent` and `journey.stats` are still stubbed. Either implement them (reading from localStorage via ctx, or removing the stubs in favor of direct hook usage in Path components).
+- [x] **Evaluate B reflection UI** — "Reflect on this meal" expandable panel on Win screen with strengths + suggestions, wired to `ai.generateReflection` with mock fallback.
+- [x] **Win screen → scrapbook save** — Full save path works: rate → note → photo → `completeSession()` → scrapbook entry. `pathJustUnlocked` fires on 3rd completion.
+- [x] **Journey tRPC endpoints** — `journey.recent` and `journey.stats` fully implemented (accept localStorage sessions, compute weekly frequency).
 
-#### Sprint 3: Coach Persona (Phase 5 deferred items)
+#### Sprint 3: Coach Persona (Phase 5 deferred items) — COMPLETE
 
-- [ ] **Coach quiz** (`src/lib/trpc/routers/coach.ts`) — `coach.quiz` tRPC endpoint is stubbed. Build the this-or-that preference quiz UI (`src/components/shared/bread-quiz.tsx` exists as a shell). Wire responses to update the preference vector in `useTodayStore` to influence future pairings.
-- [ ] **Coach vibe prompt** — `coach.vibePrompt` is stubbed. Low priority — can stay deferred until after core demo.
+- [x] **Coach quiz** — Full this-or-that quiz UI (`coach-quiz.tsx`) + `coach.quiz` tRPC endpoint. Results update preference vector → influences quest card ranking and pairing scoring.
+- [x] **Coach vibe prompt** — `coach.vibePrompt` endpoint returns daily rotating questions with result cards.
 
-#### Sprint 4: Data Expansion
+#### Sprint 4: Data Expansion — PARTIAL
 
-- [ ] **Scored pairings beyond Indian cuisine** — Currently only 14 Indian mains have Python engine scores in `pairings.json`. The TypeScript engine handles all other mains. Run the Python engine against the remaining 79 mains and update `pairings.json`. This significantly improves pairing quality for the demo.
-- [ ] **Guided cook steps coverage** — `guided-cook-steps.ts` has static cook data for a subset of dishes. Audit which dishes in `sides.json` are missing cook steps, and fill gaps for the most common quest card candidates (at minimum, cover the dishes shown in quest cards).
+- [ ] **Scored pairings beyond Indian cuisine** — Still only 14 Indian mains in `pairings.json`. TypeScript engine covers all 76 mains. Python engine run needed for quality upgrade.
+- [x] **Guided cook steps coverage** — 126 entries (119 sides + 7 meals), 58% side coverage. Quest cards prioritize dishes with guided cook data.
 
-#### Sprint 5: Testing
+#### Sprint 5: Testing — COMPLETE
 
-- [ ] **Unit tests** — Only `pairing-engine.test.ts` exists. Add tests for: `plate-evaluation.ts`, `useCookSessions` logic, craving parser output validation, unlock status logic.
-- [ ] **E2E smoke test (Playwright)** — Write one end-to-end test covering the full core loop: type craving → see results → tap "Cook this" → complete guided cook → Win screen. This is the demo flow and must not break.
+- [x] **Unit tests** — 6 test files, 93 tests: pairing-engine, plate-evaluation, ranker, normalize, cook-sessions, coach-quiz.
+- [x] **E2E smoke test (Playwright)** — 5 scenarios: Today page render, search flow, full core loop, quest card save, Path tab unlock.
+
+#### Sprint 6: Phase 7 (Multi-Side Selection) — COMPLETE
+
+- [x] **Multi-side selection** — Result stack shows selectable checkboxes on all 3 sides, "Cook N selected sides" CTA.
+- [x] **Per-side reroll** — Swap button on each side card via `pairing.rerollSide` tRPC endpoint. Excludes previously seen IDs.
 
 ---
 
