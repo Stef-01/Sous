@@ -611,6 +611,15 @@ export function WinScreen({
                     </div>
                   )}
 
+                  {reflection.isError && (
+                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
+                      <p className="text-xs text-[var(--nourish-subtext)]">
+                        Great job completing this cook! Reflection unavailable
+                        right now.
+                      </p>
+                    </div>
+                  )}
+
                   {reflection.data && (
                     <motion.div
                       initial={{ opacity: 0, y: 6 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -77,6 +77,13 @@ export function StepCard({
     answer: string;
     confidence: string;
   } | null>(null);
+
+  const noopSubscribe = () => () => {};
+  const hasSpeechSynthesis = useSyncExternalStore(
+    noopSubscribe,
+    () => !!window.speechSynthesis,
+    () => false,
+  );
 
   const handleReadAloud = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -155,7 +162,7 @@ export function StepCard({
           >
             Step {stepNumber} of {totalSteps}
           </motion.p>
-          {typeof window !== "undefined" && window.speechSynthesis && (
+          {hasSpeechSynthesis && (
             <motion.button
               onClick={handleReadAloud}
               whileTap={{ scale: 0.88 }}

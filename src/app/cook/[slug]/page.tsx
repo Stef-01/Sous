@@ -154,11 +154,6 @@ export default function GuidedCookPage({
           skillProgress: skillEntries,
         });
       }
-      // Record skill progress for this dish (if it maps to a skill node)
-      const skillNodeId = getSkillNodesForDish(slug)[0];
-      if (skillNodeId) {
-        recordSkillCook(skillNodeId);
-      }
       completeCookPhase();
     } else {
       useCookStore.setState({

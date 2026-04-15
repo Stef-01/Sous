@@ -115,41 +115,43 @@ export function ResultStack({
 
   /* eslint-disable react-hooks/set-state-in-effect -- async tRPC result drives state machine transition */
   useEffect(() => {
-    if (
-      rerollingIndex !== null &&
-      lastRerollData?.success &&
-      lastRerollData.side &&
-      !rerollQuery.isFetching
-    ) {
-      const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
-      if (rerollKey !== appliedRerollKey) {
-        const newSide = lastRerollData.side as SideResult;
-        const idx = rerollingIndex;
-
-        setSides((prev) => {
-          const next = [...prev];
-          const oldId = next[idx].id;
-          setSelectedIds((sel) => {
-            const updated = new Set(sel);
-            if (updated.has(oldId)) {
-              updated.delete(oldId);
-              updated.add(newSide.id);
-            }
-            return updated;
-          });
-          next[idx] = newSide;
-          return next;
-        });
-
-        setSeenIds((prev) => new Set([...prev, newSide.id]));
-        setAppliedRerollKey(rerollKey);
+    if (rerollingIndex !== null && !rerollQuery.isFetching) {
+      if (rerollQuery.isError) {
         setRerollingIndex(null);
+        return;
+      }
+      if (lastRerollData?.success && lastRerollData.side) {
+        const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
+        if (rerollKey !== appliedRerollKey) {
+          const newSide = lastRerollData.side as SideResult;
+          const idx = rerollingIndex;
+
+          setSides((prev) => {
+            const next = [...prev];
+            const oldId = next[idx].id;
+            setSelectedIds((sel) => {
+              const updated = new Set(sel);
+              if (updated.has(oldId)) {
+                updated.delete(oldId);
+                updated.add(newSide.id);
+              }
+              return updated;
+            });
+            next[idx] = newSide;
+            return next;
+          });
+
+          setSeenIds((prev) => new Set([...prev, newSide.id]));
+          setAppliedRerollKey(rerollKey);
+          setRerollingIndex(null);
+        }
       }
     }
   }, [
     rerollingIndex,
     lastRerollData,
     rerollQuery.isFetching,
+    rerollQuery.isError,
     appliedRerollKey,
   ]);
   /* eslint-enable react-hooks/set-state-in-effect */
@@ -405,6 +407,7 @@ function ResultCard({
           onClick={() => setExpanded(!expanded)}
           className="flex flex-1 items-center gap-2.5 text-left min-w-0"
           type="button"
+          aria-expanded={expanded}
         >
           {/* Side dish image */}
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">

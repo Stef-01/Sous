@@ -339,6 +339,10 @@ function IngredientRow({
                 <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
                   Finding a swap...
                 </p>
+              ) : subQuery.isError ? (
+                <p className="text-xs text-amber-600">
+                  Couldn&apos;t find a swap right now. Try using what you have!
+                </p>
               ) : subQuery.data ? (
                 <div className="space-y-0.5">
                   <p className="text-xs font-medium text-[var(--nourish-dark)]">

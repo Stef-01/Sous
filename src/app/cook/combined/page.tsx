@@ -593,7 +593,11 @@ function CombinedCookContent() {
             <DishTransitionCard
               key="transition"
               completedDishName={completedDishName}
-              nextDishName={currentDish?.dish.name ?? ""}
+              nextDishName={
+                orderedDishes[currentDishIndex + 1]?.dish.name ??
+                currentDish?.dish.name ??
+                ""
+              }
               currentDishNumber={currentDishIndex + 1}
               totalDishes={dishes.length}
               onContinue={handleTransitionContinue}

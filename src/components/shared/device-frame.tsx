@@ -261,6 +261,9 @@ function DeviceToggle({
         mode === "phone" ? "bottom-6 right-6" : "bottom-4 right-4",
       )}
       type="button"
+      aria-label={
+        mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"
+      }
       title={
         mode === "phone" ? "Switch to desktop layout" : "Switch to phone layout"
       }

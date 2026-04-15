@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -19,6 +19,15 @@ interface SearchPopoutProps {
  * is always visible regardless of scroll position.
  */
 export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [isOpen, onClose]);
+
   return (
     <>
       {/* Backdrop */}
@@ -45,6 +54,9 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Search for a dish"
             className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-white shadow-2xl max-h-[85vh]"
           >
             {/* Fixed header — NEVER scrolls (avoids sticky+transform bug) */}
