@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
@@ -22,7 +22,10 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 function fuzzyMatch(input: string, targets: string[]): boolean {
-  const clean = input.trim().toLowerCase().replace(/[^a-z0-9 ]/g, "");
+  const clean = input
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, "");
   return targets.some((t) => {
     const target = t.toLowerCase();
     if (clean === target) return true;
@@ -109,13 +112,7 @@ export default function WhatsCookingGame() {
       setGuess("");
       setRoundResult(null);
     }
-  }, [
-    currentDishIdx,
-    dishes.length,
-    totalScore,
-    recordScore,
-    awardXP,
-  ]);
+  }, [currentDishIdx, dishes.length, totalScore, recordScore, awardXP]);
 
   const handlePlayAgain = useCallback(() => {
     setCurrentDishIdx(0);
@@ -379,9 +376,7 @@ function GameOverScreen({
           <p className="text-2xl font-bold text-[var(--nourish-dark)] tabular-nums">
             {score} pts
           </p>
-          <p className="text-sm text-[var(--nourish-subtext)] mt-1">
-            {rating}
-          </p>
+          <p className="text-sm text-[var(--nourish-subtext)] mt-1">{rating}</p>
         </div>
         <div className="space-y-2 pt-2">
           <button

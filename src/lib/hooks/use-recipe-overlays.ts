@@ -54,7 +54,8 @@ export function useRecipeOverlays() {
   const [state, setState] = useState<OverlayState>({ overlays: {} });
   const [mounted, setMounted] = useState(false);
 
-  /* eslint-disable react-hooks/set-state-in-effect */
+  /* Hydrate from localStorage after mount (SSR-safe). */
+  /* eslint-disable react-hooks/set-state-in-effect -- intentional client-only hydration */
   useEffect(() => {
     setState(loadState());
     setMounted(true);
@@ -140,38 +141,36 @@ export function useRecipeOverlays() {
     [],
   );
 
-  const setPersonalNotes = useCallback(
-    (dishSlug: string, notes: string) => {
-      setState((prev) => {
-        const existing = prev.overlays[dishSlug] ?? {
-          dishSlug,
-          stepOverrides: {},
-          personalNotes: "",
-          substitutions: [],
-          lastModified: new Date().toISOString(),
-        };
+  const setPersonalNotes = useCallback((dishSlug: string, notes: string) => {
+    setState((prev) => {
+      const existing = prev.overlays[dishSlug] ?? {
+        dishSlug,
+        stepOverrides: {},
+        personalNotes: "",
+        substitutions: [],
+        lastModified: new Date().toISOString(),
+      };
 
-        const updated: OverlayState = {
-          overlays: {
-            ...prev.overlays,
-            [dishSlug]: {
-              ...existing,
-              personalNotes: notes,
-              lastModified: new Date().toISOString(),
-            },
+      const updated: OverlayState = {
+        overlays: {
+          ...prev.overlays,
+          [dishSlug]: {
+            ...existing,
+            personalNotes: notes,
+            lastModified: new Date().toISOString(),
           },
-        };
-        saveState(updated);
-        return updated;
-      });
-    },
-    [],
-  );
+        },
+      };
+      saveState(updated);
+      return updated;
+    });
+  }, []);
 
   const resetOverlay = useCallback((dishSlug: string) => {
     setState((prev) => {
-      const { [dishSlug]: _, ...rest } = prev.overlays;
-      const updated: OverlayState = { overlays: rest };
+      const next = { ...prev.overlays };
+      delete next[dishSlug];
+      const updated: OverlayState = { overlays: next };
       saveState(updated);
       return updated;
     });
@@ -200,7 +199,10 @@ export function useRecipeOverlays() {
  */
 export function mergeStepWithOverlay<
   T extends { instruction: string; timerSeconds: number | null },
->(baseStep: T, overlay: StepOverride | undefined): T & { hasOverlay: boolean; personalNote?: string } {
+>(
+  baseStep: T,
+  overlay: StepOverride | undefined,
+): T & { hasOverlay: boolean; personalNote?: string } {
   if (!overlay) return { ...baseStep, hasOverlay: false };
   return {
     ...baseStep,

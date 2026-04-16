@@ -9,7 +9,11 @@ interface LevelUpToastProps {
   onDismiss: () => void;
 }
 
-export const LevelUpToast = memo(function LevelUpToast({ level, title, onDismiss }: LevelUpToastProps) {
+export const LevelUpToast = memo(function LevelUpToast({
+  level,
+  title,
+  onDismiss,
+}: LevelUpToastProps) {
   return (
     <AnimatePresence>
       {level !== null && (

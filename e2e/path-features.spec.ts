@@ -25,7 +25,11 @@ test.describe("Path Tab Features", () => {
   test("Path page shows weekly challenge card", async ({ page }) => {
     await page.goto("/path");
     // Weekly challenge should display one of the challenge types
-    const challengeCard = page.locator("text=/Cook|Japanese|Italian|Variety|Rate|Streak|Indian|Mexican|Thai/i").first();
+    const challengeCard = page
+      .locator(
+        "text=/Cook|Japanese|Italian|Variety|Rate|Streak|Indian|Mexican|Thai/i",
+      )
+      .first();
     await expect(challengeCard).toBeVisible({ timeout: 10000 });
   });
 

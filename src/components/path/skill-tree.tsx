@@ -97,7 +97,10 @@ function MasteryCuisineCard({
  * Auto-scrolls to the first available or in-progress node on mount.
  * Mastery-tier nodes render below in a 2-column grid, not in the tree.
  */
-export const SkillTree = memo(function SkillTree({ nodes, onNodeTap }: SkillTreeProps) {
+export const SkillTree = memo(function SkillTree({
+  nodes,
+  onNodeTap,
+}: SkillTreeProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const haptic = useHaptic();

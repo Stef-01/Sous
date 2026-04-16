@@ -197,9 +197,8 @@ function CombinedCookContent() {
   // Current step parallel hint
   const currentParallelHint =
     currentDish && currentCookStep
-      ? parallelHintMap.get(
-          `${currentDish.dish.slug}-${currentStepIndex}`,
-        ) ?? null
+      ? (parallelHintMap.get(`${currentDish.dish.slug}-${currentStepIndex}`) ??
+        null)
       : null;
 
   // Combined totals for mission screen
@@ -293,11 +292,7 @@ function CombinedCookContent() {
             saved: false,
             skillProgress: allSkillEntries,
           });
-          awardXP(
-            "cook_complete",
-            XP_AWARDS.COOK_COMPLETE,
-            result.newStreak,
-          );
+          awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
         }
         completeCookPhase();
       }
@@ -317,6 +312,7 @@ function CombinedCookContent() {
     completeSession,
     recordSkillCook,
     getNodeProgress,
+    awardXP,
   ]);
 
   const handleTransitionContinue = useCallback(() => {
@@ -837,7 +833,10 @@ function CombinedMissionScreen({
             }}
             className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]"
           >
-            {displayTime} min{sequencerEstimate && sequencerEstimate < totalTime ? " (parallel)" : " total"}
+            {displayTime} min
+            {sequencerEstimate && sequencerEstimate < totalTime
+              ? " (parallel)"
+              : " total"}
           </motion.span>
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}

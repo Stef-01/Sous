@@ -192,7 +192,7 @@ These features exist as real, substantial code — not stubs.
 - [x] **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
 - [x] **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
 - [x] **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
-- [x] **`pnpm lint && pnpm test`** — 93 tests passing, lint clean.
+- [x] **`pnpm lint && pnpm test`** — 102 unit tests passing; full lint + Prettier clean.
 
 #### Sprint 2: Post-Cook Reflection (Phase 6A) — COMPLETE
 
@@ -212,7 +212,7 @@ These features exist as real, substantial code — not stubs.
 
 #### Sprint 5: Testing — COMPLETE
 
-- [x] **Unit tests** — 6 test files, 93 tests: pairing-engine, plate-evaluation, ranker, normalize, cook-sessions, coach-quiz.
+- [x] **Unit tests** — 7 test files, 102 tests: pairing-engine, plate-evaluation, ranker, normalize, cook-sessions, coach-quiz, cook-sequencer.
 - [x] **E2E smoke test (Playwright)** — 5 scenarios: Today page render, search flow, full core loop, quest card save, Path tab unlock.
 
 #### Sprint 6: Phase 7 (Multi-Side Selection) — COMPLETE
@@ -226,20 +226,20 @@ These features exist as real, substantial code — not stubs.
 
 These are intentionally out of scope for Stage 1:
 
-| Feature                                | Status                                                                         |
-| -------------------------------------- | ------------------------------------------------------------------------------ |
-| Community tab                          | Unlocks after 30 days. Always hidden in prototype.                             |
-| Clerk auth enforcement                 | Auth is integrated but not required. No login wall.                            |
-| Real database (Neon Postgres)          | Everything uses localStorage. DB schema is defined and ready.                  |
-| Cloudflare R2 image storage            | Images use Unsplash URLs.                                                      |
-| Upstash Redis cache/rate limiting      | Not needed at prototype scale.                                                 |
-| ~~Instacart integration~~              | **DONE (V1)** — Placeholder button with "Coming soon" toast on Grab screen.   |
-| ~~Multi-side selection + per-side reroll~~ | **DONE** — Sprint 6. Full multi-side selection and per-side reroll working. |
-| ~~Intelligent cook sequencer~~         | **DONE** — Phase 8 implemented. Parallel hints in combined cook flow.          |
-| Agentic recipe assistant               | Phase 9 — post-V1.                                                             |
+| Feature                                    | Status                                                                                |
+| ------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Community tab                              | Unlocks after 30 days. Always hidden in prototype.                                    |
+| Clerk auth enforcement                     | Auth is integrated but not required. No login wall.                                   |
+| Real database (Neon Postgres)              | Everything uses localStorage. DB schema is defined and ready.                         |
+| Cloudflare R2 image storage                | Images use Unsplash URLs.                                                             |
+| Upstash Redis cache/rate limiting          | Not needed at prototype scale.                                                        |
+| ~~Instacart integration~~                  | **DONE (V1)** — Placeholder button with "Coming soon" toast on Grab screen.           |
+| ~~Multi-side selection + per-side reroll~~ | **DONE** — Sprint 6. Full multi-side selection and per-side reroll working.           |
+| ~~Intelligent cook sequencer~~             | **DONE** — Phase 8 implemented. Parallel hints in combined cook flow.                 |
+| Agentic recipe assistant                   | Phase 9 — post-V1.                                                                    |
 | ~~Advanced skill progression / XP system~~ | **DONE** — Phase 11. XP, levels, achievements, weekly challenges, streak multipliers. |
-| ~~Games Arcade~~                       | **DONE** — Phase 14. 4 mini-games with scoring and XP integration.             |
-| ~~Recipe overlay infrastructure~~      | **DONE** — Phase 15C. Base + Overlay pattern with personal step notes.         |
+| ~~Games Arcade~~                           | **DONE** — Phase 14. 4 mini-games with scoring and XP integration.                    |
+| ~~Recipe overlay infrastructure~~          | **DONE** — Phase 15C. Base + Overlay pattern with personal step notes.                |
 
 ---
 
@@ -342,15 +342,15 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ## Summary
 
-|               | Stage 1 (Prototype)                                            | Stage 2 (Production)               |
-| ------------- | -------------------------------------------------------------- | ---------------------------------- |
-| **Auth**      | None (anonymous)                                               | Clerk, enforced                    |
-| **Data**      | localStorage + static JSON                                     | Neon Postgres, seeded              |
-| **AI**        | Working (mock fallback)                                        | Rate-limited, cached, monitored    |
-| **Images**    | Unsplash URLs                                                  | Cloudflare R2                      |
-| **Testing**   | 102 unit tests + 14 E2E tests (core loop, games, path)        | Full CI pipeline, Playwright suite |
-| **Errors**    | Console.warn fallbacks                                         | Sentry, alert rules                |
-| **Analytics** | Vercel Analytics (basic)                                       | Full funnel tracking               |
-| **Deploy**    | Vercel (already live)                                          | Vercel + hardened config           |
-| **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games  | Leaderboards, social sharing       |
-| **Recipes**   | 126 guided cook flows, overlay system, personal notes          | Full 203 coverage, cloud sync      |
+|                  | Stage 1 (Prototype)                                       | Stage 2 (Production)               |
+| ---------------- | --------------------------------------------------------- | ---------------------------------- |
+| **Auth**         | None (anonymous)                                          | Clerk, enforced                    |
+| **Data**         | localStorage + static JSON                                | Neon Postgres, seeded              |
+| **AI**           | Working (mock fallback)                                   | Rate-limited, cached, monitored    |
+| **Images**       | Unsplash URLs                                             | Cloudflare R2                      |
+| **Testing**      | 102 unit tests + 14 E2E tests (core loop, games, path)    | Full CI pipeline, Playwright suite |
+| **Errors**       | Console.warn fallbacks                                    | Sentry, alert rules                |
+| **Analytics**    | Vercel Analytics (basic)                                  | Full funnel tracking               |
+| **Deploy**       | Vercel (already live)                                     | Vercel + hardened config           |
+| **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games | Leaderboards, social sharing       |
+| **Recipes**      | 126 guided cook flows, overlay system, personal notes     | Full 203 coverage, cloud sync      |

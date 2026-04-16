@@ -78,10 +78,7 @@ function saveState(state: AchievementState) {
   }
 }
 
-function isConditionMet(
-  achievement: Achievement,
-  stats: UserStats,
-): boolean {
+function isConditionMet(achievement: Achievement, stats: UserStats): boolean {
   const c = achievement.condition;
   switch (c.type) {
     case "cooks_completed":
@@ -127,47 +124,41 @@ export function useAchievements() {
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const checkAchievements = useCallback(
-    (stats: UserStats): Achievement[] => {
-      const newUnlocks: Achievement[] = [];
+  const checkAchievements = useCallback((stats: UserStats): Achievement[] => {
+    const newUnlocks: Achievement[] = [];
 
-      setState((prev) => {
-        const unlockedSet = new Set(prev.unlocked);
-        for (const achievement of achievements) {
-          if (unlockedSet.has(achievement.id)) continue;
-          if (isConditionMet(achievement, stats)) {
-            unlockedSet.add(achievement.id);
-            newUnlocks.push(achievement);
-          }
+    setState((prev) => {
+      const unlockedSet = new Set(prev.unlocked);
+      for (const achievement of achievements) {
+        if (unlockedSet.has(achievement.id)) continue;
+        if (isConditionMet(achievement, stats)) {
+          unlockedSet.add(achievement.id);
+          newUnlocks.push(achievement);
         }
-
-        if (newUnlocks.length === 0) return prev;
-
-        const updated: AchievementState = {
-          unlocked: Array.from(unlockedSet),
-          lastCheckedStats: stats,
-        };
-        saveState(updated);
-        return updated;
-      });
-
-      if (newUnlocks.length > 0) {
-        setNewlyUnlocked(newUnlocks);
       }
 
-      return newUnlocks;
-    },
-    [],
-  );
+      if (newUnlocks.length === 0) return prev;
+
+      const updated: AchievementState = {
+        unlocked: Array.from(unlockedSet),
+        lastCheckedStats: stats,
+      };
+      saveState(updated);
+      return updated;
+    });
+
+    if (newUnlocks.length > 0) {
+      setNewlyUnlocked(newUnlocks);
+    }
+
+    return newUnlocks;
+  }, []);
 
   const dismissNewUnlocks = useCallback(() => {
     setNewlyUnlocked([]);
   }, []);
 
-  const unlockedSet = useMemo(
-    () => new Set(state.unlocked),
-    [state.unlocked],
-  );
+  const unlockedSet = useMemo(() => new Set(state.unlocked), [state.unlocked]);
 
   const unlockedAchievements = useMemo(
     () => achievements.filter((a) => unlockedSet.has(a.id)),

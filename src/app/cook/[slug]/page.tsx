@@ -178,6 +178,7 @@ export default function GuidedCookPage({
     slug,
     recordSkillCook,
     getNodeProgress,
+    awardXP,
   ]);
 
   const handleToggleChip = useCallback(

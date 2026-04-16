@@ -209,7 +209,9 @@ export default function CuisineCompassGame() {
                     : "text-amber-700",
                 )}
               >
-                {feedback.correct ? "Correct! 🎉" : `It's from ${feedback.answer}`}
+                {feedback.correct
+                  ? "Correct! 🎉"
+                  : `It's from ${feedback.answer}`}
               </p>
               <p className="text-xs text-[var(--nourish-subtext)]">
                 {feedback.fact}

@@ -4,7 +4,10 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
-import { getRandomPairs, type FlavorPair } from "@/data/games/flavor-pairs-data";
+import {
+  getRandomPairs,
+  type FlavorPair,
+} from "@/data/games/flavor-pairs-data";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { cn } from "@/lib/utils/cn";
@@ -71,22 +74,19 @@ export default function FlavorPairsGame() {
     return () => clearInterval(timer);
   }, [startTime, gameOver]);
 
-  const startGame = useCallback(
-    (diff: "easy" | "medium" | "hard") => {
-      const gamePairs = getRandomPairs(PAIR_COUNT, diff);
-      setPairs(gamePairs);
-      setCards(buildCards(gamePairs));
-      setDifficulty(diff);
-      setFlippedIds([]);
-      setMatchedPairs(0);
-      setMoves(0);
-      setStartTime(Date.now());
-      setElapsed(0);
-      setGameOver(false);
-      setLastMatchWhy(null);
-    },
-    [],
-  );
+  const startGame = useCallback((diff: "easy" | "medium" | "hard") => {
+    const gamePairs = getRandomPairs(PAIR_COUNT, diff);
+    setPairs(gamePairs);
+    setCards(buildCards(gamePairs));
+    setDifficulty(diff);
+    setFlippedIds([]);
+    setMatchedPairs(0);
+    setMoves(0);
+    setStartTime(Date.now());
+    setElapsed(0);
+    setGameOver(false);
+    setLastMatchWhy(null);
+  }, []);
 
   const handleFlip = useCallback(
     (cardId: string) => {
@@ -189,12 +189,9 @@ export default function FlavorPairsGame() {
                 onClick={() => startGame(d)}
                 className={cn(
                   "w-full rounded-xl py-3.5 text-sm font-semibold capitalize",
-                  d === "easy" &&
-                    "bg-[var(--nourish-green)] text-white",
-                  d === "medium" &&
-                    "bg-amber-500 text-white",
-                  d === "hard" &&
-                    "bg-red-500 text-white",
+                  d === "easy" && "bg-[var(--nourish-green)] text-white",
+                  d === "medium" && "bg-amber-500 text-white",
+                  d === "hard" && "bg-red-500 text-white",
                 )}
                 type="button"
               >
@@ -319,9 +316,7 @@ export default function FlavorPairsGame() {
               )}
               type="button"
               aria-label={
-                card.flipped || card.matched
-                  ? card.name
-                  : "Hidden card"
+                card.flipped || card.matched ? card.name : "Hidden card"
               }
             >
               <AnimatePresence mode="wait">

@@ -92,9 +92,7 @@ function loadState(): XPState {
     return { totalXP: 0, events: [], lastLevelSeen: 1 };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw
-      ? JSON.parse(raw)
-      : { totalXP: 0, events: [], lastLevelSeen: 1 };
+    return raw ? JSON.parse(raw) : { totalXP: 0, events: [], lastLevelSeen: 1 };
   } catch {
     return { totalXP: 0, events: [], lastLevelSeen: 1 };
   }
@@ -169,10 +167,7 @@ export function useXPSystem() {
     [state.totalXP],
   );
 
-  const recentEvents = useMemo(
-    () => state.events.slice(-10),
-    [state.events],
-  );
+  const recentEvents = useMemo(() => state.events.slice(-10), [state.events]);
 
   return {
     mounted,

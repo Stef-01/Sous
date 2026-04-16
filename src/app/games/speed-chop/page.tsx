@@ -26,10 +26,17 @@ export default function SpeedChopGame() {
   const [streak, setStreak] = useState(0);
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [funFact, setFunFact] = useState<string | null>(null);
-  const [gameState, setGameState] = useState<
-    "menu" | "playing" | "gameover"
-  >("menu");
+  const [gameState, setGameState] = useState<"menu" | "playing" | "gameover">(
+    "menu",
+  );
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const scoreRef = useRef(score);
+  const recordScoreRef = useRef(recordScore);
+  const awardXPRef = useRef(awardXP);
+  const advanceItemRef = useRef<() => void>(() => {});
+  const intervalRef = useRef(
+    Math.max(ITEM_INTERVAL_MIN, ITEM_INTERVAL_START - score * 20),
+  );
 
   const round = speedChopRounds[roundIdx % speedChopRounds.length];
   const currentItem = round.items[itemIdx];
@@ -42,28 +49,6 @@ export default function SpeedChopGame() {
     return () => clearTimeout(timerRef.current);
   }, []);
 
-  useEffect(() => {
-    if (gameState !== "playing" || !currentItem) return;
-    timerRef.current = setTimeout(() => {
-      setLives((prev) => {
-        const next = prev - 1;
-        if (next <= 0) {
-          setGameState("gameover");
-          recordScore(GAME_ID, score);
-          if (score > 0) awardXP("game_win", XP_AWARDS.GAME_WIN);
-        }
-        return next;
-      });
-      setFeedback("wrong");
-      setTimeout(() => {
-        setFeedback(null);
-        advanceItem();
-      }, 500);
-    }, interval);
-    return () => clearTimeout(timerRef.current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameState, itemIdx, roundIdx]);
-
   const advanceItem = useCallback(() => {
     if (itemIdx >= round.items.length - 1) {
       setRoundIdx((prev) => prev + 1);
@@ -72,6 +57,37 @@ export default function SpeedChopGame() {
       setItemIdx((prev) => prev + 1);
     }
   }, [itemIdx, round.items.length]);
+
+  useEffect(() => {
+    scoreRef.current = score;
+    recordScoreRef.current = recordScore;
+    awardXPRef.current = awardXP;
+    intervalRef.current = interval;
+    advanceItemRef.current = advanceItem;
+  }, [score, recordScore, awardXP, interval, advanceItem]);
+
+  useEffect(() => {
+    if (gameState !== "playing" || !currentItem) return;
+    const delay = intervalRef.current;
+    timerRef.current = setTimeout(() => {
+      setLives((prev) => {
+        const next = prev - 1;
+        if (next <= 0) {
+          setGameState("gameover");
+          const s = scoreRef.current;
+          recordScoreRef.current(GAME_ID, s);
+          if (s > 0) awardXPRef.current("game_win", XP_AWARDS.GAME_WIN);
+        }
+        return next;
+      });
+      setFeedback("wrong");
+      setTimeout(() => {
+        setFeedback(null);
+        advanceItemRef.current();
+      }, 500);
+    }, delay);
+    return () => clearTimeout(timerRef.current);
+  }, [gameState, itemIdx, roundIdx, currentItem]);
 
   const handleSwipe = useCallback(
     (side: "left" | "right") => {

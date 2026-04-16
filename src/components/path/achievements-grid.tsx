@@ -10,7 +10,10 @@ interface AchievementsGridProps {
   locked: Achievement[];
 }
 
-export const AchievementsGrid = memo(function AchievementsGrid({ unlocked, locked }: AchievementsGridProps) {
+export const AchievementsGrid = memo(function AchievementsGrid({
+  unlocked,
+  locked,
+}: AchievementsGridProps) {
   const total = unlocked.length + locked.length;
 
   return (

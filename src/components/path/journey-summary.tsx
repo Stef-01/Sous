@@ -55,7 +55,9 @@ function StatBlock({
  * Journey summary — stats card with animated number reveals.
  * Journey tone, not performance pressure.
  */
-export const JourneySummary = memo(function JourneySummary({ stats }: JourneySummaryProps) {
+export const JourneySummary = memo(function JourneySummary({
+  stats,
+}: JourneySummaryProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}

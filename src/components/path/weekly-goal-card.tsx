@@ -13,7 +13,9 @@ interface WeeklyGoalCardProps {
   completedSessions: CookSessionRecord[];
 }
 
-export const WeeklyGoalCard = memo(function WeeklyGoalCard({ completedSessions }: WeeklyGoalCardProps) {
+export const WeeklyGoalCard = memo(function WeeklyGoalCard({
+  completedSessions,
+}: WeeklyGoalCardProps) {
   const challenge = getCurrentChallenge();
   const weekStart = getWeekStart();
   const daysRemaining = getDaysRemainingInWeek();
@@ -51,9 +53,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({ completedSessions }
         };
       case "streak_days": {
         const uniqueDays = new Set(
-          weekSessions.map((s) =>
-            new Date(s.completedAt!).toDateString(),
-          ),
+          weekSessions.map((s) => new Date(s.completedAt!).toDateString()),
         ).size;
         return { current: uniqueDays, target: goal.target };
       }
