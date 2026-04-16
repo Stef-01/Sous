@@ -10,24 +10,24 @@ type DimensionKey = keyof ScoreBreakdown;
 
 const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
   cuisineFit: {
-    high: "a natural culinary companion",
-    mid: "a cross-cuisine complement",
+    high: "pairs naturally with the cuisine",
+    mid: "bridges cuisines nicely",
   },
   flavorContrast: {
     high: "adds bright contrast",
-    mid: "provides flavor variety",
+    mid: "adds flavor variety",
   },
   nutritionBalance: {
     high: "boosts nutritional balance",
     mid: "rounds out the meal",
   },
   prepBurden: {
-    high: "ready in no time",
-    mid: "manageable prep alongside your main",
+    high: "comes together fast",
+    mid: "has manageable prep",
   },
   temperature: {
-    high: "refreshing temperature contrast",
-    mid: "complements the meal's warmth",
+    high: "brings a refreshing contrast",
+    mid: "complements the warmth",
   },
   preference: {
     high: "matches your taste",
@@ -51,13 +51,12 @@ export function generateExplanation(candidate: ScoredCandidate): string {
     return DIMENSION_PHRASES[key][level];
   });
 
-  // Compose sentence
   const sideName = sideDish.name;
   if (phrases.length >= 2) {
-    return `${sideName}: ${phrases[0]} that ${phrases[1]}.`;
+    return `${sideName} ${phrases[0]} and ${phrases[1]}.`;
   }
   if (phrases.length === 1) {
-    return `${sideName}: ${phrases[0]}.`;
+    return `${sideName} ${phrases[0]}.`;
   }
   return `${sideName} pairs well with your meal.`;
 }
