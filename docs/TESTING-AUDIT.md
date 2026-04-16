@@ -2,11 +2,11 @@
 
 ## Commands run
 
-| Command | Result |
-|--------|--------|
-| `pnpm test` | Vitest: 102 tests, 7 files — pass |
-| `pnpm lint` | ESLint + Prettier — pass |
-| `pnpm build` | Next production build — pass (run before push) |
+| Command         | Result                                                 |
+| --------------- | ------------------------------------------------------ |
+| `pnpm test`     | Vitest: 102 tests, 7 files — pass                      |
+| `pnpm lint`     | ESLint + Prettier — pass                               |
+| `pnpm build`    | Next production build — pass (run before push)         |
 | `pnpm test:e2e` | Playwright: 74 tests (chromium + mobile-safari) — pass |
 
 ## Playwright web server

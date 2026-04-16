@@ -4,12 +4,12 @@ Scope note: **no expansion of scored pairings beyond the current Indian pre-comp
 
 ## Toasts & lightweight polish (near term)
 
-| Item | Notes |
-|------|--------|
-| **Achievement toast** | Wired on Path; `useAchievements` + `AchievementToast`; E2E in `e2e/path-achievement-toast.spec.ts`. |
-| **Level-up toast** | Component exists (`level-up-toast.tsx`); confirm where it mounts and same motion/visibility patterns as achievement toast. |
+| Item                        | Notes                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Achievement toast**       | Wired on Path; `useAchievements` + `AchievementToast`; E2E in `e2e/path-achievement-toast.spec.ts`.                                               |
+| **Level-up toast**          | Component exists (`level-up-toast.tsx`); confirm where it mounts and same motion/visibility patterns as achievement toast.                        |
 | **Save / Instacart toasts** | Quest “Saved for later” motion set to `initial={false}` for test visibility; Instacart is placeholder copy — decide real flow or hide until live. |
-| **Unified toast hook** | Optional: single queue (achievement + level-up + save) with max one visible, dismiss order. |
+| **Unified toast hook**      | Optional: single queue (achievement + level-up + save) with max one visible, dismiss order.                                                       |
 
 ## Product / UX sprints (medium term)
 

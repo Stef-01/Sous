@@ -30,7 +30,7 @@ test.describe("Core Loop — craving to cook to win", () => {
   });
 
   test("Today page loads with quest cards and search bar", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await expect(page.locator("h1")).toContainText("Sous");
 
     // Quest cards section visible
@@ -43,7 +43,7 @@ test.describe("Core Loop — craving to cook to win", () => {
   });
 
   test("Search flow: type craving → see paired sides", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await dismissCoachQuiz(page);
 
     // Click the search bar to open the search popout
@@ -75,7 +75,7 @@ test.describe("Core Loop — craving to cook to win", () => {
   }) => {
     test.slow();
 
-    await page.goto("/");
+    await page.goto("/today");
     await dismissCoachQuiz(page);
 
     // Open search
@@ -117,13 +117,18 @@ test.describe("Core Loop — craving to cook to win", () => {
 
     // Guided cook can be combined (many dishes/steps) with timer steps — full win is
     // covered elsewhere. Here we prove the cook shell loads and advances one step.
-    await expect(page.getByText(/Step \d+ of \d+/)).toBeVisible({ timeout: 15000 });
-    await page.getByRole("button", { name: /go to step/i }).first().click();
+    await expect(page.getByText(/Step \d+ of \d+/)).toBeVisible({
+      timeout: 15000,
+    });
+    await page
+      .getByRole("button", { name: /go to step/i })
+      .first()
+      .click();
     await expect(page.getByText(/Step 2 of/)).toBeVisible({ timeout: 15000 });
   });
 
   test("Quest card swipe and navigation", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await dismissCoachQuiz(page);
 
     // Quest cards should be visible
@@ -152,7 +157,7 @@ test.describe("Core Loop — craving to cook to win", () => {
   });
 
   test("Fallback actions work", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await dismissCoachQuiz(page);
 
     // "Rescue my fridge" chip
@@ -187,7 +192,7 @@ test.describe("Core Loop — craving to cook to win", () => {
       localStorage.setItem("sous-cook-sessions", JSON.stringify(sessions));
     });
 
-    await page.goto("/");
+    await page.goto("/today");
     await dismissCoachQuiz(page);
 
     // Path tab should be visible in the tab bar

@@ -8,6 +8,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { usePathname } from "next/navigation";
 import { Monitor, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -40,6 +41,9 @@ const STORAGE_KEY = "sous-device-mode";
  *   elements a correct containing block inside the phone frame.
  */
 export function DeviceFrame({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isStartupHome = pathname === "/";
+
   // Read saved mode from localStorage on first render (client only)
   const [mode, setModeState] = useState<DeviceMode>(() => {
     if (typeof window === "undefined") return "phone";
@@ -81,6 +85,15 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
 
   // Real mobile devices: render fullscreen, no frame, no toggle
   if (!mounted || isRealMobile) {
+    return (
+      <DeviceFrameContext.Provider value={{ mode: "desktop", setMode }}>
+        {children}
+      </DeviceFrameContext.Provider>
+    );
+  }
+
+  // Marketing homepage — full viewport (no phone chrome), no device toggle
+  if (isStartupHome) {
     return (
       <DeviceFrameContext.Provider value={{ mode: "desktop", setMode }}>
         {children}

@@ -40,7 +40,7 @@ test.describe("Path — achievement toast", () => {
   test("shows First Flame toast when cook stats cross threshold", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await page.evaluate(seedStatsAndAchievements);
     await page.goto("/path", { waitUntil: "domcontentloaded" });
     await expect(page.getByText("Your journey")).toBeVisible({

@@ -336,7 +336,7 @@ function CombinedCookContent() {
 
   const handleBackToday = useCallback(() => {
     reset();
-    router.push("/");
+    router.push("/today");
   }, [reset, router]);
 
   const handleBack = useCallback(() => {

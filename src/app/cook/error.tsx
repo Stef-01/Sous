@@ -37,7 +37,7 @@ export default function CookError({
           Try again
         </button>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/today")}
           className="rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-medium text-white shadow-sm"
           type="button"
         >

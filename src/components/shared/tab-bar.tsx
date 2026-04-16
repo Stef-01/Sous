@@ -25,8 +25,8 @@ export function TabBar({
         <div className="mx-auto flex max-w-md items-center justify-around py-2">
           {tabs.map((tab) => {
             const isActive =
-              tab.href === "/"
-                ? pathname === "/"
+              tab.href === "/today"
+                ? pathname === "/today"
                 : pathname.startsWith(tab.href);
 
             return (

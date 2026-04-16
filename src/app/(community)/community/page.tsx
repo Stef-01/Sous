@@ -50,7 +50,7 @@ export default function CommunityPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           whileTap={{ scale: 0.96 }}
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/today")}
           className="mt-4 rounded-xl bg-[var(--nourish-green)] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
           type="button"
         >

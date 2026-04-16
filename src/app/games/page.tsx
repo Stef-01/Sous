@@ -62,7 +62,7 @@ export default function GamesArcadePage() {
       <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/today")}
             whileTap={{ scale: 0.88 }}
             className="flex items-center justify-center rounded-lg min-h-11 min-w-11 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
             type="button"

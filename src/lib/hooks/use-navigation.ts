@@ -19,7 +19,7 @@ export function useNavigation(
 ) {
   return useMemo<Tab[]>(() => {
     const tabs: Tab[] = [
-      { id: "today", label: "Today", href: "/", visible: true },
+      { id: "today", label: "Today", href: "/today", visible: true },
       {
         id: "path",
         label: "Path",

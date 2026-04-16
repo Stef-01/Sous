@@ -35,7 +35,7 @@ export default function TodayError({
           Try again
         </button>
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/today")}
           className="rounded-xl border border-neutral-200 px-5 py-2.5 text-sm font-medium text-[var(--nourish-subtext)]"
           type="button"
         >

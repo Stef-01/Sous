@@ -146,7 +146,7 @@ export default function PathPage() {
   const handlePracticeDish = useCallback(
     (displayName: string) => {
       setSelectedNodeId(null);
-      router.push(`/?craving=${encodeURIComponent(displayName)}`);
+      router.push(`/today?craving=${encodeURIComponent(displayName)}`);
     },
     [router],
   );

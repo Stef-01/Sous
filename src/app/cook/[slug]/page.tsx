@@ -197,7 +197,7 @@ export default function GuidedCookPage({
 
   const handleBackToday = useCallback(() => {
     reset();
-    router.push("/");
+    router.push("/today");
   }, [reset, router]);
 
   const handleBack = useCallback(() => {
@@ -233,7 +233,7 @@ export default function GuidedCookPage({
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
     reset();
-    router.push(`/?selectSides=${encodeURIComponent(data.dish.name)}`);
+    router.push(`/today?selectSides=${encodeURIComponent(data.dish.name)}`);
   }, [data, reset, router]);
 
   const handleCookAgain = useCallback(() => {

@@ -2,7 +2,7 @@
   "name": "Sous — Cook Confidently Tonight",
   "short_name": "Sous",
   "description": "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking in 60 seconds.",
-  "start_url": "/",
+  "start_url": "/today",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FEFAF6",
@@ -22,7 +22,7 @@
       "name": "What are you craving?",
       "short_name": "Search",
       "description": "Find sides to pair with your main dish",
-      "url": "/?search=true",
+      "url": "/today?search=true",
       "icons": [{ "src": "/icons/icon.svg", "sizes": "any" }]
     },
     {

@@ -29,8 +29,8 @@ async function assertCTAInViewport(
 }
 
 test.describe("No-Scroll CTA — 375×667 viewport", () => {
-  test("/ (Today) — primary CTA visible without scroll", async ({ page }) => {
-    await page.goto("/");
+  test("/today — primary CTA visible without scroll", async ({ page }) => {
+    await page.goto("/today");
     await page.waitForLoadState("networkidle");
     // Today page has the quest card with "Start cooking" or the tab bar
     const tabBar = page.locator("nav").last();
@@ -113,7 +113,7 @@ test.describe("Meal-First Quest Experience", () => {
   test("Home page quest card shows a meal with 'Find sides' CTA", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await page.waitForLoadState("networkidle");
 
     // Wait for quest card to appear
@@ -133,7 +133,7 @@ test.describe("Meal-First Quest Experience", () => {
   });
 
   test("Search bar shows meal-centric copy", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await page.waitForLoadState("networkidle");
 
     const searchBar = page.locator('text="What are you craving?"').first();
@@ -141,7 +141,7 @@ test.describe("Meal-First Quest Experience", () => {
   });
 
   test("Quest card shows cuisine badge", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/today");
     await page.waitForLoadState("networkidle");
 
     // Give the quest card time to render

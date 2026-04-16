@@ -11,7 +11,8 @@ import * as path from "path";
 const OUT_DIR = path.join(process.cwd(), "test-results", "visual-docs");
 
 const ROUTES: { name: string; url: string }[] = [
-  { name: "01-today", url: "/" },
+  { name: "00-startup-landing", url: "/" },
+  { name: "01-today", url: "/today" },
   { name: "02-path", url: "/path" },
   { name: "03-path-scrapbook", url: "/path/scrapbook" },
   { name: "04-path-favorites", url: "/path/favorites" },

@@ -72,7 +72,7 @@ export default function FavoritesPage() {
               </p>
             </div>
             <button
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/today")}
               className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-95"
               type="button"
             >

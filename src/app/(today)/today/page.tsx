@@ -135,7 +135,7 @@ function TodayPageContent() {
         pendingQueryRef.current = selectSidesParam;
         setMainDishQuery(selectSidesParam);
         setView({ type: "loading", mainDish: selectSidesParam });
-        router.replace("/", { scroll: false });
+        router.replace("/today", { scroll: false });
       }, 0);
       return () => clearTimeout(id);
     }
@@ -153,7 +153,7 @@ function TodayPageContent() {
         pendingQueryRef.current = cravingParam;
         setMainDishQuery(cravingParam);
         setView({ type: "loading", mainDish: cravingParam });
-        router.replace("/", { scroll: false });
+        router.replace("/today", { scroll: false });
       }, 0);
       return () => clearTimeout(id);
     }
