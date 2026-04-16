@@ -163,14 +163,26 @@ function detectMilestone(ctx: {
   }
   if (ctx.streak === 7) {
     return {
-      icon: <Flame size={32} className="text-orange-500" strokeWidth={1.8} />,
+      icon: (
+        <Flame
+          size={32}
+          className="text-[var(--nourish-warm)]"
+          strokeWidth={1.8}
+        />
+      ),
       headline: "7-day streak!",
       message: `${ctx.dishName} done. A full week of cooking — you're unstoppable.`,
     };
   }
   if (ctx.streak === 14) {
     return {
-      icon: <Zap size={32} className="text-amber-500" strokeWidth={1.8} />,
+      icon: (
+        <Zap
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
       headline: "14-day streak!",
       message: `${ctx.dishName} done. Two straight weeks. This is becoming a superpower.`,
     };
@@ -344,7 +356,11 @@ export function WinScreen({
             {streak > 0 && (
               <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]">
                 {streak} day streak
-                <Flame size={14} className="text-orange-500" />
+                <Flame
+                  size={14}
+                  className="text-[var(--nourish-warm)]"
+                  strokeWidth={2.2}
+                />
               </span>
             )}
             {skillProgress.length > 0 ? (

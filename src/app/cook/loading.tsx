@@ -2,7 +2,7 @@ export default function CookLoading() {
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
       {/* Header skeleton */}
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="h-8 w-8 rounded-lg shimmer" />
           <div className="flex gap-2">

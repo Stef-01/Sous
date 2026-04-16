@@ -82,7 +82,10 @@ export const JourneySummary = memo(function JourneySummary({
             }}
             className="text-sm"
           >
-            <Star size={16} className="text-amber-400 fill-amber-400" />
+            <Star
+              size={16}
+              className="text-[var(--nourish-gold)] fill-[var(--nourish-gold)]"
+            />
           </motion.span>
         )}
       </div>
@@ -99,7 +102,13 @@ export const JourneySummary = memo(function JourneySummary({
 
         <StatBlock
           value={stats.currentStreak}
-          icon={<Flame size={18} className="text-amber-500" />}
+          icon={
+            <Flame
+              size={18}
+              className="text-[var(--nourish-warm)]"
+              strokeWidth={2.2}
+            />
+          }
           label="Day streak"
           delay={0.1}
           highlight={stats.currentStreak >= 3}

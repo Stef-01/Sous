@@ -15,10 +15,17 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className="flex items-center gap-0.5 rounded-full bg-amber-50 px-1.5 py-0.5"
+      className="flex items-center gap-0.5 rounded-full bg-[var(--nourish-warm)]/10 px-1.5 py-0.5"
     >
-      <Flame size={12} className="text-amber-500" aria-label="streak" />
-      <span className="text-[10px] font-bold text-amber-700">{streak}</span>
+      <Flame
+        size={12}
+        className="text-[var(--nourish-warm)]"
+        strokeWidth={2.2}
+        aria-label="streak"
+      />
+      <span className="text-[10px] font-bold text-[var(--nourish-warm)]">
+        {streak}
+      </span>
     </motion.div>
   );
 }

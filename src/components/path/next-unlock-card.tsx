@@ -41,12 +41,16 @@ export function NextUnlockCard({
         className="rounded-2xl p-5"
         style={{
           background:
-            "linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(74,222,128,0.08) 100%)",
-          border: "1px solid rgba(34,197,94,0.2)",
+            "linear-gradient(135deg, rgba(45,90,61,0.06) 0%, rgba(74,140,92,0.08) 100%)",
+          border: "1px solid rgba(45,90,61,0.18)",
         }}
       >
         <div className="flex items-center gap-3">
-          <Trophy size={28} className="text-amber-500" />
+          <Trophy
+            size={28}
+            className="text-[var(--nourish-gold)]"
+            strokeWidth={1.8}
+          />
           <div>
             <p className="text-sm font-bold text-[var(--nourish-green)]">
               All {skillsCompleted} skills mastered!
@@ -85,7 +89,11 @@ export function NextUnlockCard({
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                <Flame size={12} className="text-amber-500" />
+                <Flame
+                  size={12}
+                  className="text-[var(--nourish-warm)]"
+                  strokeWidth={2.2}
+                />
               </motion.span>
             )}
           </div>
@@ -103,8 +111,8 @@ export function NextUnlockCard({
             className="flex items-center gap-1 rounded-full px-2.5 py-1"
             style={{
               background:
-                "linear-gradient(135deg, rgba(34,197,94,0.12), rgba(74,222,128,0.12))",
-              border: "1px solid rgba(34,197,94,0.2)",
+                "linear-gradient(135deg, rgba(45,90,61,0.12), rgba(74,140,92,0.1))",
+              border: "1px solid rgba(45,90,61,0.2)",
             }}
           >
             <Zap
@@ -123,7 +131,7 @@ export function NextUnlockCard({
             className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background:
-                "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(74,222,128,0.1))",
+                "linear-gradient(135deg, rgba(45,90,61,0.1), rgba(74,140,92,0.08))",
             }}
           >
             <SkillIcon
@@ -160,7 +168,8 @@ export function NextUnlockCard({
             <motion.div
               className="h-full rounded-full relative overflow-hidden"
               style={{
-                background: "linear-gradient(90deg, #22c55e 0%, #4ade80 100%)",
+                background:
+                  "linear-gradient(90deg, var(--nourish-green) 0%, var(--nourish-light-green) 100%)",
               }}
               initial={{ width: 0 }}
               animate={{ width: `${progressPct}%` }}

@@ -2,7 +2,7 @@ export default function PathLoading() {
   return (
     <div className="min-h-screen bg-[var(--nourish-cream)]">
       {/* Header skeleton */}
-      <header className="border-b border-neutral-100 bg-white px-4 py-3">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="h-5 w-20 rounded shimmer" />
           <div className="flex gap-3">

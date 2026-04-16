@@ -184,7 +184,7 @@ export default function PathPage() {
     return (
       <div className="min-h-dvh bg-[var(--nourish-cream)]">
         {/* Header skeleton */}
-        <header className="border-b border-neutral-100/80 bg-white px-4 py-3">
+        <header className="app-header px-4 py-3">
           <div className="mx-auto max-w-md flex items-center justify-between">
             <div className="h-5 w-20 rounded shimmer" />
             <div className="flex gap-3">

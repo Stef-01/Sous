@@ -8,7 +8,9 @@
   --foreground: #0d0d0d;
   --nourish-green: #2d5a3d;
   --nourish-dark-green: #1a3d25;
+  --nourish-light-green: #4a8c5c;
   --nourish-gold: #d4a84b;
+  --nourish-warm: #e8833a; /* unified flame/streak accent (was amber-500/orange-500 drift) */
   --nourish-cream: #fafaf8;
   --nourish-dark: #0d0d0d;
   --nourish-input-bg: #f0ede8;
@@ -17,6 +19,23 @@
   --nourish-button-hover: #1a3d25;
   --nourish-evaluate: #8c1515;
   --nourish-evaluate-hover: #6f1010;
+
+  /* Borders — three tiers for subtle → emphatic hierarchy */
+  --nourish-border-soft: rgba(0, 0, 0, 0.05);
+  --nourish-border: rgba(0, 0, 0, 0.08);
+  --nourish-border-strong: rgba(0, 0, 0, 0.12);
+
+  /* Shadow system — used across cards, CTAs, and sheets for unified depth */
+  --shadow-card:
+    0 1px 2px rgba(13, 13, 13, 0.04), 0 1px 3px rgba(13, 13, 13, 0.04);
+  --shadow-raised:
+    0 4px 12px -2px rgba(13, 13, 13, 0.08),
+    0 2px 4px -1px rgba(13, 13, 13, 0.04);
+  --shadow-cta:
+    0 2px 8px -1px rgba(45, 90, 61, 0.22), 0 1px 2px rgba(45, 90, 61, 0.18);
+  --shadow-cta-hover:
+    0 4px 14px -2px rgba(45, 90, 61, 0.32), 0 2px 4px rgba(45, 90, 61, 0.18);
+  --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.04);
 }
 
 @theme inline {
@@ -24,7 +43,9 @@
   --color-foreground: var(--foreground);
   --color-nourish-green: var(--nourish-green);
   --color-nourish-dark-green: var(--nourish-dark-green);
+  --color-nourish-light-green: var(--nourish-light-green);
   --color-nourish-gold: var(--nourish-gold);
+  --color-nourish-warm: var(--nourish-warm);
   --color-nourish-cream: var(--nourish-cream);
   --color-nourish-dark: var(--nourish-dark);
   --color-nourish-input: var(--nourish-input-bg);
@@ -35,6 +56,44 @@
   --color-nourish-evaluate-hover: var(--nourish-evaluate-hover);
   --font-sans: "Inter", sans-serif;
   --font-serif: "DM Serif Display", Georgia, serif;
+}
+
+/* === SHARED SURFACE PATTERNS === */
+
+/* App-level sticky header — used across Today/Path/Sides/Cook for consistent height & chrome */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--nourish-border-soft);
+  box-shadow: var(--shadow-header);
+}
+
+/* Surface utilities — unified card depth */
+.surface-card {
+  background: #ffffff;
+  border: 1px solid var(--nourish-border-soft);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+}
+
+.surface-raised {
+  background: #ffffff;
+  border: 1px solid var(--nourish-border-soft);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-raised);
+}
+
+/* CTA shadow — consistent primary button depth */
+.cta-shadow {
+  box-shadow: var(--shadow-cta);
+  transition: box-shadow 0.2s ease;
+}
+.cta-shadow:hover {
+  box-shadow: var(--shadow-cta-hover);
 }
 
 /* === MOBILE OPTIMISATION === */
@@ -167,15 +226,15 @@ a,
 @keyframes cta-glow {
   0%,
   100% {
-    box-shadow: 0 2px 8px -2px rgba(45, 90, 61, 0.25);
+    box-shadow: var(--shadow-cta);
   }
   50% {
-    box-shadow: 0 4px 16px -2px rgba(45, 90, 61, 0.4);
+    box-shadow: var(--shadow-cta-hover);
   }
 }
 
 .cta-glow {
-  animation: cta-glow 2.5s ease-in-out infinite;
+  animation: cta-glow 2.8s ease-in-out infinite;
 }
 
 /* === SAFE AREA === */

@@ -13,7 +13,7 @@ export default function SidesPage() {
     <Suspense
       fallback={
         <div className="min-h-dvh bg-[var(--nourish-cream)]">
-          <header className="sticky top-0 z-40 border-b border-neutral-100/80 bg-white/95 backdrop-blur-sm px-4 py-3">
+          <header className="app-header px-4 py-3">
             <div className="mx-auto flex max-w-md items-center gap-3">
               <div className="h-9 w-9 rounded-xl shimmer" />
               <div className="flex-1 space-y-1.5">
@@ -145,7 +145,7 @@ function SidesPageContent() {
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
     >
       {/* Header with main dish thumbnail */}
-      <header className="sticky top-0 z-40 border-b border-neutral-100/80 bg-white/95 backdrop-blur-sm px-4 py-3">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             type="button"

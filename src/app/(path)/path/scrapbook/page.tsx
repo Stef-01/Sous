@@ -2,7 +2,8 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Sparkles, Camera } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
@@ -27,16 +28,18 @@ export default function ScrapbookPage() {
 
   return (
     <div className="min-h-full bg-[linear-gradient(180deg,#fffdf8_0%,#faf7f2_45%,#f4efe8_100%)]">
-      <header className="border-b border-[#e8e4dc] bg-white/90 px-4 py-3 backdrop-blur-sm">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
-          <button
+          <motion.button
             onClick={() => router.push("/path")}
-            className="rounded-lg p-1.5 text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
+            whileTap={{ scale: 0.88 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             type="button"
             aria-label="Back to Path"
           >
-            <ArrowLeft size={20} />
-          </button>
+            <ArrowLeft size={18} />
+          </motion.button>
           <div className="min-w-0">
             <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-green)]">
               Crumbs · Polaroids
@@ -51,8 +54,12 @@ export default function ScrapbookPage() {
       <main className="mx-auto max-w-md px-4 pb-28 pt-4">
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#e5dfd4] bg-white/80 p-4 shadow-sm ring-1 ring-white/60">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 text-xl shadow-inner ring-1 ring-amber-100">
-              ✨
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 shadow-inner ring-1 ring-amber-100">
+              <Sparkles
+                size={20}
+                className="text-[var(--nourish-gold)]"
+                strokeWidth={1.8}
+              />
             </div>
             <div className="space-y-1.5">
               <p className="text-sm font-semibold text-[var(--nourish-dark)]">
@@ -98,10 +105,19 @@ export default function ScrapbookPage() {
             ))}
           </div>
         ) : (
-          <div className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[#d9d0c4] bg-white/70 px-6 py-14 text-center shadow-inner">
-            <span className="text-4xl" aria-hidden>
-              📸
-            </span>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[#d9d0c4] bg-white/70 px-6 py-14 text-center shadow-inner"
+          >
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+              <Camera
+                size={24}
+                className="text-[var(--nourish-green)]"
+                strokeWidth={1.8}
+              />
+            </div>
             <div className="space-y-1">
               <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                 No polaroids yet — your first victory lap is one cook away.
@@ -112,14 +128,16 @@ export default function ScrapbookPage() {
                 are leveling up.
               </p>
             </div>
-            <button
+            <motion.button
               onClick={() => router.push("/today")}
-              className="rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-95"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white cta-shadow transition-colors hover:bg-[var(--nourish-dark-green)]"
               type="button"
             >
               Cook something now →
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
       </main>
     </div>

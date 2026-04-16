@@ -790,8 +790,7 @@ function SwipeCard({
             className={cn(
               "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
               "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-              "shadow-sm shadow-[var(--nourish-green)]/20",
-              "transition-colors duration-200 cta-glow",
+              "cta-glow transition-colors duration-200",
             )}
             type="button"
             aria-label={`${dish.isMeal ? "Find sides for" : dish.hasGuidedCook ? "Start cooking" : "Find sides for"} ${dish.dishName}`}

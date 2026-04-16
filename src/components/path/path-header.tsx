@@ -32,7 +32,7 @@ export function PathHeader({
   const xpNeeded = XP_PER_LEVEL;
 
   return (
-    <header className="border-b border-neutral-100/80 bg-white px-4 pt-4 pb-3">
+    <header className="app-header px-4 py-3">
       <div className="mx-auto max-w-md space-y-3">
         {/* Top row: title + stats */}
         <div className="flex items-center justify-between gap-2">
@@ -63,7 +63,11 @@ export function PathHeader({
                 transition={{ duration: 0.4, delay: 0.6 }}
                 className="leading-none"
               >
-                <Flame size={16} className="text-amber-500" />
+                <Flame
+                  size={16}
+                  className="text-[var(--nourish-warm)]"
+                  strokeWidth={2.2}
+                />
               </motion.span>
               <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
                 {streak}
@@ -72,7 +76,11 @@ export function PathHeader({
 
             {/* Skills completed */}
             <div className="flex items-center gap-1">
-              <Trophy size={15} className="text-amber-400" />
+              <Trophy
+                size={15}
+                className="text-[var(--nourish-gold)]"
+                strokeWidth={2.2}
+              />
               <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
                 {skillsCompleted}
               </span>
@@ -94,8 +102,9 @@ export function PathHeader({
             }}
             className="relative flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
             style={{
-              background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-              boxShadow: "0 2px 8px rgba(34, 197, 94, 0.35)",
+              background:
+                "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-dark-green) 100%)",
+              boxShadow: "var(--shadow-cta)",
             }}
           >
             <span className="text-white font-bold text-sm leading-none">
@@ -103,14 +112,14 @@ export function PathHeader({
             </span>
             <Star
               size={9}
-              className="absolute -top-0.5 -right-0.5 text-amber-300 fill-amber-300"
+              className="absolute -top-0.5 -right-0.5 text-[var(--nourish-gold)] fill-[var(--nourish-gold)]"
             />
           </motion.div>
 
           {/* XP bar */}
           <div className="flex-1 space-y-0.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-[var(--nourish-green)] uppercase tracking-wider">
+              <span className="text-[10px] font-semibold text-[var(--nourish-green)] uppercase tracking-[0.12em]">
                 Level {level}
               </span>
               <span className="text-[10px] text-[var(--nourish-subtext)] tabular-nums">
@@ -122,7 +131,7 @@ export function PathHeader({
                 className="h-full rounded-full relative overflow-hidden"
                 style={{
                   background:
-                    "linear-gradient(90deg, #22c55e 0%, #4ade80 60%, #86efac 100%)",
+                    "linear-gradient(90deg, var(--nourish-dark-green) 0%, var(--nourish-green) 55%, var(--nourish-light-green) 100%)",
                 }}
                 initial={{ width: 0 }}
                 animate={{
@@ -139,7 +148,7 @@ export function PathHeader({
                   className="absolute inset-0"
                   style={{
                     background:
-                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
                   }}
                   animate={{ x: ["-100%", "200%"] }}
                   transition={{

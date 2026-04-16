@@ -2,7 +2,8 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Heart } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
@@ -27,16 +28,18 @@ export default function FavoritesPage() {
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
       {/* Header */}
-      <header className="border-b border-neutral-100/80 bg-white px-4 py-3">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
-          <button
+          <motion.button
             onClick={() => router.push("/path")}
-            className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+            whileTap={{ scale: 0.88 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             type="button"
             aria-label="Back to Path"
           >
-            <ArrowLeft size={20} />
-          </button>
+            <ArrowLeft size={18} />
+          </motion.button>
           <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
             Favorites
           </h1>
@@ -65,8 +68,15 @@ export default function FavoritesPage() {
             />
           ))
         ) : (
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-neutral-100 bg-white px-6 py-12 text-center mt-8">
-            <span className="text-4xl">🤍</span>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            className="flex flex-col items-center gap-4 surface-card px-6 py-12 text-center mt-8"
+          >
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-50">
+              <Heart size={24} className="text-pink-400" strokeWidth={1.8} />
+            </div>
             <div className="space-y-1">
               <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                 No favorites yet
@@ -76,14 +86,16 @@ export default function FavoritesPage() {
                 always one tap away.
               </p>
             </div>
-            <button
+            <motion.button
               onClick={() => router.push("/today")}
-              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-95"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white cta-shadow transition-colors hover:bg-[var(--nourish-dark-green)]"
               type="button"
             >
               Find something to cook →
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         )}
       </main>
     </div>

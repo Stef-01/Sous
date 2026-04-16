@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface MissionScreenProps {
@@ -61,11 +62,17 @@ export function MissionScreen({
             className="absolute inset-0 flex items-center justify-center gap-3"
             style={{
               background:
-                "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
+                "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 40%, #a8d8b9 100%)",
             }}
           >
-            <span className="text-5xl drop-shadow-sm">🍽️</span>
-            <span className="text-lg font-serif font-bold text-white/90 drop-shadow-sm">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+              <UtensilsCrossed
+                size={28}
+                className="text-white drop-shadow-sm"
+                strokeWidth={1.5}
+              />
+            </div>
+            <span className="text-lg font-serif font-bold text-white/95 drop-shadow-sm">
               {dishName}
             </span>
           </div>
@@ -146,7 +153,7 @@ export function MissionScreen({
         className={cn(
           "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200",
+          "cta-shadow transition-colors duration-200",
         )}
         type="button"
       >

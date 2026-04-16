@@ -341,7 +341,7 @@ function TodayPageContent() {
       )}
 
       {/* Header — Sous + streak chip + bird */}
-      <header className="border-b border-neutral-100/80 bg-white px-4 py-1.5">
+      <header className="app-header px-4 py-2.5">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="flex items-center gap-1.5">
             <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
@@ -355,23 +355,19 @@ function TodayPageContent() {
       </header>
 
       {/* Main content */}
-      <main className="mx-auto max-w-md px-4 pt-3 pb-24">
+      <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
         {/* Primary craving trigger — search bar */}
-        <div className="mb-3">
-          <CravingSearchBar onClick={handleOpenSearch} />
-        </div>
+        <CravingSearchBar onClick={handleOpenSearch} />
 
         {/* Today's Quest — swipeable card stack */}
-        <div className="mb-2">
-          <QuestCard
-            key={questKey}
-            userPreferences={userPreferences}
-            cookHistory={stats}
-          />
-        </div>
+        <QuestCard
+          key={questKey}
+          userPreferences={userPreferences}
+          cookHistory={stats}
+        />
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}
-        <div className="space-y-2.5 mb-4 overflow-visible">
+        <div className="space-y-2.5 overflow-visible">
           <p className="text-center">
             <motion.button
               onClick={() => {

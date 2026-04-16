@@ -267,7 +267,7 @@ export function ResultStack({
         className={cn(
           "flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-all duration-200",
           selectedSides.length > 0
-            ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] shadow-sm shadow-[var(--nourish-green)]/20"
+            ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] cta-shadow"
             : "bg-neutral-100 text-neutral-400 cursor-not-allowed",
         )}
         type="button"
@@ -368,10 +368,10 @@ function ResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.08, duration: 0.3 }}
       className={cn(
-        "overflow-hidden rounded-xl border bg-white transition-colors",
+        "overflow-hidden rounded-xl border bg-white transition-all duration-200",
         selected
-          ? "border-[var(--nourish-green)]/30 shadow-sm"
-          : "border-neutral-100 opacity-60",
+          ? "border-[var(--nourish-green)]/30 shadow-[var(--shadow-card)]"
+          : "border-neutral-100 shadow-none",
       )}
     >
       <div className="flex w-full items-center gap-3 p-4">
@@ -433,7 +433,7 @@ function ResultCard({
                 className="flex h-full w-full items-center justify-center text-lg"
                 style={{
                   background:
-                    "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 60%, #a8d8b9 100%)",
+                    "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
                 }}
               >
                 <UtensilsCrossed

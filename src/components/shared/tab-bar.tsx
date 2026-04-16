@@ -18,11 +18,15 @@ export function TabBar({
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-neutral-200 bg-white/95 backdrop-blur-sm safe-area-bottom"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--nourish-border)] bg-white/92 backdrop-blur-md backdrop-saturate-150 safe-area-bottom"
+      style={{
+        boxShadow:
+          "0 -1px 0 rgba(0,0,0,0.02), 0 -4px 16px -8px rgba(13,13,13,0.06)",
+      }}
       aria-label="Main navigation"
     >
       <LayoutGroup>
-        <div className="mx-auto flex max-w-md items-center justify-around py-2">
+        <div className="mx-auto flex max-w-md items-center justify-around py-2.5">
           {tabs.map((tab) => {
             const isActive =
               tab.href === "/today"

@@ -286,7 +286,7 @@ export default function GuidedCookPage({
     return (
       <div className="min-h-full bg-[var(--nourish-cream)]">
         {/* Header skeleton */}
-        <div className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3">
+        <div className="app-header px-4 py-3">
           <div className="mx-auto flex max-w-md items-center justify-between animate-pulse">
             <div className="h-8 w-8 rounded-lg bg-neutral-200" />
             <div className="flex gap-2">
@@ -361,7 +361,7 @@ export default function GuidedCookPage({
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
+      <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <motion.button
             onClick={currentPhase === "win" ? undefined : handleBack}
