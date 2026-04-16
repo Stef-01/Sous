@@ -5,6 +5,8 @@ import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
+import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
+import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
 
 interface NodeWithStatus extends SkillNode {
   status: SkillNodeStatus;
@@ -39,14 +41,16 @@ function MasteryCuisineCard({
   onTap: (id: string) => void;
 }) {
   const isInteractive = node.status !== "locked";
+  const trainingHover = getSkillTrainingHover(node.id);
 
   return (
     <button
       type="button"
+      title={trainingHover.oneLiner}
       onClick={() => isInteractive && onTap(node.id)}
       disabled={!isInteractive}
       className={[
-        "flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200 w-full",
+        "group relative flex w-full flex-col items-center gap-2 overflow-visible rounded-2xl border p-4 text-center transition-all duration-200",
         node.status === "completed"
           ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5"
           : node.status === "in_progress"
@@ -85,6 +89,8 @@ function MasteryCuisineCard({
       {node.status === "locked" && (
         <span className="text-[10px] text-neutral-300">Locked</span>
       )}
+
+      <TrainingHoverPanel hover={trainingHover} />
     </button>
   );
 }
@@ -294,6 +300,7 @@ export const SkillTree = memo(function SkillTree({
                 cooksCompleted={node.progress.cooksCompleted}
                 cooksRequired={node.cooksRequired}
                 onTap={handleNodeTap}
+                trainingHover={getSkillTrainingHover(node.id)}
               />
             </div>
           );
@@ -308,7 +315,7 @@ export const SkillTree = memo(function SkillTree({
               CUISINE MASTERY — Choose Your Path
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 overflow-visible pb-10">
             {masteryNodes.map((node) => (
               <MasteryCuisineCard
                 key={node.id}

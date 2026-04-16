@@ -39,6 +39,7 @@ test.describe("Visual documentation captures", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("sous-coach-quiz-done", "true");
+      localStorage.setItem("sous-path-tutorial-v1", "done");
       localStorage.setItem(
         "sous-preferences",
         JSON.stringify({ spicy: 0.5, fresh: 0.3 }),

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Check, Lock } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNodeStatus } from "@/data/skill-tree";
+import type { SkillTrainingHover } from "@/data/skill-node-training-hovers";
+import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
 
 interface SkillNodeProps {
   id: string;
@@ -13,6 +15,7 @@ interface SkillNodeProps {
   cooksCompleted: number;
   cooksRequired: number;
   onTap: (id: string) => void;
+  trainingHover: SkillTrainingHover;
 }
 
 /**
@@ -32,6 +35,7 @@ export function SkillNodeComponent({
   cooksCompleted,
   cooksRequired,
   onTap,
+  trainingHover,
 }: SkillNodeProps) {
   const isInteractive = status !== "locked";
 
@@ -50,8 +54,9 @@ export function SkillNodeComponent({
       }
       onClick={() => isInteractive && onTap(id)}
       disabled={!isInteractive}
+      title={trainingHover.oneLiner}
       className={cn(
-        "flex flex-col items-center gap-1.5 group",
+        "group relative flex flex-col items-center gap-1.5 outline-none",
         isInteractive ? "cursor-pointer" : "cursor-default",
       )}
       style={{ WebkitTapHighlightColor: "transparent" }}
@@ -178,6 +183,8 @@ export function SkillNodeComponent({
       >
         {name}
       </span>
+
+      <TrainingHoverPanel hover={trainingHover} />
     </motion.button>
   );
 }

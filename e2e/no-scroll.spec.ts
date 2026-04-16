@@ -9,6 +9,12 @@ import { test, expect } from "@playwright/test";
 
 test.use({ viewport: { width: 375, height: 667 } });
 
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem("sous-path-tutorial-v1", "done");
+  });
+});
+
 async function assertCTAInViewport(
   page: import("@playwright/test").Page,
   ctaSelector: string,

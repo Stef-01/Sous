@@ -34,6 +34,7 @@ test.describe("Path — achievement toast", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("sous-coach-quiz-done", "true");
+      localStorage.setItem("sous-path-tutorial-v1", "done");
     });
   });
 

@@ -177,6 +177,7 @@ test.describe("Core Loop — craving to cook to win", () => {
   test("Path tab accessible after 3 cooks", async ({ page }) => {
     // Pre-seed 3 completed cook sessions so Path unlocks
     await page.addInitScript(() => {
+      localStorage.setItem("sous-path-tutorial-v1", "done");
       const sessions = Array.from({ length: 3 }, (_, i) => ({
         id: `test-${i}`,
         dishSlug: `test-dish-${i}`,

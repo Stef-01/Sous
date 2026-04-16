@@ -8,24 +8,29 @@ import type { Achievement } from "@/data/achievements";
 interface AchievementsGridProps {
   unlocked: Achievement[];
   locked: Achievement[];
+  /** Hide the section title (e.g. when the parent sheet already has a heading). */
+  showHeading?: boolean;
 }
 
 export const AchievementsGrid = memo(function AchievementsGrid({
   unlocked,
   locked,
+  showHeading = true,
 }: AchievementsGridProps) {
   const total = unlocked.length + locked.length;
 
   return (
-    <div className="mx-auto max-w-md px-4 pt-4 pb-2">
-      <div className="flex items-baseline justify-between mb-3">
-        <h2 className="font-serif text-lg text-[var(--nourish-dark)]">
-          Achievements
-        </h2>
-        <span className="text-xs text-[var(--nourish-subtext)]">
-          {unlocked.length}/{total}
-        </span>
-      </div>
+    <div className="mx-auto max-w-md px-4 pt-2 pb-2">
+      {showHeading ? (
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="font-serif text-lg text-[var(--nourish-dark)]">
+            Achievements
+          </h2>
+          <span className="text-xs text-[var(--nourish-subtext)]">
+            {unlocked.length}/{total}
+          </span>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-5 gap-2">
         {unlocked.map((a, idx) => (

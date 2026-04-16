@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
 
 /**
  * Favorites — filtered view of favorite cooks only.
@@ -57,6 +58,10 @@ export default function FavoritesPage() {
               onReplay={handleReplay}
               onToggleFavorite={toggleFavorite}
               index={idx}
+              evaluatorScores={stableEvaluatorScores(
+                session.sessionId,
+                session.rating,
+              )}
             />
           ))
         ) : (

@@ -4,6 +4,7 @@ test.describe("Path Tab Features", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("sous-coach-quiz-done", "true");
+      localStorage.setItem("sous-path-tutorial-v1", "done");
       localStorage.setItem(
         "sous-preferences",
         JSON.stringify({ spicy: 0.5, fresh: 0.3 }),
@@ -18,7 +19,9 @@ test.describe("Path Tab Features", () => {
     await expect(page.getByText("Your journey")).toBeVisible({
       timeout: 30000,
     });
-    await expect(page.locator("text=Achievements")).toBeVisible({
+    await expect(
+      page.getByRole("button", { name: /View badges and achievements/i }),
+    ).toBeVisible({
       timeout: 15000,
     });
     await expect(page.locator("text=Scrapbook")).toBeVisible();
@@ -42,8 +45,11 @@ test.describe("Path Tab Features", () => {
   }) => {
     await page.goto("/path/scrapbook");
     await expect(
-      page.locator("text=/scrapbook|no cooks|completed/i").first(),
+      page.getByRole("heading", { name: /teeny-tiny trophy case/i }),
     ).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/polaroids yet/i)).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("Favorites page renders correctly", async ({ page }) => {

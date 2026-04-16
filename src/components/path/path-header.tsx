@@ -1,7 +1,7 @@
 "use client";
 // v2
 import { motion } from "framer-motion";
-import { Star, Trophy, ChevronRight } from "lucide-react";
+import { Star, Trophy, ChevronRight, CircleHelp } from "lucide-react";
 
 interface PathHeaderProps {
   streak: number;
@@ -9,6 +9,8 @@ interface PathHeaderProps {
   level: number;
   levelProgress: number;
   skillsCompleted: number;
+  /** Re-open the Path orientation tutorial (2-minute click-through). */
+  onReplayTutorial?: () => void;
 }
 
 /** XP thresholds per level */
@@ -24,6 +26,7 @@ export function PathHeader({
   level,
   levelProgress,
   skillsCompleted,
+  onReplayTutorial,
 }: PathHeaderProps) {
   const xpInCurrentLevel = totalXP % XP_PER_LEVEL;
   const xpNeeded = XP_PER_LEVEL;
@@ -32,12 +35,24 @@ export function PathHeader({
     <header className="border-b border-neutral-100/80 bg-white px-4 pt-4 pb-3">
       <div className="mx-auto max-w-md space-y-3">
         {/* Top row: title + stats */}
-        <div className="flex items-center justify-between">
-          <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-            Your Path
-          </h1>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+              Your Path
+            </h1>
+            {onReplayTutorial && (
+              <button
+                type="button"
+                onClick={onReplayTutorial}
+                className="shrink-0 rounded-full p-1 text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-green)]"
+                aria-label="Replay Path intro"
+              >
+                <CircleHelp size={18} strokeWidth={2} />
+              </button>
+            )}
+          </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             {/* Streak */}
             <motion.div
               className="flex items-center gap-1"

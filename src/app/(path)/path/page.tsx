@@ -16,7 +16,8 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useAchievements } from "@/lib/hooks/use-achievements";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
 import { AchievementToast } from "@/components/shared/achievement-toast";
-import { AchievementsGrid } from "@/components/path/achievements-grid";
+import { AchievementsLauncher } from "@/components/path/achievements-launcher";
+import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
 /**
@@ -48,6 +49,30 @@ export default function PathPage() {
   } = useAchievements();
   const { level: xpLevel } = useXPSystem();
   const router = useRouter();
+
+  const [pathTutorialOpen, setPathTutorialOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mounted) return;
+    const id = window.setTimeout(() => {
+      try {
+        if (localStorage.getItem("sous-path-tutorial-v1") !== "done") {
+          setPathTutorialOpen(true);
+        }
+      } catch {
+        setPathTutorialOpen(true);
+      }
+    }, 400);
+    return () => clearTimeout(id);
+  }, [mounted]);
+
+  const completePathTutorial = useCallback(() => {
+    setPathTutorialOpen(false);
+  }, []);
+
+  const replayPathTutorial = useCallback(() => {
+    setPathTutorialOpen(true);
+  }, []);
 
   // Check achievements whenever stats change
   useEffect(() => {
@@ -203,10 +228,11 @@ export default function PathPage() {
         level={level}
         levelProgress={levelProgress}
         skillsCompleted={skillsCompleted}
+        onReplayTutorial={replayPathTutorial}
       />
 
       {/* Journey summary + next unlock + weekly goal — the 3-block dashboard */}
-      <div className="mx-auto max-w-md px-4 pt-4 space-y-3">
+      <div className="mx-auto max-w-md space-y-2 px-4 pt-3">
         <JourneySummary stats={stats} />
         <NextUnlockCard
           nextNode={nextUnlockData.nextNode}
@@ -216,9 +242,8 @@ export default function PathPage() {
         <WeeklyGoalCard completedSessions={completedSessions} />
       </div>
 
-      {/* Achievements */}
       {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
-        <AchievementsGrid
+        <AchievementsLauncher
           unlocked={unlockedAchievements}
           locked={lockedAchievements}
         />
@@ -274,6 +299,8 @@ export default function PathPage() {
         achievements={newlyUnlocked}
         onDismiss={dismissNewUnlocks}
       />
+
+      <PathTutorial open={pathTutorialOpen} onComplete={completePathTutorial} />
     </motion.div>
   );
 }
