@@ -8,6 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { SkillNodeComponent } from "./skill-node";
+import { SkillIcon } from "@/components/shared/skill-icon";
 import { SkillConnector } from "./skill-connector";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePathSound } from "@/lib/hooks/use-path-sound";
@@ -67,7 +68,7 @@ function MasteryCuisineCard({
               : "border-neutral-100 bg-neutral-50 opacity-40 cursor-default",
       ].join(" ")}
     >
-      <span className="text-3xl leading-none">{node.emoji}</span>
+      <SkillIcon skillId={node.id} size={28} className="text-current" />
       <span
         className={[
           "text-[11px] font-semibold leading-tight",
@@ -85,7 +86,7 @@ function MasteryCuisineCard({
       )}
       {node.status === "completed" && (
         <span className="text-[10px] font-bold text-[var(--nourish-green)]">
-          ✓ Mastered
+          Mastered
         </span>
       )}
       {node.status === "available" && (
@@ -351,7 +352,6 @@ export const SkillTree = memo(function SkillTree({
               <SkillNodeComponent
                 id={node.id}
                 name={node.name}
-                emoji={node.emoji}
                 status={node.status}
                 cooksCompleted={node.progress.cooksCompleted}
                 cooksRequired={node.cooksRequired}

@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Heart, RotateCcw, Sparkles } from "lucide-react";
+import {
+  Star,
+  Heart,
+  RotateCcw,
+  Sparkles,
+  UtensilsCrossed,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
@@ -120,9 +126,11 @@ export function ScrapbookEntryCard({
               />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-1 text-center">
-                <span className="text-3xl leading-none" aria-hidden>
-                  🍽️
-                </span>
+                <UtensilsCrossed
+                  size={28}
+                  className="text-[#6b5a4a]"
+                  aria-hidden
+                />
                 <span className="px-3 text-[10px] font-medium text-[#6b5a4a]">
                   Plate snapshot placeholder — evaluator will score your next
                   hero shot here.

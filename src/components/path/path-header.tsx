@@ -1,7 +1,7 @@
 "use client";
 // v2
 import { motion } from "framer-motion";
-import { Star, Trophy, ChevronRight, CircleHelp } from "lucide-react";
+import { Star, Trophy, ChevronRight, CircleHelp, Flame } from "lucide-react";
 
 interface PathHeaderProps {
   streak: number;
@@ -61,9 +61,9 @@ export function PathHeader({
               <motion.span
                 animate={streak > 0 ? { scale: [1, 1.2, 1] } : {}}
                 transition={{ duration: 0.4, delay: 0.6 }}
-                className="text-base leading-none"
+                className="leading-none"
               >
-                🔥
+                <Flame size={16} className="text-amber-500" />
               </motion.span>
               <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
                 {streak}

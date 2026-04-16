@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { motion } from "framer-motion";
+import { Star, Flame } from "lucide-react";
 import type { CookStats } from "@/lib/hooks/use-cook-sessions";
 
 interface JourneySummaryProps {
@@ -11,7 +12,7 @@ interface JourneySummaryProps {
 interface StatBlockProps {
   value: number | string;
   label: string;
-  suffix?: string;
+  icon?: React.ReactNode;
   delay?: number;
   highlight?: boolean;
 }
@@ -19,7 +20,7 @@ interface StatBlockProps {
 function StatBlock({
   value,
   label,
-  suffix = "",
+  icon,
   delay = 0,
   highlight = false,
 }: StatBlockProps) {
@@ -39,10 +40,10 @@ function StatBlock({
           damping: 18,
           delay: delay + 0.1,
         }}
-        className={`text-2xl font-bold tabular-nums ${highlight ? "text-[var(--nourish-green)]" : "text-[var(--nourish-dark)]"}`}
+        className={`flex items-center justify-center gap-1 text-2xl font-bold tabular-nums ${highlight ? "text-[var(--nourish-green)]" : "text-[var(--nourish-dark)]"}`}
       >
         {value}
-        {suffix}
+        {icon}
       </motion.div>
       <div className="text-[10px] text-[var(--nourish-subtext)] uppercase tracking-wide mt-0.5">
         {label}
@@ -81,7 +82,7 @@ export const JourneySummary = memo(function JourneySummary({
             }}
             className="text-sm"
           >
-            ⭐
+            <Star size={16} className="text-amber-400 fill-amber-400" />
           </motion.span>
         )}
       </div>
@@ -98,7 +99,7 @@ export const JourneySummary = memo(function JourneySummary({
 
         <StatBlock
           value={stats.currentStreak}
-          suffix="🔥"
+          icon={<Flame size={18} className="text-amber-500" />}
           label="Day streak"
           delay={0.1}
           highlight={stats.currentStreak >= 3}

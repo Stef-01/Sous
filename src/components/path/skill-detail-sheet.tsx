@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChefHat, Lock, Check, ArrowRight } from "lucide-react";
+import { X, Lock, Check, ArrowRight, ChefHat } from "lucide-react";
+import { SkillIcon } from "@/components/shared/skill-icon";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
@@ -107,7 +108,13 @@ export function SkillDetailSheet({
                       status === "locked" && "bg-neutral-100",
                     )}
                   >
-                    <span className="text-2xl">{node?.emoji}</span>
+                    {node && (
+                      <SkillIcon
+                        skillId={node.id}
+                        size={26}
+                        className="text-current"
+                      />
+                    )}
                   </motion.div>
                   <div>
                     <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
@@ -331,7 +338,12 @@ export function SkillDetailSheet({
                               className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs text-[var(--nourish-subtext)]"
                             >
                               <Lock size={10} />
-                              {reqNode.emoji} {reqNode.name}
+                              <SkillIcon
+                                skillId={reqNode.id}
+                                size={12}
+                                className="text-current"
+                              />{" "}
+                              {reqNode.name}
                             </div>
                           );
                         })}

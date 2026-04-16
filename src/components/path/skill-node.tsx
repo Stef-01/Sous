@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils/cn";
 import type { SkillNodeStatus } from "@/data/skill-tree";
 import type { SkillTrainingHover } from "@/data/skill-node-training-hovers";
 import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
+import { SkillIcon } from "@/components/shared/skill-icon";
 
 interface SkillNodeProps {
   id: string;
   name: string;
-  emoji: string;
   status: SkillNodeStatus;
   cooksCompleted: number;
   cooksRequired: number;
@@ -30,7 +30,6 @@ interface SkillNodeProps {
 export function SkillNodeComponent({
   id,
   name,
-  emoji,
   status,
   cooksCompleted,
   cooksRequired,
@@ -57,9 +56,10 @@ export function SkillNodeComponent({
       title={trainingHover.oneLiner}
       className={cn(
         "group relative flex flex-col items-center gap-1.5 outline-none",
+        "hover:z-[90] focus-within:z-[90]",
         isInteractive ? "cursor-pointer" : "cursor-default",
       )}
-      style={{ WebkitTapHighlightColor: "transparent" }}
+      style={{ WebkitTapHighlightColor: "transparent", isolation: "auto" }}
       type="button"
     >
       {/* Circle — layoutId shared with SkillDetailSheet for morph transition */}
@@ -93,7 +93,7 @@ export function SkillNodeComponent({
         {/* Content by state */}
         {status === "completed" ? (
           <>
-            <span className="text-2xl leading-none">{emoji}</span>
+            <SkillIcon skillId={id} size={26} className="text-white" />
             {/* Checkmark badge */}
             <motion.div
               initial={{ scale: 0 }}
@@ -115,7 +115,11 @@ export function SkillNodeComponent({
           </>
         ) : status === "in_progress" ? (
           <>
-            <span className="text-2xl leading-none">{emoji}</span>
+            <SkillIcon
+              skillId={id}
+              size={26}
+              className="text-[var(--nourish-green)]"
+            />
             {/* Progress badge */}
             <div
               className="absolute -bottom-1.5 -right-1.5 flex items-center justify-center rounded-full text-white text-[9px] font-bold min-w-[22px] h-[20px] px-1.5 shadow-sm"
@@ -145,7 +149,11 @@ export function SkillNodeComponent({
           </>
         ) : status === "available" ? (
           <>
-            <span className="text-2xl leading-none">{emoji}</span>
+            <SkillIcon
+              skillId={id}
+              size={26}
+              className="text-[var(--nourish-dark)]"
+            />
             {/* Breathing glow to signal interactivity */}
             <motion.div
               className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/20"
@@ -167,7 +175,7 @@ export function SkillNodeComponent({
         ) : (
           /* Locked state */
           <div className="flex flex-col items-center justify-center gap-1 opacity-35">
-            <span className="text-xl leading-none grayscale">{emoji}</span>
+            <SkillIcon skillId={id} size={22} className="text-slate-400" />
             <Lock size={12} className="text-slate-400" />
           </div>
         )}

@@ -3,6 +3,7 @@
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { SearchX } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { QuestCard } from "@/components/today/quest-card";
@@ -506,7 +507,10 @@ function TodayPageContent() {
               pairingQuery.data?.success &&
               pairingQuery.data.sides.length === 0 && (
                 <div className="rounded-xl border border-neutral-100 bg-white p-6 text-center space-y-3">
-                  <span className="text-3xl block">🤔</span>
+                  <SearchX
+                    size={28}
+                    className="text-[var(--nourish-subtext)] mx-auto"
+                  />
                   <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                     Hmm, we couldn&apos;t find a match
                   </p>

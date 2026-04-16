@@ -2,6 +2,16 @@
 
 import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
+import {
+  Award,
+  Flame,
+  ChefHat,
+  UtensilsCrossed,
+  Star,
+  Sparkles,
+  Target,
+  type LucideIcon,
+} from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import {
   getCurrentChallenge,
@@ -78,7 +88,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-lg">{challenge.emoji}</span>
+            <ChallengeIcon goalType={challenge.goal.type} />
             <h3 className="text-sm font-semibold text-[var(--nourish-dark)]">
               {challenge.title}
             </h3>
@@ -94,7 +104,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
             transition={{ type: "spring", stiffness: 400, damping: 12 }}
             className="flex flex-col items-center"
           >
-            <span className="text-2xl">🎉</span>
+            <Award size={24} className="text-[var(--nourish-green)]" />
             <span className="text-[9px] font-bold text-[var(--nourish-green)]">
               +{challenge.bonusXP} XP
             </span>
@@ -154,7 +164,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
 
       <p className="text-[11px] text-[var(--nourish-subtext)]">
         {isComplete
-          ? `Challenge complete! +${challenge.bonusXP} XP earned 🔥`
+          ? `Challenge complete! +${challenge.bonusXP} XP earned`
           : progress.current > 0
             ? `${remaining} more to go — ${daysRemaining} days left!`
             : "A new challenge awaits — start cooking!"}
@@ -162,3 +172,20 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
     </motion.div>
   );
 });
+
+const GOAL_ICON: Record<string, LucideIcon> = {
+  cook_count: ChefHat,
+  cuisine_cook: UtensilsCrossed,
+  unique_dishes: Sparkles,
+  rate_dishes: Star,
+  streak_days: Flame,
+};
+
+function ChallengeIcon({ goalType }: { goalType: string }) {
+  const Icon = GOAL_ICON[goalType] ?? Target;
+  return (
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[var(--nourish-green)]/10">
+      <Icon size={16} className="text-[var(--nourish-green)]" strokeWidth={2} />
+    </div>
+  );
+}

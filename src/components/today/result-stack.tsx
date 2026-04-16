@@ -9,6 +9,7 @@ import {
   Sparkles,
   Check,
   RotateCcw,
+  UtensilsCrossed,
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
@@ -435,7 +436,10 @@ function ResultCard({
                     "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 60%, #a8d8b9 100%)",
                 }}
               >
-                <span className="drop-shadow-sm">🍽️</span>
+                <UtensilsCrossed
+                  size={18}
+                  className="text-white drop-shadow-sm"
+                />
               </div>
             )}
           </div>

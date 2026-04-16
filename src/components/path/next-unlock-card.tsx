@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Lock, Zap, ChevronRight } from "lucide-react";
+import { Lock, Zap, ChevronRight, Trophy, Flame } from "lucide-react";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
+import { SkillIcon } from "@/components/shared/skill-icon";
 
 interface NextUnlockCardProps {
   /** The next skill node that is available or in-progress */
@@ -45,7 +46,7 @@ export function NextUnlockCard({
         }}
       >
         <div className="flex items-center gap-3">
-          <span className="text-3xl">🏆</span>
+          <Trophy size={28} className="text-amber-500" />
           <div>
             <p className="text-sm font-bold text-[var(--nourish-green)]">
               All {skillsCompleted} skills mastered!
@@ -83,9 +84,8 @@ export function NextUnlockCard({
               <motion.span
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-[10px]"
               >
-                🔥
+                <Flame size={12} className="text-amber-500" />
               </motion.span>
             )}
           </div>
@@ -120,13 +120,17 @@ export function NextUnlockCard({
         {/* Skill info */}
         <div className="flex items-center gap-3">
           <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
+            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
               background:
                 "linear-gradient(135deg, rgba(34,197,94,0.1), rgba(74,222,128,0.1))",
             }}
           >
-            {node.emoji}
+            <SkillIcon
+              skillId={node.id}
+              size={24}
+              className="text-[var(--nourish-green)]"
+            />
           </div>
           <div>
             <p className="text-sm font-semibold text-[var(--nourish-dark)]">
@@ -214,8 +218,8 @@ export function NextUnlockCard({
       </div>
 
       <div className="flex items-center gap-3 opacity-60">
-        <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center text-2xl grayscale flex-shrink-0">
-          {node.emoji}
+        <div className="w-12 h-12 rounded-xl bg-neutral-100 flex items-center justify-center flex-shrink-0">
+          <SkillIcon skillId={node.id} size={24} className="text-neutral-400" />
         </div>
         <div>
           <p className="text-sm font-medium text-[var(--nourish-dark)]">

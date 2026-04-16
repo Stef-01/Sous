@@ -10,9 +10,19 @@ import {
   type PanInfo,
 } from "framer-motion";
 import Image from "next/image";
-import { Clock, ShoppingBag, X, Heart } from "lucide-react";
+import {
+  Clock,
+  ShoppingBag,
+  X,
+  Heart,
+  UtensilsCrossed,
+  Flame,
+  Fish,
+  Leaf,
+  CookingPot,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import {
   getAvailableCookSlugs,
   getStaticCookData,
@@ -207,18 +217,30 @@ function buildQuestDishes(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
     );
 
-  // Daily rotation offset
-  const mealOffset = dayOfYear % Math.max(1, scoredMeals.length);
-  const sideOffset = dayOfYear % Math.max(1, scoredSides.length);
+  // Partition into "ready" (has image + guided cook) and "rest", rotate within each partition
+  const readyMeals = scoredMeals.filter(
+    (s) => s.dish.heroImageUrl && s.dish.hasGuidedCook,
+  );
+  const restMeals = scoredMeals.filter(
+    (s) => !(s.dish.heroImageUrl && s.dish.hasGuidedCook),
+  );
+  const readySides = scoredSides.filter((s) => s.dish.heroImageUrl);
+  const restSides = scoredSides.filter((s) => !s.dish.heroImageUrl);
+
+  const rotateArr = <T,>(arr: T[], offset: number): T[] => {
+    if (arr.length === 0) return arr;
+    const o = offset % arr.length;
+    return [...arr.slice(o), ...arr.slice(0, o)];
+  };
 
   const rotatedMeals = [
-    ...scoredMeals.slice(mealOffset),
-    ...scoredMeals.slice(0, mealOffset),
+    ...rotateArr(readyMeals, dayOfYear),
+    ...rotateArr(restMeals, dayOfYear),
   ].map((s) => s.dish);
 
   const rotatedSides = [
-    ...scoredSides.slice(sideOffset),
-    ...scoredSides.slice(0, sideOffset),
+    ...rotateArr(readySides, dayOfYear),
+    ...rotateArr(restSides, dayOfYear),
   ].map((s) => s.dish);
 
   // Interleave: 4 meals then 1 side, repeating (80/20 ratio)
@@ -262,6 +284,28 @@ function getCuisineGradient(cuisine: string): string {
   );
 }
 
+const CUISINE_ICON_MAP: Record<string, LucideIcon> = {
+  japanese: Fish,
+  korean: Flame,
+  thai: Leaf,
+  chinese: CookingPot,
+  vietnamese: Leaf,
+  filipino: CookingPot,
+  indian: Flame,
+  italian: UtensilsCrossed,
+  mexican: Flame,
+  mediterranean: Leaf,
+};
+
+function CuisineFallbackIcon({ cuisine }: { cuisine: string }) {
+  const Icon = CUISINE_ICON_MAP[cuisine.toLowerCase()] ?? UtensilsCrossed;
+  return (
+    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+      <Icon size={32} className="text-white drop-shadow-sm" strokeWidth={1.5} />
+    </div>
+  );
+}
+
 /** Extract descriptive tags for a meal from its description. */
 function buildMealTags(
   cuisine: string,
@@ -301,7 +345,6 @@ function buildMealTags(
  * Pass userPreferences to surface preference-matched dishes first.
  */
 export function QuestCard({
-  onFindSides,
   userPreferences,
   cookHistory,
 }: {
@@ -346,33 +389,26 @@ export function QuestCard({
 
       if (direction === "right") {
         const dish = questDishes[currentIndex % questDishes.length];
-        if (dish.isMeal && onFindSides) {
-          // Meal card: trigger the pairing flow to find sides
-          onFindSides(dish.dishName);
+        if (dish.isMeal) {
           setExitDirection("right");
           scheduleTimeout(() => {
-            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-            setExitDirection(null);
-          }, 250);
+            const params = new URLSearchParams({ main: dish.dishName });
+            if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
+            router.push(`/sides?${params.toString()}`);
+          }, 300);
         } else if (dish.hasGuidedCook && !dish.isMeal) {
           // Side dish with guided cook: go straight to cook flow
           setExitDirection("right");
           scheduleTimeout(() => {
             router.push(`/cook/${dish.slug}`);
           }, 300);
-        } else if (onFindSides) {
-          onFindSides(dish.dishName);
-          setExitDirection("right");
-          scheduleTimeout(() => {
-            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-            setExitDirection(null);
-          }, 250);
         } else {
           setExitDirection("right");
           scheduleTimeout(() => {
-            setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-            setExitDirection(null);
-          }, 250);
+            const params = new URLSearchParams({ main: dish.dishName });
+            if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
+            router.push(`/sides?${params.toString()}`);
+          }, 300);
         }
       } else {
         setExitDirection("left");
@@ -382,7 +418,7 @@ export function QuestCard({
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, scheduleTimeout, onFindSides, haptic],
+    [currentIndex, questDishes, router, scheduleTimeout, haptic],
   );
 
   const handleStart = useCallback(() => {
@@ -601,9 +637,7 @@ function SwipeCard({
                 background: getCuisineGradient(dish.cuisineFamily),
               }}
             >
-              <span className="text-6xl drop-shadow-sm">
-                {getDishEmoji(dish.tags, dish.cuisineFamily)}
-              </span>
+              <CuisineFallbackIcon cuisine={dish.cuisineFamily} />
               <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
                 {dish.dishName}
               </span>

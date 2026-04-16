@@ -268,7 +268,7 @@ export function TextPrompt({
               </div>
             ) : (
               <div className="text-center py-6 space-y-2">
-                <span className="text-3xl">🔍</span>
+                <Search size={28} className="text-[var(--nourish-subtext)]" />
                 <p className="text-sm text-[var(--nourish-subtext)]">
                   No dishes match &ldquo;{text.trim()}&rdquo;
                 </p>

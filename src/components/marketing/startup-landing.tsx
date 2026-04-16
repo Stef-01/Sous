@@ -30,7 +30,6 @@ import {
   fadeUpItem,
   fadeUpTight,
   scaleIn,
-  lineReveal,
   springSnappy,
   viewportOnce,
   easeOutExpo,
@@ -181,7 +180,7 @@ export function StartupLanding() {
   );
 
   return (
-    <div className="scroll-smooth bg-[#f2f3f7] text-[#101418] antialiased">
+    <div className="scroll-smooth bg-[#f7f8fa] text-[#2a2a2a] antialiased">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#123129] focus:shadow-lg"
@@ -193,8 +192,8 @@ export function StartupLanding() {
         className={cn(
           "sticky top-0 z-50 border-b backdrop-blur-md transition-colors duration-300",
           headerElevated
-            ? "border-[#dce1e8] bg-[#f6f7fa]/95 shadow-[0_10px_40px_-18px_rgba(15,20,28,0.18)]"
-            : "border-[#e8eaef] bg-[#f2f3f7]/82",
+            ? "border-[#e8eaef]/80 bg-[#f7f8fa]/96 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+            : "border-transparent bg-[#f7f8fa]/70",
         )}
       >
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-3.5 md:px-8">
@@ -302,20 +301,20 @@ export function StartupLanding() {
               </motion.p>
               <motion.h1
                 variants={fadeUpItem}
-                className="mt-1 max-w-[18ch] text-[2.15rem] font-semibold leading-[1.1] tracking-tight text-[#0b0f14] sm:text-[2.85rem] md:text-[3.5rem]"
+                className="mt-1 max-w-[18ch] text-[2.15rem] font-semibold leading-[1.1] tracking-tight text-[#1a1a1a] sm:text-[2.85rem] md:text-[3.5rem]"
               >
                 Healthy cooking made easy with AI.
               </motion.h1>
               <motion.p
                 variants={fadeUpItem}
-                className="mt-6 max-w-prose text-lg leading-relaxed text-[#2b3137] md:text-xl"
+                className="mt-6 max-w-prose text-lg leading-[1.7] text-[#3c3c3c] md:text-xl"
               >
                 A tailored feed of recipe reels and food creators matched to
                 your tastes, health goals, budget, and cooking habits.
               </motion.p>
               <motion.p
                 variants={fadeUpItem}
-                className="mt-3 max-w-prose text-base leading-relaxed text-[#4b535c] md:text-lg"
+                className="mt-3 max-w-prose text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
               >
                 Save meals you actually want to eat, turn them into a weekly
                 plan, compare recipes against ingredients you already have, and
@@ -372,7 +371,7 @@ export function StartupLanding() {
                             boxShadow: "0 12px 28px rgba(24,32,44,0.08)",
                           }
                     }
-                    className="rounded-full border border-[#d7dce6] bg-white/90 px-3.5 py-1.5 text-xs font-medium text-[#4f5a66] shadow-[0_1px_0_rgba(255,255,255,0.8)_inset]"
+                    className="rounded-full border border-[#e4e7ec] bg-white px-3.5 py-1.5 text-xs font-medium text-[#6a6a6a]"
                   >
                     {label}
                   </motion.span>
@@ -553,21 +552,15 @@ export function StartupLanding() {
           </div>
         </section>
 
-        <motion.div
-          className="relative mx-auto max-w-[1280px] px-4 md:px-8"
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={lineReveal}
-        >
-          <div className="h-px w-full origin-left bg-gradient-to-r from-transparent via-[#2f6c5d]/35 to-transparent" />
-        </motion.div>
+        <div className="mx-auto max-w-[1280px] px-4 md:px-8">
+          <div className="h-px w-full bg-[#e8eaef]/60" />
+        </div>
 
         <section
           id="ways"
-          className="relative scroll-mt-[72px] border-t border-[#e8eaef] bg-gradient-to-b from-white via-[#fafbfd] to-white py-16 md:py-24"
+          className="relative scroll-mt-[72px] bg-white py-20 md:py-28"
         >
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#dfe5ee]/80 to-transparent" />
+          {/* Clean section boundary — no decorative gradient */}
           <div className="mx-auto max-w-[1280px] px-4 md:px-8">
             <motion.div
               initial="hidden"
@@ -578,19 +571,19 @@ export function StartupLanding() {
             >
               <motion.p
                 variants={fadeUpItem}
-                className="text-xs font-semibold uppercase tracking-[0.22em] text-[#5b6774]"
+                className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9b9b9b]"
               >
                 Don&apos;t just scroll recipes
               </motion.p>
               <motion.h2
                 variants={fadeUpItem}
-                className="mt-3 text-3xl font-semibold tracking-tight text-[#0f1216] md:text-[2.5rem] md:leading-[1.12]"
+                className="mt-3 text-3xl font-semibold tracking-tight text-[#1a1a1a] md:text-[2.5rem] md:leading-[1.12]"
               >
                 Sous in many more ways
               </motion.h2>
               <motion.p
                 variants={fadeUpItem}
-                className="mt-4 text-base leading-relaxed text-[#55606d] md:text-lg"
+                className="mt-4 text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
               >
                 One surface that learns how you eat, nudges what to cook next,
                 and closes the loop from inspiration to groceries — the kind of
@@ -617,7 +610,7 @@ export function StartupLanding() {
                           boxShadow: "0 24px 48px rgba(24,32,44,0.1)",
                         }
                   }
-                  className="group relative overflow-hidden rounded-[24px] border border-[#e4e9f0] bg-white/90 p-6 shadow-[0_2px_0_rgba(255,255,255,0.9)_inset] md:p-7"
+                  className="group relative overflow-hidden rounded-2xl border border-[#e8eaef]/60 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.03)] md:p-7"
                 >
                   {!reduceMotion && (
                     <motion.div
@@ -643,10 +636,10 @@ export function StartupLanding() {
                       <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2f6c5d]">
                         • {way.tag}
                       </p>
-                      <h3 className="mt-2 text-lg font-semibold text-[#0f1216]">
+                      <h3 className="mt-2 text-lg font-semibold text-[#2a2a2a]">
                         {way.title}
                       </h3>
-                      <p className="mt-2 text-sm leading-relaxed text-[#55606d]">
+                      <p className="mt-2 text-sm leading-[1.7] text-[#6a6a6a]">
                         {way.body}
                       </p>
                     </div>
@@ -657,10 +650,7 @@ export function StartupLanding() {
           </div>
         </section>
 
-        <section
-          id="systems"
-          className="border-t border-[#e4e7ee] bg-white scroll-mt-[72px]"
-        >
+        <section id="systems" className="bg-[#f7f8fa] scroll-mt-[72px]">
           <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-20">
             <motion.div
               className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
@@ -672,20 +662,20 @@ export function StartupLanding() {
               <div className="max-w-2xl">
                 <motion.p
                   variants={fadeUpItem}
-                  className="text-xs font-semibold uppercase tracking-[0.18em] text-[#5b6774]"
+                  className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9b9b9b]"
                 >
                   Advanced systems
                 </motion.p>
                 <motion.h2
                   variants={fadeUpItem}
-                  className="mt-3 text-3xl font-semibold tracking-tight text-[#0f1216] md:text-[2.35rem] md:leading-tight"
+                  className="mt-3 text-3xl font-semibold tracking-tight text-[#1a1a1a] md:text-[2.35rem] md:leading-tight"
                 >
                   Not a chatbot wrapper — a full-stack nutrition intelligence
                   surface.
                 </motion.h2>
                 <motion.p
                   variants={fadeUpItem}
-                  className="mt-4 text-base leading-relaxed text-[#55606d] md:text-lg"
+                  className="mt-4 text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
                 >
                   Bedrock for conversational planning and adaptation, ranking
                   for personalization, retrieval to ground outputs in trusted
@@ -725,7 +715,7 @@ export function StartupLanding() {
                           transition: { duration: 0.2 },
                         }
                   }
-                  className="rounded-2xl border border-[#e6eaf0] bg-[#f8fafc] p-6 transition-shadow hover:shadow-[0_12px_28px_rgba(24,32,44,0.06)]"
+                  className="rounded-2xl border border-[#e8eaef]/50 bg-white p-6 transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
                 >
                   <motion.div
                     className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-[#e8ecf2]"
@@ -738,10 +728,10 @@ export function StartupLanding() {
                       aria-hidden
                     />
                   </motion.div>
-                  <h3 className="mt-4 text-lg font-semibold text-[#0f1216]">
+                  <h3 className="mt-4 text-lg font-semibold text-[#2a2a2a]">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#55606d]">
+                  <p className="mt-2 text-sm leading-[1.7] text-[#6a6a6a]">
                     {item.body}
                   </p>
                 </motion.article>
@@ -875,13 +865,13 @@ export function StartupLanding() {
       </main>
 
       <motion.footer
-        className="border-t border-[#e4e7ee] bg-[#f2f3f7]"
+        className="border-t border-[#e8eaef]/60 bg-[#f7f8fa]"
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px" }}
         transition={{ duration: 0.5, ease: easeOutExpo }}
       >
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-10 text-sm text-[#5c6672] md:flex-row md:items-center md:justify-between md:px-8">
+        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-12 text-sm text-[#6a6a6a] md:flex-row md:items-center md:justify-between md:px-8">
           <p className="font-semibold text-[#123129]">Sous</p>
           <p className="max-w-xl text-xs leading-relaxed md:text-sm">
             Landing narrative describes the product direction. The interactive

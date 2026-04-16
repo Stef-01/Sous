@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Snowflake, Gamepad2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface FallbackActionsProps {
@@ -12,13 +13,13 @@ interface FallbackActionsProps {
 const chips = [
   {
     key: "fridge",
-    emoji: "🧊",
+    icon: Snowflake,
     label: "Rescue my fridge",
     handler: "onRescueFridge" as const,
   },
   {
     key: "game",
-    emoji: "🎮",
+    icon: Gamepad2,
     label: "Play a game",
     handler: "onPlayGame" as const,
   },
@@ -53,7 +54,7 @@ export function FallbackActions({
           )}
           type="button"
         >
-          <span className="text-sm">✨</span>
+          <Sparkles size={14} className="text-[var(--nourish-green)]" />
           Personalize
         </motion.button>
       )}
@@ -78,7 +79,7 @@ export function FallbackActions({
           )}
           type="button"
         >
-          <span className="text-sm">{chip.emoji}</span>
+          <chip.icon size={14} className="text-current" />
           {chip.label}
         </motion.button>
       ))}
