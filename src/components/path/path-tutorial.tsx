@@ -33,7 +33,7 @@ const STEPS = [
   },
   {
     title: "The skill tree is your syllabus",
-    body: "Each orb is a module. Tap an unlocked node to see practice dishes and how many assessed cooks remain. Hover on desktop to read the station outcomes in chef-training language.",
+    body: "Each orb is a module. Hover on desktop for a one-line preview; tap any unlocked node for the full sheet — what you’ll actually do at home, then practice dishes and progress.",
     icon: Target,
   },
   {

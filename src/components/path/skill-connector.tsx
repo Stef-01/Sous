@@ -11,8 +11,8 @@ interface ConnectorProps {
 }
 
 /**
- * SVG path connector between two skill tree nodes.
- * Uses smooth S-curve beziers. Color and style reflect progression state.
+ * Orthogonal connector (vertical–horizontal–vertical) between nodes.
+ * Reads cleaner than S-curves when many paths overlap on a narrow canvas.
  */
 export function SkillConnector({
   x1,
@@ -22,7 +22,7 @@ export function SkillConnector({
   targetStatus,
 }: ConnectorProps) {
   const midY = (y1 + y2) / 2;
-  const path = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+  const path = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
 
   if (targetStatus === "completed") {
     return (
@@ -30,27 +30,25 @@ export function SkillConnector({
         d={path}
         fill="none"
         stroke="#22c55e"
-        strokeWidth={3}
-        strokeOpacity={0.9}
+        strokeWidth={2}
+        strokeOpacity={0.95}
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     );
   }
 
   if (targetStatus === "in_progress") {
     return (
-      <>
-        {/* Base green line */}
-        <path
-          d={path}
-          fill="none"
-          stroke="#22c55e"
-          strokeWidth={2.5}
-          strokeOpacity={0.7}
-          strokeLinecap="round"
-          strokeDasharray="6 3"
-        />
-      </>
+      <path
+        d={path}
+        fill="none"
+        stroke="#4ade80"
+        strokeWidth={2}
+        strokeOpacity={0.85}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     );
   }
 
@@ -59,25 +57,24 @@ export function SkillConnector({
       <path
         d={path}
         fill="none"
-        stroke="#d1d5db"
-        strokeWidth={2}
-        strokeOpacity={0.8}
+        stroke="#cbd5e1"
+        strokeWidth={1.5}
+        strokeOpacity={0.9}
         strokeLinecap="round"
-        strokeDasharray="5 4"
+        strokeLinejoin="round"
       />
     );
   }
 
-  // locked — very subtle
   return (
     <path
       d={path}
       fill="none"
       stroke="#e2e8f0"
-      strokeWidth={1.5}
-      strokeOpacity={0.5}
+      strokeWidth={1.25}
+      strokeOpacity={0.65}
       strokeLinecap="round"
-      strokeDasharray="3 6"
+      strokeLinejoin="round"
     />
   );
 }

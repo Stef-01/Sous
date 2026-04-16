@@ -231,16 +231,60 @@ export default function PathPage() {
         onReplayTutorial={replayPathTutorial}
       />
 
-      {/* Journey summary + next unlock + weekly goal — the 3-block dashboard */}
-      <div className="mx-auto max-w-md space-y-2 px-4 pt-3">
-        <JourneySummary stats={stats} />
-        <NextUnlockCard
-          nextNode={nextUnlockData.nextNode}
-          lockedPreview={nextUnlockData.lockedPreview}
-          skillsCompleted={skillsCompleted}
-        />
-        <WeeklyGoalCard completedSessions={completedSessions} />
-      </div>
+      {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
+      <motion.div
+        className="mx-auto max-w-md space-y-2 px-4 pt-3"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.25, margin: "0px 0px -40px 0px" }}
+        variants={{
+          hidden: {},
+          visible: {
+            transition: { staggerChildren: 0.08, delayChildren: 0.04 },
+          },
+        }}
+      >
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 14 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { type: "spring", stiffness: 320, damping: 28 },
+            },
+          }}
+        >
+          <JourneySummary stats={stats} />
+        </motion.div>
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 14 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { type: "spring", stiffness: 320, damping: 28 },
+            },
+          }}
+        >
+          <NextUnlockCard
+            nextNode={nextUnlockData.nextNode}
+            lockedPreview={nextUnlockData.lockedPreview}
+            skillsCompleted={skillsCompleted}
+          />
+        </motion.div>
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 14 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { type: "spring", stiffness: 320, damping: 28 },
+            },
+          }}
+        >
+          <WeeklyGoalCard completedSessions={completedSessions} />
+        </motion.div>
+      </motion.div>
 
       {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
         <AchievementsLauncher

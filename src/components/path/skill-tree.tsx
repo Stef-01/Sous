@@ -1,6 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useMemo, useCallback, useState, memo } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -110,6 +116,17 @@ export const SkillTree = memo(function SkillTree({
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const haptic = useHaptic();
+  const reduceMotion = useReducedMotion();
+  const scrollRm = !!reduceMotion;
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0.9", "center 0.4"],
+  });
+  const connectorOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.45],
+    scrollRm ? [1, 1, 1] : [0.05, 0.32, 1],
+  );
 
   // Split mastery (grid) from the rest (tree)
   const treeNodes = useMemo(
@@ -248,38 +265,44 @@ export const SkillTree = memo(function SkillTree({
       >
         {/* Tier labels */}
         {tierLabels.map((tl) => (
-          <div
+          <motion.div
             key={tl.label}
-            className="absolute left-1/2 -translate-x-1/2 z-10"
+            className="absolute left-1/2 z-10 -translate-x-1/2"
             style={{ top: tl.y }}
+            initial={scrollRm ? false : { opacity: 0, y: 6 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-32px", amount: 0.35 }}
+            transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-[10px] font-bold tracking-[0.15em] text-[var(--nourish-subtext)] uppercase">
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
               {tl.label}
             </span>
-          </div>
+          </motion.div>
         ))}
 
         {/* SVG connectors */}
         <svg
-          className="absolute inset-0 pointer-events-none"
+          className="pointer-events-none absolute inset-0"
           width={treeWidth}
           height={canvasHeight}
         >
-          {edges.map((edge) => {
-            const from = nodePositions[edge.from];
-            const to = nodePositions[edge.to];
-            if (!from || !to) return null;
-            return (
-              <SkillConnector
-                key={`${edge.from}-${edge.to}`}
-                x1={from.cx}
-                y1={from.cy + NODE_RADIUS}
-                x2={to.cx}
-                y2={to.cy - NODE_RADIUS}
-                targetStatus={edge.targetStatus}
-              />
-            );
-          })}
+          <motion.g style={{ opacity: connectorOpacity }}>
+            {edges.map((edge) => {
+              const from = nodePositions[edge.from];
+              const to = nodePositions[edge.to];
+              if (!from || !to) return null;
+              return (
+                <SkillConnector
+                  key={`${edge.from}-${edge.to}`}
+                  x1={from.cx}
+                  y1={from.cy + NODE_RADIUS}
+                  x2={to.cx}
+                  y2={to.cy - NODE_RADIUS}
+                  targetStatus={edge.targetStatus}
+                />
+              );
+            })}
+          </motion.g>
         </svg>
 
         {/* Tree nodes */}
@@ -310,20 +333,43 @@ export const SkillTree = memo(function SkillTree({
       {/* ── Cuisine Mastery grid ───────────────────────────── */}
       {masteryNodes.length > 0 && (
         <div className="px-4 pb-8 pt-2">
-          <div className="mb-4 text-center">
-            <span className="text-[10px] font-bold tracking-[0.15em] text-[var(--nourish-subtext)] uppercase">
-              CUISINE MASTERY — Choose Your Path
+          <motion.div
+            className="mb-4 text-center"
+            initial={scrollRm ? false : { opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
+              Cuisine mastery — pick a lane
             </span>
-          </div>
-          <div className="grid grid-cols-2 gap-3 overflow-visible pb-10">
+          </motion.div>
+          <motion.div
+            className="grid grid-cols-2 gap-3 overflow-visible pb-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.06 } },
+            }}
+          >
             {masteryNodes.map((node) => (
-              <MasteryCuisineCard
+              <motion.div
                 key={node.id}
-                node={node}
-                onTap={handleNodeTap}
-              />
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { type: "spring", stiffness: 320, damping: 26 },
+                  },
+                }}
+              >
+                <MasteryCuisineCard node={node} onTap={handleNodeTap} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

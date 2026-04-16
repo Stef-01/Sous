@@ -5,6 +5,7 @@ import { X, ChefHat, Lock, Check, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
+import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
 
 interface SkillDetailSheetProps {
   node: SkillNode | null;
@@ -36,6 +37,7 @@ export function SkillDetailSheet({
   // at the same time (both derived from selectedNodeId), so gating on `open`
   // inside AnimatePresence is sufficient. Guard node access throughout.
   const progress = node ? Math.min(cooksCompleted / node.cooksRequired, 1) : 0;
+  const training = node ? getSkillTrainingHover(node.id) : null;
 
   // Pick a random dish from the node's associated dishes
   const handleStartCook = () => {
@@ -73,9 +75,9 @@ export function SkillDetailSheet({
             exit={{ y: "100%" }}
             transition={{
               type: "spring",
-              damping: 26,
-              stiffness: 350,
-              mass: 0.8,
+              damping: 28,
+              stiffness: 380,
+              mass: 0.72,
             }}
           >
             {/* Fixed header (never scrolls) */}
@@ -126,16 +128,70 @@ export function SkillDetailSheet({
             {/* Scrollable content */}
             <div className="flex-1 overflow-y-auto min-h-0">
               <motion.div
+                key={node?.id ?? "empty"}
                 className="px-5 pb-24 space-y-5"
                 initial="hidden"
                 animate="visible"
                 variants={{
                   hidden: {},
                   visible: {
-                    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+                    transition: { staggerChildren: 0.07, delayChildren: 0.06 },
                   },
                 }}
               >
+                {training && (
+                  <motion.div
+                    className="overflow-hidden rounded-2xl border border-[var(--nourish-green)]/18 bg-gradient-to-br from-white via-white to-[var(--nourish-cream)] px-4 py-3.5 shadow-[0_8px_30px_-12px_rgba(45,90,61,0.18)]"
+                    variants={{
+                      hidden: { opacity: 0, y: 14, scale: 0.97 },
+                      visible: {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                        transition: {
+                          type: "spring",
+                          stiffness: 340,
+                          damping: 26,
+                        },
+                      },
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-md bg-[var(--nourish-green)]/12 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
+                        {training.badge}
+                      </span>
+                      <span className="text-[10px] font-medium text-[var(--nourish-subtext)]">
+                        What this unlocks at home
+                      </span>
+                    </div>
+                    <p className="mt-2 font-serif text-base font-semibold leading-snug text-[var(--nourish-dark)]">
+                      {training.sheetHeadline}
+                    </p>
+                    <ul className="mt-3 space-y-2.5">
+                      {training.atHomeYoull.map((line, i) => (
+                        <motion.li
+                          key={line}
+                          className="flex gap-2.5 text-[13px] leading-snug text-[var(--nourish-subtext)]"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: 0.12 + i * 0.09,
+                            type: "spring",
+                            stiffness: 320,
+                            damping: 28,
+                          }}
+                        >
+                          <span
+                            className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[var(--nourish-green)]"
+                            aria-hidden
+                          />
+                          <span>{line}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+
                 {/* Description */}
                 <motion.p
                   className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
@@ -170,10 +226,10 @@ export function SkillDetailSheet({
                       {cooksCompleted}/{node?.cooksRequired ?? 0} cooks
                     </span>
                   </div>
-                  <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
+                  <div className="relative h-3 w-full overflow-hidden rounded-full bg-neutral-100">
                     <motion.div
                       className={cn(
-                        "h-full rounded-full",
+                        "relative h-full overflow-hidden rounded-full",
                         status === "completed"
                           ? "bg-[var(--nourish-green)]"
                           : "bg-[var(--nourish-green)]/70",
@@ -188,7 +244,7 @@ export function SkillDetailSheet({
                       }}
                     >
                       <motion.div
-                        className="absolute inset-0"
+                        className="pointer-events-none absolute inset-0"
                         style={{
                           background:
                             "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
