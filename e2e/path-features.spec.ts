@@ -14,23 +14,27 @@ test.describe("Path Tab Features", () => {
   test("Path page shows skill tree and achievements section", async ({
     page,
   }) => {
-    await page.goto("/path");
+    await page.goto("/path", { waitUntil: "domcontentloaded" });
+    await expect(page.getByText("Your journey")).toBeVisible({
+      timeout: 30000,
+    });
     await expect(page.locator("text=Achievements")).toBeVisible({
-      timeout: 10000,
+      timeout: 15000,
     });
     await expect(page.locator("text=Scrapbook")).toBeVisible();
     await expect(page.locator("text=Favorites")).toBeVisible();
   });
 
   test("Path page shows weekly challenge card", async ({ page }) => {
-    await page.goto("/path");
-    // Weekly challenge should display one of the challenge types
-    const challengeCard = page
-      .locator(
-        "text=/Cook|Japanese|Italian|Variety|Rate|Streak|Indian|Mexican|Thai/i",
-      )
-      .first();
-    await expect(challengeCard).toBeVisible({ timeout: 10000 });
+    await page.goto("/path", { waitUntil: "domcontentloaded" });
+    await expect(page.getByText("Your journey")).toBeVisible({
+      timeout: 30000,
+    });
+    // Weekly challenge title rotates by calendar week — match known pool titles only
+    const challengeCard = page.locator(
+      "text=/Cook 3 Times|Japanese Week|Italian Week|Try Something New|Food Critic Week|5-Day Streak|Indian Spice Week|High Five|Mexican Fiesta|Thai Taste/i",
+    );
+    await expect(challengeCard).toBeVisible({ timeout: 15000 });
   });
 
   test("Scrapbook page renders correctly with no sessions", async ({

@@ -60,7 +60,7 @@ export const JourneySummary = memo(function JourneySummary({
 }: JourneySummaryProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"

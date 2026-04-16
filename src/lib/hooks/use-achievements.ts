@@ -78,6 +78,29 @@ function saveState(state: AchievementState) {
   }
 }
 
+function computeNewUnlocks(
+  prev: AchievementState,
+  stats: UserStats,
+): { next: AchievementState; newly: Achievement[] } | null {
+  const unlockedSet = new Set(prev.unlocked);
+  const newly: Achievement[] = [];
+  for (const achievement of achievements) {
+    if (unlockedSet.has(achievement.id)) continue;
+    if (isConditionMet(achievement, stats)) {
+      unlockedSet.add(achievement.id);
+      newly.push(achievement);
+    }
+  }
+  if (newly.length === 0) return null;
+  return {
+    next: {
+      unlocked: Array.from(unlockedSet),
+      lastCheckedStats: stats,
+    },
+    newly,
+  };
+}
+
 function isConditionMet(achievement: Achievement, stats: UserStats): boolean {
   const c = achievement.condition;
   switch (c.type) {
@@ -124,34 +147,20 @@ export function useAchievements() {
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const checkAchievements = useCallback((stats: UserStats): Achievement[] => {
-    const newUnlocks: Achievement[] = [];
-
+  const checkAchievements = useCallback((stats: UserStats) => {
     setState((prev) => {
-      const unlockedSet = new Set(prev.unlocked);
-      for (const achievement of achievements) {
-        if (unlockedSet.has(achievement.id)) continue;
-        if (isConditionMet(achievement, stats)) {
-          unlockedSet.add(achievement.id);
-          newUnlocks.push(achievement);
-        }
-      }
+      const result = computeNewUnlocks(prev, stats);
+      if (!result) return prev;
 
-      if (newUnlocks.length === 0) return prev;
-
-      const updated: AchievementState = {
-        unlocked: Array.from(unlockedSet),
-        lastCheckedStats: stats,
-      };
-      saveState(updated);
-      return updated;
+      saveState(result.next);
+      const { newly } = result;
+      // Defer toast until after this state update commits (avoids races with
+      // batched updates / passive effect ordering on Path).
+      queueMicrotask(() => {
+        setNewlyUnlocked(newly);
+      });
+      return result.next;
     });
-
-    if (newUnlocks.length > 0) {
-      setNewlyUnlocked(newUnlocks);
-    }
-
-    return newUnlocks;
   }, []);
 
   const dismissNewUnlocks = useCallback(() => {

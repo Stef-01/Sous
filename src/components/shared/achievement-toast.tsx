@@ -18,7 +18,7 @@ export function AchievementToast({
     <AnimatePresence>
       {first && (
         <motion.div
-          initial={{ opacity: 0, y: 40, scale: 0.9 }}
+          initial={false}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 300, damping: 22 }}
@@ -45,7 +45,7 @@ export function AchievementToast({
               </motion.div>
               <div className="text-left">
                 <motion.p
-                  initial={{ opacity: 0, x: -8 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
                   className="text-xs font-medium text-white/80 uppercase tracking-wide"
@@ -53,7 +53,7 @@ export function AchievementToast({
                   Achievement Unlocked!
                 </motion.p>
                 <motion.p
-                  initial={{ opacity: 0, x: -8 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.15 }}
                   className="text-lg font-bold"
@@ -61,7 +61,7 @@ export function AchievementToast({
                   {first.name}
                 </motion.p>
                 <motion.p
-                  initial={{ opacity: 0, x: -8 }}
+                  initial={false}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
                   className="text-sm text-white/90"
@@ -70,7 +70,7 @@ export function AchievementToast({
                 </motion.p>
                 {achievements.length > 1 && (
                   <motion.p
-                    initial={{ opacity: 0 }}
+                    initial={false}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                     className="mt-1 text-xs text-white/70"

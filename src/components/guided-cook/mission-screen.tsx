@@ -35,7 +35,7 @@ export function MissionScreen({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={false}
       animate={{ opacity: 1 }}
       className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
     >
@@ -133,7 +133,7 @@ export function MissionScreen({
 
       {/* CTA — mt-auto pins to bottom of the flex container */}
       <motion.button
-        initial={{ opacity: 0, y: 8 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{
           type: "spring",

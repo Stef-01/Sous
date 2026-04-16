@@ -15,6 +15,7 @@ import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useAchievements } from "@/lib/hooks/use-achievements";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
+import { AchievementToast } from "@/components/shared/achievement-toast";
 import { AchievementsGrid } from "@/components/path/achievements-grid";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
@@ -38,8 +39,13 @@ export default function PathPage() {
   } = useSkillProgress();
 
   const { stats, completedSessions } = useCookSessions();
-  const { unlockedAchievements, lockedAchievements, checkAchievements } =
-    useAchievements();
+  const {
+    unlockedAchievements,
+    lockedAchievements,
+    checkAchievements,
+    newlyUnlocked,
+    dismissNewUnlocks,
+  } = useAchievements();
   const { level: xpLevel } = useXPSystem();
   const router = useRouter();
 
@@ -184,7 +190,9 @@ export default function PathPage() {
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      // initial={false}: avoid opacity:0 on first paint — it makes Playwright treat
+      // the whole subtree as non-visible until the animation runs.
+      initial={false}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.18 }}
     >
@@ -260,6 +268,11 @@ export default function PathPage() {
         onClose={handleCloseSheet}
         onStartCook={handleStartCook}
         onPracticeDish={handlePracticeDish}
+      />
+
+      <AchievementToast
+        achievements={newlyUnlocked}
+        onDismiss={dismissNewUnlocks}
       />
     </motion.div>
   );

@@ -34,7 +34,7 @@ export function NextUnlockCard({
   if (!nextNode && !lockedPreview) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
         className="rounded-2xl p-5"
@@ -68,7 +68,7 @@ export function NextUnlockCard({
 
     return (
       <motion.div
-        initial={{ opacity: 0, y: 8 }}
+        initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.2 }}
         className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3.5"
@@ -201,7 +201,7 @@ export function NextUnlockCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.2 }}
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3"

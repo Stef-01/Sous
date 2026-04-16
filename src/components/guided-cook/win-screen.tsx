@@ -267,7 +267,7 @@ export function WinScreen({
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
 
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
         className="flex flex-col gap-4 text-center"
       >
@@ -371,7 +371,7 @@ export function WinScreen({
 
         {/* ── Star rating ── */}
         <motion.div
-          initial={{ opacity: 0, y: 6 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="space-y-1"

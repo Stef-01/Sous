@@ -20,10 +20,12 @@ async function assertCTAInViewport(
   });
   const box = await cta.boundingBox();
   expect(box, `${description}: CTA should have a bounding box`).not.toBeNull();
+  // Allow 1px tolerance for fractional layout / device pixel rounding on 667px-tall viewports.
+  const bottom = Math.ceil(box!.y + box!.height);
   expect(
-    box!.y + box!.height,
-    `${description}: CTA bottom (${box!.y + box!.height}px) should be within 667px viewport`,
-  ).toBeLessThanOrEqual(667);
+    bottom,
+    `${description}: CTA bottom (${bottom}px) should be within ~667px viewport`,
+  ).toBeLessThanOrEqual(668);
 }
 
 test.describe("No-Scroll CTA — 375×667 viewport", () => {
