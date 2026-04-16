@@ -2,7 +2,14 @@
 
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, ChevronRight, Sparkles, ChefHat } from "lucide-react";
+import {
+  X,
+  ArrowLeft,
+  ChevronRight,
+  Sparkles,
+  ChefHat,
+  PartyPopper,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
   coachQuizQuestions,
@@ -265,12 +272,21 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="mb-2 text-3xl"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              delay: 0.1,
+              type: "spring",
+              stiffness: 300,
+              damping: 15,
+            }}
+            className="mb-2 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
           >
-            🎉
+            <PartyPopper
+              size={24}
+              className="text-[var(--nourish-green)]"
+              strokeWidth={1.8}
+            />
           </motion.div>
 
           <motion.h1

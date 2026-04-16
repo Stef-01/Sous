@@ -11,8 +11,13 @@ import {
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ChefHat, ChevronRight } from "lucide-react";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import {
+  ArrowLeft,
+  ChefHat,
+  ChevronRight,
+  Timer,
+  UtensilsCrossed,
+} from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
@@ -545,7 +550,13 @@ function CombinedCookContent() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-col items-center gap-5 py-12 text-center"
               >
-                <span className="text-4xl">🥄</span>
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+                  <ChefHat
+                    size={24}
+                    className="text-[var(--nourish-green)]"
+                    strokeWidth={1.8}
+                  />
+                </div>
                 <div className="space-y-1.5">
                   <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                     Steps coming soon
@@ -601,7 +612,10 @@ function CombinedCookContent() {
                     }}
                     className="mb-3 rounded-xl bg-amber-50 border border-amber-200/60 px-3.5 py-2.5 flex items-start gap-2"
                   >
-                    <span className="text-base leading-none mt-0.5">⏱️</span>
+                    <Timer
+                      size={16}
+                      className="text-amber-600 mt-0.5 shrink-0"
+                    />
                     <p className="text-xs text-amber-800 leading-relaxed">
                       {currentParallelHint}
                     </p>
@@ -758,9 +772,13 @@ function CombinedMissionScreen({
                 "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
             }}
           >
-            <span className="text-6xl drop-shadow-sm">
-              {getDishEmoji(flavorProfile, mainDishName)}
-            </span>
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+              <UtensilsCrossed
+                size={32}
+                className="text-white drop-shadow-sm"
+                strokeWidth={1.5}
+              />
+            </div>
             <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
               {mainDishName}
             </span>

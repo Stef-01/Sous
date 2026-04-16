@@ -47,20 +47,25 @@ export function TabBar({
                   {isActive && (
                     <motion.div
                       layoutId="tab-indicator"
-                      className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/12"
+                      className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/10"
                       transition={{
                         type: "spring",
-                        stiffness: 300,
-                        damping: 25,
+                        stiffness: 380,
+                        damping: 30,
+                        mass: 0.8,
                       }}
                     />
                   )}
                   <motion.div
                     className="relative z-10 flex flex-col items-center gap-0.5"
-                    animate={isActive ? { scale: [1, 1.1, 1] } : { scale: 1 }}
-                    transition={
-                      isActive ? { duration: 0.3, ease: "easeInOut" } : {}
+                    animate={
+                      isActive ? { scale: 1, y: 0 } : { scale: 0.95, y: 0 }
                     }
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 20,
+                    }}
                   >
                     <TabIcon id={tab.id} active={isActive} />
                     <span

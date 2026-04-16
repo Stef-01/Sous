@@ -410,7 +410,7 @@ export function StepCard({
           }
         >
           {isLast ? (
-            "Done! 🎉"
+            "Done!"
           ) : (
             <>
               Next

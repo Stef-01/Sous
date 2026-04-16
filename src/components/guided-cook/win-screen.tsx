@@ -11,6 +11,12 @@ import {
   Home,
   Sparkles,
   ChevronDown,
+  Flame,
+  Zap,
+  ChefHat,
+  Trophy,
+  PartyPopper,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
@@ -131,7 +137,7 @@ function ConfettiLayer() {
 }
 
 interface Milestone {
-  emoji: string;
+  icon: React.ReactNode;
   headline: string;
   message: string;
 }
@@ -144,41 +150,65 @@ function detectMilestone(ctx: {
 }): Milestone {
   if (ctx.isFirstCook) {
     return {
-      emoji: "🌟",
+      icon: (
+        <Award
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
       headline: "Your first cook!",
       message: `${ctx.dishName} — and your cooking journey begins.`,
     };
   }
   if (ctx.streak === 7) {
     return {
-      emoji: "🔥",
+      icon: <Flame size={32} className="text-orange-500" strokeWidth={1.8} />,
       headline: "7-day streak!",
       message: `${ctx.dishName} done. A full week of cooking — you're unstoppable.`,
     };
   }
   if (ctx.streak === 14) {
     return {
-      emoji: "⚡",
+      icon: <Zap size={32} className="text-amber-500" strokeWidth={1.8} />,
       headline: "14-day streak!",
       message: `${ctx.dishName} done. Two straight weeks. This is becoming a superpower.`,
     };
   }
   if (ctx.streak === 30) {
     return {
-      emoji: "👨‍🍳",
+      icon: (
+        <ChefHat
+          size={32}
+          className="text-[var(--nourish-green)]"
+          strokeWidth={1.8}
+        />
+      ),
       headline: "30-day streak!",
       message: `${ctx.dishName} done. A full month of cooking — you're a chef now.`,
     };
   }
   if (ctx.streak > 0 && ctx.streak % 10 === 0) {
     return {
-      emoji: "🏆",
+      icon: (
+        <Trophy
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
       headline: `${ctx.streak}-day streak!`,
       message: `${ctx.dishName} done. ${ctx.streak} days strong.`,
     };
   }
   return {
-    emoji: "🎉",
+    icon: (
+      <PartyPopper
+        size={32}
+        className="text-[var(--nourish-green)]"
+        strokeWidth={1.8}
+      />
+    ),
     headline: `You cooked ${ctx.dishName}!`,
     message: `${ctx.dishName} is ready to eat.`,
   };
@@ -286,9 +316,9 @@ export function WinScreen({
           <motion.div
             animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
             transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
-            className="text-5xl"
+            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
           >
-            {milestone.emoji}
+            {milestone.icon}
           </motion.div>
           <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)] leading-snug">
             {headline}
@@ -312,8 +342,9 @@ export function WinScreen({
             className="flex flex-wrap items-center justify-center gap-2"
           >
             {streak > 0 && (
-              <span className="rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]">
-                {streak} day streak 🔥
+              <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-sm font-medium text-[var(--nourish-green)]">
+                {streak} day streak
+                <Flame size={14} className="text-orange-500" />
               </span>
             )}
             {skillProgress.length > 0 ? (
@@ -335,8 +366,8 @@ export function WinScreen({
                       : "bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]",
                   )}
                 >
-                  {sp.emoji} {sp.name} {sp.newCount}/{sp.required}
-                  {sp.justCompleted && " ✓"}
+                  {sp.name} {sp.newCount}/{sp.required}
+                  {sp.justCompleted && " \u2713"}
                 </motion.span>
               ))
             ) : (
@@ -360,8 +391,9 @@ export function WinScreen({
             }}
             className="rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 py-3"
           >
-            <p className="text-sm font-semibold text-[var(--nourish-green)]">
-              🎊 Path tab unlocked!
+            <p className="text-sm font-semibold text-[var(--nourish-green)] flex items-center gap-1.5 justify-center">
+              <PartyPopper size={16} />
+              Path tab unlocked!
             </p>
             <p className="text-xs text-[var(--nourish-subtext)] mt-0.5">
               3 cooks complete — your journey begins.
@@ -438,7 +470,12 @@ export function WinScreen({
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+          transition={{
+            delay: 0.5,
+            type: "spring",
+            stiffness: 260,
+            damping: 25,
+          }}
           className="w-full space-y-2"
         >
           {/* Back to Today — dominant green, always first */}

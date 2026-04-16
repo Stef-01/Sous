@@ -2,16 +2,36 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Camera } from "lucide-react";
+import {
+  Search,
+  Camera,
+  UtensilsCrossed,
+  Flame,
+  Fish,
+  Leaf,
+  CookingPot,
+  type LucideIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { sides, meals } from "@/data";
 
 interface LocalResult {
   name: string;
   cuisine: string;
-  emoji: string;
 }
+
+const CUISINE_ICON: Record<string, LucideIcon> = {
+  japanese: Fish,
+  korean: Flame,
+  thai: Leaf,
+  chinese: CookingPot,
+  vietnamese: Leaf,
+  filipino: CookingPot,
+  indian: Flame,
+  italian: UtensilsCrossed,
+  mexican: Flame,
+  mediterranean: Leaf,
+};
 
 function getCuisineFromTags(tags: string[]): string {
   const cuisineTags = [
@@ -48,7 +68,6 @@ function searchLocal(query: string): LocalResult[] {
       results.push({
         name: meal.name,
         cuisine: meal.cuisine,
-        emoji: getDishEmoji([meal.cuisine.toLowerCase()], meal.cuisine),
       });
     }
   }
@@ -64,7 +83,6 @@ function searchLocal(query: string): LocalResult[] {
       results.push({
         name: side.name,
         cuisine,
-        emoji: getDishEmoji(side.tags, cuisine),
       });
     }
   }
@@ -252,9 +270,18 @@ export function TextPrompt({
                     className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--nourish-green)]/5 transition-colors"
                     type="button"
                   >
-                    <span className="text-xl shrink-0 w-7 text-center">
-                      {result.emoji}
-                    </span>
+                    {(() => {
+                      const Icon =
+                        CUISINE_ICON[result.cuisine.toLowerCase()] ??
+                        UtensilsCrossed;
+                      return (
+                        <Icon
+                          size={18}
+                          className="shrink-0 text-[var(--nourish-green)]"
+                          strokeWidth={1.8}
+                        />
+                      );
+                    })()}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-[var(--nourish-dark)] truncate">
                         {result.name}

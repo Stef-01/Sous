@@ -2,8 +2,15 @@
 
 import { useMemo, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { RotateCcw } from "lucide-react";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import {
+  RotateCcw,
+  UtensilsCrossed,
+  Flame,
+  Fish,
+  Leaf,
+  CookingPot,
+  type LucideIcon,
+} from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 const cardVariants = {
@@ -31,6 +38,19 @@ function formatTimeAgo(dateStr: string): string {
   if (days < 7) return `${days}d ago`;
   return `${Math.floor(days / 7)}w ago`;
 }
+
+const CUISINE_ICON_MAP: Record<string, LucideIcon> = {
+  japanese: Fish,
+  korean: Flame,
+  thai: Leaf,
+  chinese: CookingPot,
+  vietnamese: Leaf,
+  filipino: CookingPot,
+  indian: Flame,
+  italian: UtensilsCrossed,
+  mexican: Flame,
+  mediterranean: Leaf,
+};
 
 /**
  * FriendsStrip — shows the user's recent completed cooks as a horizontal
@@ -75,18 +95,22 @@ export function FriendsStrip({
             className="flex flex-col items-center justify-between gap-1.5 rounded-xl bg-white shadow-sm border border-neutral-100/80 p-3 shrink-0 snap-start cursor-pointer transition-shadow hover:shadow-md"
             style={{ width: 136, height: 152 }}
           >
-            {/* Emoji */}
+            {/* Cuisine icon */}
             <div className="flex items-center justify-center w-full flex-1">
-              <span
-                style={{ fontSize: 44, lineHeight: 1 }}
-                role="img"
-                aria-label={session.dishName}
-              >
-                {getDishEmoji(
-                  [session.cuisineFamily.toLowerCase()],
-                  session.cuisineFamily,
-                )}
-              </span>
+              {(() => {
+                const Icon =
+                  CUISINE_ICON_MAP[session.cuisineFamily.toLowerCase()] ??
+                  UtensilsCrossed;
+                return (
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
+                    <Icon
+                      size={24}
+                      className="text-[var(--nourish-green)]"
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Dish name */}

@@ -42,7 +42,22 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div className="min-h-dvh bg-[var(--nourish-cream)] flex flex-col items-center justify-center gap-5 px-6 text-center">
-          <span className="text-4xl">🥄</span>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 border border-red-100">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ef4444"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
           <div className="space-y-1.5">
             <p className="text-sm font-semibold text-[var(--nourish-dark)]">
               Something went wrong

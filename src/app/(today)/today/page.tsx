@@ -17,9 +17,6 @@ import { CorrectionChips } from "@/components/today/correction-chips";
 
 import dynamic from "next/dynamic";
 
-const BreadQuiz = dynamic(() =>
-  import("@/components/shared/bread-quiz").then((m) => m.BreadQuiz),
-);
 const CoachQuiz = dynamic(() =>
   import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
 );
@@ -59,7 +56,6 @@ export default function TodayPage() {
 function TodayPageContent() {
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(false);
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
@@ -369,10 +365,6 @@ function TodayPageContent() {
         <div className="mb-2">
           <QuestCard
             key={questKey}
-            onFindSides={(dishName) => {
-              setShowSearch(true);
-              handleTextSubmit(dishName);
-            }}
             userPreferences={userPreferences}
             cookHistory={stats}
           />
@@ -617,18 +609,6 @@ function TodayPageContent() {
           </>
         )}
       </SearchPopout>
-
-      {/* Bread personality quiz — full-screen overlay */}
-      <AnimatePresence>
-        {showQuiz && (
-          <BreadQuiz
-            onClose={() => setShowQuiz(false)}
-            onComplete={() => {
-              // Quiz result saved to localStorage by the component itself.
-            }}
-          />
-        )}
-      </AnimatePresence>
 
       {/* Coach onboarding quiz — full-screen overlay */}
       <AnimatePresence>

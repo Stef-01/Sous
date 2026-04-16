@@ -3,7 +3,7 @@
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChefHat } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
@@ -319,7 +319,13 @@ export default function GuidedCookPage({
   if (error || !data?.dish) {
     return (
       <div className="min-h-full flex flex-col items-center justify-center gap-5 px-6 text-center bg-[var(--nourish-cream)]">
-        <span className="text-4xl">{data?.dish === null ? "🥄" : "😕"}</span>
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+          <ChefHat
+            size={24}
+            className="text-[var(--nourish-green)]"
+            strokeWidth={1.8}
+          />
+        </div>
         <div className="space-y-1.5">
           <p className="text-sm font-semibold text-[var(--nourish-dark)]">
             {data?.dish === null
@@ -413,7 +419,13 @@ export default function GuidedCookPage({
               animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-center gap-5 py-12 text-center"
             >
-              <span className="text-4xl">🥄</span>
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+                <ChefHat
+                  size={24}
+                  className="text-[var(--nourish-green)]"
+                  strokeWidth={1.8}
+                />
+              </div>
               <div className="space-y-1.5">
                 <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                   Steps coming soon

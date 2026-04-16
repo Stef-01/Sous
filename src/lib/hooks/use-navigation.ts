@@ -8,8 +8,8 @@ type Tab = {
 };
 
 /**
- * Progressive navigation — tabs unlock based on user behavior.
- * Today is always visible. Path unlocks after 3 cooks. Community after 30 days.
+ * Tab navigation — Today and Path are always visible.
+ * Community is gated by communityUnlocked (deferred for prototype).
  */
 export function useNavigation(
   user: {

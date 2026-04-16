@@ -348,7 +348,6 @@ export function QuestCard({
   userPreferences,
   cookHistory,
 }: {
-  onFindSides?: (dishName: string) => void;
   userPreferences?: Record<string, number>;
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
 }) {
@@ -440,7 +439,37 @@ export function QuestCard({
   }, [currentIndex, questDishes, saveDish, scheduleTimeout]);
 
   if (questDishes.length === 0) {
-    return null;
+    return (
+      <div className="space-y-1.5">
+        <div className="px-1">
+          <h2 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
+            Today&apos;s Quest
+          </h2>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25 }}
+          className="flex flex-col items-center gap-4 rounded-2xl border border-neutral-200/60 bg-white p-8 text-center"
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+            <UtensilsCrossed
+              size={24}
+              className="text-[var(--nourish-green)]"
+              strokeWidth={1.8}
+            />
+          </div>
+          <div className="space-y-1">
+            <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+              No quests available
+            </p>
+            <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
+              Use the search bar above to find something to cook today.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
   }
 
   // Show up to 3 stacked cards

@@ -28,10 +28,8 @@ function readStatus(): UnlockStatus {
 }
 
 /**
- * Read-only hook that checks localStorage for cook stats
- * and determines which tabs should be visible.
- * Path is always accessible in the prototype.
- * Community is deferred (always false in prototype).
+ * Read-only hook: cook stats from localStorage for tab visibility.
+ * Path is always visible. Community is deferred (always false).
  */
 export function useUnlockStatus(): UnlockStatus {
   const [status, setStatus] = useState<UnlockStatus>(() => {
