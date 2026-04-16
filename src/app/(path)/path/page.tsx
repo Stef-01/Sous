@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, LayoutGroup } from "framer-motion";
 import { BookOpen, Heart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { JourneySummary } from "@/components/path/journey-summary";
@@ -213,138 +213,141 @@ export default function PathPage() {
   }
 
   return (
-    <motion.div
-      className="min-h-dvh bg-[var(--nourish-cream)]"
-      // initial={false}: avoid opacity:0 on first paint — it makes Playwright treat
-      // the whole subtree as non-visible until the animation runs.
-      initial={false}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.18 }}
-    >
-      {/* Header with stats */}
-      <PathHeader
-        streak={stats.currentStreak}
-        totalXP={totalXP}
-        level={level}
-        levelProgress={levelProgress}
-        skillsCompleted={skillsCompleted}
-        onReplayTutorial={replayPathTutorial}
-      />
-
-      {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
+    <LayoutGroup>
       <motion.div
-        className="mx-auto max-w-md space-y-2 px-4 pt-3"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.25, margin: "0px 0px -40px 0px" }}
-        variants={{
-          hidden: {},
-          visible: {
-            transition: { staggerChildren: 0.08, delayChildren: 0.04 },
-          },
-        }}
+        className="min-h-dvh bg-[var(--nourish-cream)]"
+        initial={false}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.18 }}
       >
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 14 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 320, damping: 28 },
-            },
-          }}
-        >
-          <JourneySummary stats={stats} />
-        </motion.div>
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 14 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 320, damping: 28 },
-            },
-          }}
-        >
-          <NextUnlockCard
-            nextNode={nextUnlockData.nextNode}
-            lockedPreview={nextUnlockData.lockedPreview}
-            skillsCompleted={skillsCompleted}
-          />
-        </motion.div>
-        <motion.div
-          variants={{
-            hidden: { opacity: 0, y: 14 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { type: "spring", stiffness: 320, damping: 28 },
-            },
-          }}
-        >
-          <WeeklyGoalCard completedSessions={completedSessions} />
-        </motion.div>
-      </motion.div>
-
-      {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
-        <AchievementsLauncher
-          unlocked={unlockedAchievements}
-          locked={lockedAchievements}
+        {/* Header with stats */}
+        <PathHeader
+          streak={stats.currentStreak}
+          totalXP={totalXP}
+          level={level}
+          levelProgress={levelProgress}
+          skillsCompleted={skillsCompleted}
+          onReplayTutorial={replayPathTutorial}
         />
-      )}
 
-      {/* Skill tree */}
-      <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
-
-      {/* Quick links at bottom (above tab bar) */}
-      <div className="px-4 pb-24 pt-2">
-        <div className="mx-auto max-w-md flex gap-2">
+        {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
+        <motion.div
+          className="mx-auto max-w-md space-y-2 px-4 pt-3"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25, margin: "0px 0px -40px 0px" }}
+          variants={{
+            hidden: {},
+            visible: {
+              transition: { staggerChildren: 0.08, delayChildren: 0.04 },
+            },
+          }}
+        >
           <motion.div
-            className="flex-1"
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            variants={{
+              hidden: { opacity: 0, y: 14 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 320, damping: 28 },
+              },
+            }}
           >
-            <Link
-              href="/path/scrapbook"
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
-            >
-              <BookOpen size={14} />
-              Scrapbook
-            </Link>
+            <JourneySummary stats={stats} />
           </motion.div>
           <motion.div
-            className="flex-1"
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            variants={{
+              hidden: { opacity: 0, y: 14 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 320, damping: 28 },
+              },
+            }}
           >
-            <Link
-              href="/path/favorites"
-              className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
-            >
-              <Heart size={14} />
-              Favorites
-            </Link>
+            <NextUnlockCard
+              nextNode={nextUnlockData.nextNode}
+              lockedPreview={nextUnlockData.lockedPreview}
+              skillsCompleted={skillsCompleted}
+            />
           </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 14 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 320, damping: 28 },
+              },
+            }}
+          >
+            <WeeklyGoalCard completedSessions={completedSessions} />
+          </motion.div>
+        </motion.div>
+
+        {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
+          <AchievementsLauncher
+            unlocked={unlockedAchievements}
+            locked={lockedAchievements}
+          />
+        )}
+
+        {/* Skill tree */}
+        <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
+
+        {/* Quick links at bottom (above tab bar) */}
+        <div className="px-4 pb-24 pt-2">
+          <div className="mx-auto max-w-md flex gap-2">
+            <motion.div
+              className="flex-1"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            >
+              <Link
+                href="/path/scrapbook"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+              >
+                <BookOpen size={14} />
+                Scrapbook
+              </Link>
+            </motion.div>
+            <motion.div
+              className="flex-1"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            >
+              <Link
+                href="/path/favorites"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+              >
+                <Heart size={14} />
+                Favorites
+              </Link>
+            </motion.div>
+          </div>
         </div>
-      </div>
 
-      {/* Detail sheet */}
-      <SkillDetailSheet
-        node={selectedNode}
-        status={selectedStatus}
-        cooksCompleted={selectedProgress.cooksCompleted}
-        open={selectedNodeId !== null}
-        onClose={handleCloseSheet}
-        onStartCook={handleStartCook}
-        onPracticeDish={handlePracticeDish}
-      />
+        {/* Detail sheet */}
+        <SkillDetailSheet
+          node={selectedNode}
+          status={selectedStatus}
+          cooksCompleted={selectedProgress.cooksCompleted}
+          open={selectedNodeId !== null}
+          onClose={handleCloseSheet}
+          onStartCook={handleStartCook}
+          onPracticeDish={handlePracticeDish}
+        />
 
-      <AchievementToast
-        achievements={newlyUnlocked}
-        onDismiss={dismissNewUnlocks}
-      />
+        <AchievementToast
+          achievements={newlyUnlocked}
+          onDismiss={dismissNewUnlocks}
+        />
 
-      <PathTutorial open={pathTutorialOpen} onComplete={completePathTutorial} />
-    </motion.div>
+        <PathTutorial
+          open={pathTutorialOpen}
+          onComplete={completePathTutorial}
+        />
+      </motion.div>
+    </LayoutGroup>
   );
 }

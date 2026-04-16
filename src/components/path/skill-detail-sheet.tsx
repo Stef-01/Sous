@@ -90,7 +90,14 @@ export function SkillDetailSheet({
               {/* Header */}
               <div className="flex items-center justify-between px-5 pt-2 pb-3">
                 <div className="flex items-center gap-3">
-                  <div
+                  <motion.div
+                    layoutId={node ? `skill-orb-${node.id}` : undefined}
+                    transition={{
+                      type: "spring",
+                      stiffness: 360,
+                      damping: 32,
+                      mass: 0.65,
+                    }}
                     className={cn(
                       "flex items-center justify-center w-12 h-12 rounded-full",
                       status === "completed" && "bg-[var(--nourish-green)]/10",
@@ -101,7 +108,7 @@ export function SkillDetailSheet({
                     )}
                   >
                     <span className="text-2xl">{node?.emoji}</span>
-                  </div>
+                  </motion.div>
                   <div>
                     <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
                       {node?.name}

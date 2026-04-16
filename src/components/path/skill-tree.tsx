@@ -10,6 +10,7 @@ import {
 import { SkillNodeComponent } from "./skill-node";
 import { SkillConnector } from "./skill-connector";
 import { useHaptic } from "@/lib/hooks/use-haptic";
+import { usePathSound } from "@/lib/hooks/use-path-sound";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
 import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
@@ -116,6 +117,7 @@ export const SkillTree = memo(function SkillTree({
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const haptic = useHaptic();
+  const sound = usePathSound();
   const reduceMotion = useReducedMotion();
   const scrollRm = !!reduceMotion;
   const { scrollYProgress } = useScroll({
@@ -127,6 +129,25 @@ export const SkillTree = memo(function SkillTree({
     [0, 0.2, 0.45],
     scrollRm ? [1, 1, 1] : [0.05, 0.32, 1],
   );
+
+  // Track completed node ids across renders to detect new completions
+  const prevCompletedRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    const currentCompleted = new Set(
+      nodes.filter((n) => n.status === "completed").map((n) => n.id),
+    );
+    const prev = prevCompletedRef.current;
+    if (prev.size > 0) {
+      for (const id of currentCompleted) {
+        if (!prev.has(id)) {
+          haptic();
+          sound.complete();
+          break;
+        }
+      }
+    }
+    prevCompletedRef.current = currentCompleted;
+  }, [nodes, haptic, sound]);
 
   // Split mastery (grid) from the rest (tree)
   const treeNodes = useMemo(
@@ -247,12 +268,18 @@ export const SkillTree = memo(function SkillTree({
     return labels;
   }, []);
 
+  const handleEdgeDrawn = useCallback(() => {
+    haptic();
+    sound.draw();
+  }, [haptic, sound]);
+
   const handleNodeTap = useCallback(
     (nodeId: string) => {
       haptic();
+      sound.tap();
       onNodeTap(nodeId);
     },
-    [onNodeTap, haptic],
+    [onNodeTap, haptic, sound],
   );
 
   return (
@@ -287,7 +314,7 @@ export const SkillTree = memo(function SkillTree({
           height={canvasHeight}
         >
           <motion.g style={{ opacity: connectorOpacity }}>
-            {edges.map((edge) => {
+            {edges.map((edge, idx) => {
               const from = nodePositions[edge.from];
               const to = nodePositions[edge.to];
               if (!from || !to) return null;
@@ -299,6 +326,12 @@ export const SkillTree = memo(function SkillTree({
                   x2={to.cx}
                   y2={to.cy - NODE_RADIUS}
                   targetStatus={edge.targetStatus}
+                  index={idx}
+                  onDrawn={
+                    edge.targetStatus === "completed"
+                      ? handleEdgeDrawn
+                      : undefined
+                  }
                 />
               );
             })}

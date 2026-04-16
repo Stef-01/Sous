@@ -62,10 +62,12 @@ export function SkillNodeComponent({
       style={{ WebkitTapHighlightColor: "transparent" }}
       type="button"
     >
-      {/* Circle */}
-      <div
+      {/* Circle — layoutId shared with SkillDetailSheet for morph transition */}
+      <motion.div
+        layoutId={`skill-orb-${id}`}
+        transition={{ type: "spring", stiffness: 360, damping: 32, mass: 0.65 }}
         className={cn(
-          "relative flex items-center justify-center rounded-full transition-all duration-300",
+          "relative flex items-center justify-center rounded-full transition-[border-color,box-shadow] duration-300",
           "w-16 h-16",
           status === "completed" && "shadow-lg",
           status === "in_progress" &&
@@ -169,7 +171,7 @@ export function SkillNodeComponent({
             <Lock size={12} className="text-slate-400" />
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Label */}
       <span
