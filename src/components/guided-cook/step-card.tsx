@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -89,6 +89,13 @@ export function StepCard({
     () => !!window.speechSynthesis,
     () => false,
   );
+  // Gate the hands-free affordance on mount so SSR never renders the
+  // fallback line and then swaps to the real button on hydration.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   const handleReadAloud = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -167,7 +174,7 @@ export function StepCard({
           >
             Step {stepNumber} of {totalSteps}
           </motion.p>
-          {hasSpeechSynthesis && (
+          {!mounted ? null : hasSpeechSynthesis ? (
             <motion.button
               onClick={handleReadAloud}
               whileTap={{ scale: 0.92 }}
@@ -181,10 +188,22 @@ export function StepCard({
               )}
               type="button"
               aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
+              title="Hands-free: tap once to play, again to stop, a third tap to replay"
             >
               {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
               {isSpeaking ? "Stop" : "Read aloud"}
             </motion.button>
+          ) : (
+            // Quiet fallback — no button, one muted line so users with older
+            // browsers understand why the hands-free affordance is missing.
+            <span
+              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[var(--nourish-subtext)]/80"
+              role="note"
+              aria-live="polite"
+            >
+              <VolumeX size={14} strokeWidth={1.8} />
+              Read-aloud isn&apos;t available on this browser.
+            </span>
           )}
         </div>
         <div className="h-1 w-full rounded-full bg-neutral-100 overflow-hidden">
