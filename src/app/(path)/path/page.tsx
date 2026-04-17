@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, LayoutGroup } from "framer-motion";
 import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
+import { PathHero } from "@/components/path/path-hero";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { NextUnlockCard } from "@/components/path/next-unlock-card";
@@ -242,6 +243,25 @@ export default function PathPage() {
           levelProgress={levelProgress}
           skillsCompleted={skillsCompleted}
           onReplayTutorial={replayPathTutorial}
+        />
+
+        {/* Ambient hero — time-of-day tint + one warm line */}
+        <PathHero
+          streak={stats.currentStreak}
+          cooksThisWeek={
+            completedSessions.filter((s) => {
+              if (!s.completedAt) return false;
+              const completed = new Date(s.completedAt);
+              const now = new Date();
+              const weekStart = new Date(now);
+              // Week starts Monday (locale-stable) at 00:00.
+              const day = (now.getDay() + 6) % 7;
+              weekStart.setDate(now.getDate() - day);
+              weekStart.setHours(0, 0, 0, 0);
+              return completed >= weekStart;
+            }).length
+          }
+          totalCooks={stats.completedCooks}
         />
 
         {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
