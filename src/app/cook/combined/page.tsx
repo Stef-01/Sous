@@ -22,6 +22,7 @@ import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
 import { StepCard } from "@/components/guided-cook/step-card";
+import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
 import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
@@ -893,6 +894,21 @@ function CombinedMissionScreen({
       >
         {mainDishDescription}
       </motion.p>
+
+      {/* Plan-my-cook — uses sequencer-adjusted time when available so the
+          computed start reflects parallelization savings. */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 25,
+          delay: 0.28,
+        }}
+      >
+        <PlanCookChip totalMinutes={displayTime} />
+      </motion.div>
 
       {/* CTA — mt-auto pins to bottom for no-scroll compliance at 375×667 */}
       <motion.button

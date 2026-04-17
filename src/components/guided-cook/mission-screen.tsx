@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { PlanCookChip } from "./plan-cook-chip";
 
 interface MissionScreenProps {
   dishName: string;
@@ -137,6 +138,20 @@ export function MissionScreen({
       >
         {description}
       </motion.p>
+
+      {/* Plan-my-cook — optional eat-time → start-time assist */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 25,
+          delay: 0.22,
+        }}
+      >
+        <PlanCookChip totalMinutes={totalTime} />
+      </motion.div>
 
       {/* CTA — mt-auto pins to bottom of the flex container */}
       <motion.button
