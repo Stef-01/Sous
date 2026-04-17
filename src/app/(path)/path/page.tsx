@@ -8,6 +8,7 @@ import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
+import { JourneyMontage } from "@/components/path/journey-montage";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { NextUnlockCard } from "@/components/path/next-unlock-card";
@@ -264,6 +265,13 @@ export default function PathPage() {
           }
           totalCooks={stats.completedCooks}
         />
+
+        {/* Journey montage — recent cooks as a polaroid ribbon */}
+        {completedSessions.length > 0 && (
+          <div className="px-4 pt-3">
+            <JourneyMontage completedSessions={completedSessions} />
+          </div>
+        )}
 
         {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
         <motion.div
