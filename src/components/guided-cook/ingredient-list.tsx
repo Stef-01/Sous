@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -8,9 +8,11 @@ import {
   ArrowRightLeft,
   Utensils,
   ShoppingCart,
+  Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import { usePantry } from "@/lib/hooks/use-pantry";
 
 interface Ingredient {
   id: string;
@@ -55,12 +57,37 @@ export function IngredientList({
 }: IngredientListProps) {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
+  const {
+    mounted: pantryMounted,
+    has: pantryHas,
+    toggle: togglePantry,
+  } = usePantry();
 
   // Build effective sections: either use provided sections or wrap flat list
   const effectiveSections = useMemo<IngredientSection[]>(() => {
     if (sections && sections.length > 0) return sections;
     return [{ label: "", ingredients }];
   }, [sections, ingredients]);
+
+  // Auto-check ingredients the user already has in their pantry.
+  /* eslint-disable react-hooks/set-state-in-effect -- sync pantry membership (external store) into local checked set */
+  useEffect(() => {
+    if (!pantryMounted) return;
+    setChecked((prev) => {
+      const next = new Set(prev);
+      let changed = false;
+      for (const section of effectiveSections) {
+        for (const item of section.ingredients) {
+          if (!next.has(item.id) && pantryHas(item.name)) {
+            next.add(item.id);
+            changed = true;
+          }
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [pantryMounted, pantryHas, effectiveSections]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Count total ingredients across all sections
   const totalIngredients = useMemo(
@@ -140,10 +167,12 @@ export function IngredientList({
                   showingSub={askingSub === item.id}
                   recipeName={recipeName}
                   cuisineFamily={cuisineFamily}
+                  inPantry={pantryMounted && pantryHas(item.name)}
                   onToggle={() => toggleItem(item.id)}
                   onAskSub={() =>
                     setAskingSub(askingSub === item.id ? null : item.id)
                   }
+                  onTogglePantry={() => togglePantry(item.name)}
                 />
               ))}
             </div>
@@ -270,8 +299,10 @@ function IngredientRow({
   showingSub,
   recipeName,
   cuisineFamily,
+  inPantry,
   onToggle,
   onAskSub,
+  onTogglePantry,
 }: {
   item: Ingredient;
   idx: number;
@@ -279,8 +310,10 @@ function IngredientRow({
   showingSub: boolean;
   recipeName: string;
   cuisineFamily: string;
+  inPantry: boolean;
   onToggle: () => void;
   onAskSub: () => void;
+  onTogglePantry: () => void;
 }) {
   // AI substitution query — fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
@@ -346,6 +379,11 @@ function IngredientRow({
             <span className="text-xs text-[var(--nourish-subtext)]">
               {item.quantity}
             </span>
+            {inPantry && (
+              <span className="text-[10px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
+                in pantry
+              </span>
+            )}
             {item.isOptional && (
               <span className="text-[10px] text-[var(--nourish-subtext)] italic">
                 optional
@@ -357,6 +395,26 @@ function IngredientRow({
               sub: {item.substitution}
             </p>
           )}
+        </button>
+
+        {/* Stash in pantry — small bookmark toggle, preserves future cooks */}
+        <button
+          onClick={onTogglePantry}
+          className={cn(
+            "flex h-11 w-9 shrink-0 -m-1 items-center justify-center rounded-md transition-colors",
+            inPantry
+              ? "text-[var(--nourish-green)]"
+              : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
+          )}
+          type="button"
+          aria-label={
+            inPantry
+              ? `Remove ${item.name} from pantry`
+              : `Add ${item.name} to pantry`
+          }
+          title={inPantry ? "In your pantry" : "Add to pantry"}
+        >
+          <Bookmark size={14} fill={inPantry ? "currentColor" : "none"} />
         </button>
 
         {/* Substitution toggle — 44px touch target */}

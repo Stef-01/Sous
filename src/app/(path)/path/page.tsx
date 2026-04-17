@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, LayoutGroup } from "framer-motion";
-import { BookOpen, Heart } from "lucide-react";
+import { BookOpen, Bookmark, Heart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
@@ -323,6 +323,19 @@ export default function PathPage() {
               >
                 <BookOpen size={14} />
                 Scrapbook
+              </Link>
+            </motion.div>
+            <motion.div
+              className="flex-1"
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            >
+              <Link
+                href="/path/pantry"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+              >
+                <Bookmark size={14} />
+                Pantry
               </Link>
             </motion.div>
             <motion.div
