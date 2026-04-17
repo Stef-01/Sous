@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SearchX } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
+import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { FallbackActions } from "@/components/today/quick-actions";
 import { FriendsStrip } from "@/components/today/friends-strip";
@@ -358,6 +359,11 @@ function TodayPageContent() {
       <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
         {/* Primary craving trigger — search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
+
+        {/* Tonight's commitment — a soft ritual, never a nag */}
+        <div className="flex justify-center">
+          <TonightChip />
+        </div>
 
         {/* Today's Quest — swipeable card stack */}
         <QuestCard
