@@ -685,7 +685,7 @@ export function WinScreen({
                       className="space-y-3"
                     >
                       <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
+                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
                           What went well
                         </p>
                         {reflection.data.strengths.map((s, i) => (
@@ -708,7 +708,7 @@ export function WinScreen({
 
                       {reflection.data.nextTimeSuggestions.length > 0 && (
                         <div className="rounded-xl border border-[var(--nourish-gold)]/20 bg-[var(--nourish-gold)]/5 p-4 space-y-2 text-left">
-                          <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
                             For next time
                           </p>
                           {reflection.data.nextTimeSuggestions.map((s, i) => (

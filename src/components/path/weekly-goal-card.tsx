@@ -114,7 +114,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
             <span className="text-xs font-medium text-[var(--nourish-subtext)] tabular-nums">
               {progress.current}/{progress.target}
             </span>
-            <span className="text-[10px] text-[var(--nourish-subtext)]/60">
+            <span className="text-[11px] text-[var(--nourish-subtext)]/60">
               {daysRemaining}d left
             </span>
           </div>

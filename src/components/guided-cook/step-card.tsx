@@ -209,9 +209,7 @@ export function StepCard({
       )}
 
       {/* Main instruction */}
-      <p className="text-lg text-[var(--nourish-dark)] leading-relaxed">
-        {instruction}
-      </p>
+      <p className="cook-prose text-[var(--nourish-dark)]">{instruction}</p>
 
       {/* Personal note overlay indicator */}
       {personalNote && (
@@ -230,7 +228,7 @@ export function StepCard({
             const note = window.prompt("Add a personal note for this step:");
             if (note?.trim()) onAddPersonalNote(note.trim());
           }}
-          className="self-start text-[10px] text-[var(--nourish-subtext)] underline underline-offset-2 hover:text-[var(--nourish-dark)]"
+          className="self-start text-[11px] text-[var(--nourish-subtext)] underline underline-offset-2 hover:text-[var(--nourish-dark)]"
         >
           + Add a note
         </button>
@@ -363,7 +361,7 @@ export function StepCard({
                     {lastAnswer.answer}
                   </p>
                   {lastAnswer.confidence === "low" && (
-                    <p className="text-[10px] text-[var(--nourish-subtext)] italic">
+                    <p className="text-[11px] text-[var(--nourish-subtext)] italic">
                       Not fully sure — follow the recipe steps if in doubt.
                     </p>
                   )}

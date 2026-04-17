@@ -174,7 +174,7 @@ export function SkillDetailSheet({
                       <span className="rounded-md bg-[var(--nourish-green)]/12 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
                         {training.badge}
                       </span>
-                      <span className="text-[10px] font-medium text-[var(--nourish-subtext)]">
+                      <span className="text-[11px] font-medium text-[var(--nourish-subtext)]">
                         What this unlocks at home
                       </span>
                     </div>

@@ -41,7 +41,7 @@ export default function ScrapbookPage() {
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-green)]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-green)]">
               Crumbs · Polaroids
             </p>
             <h1 className="font-serif text-lg font-semibold leading-tight text-[var(--nourish-dark)]">
@@ -74,7 +74,7 @@ export default function ScrapbookPage() {
                 — plating eye, technique line, and coach notes — so you can feel
                 the arc from home-cook nights to confident dinner-party energy.
               </p>
-              <p className="flex items-center gap-1 text-[10px] font-medium text-[var(--nourish-green)]">
+              <p className="flex items-center gap-1 text-[11px] font-medium text-[var(--nourish-green)]">
                 <Sparkles className="h-3 w-3" aria-hidden />
                 Placeholder scores below are deterministic previews until rubric
                 data ships on each cook.

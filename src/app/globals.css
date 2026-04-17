@@ -36,6 +36,21 @@
   --shadow-cta-hover:
     0 4px 14px -2px rgba(45, 90, 61, 0.32), 0 2px 4px rgba(45, 90, 61, 0.18);
   --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.04);
+
+  /* Readability tokens — senior-friendly baseline.
+     Body is the floor for regular UI text; cook is the floor for anything
+     read while hands are occupied and the device sits a foot further away. */
+  --sous-text-body: 15px;
+  --sous-text-caption: 12px;
+  --sous-text-cook: 17px;
+  --sous-leading-cook: 1.55;
+}
+
+/* Cook-prose utility — applied to the main instruction on /cook/[slug]
+   so the step a user reads mid-task is comfortably larger and looser. */
+.cook-prose {
+  font-size: var(--sous-text-cook);
+  line-height: var(--sous-leading-cook);
 }
 
 @theme inline {

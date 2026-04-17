@@ -676,7 +676,7 @@ function SwipeCard({
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
           {/* Cuisine family badge — bottom left of hero image */}
           <div className="absolute bottom-2 left-3 rounded-full bg-black/30 backdrop-blur-sm px-2.5 py-0.5">
-            <span className="text-[10px] font-semibold text-white tracking-wide">
+            <span className="text-[11px] font-semibold text-white tracking-wide">
               {dish.cuisineFamily}
             </span>
           </div>
@@ -739,7 +739,7 @@ function SwipeCard({
             {dish.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]"
+                className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]"
               >
                 {tag}
               </span>

@@ -162,7 +162,7 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
                   strokeWidth={1.75}
                 />
               </div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-white/55">
                 Path orientation · Step {step + 1} of {STEPS.length}
               </p>
               <h2

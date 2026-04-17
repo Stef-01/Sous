@@ -110,12 +110,12 @@ export default function GamesArcadePage() {
                   <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                     {game.name}
                   </p>
-                  <p className="text-[10px] text-[var(--nourish-subtext)] mt-0.5">
+                  <p className="text-[11px] text-[var(--nourish-subtext)] mt-0.5">
                     {game.description}
                   </p>
                 </div>
                 {score && (
-                  <div className="flex items-center gap-2 text-[10px] text-[var(--nourish-subtext)]">
+                  <div className="flex items-center gap-2 text-[11px] text-[var(--nourish-subtext)]">
                     <span>Best: {score.bestScore}</span>
                     <span>·</span>
                     <span>{score.totalPlays} plays</span>

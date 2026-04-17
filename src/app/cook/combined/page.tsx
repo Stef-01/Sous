@@ -508,7 +508,7 @@ function CombinedCookContent() {
             {currentPhase === "cook" &&
               cookMode === "combined" &&
               dishes.length > 1 && (
-                <p className="text-[10px] text-[var(--nourish-subtext)] mt-0.5">
+                <p className="text-[11px] text-[var(--nourish-subtext)] mt-0.5">
                   Dish {currentDishIndex + 1} of {dishes.length}
                 </p>
               )}

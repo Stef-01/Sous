@@ -379,12 +379,12 @@ function IngredientRow({
               {item.quantity}
             </span>
             {inPantry && (
-              <span className="text-[10px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
+              <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
                 in pantry
               </span>
             )}
             {item.isOptional && (
-              <span className="text-[10px] text-[var(--nourish-subtext)] italic">
+              <span className="text-[11px] text-[var(--nourish-subtext)] italic">
                 optional
               </span>
             )}
@@ -460,7 +460,7 @@ function IngredientRow({
                     {subQuery.data.suggestion}
                   </p>
                   {subQuery.data.notes && (
-                    <p className="text-[10px] text-[var(--nourish-subtext)]">
+                    <p className="text-[11px] text-[var(--nourish-subtext)]">
                       {subQuery.data.notes}
                     </p>
                   )}

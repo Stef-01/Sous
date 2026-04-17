@@ -81,7 +81,7 @@ export function NextUnlockCard({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
               {status === "in_progress" ? "In progress" : "Up next"}
             </span>
             {status === "in_progress" && (
@@ -119,7 +119,7 @@ export function NextUnlockCard({
               size={11}
               className="text-[var(--nourish-green)] fill-[var(--nourish-green)]"
             />
-            <span className="text-[10px] font-bold text-[var(--nourish-green)]">
+            <span className="text-[11px] font-bold text-[var(--nourish-green)]">
               +{XP_REWARD} XP
             </span>
           </motion.div>
@@ -220,7 +220,7 @@ export function NextUnlockCard({
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
           Coming up
         </span>
         <Lock size={13} className="text-neutral-300" />

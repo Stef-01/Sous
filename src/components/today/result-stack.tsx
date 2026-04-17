@@ -452,12 +452,12 @@ function ResultCard({
             {((rank === 1 && selected) || side.hasGuidedCook) && (
               <div className="flex items-center gap-1.5 mt-0.5">
                 {rank === 1 && selected && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]">
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
                     Best match
                   </span>
                 )}
                 {side.hasGuidedCook && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-gold)]">
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]">
                     Guided
                   </span>
                 )}
@@ -562,7 +562,7 @@ function ScoreBadge({ label, value }: { label: string; value: number }) {
   return (
     <span
       className={cn(
-        "rounded-full px-2 py-0.5 text-[10px] font-medium",
+        "rounded-full px-2 py-0.5 text-[11px] font-medium",
         pct >= 70
           ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
           : pct >= 50

@@ -48,7 +48,7 @@ export function AchievementsLauncher({
         >
           <Award className="h-4 w-4 text-amber-600" aria-hidden />
           <span>Badges</span>
-          <span className="rounded-full bg-white/90 px-2 py-0.5 tabular-nums text-[10px] text-amber-900">
+          <span className="rounded-full bg-white/90 px-2 py-0.5 tabular-nums text-[11px] text-amber-900">
             {unlocked.length}/{total}
           </span>
         </motion.button>

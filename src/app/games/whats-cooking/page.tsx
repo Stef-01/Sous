@@ -161,7 +161,7 @@ export default function WhatsCookingGame() {
               {totalScore}
             </span>
             {streak > 1 && (
-              <span className="text-[10px] text-amber-600">
+              <span className="text-[11px] text-amber-600">
                 🔥 {streak} streak
               </span>
             )}

@@ -330,7 +330,7 @@ export default function FlavorPairsGame() {
                     className="absolute inset-0 flex flex-col items-center justify-center gap-1 p-2"
                   >
                     <span className="text-2xl">{card.emoji}</span>
-                    <span className="text-[10px] font-medium text-[var(--nourish-dark)] text-center leading-tight">
+                    <span className="text-[11px] font-medium text-[var(--nourish-dark)] text-center leading-tight">
                       {card.name}
                     </span>
                   </motion.div>

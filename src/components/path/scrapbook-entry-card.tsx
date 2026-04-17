@@ -83,11 +83,11 @@ export function ScrapbookEntryCard({
             {session.dishName}
           </h4>
           {session.mainDishInput && (
-            <p className="text-[10px] text-[var(--nourish-subtext)]">
+            <p className="text-[11px] text-[var(--nourish-subtext)]">
               Paired with {session.mainDishInput}
             </p>
           )}
-          <p className="mt-0.5 text-[10px] text-[var(--nourish-subtext)]">
+          <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
             {(session.cuisineFamily && session.cuisineFamily !== "unknown"
               ? `${session.cuisineFamily} · `
               : "") + completedDate}
@@ -131,7 +131,7 @@ export function ScrapbookEntryCard({
                   className="text-[#6b5a4a]"
                   aria-hidden
                 />
-                <span className="px-3 text-[10px] font-medium text-[#6b5a4a]">
+                <span className="px-3 text-[11px] font-medium text-[#6b5a4a]">
                   Plate snapshot placeholder — evaluator will score your next
                   hero shot here.
                 </span>

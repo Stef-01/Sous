@@ -119,10 +119,10 @@ export function PathHeader({
           {/* XP bar */}
           <div className="flex-1 space-y-0.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-[var(--nourish-green)] uppercase tracking-[0.12em]">
+              <span className="text-[11px] font-semibold text-[var(--nourish-green)] uppercase tracking-[0.12em]">
                 Level {level}
               </span>
-              <span className="text-[10px] text-[var(--nourish-subtext)] tabular-nums">
+              <span className="text-[11px] text-[var(--nourish-subtext)] tabular-nums">
                 {totalXP} XP
               </span>
             </div>

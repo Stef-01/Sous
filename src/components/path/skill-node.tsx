@@ -184,7 +184,7 @@ export function SkillNodeComponent({
       {/* Label */}
       <span
         className={cn(
-          "text-[10px] font-medium text-center leading-tight max-w-[64px]",
+          "text-[11px] font-medium text-center leading-tight max-w-[64px]",
           status === "completed" && "text-[var(--nourish-green)] font-semibold",
           status === "in_progress" && "text-[var(--nourish-dark)]",
           status === "available" && "text-[var(--nourish-subtext)]",

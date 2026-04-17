@@ -45,7 +45,7 @@ function StatBlock({
         {value}
         {icon}
       </motion.div>
-      <div className="text-[10px] text-[var(--nourish-subtext)] uppercase tracking-wide mt-0.5">
+      <div className="text-[11px] text-[var(--nourish-subtext)] uppercase tracking-wide mt-0.5">
         {label}
       </div>
     </motion.div>
@@ -145,13 +145,13 @@ export const JourneySummary = memo(function JourneySummary({
                   damping: 18,
                   delay: 0.3 + idx * 0.06,
                 }}
-                className="rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)] capitalize"
+                className="rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)] capitalize"
               >
                 {cuisine}
               </motion.span>
             ))}
           {(stats.cuisinesCovered ?? []).length > 5 && (
-            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-subtext)]">
+            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]">
               +{(stats.cuisinesCovered ?? []).length - 5} more
             </span>
           )}

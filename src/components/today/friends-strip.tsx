@@ -77,7 +77,7 @@ export function FriendsStrip({
 
   return (
     <div ref={ref} className="space-y-2.5">
-      <h2 className="text-[10px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase px-1">
+      <h2 className="text-[11px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase px-1">
         Your recent cooks
       </h2>
 
@@ -120,7 +120,7 @@ export function FriendsStrip({
 
             {/* Rating + time */}
             <div className="flex items-center justify-between w-full gap-1">
-              <span className="text-[10px] text-[var(--nourish-subtext)] font-medium truncate flex items-center gap-0.5">
+              <span className="text-[11px] text-[var(--nourish-subtext)] font-medium truncate flex items-center gap-0.5">
                 <RotateCcw size={9} />
                 Cook again
               </span>

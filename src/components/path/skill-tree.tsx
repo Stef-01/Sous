@@ -80,22 +80,22 @@ function MasteryCuisineCard({
         {node.name}
       </span>
       {node.status === "in_progress" && (
-        <span className="text-[10px] text-[var(--nourish-green)] font-medium">
+        <span className="text-[11px] text-[var(--nourish-green)] font-medium">
           {node.progress.cooksCompleted}/{node.cooksRequired} dishes
         </span>
       )}
       {node.status === "completed" && (
-        <span className="text-[10px] font-bold text-[var(--nourish-green)]">
+        <span className="text-[11px] font-bold text-[var(--nourish-green)]">
           Mastered
         </span>
       )}
       {node.status === "available" && (
-        <span className="text-[10px] text-[var(--nourish-subtext)]">
+        <span className="text-[11px] text-[var(--nourish-subtext)]">
           {node.cooksRequired} dishes
         </span>
       )}
       {node.status === "locked" && (
-        <span className="text-[10px] text-neutral-300">Locked</span>
+        <span className="text-[11px] text-neutral-300">Locked</span>
       )}
 
       <TrainingHoverPanel hover={trainingHover} />
@@ -302,7 +302,7 @@ export const SkillTree = memo(function SkillTree({
             viewport={{ once: true, margin: "-32px", amount: 0.35 }}
             transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
+            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
               {tl.label}
             </span>
           </motion.div>
@@ -373,7 +373,7 @@ export const SkillTree = memo(function SkillTree({
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
+            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
               Cuisine mastery — pick a lane
             </span>
           </motion.div>

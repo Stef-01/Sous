@@ -23,7 +23,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         strokeWidth={2.2}
         aria-label="streak"
       />
-      <span className="text-[10px] font-bold text-[var(--nourish-warm)]">
+      <span className="text-[11px] font-bold text-[var(--nourish-warm)]">
         {streak}
       </span>
     </motion.div>
