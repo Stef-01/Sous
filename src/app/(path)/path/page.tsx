@@ -7,6 +7,7 @@ import { motion, LayoutGroup } from "framer-motion";
 import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
+import { CuisineConstellation } from "@/components/path/cuisine-constellation";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { NextUnlockCard } from "@/components/path/next-unlock-card";
@@ -325,6 +326,11 @@ export default function PathPage() {
             locked={lockedAchievements}
           />
         )}
+
+        {/* Cuisine constellation — quiet celebration of culinary reach */}
+        <div className="px-4 pt-4">
+          <CuisineConstellation completedSessions={completedSessions} />
+        </div>
 
         {/* Skill tree */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
