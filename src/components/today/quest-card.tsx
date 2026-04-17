@@ -20,6 +20,7 @@ import {
   Fish,
   Leaf,
   CookingPot,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -31,6 +32,7 @@ import {
 import { sides, meals } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
+import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
 
 interface QuestDish {
   dishName: string;
@@ -41,9 +43,30 @@ interface QuestDish {
   description: string;
   tags: string[];
   ingredientCount: number;
+  /** Normalized ingredient names used for pantry-fit scoring. May be empty
+   *  when a dish lacks static cook data — in that case pantryFit is 0 and
+   *  the chip is never shown. */
+  ingredientNames: string[];
   hasGuidedCook: boolean;
   isMeal: boolean;
   isVerified: boolean;
+  /** Fraction of ingredients already in the user's pantry, 0..1. */
+  pantryFit: number;
+}
+
+const PANTRY_FIT_BOOST_THRESHOLD = 0.6;
+const PANTRY_FIT_BOOST_WEIGHT = 6; // ranks a strong pantry fit above most tag matches
+
+export function computePantryFit(
+  ingredientNames: string[],
+  pantrySet: Set<string>,
+): number {
+  if (ingredientNames.length === 0 || pantrySet.size === 0) return 0;
+  let hits = 0;
+  for (const n of ingredientNames) {
+    if (pantrySet.has(n)) hits++;
+  }
+  return hits / ingredientNames.length;
 }
 
 const CUISINE_TAGS = [
@@ -115,11 +138,13 @@ function scoreDishForPreferences(
  * Uses deterministic daily shuffle so the feed feels fresh each day.
  * After 10+ cooks, silently biases toward cuisines the user hasn't explored.
  */
-function buildQuestDishes(
+export function buildQuestDishes(
   userPreferences?: Record<string, number>,
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
+  pantryNames?: string[],
 ): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
+  const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
 
   const now = new Date();
   const dayOfYear = Math.floor(
@@ -130,6 +155,8 @@ function buildQuestDishes(
   const mealDishes: QuestDish[] = meals.map((meal) => {
     const mealCookData = getStaticMealCookData(meal.id);
     const hasCook = !!mealCookData || guidedSlugs.has(meal.id);
+    const ingredientNames =
+      mealCookData?.ingredients.map((i) => normalizePantryName(i.name)) ?? [];
     return {
       dishName: meal.name,
       slug: meal.id,
@@ -141,9 +168,11 @@ function buildQuestDishes(
       description: meal.description,
       tags: buildMealTags(meal.cuisine, meal.description, meal.sidePool.length),
       ingredientCount: mealCookData ? mealCookData.ingredients.length : 8,
+      ingredientNames,
       hasGuidedCook: hasCook,
       isMeal: true,
       isVerified: !!meal.nourishVerified,
+      pantryFit: computePantryFit(ingredientNames, pantrySet),
     };
   });
 
@@ -155,6 +184,8 @@ function buildQuestDishes(
     const tags = side.tags
       .slice(0, 3)
       .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+    const ingredientNames =
+      staticData?.ingredients.map((i) => normalizePantryName(i.name)) ?? [];
     return {
       dishName: side.name,
       slug: side.id,
@@ -169,9 +200,11 @@ function buildQuestDishes(
       description: side.description,
       tags,
       ingredientCount: staticData ? staticData.ingredients.length : 5,
+      ingredientNames,
       hasGuidedCook: guidedSlugs.has(side.id),
       isMeal: false,
       isVerified: false,
+      pantryFit: computePantryFit(ingredientNames, pantrySet),
     };
   });
 
@@ -188,6 +221,12 @@ function buildQuestDishes(
         }
       : () => 0;
 
+  // Pantry-aware boost: strong fit (≥60%) is worth more than a single tag
+  // match but less than a hero image, so it tilts the order without
+  // wholesale reshuffling the feed.
+  const pantryBoost = (dish: QuestDish) =>
+    dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD ? PANTRY_FIT_BOOST_WEIGHT : 0;
+
   // Score and sort meals: prefer meals with images, then verified, then preference match
   const scoredMeals = mealDishes
     .map((m) => ({
@@ -197,7 +236,8 @@ function buildQuestDishes(
         (m.isVerified ? 3 : 0) +
         (m.hasGuidedCook ? 5 : 0) +
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
-        noveltyBonus(m.cuisineFamily),
+        noveltyBonus(m.cuisineFamily) +
+        pantryBoost(m),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -211,7 +251,8 @@ function buildQuestDishes(
       score:
         (s.heroImageUrl ? 10 : 0) +
         (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0) +
-        noveltyBonus(s.cuisineFamily),
+        noveltyBonus(s.cuisineFamily) +
+        pantryBoost(s),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -351,9 +392,15 @@ export function QuestCard({
   userPreferences?: Record<string, number>;
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
 }) {
+  const { items: pantryItems, mounted: pantryMounted } = usePantry();
   const questDishes = useMemo(
-    () => buildQuestDishes(userPreferences, cookHistory),
-    [userPreferences, cookHistory],
+    () =>
+      buildQuestDishes(
+        userPreferences,
+        cookHistory,
+        pantryMounted ? pantryItems : undefined,
+      ),
+    [userPreferences, cookHistory, pantryItems, pantryMounted],
   );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
@@ -734,6 +781,16 @@ function SwipeCard({
               {dish.ingredientCount} ingredients
             </span>
           </div>
+          {/* Pantry-fit signal — only surfaces when most ingredients are
+              already on hand. Turns the ranking win into a visible reason. */}
+          {dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD && (
+            <div className="flex items-center gap-1 pt-0.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
+                <Sparkles size={11} strokeWidth={2.2} />
+                You already have most of this
+              </span>
+            </div>
+          )}
           {/* Flavor tags */}
           <div className="flex items-center gap-1.5 pt-0.5">
             {dish.tags.map((tag) => (
