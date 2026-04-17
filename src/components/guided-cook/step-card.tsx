@@ -169,10 +169,11 @@ export function StepCard({
           {hasSpeechSynthesis && (
             <motion.button
               onClick={handleReadAloud}
-              whileTap={{ scale: 0.88 }}
+              whileTap={{ scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
-                "flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-medium transition-all",
+                "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 isSpeaking
                   ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
                   : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
@@ -180,7 +181,7 @@ export function StepCard({
               type="button"
               aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
             >
-              {isSpeaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
               {isSpeaking ? "Stop" : "Read aloud"}
             </motion.button>
           )}
@@ -329,7 +330,8 @@ export function StepCard({
                   whileTap={{ scale: 0.92 }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   className={cn(
-                    "rounded-lg px-3 py-2 text-white transition-colors",
+                    "flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg px-3 text-white transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                     question.trim() && !askMutation.isPending
                       ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]"
                       : "bg-neutral-200 cursor-not-allowed",
@@ -337,7 +339,7 @@ export function StepCard({
                   type="button"
                   aria-label="Send question"
                 >
-                  <Send size={14} />
+                  <Send size={16} />
                 </motion.button>
               </div>
 

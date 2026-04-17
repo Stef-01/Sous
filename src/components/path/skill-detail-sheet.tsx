@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Lock, Check, ArrowRight, ChefHat } from "lucide-react";
 import { SkillIcon } from "@/components/shared/skill-icon";
+import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
@@ -127,14 +128,14 @@ export function SkillDetailSheet({
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={onClose}
-                  className="rounded-lg p-1.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-90"
-                  type="button"
+                <IconButton
                   aria-label="Close"
+                  onClick={onClose}
+                  size="sm"
+                  className="-mr-2"
                 >
                   <X size={20} />
-                </button>
+                </IconButton>
               </div>
             </div>
             {/* end fixed header */}
