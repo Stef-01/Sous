@@ -13,6 +13,8 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { useShoppingList } from "@/lib/hooks/use-shopping-list";
+import { toast } from "@/lib/hooks/use-toast";
 
 interface Ingredient {
   id: string;
@@ -112,7 +114,24 @@ export function IngredientList({
 
   const allChecked = checked.size >= totalIngredients;
   const missingCount = totalIngredients - checked.size;
-  const [instacartToast, setInstacartToast] = useState(false);
+  const { addMany: addToShopping } = useShoppingList();
+
+  const handleAddMissingToShopping = () => {
+    const missing: string[] = [];
+    for (const section of effectiveSections) {
+      for (const item of section.ingredients) {
+        if (!checked.has(item.id)) missing.push(item.name);
+      }
+    }
+    if (missing.length === 0) return;
+    addToShopping(missing);
+    toast.push({
+      variant: "success",
+      title: `Added ${missing.length} to shopping list`,
+      body: "Find it under Path → Shopping list",
+      dedupKey: "shopping-list-add",
+    });
+  };
 
   // Precompute running index offsets for stagger animation delay
   const sectionStartIndices = useMemo(() => {
@@ -198,23 +217,6 @@ export function IngredientList({
         </AnimatePresence>
       </div>
 
-      {/* Instacart toast */}
-      <AnimatePresence>
-        {instacartToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed bottom-24 left-4 right-4 z-50 mx-auto max-w-sm rounded-xl bg-neutral-900 px-4 py-3 text-center shadow-lg"
-          >
-            <p className="text-sm text-white">
-              Instacart ordering coming soon! For now, jot these down. 🛒
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Pinned CTAs — always visible, no scroll required */}
       <div className="mt-auto pt-3 space-y-2">
         {/* Primary: Proceed to cook */}
@@ -234,7 +236,7 @@ export function IngredientList({
           {allChecked ? "Let\u2019s cook! 🍳" : "I have everything"}
         </motion.button>
 
-        {/* Instacart: Order missing ingredients */}
+        {/* Add missing ingredients to shopping list */}
         {!allChecked && missingCount > 0 && (
           <motion.button
             initial={{ opacity: 0, y: 6 }}
@@ -246,10 +248,7 @@ export function IngredientList({
               delay: 0.1,
             }}
             whileTap={{ scale: 0.96 }}
-            onClick={() => {
-              setInstacartToast(true);
-              setTimeout(() => setInstacartToast(false), 3000);
-            }}
+            onClick={handleAddMissingToShopping}
             className={cn(
               "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium",
               "text-[#003D29] bg-[#003D29]/5 border border-[#003D29]/15",
@@ -258,8 +257,8 @@ export function IngredientList({
             type="button"
           >
             <ShoppingCart size={15} />
-            Order {missingCount} item{missingCount !== 1 ? "s" : ""} with
-            Instacart · ~35 min
+            Add {missingCount} item{missingCount !== 1 ? "s" : ""} to shopping
+            list
           </motion.button>
         )}
 
