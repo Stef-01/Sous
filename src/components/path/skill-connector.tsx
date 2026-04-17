@@ -19,10 +19,10 @@ const STATUS_STYLE: Record<
   SkillNodeStatus,
   { stroke: string; width: number; opacity: number }
 > = {
-  completed: { stroke: "#22c55e", width: 2, opacity: 0.95 },
-  in_progress: { stroke: "#4ade80", width: 2, opacity: 0.85 },
+  completed: { stroke: "#22c55e", width: 2.25, opacity: 0.95 },
+  in_progress: { stroke: "#4ade80", width: 2.25, opacity: 0.9 },
   available: { stroke: "#cbd5e1", width: 1.5, opacity: 0.9 },
-  locked: { stroke: "#e2e8f0", width: 1.25, opacity: 0.65 },
+  locked: { stroke: "#e2e8f0", width: 1.25, opacity: 0.6 },
 };
 
 export function SkillConnector({
@@ -35,8 +35,11 @@ export function SkillConnector({
   onDrawn,
 }: ConnectorProps) {
   const reduced = useReducedMotion();
+  // Smooth cubic Bezier — control points sit at the midpoint vertical of each
+  // node's column, so the curve eases out of the source and into the target.
+  // Organic feel versus the earlier stepped L-paths, without losing legibility.
   const midY = (y1 + y2) / 2;
-  const d = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
+  const d = `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
   const s = STATUS_STYLE[targetStatus];
 
   if (reduced) {

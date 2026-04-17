@@ -90,6 +90,17 @@ export function SkillNodeComponent({
               : undefined
         }
       >
+        {/* Quiet gold rim on completed — celebration without clutter */}
+        {status === "completed" && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -inset-[3px] rounded-full"
+            style={{
+              boxShadow:
+                "0 0 0 1.5px rgba(212, 168, 75, 0.55), 0 0 10px rgba(212, 168, 75, 0.18)",
+            }}
+          />
+        )}
         {/* Content by state */}
         {status === "completed" ? (
           <>
