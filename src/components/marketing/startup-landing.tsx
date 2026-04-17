@@ -1,898 +1,1022 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
   useMotionValueEvent,
+  AnimatePresence,
 } from "framer-motion";
-import {
-  Sparkles,
-  MessageCircle,
-  Zap,
-  ShieldCheck,
-  ArrowRight,
-  Camera,
-  Handshake,
-  Server,
-  HeartPulse,
-  Github,
-  BookOpen,
-  ChefHat,
-  Compass,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
   containerStagger,
   fadeUpItem,
   fadeUpTight,
-  scaleIn,
-  springSnappy,
   viewportOnce,
   easeOutExpo,
 } from "./startup-landing-variants";
 
-const PARTNER_INQUIRY_URL =
-  "https://github.com/Stef-01/Sous/issues/new?title=Partnership%20inquiry%20%E2%80%94%20Sous&body=Tell%20us%20about%20your%20organization%20and%20what%20you%20are%20exploring%20with%20Sous.";
+/** ----------------------------------------------------------------------
+ * Sous — editorial landing.
+ *
+ * Principles:
+ *  - Typography does the work. No bordered cards, no blocks, no slabs.
+ *  - Every section earns its space with a novel visual moment — a tally,
+ *    a meter, a week strip, a trajectory — rendered as type, not chart.
+ *  - Strategic claims (moat-shaped, network-effect-shaped) are never
+ *    stated. They hide under hover on specific words, phrased as quiet
+ *    sensory observations. Readers who look closely are rewarded; the
+ *    page never pitches.
+ * -------------------------------------------------------------------- */
 
-const coachingPrompts = [
-  "Suggest a low-cost high-protein dinner",
-  "What can I cook in 20 minutes?",
-  "Plan meals around my cardio days",
-];
+/* ======================================================================
+ * Primitives
+ * ==================================================================== */
 
-const capabilityCards = [
-  {
-    icon: MessageCircle,
-    title: "Conversational planning",
-    body: "Foundation models via Amazon Bedrock power meal planning, recipe adaptation, and guided cooking support.",
-  },
-  {
-    icon: Zap,
-    title: "Adaptive personalization",
-    body: "Recommendations improve from what you watch, save, cook, skip, substitute, and share.",
-  },
-  {
-    icon: Camera,
-    title: "Multimodal pantry context",
-    body: "Image-based pantry understanding helps match recipes to what you already have before checkout.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Credible healthy guidance",
-    body: "Designed with input from Stanford clinicians so trust is built into the product, not bolted on.",
-  },
-];
-
-const partnerHighlights = [
-  {
-    icon: HeartPulse,
-    title: "Clinical-grade trust layer",
-    body: "Healthy guidance is designed with clinician input so recommendations stay credible as the product scales.",
-  },
-  {
-    icon: Server,
-    title: "AI + infrastructure moat",
-    body: "Bedrock-driven reasoning, retrieval-backed nutrition context, and AWS-native data systems built for low-latency personalization.",
-  },
-  {
-    icon: Handshake,
-    title: "Distribution-ready product surface",
-    body: "Social-style engagement mechanics tied directly to meal execution, shopping conversion, and retained behavior loops.",
-  },
-];
-
-const waysToSous = [
-  {
-    tag: "Learn",
-    icon: BookOpen,
-    title: "Personalized guidance on the go",
-    body: "Signals from your goals, habits, and saves shape what surfaces next — not a generic feed.",
-  },
-  {
-    tag: "Act",
-    icon: ChefHat,
-    title: "Plans that respect real life",
-    body: "Turn inspiration into a week you can execute: pantry-aware picks, substitutions, and gap-fill flow.",
-  },
-  {
-    tag: "Ask",
-    icon: Compass,
-    title: "Answers grounded in nutrition context",
-    body: "Coach-style help when you are deciding — tuned to stay credible as the product scales.",
-  },
-];
-
-const chipLabels = [
-  "Personalized feed + creators",
-  "Pantry-aware planning",
-  "Stanford clinician input on guidance",
-];
-
-function HeroMesh({ reduced }: { reduced: boolean | null }) {
-  if (reduced) return null;
+/** Inline word with a hairline underline that reveals a margin note on hover/focus. */
+function Aside({ label, children }: { label: string; children: string }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      aria-hidden
+    <span
+      className="relative inline-block cursor-help"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+      tabIndex={0}
     >
+      <span className="border-b border-dotted border-[#b5bac1] text-[#1a1a1a] transition-colors duration-200 hover:text-[#2d5a3d] focus:text-[#2d5a3d]">
+        {label}
+      </span>
+      <AnimatePresence>
+        {open && (
+          <motion.span
+            role="note"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.22, ease: easeOutExpo }}
+            className="absolute left-1/2 top-full z-30 mt-3 w-[min(86vw,320px)] -translate-x-1/2 rounded-[14px] border border-[#e8eaef] bg-white px-4 py-3 text-left text-[13px] font-normal leading-[1.6] tracking-normal text-[#4b5563] shadow-[0_14px_32px_rgba(15,20,28,0.10)]"
+          >
+            <span
+              aria-hidden
+              className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 border-l border-t border-[#e8eaef] bg-white"
+            />
+            {children}
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </span>
+  );
+}
+
+function Eyebrow({ children }: { children: string }) {
+  return (
+    <motion.p
+      variants={fadeUpTight}
+      className="text-[11px] font-medium uppercase tracking-[0.24em] text-[#9aa0a6]"
+    >
+      {children}
+    </motion.p>
+  );
+}
+
+function Rule() {
+  return (
+    <div className="mx-auto max-w-[1040px] px-6 md:px-10">
       <motion.div
-        className="absolute -left-[20%] -top-[30%] h-[min(90vw,520px)] w-[min(90vw,520px)] rounded-full bg-[radial-gradient(circle_at_30%_30%,rgba(47,108,93,0.22)_0%,transparent_68%)] blur-2xl"
-        animate={{ x: [0, 24, 0], y: [0, 18, 0], scale: [1, 1.06, 1] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute -right-[15%] top-[10%] h-[min(85vw,480px)] w-[min(85vw,480px)] rounded-full bg-[radial-gradient(circle_at_70%_40%,rgba(255,140,105,0.18)_0%,transparent_65%)] blur-3xl"
-        animate={{ x: [0, -20, 0], y: [0, 28, 0], scale: [1, 1.08, 1] }}
-        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-20%] left-[25%] h-[min(70vw,380px)] w-[min(70vw,380px)] rounded-full bg-[radial-gradient(circle_at_50%_50%,rgba(99,179,237,0.12)_0%,transparent_70%)] blur-2xl"
-        animate={{ opacity: [0.45, 0.75, 0.45], scale: [1, 1.04, 1] }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={viewportOnce}
+        transition={{ duration: 1.1, ease: easeOutExpo }}
+        className="h-px origin-left bg-[#e5e7eb]"
       />
     </div>
   );
 }
 
+/* ======================================================================
+ * Novel moment #1 — Craving ticker
+ * A rotating italic phrase under the hero. Same shape, different craving.
+ * Shows range without a feature list.
+ * ==================================================================== */
+
+const CRAVINGS = [
+  "pad thai that feels like dinner",
+  "something light — we\u2019ve been heavy all week",
+  "soup weather, but more",
+  "the fridge, before it becomes an archaeological dig",
+  "a photo of the dish we had in Tokyo",
+];
+
+function CravingTicker() {
+  const reduceMotion = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduceMotion) return;
+    const id = setInterval(() => setI((n) => (n + 1) % CRAVINGS.length), 4200);
+    return () => clearInterval(id);
+  }, [reduceMotion]);
+  return (
+    <span
+      aria-live="polite"
+      className="relative inline-block align-baseline text-[#2d5a3d]"
+    >
+      <span className="invisible whitespace-nowrap italic">
+        {CRAVINGS.reduce((a, b) => (a.length >= b.length ? a : b))}
+      </span>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.55, ease: easeOutExpo }}
+          className="absolute inset-0 whitespace-nowrap italic"
+        >
+          {CRAVINGS[i]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+}
+
+/* ======================================================================
+ * Novel moment #2 — Saved / Cooked tally
+ * Typographic dot-tally. The gap is the insight.
+ * ==================================================================== */
+
+function Tally() {
+  const reduceMotion = useReducedMotion();
+  const saved = 7;
+  const cooked = 2;
+  return (
+    <motion.div
+      initial={reduceMotion ? false : "hidden"}
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={containerStagger}
+      className="grid max-w-[520px] grid-cols-[auto_1fr_auto] items-center gap-x-6 gap-y-4 font-mono text-[13px] tracking-tight text-[#0d0d0d] md:text-[14px]"
+    >
+      <motion.span
+        variants={fadeUpTight}
+        className="text-[11px] uppercase tracking-[0.22em] text-[#9aa0a6]"
+      >
+        Saved
+      </motion.span>
+      <motion.div variants={fadeUpTight} className="flex items-center gap-1.5">
+        {Array.from({ length: saved }).map((_, idx) => (
+          <motion.span
+            key={`s-${idx}`}
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={viewportOnce}
+            transition={{
+              delay: 0.25 + idx * 0.06,
+              duration: 0.35,
+              ease: easeOutExpo,
+            }}
+            className="h-2 w-2 rounded-full bg-[#d8dbe0]"
+          />
+        ))}
+      </motion.div>
+      <motion.span
+        variants={fadeUpTight}
+        className="text-right text-[12px] text-[#6b6b6b]"
+      >
+        seven dinners
+      </motion.span>
+
+      <motion.span
+        variants={fadeUpTight}
+        className="text-[11px] uppercase tracking-[0.22em] text-[#9aa0a6]"
+      >
+        Cooked
+      </motion.span>
+      <motion.div variants={fadeUpTight} className="flex items-center gap-1.5">
+        {Array.from({ length: saved }).map((_, idx) => (
+          <motion.span
+            key={`c-${idx}`}
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{
+              scale: 1,
+              opacity: 1,
+            }}
+            viewport={viewportOnce}
+            transition={{
+              delay: 0.7 + idx * 0.06,
+              duration: 0.4,
+              ease: easeOutExpo,
+            }}
+            className={cn(
+              "h-2 w-2 rounded-full",
+              idx < cooked
+                ? "bg-[#2d5a3d]"
+                : "border border-[#d8dbe0] bg-transparent",
+            )}
+          />
+        ))}
+      </motion.div>
+      <motion.span
+        variants={fadeUpTight}
+        className="text-right text-[12px] text-[#6b6b6b]"
+      >
+        two
+      </motion.span>
+    </motion.div>
+  );
+}
+
+/* ======================================================================
+ * Novel moment #3 — Six-axis meter
+ * The pairing logic, as a set of thin animated bars.
+ * ==================================================================== */
+
+const AXES: { label: string; value: number; note: string }[] = [
+  { label: "Cuisine fit", value: 0.94, note: "Thai ↔ Thai" },
+  { label: "Flavor contrast", value: 0.88, note: "rich ↔ sharp, cold" },
+  { label: "Nutrition balance", value: 0.72, note: "adds fiber, fresh greens" },
+  { label: "Prep burden", value: 0.86, note: "five minutes, one bowl" },
+  { label: "Temperature", value: 0.81, note: "hot bowl, cool side" },
+  { label: "Your taste", value: 0.79, note: "based on your last 30 cooks" },
+];
+
+function AxisMeter() {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={containerStagger}
+      className="grid gap-y-3 md:grid-cols-2 md:gap-x-10"
+    >
+      {AXES.map((a) => (
+        <motion.div
+          key={a.label}
+          variants={fadeUpTight}
+          className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 py-2"
+        >
+          <div className="min-w-0">
+            <p className="text-[13px] font-medium text-[#0d0d0d]">{a.label}</p>
+            <p className="mt-0.5 text-[12px] leading-[1.5] text-[#6b6b6b]">
+              {a.note}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="h-[2px] w-[120px] overflow-hidden rounded-full bg-[#ececee]">
+              <motion.span
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: a.value }}
+                viewport={viewportOnce}
+                transition={{
+                  duration: 1.1,
+                  ease: easeOutExpo,
+                  delay: 0.15,
+                }}
+                className="block h-full origin-left bg-[#2d5a3d]"
+              />
+            </span>
+            <span className="w-8 text-right font-mono text-[11px] tabular-nums text-[#9aa0a6]">
+              {a.value.toFixed(2)}
+            </span>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
+/* ======================================================================
+ * Novel moment #4 — A week, quietly
+ * Seven glyphs for seven days. The product proving it survives.
+ * ==================================================================== */
+
+const WEEK: {
+  day: string;
+  kind: "cook" | "replan" | "out" | "host";
+  label: string;
+}[] = [
+  { day: "Mon", kind: "cook", label: "lemongrass chicken" },
+  { day: "Tue", kind: "cook", label: "leftovers, reshaped" },
+  { day: "Wed", kind: "replan", label: "skipped → rebuilt around rice" },
+  { day: "Thu", kind: "cook", label: "miso salmon, fast" },
+  { day: "Fri", kind: "out", label: "dinner out" },
+  { day: "Sat", kind: "host", label: "friends over" },
+  { day: "Sun", kind: "cook", label: "one-pot braise" },
+];
+
+function WeekGlyph({ kind }: { kind: (typeof WEEK)[number]["kind"] }) {
+  const base = "block h-3 w-3";
+  if (kind === "cook")
+    return (
+      <span aria-hidden className={cn(base, "rounded-full bg-[#2d5a3d]")} />
+    );
+  if (kind === "replan")
+    return (
+      <span
+        aria-hidden
+        className={cn(
+          base,
+          "rounded-full border border-dashed border-[#2d5a3d]",
+        )}
+      />
+    );
+  if (kind === "out")
+    return (
+      <span
+        aria-hidden
+        className={cn(
+          base,
+          "rounded-full border border-[#c9ccd1] bg-transparent",
+        )}
+      />
+    );
+  return (
+    <span
+      aria-hidden
+      className={cn(base, "rotate-45 bg-[#0d0d0d]")}
+      style={{ width: 10, height: 10 }}
+    />
+  );
+}
+
+function WeeklyStrip() {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={containerStagger}
+      className="grid grid-cols-7 gap-x-2 gap-y-3"
+    >
+      {WEEK.map((d) => (
+        <motion.div
+          key={d.day}
+          variants={fadeUpTight}
+          className="flex flex-col items-start gap-2"
+        >
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]">
+            {d.day}
+          </span>
+          <WeekGlyph kind={d.kind} />
+          <span className="text-[11px] leading-[1.5] text-[#4b5563]">
+            {d.label}
+          </span>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
+/* ======================================================================
+ * Novel moment #5 — Trajectory
+ * Three dots on a hairline, showing the arc from weeknight to hosting.
+ * ==================================================================== */
+
+const ARC = [
+  { x: 0.08, y: 0.72, month: "Week 1", note: "first pad thai" },
+  { x: 0.48, y: 0.46, month: "Month 3", note: "plating, mostly on the plate" },
+  { x: 0.9, y: 0.2, month: "Month 9", note: "a dinner you\u2019d host" },
+];
+
+function TrajectoryArc() {
+  return (
+    <motion.figure
+      initial="hidden"
+      whileInView="visible"
+      viewport={viewportOnce}
+      variants={containerStagger}
+      className="mt-10 max-w-[640px]"
+    >
+      <svg
+        viewBox="0 0 100 40"
+        preserveAspectRatio="none"
+        className="h-[120px] w-full"
+        aria-hidden
+      >
+        <motion.path
+          d="M 8 32  C 28 28, 44 22, 48 18  S 76 8, 90 8"
+          stroke="#d8dbe0"
+          strokeWidth="0.3"
+          strokeDasharray="0.6 0.9"
+          fill="none"
+          initial={{ pathLength: 0 }}
+          whileInView={{ pathLength: 1 }}
+          viewport={viewportOnce}
+          transition={{ duration: 1.6, ease: easeOutExpo }}
+        />
+        {ARC.map((p, idx) => (
+          <motion.circle
+            key={p.month}
+            cx={p.x * 100}
+            cy={p.y * 40}
+            r={idx === ARC.length - 1 ? 1.4 : 1}
+            fill={idx === ARC.length - 1 ? "#2d5a3d" : "#0d0d0d"}
+            initial={{ opacity: 0, scale: 0 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={viewportOnce}
+            transition={{
+              delay: 0.4 + idx * 0.25,
+              duration: 0.4,
+              ease: easeOutExpo,
+            }}
+          />
+        ))}
+      </svg>
+      <div className="mt-2 grid grid-cols-3 gap-6">
+        {ARC.map((p) => (
+          <motion.figcaption
+            key={p.month}
+            variants={fadeUpTight}
+            className="text-left"
+          >
+            <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]">
+              {p.month}
+            </p>
+            <p className="mt-1 text-[12px] leading-[1.55] text-[#4b5563]">
+              {p.note}
+            </p>
+          </motion.figcaption>
+        ))}
+      </div>
+    </motion.figure>
+  );
+}
+
+/* ======================================================================
+ * Page
+ * ==================================================================== */
+
 export function StartupLanding() {
   const reduceMotion = useReducedMotion();
-  const heroRef = useRef<HTMLElement | null>(null);
   const [headerElevated, setHeaderElevated] = useState(false);
+  const heroRef = useRef<HTMLElement | null>(null);
 
-  const { scrollY } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   useMotionValueEvent(scrollY, "change", (y) => {
-    setHeaderElevated(y > 10);
+    setHeaderElevated(y > 8);
   });
+
+  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end start"],
   });
-
-  const parallaxPhone = useTransform(
-    heroProgress,
-    [0, 0.55],
-    [0, reduceMotion ? 0 : 48],
-  );
-  const parallaxCard = useTransform(
-    heroProgress,
-    [0, 0.55],
-    [0, reduceMotion ? 0 : -28],
-  );
-  const parallaxPrompts = useTransform(
-    heroProgress,
-    [0, 0.55],
-    [0, reduceMotion ? 0 : 20],
-  );
-  const heroGlowShift = useTransform(
+  const heroLift = useTransform(
     heroProgress,
     [0, 1],
-    ["42% 35%", "58% 55%"],
+    [0, reduceMotion ? 0 : -20],
   );
-  const heroRadialBg = useTransform(
-    heroGlowShift,
-    (pos) =>
-      `radial-gradient(ellipse 70% 55% at ${pos}, rgba(47,108,93,0.14), transparent 62%)`,
-  );
+  const heroFade = useTransform(heroProgress, [0, 0.85], [1, 0.6]);
 
   return (
-    <div className="scroll-smooth bg-[#f7f8fa] text-[#2a2a2a] antialiased">
+    <div className="bg-[#fdfdfc] text-[#1a1a1a] antialiased [scroll-behavior:smooth]">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#123129] focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-[#1a3d25] focus:shadow-lg"
       >
         Skip to content
       </a>
 
+      {/* Scroll-progress hairline */}
+      <motion.div
+        aria-hidden
+        className="fixed left-0 right-0 top-0 z-[60] h-px origin-left bg-[#2d5a3d]/70"
+        style={{ width: progressWidth }}
+      />
+
+      {/* ============================================================
+          HEADER — serif wordmark, minimal nav, single CTA.
+         ============================================================ */}
       <motion.header
         className={cn(
-          "sticky top-0 z-50 border-b backdrop-blur-md transition-colors duration-300",
+          "sticky top-0 z-50 transition-[background,border-color] duration-300",
           headerElevated
-            ? "border-[#e8eaef]/80 bg-[#f7f8fa]/96 shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-            : "border-transparent bg-[#f7f8fa]/70",
+            ? "border-b border-[#eceef2] bg-[#fdfdfc]/94 backdrop-blur-sm"
+            : "border-b border-transparent bg-[#fdfdfc]/80",
         )}
       >
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-3.5 md:px-8">
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={springSnappy}
+        <div className="mx-auto flex max-w-[1160px] items-center justify-between gap-4 px-6 py-5 md:px-10">
+          <Link
+            href="/"
+            className="font-serif text-[22px] leading-none tracking-tight text-[#0d0d0d]"
+            aria-label="Sous — home"
           >
-            <Link
-              href="/"
-              className="font-semibold tracking-tight text-[#123129] md:text-lg"
-            >
-              Sous
-            </Link>
-          </motion.div>
+            Sous
+          </Link>
           <nav
-            className="hidden items-center gap-6 text-sm font-medium text-[#4b5563] md:flex"
-            aria-label="Page sections"
+            aria-label="Sections"
+            className="hidden items-center gap-8 text-[13px] text-[#6b6b6b] md:flex"
           >
-            {[
-              ["#ways", "Discover"],
-              ["#systems", "Platform"],
-              ["#partner", "Partner"],
-            ].map(([href, label]) => (
-              <motion.a
-                key={href}
-                href={href}
-                className="relative transition hover:text-[#123129]"
-                whileHover={reduceMotion ? {} : { y: -1 }}
-                whileTap={reduceMotion ? {} : { scale: 0.98 }}
-              >
-                {label}
-                <motion.span
-                  className="absolute -bottom-1 left-0 right-0 h-px origin-left bg-[#2f6c5d]/70"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.25, ease: easeOutExpo }}
-                />
-              </motion.a>
-            ))}
-          </nav>
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ ...springSnappy, delay: 0.05 }}
-            className="flex items-center gap-2"
-          >
-            <Link
-              href="/today"
-              className="inline-flex items-center justify-center rounded-xl bg-[#2f6c5d] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(47,108,93,0.22)] transition hover:bg-[#265a4c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6c5d]"
+            <a href="#idea" className="transition-colors hover:text-[#0d0d0d]">
+              The idea
+            </a>
+            <a
+              href="#pairing"
+              className="transition-colors hover:text-[#0d0d0d]"
             >
-              Try demo
-            </Link>
-          </motion.div>
+              How it decides
+            </a>
+            <a href="#arc" className="transition-colors hover:text-[#0d0d0d]">
+              The arc
+            </a>
+          </nav>
+          <Link
+            href="/today"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#0d0d0d]/10 bg-[#0d0d0d] px-4 py-2 text-[13px] font-medium text-white transition-transform duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
+          >
+            Open the demo
+            <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+          </Link>
         </div>
       </motion.header>
 
       <main id="main">
-        <section
+        {/* ==========================================================
+            HERO — large serif, asymmetric lede, craving ticker.
+            No watermark numeral, no card, no slab.
+           ========================================================= */}
+        <motion.section
           ref={heroRef}
-          className="relative mx-auto max-w-[1280px] overflow-hidden px-4 pb-16 pt-10 md:px-8 md:pb-24 md:pt-14"
+          style={{ y: heroLift, opacity: heroFade }}
+          className="relative px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28"
         >
-          <HeroMesh reduced={!!reduceMotion} />
-          <motion.div
-            className="pointer-events-none absolute inset-0 opacity-90"
-            aria-hidden
-            style={{ background: heroRadialBg }}
-          />
-
-          <div className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+          <div className="mx-auto max-w-[1160px]">
             <motion.div
-              variants={containerStagger}
               initial="hidden"
               animate="visible"
-              className="relative z-[1]"
+              variants={containerStagger}
+              className="max-w-[18ch]"
             >
-              <motion.div
-                variants={fadeUpTight}
-                className="mb-5 flex items-center gap-2 text-[#2f6c5d]"
-                aria-hidden
-              >
-                <motion.span
-                  animate={
-                    reduceMotion
-                      ? {}
-                      : { rotate: [0, 8, -6, 0], scale: [1, 1.08, 1] }
-                  }
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="inline-flex"
-                >
-                  <Sparkles className="h-5 w-5" strokeWidth={1.8} />
-                </motion.span>
-                <Sparkles className="h-3 w-3" strokeWidth={1.8} />
-              </motion.div>
+              <Eyebrow>An app for cooking at home</Eyebrow>
 
-              <motion.p
-                variants={fadeUpItem}
-                className="text-[2rem] font-semibold leading-[1.12] tracking-tight text-[#2f6c5d] sm:text-[2.5rem] md:text-[3rem]"
-              >
-                Meet Sous.
-              </motion.p>
               <motion.h1
                 variants={fadeUpItem}
-                className="mt-1 max-w-[18ch] text-[2.15rem] font-semibold leading-[1.1] tracking-tight text-[#1a1a1a] sm:text-[2.85rem] md:text-[3.5rem]"
+                className="mt-6 font-serif text-[14vw] leading-[0.96] tracking-[-0.025em] text-[#0d0d0d] sm:text-[80px] md:text-[104px] lg:text-[120px]"
               >
-                Healthy cooking made easy with AI.
+                You don&rsquo;t
+                <br />
+                need more
+                <br />
+                <span className="italic text-[#2d5a3d]">recipes</span>.
               </motion.h1>
+            </motion.div>
+
+            {/* Asymmetric lede */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={containerStagger}
+              className="mt-14 grid gap-10 md:mt-20 md:grid-cols-12"
+            >
               <motion.p
                 variants={fadeUpItem}
-                className="mt-6 max-w-prose text-lg leading-[1.7] text-[#3c3c3c] md:text-xl"
+                className="font-serif text-[28px] leading-[1.12] tracking-tight text-[#0d0d0d] md:col-span-7 md:col-start-2 md:text-[38px]"
               >
-                A tailored feed of recipe reels and food creators matched to
-                your tastes, health goals, budget, and cooking habits.
+                Type anything —{" "}
+                <span className="relative inline-block">
+                  <CravingTicker />
+                </span>{" "}
+                — and get a dinner that fits tonight.
               </motion.p>
               <motion.p
                 variants={fadeUpItem}
-                className="mt-3 max-w-prose text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
+                className="max-w-[38ch] text-[15px] leading-[1.72] text-[#4b5563] md:col-span-4 md:col-start-9 md:mt-2 md:text-[16px]"
               >
-                Save meals you actually want to eat, turn them into a weekly
-                plan, compare recipes against ingredients you already have, and
-                order what is missing without breaking the flow. The product
-                improves as it learns from what you watch, save, cook, skip,
-                substitute, and share.
+                One main, three{" "}
+                <Aside label="sides that belong">
+                  Ranked on six axes — cuisine, contrast, nutrition, prep,
+                  temperature, and what you&rsquo;ve cooked before. Same inputs,
+                  same picks.
+                </Aside>
+                , and a short cook flow that stays out of your mood. No feed, no
+                endless scroll, no{" "}
+                <Aside label="quiet ledger">
+                  Sous pays more attention to what you&rsquo;ve actually cooked
+                  than what you&rsquo;ve saved. The two diverge fast, and the
+                  interesting one is smaller.
+                </Aside>{" "}
+                of 400 untouched saves.
               </motion.p>
-
-              <motion.div
-                variants={fadeUpItem}
-                className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-stretch"
-              >
-                <motion.span
-                  className="inline-flex sm:contents"
-                  whileHover={reduceMotion ? {} : { scale: 1.02 }}
-                  whileTap={reduceMotion ? {} : { scale: 0.98 }}
-                >
-                  <Link
-                    href="/today"
-                    className="inline-flex min-h-[52px] min-w-[200px] items-center justify-center rounded-2xl bg-[#2f6c5d] px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_28px_rgba(47,108,93,0.22)] transition hover:bg-[#265a4c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6c5d]"
-                  >
-                    Try Sous demo
-                  </Link>
-                </motion.span>
-                <motion.span
-                  className="inline-flex sm:contents"
-                  whileHover={reduceMotion ? {} : { scale: 1.01 }}
-                  whileTap={reduceMotion ? {} : { scale: 0.99 }}
-                >
-                  <a
-                    href="#systems"
-                    className="inline-flex min-h-[52px] min-w-[200px] items-center justify-center rounded-2xl border border-[#b4bcc8] bg-white/80 px-7 py-3.5 text-base font-semibold text-[#2a3644] shadow-sm transition hover:border-[#9aa6b5] hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6c5d]"
-                  >
-                    Why this is different
-                  </a>
-                </motion.span>
-              </motion.div>
-
-              <motion.div
-                variants={containerStagger}
-                initial="hidden"
-                animate="visible"
-                className="mt-8 flex flex-wrap gap-2"
-              >
-                {chipLabels.map((label) => (
-                  <motion.span
-                    key={label}
-                    variants={fadeUpTight}
-                    whileHover={
-                      reduceMotion
-                        ? {}
-                        : {
-                            y: -2,
-                            boxShadow: "0 12px 28px rgba(24,32,44,0.08)",
-                          }
-                    }
-                    className="rounded-full border border-[#e4e7ec] bg-white px-3.5 py-1.5 text-xs font-medium text-[#6a6a6a]"
-                  >
-                    {label}
-                  </motion.span>
-                ))}
-              </motion.div>
             </motion.div>
 
             <motion.div
-              className="relative z-[1] mx-auto min-h-[520px] w-full max-w-[560px] sm:min-h-[560px] lg:mx-0 lg:max-w-none"
-              initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ ...springSnappy, delay: 0.12 }}
-              aria-hidden
+              transition={{ delay: 0.35, duration: 0.6, ease: easeOutExpo }}
+              className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4 md:mt-20"
             >
-              <motion.div
-                className="pointer-events-none absolute inset-0"
-                style={{ y: parallaxPrompts }}
+              <Link
+                href="/today"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-6 py-3.5 text-[14px] font-medium text-white transition-all duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_12px_28px_-10px_rgba(13,13,13,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
               >
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_70%_35%,rgba(47,108,93,0.12),transparent_60%)]" />
-              </motion.div>
-
-              <motion.div
-                className="absolute right-[20%] top-2 sm:right-[22%]"
-                style={{ y: parallaxPhone }}
+                Try it tonight
+                <ArrowRight
+                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                  strokeWidth={1.8}
+                  aria-hidden
+                />
+              </Link>
+              <a
+                href="#idea"
+                className="group inline-flex items-baseline gap-2 text-[14px] font-medium text-[#1a1a1a] transition-colors hover:text-[#2d5a3d]"
               >
-                <motion.div
-                  className="relative h-[418px] w-[224px] rounded-[28px] border-[4px] border-[#0d1015] bg-[#cfd4dc] shadow-[0_28px_50px_rgba(15,20,28,0.22)] sm:h-[438px] sm:w-[238px]"
-                  animate={reduceMotion ? false : { y: [0, -6, 0, 4, 0] }}
-                  transition={
-                    reduceMotion
-                      ? {}
-                      : {
-                          duration: 8,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                          repeatType: "mirror",
-                        }
-                  }
-                >
-                  <div className="absolute left-1/2 top-1.5 z-10 h-4 w-[104px] -translate-x-1/2 rounded-b-xl bg-[#0d1015]" />
-                  <div className="h-full w-full overflow-hidden rounded-[22px]">
-                    <div className="h-[52%] w-full bg-[radial-gradient(circle_at_55%_28%,#ffb18a_0,#f06b52_22%,#1f2a3d_78%)]" />
-                    <div className="h-[48%] w-full bg-[linear-gradient(180deg,#162436,#0f1624)]" />
-                  </div>
-                  {!reduceMotion && (
-                    <motion.div
-                      className="pointer-events-none absolute inset-0 rounded-[22px] bg-gradient-to-tr from-white/0 via-white/12 to-white/0"
-                      animate={{ rotate: [0, 3, 0] }}
-                      transition={{
-                        duration: 10,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    />
-                  )}
-                </motion.div>
-              </motion.div>
-
-              <motion.div
-                className={cn(
-                  "absolute right-[12%] top-[42%] w-[min(92vw,300px)] rounded-[20px] border border-white/70 p-4 shadow-[0_20px_40px_rgba(24,32,44,0.12)] sm:w-[min(92vw,318px)]",
-                  "bg-white/75 backdrop-blur-[12px]",
-                )}
-                style={{ y: parallaxCard }}
-                whileHover={reduceMotion ? {} : { scale: 1.02, rotate: -0.6 }}
-                transition={{ type: "spring", stiffness: 320, damping: 22 }}
-              >
-                <p className="text-sm font-semibold leading-snug text-[#1d252e]">
-                  Roasted pumpkin, quinoa, greens, and tomato salad
-                </p>
-                <p className="mt-1 text-sm text-[#7b8591]">412 Cal</p>
-                <div className="mt-4 grid grid-cols-4 gap-2">
-                  {[
-                    ["31.4 g", "Protein"],
-                    ["39.0 g", "Carbs"],
-                    ["14.2 g", "Fats"],
-                    ["8.1 g", "Fiber"],
-                  ].map(([value, label], i) => (
-                    <motion.div
-                      key={label}
-                      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        delay: 0.35 + i * 0.06,
-                        ...springSnappy,
-                      }}
-                      className="rounded-xl bg-[#f0f2f6] px-1.5 py-2 text-center"
-                    >
-                      <p className="text-[11px] font-semibold tabular-nums text-[#1a2028]">
-                        {value}
-                      </p>
-                      <p className="mt-0.5 text-[10px] text-[#7b8591]">
-                        {label}
-                      </p>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="mt-4 flex items-center gap-2 border-t border-[#e8ecf2] pt-3 text-xs text-[#8a949f]">
-                  <span className="font-semibold text-[#2f6c5d]">Sous</span>
-                  <span className="text-[#b0b8c2]">·</span>
-                  <span>Pantry-aware meal card</span>
-                </div>
-              </motion.div>
-
-              <div className="absolute right-0 top-[6%] w-[min(46vw,200px)] space-y-2 sm:w-[200px]">
-                {coachingPrompts.map((prompt, i) => (
-                  <motion.div
-                    key={prompt}
-                    initial={reduceMotion ? false : { opacity: 0, x: 16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 + i * 0.07, ...springSnappy }}
-                    style={{ y: parallaxPrompts }}
-                    whileHover={reduceMotion ? {} : { x: -4 }}
-                    className="rounded-xl border border-[#e3e7ee] bg-white/85 px-3 py-2.5 text-[11px] leading-snug text-[#5a6570] shadow-[0_8px_18px_rgba(24,32,44,0.06)] backdrop-blur-sm"
-                  >
-                    {prompt}
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.div
-                className="absolute bottom-[4%] right-[0%] w-[min(52vw,220px)] rounded-2xl border border-[#e8ecf2] bg-white p-3.5 shadow-[0_16px_32px_rgba(24,32,44,0.1)] sm:right-[1%]"
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.28, ...springSnappy }}
-                whileHover={reduceMotion ? {} : { y: -3 }}
-              >
-                <div className="flex items-center gap-2">
-                  <motion.div
-                    className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#e8f4ef] text-[#2f6c5d]"
-                    animate={
-                      reduceMotion
-                        ? {}
-                        : { scale: [1, 1.06, 1], rotate: [0, -4, 4, 0] }
-                    }
-                    transition={{
-                      duration: 4.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Sparkles className="h-4 w-4" strokeWidth={2} />
-                  </motion.div>
-                  <p className="text-sm font-semibold text-[#1a222c]">
-                    Sous Coach
-                  </p>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-[#5d6672]">
-                  Here are balanced options that fit your week, your pantry, and
-                  your budget — grounded in trusted nutrition context.
-                </p>
-                <div className="mt-3 space-y-2">
-                  {[
-                    { name: "Miso salmon + greens", kcal: "520 kcal" },
-                    { name: "Chickpea bowl + yogurt", kcal: "480 kcal" },
-                  ].map((row, idx) => (
-                    <motion.div
-                      key={row.name}
-                      initial={reduceMotion ? false : { opacity: 0, x: 8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 + idx * 0.08, ...springSnappy }}
-                      whileHover={
-                        reduceMotion ? {} : { backgroundColor: "#eef1f6" }
-                      }
-                      className="flex items-center justify-between gap-2 rounded-xl bg-[#f4f6fa] px-2.5 py-2"
-                    >
-                      <span className="text-xs font-medium text-[#2f3844]">
-                        {row.name}
-                      </span>
-                      <span className="shrink-0 text-[11px] text-[#7b8591]">
-                        {row.kcal}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+                How it works
+                <span
+                  aria-hidden
+                  className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition-all duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
+                />
+              </a>
             </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <div className="mx-auto max-w-[1280px] px-4 md:px-8">
-          <div className="h-px w-full bg-[#e8eaef]/60" />
-        </div>
+        <Rule />
 
+        {/* ==========================================================
+            IDEA — "Saved six, cooked two" — the gap is the product.
+            Novel moment: typographic tally.
+           ========================================================= */}
         <section
-          id="ways"
-          className="relative scroll-mt-[72px] bg-white py-20 md:py-28"
+          id="idea"
+          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
         >
-          {/* Clean section boundary — no decorative gradient */}
-          <div className="mx-auto max-w-[1280px] px-4 md:px-8">
+          <div className="mx-auto max-w-[1160px]">
             <motion.div
               initial="hidden"
               whileInView="visible"
               viewport={viewportOnce}
               variants={containerStagger}
-              className="mb-12 max-w-3xl"
+              className="grid gap-12 md:grid-cols-12"
             >
-              <motion.p
-                variants={fadeUpItem}
-                className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9b9b9b]"
-              >
-                Don&apos;t just scroll recipes
-              </motion.p>
-              <motion.h2
-                variants={fadeUpItem}
-                className="mt-3 text-3xl font-semibold tracking-tight text-[#1a1a1a] md:text-[2.5rem] md:leading-[1.12]"
-              >
-                Sous in many more ways
-              </motion.h2>
-              <motion.p
-                variants={fadeUpItem}
-                className="mt-4 text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
-              >
-                One surface that learns how you eat, nudges what to cook next,
-                and closes the loop from inspiration to groceries — the kind of
-                vertical depth investors expect from a 2026 AI consumer company.
-              </motion.p>
-            </motion.div>
-
-            <motion.div
-              className="grid gap-5 md:grid-cols-3"
-              variants={containerStagger}
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-            >
-              {waysToSous.map((way) => (
-                <motion.article
-                  key={way.tag}
-                  variants={scaleIn}
-                  whileHover={
-                    reduceMotion
-                      ? {}
-                      : {
-                          y: -6,
-                          boxShadow: "0 24px 48px rgba(24,32,44,0.1)",
-                        }
-                  }
-                  className="group relative overflow-hidden rounded-2xl border border-[#e8eaef]/60 bg-white p-6 shadow-[0_1px_2px_rgba(0,0,0,0.03)] md:p-7"
-                >
-                  {!reduceMotion && (
-                    <motion.div
-                      className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-[radial-gradient(circle,rgba(47,108,93,0.12)_0%,transparent_70%)]"
-                      initial={{ opacity: 0.4, scale: 0.8 }}
-                      whileHover={{ opacity: 0.9, scale: 1.15 }}
-                      transition={{ duration: 0.45 }}
-                    />
-                  )}
-                  <div className="relative flex items-start gap-4">
-                    <motion.div
-                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#eef6f2] text-[#2f6c5d] ring-1 ring-[#dceee6]"
-                      whileHover={
-                        reduceMotion
-                          ? {}
-                          : { rotate: [0, -6, 6, 0], scale: 1.05 }
-                      }
-                      transition={{ duration: 0.5 }}
-                    >
-                      <way.icon className="h-6 w-6" strokeWidth={1.65} />
-                    </motion.div>
-                    <div>
-                      <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#2f6c5d]">
-                        • {way.tag}
-                      </p>
-                      <h3 className="mt-2 text-lg font-semibold text-[#2a2a2a]">
-                        {way.title}
-                      </h3>
-                      <p className="mt-2 text-sm leading-[1.7] text-[#6a6a6a]">
-                        {way.body}
-                      </p>
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        <section id="systems" className="bg-[#f7f8fa] scroll-mt-[72px]">
-          <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-20">
-            <motion.div
-              className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              variants={containerStagger}
-            >
-              <div className="max-w-2xl">
-                <motion.p
-                  variants={fadeUpItem}
-                  className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9b9b9b]"
-                >
-                  Advanced systems
-                </motion.p>
+              <div className="md:col-span-3">
+                <Eyebrow>The gap</Eyebrow>
+              </div>
+              <div className="md:col-span-9">
                 <motion.h2
                   variants={fadeUpItem}
-                  className="mt-3 text-3xl font-semibold tracking-tight text-[#1a1a1a] md:text-[2.35rem] md:leading-tight"
+                  className="font-serif text-[40px] leading-[1.04] tracking-tight text-[#0d0d0d] md:text-[64px]"
                 >
-                  Not a chatbot wrapper — a full-stack nutrition intelligence
-                  surface.
+                  Saved six.
+                  <br />
+                  <span className="text-[#4b5563]">Cooked two.</span>
+                </motion.h2>
+
+                <motion.div variants={fadeUpItem} className="mt-10">
+                  <Tally />
+                </motion.div>
+
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-12 max-w-[56ch] text-[17px] leading-[1.75] text-[#374151] md:text-[18px]"
+                >
+                  The feed gives you ten thousand good ideas and zero answers
+                  for <span className="italic">tonight</span>. The gap between
+                  what you saved and what you cooked is where the week goes
+                  sideways.
+                </motion.p>
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-5 max-w-[56ch] text-[17px] leading-[1.75] text-[#374151] md:text-[18px]"
+                >
+                  Sous starts after the idea — a craving, a photo, a half-empty
+                  pantry — and ends at the plate. One short sequence, every
+                  time.
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <Rule />
+
+        {/* ==========================================================
+            PAIRING — "How it decides."
+            Novel moment: six-axis meter rendered as editorial type.
+           ========================================================= */}
+        <section
+          id="pairing"
+          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
+        >
+          <div className="mx-auto max-w-[1160px]">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              variants={containerStagger}
+              className="grid gap-12 md:grid-cols-12"
+            >
+              <div className="md:col-span-5">
+                <Eyebrow>How it decides</Eyebrow>
+                <motion.h2
+                  variants={fadeUpItem}
+                  className="mt-6 font-serif text-[40px] leading-[1.04] tracking-tight text-[#0d0d0d] md:text-[60px]"
+                >
+                  Six axes.
+                  <br />
+                  One short list.
                 </motion.h2>
                 <motion.p
                   variants={fadeUpItem}
-                  className="mt-4 text-base leading-[1.7] text-[#6a6a6a] md:text-lg"
+                  className="mt-8 max-w-[36ch] text-[16px] leading-[1.75] text-[#374151] md:text-[17px]"
                 >
-                  Bedrock for conversational planning and adaptation, ranking
-                  for personalization, retrieval to ground outputs in trusted
-                  nutrition content, multimodal models for pantry understanding,
-                  and AWS-scale infrastructure for media, user state, and
-                  low-latency delivery.
+                  No feed-guessing. Every candidate is scored on six dimensions,
+                  and the top three ship. Deterministic — same inputs, same
+                  picks — and the inputs include everything you&rsquo;ve{" "}
+                  <Aside label="actually cooked">
+                    What you&rsquo;ve cooked is a better signal than what
+                    you&rsquo;ve saved. The more you cook, the less guessing the
+                    short list has to do; it starts to feel like cooking with
+                    someone who knows your kitchen.
+                  </Aside>
+                  .
                 </motion.p>
               </div>
-              <motion.div variants={fadeUpItem}>
-                <Link
-                  href="/today"
-                  className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-[#2f6c5d] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#265a4c] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2f6c5d]"
-                >
-                  Open live demo
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </motion.div>
-            </motion.div>
 
+              <div className="md:col-span-7 md:mt-3">
+                <motion.div variants={fadeUpItem}>
+                  <div className="flex items-baseline justify-between gap-4 border-b border-[#eceef2] pb-4">
+                    <div>
+                      <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]">
+                        Tonight
+                      </p>
+                      <p className="mt-1 font-serif text-[22px] leading-tight tracking-tight text-[#0d0d0d] md:text-[26px]">
+                        Pad thai, tofu and egg
+                        <span className="ml-2 text-[#9aa0a6]">·</span>{" "}
+                        <span className="font-sans text-[13px] font-medium text-[#2d5a3d]">
+                          + som tum
+                        </span>
+                      </p>
+                    </div>
+                    <span className="shrink-0 font-mono text-[11px] tabular-nums text-[#9aa0a6]">
+                      0.42s
+                    </span>
+                  </div>
+                  <div className="mt-6">
+                    <AxisMeter />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <Rule />
+
+        {/* ==========================================================
+            WEEK — "A plan that survives Wednesday."
+            Novel moment: seven-glyph strip for a real week.
+           ========================================================= */}
+        <section className="px-6 py-28 md:px-10 md:py-36">
+          <div className="mx-auto max-w-[1160px]">
             <motion.div
-              className="grid gap-4 sm:grid-cols-2"
               initial="hidden"
               whileInView="visible"
               viewport={viewportOnce}
               variants={containerStagger}
+              className="grid gap-12 md:grid-cols-12"
             >
-              {capabilityCards.map((item) => (
-                <motion.article
-                  key={item.title}
+              <div className="md:col-span-7">
+                <Eyebrow>A week that survives</Eyebrow>
+                <motion.h2
                   variants={fadeUpItem}
-                  whileHover={
-                    reduceMotion
-                      ? {}
-                      : {
-                          y: -4,
-                          borderColor: "rgb(207 216 230)",
-                          transition: { duration: 0.2 },
-                        }
-                  }
-                  className="rounded-2xl border border-[#e8eaef]/50 bg-white p-6 transition-shadow hover:shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
+                  className="mt-6 font-serif text-[40px] leading-[1.04] tracking-tight text-[#0d0d0d] md:text-[60px]"
                 >
-                  <motion.div
-                    className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-[#e8ecf2]"
-                    whileHover={reduceMotion ? {} : { rotate: [0, -8, 0] }}
-                    transition={{ duration: 0.45 }}
-                  >
-                    <item.icon
-                      className="h-5 w-5 text-[#2f6c5d]"
-                      strokeWidth={1.75}
-                      aria-hidden
-                    />
-                  </motion.div>
-                  <h3 className="mt-4 text-lg font-semibold text-[#2a2a2a]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-[1.7] text-[#6a6a6a]">
-                    {item.body}
-                  </p>
-                </motion.article>
-              ))}
-            </motion.div>
+                  Sunday plans die
+                  <br />
+                  <span className="italic text-[#2d5a3d]">on Wednesday</span>.
+                  Not this one.
+                </motion.h2>
 
+                <motion.div variants={fadeUpItem} className="mt-10">
+                  <WeeklyStrip />
+                </motion.div>
+
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#6b6b6b]"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full bg-[#2d5a3d]" />{" "}
+                    cooked
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full border border-dashed border-[#2d5a3d]" />{" "}
+                    replanned
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="h-2 w-2 rounded-full border border-[#c9ccd1]" />{" "}
+                    out
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span
+                      className="rotate-45 bg-[#0d0d0d]"
+                      style={{ width: 7, height: 7 }}
+                    />{" "}
+                    hosted
+                  </span>
+                </motion.p>
+              </div>
+
+              <div className="md:col-span-5 md:mt-16">
+                <motion.p
+                  variants={fadeUpItem}
+                  className="text-[16px] leading-[1.75] text-[#374151] md:text-[17px]"
+                >
+                  Most plans assume the week you imagined. Sous assumes the week
+                  you&rsquo;re having. If Tuesday&rsquo;s rice is still in the
+                  fridge, Wednesday&rsquo;s pairings already{" "}
+                  <Aside label="know">
+                    What the pantry still holds. What you&rsquo;ve cooked this
+                    week. How tired you said you were. All of it becomes input
+                    quietly — nothing to configure.
+                  </Aside>
+                  . If you skipped Monday entirely, the plan rebuilds around
+                  what&rsquo;s left.
+                </motion.p>
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-5 text-[14px] leading-[1.7] text-[#6b6b6b]"
+                >
+                  No guilt screens. No red badges. Missing a night is an input,
+                  not a failure.
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <Rule />
+
+        {/* ==========================================================
+            ARC — "Cooking that looks like practice."
+            Novel moment: three-dot trajectory arc.
+           ========================================================= */}
+        <section
+          id="arc"
+          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
+        >
+          <div className="mx-auto max-w-[1160px]">
             <motion.div
-              id="partner"
-              className="relative mt-14 scroll-mt-[72px] overflow-hidden rounded-[28px] border border-[#dfe6ea] bg-[linear-gradient(145deg,#0c1412_0%,#1a3d34_48%,#2f6c5d_100%)] p-6 text-white shadow-[0_24px_48px_rgba(15,24,20,0.18)] md:p-10"
               initial="hidden"
               whileInView="visible"
               viewport={viewportOnce}
-              variants={fadeUpTight}
+              variants={containerStagger}
+              className="grid gap-12 md:grid-cols-12"
             >
-              {!reduceMotion && (
-                <motion.div
-                  className="pointer-events-none absolute inset-0 opacity-40"
-                  initial={{ x: "-30%" }}
-                  animate={{ x: ["-30%", "130%"] }}
-                  transition={{
-                    duration: 14,
-                    repeat: Infinity,
-                    ease: "linear",
-                  }}
-                  style={{
-                    background:
-                      "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.09) 45%, transparent 90%)",
-                  }}
-                />
-              )}
-              <div className="relative grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-end">
-                <motion.div
-                  variants={containerStagger}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={viewportOnce}
-                >
-                  <motion.p
-                    variants={fadeUpItem}
-                    className="text-xs font-semibold uppercase tracking-[0.18em] text-white/65"
-                  >
-                    Partner with Sous
-                  </motion.p>
-                  <motion.h3
-                    variants={fadeUpItem}
-                    className="mt-3 max-w-[20ch] text-3xl font-semibold leading-[1.15] md:text-4xl"
-                  >
-                    Trust-forward nutrition, built like a platform company.
-                  </motion.h3>
-                  <motion.p
-                    variants={fadeUpItem}
-                    className="mt-4 max-w-prose text-sm leading-relaxed text-white/80 md:text-base"
-                  >
-                    We are designing healthy eating guidance with input from
-                    Stanford clinicians so credibility stays visible as the
-                    product scales. If you are exploring strategic partnerships,
-                    distribution, or infrastructure alignment, we would love to
-                    compare notes.
-                  </motion.p>
-                  <motion.div
-                    variants={fadeUpItem}
-                    className="mt-7 flex flex-wrap gap-3"
-                  >
-                    <motion.span
-                      whileHover={reduceMotion ? {} : { scale: 1.03 }}
-                      whileTap={reduceMotion ? {} : { scale: 0.98 }}
-                      className="inline-flex"
-                    >
-                      <Link
-                        href="/today"
-                        className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#123129] transition hover:bg-white/95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                      >
-                        Explore product demo
-                        <ArrowRight className="h-4 w-4" aria-hidden />
-                      </Link>
-                    </motion.span>
-                    <motion.span
-                      whileHover={reduceMotion ? {} : { scale: 1.02 }}
-                      whileTap={reduceMotion ? {} : { scale: 0.98 }}
-                      className="inline-flex"
-                    >
-                      <a
-                        href={PARTNER_INQUIRY_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-xl border border-white/35 bg-white/5 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                      >
-                        <Github className="h-4 w-4" aria-hidden />
-                        Start partnership thread
-                      </a>
-                    </motion.span>
-                  </motion.div>
-                </motion.div>
-
-                <motion.div
-                  className="grid gap-3"
-                  variants={containerStagger}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={viewportOnce}
-                >
-                  {partnerHighlights.map((item) => (
-                    <motion.article
-                      key={item.title}
-                      variants={fadeUpItem}
-                      whileHover={
-                        reduceMotion
-                          ? {}
-                          : { backgroundColor: "rgba(255,255,255,0.1)" }
-                      }
-                      className="rounded-2xl border border-white/14 bg-white/[0.07] p-4 backdrop-blur-md md:p-5"
-                    >
-                      <item.icon
-                        className="h-4 w-4 text-[#a8ebd9]"
-                        strokeWidth={1.75}
-                        aria-hidden
-                      />
-                      <p className="mt-2 text-sm font-semibold text-white">
-                        {item.title}
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-white/75 md:text-sm">
-                        {item.body}
-                      </p>
-                    </motion.article>
-                  ))}
-                </motion.div>
+              <div className="md:col-span-3">
+                <Eyebrow>The slow payoff</Eyebrow>
               </div>
+
+              <div className="md:col-span-9">
+                <motion.h2
+                  variants={fadeUpItem}
+                  className="font-serif text-[40px] leading-[1.04] tracking-tight text-[#0d0d0d] md:text-[60px]"
+                >
+                  Cooking that looks
+                  <br />
+                  like <span className="italic">practice</span>,
+                  <br />
+                  <span className="text-[#4b5563]">not a feed.</span>
+                </motion.h2>
+
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-8 max-w-[56ch] text-[17px] leading-[1.75] text-[#374151] md:text-[18px]"
+                >
+                  Every finished plate joins a{" "}
+                  <Aside label="scrapbook">
+                    Private by default. Shared between cooking friends, it
+                    slowly becomes the only food feed you want to open — because
+                    it is only people you actually trust with dinner.
+                  </Aside>{" "}
+                  with plating notes and the techniques you&rsquo;ve used. Six
+                  months in, you can see the arc — not as a number, as the
+                  plates themselves.
+                </motion.p>
+
+                <TrajectoryArc />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <Rule />
+
+        {/* ==========================================================
+            TRUST — single quiet line. No banner, no card.
+           ========================================================= */}
+        <section className="px-6 py-24 md:px-10 md:py-28">
+          <div className="mx-auto max-w-[760px] text-center">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={viewportOnce}
+              transition={{ duration: 0.7, ease: easeOutExpo }}
+              className="font-serif text-[22px] leading-[1.5] text-[#4b5563] md:text-[26px]"
+            >
+              Health guidance is written with{" "}
+              <span className="text-[#0d0d0d]">Stanford clinicians</span> —
+              worked in, not bolted on.
+            </motion.p>
+          </div>
+        </section>
+
+        {/* ==========================================================
+            CLOSER — "Try it tonight." Confident, minimal.
+           ========================================================= */}
+        <section className="px-6 pb-28 pt-8 md:px-10 md:pb-40">
+          <div className="mx-auto max-w-[1160px]">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              variants={containerStagger}
+              className="border-t border-[#eceef2] pt-20"
+            >
+              <motion.h2
+                variants={fadeUpItem}
+                className="font-serif text-[48px] leading-[0.98] tracking-[-0.025em] text-[#0d0d0d] md:text-[96px]"
+              >
+                Try it
+                <br />
+                <span className="italic text-[#2d5a3d]">tonight.</span>
+              </motion.h2>
+
+              <motion.div
+                variants={fadeUpItem}
+                className="mt-10 grid gap-6 md:grid-cols-12 md:items-end"
+              >
+                <p className="text-[16px] leading-[1.72] text-[#4b5563] md:col-span-6 md:text-[17px]">
+                  The demo is the product — a craving, three pairings, a short
+                  cook flow. Five minutes, no signup.
+                </p>
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:col-span-6 md:justify-end">
+                  <Link
+                    href="/today"
+                    className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-7 py-4 text-[15px] font-medium text-white transition-all duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_16px_32px_-12px_rgba(13,13,13,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
+                  >
+                    Open the demo
+                    <ArrowUpRight
+                      className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-[-2px]"
+                      strokeWidth={1.8}
+                      aria-hidden
+                    />
+                  </Link>
+                  <Link
+                    href="/path"
+                    className="group inline-flex items-baseline gap-2 text-[14px] font-medium text-[#1a1a1a] transition-colors hover:text-[#2d5a3d]"
+                  >
+                    See the practice path
+                    <span
+                      aria-hidden
+                      className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition-all duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
+                    />
+                  </Link>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </section>
       </main>
 
-      <motion.footer
-        className="border-t border-[#e8eaef]/60 bg-[#f7f8fa]"
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "0px" }}
-        transition={{ duration: 0.5, ease: easeOutExpo }}
-      >
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-4 px-4 py-12 text-sm text-[#6a6a6a] md:flex-row md:items-center md:justify-between md:px-8">
-          <p className="font-semibold text-[#123129]">Sous</p>
-          <p className="max-w-xl text-xs leading-relaxed md:text-sm">
-            Landing narrative describes the product direction. The interactive
-            demo reflects the current build on the Today tab.
+      {/* ============================================================
+          FOOTER — minimal, colophon-style.
+         ============================================================ */}
+      <footer className="border-t border-[#eceef2] px-6 py-10 md:px-10">
+        <div className="mx-auto flex max-w-[1160px] flex-col gap-4 text-[13px] text-[#6b6b6b] md:flex-row md:items-center md:justify-between">
+          <p className="font-serif text-[18px] text-[#0d0d0d]">Sous</p>
+          <p className="max-w-[46ch] leading-[1.6]">
+            An app for home cooks who are tired of the feed. The landing is a
+            description; the demo is the thing.
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex items-center gap-5">
             <Link
               href="/today"
-              className="font-semibold text-[#2f6c5d] underline-offset-4 hover:underline"
+              className="text-[#1a1a1a] underline-offset-4 transition-colors hover:text-[#2d5a3d] hover:underline"
             >
-              Launch app
+              Demo
             </Link>
-            <a
-              href="#partner"
-              className="font-semibold text-[#2f6c5d] underline-offset-4 hover:underline"
+            <Link
+              href="/path"
+              className="text-[#1a1a1a] underline-offset-4 transition-colors hover:text-[#2d5a3d] hover:underline"
             >
-              Partnerships
-            </a>
+              Path
+            </Link>
+            <Link
+              href="/scrapbook"
+              className="text-[#1a1a1a] underline-offset-4 transition-colors hover:text-[#2d5a3d] hover:underline"
+            >
+              Scrapbook
+            </Link>
           </div>
         </div>
-      </motion.footer>
+      </footer>
     </div>
   );
 }
