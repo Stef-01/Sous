@@ -1,41 +1,55 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import type { TimerEntry } from "@/lib/hooks/use-cook-store";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
+
+function pickPrimary(timers: TimerEntry[]): TimerEntry | null {
+  if (timers.length === 0) return null;
+  const active = timers.filter((t) => t.completedAt === null);
+  if (active.length > 0) {
+    return active.reduce((a, b) => (a.remaining <= b.remaining ? a : b));
+  }
+  return timers.reduce((a, b) =>
+    (a.completedAt ?? 0) >= (b.completedAt ?? 0) ? a : b,
+  );
+}
 
 const RADIUS = 28;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 /**
- * CookTimer — floating countdown with circular SVG progress ring.
- * Large centred time display. Pulses + vibrates at zero, shows "Done!" briefly.
+ * CookTimer — floating countdown ring showing the most urgent active timer.
+ * When multiple timers run in parallel (combined cooks), the ring follows the
+ * lowest-remaining one; the full set is visible in the TimerStack pill strip
+ * above the step card.
  */
 export function CookTimer() {
-  const { timerActive, timerRemaining, tickTimer, stopTimer } = useCookStore();
-  const [totalSeconds, setTotalSeconds] = useState(0);
+  const timers = useCookStore((s) => s.timers);
+  const tickTimers = useCookStore((s) => s.tickTimers);
+  const stopTimer = useCookStore((s) => s.stopTimer);
+
+  const primary = pickPrimary(timers);
+
   const [showDone, setShowDone] = useState(false);
+  const vibratedForRef = useRef<string | null>(null);
 
-  // Capture the initial duration when the timer starts
+  // Global 1 Hz ticker — runs only while any timer is in flight.
   useEffect(() => {
-    if (timerActive && timerRemaining > 0 && timerRemaining > totalSeconds) {
-      const id = setTimeout(() => setTotalSeconds(timerRemaining), 0);
-      return () => clearTimeout(id);
-    }
-  }, [timerActive, timerRemaining, totalSeconds]);
-
-  // Tick interval
-  useEffect(() => {
-    if (!timerActive) return;
-    const interval = setInterval(() => tickTimer(), 1000);
+    if (timers.length === 0) return;
+    const interval = setInterval(() => tickTimers(), 1000);
     return () => clearInterval(interval);
-  }, [timerActive, tickTimer]);
+  }, [timers.length, tickTimers]);
 
-  // Completion: vibrate, flash "Done!", then dismiss
+  // Vibrate once per timer when it first hits zero.
   useEffect(() => {
-    if (!timerActive || timerRemaining !== 0) return;
-
+    const justDone = timers.find(
+      (t) => t.completedAt !== null && vibratedForRef.current !== t.id,
+    );
+    if (!justDone) return;
+    vibratedForRef.current = justDone.id;
     try {
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate([200, 100, 200, 100, 200]);
@@ -43,33 +57,28 @@ export function CookTimer() {
     } catch {
       /* unsupported */
     }
+    // Flash the "Done!" label for the linger window. Guard is satisfied via
+    // `vibratedForRef` above — this effect only runs once per finished timer.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setShowDone(true);
+    const id = setTimeout(() => setShowDone(false), 1800);
+    return () => clearTimeout(id);
+  }, [timers]);
 
-    const showId = setTimeout(() => setShowDone(true), 0);
-    const hideId = setTimeout(() => {
-      setShowDone(false);
-      setTotalSeconds(0);
-      stopTimer();
-    }, 1800);
-    return () => {
-      clearTimeout(showId);
-      clearTimeout(hideId);
-    };
-  }, [timerActive, timerRemaining, stopTimer]);
+  if (!primary) return null;
 
-  if (!timerActive && timerRemaining <= 0) return null;
-
-  const minutes = Math.floor(timerRemaining / 60);
-  const seconds = timerRemaining % 60;
+  const { remaining, totalSeconds } = primary;
+  const minutes = Math.floor(remaining / 60);
+  const seconds = remaining % 60;
   const display =
     totalSeconds >= 60
       ? `${minutes}:${String(seconds).padStart(2, "0")}`
-      : `${timerRemaining}s`;
+      : `${remaining}s`;
 
-  // Ring fill: fraction remaining
-  const fraction = totalSeconds > 0 ? timerRemaining / totalSeconds : 1;
+  const fraction = totalSeconds > 0 ? remaining / totalSeconds : 1;
   const strokeDash = fraction * CIRCUMFERENCE;
-  const isLow = timerRemaining <= 10 && timerRemaining > 0;
-  const isDone = timerRemaining === 0;
+  const isLow = remaining <= 10 && remaining > 0;
+  const isDone = primary.completedAt !== null;
 
   return (
     <motion.div
@@ -96,13 +105,11 @@ export function CookTimer() {
         }
         className="flex items-center gap-4 rounded-2xl bg-[var(--nourish-dark)] px-5 py-3 shadow-xl"
       >
-        {/* Circular progress ring */}
         <div
           className="relative flex items-center justify-center"
           style={{ width: 72, height: 72 }}
         >
           <svg width="72" height="72" className="-rotate-90">
-            {/* Track */}
             <circle
               cx="36"
               cy="36"
@@ -111,7 +118,6 @@ export function CookTimer() {
               stroke="rgba(255,255,255,0.12)"
               strokeWidth="4"
             />
-            {/* Progress */}
             <motion.circle
               cx="36"
               cy="36"
@@ -126,10 +132,9 @@ export function CookTimer() {
             />
           </svg>
 
-          {/* Time display — centred inside the ring */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <AnimatePresence mode="wait">
-              {showDone ? (
+              {isDone && showDone ? (
                 <motion.span
                   key="done"
                   initial={{ scale: 0.6, opacity: 0 }}
@@ -147,7 +152,7 @@ export function CookTimer() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
                   className="font-mono font-bold tabular-nums text-white leading-none"
-                  style={{ fontSize: timerRemaining >= 600 ? 16 : 20 }}
+                  style={{ fontSize: remaining >= 600 ? 16 : 20 }}
                 >
                   {display}
                 </motion.span>
@@ -156,15 +161,10 @@ export function CookTimer() {
           </div>
         </div>
 
-        {/* Dismiss */}
         <button
-          onClick={() => {
-            setShowDone(false);
-            setTotalSeconds(0);
-            stopTimer();
-          }}
+          onClick={() => stopTimer(primary.id)}
           className="flex items-center justify-center rounded-full min-h-11 min-w-11 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-          aria-label="Stop timer"
+          aria-label={`Stop ${primary.label}`}
           type="button"
         >
           <X size={18} />

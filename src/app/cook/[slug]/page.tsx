@@ -203,8 +203,8 @@ export default function GuidedCookPage({
   );
 
   const handleStartTimer = useCallback(
-    (seconds: number) => {
-      startTimer(seconds);
+    (seconds: number, label?: string) => {
+      startTimer(seconds, label);
     },
     [startTimer],
   );

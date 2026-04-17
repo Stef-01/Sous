@@ -10,14 +10,28 @@ export interface CookDishEntry {
   totalSteps: number;
 }
 
+/** A single kitchen timer entry. The store can hold several concurrently so
+ *  that a user can run "rice 4 min" and "curry 9 min" in parallel lanes. */
+export interface TimerEntry {
+  id: string;
+  label: string;
+  totalSeconds: number;
+  remaining: number;
+  startedAt: number;
+  /** Set once `remaining` hits 0. Kept briefly so the UI can flash "Done!". */
+  completedAt: number | null;
+}
+
+/** How long a finished timer stays in the array before auto-pruning. */
+export const COMPLETED_TIMER_LINGER_MS = 1800;
+
 interface CookStore {
   sessionId: string | null;
   currentPhase: Phase;
   currentStepIndex: number;
   totalSteps: number;
   expandedChip: ChipType;
-  timerActive: boolean;
-  timerRemaining: number;
+  timers: TimerEntry[];
 
   // Combined cook mode
   cookMode: "single" | "combined";
@@ -33,9 +47,15 @@ interface CookStore {
   prevStep: () => void;
   nextDish: () => boolean; // returns true if there's another dish, false if all done
   toggleChip: (chip: ChipType) => void;
-  startTimer: (seconds: number) => void;
-  tickTimer: () => void;
-  stopTimer: () => void;
+  /** Add a new timer. Label helps the user identify which dish/step it belongs
+   *  to when multiple timers are running. If a timer with the same label is
+   *  already active (dedupe), the call is a no-op. */
+  startTimer: (seconds: number, label?: string) => void;
+  /** Decrement every active timer by one second and prune completed timers
+   *  whose linger window has elapsed. */
+  tickTimers: () => void;
+  /** Stop a specific timer by id, or all timers if no id is given. */
+  stopTimer: (id?: string) => void;
   completeSession: () => void;
   reset: () => void;
 }
@@ -46,12 +66,18 @@ const initialState = {
   currentStepIndex: 0,
   totalSteps: 0,
   expandedChip: null as ChipType,
-  timerActive: false,
-  timerRemaining: 0,
+  timers: [] as TimerEntry[],
   cookMode: "single" as "single" | "combined",
   dishes: [] as CookDishEntry[],
   currentDishIndex: 0,
 };
+
+function nextTimerId(): string {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `t-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
 
 export const useCookStore = create<CookStore>((set, get) => ({
   ...initialState,
@@ -95,8 +121,9 @@ export const useCookStore = create<CookStore>((set, get) => ({
         currentStepIndex: 0,
         totalSteps: dishes[nextIdx].totalSteps,
         expandedChip: null,
-        timerActive: false,
-        timerRemaining: 0,
+        // Dish boundaries are a natural reset — any stragglers from the
+        // previous dish should not bleed into the next.
+        timers: [],
       });
       return true;
     }
@@ -108,23 +135,59 @@ export const useCookStore = create<CookStore>((set, get) => ({
       expandedChip: state.expandedChip === chip ? null : chip,
     })),
 
-  startTimer: (seconds) => {
-    // Guard against double-tap: don't restart if a timer is already running
-    const { timerActive } = get();
-    if (timerActive) return;
-    set({ timerActive: true, timerRemaining: seconds });
+  startTimer: (seconds, label) => {
+    if (seconds <= 0) return;
+    const resolvedLabel = (label ?? "Timer").trim() || "Timer";
+    const { timers } = get();
+    // Dedupe by label — accidental double-taps on the same timer chip
+    // should not spawn two pills. Completed timers (remaining === 0) don't
+    // block a fresh start.
+    const alreadyActive = timers.some(
+      (t) => t.label === resolvedLabel && t.remaining > 0,
+    );
+    if (alreadyActive) return;
+    const entry: TimerEntry = {
+      id: nextTimerId(),
+      label: resolvedLabel,
+      totalSeconds: seconds,
+      remaining: seconds,
+      startedAt: Date.now(),
+      completedAt: null,
+    };
+    set({ timers: [...timers, entry] });
   },
 
-  tickTimer: () =>
+  tickTimers: () =>
     set((state) => {
-      if (state.timerRemaining <= 1) {
-        // Keep timerActive true at 0 so the completion effect can detect it
-        return { timerRemaining: 0 };
+      if (state.timers.length === 0) return state;
+      const now = Date.now();
+      const next: TimerEntry[] = [];
+      for (const t of state.timers) {
+        // Prune finished timers whose linger window has elapsed.
+        if (
+          t.completedAt !== null &&
+          now - t.completedAt >= COMPLETED_TIMER_LINGER_MS
+        ) {
+          continue;
+        }
+        if (t.completedAt !== null) {
+          next.push(t); // still in flash window
+          continue;
+        }
+        if (t.remaining <= 1) {
+          next.push({ ...t, remaining: 0, completedAt: now });
+        } else {
+          next.push({ ...t, remaining: t.remaining - 1 });
+        }
       }
-      return { timerRemaining: state.timerRemaining - 1 };
+      return { timers: next };
     }),
 
-  stopTimer: () => set({ timerActive: false, timerRemaining: 0 }),
+  stopTimer: (id) =>
+    set((state) => {
+      if (id === undefined) return { timers: [] };
+      return { timers: state.timers.filter((t) => t.id !== id) };
+    }),
 
   completeSession: () => set({ currentPhase: "win" }),
 

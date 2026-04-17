@@ -38,7 +38,9 @@ interface StepCardProps {
   imageUrl?: string | null;
   expandedChip: string | null;
   onToggleChip: (chip: string | null) => void;
-  onStartTimer: (seconds: number) => void;
+  /** `label` identifies which timer in the stack this is — passes through to
+   *  the store so TimerStack pills can show "Basmati rice · step 3" etc. */
+  onStartTimer: (seconds: number, label?: string) => void;
   onNext: () => void;
   onPrev: () => void;
   isFirst: boolean;
@@ -275,7 +277,16 @@ export function StepCard({
             onToggle={() =>
               onToggleChip(expandedChip === "timer" ? null : "timer")
             }
-            onStart={() => onStartTimer(timerSeconds)}
+            onStart={() =>
+              onStartTimer(
+                timerSeconds,
+                // Prefer the recipe name so multi-dish cooks can tell pills
+                // apart; fall back to the step number for single cooks.
+                recipeName
+                  ? `${recipeName} · step ${stepNumber}`
+                  : `Step ${stepNumber}`,
+              )
+            }
           />
         )}
 

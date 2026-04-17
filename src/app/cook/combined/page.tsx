@@ -27,6 +27,7 @@ import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
 import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
+import { TimerStack } from "@/components/guided-cook/timer-stack";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -349,8 +350,8 @@ function CombinedCookContent() {
   );
 
   const handleStartTimer = useCallback(
-    (seconds: number) => {
-      startTimer(seconds);
+    (seconds: number, label?: string) => {
+      startTimer(seconds, label);
     },
     [startTimer],
   );
@@ -605,6 +606,10 @@ function CombinedCookContent() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ type: "spring", stiffness: 260, damping: 25 }}
               >
+                {/* Timer stack — parallel-lane pills for every running
+                    timer. Hidden when nothing is running. */}
+                <TimerStack />
+
                 {/* Current dish label */}
                 {dishes.length > 1 && (
                   <motion.p
