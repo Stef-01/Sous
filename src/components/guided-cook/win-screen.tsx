@@ -17,6 +17,7 @@ import {
   Trophy,
   PartyPopper,
   Award,
+  Send,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
@@ -33,6 +34,8 @@ export interface SkillProgressEntry {
 
 interface WinScreenProps {
   dishName: string;
+  /** The slug of the primary dish — needed to build a shareable gift link. */
+  dishSlug?: string;
   sideDishes?: string[];
   cuisineFamily?: string;
   isFirstCook?: boolean;
@@ -47,6 +50,30 @@ interface WinScreenProps {
   onSave: () => void;
   onCookAgain: () => void;
   onBackToday: () => void;
+}
+
+/** Where the sender's first name lives between sessions. Collected lazily
+ *  the first time the user taps "Send to a friend" — intentionally not an
+ *  onboarding question, and intentionally not tied to auth. */
+const GIFT_SENDER_NAME_KEY = "sous-gift-sender-name";
+
+function loadGiftSenderName(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return localStorage.getItem(GIFT_SENDER_NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function saveGiftSenderName(name: string) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(GIFT_SENDER_NAME_KEY, name);
+  } catch {
+    // localStorage unavailable — the feature still works, it just won't
+    // remember the name between cooks.
+  }
 }
 
 // ── CSS confetti particles ────────────────────────────────────────────────────
@@ -235,6 +262,7 @@ function detectMilestone(ctx: {
  */
 export function WinScreen({
   dishName,
+  dishSlug,
   sideDishes = [],
   cuisineFamily = "",
   isFirstCook = false,
@@ -256,6 +284,7 @@ export function WinScreen({
   const [showReflection, setShowReflection] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
   const [photoAdded, setPhotoAdded] = useState(false);
+  const [giftSent, setGiftSent] = useState(false);
 
   const winMessage = trpc.ai.generateWinMessage.useQuery(
     {
@@ -301,6 +330,54 @@ export function WinScreen({
     setRating(stars);
     onRate(stars);
     if (stars <= 3 && !showReflection) setShowReflection(true);
+  };
+
+  const handleSendGift = async () => {
+    if (!dishSlug) return;
+
+    // Prompt for a first name the first time. Keeping this as a simple
+    // browser prompt (rather than building a modal) keeps the surface tiny
+    // and aligns with "no settings page" — it only appears once.
+    let senderName = loadGiftSenderName();
+    if (!senderName) {
+      const entered = window.prompt(
+        "Your first name — your friend will see this on the gift page:",
+        "",
+      );
+      if (!entered) return;
+      senderName = entered.trim().slice(0, 24);
+      if (!senderName) return;
+      saveGiftSenderName(senderName);
+    }
+
+    const params = new URLSearchParams({ from: senderName });
+    if (rating > 0) params.set("stars", String(rating));
+    const giftUrl = `${window.location.origin}/gift/${encodeURIComponent(
+      dishSlug,
+    )}?${params.toString()}`;
+
+    // Prefer the native share sheet where available (mobile + some
+    // desktops); fall back to clipboard so the user always gets a link.
+    const shareData = {
+      title: `${senderName} cooked ${dishName}`,
+      text: `${senderName} made ${dishName} on Sous. Try it yourself —`,
+      url: giftUrl,
+    };
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share(shareData);
+      } else if (
+        typeof navigator !== "undefined" &&
+        navigator.clipboard?.writeText
+      ) {
+        await navigator.clipboard.writeText(giftUrl);
+      } else {
+        window.prompt("Copy this link:", giftUrl);
+      }
+      setGiftSent(true);
+    } catch {
+      // Share dialog dismissed — don't flip the button to "sent" state.
+    }
   };
 
   return (
@@ -528,6 +605,30 @@ export function WinScreen({
             <BookmarkPlus size={14} />
             {saved ? "Saved ✓" : "Save to scrapbook"}
           </motion.button>
+
+          {/* Send to a friend — secondary text link; only rendered once we
+              have a slug to share. Deliberately quiet so it doesn't compete
+              with Back to Today. */}
+          {dishSlug && (
+            <motion.button
+              onClick={handleSendGift}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className={cn(
+                "flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm transition-colors",
+                giftSent
+                  ? "text-[var(--nourish-green)]/70 cursor-default"
+                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]",
+              )}
+              type="button"
+              aria-label={
+                giftSent ? "Gift link copied" : `Send ${dishName} to a friend`
+              }
+            >
+              <Send size={14} />
+              {giftSent ? "Link copied ✓" : "Send to a friend"}
+            </motion.button>
+          )}
         </motion.div>
 
         {/* ── Secondary actions (photo + note) ── */}

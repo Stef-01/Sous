@@ -700,6 +700,7 @@ function CombinedCookContent() {
                   ? `${orderedDishes.map((d) => d.dish.name).join(" + ")}`
                   : (orderedDishes[0]?.dish.name ?? "")
               }
+              dishSlug={mainDish?.slug ?? orderedDishes[0]?.dish.slug}
               sideDishes={orderedDishes.map((d) => d.dish.name)}
               cuisineFamily={mainDish?.cuisineFamily ?? ""}
               isFirstCook={winMeta.streak === 1}
