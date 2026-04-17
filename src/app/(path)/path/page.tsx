@@ -264,6 +264,10 @@ export default function PathPage() {
             }).length
           }
           totalCooks={stats.completedCooks}
+          lastCookedAt={
+            completedSessions.find((s) => s.completedAt)?.completedAt ??
+            undefined
+          }
         />
 
         {/* Journey montage — recent cooks as a polaroid ribbon */}

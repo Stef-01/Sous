@@ -12,7 +12,12 @@ interface PathHeroProps {
   weeklyGoal?: number;
   /** Total completed cooks across all time. */
   totalCooks: number;
+  /** ISO timestamp of the most recent completed cook. Undefined when the user
+   *  has never cooked — in that case the "start tonight" copy wins. */
+  lastCookedAt?: string;
 }
+
+const WELCOME_BACK_THRESHOLD_DAYS = 7;
 
 type TimeBand = "morning" | "afternoon" | "evening";
 
@@ -44,9 +49,16 @@ function resolveHeadline(
   cooksThisWeek: number,
   weeklyGoal: number,
   totalCooks: number,
+  daysSinceLastCook: number | undefined,
 ): string {
   if (totalCooks === 0) {
     return "Your kitchen story starts tonight.";
+  }
+  if (
+    typeof daysSinceLastCook === "number" &&
+    daysSinceLastCook >= WELCOME_BACK_THRESHOLD_DAYS
+  ) {
+    return "Welcome back. Let's start easy.";
   }
   if (cooksThisWeek >= weeklyGoal) {
     return "You hit your cooking goal this week — nice.";
@@ -75,21 +87,31 @@ export function PathHero({
   cooksThisWeek,
   weeklyGoal = 3,
   totalCooks,
+  lastCookedAt,
 }: PathHeroProps) {
-  // Resolve band on the client so the SSR/client branch cannot mismatch.
-  // Hydration pattern — intentionally state-sets on mount to pick up the real
-  // hour without breaking server-render parity. See also use-xp-system.ts.
+  // Resolve band + days-since on the client so the SSR/client branch cannot
+  // mismatch. Intentional state-sets on mount — impure Date reads are
+  // forbidden during render but are the whole point of these effects.
   const [band, setBand] = useState<TimeBand>("afternoon");
+  const [daysSinceLastCook, setDaysSinceLastCook] = useState<
+    number | undefined
+  >(undefined);
   useEffect(() => {
+    const now = new Date();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setBand(resolveTimeBand(new Date()));
-  }, []);
+    setBand(resolveTimeBand(now));
+    if (lastCookedAt) {
+      const diffMs = now.getTime() - new Date(lastCookedAt).getTime();
+      setDaysSinceLastCook(Math.max(0, Math.floor(diffMs / 86400000)));
+    }
+  }, [lastCookedAt]);
 
   const headline = resolveHeadline(
     streak,
     cooksThisWeek,
     weeklyGoal,
     totalCooks,
+    daysSinceLastCook,
   );
 
   return (

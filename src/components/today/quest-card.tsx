@@ -393,7 +393,7 @@ export function QuestCard({
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
 }) {
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
-  const questDishes = useMemo(
+  const baseDishes = useMemo(
     () =>
       buildQuestDishes(
         userPreferences,
@@ -402,6 +402,14 @@ export function QuestCard({
       ),
     [userPreferences, cookHistory, pantryItems, pantryMounted],
   );
+  // Quick-win filter: a single toggle that narrows the feed to fast dishes.
+  // Session-scoped (no storage) — user re-engages every time they sit down.
+  const [onlyQuick, setOnlyQuick] = useState(false);
+  const questDishes = useMemo(() => {
+    if (!onlyQuick) return baseDishes;
+    const filtered = baseDishes.filter((d) => d.cookTimeMinutes <= 20);
+    return filtered.length > 0 ? filtered : baseDishes;
+  }, [baseDishes, onlyQuick]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
@@ -528,11 +536,30 @@ export function QuestCard({
 
   return (
     <div className="space-y-1.5">
-      {/* Section header */}
-      <div className="px-1">
+      {/* Section header + quick-win chip — a single shortcut, never a filter panel. */}
+      <div className="flex items-center justify-between px-1">
         <h2 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
           Today&apos;s Quest
         </h2>
+        <motion.button
+          type="button"
+          onClick={() => {
+            setOnlyQuick((v) => !v);
+            setCurrentIndex(0);
+          }}
+          whileTap={{ scale: 0.96 }}
+          className={cn(
+            "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+            onlyQuick
+              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+              : "border-[var(--nourish-border-strong)] bg-white/60 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40 hover:text-[var(--nourish-green)]",
+          )}
+          aria-pressed={onlyQuick}
+          aria-label="Filter to dishes under 20 minutes"
+        >
+          <Clock size={11} strokeWidth={2.2} />
+          Under 20 min
+        </motion.button>
       </div>
 
       {/* Card stack container — minHeight 460 pushes action chips below fold at 375×667 */}
