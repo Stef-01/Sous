@@ -8,6 +8,7 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
+import { CookForTwoChip } from "@/components/today/cook-for-two-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { FallbackActions } from "@/components/today/quick-actions";
 import { FriendsStrip } from "@/components/today/friends-strip";
@@ -25,6 +26,7 @@ const CoachQuiz = dynamic(() =>
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
+import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
 
 type ViewState =
@@ -76,6 +78,12 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats, completedSessions } = useCookSessions();
+  const tasteBlend = useTasteBlend();
+  const effectivePreferences = blendPreferences(
+    userPreferences,
+    tasteBlend.duo,
+    tasteBlend.alpha,
+  );
 
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
@@ -164,7 +172,7 @@ function TodayPageContent() {
       mainDish: mainDishQuery,
       inputMode: "text",
       _rerollSeed: rerollSeed || undefined,
-      userPreferences,
+      userPreferences: effectivePreferences,
       effortTolerance,
     },
     {
@@ -373,9 +381,12 @@ function TodayPageContent() {
         {/* Today's Quest — swipeable card stack */}
         <QuestCard
           key={questKey}
-          userPreferences={userPreferences}
+          userPreferences={effectivePreferences}
           cookHistory={stats}
         />
+
+        {/* Household taste blend — opt-in, re-invokable from here */}
+        <CookForTwoChip />
 
         {/* "Too tired?" + action chips — tightly grouped as secondary options */}
         <div className="space-y-2.5 overflow-visible">
