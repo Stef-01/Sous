@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { computeStreakWithRest, loadRestDays } from "./use-rest-days";
 
 const SESSIONS_KEY = "sous-cook-sessions";
 const STATS_KEY = "sous-cook-stats";
@@ -108,25 +109,15 @@ function persistStats(stats: CookStats) {
 
 /**
  * Calculate whether the streak is still active.
- * A streak stays alive if the user cooked today or yesterday.
+ * A streak stays alive if the user cooked today, yesterday, or if every
+ * intervening day is covered by a rest day (see `use-rest-days.ts`).
  * Uses calendar-day comparison (not raw ms diff) to avoid timezone bugs.
  */
 function computeStreak(
   lastCookDate: string | null,
   currentStreak: number,
 ): number {
-  if (!lastCookDate) return 0;
-  // Compare calendar days using local date strings
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, "0")}-${String(yesterday.getDate()).padStart(2, "0")}`;
-
-  if (lastCookDate === todayStr || lastCookDate === yesterdayStr) {
-    return currentStreak;
-  }
-  return 0; // streak broken
+  return computeStreakWithRest(lastCookDate, currentStreak, loadRestDays());
 }
 
 // ── Hook ──────────────────────────────────────────────
