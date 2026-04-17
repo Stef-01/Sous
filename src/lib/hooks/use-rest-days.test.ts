@@ -52,47 +52,27 @@ describe("computeStreakWithRest", () => {
 
   it("preserves the streak when the user cooked yesterday", () => {
     expect(
-      computeStreakWithRest(
-        toDateKey(localDate(2025, 1, 13)),
-        5,
-        [],
-        today,
-      ),
+      computeStreakWithRest(toDateKey(localDate(2025, 1, 13)), 5, [], today),
     ).toBe(5);
   });
 
   it("resets the streak when two days are missed with no rest day", () => {
     expect(
-      computeStreakWithRest(
-        toDateKey(localDate(2025, 1, 12)),
-        5,
-        [],
-        today,
-      ),
+      computeStreakWithRest(toDateKey(localDate(2025, 1, 12)), 5, [], today),
     ).toBe(0);
   });
 
   it("keeps the streak alive when the missed day is a rest day", () => {
     const rest = [toDateKey(localDate(2025, 1, 13))];
     expect(
-      computeStreakWithRest(
-        toDateKey(localDate(2025, 1, 12)),
-        5,
-        rest,
-        today,
-      ),
+      computeStreakWithRest(toDateKey(localDate(2025, 1, 12)), 5, rest, today),
     ).toBe(5);
   });
 
   it("resets if any intervening day is not covered by a rest day", () => {
     const rest = [toDateKey(localDate(2025, 1, 13))];
     expect(
-      computeStreakWithRest(
-        toDateKey(localDate(2025, 1, 11)),
-        5,
-        rest,
-        today,
-      ),
+      computeStreakWithRest(toDateKey(localDate(2025, 1, 11)), 5, rest, today),
     ).toBe(0);
   });
 });

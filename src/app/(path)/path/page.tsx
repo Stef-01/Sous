@@ -8,6 +8,7 @@ import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
+import { ConfidenceDial } from "@/components/path/confidence-dial";
 import { JourneyMontage } from "@/components/path/journey-montage";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
@@ -342,6 +343,11 @@ export default function PathPage() {
         {/* Cuisine constellation — quiet celebration of culinary reach */}
         <div className="px-4 pt-4">
           <CuisineConstellation completedSessions={completedSessions} />
+        </div>
+
+        {/* Kitchen confidence dial — derived gauge, no number, just a tier */}
+        <div className="px-4">
+          <ConfidenceDial stats={stats} completedSessions={completedSessions} />
         </div>
 
         {/* Skill tree */}
