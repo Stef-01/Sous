@@ -23,6 +23,8 @@ import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
+import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
+import { useBigHands } from "@/lib/hooks/use-big-hands";
 import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
@@ -70,6 +72,7 @@ function CombinedCookContent() {
     [sidesParam],
   );
 
+  const { enabled: bigHands } = useBigHands();
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
@@ -480,6 +483,7 @@ function CombinedCookContent() {
 
   return (
     <motion.div
+      data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -908,6 +912,15 @@ function CombinedMissionScreen({
         }}
       >
         <PlanCookChip totalMinutes={displayTime} />
+      </motion.div>
+
+      {/* Big-hands — session-scoped opt-in for the rest of this cook */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
+      >
+        <BigHandsToggle />
       </motion.div>
 
       {/* CTA — mt-auto pins to bottom for no-scroll compliance at 375×667 */}

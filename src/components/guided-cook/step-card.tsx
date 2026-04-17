@@ -18,6 +18,7 @@ import { HackChip } from "./hack-chip";
 import { FactChip } from "./fact-chip";
 import { Glossify } from "./glossify";
 import { trpc } from "@/lib/trpc/client";
+import { useBigHands } from "@/lib/hooks/use-big-hands";
 
 interface StepCardProps {
   /** +1 when advancing forward, -1 when going back. Controls slide direction. */
@@ -78,6 +79,7 @@ export function StepCard({
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const bigHands = useBigHands();
   const [lastAnswer, setLastAnswer] = useState<{
     answer: string;
     confidence: string;
@@ -399,6 +401,7 @@ export function StepCard({
       {/* Navigation */}
       <div className="flex items-center gap-3 pt-2">
         <motion.button
+          data-cook-nav
           onClick={onPrev}
           disabled={isFirst}
           whileTap={isFirst ? undefined : { scale: 0.95 }}
@@ -418,7 +421,19 @@ export function StepCard({
         </motion.button>
 
         <motion.button
-          onClick={onNext}
+          data-cook-nav
+          onClick={(event) => {
+            // If the tap lands within ~24px of either horizontal edge of
+            // the button, assume the user is reaching — record it so the
+            // big-hands nudge can surface after 3 near-misses.
+            const rect = event.currentTarget.getBoundingClientRect();
+            const fromLeft = event.clientX - rect.left;
+            const fromRight = rect.right - event.clientX;
+            if (fromLeft < 24 || fromRight < 24) {
+              bigHands.registerEdgeTap();
+            }
+            onNext();
+          }}
           whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
@@ -441,6 +456,36 @@ export function StepCard({
           )}
         </motion.button>
       </div>
+
+      {/* Big-hands nudge — quietly appears after the user has mis-tapped
+          near the edge of the Next button three times. Single tap accepts. */}
+      {bigHands.shouldNudge && (
+        <motion.div
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22 }}
+          className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.07] px-3 py-2"
+        >
+          <p className="min-w-0 flex-1 text-[12px] text-[var(--nourish-dark)]">
+            Tapping feels tight? Try bigger controls for the rest of this cook.
+          </p>
+          <button
+            type="button"
+            onClick={() => bigHands.setEnabled(true)}
+            className="shrink-0 rounded-full bg-[var(--nourish-green)] px-3 py-1 text-[11px] font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          >
+            Bigger
+          </button>
+          <button
+            type="button"
+            onClick={bigHands.dismissNudge}
+            aria-label="Dismiss suggestion"
+            className="shrink-0 rounded-full px-2 py-1 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+          >
+            Not now
+          </button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

@@ -14,6 +14,7 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
+import { useBigHands } from "@/lib/hooks/use-big-hands";
 import { toast } from "@/lib/hooks/use-toast";
 import {
   getStaticCookData,
@@ -57,6 +58,7 @@ export default function GuidedCookPage({
     });
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
+  const { enabled: bigHands } = useBigHands();
   const sessionIdRef = useRef<string | null>(null);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
@@ -367,6 +369,7 @@ export default function GuidedCookPage({
 
   return (
     <motion.div
+      data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}

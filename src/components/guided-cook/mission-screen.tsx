@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { PlanCookChip } from "./plan-cook-chip";
+import { BigHandsToggle } from "./big-hands-toggle";
 
 interface MissionScreenProps {
   dishName: string;
@@ -151,6 +152,20 @@ export function MissionScreen({
         }}
       >
         <PlanCookChip totalMinutes={totalTime} />
+      </motion.div>
+
+      {/* Big-hands mode — calm opt-in for the rest of this session */}
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 25,
+          delay: 0.24,
+        }}
+      >
+        <BigHandsToggle />
       </motion.div>
 
       {/* CTA — mt-auto pins to bottom of the flex container */}

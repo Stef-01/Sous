@@ -53,6 +53,25 @@
   line-height: var(--sous-leading-cook);
 }
 
+/* Big-hands mode — session-scoped toggle on the cook pages. Bumps the
+   cook prose ~1.2× and expands hit areas on the step-nav controls to
+   ~1.25×. We rebind CSS variables rather than rewriting classes, so
+   existing Tailwind utilities inherit the new scale automatically. */
+[data-big-hands="true"] {
+  --sous-text-cook: 20px;
+  --sous-leading-cook: 1.6;
+  --sous-text-body: 17px;
+  --sous-text-caption: 14px;
+}
+[data-big-hands="true"] [data-cook-nav] {
+  padding: 0.95rem 1.1rem;
+  font-size: 16px;
+}
+[data-big-hands="true"] [data-cook-nav] svg {
+  width: 22px;
+  height: 22px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
