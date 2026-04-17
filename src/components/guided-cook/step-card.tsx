@@ -16,6 +16,7 @@ import { TimerChip } from "./timer-chip";
 import { MistakeChip } from "./mistake-chip";
 import { HackChip } from "./hack-chip";
 import { FactChip } from "./fact-chip";
+import { Glossify } from "./glossify";
 import { trpc } from "@/lib/trpc/client";
 
 interface StepCardProps {
@@ -209,8 +210,10 @@ export function StepCard({
         </div>
       )}
 
-      {/* Main instruction */}
-      <p className="cook-prose text-[var(--nourish-dark)]">{instruction}</p>
+      {/* Main instruction — technique words are tap-to-reveal via Glossify */}
+      <p className="cook-prose text-[var(--nourish-dark)]">
+        <Glossify>{instruction}</Glossify>
+      </p>
 
       {/* Personal note overlay indicator */}
       {personalNote && (
