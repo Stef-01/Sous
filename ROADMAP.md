@@ -1,7 +1,36 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-15
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions)
+> **Updated:** 2026-04-16
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan)
+
+---
+
+## STAGE 0.5: NEXT-20 INTUITION + BEAUTY BUILD — COMPLETE
+
+A focused 20-phase pass on making the app more intuitive, accessible, and visually engaging, with a middle-aged-to-senior user in mind. All phases shipped between 2026-04-15 and 2026-04-16. See `docs/NEXT-20-PHASES.md` for the full plan.
+
+- **Phase 1** — Readable-by-default typography pass (css variables for body/caption/cook sizes, cook-prose class).
+- **Phase 2** — Tap target + contrast audit via a shared `IconButton` primitive (all icon controls ≥44×44).
+- **Phase 3** — Plain-language cook step glossary (`cook-glossary.ts`, `Glossify` component, inline tooltips).
+- **Phase 4** — Path ambient hero with time-of-day gradient and warm headline copy.
+- **Phase 5** — Living skill tree with stroke-draw connectors and bloom animations on mastery.
+- **Phase 6** — Cuisine constellation SVG on Path (quiet celebration of culinary reach).
+- **Phase 7** — Journey montage strip (horizontal scroll of recent cook polaroids).
+- **Phase 8** — "Tonight" commitment chip on Today (localStorage, auto-expiring).
+- **Phase 9** — "Plan my cook" chip on Mission (eat-by time → start-cooking-at time).
+- **Phase 10** — Pantry-aware ranking in QuestCard (`computePantryFit`, "already have most of this" chip).
+- **Phase 11** — Quick-win "Under 20 min" filter + "Welcome back" path hero for returning users.
+- **Phase 12** — Read-aloud step player with graceful fallback when speech synthesis is unavailable.
+- **Phase 13** — Big-hands mode (session-scoped, `data-big-hands` CSS variables, edge-tap auto-nudge).
+- **Phase 14** — Timer stack timeline on `/cook/combined` (multi-timer `useCookStore`, `TimerStack` pills).
+- **Phase 15** — Repeat-cook shortcut on Today (shows last ≥4-star cook within 14 days).
+- **Phase 16** — Rest-day grace (1-per-week cap, preserves streak, dotted-outline visual state).
+- **Phase 17** — Kitchen confidence dial on Path (derived gauge, 4 tiers, no number).
+- **Phase 18** — Recipe gift link (`/gift/<slug>?from=<name>&stars=<n>` read-only preview, no signup wall).
+- **Phase 19** — Household taste blend ("Cook for two" chip + single slider, blends preference vector).
+- **Phase 20** — Final audit + polish (full lint + 172 tests + prod build green; Playwright smokes for read-aloud, Tonight round-trip, and rest-day streak invariant).
+
+Remaining deferred items (require live environment): Lighthouse runs for `/today`, `/path`, `/cook/[slug]`; manual 375×667 viewport pass; visual regression screenshot baseline in `docs/screenshots/2026-04-phase-20/`.
 
 ---
 
