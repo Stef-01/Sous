@@ -15,7 +15,7 @@ import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useAchievements } from "@/lib/hooks/use-achievements";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
-import { AchievementToast } from "@/components/shared/achievement-toast";
+import { toast } from "@/lib/hooks/use-toast";
 import { AchievementsLauncher } from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
@@ -47,6 +47,20 @@ export default function PathPage() {
     newlyUnlocked,
     dismissNewUnlocks,
   } = useAchievements();
+
+  useEffect(() => {
+    if (newlyUnlocked.length === 0) return;
+    toast.pushMany(
+      newlyUnlocked.map((a) => ({
+        variant: "achievement" as const,
+        title: a.name,
+        body: a.description,
+        emoji: a.emoji,
+        dedupKey: `achievement:${a.id}`,
+      })),
+    );
+    dismissNewUnlocks();
+  }, [newlyUnlocked, dismissNewUnlocks]);
   const { level: xpLevel } = useXPSystem();
   const router = useRouter();
 
@@ -336,11 +350,6 @@ export default function PathPage() {
           onClose={handleCloseSheet}
           onStartCook={handleStartCook}
           onPracticeDish={handlePracticeDish}
-        />
-
-        <AchievementToast
-          achievements={newlyUnlocked}
-          onDismiss={dismissNewUnlocks}
         />
 
         <PathTutorial

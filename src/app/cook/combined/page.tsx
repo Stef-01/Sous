@@ -29,7 +29,7 @@ import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
-import { LevelUpToast } from "@/components/shared/level-up-toast";
+import { toast } from "@/lib/hooks/use-toast";
 import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
@@ -78,6 +78,18 @@ function CombinedCookContent() {
     dismissLevelUp,
     title: levelTitle,
   } = useXPSystem();
+
+  useEffect(() => {
+    if (levelUpPending === null) return;
+    toast.push({
+      variant: "level-up",
+      title: `Level ${levelUpPending}`,
+      body: levelTitle,
+      emoji: "⭐",
+      dedupKey: `level-up:${levelUpPending}`,
+    });
+    dismissLevelUp();
+  }, [levelUpPending, levelTitle, dismissLevelUp]);
   const sessionIdRef = useRef<string | null>(null);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
@@ -703,11 +715,6 @@ function CombinedCookContent() {
 
       {/* Floating timer */}
       <CookTimer />
-      <LevelUpToast
-        level={levelUpPending}
-        title={levelTitle}
-        onDismiss={dismissLevelUp}
-      />
     </motion.div>
   );
 }

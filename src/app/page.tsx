@@ -2,21 +2,21 @@ import type { Metadata } from "next";
 import { StartupLanding } from "@/components/marketing/startup-landing";
 
 export const metadata: Metadata = {
-  title: "Sous — From feed to fork, with trust",
+  title: "Sous — You don't need more recipes",
   description:
-    "Sous combines tailored food discovery, weekly planning, pantry-aware recipes, and gap-fill ordering in one flow — with AI systems built for nutrition credibility, including guidance shaped with input from Stanford clinicians.",
+    "A small app for home cooks who are tired of the feed. One craving, three sides that belong, and a short cook flow. Sous collapses the distance from saved to cooked.",
   openGraph: {
-    title: "Sous — From feed to fork, with trust",
+    title: "Sous — You don't need more recipes",
     description:
-      "Personal food media meets credible nutrition: one continuous flow from reels to real meals.",
+      "One main, three pairings, one cook flow. The app for home cooks who are done scrolling.",
     siteName: "Sous",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sous — From feed to fork, with trust",
+    title: "Sous — You don't need more recipes",
     description:
-      "Personal food media meets credible nutrition: one continuous flow from reels to real meals.",
+      "One main, three pairings, one cook flow. The app for home cooks who are done scrolling.",
   },
 };
 

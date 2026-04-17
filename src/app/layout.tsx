@@ -6,6 +6,7 @@ import { Providers } from "@/components/providers";
 import { AuthProvider } from "@/components/auth-provider";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
+import { ToastHost } from "@/components/shared/toast-host";
 import "./globals.css";
 
 const inter = Inter({
@@ -76,6 +77,7 @@ export default function RootLayout({
             <ErrorBoundary>
               <DeviceFrame>{children}</DeviceFrame>
             </ErrorBoundary>
+            <ToastHost />
           </Providers>
           <Analytics />
           <SpeedInsights />
