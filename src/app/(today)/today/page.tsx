@@ -8,7 +8,9 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
+import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
 import { QuestCard } from "@/components/today/quest-card";
+import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { MoreHorizontal } from "lucide-react";
@@ -354,11 +356,24 @@ function TodayPageContent() {
       {/* Header — Sous + streak chip + bird */}
       <header className="app-header px-4 py-2.5">
         <div className="mx-auto flex max-w-md items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-              Sous
-            </h1>
-            <StreakCounter streak={stats.currentStreak} />
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+                Sous
+              </h1>
+              <StreakCounter streak={stats.currentStreak} />
+            </div>
+            {(() => {
+              const line = deriveWelcomeLine({
+                streak: stats.currentStreak,
+                lastCookIso: stats.lastCookDate,
+              });
+              return line ? (
+                <span className="text-[10px] leading-tight text-[var(--nourish-subtext)]/80 italic">
+                  {line}
+                </span>
+              ) : null;
+            })()}
           </div>
           {/* Owl mascot — profile position */}
           <OwlAvatar onClick={handleOpenSearch} />
@@ -369,6 +384,10 @@ function TodayPageContent() {
       <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
         {/* Primary craving trigger — search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
+
+        {/* Cook rhythm — a single italic line about when the user usually
+            cooks. Silent below three completed cooks. */}
+        <CookRhythmLine sessions={completedSessions} />
 
         {/* Tonight's commitment — persistent banner only (the commit flow now
             lives in the More options drawer; surface stays calm). */}

@@ -1,11 +1,15 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { FRIEND_COOKS, type FriendCook } from "@/data/friend-cooks";
+import {
+  useFriendsLastSeen,
+  parsePostedAgoMs,
+} from "@/lib/hooks/use-friends-last-seen";
 
 /** A friend cook enriched with a canonical 4-star "rating" for the gift
  *  preview. We don't track real friend ratings — 4 reads as "they liked
@@ -75,6 +79,7 @@ export function FriendsStrip({
   onDishSelect?: (dishName: string) => void;
 }) {
   const router = useRouter();
+  const { lastSeenAt } = useFriendsLastSeen();
   const entries = useMemo<EnrichedEntry[]>(() => {
     const mine: EnrichedEntry[] = sessions
       .filter((s) => s.completedAt)
@@ -105,6 +110,27 @@ export function FriendsStrip({
 
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+
+  // "New since last visit" for friends' tiles. Computed from a mount-time
+  // snapshot of Date.now() so render stays pure per React's new purity rules.
+  const [nowAtMount, setNowAtMount] = useState<number | null>(null);
+  /* eslint-disable react-hooks/set-state-in-effect -- stamp now() exactly once */
+  useEffect(() => {
+    setNowAtMount(Date.now());
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const newFlags = useMemo<Record<string, boolean>>(() => {
+    if (lastSeenAt === null || nowAtMount === null) return {};
+    const out: Record<string, boolean> = {};
+    for (const entry of entries) {
+      if (entry.isSelf) continue;
+      const ageMs = parsePostedAgoMs(entry.postedAgo);
+      if (ageMs === null) continue;
+      if (nowAtMount - ageMs > lastSeenAt) out[entry.id] = true;
+    }
+    return out;
+  }, [entries, lastSeenAt, nowAtMount]);
 
   if (entries.length === 0) return null;
 
@@ -138,70 +164,82 @@ export function FriendsStrip({
       </div>
 
       <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
-        {entries.map((entry, idx) => (
-          <motion.button
-            key={entry.id}
-            type="button"
-            custom={idx}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            variants={cardVariants}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => handleTap(entry)}
-            className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm border border-neutral-100/80 transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-            style={{ width: 168 }}
-            aria-label={
-              entry.isSelf
-                ? `Your cook of ${entry.dish}`
-                : `Open ${entry.friend}'s ${entry.dish}`
-            }
-          >
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--nourish-cream)]">
-              {entry.imageUrl ? (
-                <Image
-                  src={entry.imageUrl}
-                  alt={entry.dish}
-                  fill
-                  sizes="168px"
-                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center text-3xl">
-                  🍽️
-                </div>
-              )}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+        {entries.map((entry, idx) => {
+          // Only friend tiles can be "new since last visit" — the user's
+          // own cooks are never surprising to them. Pre-computed in `newFlags`
+          // above so render stays pure.
+          const isNew = newFlags[entry.id] ?? false;
+          return (
+            <motion.button
+              key={entry.id}
+              type="button"
+              custom={idx}
+              initial="hidden"
+              animate={inView ? "visible" : "hidden"}
+              variants={cardVariants}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => handleTap(entry)}
+              className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm border border-neutral-100/80 transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              style={{ width: 168 }}
+              aria-label={
+                entry.isSelf
+                  ? `Your cook of ${entry.dish}`
+                  : `Open ${entry.friend}'s ${entry.dish}`
+              }
+            >
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--nourish-cream)]">
+                {entry.imageUrl ? (
+                  <Image
+                    src={entry.imageUrl}
+                    alt={entry.dish}
+                    fill
+                    sizes="168px"
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-3xl">
+                    🍽️
+                  </div>
+                )}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
 
-              {/* Friend avatar + name overlay */}
-              <div className="absolute inset-x-2 bottom-2 flex items-center gap-1.5 text-white">
-                <div
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/90 text-[10px] font-bold text-[var(--nourish-dark)] ring-2 ${
-                    entry.accent ? accentRing[entry.accent] : "ring-white/40"
-                  }`}
-                >
-                  {entry.initial || initialFor(entry.friend)}
+                {/* Friend avatar + name overlay */}
+                <div className="absolute inset-x-2 bottom-2 flex items-center gap-1.5 text-white">
+                  <div
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/90 text-[10px] font-bold text-[var(--nourish-dark)] ring-2 ${
+                      entry.accent ? accentRing[entry.accent] : "ring-white/40"
+                    }`}
+                  >
+                    {entry.initial || initialFor(entry.friend)}
+                  </div>
+                  <span className="truncate text-[11px] font-semibold drop-shadow-sm">
+                    {entry.friend}
+                  </span>
+                  <span className="ml-auto shrink-0 text-[9px] font-medium text-white/80 drop-shadow-sm">
+                    {entry.postedAgo}
+                  </span>
                 </div>
-                <span className="truncate text-[11px] font-semibold drop-shadow-sm">
-                  {entry.friend}
-                </span>
-                <span className="ml-auto shrink-0 text-[9px] font-medium text-white/80 drop-shadow-sm">
-                  {entry.postedAgo}
-                </span>
               </div>
-            </div>
 
-            <div className="flex flex-col gap-0.5 px-2.5 py-2">
-              <span className="text-[12px] font-semibold leading-tight text-[var(--nourish-dark)] line-clamp-1">
-                {entry.dish}
-              </span>
-              {entry.note && (
-                <span className="line-clamp-2 text-[10px] leading-snug text-[var(--nourish-subtext)]">
-                  {entry.note}
+              <div className="flex flex-col gap-0.5 px-2.5 py-2">
+                <span className="text-[12px] font-semibold leading-tight text-[var(--nourish-dark)] line-clamp-1">
+                  {entry.dish}
                 </span>
+                {entry.note && (
+                  <span className="line-clamp-2 text-[10px] leading-snug text-[var(--nourish-subtext)]">
+                    {entry.note}
+                  </span>
+                )}
+              </div>
+              {isNew && (
+                <span
+                  aria-label="New since your last visit"
+                  className="absolute right-2 top-2 h-2 w-2 rounded-full bg-[var(--nourish-warm)] ring-2 ring-white"
+                />
               )}
-            </div>
-          </motion.button>
-        ))}
+            </motion.button>
+          );
+        })}
       </div>
     </section>
   );

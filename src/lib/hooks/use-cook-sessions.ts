@@ -20,6 +20,8 @@ export interface CookSessionRecord {
   note?: string;
   photoUri?: string;
   rating?: number; // 1-5
+  /** Low-star feedback chip selection: "too-salty" | "too-dry" | "unclear". */
+  feedback?: string;
   favorite: boolean;
   scrapbookSaved?: boolean;
 }
@@ -251,7 +253,10 @@ export function useCookSessions() {
     (
       sessionId: string,
       updates: Partial<
-        Pick<CookSessionRecord, "note" | "photoUri" | "rating" | "favorite">
+        Pick<
+          CookSessionRecord,
+          "note" | "photoUri" | "rating" | "favorite" | "feedback"
+        >
       >,
     ) => {
       const existing = loadSessions();

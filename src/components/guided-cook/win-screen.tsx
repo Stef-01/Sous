@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Star,
   Camera,
@@ -22,6 +22,7 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
+import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -46,6 +47,8 @@ interface WinScreenProps {
   saved?: boolean;
   skillProgress?: SkillProgressEntry[];
   onRate: (rating: number) => void;
+  /** Persists a low-star feedback chip (1–2 ★) into the session record. */
+  onFeedback?: (feedback: string) => void;
   onAddPhoto: () => void;
   onAddNote: (note: string) => void;
   onSave: () => void;
@@ -273,6 +276,7 @@ export function WinScreen({
   saved = false,
   skillProgress = [],
   onRate,
+  onFeedback,
   onAddPhoto,
   onAddNote,
   onSave,
@@ -280,12 +284,16 @@ export function WinScreen({
   onBackToday,
 }: WinScreenProps) {
   const [rating, setRating] = useState(0);
+  const [feedback, setFeedback] = useState<string | null>(null);
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
   const [showReflection, setShowReflection] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(true);
+  const prefersReducedMotion = useReducedMotion();
+  const [showConfetti, setShowConfetti] = useState(!prefersReducedMotion);
   const [photoAdded, setPhotoAdded] = useState(false);
   const [giftSent, setGiftSent] = useState(false);
+  const [inviteFriendName, setInviteFriendName] = useState("");
+  const invitePrompts = useInvitePrompts();
 
   const winMessage = trpc.ai.generateWinMessage.useQuery(
     {
@@ -385,6 +393,32 @@ export function WinScreen({
       // Share dialog dismissed — don't flip the button to "sent" state.
     }
   };
+
+  const handleInvite = () => {
+    if (!dishSlug) return;
+    const senderName = loadGiftSenderName() || "Someone";
+    const params = new URLSearchParams({ from: senderName });
+    if (rating > 0) params.set("stars", String(rating));
+    const giftUrl = `${window.location.origin}/gift/${encodeURIComponent(
+      dishSlug,
+    )}?${params.toString()}`;
+    const name = inviteFriendName.trim();
+    const greeting = name ? `Hey ${name} — ` : "";
+    const body = `${greeting}I made ${dishName} on Sous tonight. Want to cook it with me next week? ${giftUrl}`;
+    const href = `sms:?&body=${encodeURIComponent(body)}`;
+    try {
+      window.location.href = href;
+    } catch {
+      // Device refused sms: — silently mark dismissed so we don't retry.
+    }
+    invitePrompts.dismiss(dishSlug);
+  };
+
+  const showInvitePrompt =
+    !!dishSlug &&
+    invitePrompts.mounted &&
+    !invitePrompts.isDismissed(dishSlug) &&
+    rating >= 4;
 
   return (
     <div className="relative">
@@ -563,6 +597,53 @@ export function WinScreen({
               </motion.p>
             )}
           </AnimatePresence>
+
+          {/* Low-star capture — 3 chips, one tap, silent above 2 ★ */}
+          <AnimatePresence>
+            {rating > 0 && rating <= 2 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden pt-1"
+              >
+                <p className="mb-1.5 text-[11px] text-[var(--nourish-subtext)]">
+                  What went wrong?
+                </p>
+                <div className="flex flex-wrap justify-center gap-1.5">
+                  {[
+                    { id: "too-salty", label: "too salty" },
+                    { id: "too-dry", label: "too dry" },
+                    { id: "unclear", label: "instructions unclear" },
+                  ].map((chip) => (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      onClick={() => {
+                        setFeedback(chip.id);
+                        onFeedback?.(chip.id);
+                      }}
+                      className={cn(
+                        "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
+                        feedback === chip.id
+                          ? "bg-[var(--nourish-warm)]/15 text-[var(--nourish-warm)] ring-1 ring-[var(--nourish-warm)]/30"
+                          : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
+                      )}
+                      aria-pressed={feedback === chip.id}
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
+                {feedback && (
+                  <p className="mt-1.5 text-[10px] text-[var(--nourish-subtext)]/70 italic">
+                    Thanks — Sous will adjust next time.
+                  </p>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
         {/* ── CTAs — primary action first ── */}
@@ -636,6 +717,51 @@ export function WinScreen({
             </motion.button>
           )}
         </motion.div>
+
+        {/* ── Cook-with-a-friend invite — one-time per dish, only at ≥4★ ── */}
+        <AnimatePresence>
+          {showInvitePrompt && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 25 }}
+              className="overflow-hidden"
+            >
+              <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-3 space-y-2 text-left">
+                <p className="text-xs font-medium text-[var(--nourish-dark)]">
+                  Cook this with someone next week?
+                </p>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={inviteFriendName}
+                    onChange={(e) =>
+                      setInviteFriendName(e.target.value.slice(0, 24))
+                    }
+                    placeholder="Friend's name (optional)"
+                    className="flex-1 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs placeholder:text-[var(--nourish-subtext)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
+                    aria-label="Friend's first name for the invite message"
+                  />
+                  <button
+                    onClick={handleInvite}
+                    type="button"
+                    className="rounded-lg bg-[var(--nourish-green)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition-colors"
+                  >
+                    Send invite
+                  </button>
+                </div>
+                <button
+                  onClick={() => dishSlug && invitePrompts.dismiss(dishSlug)}
+                  type="button"
+                  className="text-[10px] text-[var(--nourish-subtext)]/70 hover:text-[var(--nourish-subtext)] underline underline-offset-2"
+                >
+                  Not this time
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* ── Secondary actions (photo + note) ── */}
         <motion.div

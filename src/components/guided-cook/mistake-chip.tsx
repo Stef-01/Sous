@@ -60,6 +60,7 @@ export function MistakeChip({
           onClick={onToggle}
           className={cn(
             "flex flex-1 items-center gap-2 px-3 py-2.5 text-sm font-medium text-left",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40",
             isExpanded ? "text-amber-700" : "text-[var(--nourish-subtext)]",
           )}
           type="button"
@@ -78,6 +79,7 @@ export function MistakeChip({
             onClick={handleDismiss}
             className={cn(
               "shrink-0 px-2.5 border-l border-current/10",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40",
               isExpanded
                 ? "text-amber-700/70 hover:text-amber-800"
                 : "text-[var(--nourish-subtext)]/60 hover:text-[var(--nourish-subtext)]",

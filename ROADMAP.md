@@ -1,7 +1,37 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-04-17
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## STAGE 0.9: NEXT-20D HABIT + TRUST + POLISH — COMPLETE
+
+A fourth 20-phase sprint focused on turning the app into a habit: surfacing
+the user's own cooking rhythm, strengthening the social loop, tightening
+craving search, and sharpening guided-cook trust with zero new UI clutter.
+All phases shipped 2026-04-17. See `docs/NEXT-20D-PHASES.md` for the full
+plan.
+
+- **P1** — `deriveCookRhythm` + ambient "Tuesday nights: you usually cook" line on Today, silent until the user has at least 4 completed cooks across 2+ distinct weeks.
+- **P2** — Ingredient-reuse hint on `QuestCard`: `matchIngredientReuse` finds one shared named ingredient between today's top pick and a cook from the last 7 days, rendered as a single warm line ("reuses cilantro from Friday's tacos").
+- **P3** — "You made this before" recall chip on Mission screen when the user is re-cooking a past dish, using `useCookSessions` last-completed timestamp.
+- **P4** — Streak-aware welcome line on Today: copy adapts to 0 / 1–2 / 3+ day streak, stays quiet and returnable.
+- **P5** — Post-cook invite sheet: single `sms:` deep-link on the Win screen (one-time prompt per unique cook), wired through `useInvitePrompts`.
+- **P6** — `FriendsStrip` "new since last visit" dot: `useFriendsLastSeen` stamps a mount-time snapshot and only flags friend tiles whose approximate post time is newer than the last visit.
+- **P7** — Gift page CTA polish: stars moved up to the header row beside the sender, primary CTA re-worded to "Cook this too."
+- **P8** — `CameraInput` 6-second fallback: if recognition hangs, a "Didn't work — try typing instead" button surfaces and closes the camera.
+- **P9** — `TextPrompt` empty-state starter chips swap from single words to evocative compound queries ("Chicken pasta", "Quick rice bowl").
+- **P10** — Local result cap (6) with "Show N more" expanders on both literal and semantic match lists to keep the results sheet scannable.
+- **P11** — Pre-cook `CookWatchlist`: collapsed chip at the top of the Grab phase listing all unsuppressed mistake warnings for the dish, per-dish scoped via `useMistakeSuppression`.
+- **P12** — Step re-read via tap: double-tap the current instruction in `StepCard` to re-trigger text-to-speech without leaving the step.
+- **P13** — Substitution memory: new `useSubstitutionMemory` hook (90-day per-dish/per-ingredient TTL) + "Saved as my swap" button in the AI substitute panel and "last time: X" hint in `IngredientList`.
+- **P14** — Win-screen low-star feedback: 1- or 2-star ratings reveal 3 deterministic chips ("too salty", "too dry", "instructions unclear") that write back onto the cook session record.
+- **P15** — Landing lazy-load: `AppPreviewSection`, `ScreenshotCarousel`, and `TrustStrip` moved behind `next/dynamic` (ssr: false) to shrink the LCP-blocking bundle on `/`.
+- **P16** — A11y sweep on sprint surfaces (`FilterDropdown`, `MistakeChip` dismiss, `IngredientList` station toggle, `CookWatchlist`): visible focus rings + bare-icon-button `aria-label`s.
+- **P17** — Reduced-motion sweep: `useReducedMotion` gates WinScreen confetti and simplifies `PreferenceStrip` expand/chevron animation for users with `prefers-reduced-motion`.
+- **P18** — New-hook unit tests: `use-substitution-memory.test.ts` (6) + `use-mistake-suppression.test.ts` (6) cover versioned storage keys, TTL expiry, malformed-entry rejection, and key format stability.
+- **P19–P20** — Lint, 222 vitest tests green (26 files), production build clean, changes committed to main.
 
 ---
 

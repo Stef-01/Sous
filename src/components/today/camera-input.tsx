@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Camera, Upload } from "lucide-react";
+import { X, Camera, Upload, Keyboard } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
 interface CameraInputProps {
@@ -22,6 +22,18 @@ export function CameraInput({
 }: CameraInputProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [showTypingFallback, setShowTypingFallback] = useState(false);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- reset + start timer in response to isProcessing flip */
+  useEffect(() => {
+    if (!isProcessing) {
+      setShowTypingFallback(false);
+      return;
+    }
+    const id = window.setTimeout(() => setShowTypingFallback(true), 6000);
+    return () => clearTimeout(id);
+  }, [isProcessing]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleFileSelect = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,8 +99,18 @@ export function CameraInput({
               className="w-full rounded-2xl object-contain"
             />
             {isProcessing && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-2xl">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 rounded-2xl">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                {showTypingFallback && (
+                  <button
+                    onClick={onClose}
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[var(--nourish-dark)] hover:bg-white transition-colors"
+                  >
+                    <Keyboard size={12} />
+                    Didn&apos;t work — try typing instead
+                  </button>
+                )}
               </div>
             )}
           </div>

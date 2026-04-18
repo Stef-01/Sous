@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
+import { useSubstitutionMemory } from "@/lib/hooks/use-substitution-memory";
 import { toast } from "@/lib/hooks/use-toast";
 import {
   coalescePrepList,
@@ -48,6 +49,8 @@ interface IngredientListProps {
   prepDishes?: StaticDishData[];
   recipeName?: string;
   cuisineFamily?: string;
+  /** Dish slug — enables persistent per-dish substitution memory. */
+  dishSlug?: string;
   onReady: () => void;
   onSelectSides?: () => void;
 }
@@ -65,6 +68,7 @@ export function IngredientList({
   prepDishes,
   recipeName = "",
   cuisineFamily = "",
+  dishSlug,
   onReady,
   onSelectSides,
 }: IngredientListProps) {
@@ -76,6 +80,11 @@ export function IngredientList({
     has: pantryHas,
     toggle: togglePantry,
   } = usePantry();
+  const {
+    get: getRememberedSub,
+    remember: rememberSub,
+    mounted: subMemMounted,
+  } = useSubstitutionMemory();
 
   // Build effective sections: either use provided sections or wrap flat list
   const effectiveSections = useMemo<IngredientSection[]>(() => {
@@ -225,6 +234,7 @@ export function IngredientList({
                 onClick={() => setViewMode("dish")}
                 className={cn(
                   "rounded-full px-2.5 py-1 transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                   viewMode === "dish"
                     ? "bg-[var(--nourish-green)] text-white"
                     : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
@@ -239,6 +249,7 @@ export function IngredientList({
                 onClick={() => setViewMode("station")}
                 className={cn(
                   "rounded-full px-2.5 py-1 transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                   viewMode === "station"
                     ? "bg-[var(--nourish-green)] text-white"
                     : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
@@ -347,6 +358,14 @@ export function IngredientList({
                     recipeName={recipeName}
                     cuisineFamily={cuisineFamily}
                     inPantry={pantryMounted && pantryHas(item.name)}
+                    rememberedSub={
+                      dishSlug && subMemMounted
+                        ? getRememberedSub(dishSlug, item.id)
+                        : null
+                    }
+                    onRememberSub={(sub) => {
+                      if (dishSlug) rememberSub(dishSlug, item.id, sub);
+                    }}
                     onToggle={() => toggleItem(item.id)}
                     onAskSub={() =>
                       setAskingSub(askingSub === item.id ? null : item.id)
@@ -460,6 +479,8 @@ function IngredientRow({
   recipeName,
   cuisineFamily,
   inPantry,
+  rememberedSub,
+  onRememberSub,
   onToggle,
   onAskSub,
   onTogglePantry,
@@ -471,6 +492,8 @@ function IngredientRow({
   recipeName: string;
   cuisineFamily: string;
   inPantry: boolean;
+  rememberedSub: string | null;
+  onRememberSub: (sub: string) => void;
   onToggle: () => void;
   onAskSub: () => void;
   onTogglePantry: () => void;
@@ -550,9 +573,14 @@ function IngredientRow({
               </span>
             )}
           </div>
-          {item.substitution && !showingSub && (
+          {item.substitution && !showingSub && !rememberedSub && (
             <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
               sub: {item.substitution}
+            </p>
+          )}
+          {rememberedSub && !showingSub && (
+            <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
+              last time: {rememberedSub}
             </p>
           )}
         </button>
@@ -616,7 +644,7 @@ function IngredientRow({
                   Couldn&apos;t find a swap right now. Try using what you have!
                 </p>
               ) : subQuery.data ? (
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <p className="text-xs font-medium text-[var(--nourish-dark)]">
                     {subQuery.data.suggestion}
                   </p>
@@ -625,6 +653,27 @@ function IngredientRow({
                       {subQuery.data.notes}
                     </p>
                   )}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      subQuery.data && onRememberSub(subQuery.data.suggestion)
+                    }
+                    className={cn(
+                      "mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors",
+                      rememberedSub === subQuery.data.suggestion
+                        ? "bg-[var(--nourish-green)]/15 text-[var(--nourish-green)]"
+                        : "bg-white/60 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10",
+                    )}
+                    aria-label={
+                      rememberedSub === subQuery.data.suggestion
+                        ? "Swap remembered"
+                        : "Remember this swap"
+                    }
+                  >
+                    {rememberedSub === subQuery.data.suggestion
+                      ? "Saved as my swap"
+                      : "Remember this swap"}
+                  </button>
                 </div>
               ) : (
                 <p className="text-xs text-[var(--nourish-subtext)]">

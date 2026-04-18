@@ -74,6 +74,24 @@ export default async function GiftPage({
             <span className="text-[var(--nourish-green)]">{dish.name}</span>
             {starCount >= 4 ? " and loved it." : "."}
           </h1>
+          {starCount > 0 && (
+            <div
+              className="flex items-center gap-0.5 pt-0.5"
+              aria-label={`${senderName} rated this ${starCount} out of 5 stars`}
+            >
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star
+                  key={i}
+                  size={14}
+                  className={
+                    i <= starCount
+                      ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+                      : "fill-neutral-100 text-neutral-200"
+                  }
+                />
+              ))}
+            </div>
+          )}
         </header>
 
         {/* Dish card — read-only preview */}
@@ -111,27 +129,6 @@ export default async function GiftPage({
                 {dish.skillLevel}
               </span>
             </div>
-            {starCount > 0 && (
-              <div
-                className="flex items-center gap-1 pt-1"
-                aria-label={`${senderName} rated this ${starCount} out of 5 stars`}
-              >
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star
-                    key={i}
-                    size={18}
-                    className={
-                      i <= starCount
-                        ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
-                        : "fill-neutral-100 text-neutral-200"
-                    }
-                  />
-                ))}
-                <span className="ml-2 text-xs text-[var(--nourish-subtext)]">
-                  {senderName}&apos;s rating
-                </span>
-              </div>
-            )}
           </div>
         </section>
 
@@ -140,7 +137,7 @@ export default async function GiftPage({
           href={`/today?craving=${encodeURIComponent(dish.name)}`}
           className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] py-4 text-base font-semibold text-white shadow-sm shadow-[var(--nourish-green)]/20 transition-colors hover:bg-[var(--nourish-dark-green)]"
         >
-          Try it yourself
+          Cook this too
           <ArrowRight
             size={18}
             className="transition-transform group-hover:translate-x-0.5"

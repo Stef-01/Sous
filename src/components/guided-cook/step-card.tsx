@@ -237,8 +237,19 @@ export function StepCard({
         </div>
       )}
 
-      {/* Main instruction — technique words are tap-to-reveal via Glossify */}
-      <p className="cook-prose text-[var(--nourish-dark)]">
+      {/* Main instruction — technique words are tap-to-reveal via Glossify.
+          Double-tap anywhere on the body re-speaks the step (Phase 12). */}
+      <p
+        className="cook-prose text-[var(--nourish-dark)] select-text"
+        onDoubleClick={
+          mounted && hasSpeechSynthesis ? handleReadAloud : undefined
+        }
+        aria-label={
+          mounted && hasSpeechSynthesis
+            ? "Double-tap to re-read this step"
+            : undefined
+        }
+      >
         <Glossify>{instruction}</Glossify>
       </p>
 

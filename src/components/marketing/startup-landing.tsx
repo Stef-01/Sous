@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import {
   motion,
@@ -19,9 +20,28 @@ import {
   viewportOnce,
   easeOutExpo,
 } from "./startup-landing-variants";
-import { AppPreviewSection } from "./app-preview-section";
-import { ScreenshotCarousel } from "./screenshot-carousel";
-import { TrustStrip } from "./trust-strip";
+
+// Below-the-fold modules are loaded lazily on the client to improve LCP on the
+// marketing page. Each lands with a subtle opacity-only fade once intersected,
+// so there is no layout shift during hydration.
+const AppPreviewSection = dynamic(
+  () =>
+    import("./app-preview-section").then((mod) => ({
+      default: mod.AppPreviewSection,
+    })),
+  { ssr: false, loading: () => <div className="min-h-[40vh]" /> },
+);
+const ScreenshotCarousel = dynamic(
+  () =>
+    import("./screenshot-carousel").then((mod) => ({
+      default: mod.ScreenshotCarousel,
+    })),
+  { ssr: false, loading: () => <div className="min-h-[50vh]" /> },
+);
+const TrustStrip = dynamic(
+  () => import("./trust-strip").then((mod) => ({ default: mod.TrustStrip })),
+  { ssr: false, loading: () => <div className="min-h-[20vh]" /> },
+);
 
 /** ----------------------------------------------------------------------
  * Sous — editorial landing.

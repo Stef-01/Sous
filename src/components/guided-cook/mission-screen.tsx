@@ -7,6 +7,7 @@ import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { PlanCookChip } from "./plan-cook-chip";
 import { BigHandsToggle } from "./big-hands-toggle";
+import { DishRecallLine } from "./dish-recall-line";
 
 interface MissionScreenProps {
   dishName: string;
@@ -16,6 +17,9 @@ interface MissionScreenProps {
   cookTimeMinutes: number;
   heroImageUrl: string | null;
   hasIngredients?: boolean;
+  /** When provided, surfaces a "last cooked N days ago" recall line if this
+   *  dish has been completed before. */
+  dishSlug?: string;
   onStart: () => void;
 }
 
@@ -31,6 +35,7 @@ export function MissionScreen({
   cookTimeMinutes,
   heroImageUrl,
   hasIngredients = true,
+  dishSlug,
   onStart,
 }: MissionScreenProps) {
   const [imgError, setImgError] = useState(false);
@@ -129,6 +134,9 @@ export function MissionScreen({
           </motion.span>
         </div>
       </div>
+
+      {/* Recall line — "Last cooked 12 days ago · you rated it 5★" */}
+      {dishSlug && <DishRecallLine dishSlug={dishSlug} />}
 
       {/* Description — clamped to 3 lines so CTA is never pushed off-screen */}
       <motion.p

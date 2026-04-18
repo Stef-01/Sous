@@ -39,6 +39,7 @@ import {
 } from "@/components/shared/filter-dropdown";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
+import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 interface QuestDish {
@@ -565,6 +566,35 @@ export function QuestCard({
     });
   }, [topSlug, topDishName, cookSessions]);
 
+  // One-line "reuses cilantro from Friday's tacos" ingredient-reuse hint.
+  // We look up each recent session's ingredients from the static cook data
+  // so no new fields need to be persisted in localStorage.
+  const topIngredientReuse = useMemo(() => {
+    const topIngredients = visibleCards[0]?.ingredientNames ?? [];
+    if (!topSlug || topIngredients.length === 0) return null;
+    if (!cookSessions || cookSessions.length === 0) return null;
+    const pastEntries = cookSessions
+      .filter((s) => !!s.completedAt && s.recipeSlug !== topSlug)
+      .map((s) => {
+        const cook =
+          getStaticCookData(s.recipeSlug) ??
+          getStaticMealCookData(s.recipeSlug);
+        if (!cook) return null;
+        const names = cook.ingredients.map((i) => i.name.toLowerCase());
+        return {
+          slug: s.recipeSlug,
+          dishName: s.dishName,
+          completedAt: new Date(s.completedAt!).getTime(),
+          ingredients: new Set(names),
+        };
+      })
+      .filter((e): e is NonNullable<typeof e> => e !== null);
+    return matchIngredientReuse({
+      currentIngredientNames: topIngredients,
+      pastSessions: pastEntries,
+    });
+  }, [topSlug, visibleCards, cookSessions]);
+
   if (questDishes.length === 0) {
     return (
       <div className="space-y-1.5">
@@ -662,6 +692,11 @@ export function QuestCard({
                 rationale={
                   dish.stackIndex === 0 ? (topRationale?.text ?? null) : null
                 }
+                ingredientReuse={
+                  dish.stackIndex === 0
+                    ? (topIngredientReuse?.text ?? null)
+                    : null
+                }
               />
             ))}
         </AnimatePresence>
@@ -701,6 +736,7 @@ function SwipeCard({
   onSave,
   exitDirection,
   rationale,
+  ingredientReuse,
 }: {
   dish: QuestDish & { stackIndex: number };
   stackIndex: number;
@@ -714,6 +750,9 @@ function SwipeCard({
   /** Optional ambient rationale rendered below the flavor tags. Only the
    *  top card receives one — silent on deeper cards and for new users. */
   rationale: string | null;
+  /** Optional "reuses cilantro from yesterday's tacos" hint. Only the top
+   *  card receives one. Silent when no recent ingredient overlap exists. */
+  ingredientReuse: string | null;
 }) {
   const [imgError, setImgError] = useState(false);
   const x = useMotionValue(0);
@@ -920,6 +959,13 @@ function SwipeCard({
           {rationale && (
             <p className="pt-1 text-[11px] italic leading-snug text-[var(--nourish-subtext)]">
               {rationale}.
+            </p>
+          )}
+          {/* Ingredient-reuse hint — surfaced only when a recent cook shares
+              a non-staple ingredient with this dish. */}
+          {ingredientReuse && (
+            <p className="text-[11px] leading-snug text-[var(--nourish-green)]/80">
+              {ingredientReuse}.
             </p>
           )}
         </div>

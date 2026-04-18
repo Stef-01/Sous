@@ -7,6 +7,8 @@ import { ArrowLeft, ChefHat } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
+import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
+import type { StaticCookStep } from "@/data/guided-cook-steps";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
@@ -287,6 +289,15 @@ export default function GuidedCookPage({
     [updateSession, awardXP],
   );
 
+  const handleFeedback = useCallback(
+    (feedback: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { feedback });
+      }
+    },
+    [updateSession],
+  );
+
   const handleSave = useCallback(() => {
     if (sessionIdRef.current) {
       updateSession(sessionIdRef.current, { favorite: true });
@@ -412,19 +423,26 @@ export default function GuidedCookPage({
               cookTimeMinutes={dish.cookTimeMinutes}
               heroImageUrl={dish.heroImageUrl}
               hasIngredients={ingredients.length > 0}
+              dishSlug={dish.slug}
               onStart={handleMissionStart}
             />
           )}
 
           {currentPhase === "grab" && (
-            <IngredientList
-              key="grab"
-              ingredients={ingredients}
-              recipeName={dish.name}
-              cuisineFamily={cuisine}
-              onReady={handleGrabReady}
-              onSelectSides={handleSelectSides}
-            />
+            <div key="grab" className="space-y-3">
+              <CookWatchlist
+                dishSlug={dish.slug}
+                steps={cookSteps.map((s: unknown) => s as StaticCookStep)}
+              />
+              <IngredientList
+                ingredients={ingredients}
+                recipeName={dish.name}
+                cuisineFamily={cuisine}
+                dishSlug={dish.slug}
+                onReady={handleGrabReady}
+                onSelectSides={handleSelectSides}
+              />
+            </div>
           )}
 
           {currentPhase === "cook" && !currentCookStep && (
@@ -501,6 +519,7 @@ export default function GuidedCookPage({
               saved={winMeta.saved}
               skillProgress={winMeta.skillProgress}
               onRate={handleRate}
+              onFeedback={handleFeedback}
               onAddPhoto={handleAddPhoto}
               onAddNote={handleAddNote}
               onSave={handleSave}

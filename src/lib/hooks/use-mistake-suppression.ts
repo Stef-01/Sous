@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const STORAGE_KEY = "sous-mistake-suppressions-v1";
+export const MISTAKE_STORAGE_KEY = "sous-mistake-suppressions-v1";
+const STORAGE_KEY = MISTAKE_STORAGE_KEY;
 const SUPPRESSION_MS = 180 * 24 * 60 * 60 * 1000;
 
 /**
@@ -10,26 +11,40 @@ const SUPPRESSION_MS = 180 * 24 * 60 * 60 * 1000;
  * We scope per dish (not globally) so expertise on pad thai doesn't silence
  * different, distinct mistakes on a shakshuka.
  */
-type SuppressionMap = Record<string, string>;
+export type SuppressionMap = Record<string, string>;
+
+export function mistakeSuppressionKey(
+  dishSlug: string,
+  mistakeId: string,
+): string {
+  return `${dishSlug}::${mistakeId}`;
+}
+
+/**
+ * Normalize raw localStorage payload: drop malformed, expired, or non-string
+ * entries. Exported for unit tests.
+ */
+export function normalizeSuppressionPayload(
+  raw: unknown,
+  now: number = Date.now(),
+): SuppressionMap {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const out: SuppressionMap = {};
+  for (const [key, ts] of Object.entries(raw as Record<string, unknown>)) {
+    if (typeof ts !== "string") continue;
+    const start = new Date(ts).getTime();
+    if (!Number.isFinite(start)) continue;
+    if (now - start <= SUPPRESSION_MS) out[key] = ts;
+  }
+  return out;
+}
 
 function loadMap(): SuppressionMap {
   if (typeof window === "undefined") return {};
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return {};
-    const parsed = JSON.parse(raw) as unknown;
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return {};
-    }
-    const now = Date.now();
-    const out: SuppressionMap = {};
-    for (const [key, ts] of Object.entries(parsed as Record<string, unknown>)) {
-      if (typeof ts !== "string") continue;
-      const start = new Date(ts).getTime();
-      if (!Number.isFinite(start)) continue;
-      if (now - start <= SUPPRESSION_MS) out[key] = ts;
-    }
-    return out;
+    return normalizeSuppressionPayload(JSON.parse(raw) as unknown);
   } catch {
     return {};
   }
@@ -45,7 +60,7 @@ function persistMap(map: SuppressionMap): void {
 }
 
 function keyFor(dishSlug: string, mistakeId: string): string {
-  return `${dishSlug}::${mistakeId}`;
+  return mistakeSuppressionKey(dishSlug, mistakeId);
 }
 
 /**

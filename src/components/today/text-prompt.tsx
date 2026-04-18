@@ -196,21 +196,14 @@ export function TextPrompt({
   onSubmit,
   onCameraClick,
   isLoading,
-  suggestions = [
-    "Pasta",
-    "Stir Fry",
-    "Salad",
-    "Curry",
-    "Tacos",
-    "Soup",
-    "Rice",
-    "Chicken",
-  ],
+  suggestions = ["Chicken pasta", "Tacos", "Quick rice bowl", "Something cozy"],
 }: TextPromptProps) {
   const [text, setText] = useState("");
   const [localResults, setLocalResults] = useState<LocalResult[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [showAllLiteral, setShowAllLiteral] = useState(false);
+  const [showAllSemantic, setShowAllSemantic] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { entries: historyEntries, record: recordHistory } =
     useCravingHistory();
@@ -228,6 +221,8 @@ export function TextPrompt({
         }),
       );
       setHasSearched(true);
+      setShowAllLiteral(false);
+      setShowAllSemantic(false);
     }, 300);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -444,20 +439,41 @@ export function TextPrompt({
             )}
             {effectiveResults.length > 0 ? (
               (() => {
+                const LOCAL_RESULT_CAP = 6;
                 const literalHits = effectiveResults.filter((r) => !r.semantic);
                 const semanticHits = effectiveResults.filter((r) => r.semantic);
+                const literalShown = showAllLiteral
+                  ? literalHits
+                  : literalHits.slice(0, LOCAL_RESULT_CAP);
+                const semanticShown = showAllSemantic
+                  ? semanticHits
+                  : semanticHits.slice(0, LOCAL_RESULT_CAP);
+                const literalHidden = literalHits.length - literalShown.length;
+                const semanticHidden =
+                  semanticHits.length - semanticShown.length;
                 return (
                   <div className="space-y-3">
                     {literalHits.length > 0 && (
-                      <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
-                        {literalHits.map((result, idx) => (
-                          <ResultRow
-                            key={result.name}
-                            result={result}
-                            idx={idx}
-                            onSelect={handleSelectResult}
-                          />
-                        ))}
+                      <div>
+                        <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
+                          {literalShown.map((result, idx) => (
+                            <ResultRow
+                              key={result.name}
+                              result={result}
+                              idx={idx}
+                              onSelect={handleSelectResult}
+                            />
+                          ))}
+                        </div>
+                        {literalHidden > 0 && (
+                          <button
+                            onClick={() => setShowAllLiteral(true)}
+                            type="button"
+                            className="mt-1.5 w-full rounded-lg py-1.5 text-[11px] font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5 transition-colors"
+                          >
+                            Show {literalHidden} more
+                          </button>
+                        )}
                       </div>
                     )}
 
@@ -467,7 +483,7 @@ export function TextPrompt({
                           Closest to what you&apos;re craving
                         </p>
                         <div className="rounded-xl border border-dashed border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.03] overflow-hidden divide-y divide-[var(--nourish-green)]/10">
-                          {semanticHits.map((result, idx) => (
+                          {semanticShown.map((result, idx) => (
                             <ResultRow
                               key={result.name}
                               result={result}
@@ -476,6 +492,15 @@ export function TextPrompt({
                             />
                           ))}
                         </div>
+                        {semanticHidden > 0 && (
+                          <button
+                            onClick={() => setShowAllSemantic(true)}
+                            type="button"
+                            className="w-full rounded-lg py-1.5 text-[11px] font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5 transition-colors"
+                          >
+                            Show {semanticHidden} more
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

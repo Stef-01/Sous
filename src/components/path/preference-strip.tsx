@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Sparkles, ChevronDown } from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { derivePreferenceObservations } from "@/lib/engine/preference-observations";
@@ -54,6 +54,7 @@ export function PreferenceStrip({ sessions }: PreferenceStripProps) {
 
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(true);
+  const prefersReducedMotion = useReducedMotion();
 
   /* eslint-disable react-hooks/set-state-in-effect -- hydrate view count from localStorage on mount */
   useEffect(() => {
@@ -90,7 +91,7 @@ export function PreferenceStrip({ sessions }: PreferenceStripProps) {
         </span>
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           className="text-[var(--nourish-subtext)]"
         >
           <ChevronDown size={14} aria-hidden />
@@ -101,19 +102,23 @@ export function PreferenceStrip({ sessions }: PreferenceStripProps) {
         {mounted && open && (
           <motion.ul
             key="observations"
-            initial={{ height: 0, opacity: 0 }}
+            initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
+            exit={
+              prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }
+            }
+            transition={{ duration: prefersReducedMotion ? 0 : 0.22 }}
             className="overflow-hidden"
           >
             <div className="space-y-1.5 px-4 pb-3">
               {observations.map((o, i) => (
                 <motion.li
                   key={o.id}
-                  initial={{ opacity: 0, y: 4 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
+                  transition={{
+                    delay: prefersReducedMotion ? 0 : i * 0.06,
+                  }}
                   className="text-[13px] leading-relaxed text-[var(--nourish-dark)]"
                 >
                   <span
