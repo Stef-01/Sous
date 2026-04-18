@@ -14,10 +14,17 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { sides, meals } from "@/data";
+import { findClosestDishes } from "@/lib/engine/find-closest-dishes";
 
 interface LocalResult {
   name: string;
   cuisine: string;
+  /** Why this dish surfaced — e.g. "Same pasta · cream sauce". Only set for
+   *  semantically-matched suggestions. */
+  reason?: string;
+  /** `true` when this row came from the semantic matcher (not a literal
+   *  substring hit). Lets the UI tag it as a "closest match". */
+  semantic?: boolean;
 }
 
 const CUISINE_ICON: Record<string, LucideIcon> = {
@@ -58,36 +65,44 @@ function searchLocal(query: string): LocalResult[] {
   const results: LocalResult[] = [];
   const seen = new Set<string>();
 
-  // Search meals first (main dishes)
+  // Pass 1 — literal substring hits (fast, predictable).
   for (const meal of meals) {
-    const matches =
+    const hit =
       meal.name.toLowerCase().includes(q) ||
       meal.aliases.some((a) => a.toLowerCase().includes(q));
-    if (matches && !seen.has(meal.id)) {
+    if (hit && !seen.has(meal.id)) {
       seen.add(meal.id);
-      results.push({
-        name: meal.name,
-        cuisine: meal.cuisine,
-      });
+      results.push({ name: meal.name, cuisine: meal.cuisine });
     }
   }
 
-  // Search sides
   for (const side of sides) {
-    const matches =
+    const hit =
       side.name.toLowerCase().includes(q) ||
       side.tags.some((t) => t.toLowerCase().includes(q));
-    if (matches && !seen.has(side.id)) {
+    if (hit && !seen.has(side.id)) {
       seen.add(side.id);
-      const cuisine = getCuisineFromTags(side.tags);
-      results.push({
-        name: side.name,
-        cuisine,
-      });
+      results.push({ name: side.name, cuisine: getCuisineFromTags(side.tags) });
     }
   }
 
-  return results.slice(0, 6);
+  // Pass 2 — semantic "closest" matches from the taxonomy index. These
+  // only surface dishes we did not already catch literally, and each
+  // carries a short reason ("Same pasta · cream sauce"). We cap the list
+  // so the literal matches still dominate when they exist.
+  const semantic = findClosestDishes(q, 4);
+  for (const m of semantic) {
+    if (seen.has(m.dish.id)) continue;
+    seen.add(m.dish.id);
+    results.push({
+      name: m.dish.name,
+      cuisine: m.dish.cuisine,
+      reason: m.reason,
+      semantic: true,
+    });
+  }
+
+  return results.slice(0, 8);
 }
 
 interface TextPromptProps {
@@ -258,41 +273,44 @@ export function TextPrompt({
             transition={{ duration: 0.15 }}
           >
             {effectiveResults.length > 0 ? (
-              <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
-                {effectiveResults.map((result, idx) => (
-                  <motion.button
-                    key={result.name}
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: idx * 0.04 }}
-                    onClick={() => handleSelectResult(result.name)}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--nourish-green)]/5 transition-colors"
-                    type="button"
-                  >
-                    {(() => {
-                      const Icon =
-                        CUISINE_ICON[result.cuisine.toLowerCase()] ??
-                        UtensilsCrossed;
-                      return (
-                        <Icon
-                          size={18}
-                          className="shrink-0 text-[var(--nourish-green)]"
-                          strokeWidth={1.8}
-                        />
-                      );
-                    })()}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-[var(--nourish-dark)] truncate">
-                        {result.name}
-                      </p>
-                      <p className="text-[11px] text-[var(--nourish-subtext)]">
-                        {result.cuisine} · ~15 min
-                      </p>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
+              (() => {
+                const literalHits = effectiveResults.filter((r) => !r.semantic);
+                const semanticHits = effectiveResults.filter((r) => r.semantic);
+                return (
+                  <div className="space-y-3">
+                    {literalHits.length > 0 && (
+                      <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
+                        {literalHits.map((result, idx) => (
+                          <ResultRow
+                            key={result.name}
+                            result={result}
+                            idx={idx}
+                            onSelect={handleSelectResult}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {semanticHits.length > 0 && (
+                      <div className="space-y-1.5">
+                        <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext)]/80">
+                          Closest to what you&apos;re craving
+                        </p>
+                        <div className="rounded-xl border border-dashed border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.03] overflow-hidden divide-y divide-[var(--nourish-green)]/10">
+                          {semanticHits.map((result, idx) => (
+                            <ResultRow
+                              key={result.name}
+                              result={result}
+                              idx={idx}
+                              onSelect={handleSelectResult}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()
             ) : (
               <div className="text-center py-6 space-y-2">
                 <Search size={28} className="text-[var(--nourish-subtext)]" />
@@ -308,5 +326,44 @@ export function TextPrompt({
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function ResultRow({
+  result,
+  idx,
+  onSelect,
+}: {
+  result: LocalResult;
+  idx: number;
+  onSelect: (name: string) => void;
+}) {
+  const Icon =
+    CUISINE_ICON[result.cuisine.toLowerCase()] ?? UtensilsCrossed;
+  return (
+    <motion.button
+      initial={{ opacity: 0, x: -6 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: idx * 0.04 }}
+      onClick={() => onSelect(result.name)}
+      whileTap={{ scale: 0.98 }}
+      className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--nourish-green)]/5 transition-colors"
+      type="button"
+    >
+      <Icon
+        size={18}
+        className="shrink-0 text-[var(--nourish-green)]"
+        strokeWidth={1.8}
+      />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-[var(--nourish-dark)] truncate">
+          {result.name}
+        </p>
+        <p className="text-[11px] text-[var(--nourish-subtext)]">
+          {result.cuisine}
+          {result.reason ? ` · ${result.reason}` : " · ~15 min"}
+        </p>
+      </div>
+    </motion.button>
   );
 }
