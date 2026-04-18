@@ -33,6 +33,11 @@ import { sides, meals } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
+import {
+  FilterDropdown,
+  type FilterOption,
+} from "@/components/shared/filter-dropdown";
+import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 
 interface QuestDish {
   dishName: string;
@@ -402,14 +407,50 @@ export function QuestCard({
       ),
     [userPreferences, cookHistory, pantryItems, pantryMounted],
   );
-  // Quick-win filter: a single toggle that narrows the feed to fast dishes.
-  // Session-scoped (no storage) — user re-engages every time they sit down.
-  const [onlyQuick, setOnlyQuick] = useState(false);
+  // Quest filters: cook-time cap + cuisine. Both session-scoped so they
+  // never become permanent settings — they reset at app close.
+  const filters = useQuestFilters();
+
+  // Build the cuisine option list from the actual dish index so we never
+  // show an option that has zero results. Keeps the dropdown honest.
+  const cuisineOptions = useMemo<FilterOption<string>[]>(() => {
+    const seen = new Map<string, string>();
+    for (const d of baseDishes) {
+      const key = d.cuisineFamily.toLowerCase();
+      if (!seen.has(key)) {
+        seen.set(key, d.cuisineFamily);
+      }
+    }
+    const alpha = Array.from(seen.entries()).sort((a, b) =>
+      a[1].localeCompare(b[1]),
+    );
+    return [
+      { value: "any", label: "Any cuisine", pillLabel: "Cuisine" },
+      ...alpha.map(([key, label]) => ({
+        value: key,
+        label,
+        pillLabel: label,
+      })),
+    ];
+  }, [baseDishes]);
+
   const questDishes = useMemo(() => {
-    if (!onlyQuick) return baseDishes;
-    const filtered = baseDishes.filter((d) => d.cookTimeMinutes <= 20);
+    const cap =
+      filters.cookTime === "any"
+        ? Number.POSITIVE_INFINITY
+        : Number.parseInt(filters.cookTime, 10);
+    const cuisineKey = filters.cuisine.toLowerCase();
+    const filtered = baseDishes.filter((d) => {
+      if (d.cookTimeMinutes > cap) return false;
+      if (filters.cuisine !== "any") {
+        if (d.cuisineFamily.toLowerCase() !== cuisineKey) return false;
+      }
+      return true;
+    });
+    // Graceful fallback: if the filter combination yields nothing, return
+    // the base feed so the user never hits an empty state because of filters.
     return filtered.length > 0 ? filtered : baseDishes;
-  }, [baseDishes, onlyQuick]);
+  }, [baseDishes, filters.cookTime, filters.cuisine]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
@@ -536,30 +577,44 @@ export function QuestCard({
 
   return (
     <div className="space-y-1.5">
-      {/* Section header + quick-win chip — a single shortcut, never a filter panel. */}
-      <div className="flex items-center justify-between px-1">
-        <h2 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
+      {/* Section header + filter pills — two clickable dropdowns replace the
+          old binary "Under 20 min" toggle. Both reset at tab close. */}
+      <div className="flex items-center justify-between gap-2 px-1">
+        <h2 className="shrink-0 text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
           Today&apos;s Quest
         </h2>
-        <motion.button
-          type="button"
-          onClick={() => {
-            setOnlyQuick((v) => !v);
-            setCurrentIndex(0);
-          }}
-          whileTap={{ scale: 0.96 }}
-          className={cn(
-            "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-            onlyQuick
-              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-              : "border-[var(--nourish-border-strong)] bg-white/60 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40 hover:text-[var(--nourish-green)]",
-          )}
-          aria-pressed={onlyQuick}
-          aria-label="Filter to dishes under 20 minutes"
-        >
-          <Clock size={11} strokeWidth={2.2} />
-          Under 20 min
-        </motion.button>
+        <div className="flex items-center gap-1.5">
+          <FilterDropdown
+            label="Cook time"
+            value={filters.cookTime}
+            defaultValue="any"
+            onChange={(v) => {
+              filters.setCookTime(v);
+              setCurrentIndex(0);
+            }}
+            leadingIcon={<Clock size={11} strokeWidth={2.2} />}
+            align="end"
+            options={[
+              { value: "any", label: "Any time", pillLabel: "Any time" },
+              { value: "15", label: "≤ 15 min", pillLabel: "≤ 15 min" },
+              { value: "20", label: "≤ 20 min", pillLabel: "≤ 20 min" },
+              { value: "30", label: "≤ 30 min", pillLabel: "≤ 30 min" },
+              { value: "45", label: "≤ 45 min", pillLabel: "≤ 45 min" },
+              { value: "60", label: "≤ 60 min", pillLabel: "≤ 60 min" },
+            ]}
+          />
+          <FilterDropdown
+            label="Cuisine"
+            value={filters.cuisine}
+            defaultValue="any"
+            onChange={(v) => {
+              filters.setCuisine(v);
+              setCurrentIndex(0);
+            }}
+            align="end"
+            options={cuisineOptions}
+          />
+        </div>
       </div>
 
       {/* Card stack container — minHeight 460 pushes action chips below fold at 375×667 */}
