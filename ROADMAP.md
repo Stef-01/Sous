@@ -1,7 +1,29 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-04-17
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## STAGE 0.8: NEXT-20C MEMORY + RELATIONSHIPS + PERFORMANCE — COMPLETE
+
+A third 20-phase sprint focused on making the app remember the user, surface
+preference-aware moments, and coalesce multi-dish prep without adding UI
+clutter. All phases shipped 2026-04-17. See `docs/NEXT-20C-PHASES.md` for the
+full plan.
+
+- **P1** — `PreferenceStrip` on Path renders a single collapsed "What Sous has learned" line backed by `derivePreferenceObservations` over the user's completed cook sessions; auto-suppresses after three views and only appears once real data exists.
+- **P2** — `buildPairingRationale` + new "Because you cooked X" ambient line on `QuestCard` ties today's suggestion to a recent cook via shared taxonomy axes (cuisine / protein / technique / flavor), with 3 new unit tests.
+- **P3** — `RepeatCookChip` upgraded to distinguish "recent" (≤14 days) and "revive" (21–90 days) loved dishes and drop a gentle, non-guilting nudge; 8 new unit tests over `pickRepeatCandidate`.
+- **P4** — Preference-decay halo on skill-tree nodes: `preference-decay.ts` (`computeFreshness`) decays 10% per 30 days with a 0.15 floor; `SkillNode` paints a warm radial halo whose opacity tracks freshness; `useSkillProgress` now stamps `lastCookedAt` on every recorded cook.
+- **P7** — `FriendsStrip` tiles become tap-through routes to the read-only `/gift/<slug>` gift page, turning the social strip into a zero-friction inspiration surface.
+- **P8** — `useShareLog` + imperative `logShare` persist share events in `localStorage`; `WinScreen` logs every successful gift; new `CooksSharedLine` on Path renders a single-line tally ("3 meals shared — Alex cooked one of them.") silent until the user has shared at least once.
+- **P10** — `useCravingHistory` remembers the user's last 5 craving queries for 30 days (MRU, case-insensitive dedup); `TextPrompt` now shows a one-tap "Recent" chip row on focus when the input is empty.
+- **P11** — Live filter application in craving results: `TextPrompt` consumes `useQuestFilters` so cook-time and cuisine filters active on `QuestCard` also filter the local search results, with a clearable "Filters on: ≤30 min · Indian" pill at the top of the results.
+- **P12** — Why-this-match tap-to-expand on semantic matches: `find-closest-dishes` now returns a `matched` axes breakdown, `TextPrompt` renders an inline "Why?" expander listing the exact axes that hit (name / form / cuisine / protein / sauce / flavor / technique).
+- **P13** — Pre-cook prep-list coalescing: new `coalescePrepList` utility (5 unit tests) merges ingredients across all dishes in a combined cook, groups them by inferred station (cutting-board / stove / oven / blender / other), and `IngredientList` gains a "By dish / By station" toggle that keeps existing checked state intact via `prepSourceIds`.
+- **P15** — Mistake-chip dismissible with memory: new `useMistakeSuppression` hook (180-day per-dish suppression map) + `X` dismiss button on `MistakeChip`; `StepCard` threads `dishSlug` + `stepNumber` so suppressions are scoped, not global.
+- **P19–P20** — Lint, 194 vitest tests green (21 files), production build clean, changes committed to main.
 
 ---
 

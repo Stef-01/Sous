@@ -205,6 +205,42 @@ function CombinedCookContent() {
     [orderedDishes],
   );
 
+  // Shape each orderedDish back into a StaticDishData-compatible object so
+  // the IngredientList can offer a "By station" coalesced view. Only
+  // meaningful when there are 2+ dishes.
+  const prepDishes = useMemo(() => {
+    return orderedDishes.map((d) => ({
+      name: d.dish.name,
+      slug: d.dish.slug,
+      description: d.dish.description ?? "",
+      cuisineFamily: d.dish.cuisineFamily,
+      prepTimeMinutes: d.dish.prepTimeMinutes,
+      cookTimeMinutes: d.dish.cookTimeMinutes,
+      skillLevel: d.dish.skillLevel ?? "beginner",
+      heroImageUrl: d.dish.heroImageUrl ?? null,
+      flavorProfile: (d.dish.flavorProfile ?? []) as string[],
+      temperature: d.dish.temperature ?? "hot",
+      ingredients: d.ingredients.map((i) => ({
+        id: i.id,
+        name: i.name,
+        quantity: i.quantity,
+        isOptional: !!i.isOptional,
+        substitution: i.substitution ?? null,
+      })),
+      steps: d.steps.map((s) => ({
+        phase: "cook" as const,
+        stepNumber: s.stepNumber ?? 0,
+        instruction: s.instruction,
+        timerSeconds: s.timerSeconds ?? null,
+        mistakeWarning: s.mistakeWarning ?? null,
+        quickHack: s.quickHack ?? null,
+        cuisineFact: s.cuisineFact ?? null,
+        donenessCue: s.donenessCue ?? null,
+        imageUrl: s.imageUrl ?? null,
+      })),
+    }));
+  }, [orderedDishes]);
+
   // Sequencer parallel hints: map of "dishSlug-stepIndex" -> hint text
   const parallelHintMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -551,6 +587,7 @@ function CombinedCookContent() {
               key="grab"
               ingredients={allIngredients}
               sections={ingredientSections}
+              prepDishes={prepDishes}
               recipeName={mainDish?.name ?? ""}
               cuisineFamily={mainDish?.cuisineFamily ?? ""}
               onReady={handleGrabReady}

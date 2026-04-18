@@ -14,6 +14,9 @@ import type { SkillNodeStatus } from "@/data/skill-tree";
 interface NodeProgress {
   cooksCompleted: number;
   completedAt?: string;
+  /** ISO timestamp of the most recent cook recorded against this node.
+   *  Drives the skill-tree decay halo on the Path screen. */
+  lastCookedAt?: string;
 }
 
 interface SkillProgressState {
@@ -99,12 +102,17 @@ export function useSkillProgress() {
       const current = prev[nodeId] || { cooksCompleted: 0 };
       const newCount = current.cooksCompleted + 1;
       const isNowComplete = newCount >= node.cooksRequired;
+      const nowIso = new Date().toISOString();
 
       const updated: SkillProgressState = {
         ...prev,
         [nodeId]: {
+          ...current,
           cooksCompleted: newCount,
-          ...(isNowComplete ? { completedAt: new Date().toISOString() } : {}),
+          lastCookedAt: nowIso,
+          ...(isNowComplete && !current.completedAt
+            ? { completedAt: nowIso }
+            : {}),
         },
       };
 

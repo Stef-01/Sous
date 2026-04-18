@@ -47,6 +47,9 @@ interface StepCardProps {
   isLast: boolean;
   personalNote?: string;
   onAddPersonalNote?: (note: string) => void;
+  /** Slug of the dish being cooked. When set, the MistakeChip's per-dish
+   *  suppression affordance is enabled. */
+  dishSlug?: string;
 }
 
 /**
@@ -77,6 +80,7 @@ export function StepCard({
   isLast,
   personalNote,
   onAddPersonalNote,
+  dishSlug,
 }: StepCardProps) {
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
@@ -297,6 +301,8 @@ export function StepCard({
             onToggle={() =>
               onToggleChip(expandedChip === "mistake" ? null : "mistake")
             }
+            dishSlug={dishSlug}
+            stepNumber={stepNumber}
           />
         )}
 

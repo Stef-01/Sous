@@ -15,6 +15,12 @@ import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  coalescePrepList,
+  normalizePrepName,
+  type PrepListGroup,
+} from "@/lib/engine/prep-list";
+import type { StaticDishData } from "@/data/guided-cook-steps";
 
 interface Ingredient {
   id: string;
@@ -36,6 +42,10 @@ interface IngredientListProps {
   /** Segmented ingredient sections — used for combined mains+sides mode.
    *  When provided, overrides the flat `ingredients` prop. */
   sections?: IngredientSection[];
+  /** Full dish data for every dish in the combined flow. When present and
+   *  there's more than one, the component offers a "By station" toggle that
+   *  shows the coalesced mise-en-place grouped by prep station. */
+  prepDishes?: StaticDishData[];
   recipeName?: string;
   cuisineFamily?: string;
   onReady: () => void;
@@ -52,11 +62,13 @@ interface IngredientListProps {
 export function IngredientList({
   ingredients,
   sections,
+  prepDishes,
   recipeName = "",
   cuisineFamily = "",
   onReady,
   onSelectSides,
 }: IngredientListProps) {
+  const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
   const {
@@ -133,6 +145,49 @@ export function IngredientList({
     });
   };
 
+  // Coalesced prep-list: only surfaced when we have 2+ dishes of authored
+  // cook data, which is the case for combined cook flows. For single-dish
+  // flows we don't offer the toggle since it would just duplicate the
+  // by-dish view.
+  const prepGroups = useMemo<PrepListGroup[]>(() => {
+    if (!prepDishes || prepDishes.length < 2) return [];
+    return coalescePrepList(prepDishes);
+  }, [prepDishes]);
+  const hasCoalescedView = prepGroups.length > 0;
+
+  // Build a map: prep-item key -> list of source ingredient ids, so that
+  // tapping a coalesced row can check every underlying ingredient and keep
+  // the existing "all checked → go cook" state machine honest.
+  const prepSourceIds = useMemo(() => {
+    const map = new Map<string, string[]>();
+    if (!prepDishes || prepDishes.length === 0) return map;
+    for (const dish of prepDishes) {
+      for (const ing of dish.ingredients) {
+        const key = normalizePrepName(ing.name);
+        if (!key) continue;
+        const arr = map.get(key) ?? [];
+        arr.push(ing.id);
+        map.set(key, arr);
+      }
+    }
+    return map;
+  }, [prepDishes]);
+
+  const toggleCoalesced = (prepName: string) => {
+    const ids = prepSourceIds.get(normalizePrepName(prepName));
+    if (!ids || ids.length === 0) return;
+    setChecked((prev) => {
+      const allOn = ids.every((id) => prev.has(id));
+      const next = new Set(prev);
+      if (allOn) {
+        ids.forEach((id) => next.delete(id));
+      } else {
+        ids.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  };
+
   // Precompute running index offsets for stagger animation delay
   const sectionStartIndices = useMemo(() => {
     const indices: number[] = [];
@@ -153,50 +208,156 @@ export function IngredientList({
     >
       {/* Scrollable ingredient list */}
       <div className="flex-1 overflow-y-auto min-h-0 space-y-5 pb-4">
-        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
-          Gather these
-        </h2>
-
-        {effectiveSections.map((section, sectionIdx) => {
-          const sectionStartIdx = sectionStartIndices[sectionIdx];
-
-          return (
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
+            Gather these
+          </h2>
+          {hasCoalescedView && (
             <div
-              key={section.label || `section-${sectionIdx}`}
-              className="space-y-1"
+              role="tablist"
+              aria-label="Prep view"
+              className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
             >
-              {/* Section header — only shown in segmented mode */}
-              {isSegmented && section.label && (
-                <motion.h3
-                  initial={{ opacity: 0, x: -4 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: sectionStartIdx * 0.04 }}
-                  className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide px-3 pt-3 pb-1"
-                >
-                  {section.label}
-                </motion.h3>
-              )}
-
-              {section.ingredients.map((item, idx) => (
-                <IngredientRow
-                  key={item.id}
-                  item={item}
-                  idx={sectionStartIdx + idx}
-                  checked={checked.has(item.id)}
-                  showingSub={askingSub === item.id}
-                  recipeName={recipeName}
-                  cuisineFamily={cuisineFamily}
-                  inPantry={pantryMounted && pantryHas(item.name)}
-                  onToggle={() => toggleItem(item.id)}
-                  onAskSub={() =>
-                    setAskingSub(askingSub === item.id ? null : item.id)
-                  }
-                  onTogglePantry={() => togglePantry(item.name)}
-                />
-              ))}
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === "dish"}
+                onClick={() => setViewMode("dish")}
+                className={cn(
+                  "rounded-full px-2.5 py-1 transition-colors",
+                  viewMode === "dish"
+                    ? "bg-[var(--nourish-green)] text-white"
+                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                )}
+              >
+                By dish
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === "station"}
+                onClick={() => setViewMode("station")}
+                className={cn(
+                  "rounded-full px-2.5 py-1 transition-colors",
+                  viewMode === "station"
+                    ? "bg-[var(--nourish-green)] text-white"
+                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                )}
+              >
+                By station
+              </button>
             </div>
-          );
-        })}
+          )}
+        </div>
+
+        {viewMode === "station" && hasCoalescedView ? (
+          <div className="space-y-4">
+            {prepGroups.map((group) => (
+              <div key={group.station} className="space-y-1">
+                <h3 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
+                  {group.label}
+                </h3>
+                {group.items.map((item) => {
+                  const ids =
+                    prepSourceIds.get(normalizePrepName(item.name)) ?? [];
+                  const isChecked =
+                    ids.length > 0 && ids.every((id) => checked.has(id));
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => toggleCoalesced(item.name)}
+                      className={cn(
+                        "flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors",
+                        isChecked
+                          ? "bg-[var(--nourish-green)]/5"
+                          : "hover:bg-neutral-50",
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
+                          isChecked
+                            ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+                            : "border-neutral-300",
+                        )}
+                      >
+                        {isChecked ? (
+                          <Check
+                            size={12}
+                            className="text-white"
+                            strokeWidth={3}
+                          />
+                        ) : (
+                          <Circle size={6} className="text-transparent" />
+                        )}
+                      </span>
+                      <span className="flex-1">
+                        <span
+                          className={cn(
+                            "block text-sm font-medium",
+                            isChecked
+                              ? "text-[var(--nourish-subtext)] line-through"
+                              : "text-[var(--nourish-dark)]",
+                          )}
+                        >
+                          {item.name}
+                        </span>
+                        <span className="block text-[11px] text-[var(--nourish-subtext)]">
+                          {item.quantity}
+                          {item.sources.length > 1
+                            ? ` · ${item.sources.join(" & ")}`
+                            : ""}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        ) : (
+          effectiveSections.map((section, sectionIdx) => {
+            const sectionStartIdx = sectionStartIndices[sectionIdx];
+
+            return (
+              <div
+                key={section.label || `section-${sectionIdx}`}
+                className="space-y-1"
+              >
+                {/* Section header — only shown in segmented mode */}
+                {isSegmented && section.label && (
+                  <motion.h3
+                    initial={{ opacity: 0, x: -4 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: sectionStartIdx * 0.04 }}
+                    className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide px-3 pt-3 pb-1"
+                  >
+                    {section.label}
+                  </motion.h3>
+                )}
+
+                {section.ingredients.map((item, idx) => (
+                  <IngredientRow
+                    key={item.id}
+                    item={item}
+                    idx={sectionStartIdx + idx}
+                    checked={checked.has(item.id)}
+                    showingSub={askingSub === item.id}
+                    recipeName={recipeName}
+                    cuisineFamily={cuisineFamily}
+                    inPantry={pantryMounted && pantryHas(item.name)}
+                    onToggle={() => toggleItem(item.id)}
+                    onAskSub={() =>
+                      setAskingSub(askingSub === item.id ? null : item.id)
+                    }
+                    onTogglePantry={() => togglePantry(item.name)}
+                  />
+                ))}
+              </div>
+            );
+          })
+        )}
 
         {/* "Got everything?" message when all checked */}
         <AnimatePresence>

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import { logShare } from "@/lib/hooks/use-share-log";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -375,6 +376,11 @@ export function WinScreen({
         window.prompt("Copy this link:", giftUrl);
       }
       setGiftSent(true);
+      logShare({
+        dishSlug,
+        dishName,
+        recipient: senderName,
+      });
     } catch {
       // Share dialog dismissed — don't flip the button to "sent" state.
     }

@@ -2,9 +2,16 @@
 
 import { useMemo, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, useInView } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { FRIEND_COOKS, type FriendCook } from "@/data/friend-cooks";
+
+/** A friend cook enriched with a canonical 4-star "rating" for the gift
+ *  preview. We don't track real friend ratings — 4 reads as "they liked
+ *  it" without overclaiming, and keeps the star row in the gift page
+ *  honest rather than absent. User's own cooks reuse their real rating. */
+const DEFAULT_FRIEND_STARS = 4;
 
 const cardVariants = {
   hidden: { opacity: 0, y: 14 },
@@ -55,18 +62,21 @@ function initialFor(name: string): string {
  * threading — this is a gentle "look what's getting made this week" nudge,
  * not a feed product.
  */
+type EnrichedEntry = FriendCook & { stars: number; isSelf: boolean };
+
 export function FriendsStrip({
   sessions,
   onDishSelect,
 }: {
   sessions: CookSessionRecord[];
+  /** Invoked when the user taps their OWN cook tile. Friend tiles route
+   *  into the gift preview instead so the strip doubles as a discovery
+   *  surface. */
   onDishSelect?: (dishName: string) => void;
 }) {
-  const entries = useMemo(() => {
-    // User's own completed cooks come first when present. We fall back to
-    // the canonical recipe photo (via recipeSlug → /food_images/<slug>.png)
-    // when the user did not save a scrapbook shot.
-    const mine: FriendCook[] = sessions
+  const router = useRouter();
+  const entries = useMemo<EnrichedEntry[]>(() => {
+    const mine: EnrichedEntry[] = sessions
       .filter((s) => s.completedAt)
       .slice(0, 4)
       .map((s) => ({
@@ -79,14 +89,42 @@ export function FriendsStrip({
           s.photoUri ?? `/food_images/${s.recipeSlug.replace(/-/g, "_")}.png`,
         postedAgo: s.completedAt ? formatTimeAgo(s.completedAt) : "",
         accent: "green",
+        stars:
+          typeof s.rating === "number" && s.rating > 0
+            ? s.rating
+            : DEFAULT_FRIEND_STARS,
+        isSelf: true,
       }));
-    return [...mine, ...FRIEND_COOKS];
+    const friends: EnrichedEntry[] = FRIEND_COOKS.map((f) => ({
+      ...f,
+      stars: DEFAULT_FRIEND_STARS,
+      isSelf: false,
+    }));
+    return [...mine, ...friends];
   }, [sessions]);
 
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
 
   if (entries.length === 0) return null;
+
+  const handleTap = (entry: EnrichedEntry) => {
+    if (entry.isSelf) {
+      onDishSelect?.(entry.dish);
+      return;
+    }
+    // Friend tiles open the read-only gift preview for their cook — the
+    // same surface a recipient sees when someone shares a dish via the
+    // Win-screen gift flow. Makes the feed a discovery layer, not
+    // wallpaper.
+    const params = new URLSearchParams({
+      from: entry.friend,
+      stars: String(entry.stars),
+    });
+    router.push(
+      `/gift/${encodeURIComponent(entry.dishSlug)}?${params.toString()}`,
+    );
+  };
 
   return (
     <section ref={ref} className="space-y-2" aria-label="Friends' recent cooks">
@@ -109,10 +147,14 @@ export function FriendsStrip({
             animate={inView ? "visible" : "hidden"}
             variants={cardVariants}
             whileTap={{ scale: 0.97 }}
-            onClick={() => onDishSelect?.(entry.dish)}
+            onClick={() => handleTap(entry)}
             className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm border border-neutral-100/80 transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             style={{ width: 168 }}
-            aria-label={`${entry.friend} made ${entry.dish}`}
+            aria-label={
+              entry.isSelf
+                ? `Your cook of ${entry.dish}`
+                : `Open ${entry.friend}'s ${entry.dish}`
+            }
           >
             <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--nourish-cream)]">
               {entry.imageUrl ? (

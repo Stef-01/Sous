@@ -383,6 +383,7 @@ function TodayPageContent() {
           key={questKey}
           userPreferences={effectivePreferences}
           cookHistory={stats}
+          cookSessions={completedSessions}
         />
 
         {/* Tiny, deliberately unassuming "more options" entry point.

@@ -38,6 +38,8 @@ import {
   type FilterOption,
 } from "@/components/shared/filter-dropdown";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
+import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
+import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 interface QuestDish {
   dishName: string;
@@ -393,9 +395,13 @@ function buildMealTags(
 export function QuestCard({
   userPreferences,
   cookHistory,
+  cookSessions,
 }: {
   userPreferences?: Record<string, number>;
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
+  /** Completed cook sessions, used to compute the "Because you cooked X"
+   *  rationale. Silent when empty or below the 5-cook threshold. */
+  cookSessions?: CookSessionRecord[];
 }) {
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
   const baseDishes = useMemo(
@@ -534,6 +540,31 @@ export function QuestCard({
     }
   }, [currentIndex, questDishes, saveDish, scheduleTimeout]);
 
+  // Show up to 3 stacked cards. Memoised so downstream memos don't flap.
+  const visibleCards = useMemo(() => {
+    const out: Array<(typeof questDishes)[number] & { stackIndex: number }> =
+      [];
+    for (let i = 0; i < Math.min(3, questDishes.length); i++) {
+      const idx = (currentIndex + i) % questDishes.length;
+      out.push({ ...questDishes[idx], stackIndex: i });
+    }
+    return out;
+  }, [currentIndex, questDishes]);
+
+  // One-line "Because you cooked X" rationale for the top card — silent
+  // until the user has ≥5 completed cooks and the pick shares ≥2 taxonomy
+  // axes with something they cooked in the last 21 days.
+  const topSlug = visibleCards[0]?.slug;
+  const topDishName = visibleCards[0]?.dishName;
+  const topRationale = useMemo(() => {
+    if (!topSlug || !cookSessions || cookSessions.length === 0) return null;
+    return buildPairingRationale({
+      currentDishSlug: topSlug,
+      currentDishName: topDishName,
+      cookHistory: cookSessions,
+    });
+  }, [topSlug, topDishName, cookSessions]);
+
   if (questDishes.length === 0) {
     return (
       <div className="space-y-1.5">
@@ -566,13 +597,6 @@ export function QuestCard({
         </motion.div>
       </div>
     );
-  }
-
-  // Show up to 3 stacked cards
-  const visibleCards = [];
-  for (let i = 0; i < Math.min(3, questDishes.length); i++) {
-    const idx = (currentIndex + i) % questDishes.length;
-    visibleCards.push({ ...questDishes[idx], stackIndex: i });
   }
 
   return (
@@ -635,6 +659,9 @@ export function QuestCard({
                 onSkip={handleSkip}
                 onSave={handleSave}
                 exitDirection={dish.stackIndex === 0 ? exitDirection : null}
+                rationale={
+                  dish.stackIndex === 0 ? (topRationale?.text ?? null) : null
+                }
               />
             ))}
         </AnimatePresence>
@@ -673,6 +700,7 @@ function SwipeCard({
   onSkip,
   onSave,
   exitDirection,
+  rationale,
 }: {
   dish: QuestDish & { stackIndex: number };
   stackIndex: number;
@@ -683,6 +711,9 @@ function SwipeCard({
   onSkip: () => void;
   onSave: () => void;
   exitDirection: "left" | "right" | null;
+  /** Optional ambient rationale rendered below the flavor tags. Only the
+   *  top card receives one — silent on deeper cards and for new users. */
+  rationale: string | null;
 }) {
   const [imgError, setImgError] = useState(false);
   const x = useMotionValue(0);
@@ -884,6 +915,13 @@ function SwipeCard({
               </span>
             ))}
           </div>
+          {/* Memory line — ambient, italic, visually quiet. Only renders
+              when the rationale builder cleared its threshold. */}
+          {rationale && (
+            <p className="pt-1 text-[11px] italic leading-snug text-[var(--nourish-subtext)]">
+              {rationale}.
+            </p>
+          )}
         </div>
 
         {/* Action row — heart save + Start cooking */}

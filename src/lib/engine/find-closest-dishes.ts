@@ -29,10 +29,26 @@ import {
   type Technique,
 } from "@/lib/engine/dish-taxonomy";
 
+/**
+ * Per-axis overlap breakdown for a match. Enables the UI to render a
+ * "Why this match?" expander without re-running the scoring.
+ */
+export interface DishMatchAxes {
+  forms: Form[];
+  sauces: SauceFamily[];
+  proteins: Protein[];
+  flavors: Flavor[];
+  techniques: Technique[];
+  cuisineHit: boolean;
+  exactName: boolean;
+  aliasHit: boolean;
+}
+
 export interface DishMatch {
   dish: DishTaxonomy;
   score: number;
   reason: string;
+  matched: DishMatchAxes;
 }
 
 // Axis weights. Form (pasta vs salad) is the strongest single signal because
@@ -186,6 +202,16 @@ export function findClosestDishes(
         exactName,
         aliasHit,
       ),
+      matched: {
+        forms: matchedForms,
+        sauces: matchedSauces,
+        proteins: matchedProteins,
+        flavors: matchedFlavors,
+        techniques: matchedTechniques,
+        cuisineHit: queryTokens.has(dish.cuisine.toLowerCase()),
+        exactName,
+        aliasHit,
+      },
     });
   }
 

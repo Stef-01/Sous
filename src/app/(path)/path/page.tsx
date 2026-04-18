@@ -9,6 +9,8 @@ import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
 import { ConfidenceDial } from "@/components/path/confidence-dial";
+import { PreferenceStrip } from "@/components/path/preference-strip";
+import { CooksSharedLine } from "@/components/path/cooks-shared-line";
 import { TasteBlendPrompt } from "@/components/path/taste-blend-prompt";
 import { JourneyMontage } from "@/components/path/journey-montage";
 import { JourneySummary } from "@/components/path/journey-summary";
@@ -361,6 +363,17 @@ export default function PathPage() {
         {/* Kitchen confidence dial — derived gauge, no number, just a tier */}
         <div className="px-4">
           <ConfidenceDial stats={stats} completedSessions={completedSessions} />
+        </div>
+
+        {/* What Sous has learned — warm, plain-language observations */}
+        <div className="px-4 pt-2">
+          <PreferenceStrip sessions={completedSessions} />
+        </div>
+
+        {/* Cooks-shared tally — silent until the user has shared at least
+            one meal via the Win-screen gift flow. */}
+        <div className="px-4 pt-2">
+          <CooksSharedLine />
         </div>
 
         {/* One-time household taste blend prompt */}

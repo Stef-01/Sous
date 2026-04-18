@@ -14,10 +14,15 @@ import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePathSound } from "@/lib/hooks/use-path-sound";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
+import { computeFreshness } from "@/lib/engine/preference-decay";
 
 interface NodeWithStatus extends SkillNode {
   status: SkillNodeStatus;
-  progress: { cooksCompleted: number; completedAt?: string };
+  progress: {
+    cooksCompleted: number;
+    completedAt?: string;
+    lastCookedAt?: string;
+  };
 }
 
 interface SkillTreeProps {
@@ -354,6 +359,7 @@ export const SkillTree = memo(function SkillTree({
                 cooksRequired={node.cooksRequired}
                 onTap={handleNodeTap}
                 trainingHover={getSkillTrainingHover(node.id)}
+                freshness={computeFreshness(node.progress.lastCookedAt)}
               />
             </div>
           );

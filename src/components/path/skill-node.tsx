@@ -15,6 +15,9 @@ interface SkillNodeProps {
   cooksRequired: number;
   onTap: (id: string) => void;
   trainingHover: SkillTrainingHover;
+  /** 0–1 preference freshness. 1 means "cooked today", lower values fade the
+   *  warm halo around completed / in-progress nodes. Undefined == no halo. */
+  freshness?: number;
 }
 
 /**
@@ -34,8 +37,13 @@ export function SkillNodeComponent({
   cooksRequired,
   onTap,
   trainingHover,
+  freshness,
 }: SkillNodeProps) {
   const isInteractive = status !== "locked";
+  const showHalo =
+    (status === "completed" || status === "in_progress") &&
+    typeof freshness === "number" &&
+    freshness > 0;
 
   return (
     <motion.button
@@ -89,6 +97,20 @@ export function SkillNodeComponent({
               : undefined
         }
       >
+        {/* Warm preference-decay halo. Fades with time-since-last-cook. Sits
+            *behind* the node; no number, no scold — just ambient warmth that
+            cools off as the skill gets rusty. */}
+        {showHalo && (
+          <span
+            aria-hidden
+            className="pointer-events-none absolute -inset-3 rounded-full"
+            style={{
+              background: `radial-gradient(circle, rgba(251,191,36,${0.38 * freshness!}) 0%, rgba(251,191,36,0) 72%)`,
+              filter: "blur(2px)",
+              transition: "opacity 400ms ease-out",
+            }}
+          />
+        )}
         {/* Quiet gold rim on completed — celebration without clutter */}
         {status === "completed" && (
           <span
