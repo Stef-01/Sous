@@ -26,22 +26,3 @@ export async function getAIProvider(): Promise<AIProvider> {
 
   return _provider;
 }
-
-/**
- * Safe wrapper that catches any provider errors and falls back to mock.
- * Use this at API boundaries.
- */
-export async function withFallback<T>(
-  fn: (provider: AIProvider) => Promise<T>,
-  fallbackFn: (provider: AIProvider) => Promise<T>,
-): Promise<T> {
-  const provider = await getAIProvider();
-  try {
-    return await fn(provider);
-  } catch (error) {
-    console.error("AI provider error, using mock fallback:", error);
-    const { MockAIProvider } = await import("./providers/mock");
-    const mock = new MockAIProvider();
-    return fallbackFn(mock);
-  }
-}

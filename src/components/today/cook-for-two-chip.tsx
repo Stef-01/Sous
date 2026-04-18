@@ -31,49 +31,43 @@ export function CookForTwoChip() {
 
   return (
     <section aria-label="Cook for two" className="mx-auto max-w-md">
-      <motion.button
-        layout
-        type="button"
-        onClick={() => {
-          if (!duo) setDuo(true);
-          setOpen((o) => !o);
-        }}
-        whileTap={{ scale: 0.97 }}
-        transition={{ type: "spring", stiffness: 400, damping: 22 }}
-        className={`flex w-full items-center justify-between gap-2 rounded-full border px-4 py-2 text-xs transition-colors ${
+      {/* Main toggle + optional clear sit side-by-side, never nested,
+          so screen readers and keyboards see two distinct controls. */}
+      <div
+        className={`flex w-full items-center gap-1 rounded-full border pr-1 text-xs transition-colors ${
           duo
             ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
             : "border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)]"
         }`}
       >
-        <span className="inline-flex items-center gap-1.5">
+        <motion.button
+          layout
+          type="button"
+          onClick={() => {
+            if (!duo) setDuo(true);
+            setOpen((o) => !o);
+          }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 400, damping: 22 }}
+          className="flex flex-1 items-center gap-1.5 px-4 py-2 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 rounded-full"
+        >
           <Users size={13} />
           {duo ? `Cooking for two · ${blendLabel}` : "Cook for two?"}
-        </span>
+        </motion.button>
         {duo && (
-          <span
-            role="button"
-            tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
+          <button
+            type="button"
+            onClick={() => {
               setDuo(false);
               setOpen(false);
             }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                e.stopPropagation();
-                setDuo(false);
-                setOpen(false);
-              }
-            }}
             aria-label="Turn off cook for two"
-            className="flex h-5 w-5 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-[var(--nourish-cream)]"
+            className="flex h-6 w-6 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-[var(--nourish-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <X size={12} />
-          </span>
+          </button>
         )}
-      </motion.button>
+      </div>
 
       <AnimatePresence initial={false}>
         {duo && open && (

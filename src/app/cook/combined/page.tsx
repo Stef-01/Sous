@@ -21,6 +21,7 @@ import {
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
+import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
 import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
@@ -178,11 +179,17 @@ function CombinedCookContent() {
       }));
       startCombinedSession(dishEntries);
 
-      // Start a local session for tracking
+      // Start a local session for tracking. We encode the combined slug
+      // as `<main>+<side>+<side>` so history queries can distinguish a
+      // multi-dish cook from a single-dish one. See AUDIT-2026-04-17 P1-10.
       if (!sessionIdRef.current) {
         const firstDish = orderedDishes[0];
+        const combinedSlug =
+          orderedDishes.length > 1
+            ? orderedDishes.map((d) => d.dish.slug).join("+")
+            : firstDish.dish.slug;
         sessionIdRef.current = startSession(
-          firstDish.dish.slug,
+          combinedSlug,
           `${orderedDishes.map((d) => d.dish.name).join(" + ")}`,
           firstDish.dish.cuisineFamily,
         );
@@ -470,6 +477,15 @@ function CombinedCookContent() {
     }
   }, [updateSession, awardXP]);
 
+  const handleFeedback = useCallback(
+    (feedback: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, { feedback });
+      }
+    },
+    [updateSession],
+  );
+
   const handleRate = useCallback(
     (stars: number) => {
       if (sessionIdRef.current) {
@@ -581,17 +597,29 @@ function CombinedCookContent() {
             />
           )}
 
-          {/* GRAB — Segmented ingredient list */}
+          {/* GRAB — Per-dish watchlist stack + segmented ingredient list.
+              Each watchlist is per-dish scoped so MistakeChip suppression
+              from prior cooks respects per-dish boundaries. */}
           {currentPhase === "grab" && (
-            <IngredientList
-              key="grab"
-              ingredients={allIngredients}
-              sections={ingredientSections}
-              prepDishes={prepDishes}
-              recipeName={mainDish?.name ?? ""}
-              cuisineFamily={mainDish?.cuisineFamily ?? ""}
-              onReady={handleGrabReady}
-            />
+            <div className="space-y-2">
+              {orderedDishes.map((d) => (
+                <CookWatchlist
+                  key={`watchlist-${d.dish.slug}`}
+                  dishSlug={d.dish.slug}
+                  steps={d.steps}
+                />
+              ))}
+              <IngredientList
+                key="grab"
+                ingredients={allIngredients}
+                sections={ingredientSections}
+                prepDishes={prepDishes}
+                recipeName={mainDish?.name ?? ""}
+                cuisineFamily={mainDish?.cuisineFamily ?? ""}
+                dishSlug={mainDish?.slug}
+                onReady={handleGrabReady}
+              />
+            </div>
           )}
 
           {/* COOK — Empty steps guard */}
@@ -708,11 +736,15 @@ function CombinedCookContent() {
                     currentStepIndex === currentCookSteps.length - 1 &&
                     currentDishIndex === dishes.length - 1
                   }
+                  dishSlug={currentDish.dish.slug}
                 />
               </motion.div>
             )}
 
-          {/* TRANSITION — Between dishes */}
+          {/* TRANSITION — Between dishes. We show the NEXT dish's position
+              in the plate (index+2) because the user has just finished
+              dish `currentDishIndex + 1` and is about to start the next.
+              See AUDIT-2026-04-17 P1-3. */}
           {currentPhase === "cook" && showTransition && (
             <DishTransitionCard
               key="transition"
@@ -722,7 +754,7 @@ function CombinedCookContent() {
                 currentDish?.dish.name ??
                 ""
               }
-              currentDishNumber={currentDishIndex + 1}
+              currentDishNumber={currentDishIndex + 2}
               totalDishes={dishes.length}
               onContinue={handleTransitionContinue}
             />
@@ -751,6 +783,7 @@ function CombinedCookContent() {
               saved={winMeta.saved}
               skillProgress={winMeta.skillProgress}
               onRate={handleRate}
+              onFeedback={handleFeedback}
               onAddPhoto={handleAddPhoto}
               onAddNote={handleAddNote}
               onSave={handleSave}

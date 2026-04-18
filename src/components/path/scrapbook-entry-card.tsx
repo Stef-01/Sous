@@ -121,7 +121,7 @@ export function ScrapbookEntryCard({
               // eslint-disable-next-line @next/next/no-img-element -- user data URIs / arbitrary URLs from device
               <img
                 src={session.photoUri}
-                alt=""
+                alt={`Photo of ${session.dishName}`}
                 className="h-full w-full object-cover"
               />
             ) : (

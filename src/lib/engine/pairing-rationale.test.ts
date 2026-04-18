@@ -14,11 +14,8 @@ function makeSession(
 ): CookSessionRecord {
   return {
     sessionId: overrides.sessionId ?? `s-${overrides.recipeSlug}`,
-    recipeSlug: overrides.recipeSlug,
-    dishName: overrides.dishName,
     cuisineFamily: overrides.cuisineFamily ?? "italian",
     startedAt: overrides.completedAt,
-    completedAt: overrides.completedAt,
     favorite: overrides.favorite ?? false,
     ...overrides,
   } as CookSessionRecord;

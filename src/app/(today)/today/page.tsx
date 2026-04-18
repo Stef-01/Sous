@@ -3,7 +3,7 @@
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { SearchX } from "lucide-react";
+import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
@@ -13,7 +13,6 @@ import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
 import { FriendsStrip } from "@/components/today/friends-strip";
-import { MoreHorizontal } from "lucide-react";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
@@ -186,8 +185,10 @@ function TodayPageContent() {
 
   const recognitionMutation = trpc.recognition.identify.useMutation();
 
-  // Transition from loading → results when query resolves for the CURRENT query
-
+  // Transition from loading → results when query resolves for the CURRENT query.
+  // If the query errors while still in loading, fall back to search so the
+  // skeleton UI doesn't stack on top of the error block (AUDIT P1-5).
+  /* eslint-disable react-hooks/set-state-in-effect -- async query result drives view state machine */
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -200,7 +201,21 @@ function TodayPageContent() {
       }, 0);
       return () => clearTimeout(id);
     }
-  }, [pairingQuery.data, pairingQuery.isFetching, view, mainDishQuery]);
+    if (
+      view.type === "loading" &&
+      pairingQuery.isError &&
+      pendingQueryRef.current === mainDishQuery
+    ) {
+      setView({ type: "idle" });
+    }
+  }, [
+    pairingQuery.data,
+    pairingQuery.isFetching,
+    pairingQuery.isError,
+    view,
+    mainDishQuery,
+  ]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── Handlers ──────────────────────────────────────────
 
@@ -648,12 +663,15 @@ function TodayPageContent() {
         {showCoachQuiz && (
           <CoachQuiz
             onClose={() => {
-              // Mark as done even if closed early so it doesn't re-appear
+              // Mark as done even if closed early so it doesn't re-appear.
+              // Also set component state so "Personalize" hides immediately
+              // (the deferred localStorage effect only runs once on mount).
               try {
                 localStorage.setItem("sous-coach-quiz-done", "true");
               } catch {
                 // localStorage unavailable
               }
+              setQuizDone(true);
               setShowCoachQuiz(false);
             }}
             onComplete={handleCoachQuizComplete}

@@ -15,7 +15,6 @@ function makeSession(
     dishName: overrides.dishName ?? "Pasta Carbonara",
     cuisineFamily: overrides.cuisineFamily ?? "italian",
     startedAt: overrides.startedAt ?? overrides.completedAt,
-    completedAt: overrides.completedAt,
     rating: overrides.rating,
     favorite: overrides.favorite ?? false,
     ...overrides,

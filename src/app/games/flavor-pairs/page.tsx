@@ -63,6 +63,7 @@ export default function FlavorPairsGame() {
   const [startTime, setStartTime] = useState(0);
   const [elapsed, setElapsed] = useState(0);
   const [gameOver, setGameOver] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
   const [lastMatchWhy, setLastMatchWhy] = useState<string | null>(null);
   const isCheckingRef = useRef(false);
 
@@ -123,11 +124,17 @@ export default function FlavorPairsGame() {
             setMatchedPairs((prev) => {
               const newCount = prev + 1;
               if (newCount >= PAIR_COUNT) {
-                setGameOver(true);
+                // Freeze the score at game-over time so the recorded
+                // leaderboard value and the displayed value always match.
+                // Using `moves + 1` because React's moves state is the
+                // pre-increment value inside this stale closure.
+                // See AUDIT-2026-04-17 P1-8.
                 const score = Math.max(
                   0,
                   1000 - (moves + 1) * 50 - elapsed * 5,
                 );
+                setFinalScore(score);
+                setGameOver(true);
                 recordScore(GAME_ID, score);
                 awardXP("game_win", XP_AWARDS.GAME_WIN);
               }
@@ -205,7 +212,7 @@ export default function FlavorPairsGame() {
   }
 
   if (gameOver) {
-    const score = Math.max(0, 1000 - moves * 50 - elapsed * 5);
+    const score = finalScore;
     return (
       <motion.div
         className="min-h-dvh bg-[var(--nourish-cream)] flex flex-col items-center justify-center px-6"

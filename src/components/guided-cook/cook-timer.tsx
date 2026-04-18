@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import type { TimerEntry } from "@/lib/hooks/use-cook-store";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
@@ -35,6 +35,7 @@ export function CookTimer() {
 
   const [showDone, setShowDone] = useState(false);
   const vibratedForRef = useRef<string | null>(null);
+  const prefersReducedMotion = useReducedMotion();
 
   // Global 1 Hz ticker — runs only while any timer is in flight.
   useEffect(() => {
@@ -90,18 +91,22 @@ export function CookTimer() {
     >
       <motion.div
         animate={
-          isDone
-            ? { scale: [1, 1.15, 1, 1.1, 1] }
-            : isLow
-              ? { scale: [1, 1.04, 1] }
-              : {}
+          prefersReducedMotion
+            ? {}
+            : isDone
+              ? { scale: [1, 1.15, 1, 1.1, 1] }
+              : isLow
+                ? { scale: [1, 1.04, 1] }
+                : {}
         }
         transition={
-          isDone
-            ? { duration: 0.5, ease: "easeInOut" }
-            : isLow
-              ? { duration: 0.6, repeat: Infinity, repeatType: "loop" }
-              : {}
+          prefersReducedMotion
+            ? {}
+            : isDone
+              ? { duration: 0.5, ease: "easeInOut" }
+              : isLow
+                ? { duration: 0.6, repeat: Infinity, repeatType: "loop" }
+                : {}
         }
         className="flex items-center gap-4 rounded-2xl bg-[var(--nourish-dark)] px-5 py-3 shadow-xl"
       >

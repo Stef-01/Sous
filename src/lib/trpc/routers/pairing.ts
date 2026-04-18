@@ -269,28 +269,4 @@ export const pairingRouter = router({
         },
       };
     }),
-
-  explain: publicProcedure
-    .input(z.object({ sideDishId: z.string(), mainDish: z.string() }))
-    .query(async ({ input }) => {
-      // Parse intent for this main dish
-      const parseResult = await parseCraving(input.mainDish);
-      if (!parseResult.success) {
-        return { explanation: "Great pairing for your meal." };
-      }
-
-      // Find this specific side and re-score
-      const candidates = getCandidates();
-      const side = candidates.find((c) => c.id === input.sideDishId);
-      if (!side) {
-        return { explanation: "Great pairing for your meal." };
-      }
-
-      const result = suggestSides(parseResult.data, [side]);
-      if (result.success && result.data.sides.length > 0) {
-        return { explanation: result.data.sides[0].explanation };
-      }
-
-      return { explanation: "Great pairing for your meal." };
-    }),
 });

@@ -51,11 +51,28 @@ export function searchMeals(
   return instance.search(normalized, { limit }).map((r) => r.item);
 }
 
+/**
+ * Deterministic suggestion list. Previously this used a biased Fisher-Yates
+ * substitute (`sort(() => Math.random() - 0.5)`), which was non-deterministic
+ * AND statistically biased. We now rotate a day-of-year window over the pool,
+ * so suggestions vary day-over-day but stay stable within a session (and in
+ * tests). See AUDIT-2026-04-17 P1-9.
+ */
 export function getSuggestions(
   count: number = 6,
   verifiedOnly = false,
 ): string[] {
   const pool = verifiedOnly ? meals.filter((m) => m.nourishVerified) : meals;
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count).map((m) => m.name);
+  if (pool.length === 0) return [];
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor(
+    (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
+  );
+  const offset = dayOfYear % pool.length;
+  const out: string[] = [];
+  for (let i = 0; i < Math.min(count, pool.length); i++) {
+    out.push(pool[(offset + i) % pool.length].name);
+  }
+  return out;
 }

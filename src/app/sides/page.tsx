@@ -130,10 +130,13 @@ function SidesPageContent() {
     [handleCookThis, pairingQuery.data, router],
   );
 
-  if (!mainDish) {
-    router.replace("/today");
-    return null;
-  }
+  // Navigating during render causes "Cannot update during rendering" warnings;
+  // punt to an effect instead. See AUDIT-2026-04-17 P1-7.
+  useEffect(() => {
+    if (!mainDish) router.replace("/today");
+  }, [mainDish, router]);
+
+  if (!mainDish) return null;
 
   const isLoading = pairingQuery.isLoading || pairingQuery.isFetching;
 

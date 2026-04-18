@@ -121,6 +121,12 @@ export function ResultStack({
         setRerollingIndex(null);
         return;
       }
+      // No alternatives available — server returned { success: false, side: null }.
+      // Without this branch the spinner sticks on forever. See AUDIT-2026-04-17 P0-3.
+      if (lastRerollData && !lastRerollData.success) {
+        setRerollingIndex(null);
+        return;
+      }
       if (lastRerollData?.success && lastRerollData.side) {
         const rerollKey = `${rerollingIndex}-${lastRerollData.side.id}`;
         if (rerollKey !== appliedRerollKey) {

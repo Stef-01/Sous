@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useId, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -204,6 +204,7 @@ export function TextPrompt({
   const [isFocused, setIsFocused] = useState(false);
   const [showAllLiteral, setShowAllLiteral] = useState(false);
   const [showAllSemantic, setShowAllSemantic] = useState(false);
+  const inputId = useId();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { entries: historyEntries, record: recordHistory } =
     useCravingHistory();
@@ -286,12 +287,16 @@ export function TextPrompt({
 
   return (
     <div className="space-y-3">
-      <label className="block text-sm font-medium text-[var(--nourish-subtext)]">
+      <label
+        htmlFor={inputId}
+        className="block text-sm font-medium text-[var(--nourish-subtext)]"
+      >
         What&apos;s your main dish?
       </label>
 
       <div className="relative">
         <input
+          id={inputId}
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -560,7 +565,7 @@ function ResultRow({
             </p>
             <p className="text-[11px] text-[var(--nourish-subtext)] truncate">
               {result.cuisine}
-              {result.reason ? ` · ${result.reason}` : " · ~15 min"}
+              {result.reason ? ` · ${result.reason}` : ""}
             </p>
           </div>
         </button>

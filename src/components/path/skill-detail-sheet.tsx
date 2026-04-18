@@ -41,13 +41,14 @@ export function SkillDetailSheet({
   const progress = node ? Math.min(cooksCompleted / node.cooksRequired, 1) : 0;
   const training = node ? getSkillTrainingHover(node.id) : null;
 
-  // Pick a random dish from the node's associated dishes
+  // Pick the first associated dish. Previously this was random, which
+  // meant users couldn't re-cook the dish they just trained with on
+  // "Practice again". See AUDIT-2026-04-17 P1-16.
   const handleStartCook = () => {
     if (!node) return;
     const dishes = node.associatedDishes;
     if (dishes.length === 0) return;
-    const randomDish = dishes[Math.floor(Math.random() * dishes.length)];
-    onStartCook(randomDish);
+    onStartCook(dishes[0]);
   };
 
   return (

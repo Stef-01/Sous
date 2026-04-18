@@ -105,6 +105,17 @@ export function StepCard({
     setMounted(true);
   }, []);
 
+  // Cancel any in-flight TTS when the step changes or the component
+  // unmounts, so the previous step's audio doesn't read over the new
+  // screen. See AUDIT-2026-04-17 P1-6.
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, [stepNumber]);
+
   const handleReadAloud = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
@@ -151,7 +162,8 @@ export function StepCard({
     });
   };
 
-  const progress = stepNumber / totalSteps;
+  // Clamp so a misconfigured step list (totalSteps === 0) never yields NaN.
+  const progress = totalSteps > 0 ? stepNumber / totalSteps : 0;
 
   const slideX = 56 * direction;
 
@@ -285,7 +297,7 @@ export function StepCard({
 
       {/* Expandable chips */}
       <div className="space-y-2">
-        {timerSeconds && (
+        {timerSeconds != null && timerSeconds > 0 && (
           <TimerChip
             seconds={timerSeconds}
             isExpanded={expandedChip === "timer"}

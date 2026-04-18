@@ -81,9 +81,9 @@ export default function FavoritesPage() {
               <p className="text-sm font-semibold text-[var(--nourish-dark)]">
                 No favorites yet
               </p>
-              <p className="text-xs text-[var(--nourish-subtext)] max-w-[220px]">
-                Tap the heart on any dish to save it here — your go-to cooks,
-                always one tap away.
+              <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
+                Finish a cook and tap the heart on the win screen to favorite it
+                — your go-to cooks, always one tap away.
               </p>
             </div>
             <motion.button

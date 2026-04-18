@@ -23,6 +23,7 @@ export function CameraInput({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [showTypingFallback, setShowTypingFallback] = useState(false);
+  const [sizeError, setSizeError] = useState<string | null>(null);
 
   /* eslint-disable react-hooks/set-state-in-effect -- reset + start timer in response to isProcessing flip */
   useEffect(() => {
@@ -43,9 +44,10 @@ export function CameraInput({
       // Validate type and size
       if (!file.type.startsWith("image/")) return;
       if (file.size > 5 * 1024 * 1024) {
-        alert("Image must be under 5MB");
+        setSizeError("Image must be under 5MB. Try a smaller photo.");
         return;
       }
+      setSizeError(null);
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -122,6 +124,14 @@ export function CameraInput({
             <p className="text-sm text-white/60 max-w-xs">
               Take a photo or upload an image of your main dish
             </p>
+            {sizeError && (
+              <p
+                role="alert"
+                className="rounded-lg bg-red-500/15 px-3 py-1.5 text-xs text-red-200"
+              >
+                {sizeError}
+              </p>
+            )}
           </div>
         )}
       </div>

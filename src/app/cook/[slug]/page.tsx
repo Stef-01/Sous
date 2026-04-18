@@ -502,6 +502,7 @@ export default function GuidedCookPage({
               onPrev={handleBack}
               isFirst={currentStepIndex === 0}
               isLast={currentStepIndex === cookSteps.length - 1}
+              dishSlug={dish.slug}
             />
           )}
 
