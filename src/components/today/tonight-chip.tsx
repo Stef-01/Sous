@@ -12,6 +12,15 @@ interface TonightChipProps {
    * displayed quest dish. Makes "commit to this" a one-tap action.
    */
   suggested?: string;
+  /**
+   * Rendering mode.
+   * - `full` (default): show the commit pill when no intention, banner when one exists.
+   * - `banner-only`: render only the active-intention banner (returns `null` when empty).
+   *   Used on the Today home page so the surface stays calm.
+   * - `commit-only`: render only the commit pill/form (returns `null` if an intention
+   *   already exists). Used inside the More options drawer.
+   */
+  mode?: "full" | "banner-only" | "commit-only";
 }
 
 /**
@@ -21,7 +30,7 @@ interface TonightChipProps {
  * Post-commit: a calm banner affirms the choice and offers an equally
  * light-weight way to change or drop it. No nagging, no red badges.
  */
-export function TonightChip({ suggested }: TonightChipProps) {
+export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
   const { intention, mounted, commit, clear } = useCookIntention();
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("");
@@ -46,7 +55,11 @@ export function TonightChip({ suggested }: TonightChipProps) {
   }, [expanded, suggested, value]);
 
   if (!mounted) {
-    return <div className="h-[46px]" aria-hidden />;
+    // Reserve a tiny placeholder in `full` mode so layout doesn't jump.
+    // Drawer + banner-only modes can render nothing — the drawer's own
+    // layout handles spacing.
+    if (mode === "full") return <div className="h-[46px]" aria-hidden />;
+    return null;
   }
 
   const handleSubmit = () => {
@@ -56,6 +69,7 @@ export function TonightChip({ suggested }: TonightChipProps) {
   };
 
   if (intention) {
+    if (mode === "commit-only") return null;
     return (
       <AnimatePresence mode="wait">
         <motion.div
@@ -89,6 +103,8 @@ export function TonightChip({ suggested }: TonightChipProps) {
       </AnimatePresence>
     );
   }
+
+  if (mode === "banner-only") return null;
 
   return (
     <AnimatePresence initial={false} mode="wait">

@@ -8,10 +8,10 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
-import { CookForTwoChip } from "@/components/today/cook-for-two-chip";
 import { QuestCard } from "@/components/today/quest-card";
-import { FallbackActions } from "@/components/today/quick-actions";
+import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
 import { FriendsStrip } from "@/components/today/friends-strip";
+import { MoreHorizontal } from "lucide-react";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
@@ -61,6 +61,7 @@ function TodayPageContent() {
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
@@ -369,52 +370,38 @@ function TodayPageContent() {
         {/* Primary craving trigger — search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
 
+        {/* Tonight's commitment — persistent banner only (the commit flow now
+            lives in the More options drawer; surface stays calm). */}
+        <TonightChip mode="banner-only" />
+
         {/* Repeat-cook shortcut — hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
 
-        {/* Tonight's commitment — a soft ritual, never a nag */}
-        <div className="flex justify-center">
-          <TonightChip />
-        </div>
-
-        {/* Today's Quest — swipeable card stack */}
+        {/* Today's Quest — swipeable card stack (the hero of this surface) */}
         <QuestCard
           key={questKey}
           userPreferences={effectivePreferences}
           cookHistory={stats}
         />
 
-        {/* Household taste blend — opt-in, re-invokable from here */}
-        <CookForTwoChip />
-
-        {/* "Too tired?" + action chips — tightly grouped as secondary options */}
-        <div className="space-y-2.5 overflow-visible">
-          <p className="text-center">
-            <motion.button
-              onClick={() => {
-                setShowSearch(true);
-                handleTextSubmit("something quick and easy, I'm tired");
-              }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
-              type="button"
-            >
-              Too tired?{" "}
-              <span className="underline underline-offset-2 decoration-[var(--nourish-green)]/50">
-                Make something in 15 minutes
-              </span>
-            </motion.button>
-          </p>
-          <FallbackActions
-            onRescueFridge={handleRescueFridge}
-            onPlayGame={() => router.push("/games")}
-            onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
-          />
+        {/* Tiny, deliberately unassuming "more options" entry point.
+            Everything secondary (tonight commit, cook-for-two, rescue fridge,
+            games, personalize) lives one tap away in the drawer. */}
+        <div className="flex justify-center pt-1">
+          <motion.button
+            type="button"
+            onClick={() => setShowMoreOptions(true)}
+            whileTap={{ scale: 0.96 }}
+            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
+            aria-label="Open more options"
+          >
+            <MoreHorizontal size={13} strokeWidth={2} />
+            More options
+          </motion.button>
         </div>
 
-        {/* Friends social meals — below fold, social proof */}
+        {/* Friends social feed — below fold, horizontal-scroll social proof */}
         <FriendsStrip
           sessions={completedSessions}
           onDishSelect={(dishName) => {
@@ -423,6 +410,14 @@ function TodayPageContent() {
           }}
         />
       </main>
+
+      <MoreOptionsSheet
+        open={showMoreOptions}
+        onClose={() => setShowMoreOptions(false)}
+        onRescueFridge={handleRescueFridge}
+        onPlayGame={() => router.push("/games")}
+        onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
+      />
 
       {/* Search popout — slides up from bottom */}
       <SearchPopout isOpen={showSearch} onClose={handleCloseSearch}>
