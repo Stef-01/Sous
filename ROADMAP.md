@@ -80,7 +80,7 @@ These features exist as real, substantial code — not stubs.
 
 #### Guided Cook Flow
 
-- **`/cook/[slug]`** — full 4-phase flow: Mission → Grab → Cook → Win.
+- `**/cook/[slug]**` — full 4-phase flow: Mission → Grab → Cook → Win.
 - **Mission screen** (`src/components/guided-cook/mission-screen.tsx`) — dish overview, what you'll learn. Working.
 - **Ingredient list** (`src/components/guided-cook/ingredient-list.tsx`) — checkable list, "I don't have this" fires `ai.suggestSubstitution`. Working.
 - **Step card** (`src/components/guided-cook/step-card.tsx`) — one instruction per screen, expandable chips, Cook Q&A button wired to `ai.askCookQuestion`. Working.
@@ -94,14 +94,14 @@ These features exist as real, substantial code — not stubs.
 
 #### Cook Session Persistence
 
-- **`useCookSessions` hook** (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
-- **`useUnlockStatus` hook** (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
+- `**useCookSessions` hook** (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
+- `**useUnlockStatus` hook** (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
 
 #### Evaluate A (Pre-Cook Plate Evaluation)
 
 - **Plate evaluation engine** (`src/lib/plateAppraisal.ts`, `src/lib/engine/plate-evaluation.ts`) — category coverage (veg/protein/carbs), signal classification, confidence-first appraisal, one-best-move recommendation. Working.
 - **Evaluate sheet UI** (`src/components/results/EvaluateSheet.tsx`) — ADA plate visualization, balance indicators, swap suggestion. Working.
-- **`ai.rewriteAppraisal`** — warmer natural-language version of deterministic appraisal. Wired.
+- `**ai.rewriteAppraisal`** — warmer natural-language version of deterministic appraisal. Wired.
 
 #### Results, Search, Save, Share
 
@@ -181,7 +181,7 @@ These features exist as real, substantial code — not stubs.
 #### Recipe Overlay Infrastructure (Phase 15C)
 
 - **Recipe overlays hook** (`src/lib/hooks/use-recipe-overlays.ts`) — "Base + Overlay" pattern for user recipe modifications. Stores step overrides, personal notes, and substitutions in localStorage. Working.
-- **`mergeStepWithOverlay` utility** — Merges base step data with user overlay at read time.
+- `**mergeStepWithOverlay` utility** — Merges base step data with user overlay at read time.
 - **Personal step notes** — Step card allows users to add notes to individual cooking steps via overlay system. Working.
 
 #### Cuisine Mastery & Streak Progression
@@ -215,45 +215,46 @@ These features exist as real, substantial code — not stubs.
 
 #### Sprint 1: Polish and Connect (Phase 1 remaining) — COMPLETE
 
-- [x] **Quest card pool** — `buildQuestDishes()` draws from all 76 meals + 119 guided-cook sides with smart scoring, daily rotation, preference matching, and novelty bonus. 80/20 meal:side ratio.
-- [x] **Quest card save button** — Heart wired to `useSavedDishes` (localStorage, max 50, toast notification).
-- [x] **Friends strip** — Replaced mock data with real cook session history via `FriendsStrip({ sessions })`. Hidden when no completed cooks.
-- [x] **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
-- [x] **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
-- [x] **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
-- [x] **`pnpm lint && pnpm test`** — 102 unit tests passing; full lint + Prettier clean.
+- **Quest card pool** — `buildQuestDishes()` draws from all 76 meals + 119 guided-cook sides with smart scoring, daily rotation, preference matching, and novelty bonus. 80/20 meal:side ratio.
+- **Quest card save button** — Heart wired to `useSavedDishes` (localStorage, max 50, toast notification).
+- **Friends strip** — Replaced mock data with real cook session history via `FriendsStrip({ sessions })`. Hidden when no completed cooks.
+- **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
+- **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
+- **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
+- `**pnpm lint && pnpm test`** — 102 unit tests passing; full lint + Prettier clean.
 
 #### Sprint 2: Post-Cook Reflection (Phase 6A) — COMPLETE
 
-- [x] **Evaluate B reflection UI** — "Reflect on this meal" expandable panel on Win screen with strengths + suggestions, wired to `ai.generateReflection` with mock fallback.
-- [x] **Win screen → scrapbook save** — Full save path works: rate → note → photo → `completeSession()` → scrapbook entry. `pathJustUnlocked` fires on 3rd completion.
-- [x] **Journey tRPC endpoints** — `journey.recent` and `journey.stats` fully implemented (accept localStorage sessions, compute weekly frequency).
+- **Evaluate B reflection UI** — "Reflect on this meal" expandable panel on Win screen with strengths + suggestions, wired to `ai.generateReflection` with mock fallback.
+- **Win screen → scrapbook save** — Full save path works: rate → note → photo → `completeSession()` → scrapbook entry. `pathJustUnlocked` fires on 3rd completion.
+- **Journey tRPC endpoints** — `journey.recent` and `journey.stats` fully implemented (accept localStorage sessions, compute weekly frequency).
 
 #### Sprint 3: Coach Persona (Phase 5 deferred items) — COMPLETE
 
-- [x] **Coach quiz** — Full this-or-that quiz UI (`coach-quiz.tsx`) + `coach.quiz` tRPC endpoint. Results update preference vector → influences quest card ranking and pairing scoring.
-- [x] **Coach vibe prompt** — `coach.vibePrompt` endpoint returns daily rotating questions with result cards.
+- **Coach quiz** — Full this-or-that quiz UI (`coach-quiz.tsx`) + `coach.quiz` tRPC endpoint. Results update preference vector → influences quest card ranking and pairing scoring.
+- **Coach vibe prompt** — `coach.vibePrompt` endpoint returns daily rotating questions with result cards.
 
 #### Sprint 4: Data Expansion — PARTIAL
 
-- [ ] **Scored pairings beyond Indian cuisine** — Still only 14 Indian mains in `pairings.json`. TypeScript engine covers all 76 mains. Python engine run needed for quality upgrade.
-- [x] **Guided cook steps coverage** — 126 entries (119 sides + 7 meals), 58% side coverage. Quest cards prioritize dishes with guided cook data.
+- **Scored pairings beyond Indian cuisine** — Still only 14 Indian mains in `pairings.json`. TypeScript engine covers all 76 mains. Python engine run needed for quality upgrade.
+- **Guided cook steps coverage** — 126 entries (119 sides + 7 meals), 58% side coverage. Quest cards prioritize dishes with guided cook data.
 
 #### Sprint 5: Testing — COMPLETE
 
-- [x] **Unit tests** — 7 test files, 102 tests: pairing-engine, plate-evaluation, ranker, normalize, cook-sessions, coach-quiz, cook-sequencer.
-- [x] **E2E smoke test (Playwright)** — 5 scenarios: Today page render, search flow, full core loop, quest card save, Path tab unlock.
+- **Unit tests** — 7 test files, 102 tests: pairing-engine, plate-evaluation, ranker, normalize, cook-sessions, coach-quiz, cook-sequencer.
+- **E2E smoke test (Playwright)** — 5 scenarios: Today page render, search flow, full core loop, quest card save, Path tab unlock.
 
 #### Sprint 6: Phase 7 (Multi-Side Selection) — COMPLETE
 
-- [x] **Multi-side selection** — Result stack shows selectable checkboxes on all 3 sides, "Cook N selected sides" CTA.
-- [x] **Per-side reroll** — Swap button on each side card via `pairing.rerollSide` tRPC endpoint. Excludes previously seen IDs.
+- **Multi-side selection** — Result stack shows selectable checkboxes on all 3 sides, "Cook N selected sides" CTA.
+- **Per-side reroll** — Swap button on each side card via `pairing.rerollSide` tRPC endpoint. Excludes previously seen IDs.
 
 ---
 
 ### Explicitly Deferred from Prototype
 
 These are intentionally out of scope for Stage 1:
+
 
 | Feature                                    | Status                                                                                |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- |
@@ -270,6 +271,7 @@ These are intentionally out of scope for Stage 1:
 | ~~Games Arcade~~                           | **DONE** — Phase 14. 4 mini-games with scoring and XP integration.                    |
 | ~~Recipe overlay infrastructure~~          | **DONE** — Phase 15C. Base + Overlay pattern with personal step notes.                |
 
+
 ---
 
 ## STAGE 2: PRODUCTION LAUNCH
@@ -280,96 +282,97 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ### Auth (Clerk)
 
-- [ ] Enable Clerk auth fully — `src/components/auth-provider.tsx` and `src/middleware.ts` exist but auth is not enforced on any route.
-- [ ] Add login/signup flow with social providers (Google, Apple).
-- [ ] Associate cook sessions with Clerk user IDs (currently local sessions use `local-${Date.now()}`).
-- [ ] `cook.start` / `cook.complete` already write to DB when `ctx.userId` is present — just need auth enforced.
-- [ ] Migrate localStorage sessions to DB on first login ("import your history" flow).
+- Enable Clerk auth fully — `src/components/auth-provider.tsx` and `src/middleware.ts` exist but auth is not enforced on any route.
+- Add login/signup flow with social providers (Google, Apple).
+- Associate cook sessions with Clerk user IDs (currently local sessions use `local-${Date.now()}`).
+- `cook.start` / `cook.complete` already write to DB when `ctx.userId` is present — just need auth enforced.
+- Migrate localStorage sessions to DB on first login ("import your history" flow).
 
 ### Real Database (Neon Postgres + Drizzle)
 
-- [ ] Provision a Neon Postgres database and set `DATABASE_URL`.
-- [ ] Run `pnpm db:push` to apply the 7-table Drizzle schema.
-- [ ] Run `pnpm db:seed` to seed the side dish and meal catalog.
-- [ ] Fill in the 6 stubbed tRPC endpoints: `journey.recent`, `journey.stats`, `coach.quiz`, `coach.vibePrompt`, `content.getSideDish`, `content.search`.
-- [ ] Replace localStorage-only session hooks with server-backed equivalents (localStorage can remain as optimistic cache).
+- Provision a Neon Postgres database and set `DATABASE_URL`.
+- Run `pnpm db:push` to apply the 7-table Drizzle schema.
+- Run `pnpm db:seed` to seed the side dish and meal catalog.
+- Fill in the 6 stubbed tRPC endpoints: `journey.recent`, `journey.stats`, `coach.quiz`, `coach.vibePrompt`, `content.getSideDish`, `content.search`.
+- Replace localStorage-only session hooks with server-backed equivalents (localStorage can remain as optimistic cache).
 
 ### Performance
 
-- [ ] Lazy-load the pairing engine and data files (currently bundled at build time).
-- [ ] Add ISR or edge caching for the `pairing.suggest` endpoint.
-- [ ] Optimize Framer Motion bundle — tree-shake unused features.
-- [ ] Image optimization — switch from Unsplash URLs to Next.js `<Image>` with blur placeholders.
-- [ ] Audit and reduce initial JS bundle to under 150KB gzipped (current target from `planning.md`).
-- [ ] Lighthouse score ≥ 90 on mobile.
+- Lazy-load the pairing engine and data files (currently bundled at build time).
+- Add ISR or edge caching for the `pairing.suggest` endpoint.
+- Optimize Framer Motion bundle — tree-shake unused features.
+- Image optimization — switch from Unsplash URLs to Next.js `<Image>` with blur placeholders.
+- Audit and reduce initial JS bundle to under 150KB gzipped (current target from `planning.md`).
+- Lighthouse score ≥ 90 on mobile.
 
 ### Caching and Rate Limiting (Upstash Redis)
 
-- [ ] Add Upstash Redis for rate limiting on AI endpoints (`recognition.identify`, `pairing.suggest`).
-- [ ] Cache pairing results per main dish slug to reduce AI API costs on repeat queries.
-- [ ] Cache food recognition results by image hash to avoid re-querying Vision API for the same photo.
+- Add Upstash Redis for rate limiting on AI endpoints (`recognition.identify`, `pairing.suggest`).
+- Cache pairing results per main dish slug to reduce AI API costs on repeat queries.
+- Cache food recognition results by image hash to avoid re-querying Vision API for the same photo.
 
 ### Image Pipeline (Cloudflare R2)
 
-- [ ] Stand up a Cloudflare R2 bucket for food images.
-- [ ] Replace Unsplash URLs with R2-hosted, culturally reviewed photography.
-- [ ] Build an image upload pipeline for Win screen photos (currently `photoUri` in cook sessions is a local blob URL that doesn't persist across devices).
+- Stand up a Cloudflare R2 bucket for food images.
+- Replace Unsplash URLs with R2-hosted, culturally reviewed photography.
+- Build an image upload pipeline for Win screen photos (currently `photoUri` in cook sessions is a local blob URL that doesn't persist across devices).
 
 ### Error Monitoring (Sentry)
 
-- [ ] Add Sentry for both client and server-side error capture.
-- [ ] Set up alert rules for: AI API failures, pairing engine errors, database query failures.
-- [ ] Add source maps for production stack traces.
+- Add Sentry for both client and server-side error capture.
+- Set up alert rules for: AI API failures, pairing engine errors, database query failures.
+- Add source maps for production stack traces.
 
 ### Analytics
 
-- [ ] Expand Vercel Analytics stub (`src/lib/analytics.ts`) with real event tracking: search submitted, pairing viewed, cook started, cook completed, evaluate opened, plate shared.
-- [ ] Set up a funnel view: search → results → cook → win.
-- [ ] Track feature discovery rates (how many users find Evaluate, Path, scrapbook).
+- Expand Vercel Analytics stub (`src/lib/analytics.ts`) with real event tracking: search submitted, pairing viewed, cook started, cook completed, evaluate opened, plate shared.
+- Set up a funnel view: search → results → cook → win.
+- Track feature discovery rates (how many users find Evaluate, Path, scrapbook).
 
 ### SEO
 
-- [ ] Add `og:image` and `twitter:card` meta tags to the Today page (shareable plate preview image).
-- [ ] Add structured data (Schema.org Recipe) for guided cook pages.
-- [ ] Generate a sitemap for `/cook/[slug]` routes.
-- [ ] Ensure all pages have unique, descriptive `<title>` and `<meta description>` tags.
+- Add `og:image` and `twitter:card` meta tags to the Today page (shareable plate preview image).
+- Add structured data (Schema.org Recipe) for guided cook pages.
+- Generate a sitemap for `/cook/[slug]` routes.
+- Ensure all pages have unique, descriptive `<title>` and `<meta description>` tags.
 
 ### Security
 
-- [ ] Enforce Clerk auth on all mutation tRPC endpoints in production (`publicProcedure` → `protectedProcedure` where appropriate).
-- [ ] Add input sanitization and output validation on all AI endpoints (Zod schemas are defined — enforce them at the route boundary).
-- [ ] Rate limit camera/recognition endpoint per user to prevent Vision API abuse.
-- [ ] Review and restrict CORS policy on the tRPC API route.
-- [ ] Add Content-Security-Policy headers.
-- [ ] Rotate any API keys currently in `.env.local` and store in Vercel Environment Variables.
+- Enforce Clerk auth on all mutation tRPC endpoints in production (`publicProcedure` → `protectedProcedure` where appropriate).
+- Add input sanitization and output validation on all AI endpoints (Zod schemas are defined — enforce them at the route boundary).
+- Rate limit camera/recognition endpoint per user to prevent Vision API abuse.
+- Review and restrict CORS policy on the tRPC API route.
+- Add Content-Security-Policy headers.
+- Rotate any API keys currently in `.env.local` and store in Vercel Environment Variables.
 
 ### CI/CD Pipeline
 
-- [ ] Set up GitHub Actions: lint + test on every PR.
-- [ ] Block merges to `main` if `pnpm lint` or `pnpm test` fail.
-- [ ] Add Playwright E2E smoke tests to CI (requires running Vercel preview URL).
-- [ ] Add automated Lighthouse CI check on PRs touching Today page or Guided Cook.
-- [ ] Configure preview deployments on Vercel for all PRs.
+- Set up GitHub Actions: lint + test on every PR.
+- Block merges to `main` if `pnpm lint` or `pnpm test` fail.
+- Add Playwright E2E smoke tests to CI (requires running Vercel preview URL).
+- Add automated Lighthouse CI check on PRs touching Today page or Guided Cook.
+- Configure preview deployments on Vercel for all PRs.
 
 ### Accessibility
 
-- [ ] Full WCAG 2.1 AA audit on core flows (search, results, guided cook, evaluate).
-- [ ] Keyboard navigation for the quest card stack and search popout.
-- [ ] Screen reader labels on all icon-only buttons.
-- [ ] Verify `prefers-reduced-motion` is respected everywhere (hook exists in `src/hooks/useReducedMotion.ts`).
-- [ ] Color contrast audit — the cream/stone palette needs verification at small text sizes.
+- Full WCAG 2.1 AA audit on core flows (search, results, guided cook, evaluate).
+- Keyboard navigation for the quest card stack and search popout.
+- Screen reader labels on all icon-only buttons.
+- Verify `prefers-reduced-motion` is respected everywhere (hook exists in `src/hooks/useReducedMotion.ts`).
+- Color contrast audit — the cream/stone palette needs verification at small text sizes.
 
 ### Additional Production Concerns
 
-- [ ] **PWA / installability** — Add a web app manifest, service worker, and offline fallback for the core Today page.
-- [ ] **Multi-language** — Spanish, Hindi, Tagalog are the highest-priority candidates per the PRD (Stanford patient demographics).
-- [ ] **Legal disclaimers** — "Not medical advice" notice, Privacy Policy, Terms of Service pages.
-- [ ] **Data retention policy** — Define and implement a policy for cook session data (user deletion, data export).
-- [ ] **Clinical partner flow** (from PRD) — Clinician referral links, curated starter packs per cuisine, anonymous patient exploration tracking (opt-in).
+- **PWA / installability** — Add a web app manifest, service worker, and offline fallback for the core Today page.
+- **Multi-language** — Spanish, Hindi, Tagalog are the highest-priority candidates per the PRD (Stanford patient demographics).
+- **Legal disclaimers** — "Not medical advice" notice, Privacy Policy, Terms of Service pages.
+- **Data retention policy** — Define and implement a policy for cook session data (user deletion, data export).
+- **Clinical partner flow** (from PRD) — Clinician referral links, curated starter packs per cuisine, anonymous patient exploration tracking (opt-in).
 
 ---
 
 ## Summary
+
 
 |                  | Stage 1 (Prototype)                                       | Stage 2 (Production)               |
 | ---------------- | --------------------------------------------------------- | ---------------------------------- |
@@ -383,3 +386,5 @@ These are the concerns that must be resolved before Sous goes live for real user
 | **Deploy**       | Vercel (already live)                                     | Vercel + hardened config           |
 | **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games | Leaderboards, social sharing       |
 | **Recipes**      | 126 guided cook flows, overlay system, personal notes     | Full 203 coverage, cloud sync      |
+
+
