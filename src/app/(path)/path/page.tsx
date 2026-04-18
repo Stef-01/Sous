@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, LayoutGroup } from "framer-motion";
@@ -21,7 +21,10 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useAchievements } from "@/lib/hooks/use-achievements";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
 import { toast } from "@/lib/hooks/use-toast";
-import { AchievementsLauncher } from "@/components/path/achievements-launcher";
+import {
+  AchievementsLauncher,
+  type AchievementsLauncherHandle,
+} from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
@@ -91,6 +94,11 @@ export default function PathPage() {
 
   const replayPathTutorial = useCallback(() => {
     setPathTutorialOpen(true);
+  }, []);
+
+  const achievementsRef = useRef<AchievementsLauncherHandle>(null);
+  const openBadges = useCallback(() => {
+    achievementsRef.current?.open();
   }, []);
 
   // Check achievements whenever stats change
@@ -247,6 +255,9 @@ export default function PathPage() {
           levelProgress={levelProgress}
           skillsCompleted={skillsCompleted}
           onReplayTutorial={replayPathTutorial}
+          badgesUnlocked={unlockedAchievements.length}
+          badgesTotal={unlockedAchievements.length + lockedAchievements.length}
+          onOpenBadges={openBadges}
         />
 
         {/* Ambient hero — time-of-day tint + one warm line */}
@@ -338,6 +349,7 @@ export default function PathPage() {
           <AchievementsLauncher
             unlocked={unlockedAchievements}
             locked={lockedAchievements}
+            openRef={achievementsRef}
           />
         )}
 

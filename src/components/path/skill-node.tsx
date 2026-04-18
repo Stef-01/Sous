@@ -5,7 +5,6 @@ import { Check, Lock } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { SkillNodeStatus } from "@/data/skill-tree";
 import type { SkillTrainingHover } from "@/data/skill-node-training-hovers";
-import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
 import { SkillIcon } from "@/components/shared/skill-icon";
 
 interface SkillNodeProps {
@@ -204,8 +203,6 @@ export function SkillNodeComponent({
       >
         {name}
       </span>
-
-      <TrainingHoverPanel hover={trainingHover} />
     </motion.button>
   );
 }

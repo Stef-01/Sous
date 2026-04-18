@@ -1,7 +1,24 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-16
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish)
+> **Updated:** 2026-04-17
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## STAGE 0.7: PATH MODAL OVERLAP RCA + REMEDIATION — COMPLETE
+
+A targeted hotfix sprint triggered by a screenshot showing the Sprint 20B
+P16 hover-tooltip fix had not actually resolved the overlap. Full RCA in
+`docs/PATH-OVERLAP-RCA.md`. Shipped 2026-04-17.
+
+- **Phase 0** — Written RCA mapping every observed symptom (header clip, floating tooltip, label overlap, FAB overlap, default scrollbar, whitespace) to root cause before touching code.
+- **Phase 1** — `TrainingHoverPanel` component deleted outright; removed from `SkillNodeComponent` + `MasteryCuisineCard`; `.skill-hover-preview` block removed from `globals.css`. Native `title` attribute retained on every node for hover information without any overlay.
+- **Phase 2** — `.app-header` carries `padding-top: env(safe-area-inset-top, 0px)` so notch/status-bar regions never clip header content on iOS standalone PWA or phone-frame emulators.
+- **Phase 3** — `html { scrollbar-gutter: stable }` plus a soft `rgba(15,23,42,0.10)` webkit/firefox scrollbar so the 15-17 px layout shift and competing-with-chrome visuals are gone.
+- **Phase 4** — Badges entry point moved OUT of a floating FAB and INTO the `PathHeader` as an inline chip next to Streak + Trophy. `AchievementsLauncher` is now headless by default and exposes an imperative `open()` handle via `useImperativeHandle` / `openRef`. Eliminates the entire class of FAB-over-content overlaps.
+- **Phase 5** — Live-browser visual verification at 390×844 via the Cursor IDE browser MCP. Scrolled every tier of the skill tree and confirmed no overlays, no clipping, no visible default scrollbar.
+- **Phase 6** — Lint, 180 vitest tests, production build all green.
+- **Phase 7** — This commit + ROADMAP update.
 
 ---
 
@@ -110,14 +127,14 @@ These features exist as real, substantial code — not stubs.
 
 #### Cook Session Persistence
 
-- `**useCookSessions` hook\*\* (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
-- `**useUnlockStatus` hook\*\* (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
+- `**useCookSessions` hook (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
+- `**useUnlockStatus` hook (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
 
 #### Evaluate A (Pre-Cook Plate Evaluation)
 
 - **Plate evaluation engine** (`src/lib/plateAppraisal.ts`, `src/lib/engine/plate-evaluation.ts`) — category coverage (veg/protein/carbs), signal classification, confidence-first appraisal, one-best-move recommendation. Working.
 - **Evaluate sheet UI** (`src/components/results/EvaluateSheet.tsx`) — ADA plate visualization, balance indicators, swap suggestion. Working.
-- `**ai.rewriteAppraisal`\*\* — warmer natural-language version of deterministic appraisal. Wired.
+- `**ai.rewriteAppraisal` — warmer natural-language version of deterministic appraisal. Wired.
 
 #### Results, Search, Save, Share
 
@@ -197,7 +214,7 @@ These features exist as real, substantial code — not stubs.
 #### Recipe Overlay Infrastructure (Phase 15C)
 
 - **Recipe overlays hook** (`src/lib/hooks/use-recipe-overlays.ts`) — "Base + Overlay" pattern for user recipe modifications. Stores step overrides, personal notes, and substitutions in localStorage. Working.
-- `**mergeStepWithOverlay` utility\*\* — Merges base step data with user overlay at read time.
+- `**mergeStepWithOverlay` utility — Merges base step data with user overlay at read time.
 - **Personal step notes** — Step card allows users to add notes to individual cooking steps via overlay system. Working.
 
 #### Cuisine Mastery & Streak Progression
@@ -237,7 +254,7 @@ These features exist as real, substantial code — not stubs.
 - **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
 - **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
 - **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
-- `**pnpm lint && pnpm test`\*\* — 102 unit tests passing; full lint + Prettier clean.
+- `**pnpm lint && pnpm test` — 102 unit tests passing; full lint + Prettier clean.
 
 #### Sprint 2: Post-Cook Reflection (Phase 6A) — COMPLETE
 

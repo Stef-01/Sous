@@ -1,23 +1,38 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Award, X } from "lucide-react";
+import { X } from "lucide-react";
 import { AchievementsGrid } from "@/components/path/achievements-grid";
 import type { Achievement } from "@/data/achievements";
 
 interface AchievementsLauncherProps {
   unlocked: Achievement[];
   locked: Achievement[];
+  /**
+   * Optional imperative handle so a parent (e.g. PathHeader's chip) can open
+   * the sheet without needing this component to render its own trigger.
+   */
+  openRef?: React.RefObject<AchievementsLauncherHandle | null>;
+  /** When true, renders no inline trigger at all — sheet is opened imperatively. */
+  headless?: boolean;
+}
+
+export interface AchievementsLauncherHandle {
+  open: () => void;
 }
 
 /**
- * Floating badges entry point — keeps Path uncluttered while preserving
- * the full achievements grid in a lightweight overlay.
+ * Achievements sheet controller. By default headless — the parent renders its
+ * own trigger (typically a chip in PathHeader) and calls `open()` via ref.
+ * Kept separate from the header so its animation + dismissal logic stays
+ * co-located with the grid.
  */
 export function AchievementsLauncher({
   unlocked,
   locked,
+  openRef,
+  headless = true,
 }: AchievementsLauncherProps) {
   const [open, setOpen] = useState(false);
 
@@ -31,36 +46,34 @@ export function AchievementsLauncher({
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onKey]);
 
+  useImperativeHandle(
+    openRef,
+    () => ({
+      open: () => setOpen(true),
+    }),
+    [],
+  );
+
   const total = unlocked.length + locked.length;
   if (total === 0) return null;
 
   return (
     <>
-      {/* FAB sits above the tab bar (≈64px) with a safe-area-aware offset
-          so it never overlaps Today/Path/Community icons. The button has
-          a minimum 44×44 tap target for iOS HIG and Android Material. */}
-      <div
-        className="fixed right-3 z-[55] sm:right-4"
-        style={{
-          bottom: "calc(5.25rem + env(safe-area-inset-bottom, 0px))",
-        }}
-      >
-        <motion.button
-          type="button"
-          whileTap={{ scale: 0.94 }}
-          onClick={() => setOpen(true)}
-          className="flex min-h-[44px] items-center gap-2 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-4 py-2.5 text-[13px] font-semibold text-amber-950 shadow-[0_8px_20px_-6px_rgba(120,80,20,0.35)] ring-1 ring-amber-100/80 transition-shadow hover:shadow-[0_10px_24px_-6px_rgba(120,80,20,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
-          aria-label={`View badges and achievements (${unlocked.length} of ${total} unlocked)`}
-          aria-haspopup="dialog"
-          aria-expanded={open}
-        >
-          <Award className="h-4 w-4 text-amber-600" aria-hidden />
-          <span>Badges</span>
-          <span className="rounded-full bg-white/90 px-2 py-0.5 tabular-nums text-[11px] text-amber-900">
-            {unlocked.length}/{total}
-          </span>
-        </motion.button>
-      </div>
+      {!headless && (
+        <div className="px-4 pb-2 pt-1">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="inline-flex items-center gap-2 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-3 py-1.5 text-[12px] font-semibold text-amber-950 shadow-sm ring-1 ring-amber-100/60"
+            aria-haspopup="dialog"
+          >
+            Badges
+            <span className="tabular-nums">
+              {unlocked.length}/{total}
+            </span>
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {open && (

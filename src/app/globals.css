@@ -94,7 +94,9 @@
 
 /* === SHARED SURFACE PATTERNS === */
 
-/* App-level sticky header — used across Today/Path/Sides/Cook for consistent height & chrome */
+/* App-level sticky header — used across Today/Path/Sides/Cook for consistent height & chrome.
+   padding-top respects the device safe-area inset so notch/status-bar regions
+   never clip header content on iOS standalone PWA or viewport-fit=cover pages. */
 .app-header {
   position: sticky;
   top: 0;
@@ -103,6 +105,7 @@
   border-bottom: 1px solid var(--nourish-border-soft);
   box-shadow: var(--shadow-header);
   isolation: isolate;
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
 /* Surface utilities — unified card depth */
@@ -135,6 +138,35 @@ html {
   touch-action: manipulation;
   /* Prevent text size inflation on iOS Safari */
   -webkit-text-size-adjust: 100%;
+  /* Reserve space for the scrollbar even when content fits, so layout never
+     jumps by 15–17 px when a modal opens or a page grows past the viewport. */
+  scrollbar-gutter: stable;
+}
+
+/* Soft custom scrollbar — reads as chrome, never as content. The transparent
+   border + background-clip trick gives a 4 px visual thumb inside a 10 px
+   gutter, so there's always breathing room beside the content edge. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.1);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 150ms ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.22);
+  background-clip: padding-box;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.12) transparent;
 }
 
 body {
@@ -296,31 +328,6 @@ a,
   width: 0;
   height: 0;
   background: transparent;
-}
-
-/* === HOVER-ONLY PREVIEW TOOLTIP ===
-   Used by TrainingHoverPanel on the Path skill tree. Only appears on
-   devices that truly have a hover+fine-pointer (desktop with mouse).
-   Touch iPads at ≥768px CSS width would otherwise trigger this on tap
-   and leave it stuck over adjacent nodes. */
-.skill-hover-preview {
-  display: none;
-}
-@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
-  .skill-hover-preview {
-    display: block;
-    opacity: 0;
-    visibility: hidden;
-    transition:
-      opacity 150ms ease,
-      visibility 150ms ease;
-    pointer-events: none;
-  }
-  .group:hover > .skill-hover-preview,
-  .group:focus-within > .skill-hover-preview {
-    opacity: 1;
-    visibility: visible;
-  }
 }
 
 /* === REDUCED MOTION === */

@@ -1,7 +1,7 @@
 "use client";
 // v2
 import { motion } from "framer-motion";
-import { Star, Trophy, CircleHelp, Flame } from "lucide-react";
+import { Star, Trophy, CircleHelp, Flame, Award } from "lucide-react";
 
 interface PathHeaderProps {
   streak: number;
@@ -11,6 +11,12 @@ interface PathHeaderProps {
   skillsCompleted: number;
   /** Re-open the Path orientation tutorial (2-minute click-through). */
   onReplayTutorial?: () => void;
+  /** Total achievements unlocked — rendered as an inline chip when defined. */
+  badgesUnlocked?: number;
+  /** Total achievements available. */
+  badgesTotal?: number;
+  /** Open the achievements grid modal. If undefined, no badges chip renders. */
+  onOpenBadges?: () => void;
 }
 
 /** XP thresholds per level */
@@ -27,7 +33,15 @@ export function PathHeader({
   levelProgress,
   skillsCompleted,
   onReplayTutorial,
+  badgesUnlocked,
+  badgesTotal,
+  onOpenBadges,
 }: PathHeaderProps) {
+  const showBadges =
+    typeof onOpenBadges === "function" &&
+    typeof badgesUnlocked === "number" &&
+    typeof badgesTotal === "number" &&
+    badgesTotal > 0;
   const xpInCurrentLevel = totalXP % XP_PER_LEVEL;
   const xpNeeded = XP_PER_LEVEL;
 
@@ -85,6 +99,28 @@ export function PathHeader({
                 {skillsCompleted}
               </span>
             </div>
+
+            {showBadges && (
+              <motion.button
+                type="button"
+                whileTap={{ scale: 0.94 }}
+                onClick={onOpenBadges}
+                className="flex items-center gap-1 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-2 py-0.5 leading-none text-amber-950 shadow-sm ring-1 ring-amber-100/60 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                aria-label={`View badges (${badgesUnlocked} of ${badgesTotal} unlocked)`}
+                aria-haspopup="dialog"
+              >
+                <Award
+                  size={12}
+                  className="text-amber-600"
+                  strokeWidth={2.4}
+                  aria-hidden
+                />
+                <span className="text-[12px] font-bold tabular-nums">
+                  {badgesUnlocked}
+                  <span className="text-amber-700/70">/{badgesTotal}</span>
+                </span>
+              </motion.button>
+            )}
           </div>
         </div>
 

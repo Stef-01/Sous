@@ -14,7 +14,6 @@ import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePathSound } from "@/lib/hooks/use-path-sound";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
-import { TrainingHoverPanel } from "@/components/path/training-hover-panel";
 
 interface NodeWithStatus extends SkillNode {
   status: SkillNodeStatus;
@@ -97,8 +96,6 @@ function MasteryCuisineCard({
       {node.status === "locked" && (
         <span className="text-[11px] text-neutral-300">Locked</span>
       )}
-
-      <TrainingHoverPanel hover={trainingHover} />
     </button>
   );
 }
