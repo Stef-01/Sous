@@ -54,15 +54,6 @@ const WEIGHT = {
   sauceMismatch: -3,
 } as const;
 
-/** Intersection size of two small string arrays. */
-function intersectCount<T extends string>(a: T[], b: T[]): number {
-  if (a.length === 0 || b.length === 0) return 0;
-  const set = new Set<string>(b);
-  let n = 0;
-  for (const x of a) if (set.has(x)) n++;
-  return n;
-}
-
 function reasonFor(
   matched: {
     forms: Form[];
@@ -135,9 +126,7 @@ export function findClosestDishes(
     // Axis overlaps
     const matchedForms = dish.forms.filter((f) => q.forms.includes(f));
     const matchedSauces = dish.sauces.filter((s) => q.sauces.includes(s));
-    const matchedProteins = dish.proteins.filter((p) =>
-      q.proteins.includes(p),
-    );
+    const matchedProteins = dish.proteins.filter((p) => q.proteins.includes(p));
     const matchedFlavors = dish.flavors.filter((f) => q.flavors.includes(f));
     const matchedTechniques = dish.techniques.filter((t) =>
       q.techniques.includes(t),
@@ -173,7 +162,11 @@ export function findClosestDishes(
       if (dishHasAnyForm) score += WEIGHT.formMismatch;
     }
 
-    if (q.sauces.length > 0 && matchedSauces.length === 0 && dish.sauces.length > 0) {
+    if (
+      q.sauces.length > 0 &&
+      matchedSauces.length === 0 &&
+      dish.sauces.length > 0
+    ) {
       score += WEIGHT.sauceMismatch;
     }
 

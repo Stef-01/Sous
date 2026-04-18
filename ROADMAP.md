@@ -1,7 +1,23 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-04-16
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan)
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish)
+
+---
+
+## STAGE 0.6: NEXT-20B DECLUTTER + SEMANTIC CRAVING + LANDING POLISH — COMPLETE
+
+A second 20-phase sprint focused on simplifying the Today home, upgrading craving search with rule-based semantic matching, enriching the marketing landing with phone-frame mockups and a screenshot carousel, and rectifying visual bugs on the Path screen. All phases shipped 2026-04-16. See `docs/NEXT-20B-PHASES.md` for the full plan.
+
+- **P1–P2** — `MoreOptionsSheet` bottom drawer consolidates TonightChip (commit pill) + CookForTwoChip + quick-helper actions; Today page no longer carries "Make something in 15 minutes" or FallbackActions in the primary view.
+- **P3–P4** — `FriendsStrip` upgraded from a plain list into a social-feed-style row with meal photos, friend avatars, and time-ago labels; seeded by mock `friend-cooks.ts` data layered with the user's own completed cooks.
+- **P5–P8** — Reusable `FilterDropdown` primitive replaces the single "Under 20 min" toggle with two minimalist pill-dropdowns (cook time + cuisine) on `QuestCard`. `useQuestFilters` hook persists state in `sessionStorage`.
+- **P9–P12** — Rule-based semantic craving matcher (`dish-taxonomy.ts` + `find-closest-dishes.ts`) scores dishes across protein / sauce / technique / flavor / form / cuisine / dairy axes. Wired into `TextPrompt` under a "Closest to what you're craving" section with one-line reasons. 8 unit tests.
+- **P13–P15** — Landing: new `AppPreviewSection` (three phone frames rendering real Today/Path/Win mockups using live app components), `ScreenshotCarousel` (horizontal bleed of real food photos with dish-captions), `TrustStrip` (dotted editorial row — "no logins", "no ads", "on-device", "under 10s").
+- **P16** — Training hover tooltip on Path skill nodes gated to `@media (hover: hover) and (pointer: fine)` so it never triggers on touch devices; new `.skill-hover-preview` class in `globals.css` replaces the Tailwind stack that allowed overlap.
+- **P17** — `PathHeader` tightened: single-caption XP bar, 36px level badge, compact title + streak + skills trophy row; removed redundant "X/Y XP to level N+1" sub-caption and stray `ChevronRight`.
+- **P18** — Badges FAB: 44×44 minimum tap target, larger shadow, stronger focus ring, safe-area-aware bottom offset (`calc(5.25rem + env(safe-area-inset-bottom))`), z-index raised above tab bar but below modals.
+- **P19–P20** — Lint, 180 vitest tests green, production build clean, changes committed to main.
 
 ---
 
@@ -94,14 +110,14 @@ These features exist as real, substantial code — not stubs.
 
 #### Cook Session Persistence
 
-- `**useCookSessions` hook** (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
-- `**useUnlockStatus` hook** (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
+- `**useCookSessions` hook\*\* (`src/lib/hooks/use-cook-sessions.ts`) — localStorage-based sessions, stats, streak, cuisine tracking, favorites toggle, completion → pathJustUnlocked trigger. Fully working without a database.
+- `**useUnlockStatus` hook\*\* (`src/lib/hooks/use-unlock-status.ts`) — reads completedCooks, enforces Path unlock at 3 cooks, Community always deferred. Working.
 
 #### Evaluate A (Pre-Cook Plate Evaluation)
 
 - **Plate evaluation engine** (`src/lib/plateAppraisal.ts`, `src/lib/engine/plate-evaluation.ts`) — category coverage (veg/protein/carbs), signal classification, confidence-first appraisal, one-best-move recommendation. Working.
 - **Evaluate sheet UI** (`src/components/results/EvaluateSheet.tsx`) — ADA plate visualization, balance indicators, swap suggestion. Working.
-- `**ai.rewriteAppraisal`** — warmer natural-language version of deterministic appraisal. Wired.
+- `**ai.rewriteAppraisal`\*\* — warmer natural-language version of deterministic appraisal. Wired.
 
 #### Results, Search, Save, Share
 
@@ -181,7 +197,7 @@ These features exist as real, substantial code — not stubs.
 #### Recipe Overlay Infrastructure (Phase 15C)
 
 - **Recipe overlays hook** (`src/lib/hooks/use-recipe-overlays.ts`) — "Base + Overlay" pattern for user recipe modifications. Stores step overrides, personal notes, and substitutions in localStorage. Working.
-- `**mergeStepWithOverlay` utility** — Merges base step data with user overlay at read time.
+- `**mergeStepWithOverlay` utility\*\* — Merges base step data with user overlay at read time.
 - **Personal step notes** — Step card allows users to add notes to individual cooking steps via overlay system. Working.
 
 #### Cuisine Mastery & Streak Progression
@@ -221,7 +237,7 @@ These features exist as real, substantial code — not stubs.
 - **Error states** — Pairing failure, recognition failure, network timeout, empty results all have user-visible UI with retry actions.
 - **Loading skeletons** — Shimmer placeholders in search popout during pairing load.
 - **Cross-browser scrollbar hiding** — CSS covers IE/Edge (`-ms-overflow-style`), Firefox (`scrollbar-width`), and WebKit (`::-webkit-scrollbar`).
-- `**pnpm lint && pnpm test`** — 102 unit tests passing; full lint + Prettier clean.
+- `**pnpm lint && pnpm test`\*\* — 102 unit tests passing; full lint + Prettier clean.
 
 #### Sprint 2: Post-Cook Reflection (Phase 6A) — COMPLETE
 
@@ -255,7 +271,6 @@ These features exist as real, substantial code — not stubs.
 
 These are intentionally out of scope for Stage 1:
 
-
 | Feature                                    | Status                                                                                |
 | ------------------------------------------ | ------------------------------------------------------------------------------------- |
 | Community tab                              | Unlocks after 30 days. Always hidden in prototype.                                    |
@@ -270,7 +285,6 @@ These are intentionally out of scope for Stage 1:
 | ~~Advanced skill progression / XP system~~ | **DONE** — Phase 11. XP, levels, achievements, weekly challenges, streak multipliers. |
 | ~~Games Arcade~~                           | **DONE** — Phase 14. 4 mini-games with scoring and XP integration.                    |
 | ~~Recipe overlay infrastructure~~          | **DONE** — Phase 15C. Base + Overlay pattern with personal step notes.                |
-
 
 ---
 
@@ -373,7 +387,6 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ## Summary
 
-
 |                  | Stage 1 (Prototype)                                       | Stage 2 (Production)               |
 | ---------------- | --------------------------------------------------------- | ---------------------------------- |
 | **Auth**         | None (anonymous)                                          | Clerk, enforced                    |
@@ -386,5 +399,3 @@ These are the concerns that must be resolved before Sous goes live for real user
 | **Deploy**       | Vercel (already live)                                     | Vercel + hardened config           |
 | **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games | Leaderboards, social sharing       |
 | **Recipes**      | 126 guided cook flows, overlay system, personal notes     | Full 203 coverage, cloud sync      |
-
-

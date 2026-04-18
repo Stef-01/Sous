@@ -28,9 +28,7 @@ describe("findClosestDishes", () => {
     expect(topIsPasta).toBe(true);
 
     // Butter chicken, if present, must rank strictly lower than the top pasta.
-    const alfredoIdx = matches.findIndex((m) =>
-      m.dish.forms.includes("pasta"),
-    );
+    const alfredoIdx = matches.findIndex((m) => m.dish.forms.includes("pasta"));
     const butterIdx = matches.findIndex((m) =>
       m.dish.name.toLowerCase().includes("butter chicken"),
     );

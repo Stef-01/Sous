@@ -298,6 +298,31 @@ a,
   background: transparent;
 }
 
+/* === HOVER-ONLY PREVIEW TOOLTIP ===
+   Used by TrainingHoverPanel on the Path skill tree. Only appears on
+   devices that truly have a hover+fine-pointer (desktop with mouse).
+   Touch iPads at ≥768px CSS width would otherwise trigger this on tap
+   and leave it stuck over adjacent nodes. */
+.skill-hover-preview {
+  display: none;
+}
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  .skill-hover-preview {
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 150ms ease,
+      visibility 150ms ease;
+    pointer-events: none;
+  }
+  .group:hover > .skill-hover-preview,
+  .group:focus-within > .skill-hover-preview {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
 /* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
   .shimmer {

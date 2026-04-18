@@ -73,8 +73,8 @@ chicken as a distant cousin.
   memoised.
 - **Phase 10 — `findClosestDishes(text, index, k)`**: Token-overlap ranking
   with synonym expansion. Examples of synonym classes: `{chicken, poultry,
-  hen}`, `{alfredo, white-sauce, cream-sauce, bechamel, carbonara}`, `{tikka,
-  makhani, butter, tandoori}`, `{pasta, noodle, spaghetti, fettuccine}`.
+hen}`, `{alfredo, white-sauce, cream-sauce, bechamel, carbonara}`, `{tikka,
+makhani, butter, tandoori}`, `{pasta, noodle, spaghetti, fettuccine}`.
   Score = weighted sum of matches on each tag axis; ties broken by cuisine
   affinity then alphabetic for determinism.
 - **Phase 11 — Wire into search flow**: When the craving popout parses a

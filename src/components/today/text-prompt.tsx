@@ -338,8 +338,7 @@ function ResultRow({
   idx: number;
   onSelect: (name: string) => void;
 }) {
-  const Icon =
-    CUISINE_ICON[result.cuisine.toLowerCase()] ?? UtensilsCrossed;
+  const Icon = CUISINE_ICON[result.cuisine.toLowerCase()] ?? UtensilsCrossed;
   return (
     <motion.button
       initial={{ opacity: 0, x: -6 }}

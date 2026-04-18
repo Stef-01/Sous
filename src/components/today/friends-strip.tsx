@@ -76,8 +76,7 @@ export function FriendsStrip({
         dish: s.dishName,
         dishSlug: s.recipeSlug,
         imageUrl:
-          s.photoUri ??
-          `/food_images/${s.recipeSlug.replace(/-/g, "_")}.png`,
+          s.photoUri ?? `/food_images/${s.recipeSlug.replace(/-/g, "_")}.png`,
         postedAgo: s.completedAt ? formatTimeAgo(s.completedAt) : "",
         accent: "green",
       }));
@@ -135,9 +134,7 @@ export function FriendsStrip({
               <div className="absolute inset-x-2 bottom-2 flex items-center gap-1.5 text-white">
                 <div
                   className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/90 text-[10px] font-bold text-[var(--nourish-dark)] ring-2 ${
-                    entry.accent
-                      ? accentRing[entry.accent]
-                      : "ring-white/40"
+                    entry.accent ? accentRing[entry.accent] : "ring-white/40"
                   }`}
                 >
                   {entry.initial || initialFor(entry.friend)}

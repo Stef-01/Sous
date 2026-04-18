@@ -19,6 +19,9 @@ import {
   viewportOnce,
   easeOutExpo,
 } from "./startup-landing-variants";
+import { AppPreviewSection } from "./app-preview-section";
+import { ScreenshotCarousel } from "./screenshot-carousel";
+import { TrustStrip } from "./trust-strip";
 
 /** ----------------------------------------------------------------------
  * Sous — editorial landing.
@@ -695,6 +698,14 @@ export function StartupLanding() {
 
         <Rule />
 
+        <AppPreviewSection />
+
+        <Rule />
+
+        <ScreenshotCarousel />
+
+        <Rule />
+
         {/* ==========================================================
             PAIRING — "How it decides."
             Novel moment: six-axis meter rendered as editorial type.
@@ -909,23 +920,9 @@ export function StartupLanding() {
         <Rule />
 
         {/* ==========================================================
-            TRUST — single quiet line. No banner, no card.
+            TRUST — editorial dotted strip + Stanford line.
            ========================================================= */}
-        <section className="px-6 py-24 md:px-10 md:py-28">
-          <div className="mx-auto max-w-[760px] text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportOnce}
-              transition={{ duration: 0.7, ease: easeOutExpo }}
-              className="font-serif text-[22px] leading-[1.5] text-[#4b5563] md:text-[26px]"
-            >
-              Health guidance is written with{" "}
-              <span className="text-[#0d0d0d]">Stanford clinicians</span> —
-              worked in, not bolted on.
-            </motion.p>
-          </div>
-        </section>
+        <TrustStrip />
 
         {/* ==========================================================
             CLOSER — "Try it tonight." Confident, minimal.

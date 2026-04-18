@@ -36,13 +36,21 @@ export function AchievementsLauncher({
 
   return (
     <>
-      <div className="fixed bottom-[4.75rem] right-3 z-40 safe-area-bottom sm:right-4">
+      {/* FAB sits above the tab bar (≈64px) with a safe-area-aware offset
+          so it never overlaps Today/Path/Community icons. The button has
+          a minimum 44×44 tap target for iOS HIG and Android Material. */}
+      <div
+        className="fixed right-3 z-[55] sm:right-4"
+        style={{
+          bottom: "calc(5.25rem + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
         <motion.button
           type="button"
           whileTap={{ scale: 0.94 }}
           onClick={() => setOpen(true)}
-          className="flex items-center gap-2 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-3.5 py-2 text-xs font-semibold text-amber-950 shadow-md ring-1 ring-amber-100/80"
-          aria-label="View badges and achievements"
+          className="flex min-h-[44px] items-center gap-2 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-4 py-2.5 text-[13px] font-semibold text-amber-950 shadow-[0_8px_20px_-6px_rgba(120,80,20,0.35)] ring-1 ring-amber-100/80 transition-shadow hover:shadow-[0_10px_24px_-6px_rgba(120,80,20,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+          aria-label={`View badges and achievements (${unlocked.length} of ${total} unlocked)`}
           aria-haspopup="dialog"
           aria-expanded={open}
         >
