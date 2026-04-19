@@ -286,13 +286,13 @@ export default function WhatsCookingGame() {
               className="text-center"
             >
               <p className="text-xs text-red-500 font-medium">
-                Not quite — here&apos;s another clue!
+                Not quite - here&apos;s another clue!
               </p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Input area — hidden when round result is showing */}
+        {/* Input area  -  hidden when round result is showing */}
         {!roundResult && (
           <div className="space-y-2">
             <div className="flex gap-2">

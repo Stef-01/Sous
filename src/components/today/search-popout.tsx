@@ -11,7 +11,7 @@ interface SearchPopoutProps {
 }
 
 /**
- * Search Popout — bottom-sheet modal containing the search/pairing flow.
+ * Search Popout  -  bottom-sheet modal containing the search/pairing flow.
  *
  * IMPORTANT: position:sticky is broken inside CSS transform elements (Framer Motion
  * uses translateY for the slide animation). Instead, we use a flex-col layout with
@@ -59,7 +59,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
             aria-label="Search for a dish"
             className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-white shadow-2xl max-h-[85vh]"
           >
-            {/* Fixed header — NEVER scrolls (avoids sticky+transform bug) */}
+            {/* Fixed header  -  NEVER scrolls (avoids sticky+transform bug) */}
             <div className="flex-shrink-0 bg-white rounded-t-2xl px-4 pt-3 pb-2">
               {/* Drag handle */}
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-neutral-300" />
@@ -80,7 +80,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
               </div>
             </div>
 
-            {/* Scrollable content area — pb-24 ensures CTA clears the tab bar */}
+            {/* Scrollable content area  -  pb-24 ensures CTA clears the tab bar */}
             <div className="flex-1 overflow-y-auto min-h-0 scroll-contain">
               <div className="mx-auto max-w-md px-4 pt-2 pb-24 space-y-4">
                 {children}

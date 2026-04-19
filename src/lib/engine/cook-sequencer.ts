@@ -1,5 +1,5 @@
 /**
- * Cook Sequencer — intelligently interleaves steps from multiple dishes
+ * Cook Sequencer  -  intelligently interleaves steps from multiple dishes
  * so everything finishes together and no user idle time is wasted.
  *
  * Rules:
@@ -7,7 +7,7 @@
  * 2. Longest-cooking items start first
  * 3. Quick-cook items start last so they're hot when served
  * 4. Interleave idle time (baking, simmering) with active prep
- * 5. Never leave the user idle — always suggest the next useful action
+ * 5. Never leave the user idle  -  always suggest the next useful action
  */
 
 export interface SequencerDish {

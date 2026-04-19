@@ -1,15 +1,15 @@
 /**
- * Skill Tree — Sous cooking progression system.
+ * Skill Tree  -  Sous cooking progression system.
  *
  * Five tiers based on real culinary school programs (Le Cordon Bleu, CIA, ICE, JWU, Escoffier):
- *   1. Foundation     — core fundamentals every cook needs
- *   2. Intermediate   — building on the basics with more technique
- *   3. Advanced       — professional-level skills
- *   4. Pre-Mastery    — capstone and creative skills
- *   5. Mastery        — branching cuisine specialization paths (parallel, not sequential)
+ *   1. Foundation      -  core fundamentals every cook needs
+ *   2. Intermediate    -  building on the basics with more technique
+ *   3. Advanced        -  professional-level skills
+ *   4. Pre-Mastery     -  capstone and creative skills
+ *   5. Mastery         -  branching cuisine specialization paths (parallel, not sequential)
  *
  * Positions use a coordinate system: x (0–100), y (row index).
- * Mastery nodes use placeholder positions — they render in a grid, not the tree.
+ * Mastery nodes use placeholder positions  -  they render in a grid, not the tree.
  */
 
 export interface SkillNode {
@@ -64,7 +64,7 @@ const foundation: SkillNode[] = [
     name: "Dry-Heat Cooking",
     emoji: "🔥",
     description:
-      "Searing, roasting, and stir-frying — methods that develop color and crust through high heat and no added liquid.",
+      "Searing, roasting, and stir-frying  -  methods that develop color and crust through high heat and no added liquid.",
     tier: "foundation",
     requiredSkills: ["mise-en-place"],
     associatedDishes: [
@@ -80,7 +80,7 @@ const foundation: SkillNode[] = [
     name: "Moist-Heat Cooking",
     emoji: "♨️",
     description:
-      "Poaching, steaming, and simmering — gentle techniques that preserve texture and draw out flavor through liquid.",
+      "Poaching, steaming, and simmering  -  gentle techniques that preserve texture and draw out flavor through liquid.",
     tier: "foundation",
     requiredSkills: ["mise-en-place"],
     associatedDishes: ["poached-eggs", "steamed-broccoli", "tomato-soup"],
@@ -108,7 +108,7 @@ const foundation: SkillNode[] = [
     name: "Egg Cookery",
     emoji: "🍳",
     description:
-      "French omelettes, soft-boiled eggs, scrambled eggs, and frittata — eggs reveal the precision of a cook's hand.",
+      "French omelettes, soft-boiled eggs, scrambled eggs, and frittata  -  eggs reveal the precision of a cook's hand.",
     tier: "foundation",
     requiredSkills: ["dry-heat-cooking"],
     associatedDishes: [
@@ -137,7 +137,7 @@ const foundation: SkillNode[] = [
     name: "Mother Sauces",
     emoji: "🥄",
     description:
-      "Master béchamel, velouté, and tomato sauce — the classic French bases that underpin hundreds of dishes.",
+      "Master béchamel, velouté, and tomato sauce  -  the classic French bases that underpin hundreds of dishes.",
     tier: "foundation",
     requiredSkills: ["stock-making"],
     associatedDishes: ["mac-and-cheese", "tomato-soup", "pan-gravy"],
@@ -182,7 +182,7 @@ const intermediate: SkillNode[] = [
     name: "Soups",
     emoji: "🍜",
     description:
-      "From clear chicken noodle to velvety cream of mushroom to hearty minestrone — soup is a full lesson in balance.",
+      "From clear chicken noodle to velvety cream of mushroom to hearty minestrone  -  soup is a full lesson in balance.",
     tier: "intermediate",
     requiredSkills: ["stock-making", "vegetable-techniques"],
     associatedDishes: [
@@ -226,7 +226,7 @@ const intermediate: SkillNode[] = [
     name: "Seafood",
     emoji: "🐟",
     description:
-      "Pan-sear salmon perfectly, make shrimp scampi, and steam mussels open. Fish is unforgiving — nail it here.",
+      "Pan-sear salmon perfectly, make shrimp scampi, and steam mussels open. Fish is unforgiving  -  nail it here.",
     tier: "intermediate",
     requiredSkills: ["meat-cookery"],
     associatedDishes: ["pan-seared-salmon", "shrimp-scampi", "steamed-mussels"],
@@ -290,7 +290,7 @@ const intermediate: SkillNode[] = [
     name: "Quick Breads",
     emoji: "🍌",
     description:
-      "Banana bread, buttermilk biscuits, and cornbread — no yeast, fast results, and the foundation of baking intuition.",
+      "Banana bread, buttermilk biscuits, and cornbread  -  no yeast, fast results, and the foundation of baking intuition.",
     tier: "intermediate",
     requiredSkills: ["mise-en-place"],
     associatedDishes: ["banana-bread", "buttermilk-biscuits", "cornbread"],
@@ -347,7 +347,7 @@ const advanced: SkillNode[] = [
     name: "Yeast Breads",
     emoji: "🍞",
     description:
-      "Focaccia, sandwich bread, and pizza dough — learn to work with living yeast and understand fermentation timing.",
+      "Focaccia, sandwich bread, and pizza dough  -  learn to work with living yeast and understand fermentation timing.",
     tier: "advanced",
     requiredSkills: ["quick-breads"],
     associatedDishes: ["focaccia", "sandwich-bread", "pizza-dough"],
@@ -359,7 +359,7 @@ const advanced: SkillNode[] = [
     name: "Pastry Fundamentals",
     emoji: "🥐",
     description:
-      "Flaky pie crust, pâte à choux for cream puffs, and a crisp tart shell. Pastry is precision — every gram matters.",
+      "Flaky pie crust, pâte à choux for cream puffs, and a crisp tart shell. Pastry is precision  -  every gram matters.",
     tier: "advanced",
     requiredSkills: ["quick-breads"],
     associatedDishes: ["pie-crust", "cream-puffs", "tart-shell"],
@@ -395,7 +395,7 @@ const advanced: SkillNode[] = [
     name: "Fermentation",
     emoji: "🫙",
     description:
-      "Make kimchi, sauerkraut, and yogurt. Fermentation is patience rewarded — and one of the oldest cooking methods on earth.",
+      "Make kimchi, sauerkraut, and yogurt. Fermentation is patience rewarded  -  and one of the oldest cooking methods on earth.",
     tier: "advanced",
     requiredSkills: ["seasoning-tasting", "vegetable-techniques"],
     associatedDishes: ["kimchi", "sauerkraut", "yogurt"],
@@ -407,7 +407,7 @@ const advanced: SkillNode[] = [
     name: "Advanced Sauces",
     emoji: "🫗",
     description:
-      "Hollandaise, béarnaise, and beurre blanc — the emulsified butter sauces that separate home cooks from professionals.",
+      "Hollandaise, béarnaise, and beurre blanc  -  the emulsified butter sauces that separate home cooks from professionals.",
     tier: "advanced",
     requiredSkills: ["mother-sauces", "pan-sauces-deglazing"],
     associatedDishes: [
@@ -423,7 +423,7 @@ const advanced: SkillNode[] = [
     name: "Live-Fire Cooking",
     emoji: "🔥",
     description:
-      "Grilled fish, smoked ribs, and campfire vegetables. Learn to read and control live fire — a fundamentally different heat source.",
+      "Grilled fish, smoked ribs, and campfire vegetables. Learn to read and control live fire  -  a fundamentally different heat source.",
     tier: "advanced",
     requiredSkills: ["meat-cookery", "seafood"],
     associatedDishes: ["grilled-fish", "smoked-ribs", "grilled-vegetables"],
@@ -477,7 +477,7 @@ const preMastery: SkillNode[] = [
     name: "Laminated Doughs",
     emoji: "🥐",
     description:
-      "Croissants and rough puff pastry — hundreds of layers of butter folded in. The most technical skill in the pastry kitchen.",
+      "Croissants and rough puff pastry  -  hundreds of layers of butter folded in. The most technical skill in the pastry kitchen.",
     tier: "pre-mastery",
     requiredSkills: ["yeast-breads", "pastry-fundamentals"],
     associatedDishes: ["croissants", "rough-puff-pastry", "danish-pastry"],
@@ -514,9 +514,9 @@ const preMastery: SkillNode[] = [
   },
 ];
 
-// ── Tier 5: Cuisine Mastery — parallel branching paths ──────
+// ── Tier 5: Cuisine Mastery  -  parallel branching paths ──────
 // These render as a grid, not a tree. Prerequisites gate access but
-// paths are independent — users can work multiple cuisines at once.
+// paths are independent  -  users can work multiple cuisines at once.
 // Position values are placeholders (not used for tree rendering).
 
 const mastery: SkillNode[] = [
@@ -525,7 +525,7 @@ const mastery: SkillNode[] = [
     name: "Italian Mastery",
     emoji: "🇮🇹",
     description:
-      "Master the fundamentals of Italian cooking — simplicity, quality ingredients, and perfect technique.",
+      "Master the fundamentals of Italian cooking  -  simplicity, quality ingredients, and perfect technique.",
     tier: "mastery",
     cuisineFamily: "italian",
     requiredSkills: ["global-flavor-profiles"],
@@ -544,7 +544,7 @@ const mastery: SkillNode[] = [
     name: "Japanese Mastery",
     emoji: "🇯🇵",
     description:
-      "Learn the precision and balance of Japanese cuisine — umami, knife work, and seasonal respect.",
+      "Learn the precision and balance of Japanese cuisine  -  umami, knife work, and seasonal respect.",
     tier: "mastery",
     cuisineFamily: "japanese",
     requiredSkills: ["global-flavor-profiles", "seafood"],
@@ -563,7 +563,7 @@ const mastery: SkillNode[] = [
     name: "French Mastery",
     emoji: "🇫🇷",
     description:
-      "The foundation of Western cuisine — sauces, technique, and classical preparation.",
+      "The foundation of Western cuisine  -  sauces, technique, and classical preparation.",
     tier: "mastery",
     cuisineFamily: "french",
     requiredSkills: ["advanced-sauces", "global-flavor-profiles"],
@@ -620,7 +620,7 @@ const mastery: SkillNode[] = [
     name: "Thai Mastery",
     emoji: "🇹🇭",
     description:
-      "Balance sweet, sour, salty, and spicy — the four pillars of Thai flavor.",
+      "Balance sweet, sour, salty, and spicy  -  the four pillars of Thai flavor.",
     tier: "mastery",
     cuisineFamily: "thai",
     requiredSkills: ["global-flavor-profiles"],

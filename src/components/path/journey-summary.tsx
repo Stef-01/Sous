@@ -53,7 +53,7 @@ function StatBlock({
 }
 
 /**
- * Journey summary — stats card with animated number reveals.
+ * Journey summary  -  stats card with animated number reveals.
  * Journey tone, not performance pressure.
  */
 export const JourneySummary = memo(function JourneySummary({
@@ -123,7 +123,7 @@ export const JourneySummary = memo(function JourneySummary({
         />
       </div>
 
-      {/* Cuisine tags — deduplicate by normalized name */}
+      {/* Cuisine tags  -  deduplicate by normalized name */}
       {(stats.cuisinesCovered ?? []).length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-0.5">
           {[

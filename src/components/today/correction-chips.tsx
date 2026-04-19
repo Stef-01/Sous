@@ -13,9 +13,9 @@ interface CorrectionChipsProps {
 }
 
 /**
- * Correction Chips — shown after photo recognition.
+ * Correction Chips  -  shown after photo recognition.
  * User confirms the detected dish or selects an alternative.
- * Never trust vision output alone — this is the two-step pipeline.
+ * Never trust vision output alone  -  this is the two-step pipeline.
  */
 export function CorrectionChips({
   dishName,
@@ -99,7 +99,7 @@ export function CorrectionChips({
         type="button"
       >
         <Check size={16} />
-        Looks right — Pair
+        Looks right - Pair
       </button>
     </motion.div>
   );

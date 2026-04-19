@@ -53,7 +53,7 @@ function inferMainNutritionCategory(main: MainDishIntent): string {
     return "vegetable";
   }
 
-  // Default — most mains are protein-based
+  // Default  -  most mains are protein-based
   return "protein";
 }
 

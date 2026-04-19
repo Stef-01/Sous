@@ -12,7 +12,7 @@ export type SkillTrainingHover = {
   hoverTeaser: string;
   /** Sheet subhead under the skill title */
   sheetHeadline: string;
-  /** Deeper bullets — shown in the bottom sheet with stagger animation */
+  /** Deeper bullets  -  shown in the bottom sheet with stagger animation */
   atHomeYoull: string[];
   /** Native tooltip / title */
   oneLiner: string;
@@ -57,7 +57,7 @@ function masteryHover(node: SkillNode): SkillTrainingHover {
   const short = capitalizeWord(raw.replace(/-/g, " "));
   return {
     badge: "Deep dive",
-    hoverTeaser: `Cook ${n} real ${short} dinners you’d serve friends — tap for ideas.`,
+    hoverTeaser: `Cook ${n} real ${short} dinners you’d serve friends  -  tap for ideas.`,
     sheetHeadline: `Make ${short} flavors feel natural in your own kitchen.`,
     atHomeYoull: [
       `Rotate a few go-to ${short} plates so shopping and timing get easier.`,
@@ -73,10 +73,10 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "knife-skills": {
     badge: "Basics",
     hoverTeaser:
-      "Safer, faster chopping for every salad and stir-fry — tap for more.",
+      "Safer, faster chopping for every salad and stir-fry  -  tap for more.",
     sheetHeadline: "Chop with confidence so dinner prep stops feeling chaotic.",
     atHomeYoull: [
-      "Even slices mean even cooking — fewer burnt edges and raw centers.",
+      "Even slices mean even cooking  -  fewer burnt edges and raw centers.",
       "Prep a whole veg tray in one go for sheet pans, tacos, and grain bowls.",
       "After a few cooks, your board rhythm feels steady instead of hesitant.",
     ],
@@ -85,20 +85,20 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "mise-en-place": {
     badge: "Basics",
     hoverTeaser:
-      "Everything measured and staged before the pan gets hot — tap to see why.",
+      "Everything measured and staged before the pan gets hot  -  tap to see why.",
     sheetHeadline:
       "Set yourself up so stir-fries and pastas don’t turn into a scramble.",
     atHomeYoull: [
       "Lay out ingredients once so you’re not opening drawers mid-sear.",
       "Time dishes so protein, veg, and starch land on the plate together.",
-      "Clean as you go — the kitchen still looks kind when it’s time to eat.",
+      "Clean as you go  -  the kitchen still looks kind when it’s time to eat.",
     ],
     oneLiner: "Mise en place: calmer weeknight cooking.",
   },
   "mother-sauces": {
     badge: "Level up",
     hoverTeaser:
-      "Pan sauces and gravies that taste like a restaurant — tap for practice dishes.",
+      "Pan sauces and gravies that taste like a restaurant  -  tap for practice dishes.",
     sheetHeadline:
       "Build sauces from scratch so leftovers feel like a new meal.",
     atHomeYoull: [
@@ -111,19 +111,19 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "plating-presentation": {
     badge: "Showpiece",
     hoverTeaser:
-      "Plates that look as good as they taste — tap for simple tricks.",
+      "Plates that look as good as they taste  -  tap for simple tricks.",
     sheetHeadline: "Make home dinners feel special without extra shopping.",
     atHomeYoull: [
       "Give each plate a clear focal point so it reads well on the table.",
       "Use height and color contrast with what you already bought this week.",
-      "Snap a quick photo to notice what to tweak next time — no food-stylist gear needed.",
+      "Snap a quick photo to notice what to tweak next time  -  no food-stylist gear needed.",
     ],
     oneLiner: "Plating: make tonight’s dinner look intentional.",
   },
   "kitchen-orchestration": {
     badge: "Showpiece",
     hoverTeaser:
-      "Serve a full dinner hot, together — tap for how we practice that.",
+      "Serve a full dinner hot, together  -  tap for how we practice that.",
     sheetHeadline:
       "Run timing for mains, sides, and guests without melting down.",
     atHomeYoull: [
@@ -136,7 +136,7 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "italian-mastery": {
     badge: "Deep dive",
     hoverTeaser:
-      "Pasta nights that taste traveled — tap for dish ideas and pacing.",
+      "Pasta nights that taste traveled  -  tap for dish ideas and pacing.",
     sheetHeadline:
       "Own Italian weeknights: pasta, sauces, and simple antipasti.",
     atHomeYoull: [
@@ -149,7 +149,7 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "japanese-mastery": {
     badge: "Deep dive",
     hoverTeaser:
-      "Dashi, rice, and clean flavors at home — tap for the practice path.",
+      "Dashi, rice, and clean flavors at home  -  tap for the practice path.",
     sheetHeadline:
       "Build Japanese comfort food without a pantry full of mystery bottles.",
     atHomeYoull: [
@@ -162,7 +162,7 @@ const SPECIFIC: Record<string, SkillTrainingHover> = {
   "french-mastery": {
     badge: "Deep dive",
     hoverTeaser:
-      "Butter, wine pan sauces, and roasts that feel classic — tap to plan cooks.",
+      "Butter, wine pan sauces, and roasts that feel classic  -  tap to plan cooks.",
     sheetHeadline: "French techniques that still fit real weeknights.",
     atHomeYoull: [
       "Pan-roast proteins and finish with a quick pan sauce you’d swipe bread through.",
@@ -184,12 +184,12 @@ function tierTemplate(node: SkillNode): SkillTrainingHover {
 
   const hoverTeaser =
     node.tier === "foundation"
-      ? `${n} easy wins on ${topic.toLowerCase()} — tap for dish ideas.`
+      ? `${n} easy wins on ${topic.toLowerCase()}  -  tap for dish ideas.`
       : node.tier === "intermediate"
-        ? `Sharpen ${topic.toLowerCase()} across ${n} real dinners — tap to see how.`
+        ? `Sharpen ${topic.toLowerCase()} across ${n} real dinners  -  tap to see how.`
         : node.tier === "advanced"
-          ? `Push ${topic.toLowerCase()} with ${n} cooks you’d serve friends — tap for more.`
-          : `${n} show-off cooks on ${topic.toLowerCase()} — tap for the plan.`;
+          ? `Push ${topic.toLowerCase()} with ${n} cooks you’d serve friends  -  tap for more.`
+          : `${n} show-off cooks on ${topic.toLowerCase()}  -  tap for the plan.`;
 
   const sheetHeadline =
     node.tier === "foundation"
@@ -205,13 +205,13 @@ function tierTemplate(node: SkillNode): SkillTrainingHover {
       ? [
           `Finish ${n} guided cooks so ${topic.toLowerCase()} stops feeling guessy.`,
           "Pick techniques you’ll reuse on salads, sheet pans, and quick sautés.",
-          "Unlock the next focus when this one feels natural — no cramming.",
+          "Unlock the next focus when this one feels natural  -  no cramming.",
         ]
       : node.tier === "intermediate"
         ? [
             `Use ${n} dinners to tighten timing, seasoning, and cleanup habits.`,
             "Lean on suggested dishes so you’re not doom-scrolling recipes mid-week.",
-            "Notice what repeats — that’s the muscle we’re building.",
+            "Notice what repeats  -  that’s the muscle we’re building.",
           ]
         : node.tier === "advanced"
           ? [

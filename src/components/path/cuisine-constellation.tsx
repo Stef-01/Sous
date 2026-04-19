@@ -19,7 +19,7 @@ interface Cuisine {
 /**
  * The eight mastery cuisines mirrored from `skill-tree.ts`.
  * Arranged in circular order so the constellation reads left-to-right top
- * and clockwise around — a quietly pleasing topology.
+ * and clockwise around  -  a quietly pleasing topology.
  */
 const CUISINES: Cuisine[] = [
   { id: "italian", name: "Italian", emoji: "🇮🇹", mastery: 5 },
@@ -57,38 +57,38 @@ function starAppearance(ratio: number): {
 } {
   if (ratio >= 1) {
     return {
-      fill: "#d4a84b", // gold — mastered
+      fill: "#d4a84b", // gold  -  mastered
       glow: "rgba(212, 168, 75, 0.55)",
       radius: 7,
     };
   }
   if (ratio >= 0.5) {
     return {
-      fill: "#2d5a3d", // deep green — well underway
+      fill: "#2d5a3d", // deep green  -  well underway
       glow: "rgba(45, 90, 61, 0.45)",
       radius: 6,
     };
   }
   if (ratio > 0) {
     return {
-      fill: "#4a8c5c", // light green — some progress
+      fill: "#4a8c5c", // light green  -  some progress
       glow: "rgba(74, 140, 92, 0.35)",
       radius: 5.5,
     };
   }
   return {
-    fill: "#cbd5e1", // slate-300 — untouched
+    fill: "#cbd5e1", // slate-300  -  untouched
     glow: "rgba(203, 213, 225, 0)",
     radius: 4.5,
   };
 }
 
 /**
- * CuisineConstellation — quiet celebratory view of how much of the world's
+ * CuisineConstellation  -  quiet celebratory view of how much of the world's
  * cuisines the user has touched. Stars brighten with each cook. Tap any star
  * to see its name and the exact fraction of cooks completed toward mastery.
  *
- * Hidden entirely when the user has zero completed cooks — we don't want an
+ * Hidden entirely when the user has zero completed cooks  -  we don't want an
  * empty sky to feel like a chore list.
  */
 export function CuisineConstellation({
@@ -147,7 +147,7 @@ export function CuisineConstellation({
           role="img"
           aria-label={`Cuisine constellation showing ${exploredCount} of ${CUISINES.length} cuisines explored`}
         >
-          {/* Faint orbital ring — the implicit topology of world cuisines. */}
+          {/* Faint orbital ring  -  the implicit topology of world cuisines. */}
           <circle
             cx={CX}
             cy={CY}
@@ -158,7 +158,7 @@ export function CuisineConstellation({
             strokeDasharray="2 4"
           />
 
-          {/* Connector arcs between adjacent stars — only drawn between
+          {/* Connector arcs between adjacent stars  -  only drawn between
               cuisines that have any progress. */}
           {progress.map((cuisine, i) => {
             const next = progress[(i + 1) % progress.length];
@@ -201,7 +201,7 @@ export function CuisineConstellation({
                 aria-label={`${cuisine.name}: ${cuisine.cooks} of ${cuisine.mastery} cooks`}
                 className="cursor-pointer outline-none"
               >
-                {/* Halo — only drawn when there is any progress */}
+                {/* Halo  -  only drawn when there is any progress */}
                 {cuisine.cooks > 0 && (
                   <motion.circle
                     cx={x}
@@ -233,7 +233,7 @@ export function CuisineConstellation({
           })}
         </svg>
 
-        {/* Info overlay — fixed to the bottom-center of the card. */}
+        {/* Info overlay  -  fixed to the bottom-center of the card. */}
         <AnimatePresence mode="wait">
           {selectedCuisine ? (
             <motion.div

@@ -7,7 +7,7 @@ import type {
 } from "./types";
 
 /**
- * Ranker — aggregates per-dimension scores with weights and selects top K.
+ * Ranker  -  aggregates per-dimension scores with weights and selects top K.
  *
  * The engine is deterministic given the same inputs. Novelty is introduced
  * through daily rotation of tie-breaking logic (day-of-year modulo).

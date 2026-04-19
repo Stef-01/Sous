@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Zod schema for a V1 side dish — source of truth for the SideDish type.
+ * Zod schema for a V1 side dish  -  source of truth for the SideDish type.
  * Used for seed data validation and API input/output.
  */
 export const sideDishSchema = z.object({

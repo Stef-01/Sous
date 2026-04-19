@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 const STORAGE_KEY = "sous-cook-intention-v1";
 
 export interface CookIntention {
-  /** Freeform dish name — what the user is committing to. */
+  /** Freeform dish name  -  what the user is committing to. */
   dishName: string;
   /** ISO timestamp the commitment was made. */
   createdAt: string;
@@ -33,7 +33,7 @@ function load(): CookIntention | null {
     const parsed = JSON.parse(raw) as Partial<StoredShape>;
     const intention = parsed.intention ?? null;
     if (!intention) return null;
-    // Auto-expire if the stored target date is in the past — tonight's
+    // Auto-expire if the stored target date is in the past  -  tonight's
     // commitment should silently fade, never nag.
     if (intention.targetDate !== localDateKey()) return null;
     if (
@@ -55,7 +55,7 @@ function save(intention: CookIntention | null): void {
     const payload: StoredShape = { intention };
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch {
-    // localStorage quota/SSR — silent fallback. Intention is ephemeral anyway.
+    // localStorage quota/SSR  -  silent fallback. Intention is ephemeral anyway.
   }
 }
 
@@ -67,7 +67,7 @@ export interface UseCookIntentionResult {
 }
 
 /**
- * useCookIntention — lightweight "I'm cooking X tonight" commitment store.
+ * useCookIntention  -  lightweight "I'm cooking X tonight" commitment store.
  *
  * The commitment is intentionally fragile: it auto-expires at local midnight
  * and can be cleared at any time with zero friction. The win is a small
@@ -78,7 +78,7 @@ export function useCookIntention(): UseCookIntentionResult {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Hydrate once from localStorage — intentional client-side state seed,
+    // Hydrate once from localStorage  -  intentional client-side state seed,
     // so the UI can render a mount-aware fallback until storage is read.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIntention(load());

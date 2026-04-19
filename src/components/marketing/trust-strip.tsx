@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
 
 /**
- * TrustStrip — the quiet "ground truth" row near the bottom of the landing.
+ * TrustStrip  -  the quiet "ground truth" row near the bottom of the landing.
  *
  * Visual vocabulary: a single horizontal rule of dotted separators between
- * four tiny, typographic claims. No badges, no stars, no logos — the
+ * four tiny, typographic claims. No badges, no stars, no logos  -  the
  * medium is the claim. A single italicized Stanford line continues to
  * carry the health credibility, sitting above the strip.
  */
@@ -23,8 +23,8 @@ export function TrustStrip() {
           className="font-serif text-[22px] leading-[1.5] text-[#4b5563] md:text-[26px]"
         >
           Nutrition notes are reviewed with{" "}
-          <span className="text-[#0d0d0d]">Stanford Medicine–affiliated</span>{" "}
-          clinicians — not influencer guesswork, layered in from the start.
+          <span className="text-[#0d0d0d]">Stanford Medicine-affiliated</span>{" "}
+          clinicians, not influencer guesswork, layered in from the start.
         </motion.p>
 
         <motion.div
@@ -58,7 +58,7 @@ export function TrustStrip() {
           className="mt-10 text-[12px] italic leading-[1.7] text-[#9aa0a6]"
         >
           The demo runs as-is. Email and friends sync arrive when you ask for
-          them — not a moment sooner.
+          them, not a moment sooner.
         </motion.p>
       </div>
     </section>

@@ -9,7 +9,7 @@ interface ConnectorProps {
   x2: number;
   y2: number;
   targetStatus: SkillNodeStatus;
-  /** Index within the edge list — used to stagger draw timing */
+  /** Index within the edge list  -  used to stagger draw timing */
   index?: number;
   /** Called once when stroke-draw finishes on a completed edge */
   onDrawn?: () => void;
@@ -35,7 +35,7 @@ export function SkillConnector({
   onDrawn,
 }: ConnectorProps) {
   const reduced = useReducedMotion();
-  // Smooth cubic Bezier — control points sit at the midpoint vertical of each
+  // Smooth cubic Bezier  -  control points sit at the midpoint vertical of each
   // node's column, so the curve eases out of the source and into the target.
   // Organic feel versus the earlier stepped L-paths, without losing legibility.
   const midY = (y1 + y2) / 2;

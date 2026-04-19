@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { normalizePantryName } from "./use-pantry";
 
 /**
- * Shopping list — ingredients you've wanted but not yet cooked with. Each
+ * Shopping list  -  ingredients you've wanted but not yet cooked with. Each
  * entry tracks display name (to preserve casing for humans) and normalized
  * key (to dedupe against the pantry).
  *
@@ -17,7 +17,7 @@ const SHOPPING_KEY = "sous-shopping-list-v1";
 const MAX_ITEMS = 100;
 
 export interface ShoppingItem {
-  /** Normalized key — unique identifier. */
+  /** Normalized key  -  unique identifier. */
   key: string;
   /** Human-readable name as originally captured. */
   name: string;

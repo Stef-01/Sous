@@ -18,12 +18,12 @@ const STORAGE_KEY = "sous-path-tutorial-v1";
 const STEPS = [
   {
     title: "Welcome to your culinary campus",
-    body: "Path is your staged progression from confident home cook toward line-ready technique. Think culinary school stations — just sized for real life between work weeks.",
+    body: "Path is your staged progression from confident home cook toward line-ready technique. Think culinary school stations  -  just sized for real life between work weeks.",
     icon: Map,
   },
   {
     title: "How you level up here",
-    body: "Every completed cook feeds XP and unlocks stations on the tree. You are not grinding badges for their own sake — you are collecting repeatable skills you can call on at dinner time.",
+    body: "Every completed cook feeds XP and unlocks stations on the tree. You are not grinding badges for their own sake  -  you are collecting repeatable skills you can call on at dinner time.",
     icon: ChefHat,
   },
   {
@@ -33,27 +33,27 @@ const STEPS = [
   },
   {
     title: "The skill tree is your syllabus",
-    body: "Each orb is a module. Hover on desktop for a one-line preview; tap any unlocked node for the full sheet — what you’ll actually do at home, then practice dishes and progress.",
+    body: "Each orb is a module. Hover on desktop for a one-line preview; tap any unlocked node for the full sheet  -  what you’ll actually do at home, then practice dishes and progress.",
     icon: Target,
   },
   {
     title: "Cuisine mastery grid",
-    body: "Below the vertical tree, parallel tracks open like concentrations — pick a cuisine spine and prove repetition until it feels automatic.",
+    body: "Below the vertical tree, parallel tracks open like concentrations  -  pick a cuisine spine and prove repetition until it feels automatic.",
     icon: ChefHat,
   },
   {
     title: "Badges live in one tap",
-    body: "Tap the floating Badges pill anytime. Achievements stay out of your way until you want the dopamine — the tree stays the hero.",
+    body: "Tap the floating Badges pill anytime. Achievements stay out of your way until you want the dopamine  -  the tree stays the hero.",
     icon: Award,
   },
   {
     title: "Scrapbook = memory + evaluator",
-    body: "Scrapbook is where finished plates live. Over time it doubles as a plating and technique journal — same archive, dual use — so you can see how your eye and hand improve cook to cook.",
+    body: "Scrapbook is where finished plates live. Over time it doubles as a plating and technique journal  -  same archive, dual use  -  so you can see how your eye and hand improve cook to cook.",
     icon: ImageIcon,
   },
   {
     title: "You are on the right trail",
-    body: "Keep cooking from Today, return here when you want direction, and let the tree surprise you with what you have already earned. About two minutes well spent — now go make something delicious.",
+    body: "Keep cooking from Today, return here when you want direction, and let the tree surprise you with what you have already earned. About two minutes well spent  -  now go make something delicious.",
     icon: PartyPopper,
   },
 ];
@@ -176,7 +176,7 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
               </p>
               {step === 0 && (
                 <p className="mt-2 text-xs text-white/55">
-                  Eight short beats — about two minutes — then you are back to
+                  Eight short beats - about two minutes - then you are back to
                   the kitchen.
                 </p>
               )}

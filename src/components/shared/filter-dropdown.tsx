@@ -34,13 +34,13 @@ interface FilterDropdownProps<T extends string> {
 }
 
 /**
- * FilterDropdown — minimalist clickable pill that opens a tiny dropdown menu.
+ * FilterDropdown  -  minimalist clickable pill that opens a tiny dropdown menu.
  *
  * Deliberately lighter-weight than a full Select: no search, no multi-select,
- * no labels — just a single column of short options with a check on the
+ * no labels  -  just a single column of short options with a check on the
  * active one. Tap outside or press Escape to dismiss.
  *
- * This is the Sous answer to "settings pages" — one tap, six options, done.
+ * This is the Sous answer to "settings pages"  -  one tap, six options, done.
  */
 export function FilterDropdown<T extends string>({
   label,

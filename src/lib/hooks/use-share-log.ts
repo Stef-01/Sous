@@ -46,7 +46,7 @@ function persist(entries: ShareLogEntry[]) {
   if (typeof window === "undefined") return;
   try {
     window.localStorage.setItem(SHARE_LOG_KEY, JSON.stringify(entries));
-    // Notify same-tab listeners — native `storage` events only fire in
+    // Notify same-tab listeners  -  native `storage` events only fire in
     // other tabs. Without this the Path tally would lag a cycle behind
     // a Win-screen share.
     window.dispatchEvent(
@@ -56,7 +56,7 @@ function persist(entries: ShareLogEntry[]) {
       }),
     );
   } catch {
-    // quota exceeded / disabled — silent, share still succeeds.
+    // quota exceeded / disabled  -  silent, share still succeeds.
   }
 }
 

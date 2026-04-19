@@ -14,7 +14,7 @@ interface AchievementsLauncherProps {
    * the sheet without needing this component to render its own trigger.
    */
   openRef?: React.RefObject<AchievementsLauncherHandle | null>;
-  /** When true, renders no inline trigger at all — sheet is opened imperatively. */
+  /** When true, renders no inline trigger at all  -  sheet is opened imperatively. */
   headless?: boolean;
 }
 
@@ -23,7 +23,7 @@ export interface AchievementsLauncherHandle {
 }
 
 /**
- * Achievements sheet controller. By default headless — the parent renders its
+ * Achievements sheet controller. By default headless  -  the parent renders its
  * own trigger (typically a chip in PathHeader) and calls `open()` via ref.
  * Kept separate from the header so its animation + dismissal logic stays
  * co-located with the grid.

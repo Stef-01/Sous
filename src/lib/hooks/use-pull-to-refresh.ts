@@ -17,7 +17,7 @@ interface PullState {
 }
 
 /**
- * usePullToRefresh — detects pull-down gesture at the top of the scroll container.
+ * usePullToRefresh  -  detects pull-down gesture at the top of the scroll container.
  * Returns pull state (for showing an indicator) and a ref to attach to the
  * scrollable container element.
  *

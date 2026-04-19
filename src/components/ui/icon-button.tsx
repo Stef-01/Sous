@@ -5,7 +5,7 @@ import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * IconButton — shared primitive for icon-only controls.
+ * IconButton  -  shared primitive for icon-only controls.
  *
  * Guarantees a 48×48 px hit area even when the visible glyph is smaller,
  * via invisible padding on the outer element and a tightly centered icon.
@@ -30,7 +30,7 @@ const VARIANTS: Record<Variant, string> = {
 const SIZES: Record<Size, string> = {
   // 48×48 hit area, visible surface scales via the inner icon only.
   md: "h-12 w-12",
-  // 44×44 — reserved for dense clusters. Still above the Apple HIG minimum.
+  // 44×44  -  reserved for dense clusters. Still above the Apple HIG minimum.
   sm: "h-11 w-11",
 };
 

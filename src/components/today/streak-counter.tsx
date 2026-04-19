@@ -12,7 +12,7 @@ interface StreakCounterProps {
 }
 
 /**
- * StreakCounter — compact pill with a tiny "…" affordance. The overflow menu
+ * StreakCounter  -  compact pill with a tiny "…" affordance. The overflow menu
  * reveals a single inline confirm: "Take a rest day." Rest days bridge the
  * streak so one skipped day doesn't reset progress. The pill renders with a
  * dotted ring around today when a rest day is active so the user can see the
@@ -62,7 +62,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
           "flex items-center gap-0.5 rounded-full bg-[var(--nourish-warm)]/10 px-1.5 py-0.5",
-          // Dotted ring when today is a rest day — signals the streak is
+          // Dotted ring when today is a rest day  -  signals the streak is
           // being intentionally held open.
           todayIsRestDay &&
             "outline-dashed outline-1 outline-offset-2 outline-[var(--nourish-warm)]/60",

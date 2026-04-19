@@ -1,5 +1,5 @@
 /**
- * Cook-step glossary — plain-English explanations for technique words
+ * Cook-step glossary  -  plain-English explanations for technique words
  * that show up in recipe instructions. Used by `<Glossify>` to underline
  * the word and reveal a short tooltip on tap or hover.
  *
@@ -25,7 +25,7 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Deglaze",
     patterns: ["deglaze", "deglazes", "deglazed", "deglazing"],
     meaning:
-      "Splash a liquid (wine, broth, water) into a hot pan to lift the brown bits stuck to the bottom — that is pure flavor.",
+      "Splash a liquid (wine, broth, water) into a hot pan to lift the brown bits stuck to the bottom  -  that is pure flavor.",
   },
   {
     term: "Sauté",
@@ -37,7 +37,7 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Simmer",
     patterns: ["simmer", "simmers", "simmered", "simmering"],
     meaning:
-      "Keep the liquid just below a boil so the surface gently trembles — never a rolling boil.",
+      "Keep the liquid just below a boil so the surface gently trembles  -  never a rolling boil.",
   },
   {
     term: "Reduce",
@@ -49,7 +49,7 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Poach",
     patterns: ["poach", "poaches", "poached", "poaching"],
     meaning:
-      "Cook something gently in liquid that is hot but not bubbling — a barely-moving surface.",
+      "Cook something gently in liquid that is hot but not bubbling  -  a barely-moving surface.",
   },
   {
     term: "Braise",
@@ -81,7 +81,7 @@ export const cookGlossary: GlossaryEntry[] = [
       "caramelising",
     ],
     meaning:
-      "Cook until the natural sugars turn golden-brown and sweet — onions, for example, take time.",
+      "Cook until the natural sugars turn golden-brown and sweet  -  onions, for example, take time.",
   },
   {
     term: "Render",
@@ -111,7 +111,7 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Fold",
     patterns: ["fold", "folds", "folded", "folding"],
     meaning:
-      "Combine gently from the bottom up with a spatula so you keep the air in — do not stir.",
+      "Combine gently from the bottom up with a spatula so you keep the air in  -  do not stir.",
   },
   {
     term: "Whisk",
@@ -139,7 +139,7 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Mince",
     patterns: ["mince", "minces", "minced", "mincing"],
     meaning:
-      "Chop as finely as you can — smaller than dice, almost a paste for garlic.",
+      "Chop as finely as you can  -  smaller than dice, almost a paste for garlic.",
   },
   {
     term: "Dice",
@@ -150,13 +150,13 @@ export const cookGlossary: GlossaryEntry[] = [
     term: "Zest",
     patterns: ["zest", "zests", "zested", "zesting"],
     meaning:
-      "Grate only the colorful outer layer of a citrus peel — avoid the bitter white pith underneath.",
+      "Grate only the colorful outer layer of a citrus peel  -  avoid the bitter white pith underneath.",
   },
   {
     term: "Al dente",
     patterns: ["al dente"],
     meaning:
-      "Cooked through but with a little firmness left — pasta should still have a gentle bite.",
+      "Cooked through but with a little firmness left  -  pasta should still have a gentle bite.",
   },
   {
     term: "Score",
@@ -181,13 +181,13 @@ export const cookGlossary: GlossaryEntry[] = [
       "dry toast",
     ],
     meaning:
-      "Heat in a dry pan, stirring often, just until fragrant and lightly colored — no oil needed.",
+      "Heat in a dry pan, stirring often, just until fragrant and lightly colored  -  no oil needed.",
   },
   {
     term: "Reserve",
     patterns: ["reserve", "reserves", "reserved", "reserving"],
     meaning:
-      "Set aside for later in the same recipe — do not throw it out, you will use it soon.",
+      "Set aside for later in the same recipe  -  do not throw it out, you will use it soon.",
   },
 ];
 
@@ -202,7 +202,7 @@ const allPatterns = cookGlossary
   .flatMap((e) => e.patterns)
   // Sort longest-first so "al dente" wins over "dent" or similar overlaps.
   .sort((a, b) => b.length - a.length)
-  // Escape nothing — all entries are plain words; no regex metacharacters used.
+  // Escape nothing  -  all entries are plain words; no regex metacharacters used.
   .join("|");
 
 export const glossaryRegexSource = `\\b(${allPatterns})\\b`;

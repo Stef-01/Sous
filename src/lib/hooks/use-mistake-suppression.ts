@@ -55,7 +55,7 @@ function persistMap(map: SuppressionMap): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
   } catch {
-    // quota / disabled — not worth surfacing; behaviour falls back to "show".
+    // quota / disabled  -  not worth surfacing; behaviour falls back to "show".
   }
 }
 
@@ -64,7 +64,7 @@ function keyFor(dishSlug: string, mistakeId: string): string {
 }
 
 /**
- * useMistakeSuppression — lets experienced cooks dismiss a specific mistake
+ * useMistakeSuppression  -  lets experienced cooks dismiss a specific mistake
  * chip for a specific dish. Dismissals persist for 180 days and are scoped
  * per dish so the chip still appears on new recipes. After 180 days it
  * returns once as a low-frequency reminder.

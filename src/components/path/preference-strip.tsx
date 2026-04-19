@@ -7,7 +7,7 @@ import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { derivePreferenceObservations } from "@/lib/engine/preference-observations";
 
 /** After this many expansions we default collapsed. The strip is meant to
- *  be a quiet, returnable observation — not a thing the user needs to close
+ *  be a quiet, returnable observation  -  not a thing the user needs to close
  *  every time. */
 const COLLAPSE_AFTER_VIEWS = 3;
 const VIEW_COUNT_KEY = "sous-preference-strip-views-v1";
@@ -29,7 +29,7 @@ function writeViewCount(n: number): void {
   try {
     window.localStorage.setItem(VIEW_COUNT_KEY, String(n));
   } catch {
-    // quota / disabled — silent failure, strip just stays expanded next time.
+    // quota / disabled  -  silent failure, strip just stays expanded next time.
   }
 }
 
@@ -38,7 +38,7 @@ interface PreferenceStripProps {
 }
 
 /**
- * PreferenceStrip — "What Sous has learned."
+ * PreferenceStrip  -  "What Sous has learned."
  *
  * Shows up to three deterministic, warm observations derived from
  * completed cook sessions (cuisine concentration, day-of-week patterns,

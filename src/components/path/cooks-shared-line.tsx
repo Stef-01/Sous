@@ -6,13 +6,13 @@ import { useShareLog } from "@/lib/hooks/use-share-log";
 import { FRIEND_COOKS } from "@/data/friend-cooks";
 
 /**
- * CooksSharedLine — a single typographic line on Path, honest + quiet.
+ * CooksSharedLine  -  a single typographic line on Path, honest + quiet.
  *
- * "3 meals shared — Alex cooked one of them."
+ * "3 meals shared  -  Alex cooked one of them."
  *
  * Silent when the user has not shared anything yet. Friend-overlap line
  * derived deterministically from the mock friend dataset so the tally
- * reads as insight, not fluff. No graphs, no dashboards — a sentence.
+ * reads as insight, not fluff. No graphs, no dashboards  -  a sentence.
  */
 export function CooksSharedLine() {
   const { entries, mounted } = useShareLog();
@@ -46,7 +46,7 @@ export function CooksSharedLine() {
         {label}
         {friendMatch ? (
           <>
-            {" — "}
+            {"  -  "}
             <span className="font-semibold text-[var(--nourish-dark)]">
               {friendMatch}
             </span>

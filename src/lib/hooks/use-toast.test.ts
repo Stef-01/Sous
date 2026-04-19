@@ -22,7 +22,7 @@ describe("toast queue", () => {
     expect(titles).toEqual(["A", "B", "C"]);
   });
 
-  it("dedupes by dedupKey — new entry replaces the old one at the end", () => {
+  it("dedupes by dedupKey  -  new entry replaces the old one at the end", () => {
     toast.push({ variant: "info", title: "first", dedupKey: "k1" });
     toast.push({ variant: "info", title: "keep", dedupKey: "k2" });
     toast.push({ variant: "info", title: "second", dedupKey: "k1" });

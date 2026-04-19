@@ -54,7 +54,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
 }
 
 /**
- * Scrapbook entry — polaroid-style memory with dual-use evaluator strip
+ * Scrapbook entry  -  polaroid-style memory with dual-use evaluator strip
  * (plating + technique) for wonder and longitudinal improvement.
  */
 export function ScrapbookEntryCard({
@@ -132,7 +132,7 @@ export function ScrapbookEntryCard({
                   aria-hidden
                 />
                 <span className="px-3 text-[11px] font-medium text-[#6b5a4a]">
-                  Plate snapshot placeholder — evaluator will score your next
+                  Plate snapshot placeholder - evaluator will score your next
                   hero shot here.
                 </span>
               </div>
@@ -159,7 +159,7 @@ export function ScrapbookEntryCard({
           value={evaluatorScores.technique}
         />
         <p className="text-[9px] leading-snug text-[var(--nourish-subtext)]">
-          Same archive powers coach feedback and your “before → after” wall — so
+          Same archive powers coach feedback and your “before → after” wall - so
           you can see the curve, not just the calories.
         </p>
       </div>

@@ -24,7 +24,7 @@ interface NextUnlockCardProps {
 const XP_REWARD = 50;
 
 /**
- * Next Unlock Card — Phase 3 milestone preview with gamified XP reward display.
+ * Next Unlock Card  -  Phase 3 milestone preview with gamified XP reward display.
  */
 export function NextUnlockCard({
   nextNode,
@@ -64,7 +64,7 @@ export function NextUnlockCard({
     );
   }
 
-  // Active skill — in_progress or available
+  // Active skill  -  in_progress or available
   if (nextNode) {
     const { node, status, cooksCompleted } = nextNode;
     const progress = Math.min(cooksCompleted / node.cooksRequired, 1);
@@ -209,7 +209,7 @@ export function NextUnlockCard({
     );
   }
 
-  // Locked preview — nothing available yet
+  // Locked preview  -  nothing available yet
   const { node, cooksNeeded } = lockedPreview!;
 
   return (

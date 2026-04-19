@@ -10,7 +10,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export const REPEAT_RECENT_WINDOW_MS = 14 * DAY_MS;
 /** Sprint C Phase 3: after the recent window, a second warm nudge covers
  *  21-90 days ("It's been N days since your last carbonara"). After 90d
- *  we drop it entirely — a kind reminder, never a guilt screen. */
+ *  we drop it entirely  -  a kind reminder, never a guilt screen. */
 export const REPEAT_REVIVE_MIN_MS = 21 * DAY_MS;
 export const REPEAT_REVIVE_MAX_MS = 90 * DAY_MS;
 /** Minimum star rating required before we surface "make it again". */
@@ -44,7 +44,7 @@ export function pickRepeatCandidate(
     if (age >= 0 && age <= REPEAT_RECENT_WINDOW_MS) {
       if (!recent || ts > recent.ts) recent = { record: s, ts };
     } else if (age >= REPEAT_REVIVE_MIN_MS && age <= REPEAT_REVIVE_MAX_MS) {
-      // Prefer the most-recently-cooked revive candidate — the closer to
+      // Prefer the most-recently-cooked revive candidate  -  the closer to
       // "today", the more naturally "it's been N days" reads.
       if (!revive || ts > revive.ts) revive = { record: s, ts };
     }
@@ -72,7 +72,7 @@ interface RepeatCookChipProps {
 }
 
 /**
- * RepeatCookChip — a soft one-line row just under the primary search bar that
+ * RepeatCookChip  -  a soft one-line row just under the primary search bar that
  * proposes re-cooking the user's most recent loved dish (≥4 stars, <14 days).
  * One tap drops them straight into the Mission screen for that dish.
  *

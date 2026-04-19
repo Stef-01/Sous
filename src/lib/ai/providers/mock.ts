@@ -1,5 +1,5 @@
 /**
- * Mock AI Provider — deterministic fallback for all bounded AI surfaces.
+ * Mock AI Provider  -  deterministic fallback for all bounded AI surfaces.
  *
  * Used when:
  * 1. AI API keys are not configured
@@ -68,13 +68,13 @@ const COMMON_SUBS: Record<string, { sub: string; note: string }> = {
 
 const EXPLAIN_TEMPLATES = [
   (main: string, side: string) =>
-    `${side} brings a natural complement to ${main} — the flavors balance beautifully without competing.`,
+    `${side} brings a natural complement to ${main}  -  the flavors balance beautifully without competing.`,
   (main: string, side: string) =>
     `Pairing ${side} with ${main} creates a well-rounded plate with contrasting textures and flavors.`,
   (main: string, side: string) =>
     `${side} works alongside ${main} by adding variety to the plate while keeping the meal cohesive.`,
   (main: string, side: string) =>
-    `The combination of ${main} and ${side} is a classic for a reason — complementary flavors and balanced nutrition.`,
+    `The combination of ${main} and ${side} is a classic for a reason  -  complementary flavors and balanced nutrition.`,
 ];
 
 // ── Win message templates ───────────────────────────────
@@ -95,29 +95,29 @@ const WIN_MESSAGES = [
       : `Your ${dish} is ready to enjoy. Every cook makes the next one easier.`,
   (dish: string, sides: string[]) =>
     sides.length > 0
-      ? `${dish} paired with ${sides.join(" and ")} — a plate worth remembering.`
-      : `${dish} — a plate worth remembering.`,
+      ? `${dish} paired with ${sides.join(" and ")}  -  a plate worth remembering.`
+      : `${dish}  -  a plate worth remembering.`,
   (dish: string) =>
     `Another ${dish} in the books. The more you cook, the more confident you get.`,
 ];
 
 const STREAK_MESSAGES = [
   (n: number) => `${n}-day streak! You're building real cooking rhythm.`,
-  (n: number) => `${n} days in a row — your kitchen confidence is showing.`,
+  (n: number) => `${n} days in a row  -  your kitchen confidence is showing.`,
 ];
 
 // ── Reflection templates ────────────────────────────────
 
 const STRENGTH_TEMPLATES: Array<(dish: string, cuisine: string) => string> = [
   (dish) => `You followed the full ${dish} recipe from start to finish.`,
-  (dish) => `Great job completing ${dish} — that takes real focus.`,
+  (dish) => `Great job completing ${dish}  -  that takes real focus.`,
   (_dish, cuisine) => `You're building ${cuisine} cooking confidence.`,
   () => "You stayed patient through the whole cook.",
   () => "The fact that you cooked tonight is already a win.",
 ];
 
 const STREAK_STRENGTH = (n: number) =>
-  `${n}-day cooking streak — real momentum building.`;
+  `${n}-day cooking streak  -  real momentum building.`;
 
 const SUGGESTION_TEMPLATES: Array<{
   type: "plating" | "ratio" | "technique" | "finish";
@@ -126,7 +126,7 @@ const SUGGESTION_TEMPLATES: Array<{
   {
     type: "plating",
     message: (dish: string) =>
-      `Try plating ${dish} on a warm plate — it stays hot longer.`,
+      `Try plating ${dish} on a warm plate  -  it stays hot longer.`,
   },
   {
     type: "finish",
@@ -135,7 +135,7 @@ const SUGGESTION_TEMPLATES: Array<{
   {
     type: "technique",
     message: () =>
-      "Let things rest for a minute before serving — flavors settle.",
+      "Let things rest for a minute before serving  -  flavors settle.",
   },
   {
     type: "ratio",
@@ -149,7 +149,8 @@ const SUGGESTION_TEMPLATES: Array<{
   },
   {
     type: "technique",
-    message: () => "Taste as you go — your palate gets better with every cook.",
+    message: () =>
+      "Taste as you go  -  your palate gets better with every cook.",
   },
 ];
 
@@ -198,7 +199,7 @@ export class MockAIProvider implements AIProvider {
       q.includes("mistake")
     ) {
       return {
-        answer: `Don't worry — most cooking mistakes are recoverable. If it's too salty, add acid (lemon/vinegar). Too bland, add salt gradually. Too thick, add a splash of liquid.`,
+        answer: `Don't worry  -  most cooking mistakes are recoverable. If it's too salty, add acid (lemon/vinegar). Too bland, add salt gradually. Too thick, add a splash of liquid.`,
         confidence: "medium",
       };
     }
@@ -261,7 +262,7 @@ export class MockAIProvider implements AIProvider {
   async rewriteAppraisal(
     input: AppraisalRewriteInput,
   ): Promise<AppraisalRewriteResult> {
-    // The deterministic appraisal is already good — just return it
+    // The deterministic appraisal is already good  -  just return it
     return { appraisal: input.deterministic };
   }
 
@@ -287,7 +288,7 @@ export class MockAIProvider implements AIProvider {
 
     if (input.isFirstCook) {
       strengths.push(
-        "Your very first cook — this is the start of something great.",
+        "Your very first cook  -  this is the start of something great.",
       );
     }
 

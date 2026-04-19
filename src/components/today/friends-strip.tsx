@@ -12,7 +12,7 @@ import {
 } from "@/lib/hooks/use-friends-last-seen";
 
 /** A friend cook enriched with a canonical 4-star "rating" for the gift
- *  preview. We don't track real friend ratings — 4 reads as "they liked
+ *  preview. We don't track real friend ratings  -  4 reads as "they liked
  *  it" without overclaiming, and keeps the star row in the gift page
  *  honest rather than absent. User's own cooks reuse their real rating. */
 const DEFAULT_FRIEND_STARS = 4;
@@ -58,12 +58,12 @@ function initialFor(name: string): string {
 }
 
 /**
- * FriendsStrip — second-fold social feed for the Today page.
+ * FriendsStrip  -  second-fold social feed for the Today page.
  *
  * Shows a horizontal-scroll row of meal photos from friends' recent cooks,
  * plus the user's own recent cooks (when present) layered in front. Tap a
  * tile to drop its dish name into the craving search. No likes, no
- * threading — this is a gentle "look what's getting made this week" nudge,
+ * threading  -  this is a gentle "look what's getting made this week" nudge,
  * not a feed product.
  */
 type EnrichedEntry = FriendCook & { stars: number; isSelf: boolean };
@@ -139,7 +139,7 @@ export function FriendsStrip({
       onDishSelect?.(entry.dish);
       return;
     }
-    // Friend tiles open the read-only gift preview for their cook — the
+    // Friend tiles open the read-only gift preview for their cook  -  the
     // same surface a recipient sees when someone shares a dish via the
     // Win-screen gift flow. Makes the feed a discovery layer, not
     // wallpaper.
@@ -165,7 +165,7 @@ export function FriendsStrip({
 
       <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
         {entries.map((entry, idx) => {
-          // Only friend tiles can be "new since last visit" — the user's
+          // Only friend tiles can be "new since last visit"  -  the user's
           // own cooks are never surprising to them. Pre-computed in `newFlags`
           // above so render stays pure.
           const isNew = newFlags[entry.id] ?? false;

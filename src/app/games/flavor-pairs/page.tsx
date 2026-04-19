@@ -186,7 +186,7 @@ export default function FlavorPairsGame() {
         <main className="flex-1 flex flex-col items-center justify-center px-6 gap-6">
           <span className="text-5xl">🧩</span>
           <p className="text-sm text-[var(--nourish-subtext)] text-center max-w-xs">
-            Match ingredients that pair well together. Flip two cards — if
+            Match ingredients that pair well together. Flip two cards - if
             they&apos;re a great flavor pair, they stay!
           </p>
           <div className="space-y-2 w-full max-w-xs">

@@ -45,7 +45,7 @@ interface ResultStackProps {
 }
 
 /**
- * Result Stack — three selectable side dish cards.
+ * Result Stack  -  three selectable side dish cards.
  * Users can select 1-3 sides, reroll individual cards, then "Cook selected".
  */
 export function ResultStack({
@@ -121,7 +121,7 @@ export function ResultStack({
         setRerollingIndex(null);
         return;
       }
-      // No alternatives available — server returned { success: false, side: null }.
+      // No alternatives available  -  server returned { success: false, side: null }.
       // Without this branch the spinner sticks on forever. See AUDIT-2026-04-17 P0-3.
       if (lastRerollData && !lastRerollData.success) {
         setRerollingIndex(null);
@@ -264,7 +264,7 @@ export function ResultStack({
         ))}
       </div>
 
-      {/* Cook selected — primary CTA */}
+      {/* Cook selected  -  primary CTA */}
       <motion.button
         onClick={handleCookSelected}
         disabled={selectedSides.length === 0}
@@ -286,7 +286,7 @@ export function ResultStack({
             : `Cook ${selectedSides.length} selected sides`}
       </motion.button>
 
-      {/* Evaluate plate button — visually secondary */}
+      {/* Evaluate plate button  -  visually secondary */}
       {evaluation && (
         <motion.button
           initial={{ opacity: 0, y: 6 }}
@@ -352,7 +352,7 @@ function ResultCard({
   const [expanded, setExpanded] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  // AI-enhanced pairing explanation — fires when expanded
+  // AI-enhanced pairing explanation  -  fires when expanded
   const aiExplanation = trpc.ai.explainPairing.useQuery(
     {
       mainDish,
@@ -381,7 +381,7 @@ function ResultCard({
       )}
     >
       <div className="flex w-full items-center gap-3 p-4">
-        {/* Selection checkbox — min 44px touch target wrapping the visual circle */}
+        {/* Selection checkbox  -  min 44px touch target wrapping the visual circle */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -483,7 +483,7 @@ function ResultCard({
           />
         </button>
 
-        {/* Per-side reroll — min 44px touch target */}
+        {/* Per-side reroll  -  min 44px touch target */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -536,7 +536,7 @@ function ResultCard({
                 {displayExplanation}
               </p>
 
-              {/* Cook just this side — secondary inline action */}
+              {/* Cook just this side  -  secondary inline action */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();

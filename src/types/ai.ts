@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Zod schemas for AI integration — source of truth for structured outputs.
+ * Zod schemas for AI integration  -  source of truth for structured outputs.
  */
 
 // ── Craving Parser (Claude) ───────────────────────────

@@ -5,7 +5,7 @@ import { Hand } from "lucide-react";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
 
 /**
- * BigHandsToggle — a single inline row on the Mission screen that lets the
+ * BigHandsToggle  -  a single inline row on the Mission screen that lets the
  * user bump cook UI scale for the rest of the session. No settings page,
  * no permanent preference. One tap on, one tap off.
  */
@@ -35,7 +35,7 @@ export function BigHandsToggle() {
         </span>
         <span className="block text-[12px] text-[var(--nourish-subtext)]">
           {enabled
-            ? "On — bigger text and buttons until the session ends."
+            ? "On  -  bigger text and buttons until the session ends."
             : "Larger text and easier-to-tap buttons. Just for this cook."}
         </span>
       </span>

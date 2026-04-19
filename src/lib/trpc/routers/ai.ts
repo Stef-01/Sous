@@ -1,5 +1,5 @@
 /**
- * AI Router — 5 bounded AI surfaces with graceful fallback.
+ * AI Router  -  5 bounded AI surfaces with graceful fallback.
  *
  * Every endpoint works with or without AI API keys.
  * Schema-validated inputs and outputs.
@@ -18,7 +18,7 @@ import {
 
 export const aiRouter = router({
   /**
-   * 1. Explain Pairing — warmer "why this works" sentence
+   * 1. Explain Pairing  -  warmer "why this works" sentence
    */
   explainPairing: publicProcedure
     .input(explainPairingInputSchema)
@@ -28,7 +28,7 @@ export const aiRouter = router({
     }),
 
   /**
-   * 2. Cook Q&A — answer a bounded question about the current step
+   * 2. Cook Q&A  -  answer a bounded question about the current step
    */
   askCookQuestion: publicProcedure
     .input(cookQuestionInputSchema)
@@ -38,7 +38,7 @@ export const aiRouter = router({
     }),
 
   /**
-   * 3. Substitution — "I don't have X, what can I use?"
+   * 3. Substitution  -  "I don't have X, what can I use?"
    */
   suggestSubstitution: publicProcedure
     .input(substitutionInputSchema)
@@ -48,7 +48,7 @@ export const aiRouter = router({
     }),
 
   /**
-   * 4. Win Message — personalized celebration
+   * 4. Win Message  -  personalized celebration
    */
   generateWinMessage: publicProcedure
     .input(winMessageInputSchema)
@@ -58,7 +58,7 @@ export const aiRouter = router({
     }),
 
   /**
-   * 5. Appraisal Rewrite — natural language plate evaluation
+   * 5. Appraisal Rewrite  -  natural language plate evaluation
    */
   rewriteAppraisal: publicProcedure
     .input(appraisalRewriteInputSchema)
@@ -68,7 +68,7 @@ export const aiRouter = router({
     }),
 
   /**
-   * 6. Post-Cook Reflection — strengths + gentle suggestions
+   * 6. Post-Cook Reflection  -  strengths + gentle suggestions
    */
   generateReflection: publicProcedure
     .input(postCookReflectionInputSchema)

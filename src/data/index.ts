@@ -35,7 +35,7 @@ export function resolveMealSlug(text: string): string | null {
       return meal.id;
   }
 
-  // Substring match — meal name contained in query or query contained in meal name
+  // Substring match  -  meal name contained in query or query contained in meal name
   for (const meal of meals) {
     const mealLower = meal.name.toLowerCase();
     if (normalized.includes(mealLower) || mealLower.includes(normalized))

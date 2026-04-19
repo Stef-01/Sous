@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-/** Household taste blend — a single knob that dampens the user's own
+/** Household taste blend  -  a single knob that dampens the user's own
  *  preference vector so pairings lean more toward a partner's taste.
  *
  *  We don't model a second user's profile: onboarding-for-two would violate
@@ -10,9 +10,9 @@ import { useCallback, useEffect, useState } from "react";
  *  history on Sous anyway. Instead, a slider `alpha ∈ [0, 1]` scales the
  *  acting preference vector:
  *
- *    alpha = 1.0 → "More yours" — full personal preferences
- *    alpha = 0.5 → blend        — half-strength preferences (widens pool)
- *    alpha = 0.0 → "More theirs" — preferences disabled (pure pairing fit)
+ *    alpha = 1.0 → "More yours"  -  full personal preferences
+ *    alpha = 0.5 → blend         -  half-strength preferences (widens pool)
+ *    alpha = 0.0 → "More theirs"  -  preferences disabled (pure pairing fit)
  *
  *  The effect: when you drag toward "theirs," the pairing engine stops
  *  biasing for your learned tastes and falls back to cuisine/flavor
@@ -28,7 +28,7 @@ export interface TasteBlendState {
   /** Blend factor 0..1. See module doc for semantics. */
   alpha: number;
   /** Timestamp when we last showed the initial "cooking for someone else
-   *  tonight too?" prompt — null means never shown. Used to gate the
+   *  tonight too?" prompt  -  null means never shown. Used to gate the
    *  one-time Path prompt. */
   promptedAt: number | null;
 }
@@ -68,7 +68,7 @@ function persistState(state: TasteBlendState) {
   }
 }
 
-/** Apply blend to a preference vector. Returns a new Record — never mutates.
+/** Apply blend to a preference vector. Returns a new Record  -  never mutates.
  *  When `duo` is false, this is an identity transform. */
 export function blendPreferences(
   prefs: Record<string, number> | undefined,
@@ -94,7 +94,7 @@ export function useTasteBlend() {
 
   useEffect(() => {
     // Hydration from localStorage must happen client-side only so SSR and
-    // first paint agree — this is the intended use of set-in-effect here.
+    // first paint agree  -  this is the intended use of set-in-effect here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setState(loadState());
     setMounted(true);

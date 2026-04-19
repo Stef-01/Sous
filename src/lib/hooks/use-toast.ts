@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 /**
  * Unified toast queue.
  *
- * Module-level state so every caller shares one serial queue — max one toast
+ * Module-level state so every caller shares one serial queue  -  max one toast
  * visible at a time, next one appears after dismiss or auto-dismiss. Zero
  * prop drilling, survives route transitions.
  */
@@ -22,7 +22,7 @@ export interface Toast {
   duration?: number;
   /** Optional action button. */
   action?: { label: string; onClick: () => void };
-  /** Dedup key — if provided, new toasts with the same key replace the queued one. */
+  /** Dedup key  -  if provided, new toasts with the same key replace the queued one. */
   dedupKey?: string;
 }
 

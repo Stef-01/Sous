@@ -1,8 +1,8 @@
 /**
- * findClosestDishes — nuanced, deterministic nearest-neighbour matching.
+ * findClosestDishes  -  nuanced, deterministic nearest-neighbour matching.
  *
  * The problem: keyword search returns "anything with chicken" when the user
- * types "chicken alfredo" — they see butter chicken before they see
+ * types "chicken alfredo"  -  they see butter chicken before they see
  * chicken carbonara. That is the opposite of what they want.
  *
  * The fix here is boring-but-legible:
@@ -15,7 +15,7 @@
  *
  * We deliberately avoid embeddings / TF-IDF / cosine similarity. A small
  * table of synonyms + deliberate weights beats a black-box score for this
- * surface — when a match looks wrong, we can read the scoring and fix it.
+ * surface  -  when a match looks wrong, we can read the scoring and fix it.
  */
 
 import {
@@ -132,7 +132,7 @@ export function findClosestDishes(
     if (exactName) score += WEIGHT.exactName;
     else if (aliasHit) score += WEIGHT.aliasHit;
 
-    // Token-level overlap on dish name — lighter signal that catches
+    // Token-level overlap on dish name  -  lighter signal that catches
     // partial queries like "carbonara" hitting "Pasta Carbonara".
     const nameTokens = dishName.split(/[^a-z]+/).filter(Boolean);
     for (const tok of nameTokens) {
@@ -154,7 +154,7 @@ export function findClosestDishes(
     score += WEIGHT.flavor * matchedFlavors.length;
     score += WEIGHT.technique * matchedTechniques.length;
 
-    // Light cuisine alignment bonus — cheap but useful when a user types
+    // Light cuisine alignment bonus  -  cheap but useful when a user types
     // e.g. "italian chicken" and we have multiple chicken dishes.
     if (queryTokens.has(dish.cuisine.toLowerCase())) {
       score += WEIGHT.cuisine;

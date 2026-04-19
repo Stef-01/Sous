@@ -38,7 +38,7 @@ interface StepCardProps {
   imageUrl?: string | null;
   expandedChip: string | null;
   onToggleChip: (chip: string | null) => void;
-  /** `label` identifies which timer in the stack this is — passes through to
+  /** `label` identifies which timer in the stack this is  -  passes through to
    *  the store so TimerStack pills can show "Basmati rice · step 3" etc. */
   onStartTimer: (seconds: number, label?: string) => void;
   onNext: () => void;
@@ -51,7 +51,7 @@ interface StepCardProps {
 }
 
 /**
- * Step Card — one focused instruction per screen.
+ * Step Card  -  one focused instruction per screen.
  * The core of the Cook phase. Shows instruction text + expandable chips.
  */
 export function StepCard({
@@ -210,7 +210,7 @@ export function StepCard({
               {isSpeaking ? "Stop" : "Read aloud"}
             </motion.button>
           ) : (
-            // Quiet fallback — no button, one muted line so users with older
+            // Quiet fallback  -  no button, one muted line so users with older
             // browsers understand why the hands-free affordance is missing.
             <span
               className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[var(--nourish-subtext)]/80"
@@ -245,7 +245,7 @@ export function StepCard({
         </div>
       )}
 
-      {/* Main instruction — technique words are tap-to-reveal via Glossify.
+      {/* Main instruction  -  technique words are tap-to-reveal via Glossify.
           Double-tap anywhere on the body re-speaks the step (Phase 12). */}
       <p
         className="cook-prose text-[var(--nourish-dark)] select-text"
@@ -323,7 +323,7 @@ export function StepCard({
         )}
       </div>
 
-      {/* Cook Q&A — bounded AI question */}
+      {/* Cook Q&A  -  bounded AI question */}
       <div className="space-y-2">
         <motion.button
           onClick={() => setShowQA(!showQA)}
@@ -401,7 +401,7 @@ export function StepCard({
                   </p>
                   {lastAnswer.confidence === "low" && (
                     <p className="text-[11px] text-[var(--nourish-subtext)] italic">
-                      Not fully sure — follow the recipe steps if in doubt.
+                      Not fully sure - follow the recipe steps if in doubt.
                     </p>
                   )}
                 </motion.div>
@@ -437,7 +437,7 @@ export function StepCard({
           data-cook-nav
           onClick={(event) => {
             // If the tap lands within ~24px of either horizontal edge of
-            // the button, assume the user is reaching — record it so the
+            // the button, assume the user is reaching  -  record it so the
             // big-hands nudge can surface after 3 near-misses.
             const rect = event.currentTarget.getBoundingClientRect();
             const fromLeft = event.clientX - rect.left;
@@ -470,7 +470,7 @@ export function StepCard({
         </motion.button>
       </div>
 
-      {/* Big-hands nudge — quietly appears after the user has mis-tapped
+      {/* Big-hands nudge  -  quietly appears after the user has mis-tapped
           near the edge of the Next button three times. Single tap accepts. */}
       {bigHands.shouldNudge && (
         <motion.div

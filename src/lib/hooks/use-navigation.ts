@@ -8,7 +8,7 @@ type Tab = {
 };
 
 /**
- * Tab navigation — Today and Path are always visible.
+ * Tab navigation  -  Today and Path are always visible.
  * Community is gated by communityUnlocked (deferred for prototype).
  */
 export function useNavigation(

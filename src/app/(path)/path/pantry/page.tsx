@@ -6,7 +6,7 @@ import { ArrowLeft, Bookmark, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
 
 /**
- * Pantry — the quiet ledger. Ingredients you've marked as "I have this".
+ * Pantry  -  the quiet ledger. Ingredients you've marked as "I have this".
  *
  * Every cook's Grab screen auto-checks items in this set, so the more you
  * cook the less ticking off you do. Users can remove items here if their

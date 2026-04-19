@@ -22,7 +22,7 @@ function formatShortDate(iso: string): string {
 }
 
 /**
- * Gradient fallback when a session has no photo — cream + cuisine-tinted.
+ * Gradient fallback when a session has no photo  -  cream + cuisine-tinted.
  * Deterministic per-session via a cheap hash so tiles stay visually stable
  * across renders.
  */
@@ -33,13 +33,13 @@ function hashToHue(input: string): number {
 }
 
 /**
- * Journey Montage — the last N cooks as a polaroid-style ribbon.
+ * Journey Montage  -  the last N cooks as a polaroid-style ribbon.
  *
  * Each card shows the dish's photo (or a warm gradient fallback with the
  * cuisine emoji), the name, and the cook date. A subtle, deterministic
  * rotation on each card gives the strip a scrapbook feel without chaos.
  *
- * Hidden when there are zero completed cooks — an empty ribbon is a
+ * Hidden when there are zero completed cooks  -  an empty ribbon is a
  * chore in disguise.
  */
 export function JourneyMontage({
@@ -99,7 +99,7 @@ export function JourneyMontage({
                   "shadow-[0_2px_10px_rgba(15,20,28,0.08)] hover:shadow-[0_6px_18px_rgba(15,20,28,0.14)]",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 )}
-                aria-label={`${session.dishName} — cooked ${formatShortDate(session.completedAt!)}`}
+                aria-label={`${session.dishName}  -  cooked ${formatShortDate(session.completedAt!)}`}
               >
                 <div className="relative h-[84px] w-[84px] overflow-hidden rounded-md">
                   {session.photoUri ? (

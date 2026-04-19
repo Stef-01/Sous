@@ -6,7 +6,7 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * TimerStack — a slim horizontal strip at the top of the cook view that shows
+ * TimerStack  -  a slim horizontal strip at the top of the cook view that shows
  * every running timer as a pill with label + remaining time. Designed for
  * combined cooks where "rice has 4 min, curry has 9 min" should be visible at
  * a glance without tapping around.

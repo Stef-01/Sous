@@ -13,7 +13,7 @@ interface State {
 }
 
 /**
- * ErrorBoundary — catches render errors anywhere in the subtree.
+ * ErrorBoundary  -  catches render errors anywhere in the subtree.
  * Shows a minimal recovery UI so the app doesn't go fully blank.
  * Must be a class component (React error boundaries require class lifecycle).
  */

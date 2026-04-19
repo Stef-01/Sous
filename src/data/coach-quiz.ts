@@ -1,5 +1,5 @@
 /**
- * Coach Quiz — onboarding preference quiz.
+ * Coach Quiz  -  onboarding preference quiz.
  *
  * 5 questions covering cooking experience, flavor preferences, dietary needs,
  * favourite cuisines, and cooking goals. Answers produce a preference vector
@@ -186,7 +186,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
 // ── Preference computation ──────────────────────────────
 
 export interface CoachQuizResult {
-  /** Preference vector — keys are cuisine/flavor/nutrition tags, values -1..1. */
+  /** Preference vector  -  keys are cuisine/flavor/nutrition tags, values -1..1. */
   preferences: Record<string, number>;
   /** Effort tolerance derived from experience + goal answers. */
   effortTolerance: EffortTolerance;
@@ -194,7 +194,7 @@ export interface CoachQuizResult {
 
 /**
  * Aggregate quiz answers into a preference vector and effort tolerance.
- * `answers` is a sparse array — null means the question was skipped.
+ * `answers` is a sparse array  -  null means the question was skipped.
  */
 export function computePreferencesFromAnswers(
   answers: (number | null)[],

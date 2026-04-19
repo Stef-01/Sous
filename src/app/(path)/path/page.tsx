@@ -31,7 +31,7 @@ import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
 
 /**
- * Path home — Duolingo-style skill tree for cooking progression.
+ * Path home  -  Duolingo-style skill tree for cooking progression.
  *
  * Three tiers: Foundation → Intermediate → Cuisine Specializations.
  * Nodes unlock as prerequisites are completed. Tapping a node opens
@@ -227,7 +227,7 @@ export default function PathPage() {
           <div className="h-16 rounded-2xl shimmer" />
           <div className="h-16 rounded-2xl shimmer" />
         </div>
-        {/* Skill tree nodes skeleton — alternating offsets to mimic real layout */}
+        {/* Skill tree nodes skeleton  -  alternating offsets to mimic real layout */}
         <div className="mx-auto max-w-md px-4 pt-8 pb-8">
           {["mx-auto", "ml-auto mr-12", "mx-auto", "ml-12", "mx-auto"].map(
             (cls, i) => (
@@ -262,7 +262,7 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Ambient hero — time-of-day tint + one warm line */}
+        {/* Ambient hero  -  time-of-day tint + one warm line */}
         <PathHero
           streak={stats.currentStreak}
           cooksThisWeek={
@@ -285,14 +285,14 @@ export default function PathPage() {
           }
         />
 
-        {/* Journey montage — recent cooks as a polaroid ribbon */}
+        {/* Journey montage  -  recent cooks as a polaroid ribbon */}
         {completedSessions.length > 0 && (
           <div className="px-4 pt-3">
             <JourneyMontage completedSessions={completedSessions} />
           </div>
         )}
 
-        {/* Journey summary + next unlock + weekly goal — reveal as you scroll into view */}
+        {/* Journey summary + next unlock + weekly goal  -  reveal as you scroll into view */}
         <motion.div
           className="mx-auto max-w-md space-y-2 px-4 pt-3"
           initial="hidden"
@@ -355,22 +355,22 @@ export default function PathPage() {
           />
         )}
 
-        {/* Cuisine constellation — quiet celebration of culinary reach */}
+        {/* Cuisine constellation  -  quiet celebration of culinary reach */}
         <div className="px-4 pt-4">
           <CuisineConstellation completedSessions={completedSessions} />
         </div>
 
-        {/* Kitchen confidence dial — derived gauge, no number, just a tier */}
+        {/* Kitchen confidence dial  -  derived gauge, no number, just a tier */}
         <div className="px-4">
           <ConfidenceDial stats={stats} completedSessions={completedSessions} />
         </div>
 
-        {/* What Sous has learned — warm, plain-language observations */}
+        {/* What Sous has learned  -  warm, plain-language observations */}
         <div className="px-4 pt-2">
           <PreferenceStrip sessions={completedSessions} />
         </div>
 
-        {/* Cooks-shared tally — silent until the user has shared at least
+        {/* Cooks-shared tally  -  silent until the user has shared at least
             one meal via the Win-screen gift flow. */}
         <div className="px-4 pt-2">
           <CooksSharedLine />

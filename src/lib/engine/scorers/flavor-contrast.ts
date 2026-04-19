@@ -7,7 +7,7 @@ import type { Scorer, MainDishIntent, SideDishCandidate } from "../types";
  * Bright sides pair well with rich mains. Crunchy sides complement saucy mains.
  */
 
-// Complementary flavor pairs — each key is complemented by its values
+// Complementary flavor pairs  -  each key is complemented by its values
 const COMPLEMENTS: Record<string, string[]> = {
   rich: ["bright", "acidic", "fresh", "crunchy", "light"],
   heavy: ["bright", "fresh", "light", "crisp"],

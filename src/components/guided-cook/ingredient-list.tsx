@@ -38,9 +38,9 @@ export interface IngredientSection {
 }
 
 interface IngredientListProps {
-  /** Flat ingredient list — used for single-dish mode. */
+  /** Flat ingredient list  -  used for single-dish mode. */
   ingredients: Ingredient[];
-  /** Segmented ingredient sections — used for combined mains+sides mode.
+  /** Segmented ingredient sections  -  used for combined mains+sides mode.
    *  When provided, overrides the flat `ingredients` prop. */
   sections?: IngredientSection[];
   /** Full dish data for every dish in the combined flow. When present and
@@ -49,14 +49,14 @@ interface IngredientListProps {
   prepDishes?: StaticDishData[];
   recipeName?: string;
   cuisineFamily?: string;
-  /** Dish slug — enables persistent per-dish substitution memory. */
+  /** Dish slug  -  enables persistent per-dish substitution memory. */
   dishSlug?: string;
   onReady: () => void;
   onSelectSides?: () => void;
 }
 
 /**
- * Ingredient List — the Grab phase.
+ * Ingredient List  -  the Grab phase.
  * Checkable list of ingredients with quantities and substitutions.
  * Supports both flat (single-dish) and segmented (combined cook) modes.
  * Tap "I don't have this" for AI-powered substitution suggestions.
@@ -336,7 +336,7 @@ export function IngredientList({
                 key={section.label || `section-${sectionIdx}`}
                 className="space-y-1"
               >
-                {/* Section header — only shown in segmented mode */}
+                {/* Section header  -  only shown in segmented mode */}
                 {isSegmented && section.label && (
                   <motion.h3
                     initial={{ opacity: 0, x: -4 }}
@@ -397,7 +397,7 @@ export function IngredientList({
         </AnimatePresence>
       </div>
 
-      {/* Pinned CTAs — always visible, no scroll required */}
+      {/* Pinned CTAs  -  always visible, no scroll required */}
       <div className="mt-auto pt-3 space-y-2">
         {/* Primary: Proceed to cook */}
         <motion.button
@@ -498,7 +498,7 @@ function IngredientRow({
   onAskSub: () => void;
   onTogglePantry: () => void;
 }) {
-  // AI substitution query — fires only when expanded
+  // AI substitution query  -  fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
     {
       missingIngredient: item.name,
@@ -520,7 +520,7 @@ function IngredientRow({
           checked && "opacity-60",
         )}
       >
-        {/* Checkbox — 44px touch target wraps 20px visual circle */}
+        {/* Checkbox  -  44px touch target wraps 20px visual circle */}
         <button
           onClick={onToggle}
           className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center active:scale-90 transition-transform"
@@ -585,7 +585,7 @@ function IngredientRow({
           )}
         </button>
 
-        {/* Stash in pantry — small bookmark toggle, preserves future cooks */}
+        {/* Stash in pantry  -  small bookmark toggle, preserves future cooks */}
         <button
           onClick={onTogglePantry}
           className={cn(
@@ -605,7 +605,7 @@ function IngredientRow({
           <Bookmark size={14} fill={inPantry ? "currentColor" : "none"} />
         </button>
 
-        {/* Substitution toggle — 44px touch target */}
+        {/* Substitution toggle  -  44px touch target */}
         {!checked && !item.isOptional && (
           <button
             onClick={onAskSub}

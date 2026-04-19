@@ -21,13 +21,13 @@ interface SkillNodeProps {
 }
 
 /**
- * Skill Node — circular node in the skill tree.
+ * Skill Node  -  circular node in the skill tree.
  *
  * Visual states:
- *   completed  — green gradient fill, checkmark badge, star burst
- *   in_progress — green border, pulsing glow, progress fraction
- *   available  — white circle, subtle bounce on hover, tappable
- *   locked     — soft gray-blue tint, lock icon, dimmed but visible
+ *   completed   -  green gradient fill, checkmark badge, star burst
+ *   in_progress  -  green border, pulsing glow, progress fraction
+ *   available   -  white circle, subtle bounce on hover, tappable
+ *   locked      -  soft gray-blue tint, lock icon, dimmed but visible
  */
 export function SkillNodeComponent({
   id,
@@ -69,7 +69,7 @@ export function SkillNodeComponent({
       style={{ WebkitTapHighlightColor: "transparent", isolation: "auto" }}
       type="button"
     >
-      {/* Circle — layoutId shared with SkillDetailSheet for morph transition */}
+      {/* Circle  -  layoutId shared with SkillDetailSheet for morph transition */}
       <motion.div
         layoutId={`skill-orb-${id}`}
         transition={{ type: "spring", stiffness: 360, damping: 32, mass: 0.65 }}
@@ -98,7 +98,7 @@ export function SkillNodeComponent({
         }
       >
         {/* Warm preference-decay halo. Fades with time-since-last-cook. Sits
-            *behind* the node; no number, no scold — just ambient warmth that
+            *behind* the node; no number, no scold  -  just ambient warmth that
             cools off as the skill gets rusty. */}
         {showHalo && (
           <span
@@ -111,7 +111,7 @@ export function SkillNodeComponent({
             }}
           />
         )}
-        {/* Quiet gold rim on completed — celebration without clutter */}
+        {/* Quiet gold rim on completed  -  celebration without clutter */}
         {status === "completed" && (
           <span
             aria-hidden

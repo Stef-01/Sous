@@ -1,5 +1,5 @@
 /**
- * Preference decay — the same 10 %/30 days rate used in the pairing engine,
+ * Preference decay  -  the same 10 %/30 days rate used in the pairing engine,
  * surfaced here for the UI so users see their practice cooling off.
  *
  * Returns a value in [0, 1]. A freshly cooked skill reads as 1. Every 30

@@ -16,12 +16,12 @@ interface SkillDetailSheetProps {
   open: boolean;
   onClose: () => void;
   onStartCook: (dishSlug: string) => void;
-  /** Called when user taps a practice dish chip — passes display name for search pre-fill */
+  /** Called when user taps a practice dish chip  -  passes display name for search pre-fill */
   onPracticeDish?: (displayName: string) => void;
 }
 
 /**
- * Skill Detail Sheet — bottom sheet for a tapped skill node.
+ * Skill Detail Sheet  -  bottom sheet for a tapped skill node.
  * Shows description, associated dishes, and progress.
  * One CTA: "Start cooking" for available/in-progress, info for completed/locked.
  */
@@ -34,7 +34,7 @@ export function SkillDetailSheet({
   onStartCook,
   onPracticeDish,
 }: SkillDetailSheetProps) {
-  // Note: do NOT return null when node is null — AnimatePresence needs to render
+  // Note: do NOT return null when node is null  -  AnimatePresence needs to render
   // to fire the exit animation. The `open` prop and `node` will both be falsy
   // at the same time (both derived from selectedNodeId), so gating on `open`
   // inside AnimatePresence is sufficient. Guard node access throughout.
@@ -53,7 +53,7 @@ export function SkillDetailSheet({
 
   return (
     <>
-      {/* Backdrop — separate AnimatePresence */}
+      {/* Backdrop  -  separate AnimatePresence */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -67,7 +67,7 @@ export function SkillDetailSheet({
         )}
       </AnimatePresence>
 
-      {/* Sheet — separate AnimatePresence; flex-col avoids sticky+transform bug */}
+      {/* Sheet  -  separate AnimatePresence; flex-col avoids sticky+transform bug */}
       <AnimatePresence>
         {open && (
           <motion.div

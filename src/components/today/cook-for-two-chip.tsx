@@ -9,7 +9,7 @@ import { useTasteBlend } from "@/lib/hooks/use-taste-blend";
  *
  *  Collapsed state: a small pill that says "Cook for two?" (when duo is
  *  off) or "Cooking for two" with the current blend label (when on). Tap
- *  expands into the single blend slider — one knob, no settings.
+ *  expands into the single blend slider  -  one knob, no settings.
  *
  *  Deliberately below the primary quest card so it never competes for
  *  attention. It's the kind of thing you reach for occasionally, not every
@@ -94,7 +94,7 @@ export function CookForTwoChip() {
                 onChange={(e) =>
                   setAlpha(Number.parseInt(e.target.value, 10) / 100)
                 }
-                aria-label="Taste blend — more theirs or more yours"
+                aria-label="Taste blend  -  more theirs or more yours"
                 className="w-full accent-[var(--nourish-green)]"
               />
               <p className="text-center text-[11px] text-[var(--nourish-subtext)]">

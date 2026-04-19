@@ -11,7 +11,7 @@ interface PathHeaderProps {
   skillsCompleted: number;
   /** Re-open the Path orientation tutorial (2-minute click-through). */
   onReplayTutorial?: () => void;
-  /** Total achievements unlocked — rendered as an inline chip when defined. */
+  /** Total achievements unlocked  -  rendered as an inline chip when defined. */
   badgesUnlocked?: number;
   /** Total achievements available. */
   badgesTotal?: number;
@@ -23,7 +23,7 @@ interface PathHeaderProps {
 const XP_PER_LEVEL = 100;
 
 /**
- * Path Header — gamified stats bar at the top of the skill tree.
+ * Path Header  -  gamified stats bar at the top of the skill tree.
  * Duolingo-inspired: big level badge, animated gradient XP bar, streak flame.
  */
 export function PathHeader({
@@ -48,7 +48,7 @@ export function PathHeader({
   return (
     <header className="app-header px-4 pt-3 pb-2.5">
       <div className="mx-auto max-w-md space-y-2">
-        {/* Row 1 — title + compact stats. Stats cluster is a single pill-row
+        {/* Row 1  -  title + compact stats. Stats cluster is a single pill-row
             with equal baseline so the two numbers line up even when one is
             double-digit. */}
         <div className="flex items-center justify-between gap-2">
@@ -124,7 +124,7 @@ export function PathHeader({
           </div>
         </div>
 
-        {/* Row 2 — level badge + single-line XP bar. Previous layout stacked
+        {/* Row 2  -  level badge + single-line XP bar. Previous layout stacked
             three tiny caption rows; now the bar carries one caption only so
             the level/XP block matches the 36px badge height cleanly. */}
         <div className="flex items-center gap-2.5">

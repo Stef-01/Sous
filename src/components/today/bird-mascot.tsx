@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 
 /**
- * OwlAvatar — small 28x28 owl head for the header profile position.
+ * OwlAvatar  -  small 28x28 owl head for the header profile position.
  * Simplified SVG: head + eyes + chef hat + beak + cheeks only.
  * Tappable with a Duolingo-style spring bounce.
  */
@@ -51,7 +51,7 @@ export function OwlAvatar({ onClick }: { onClick: () => void }) {
 }
 
 /**
- * CravingSearchBar — full-width search trigger.
+ * CravingSearchBar  -  full-width search trigger.
  * The primary action on the Today page. Inviting and prominent.
  */
 export function CravingSearchBar({ onClick }: { onClick: () => void }) {

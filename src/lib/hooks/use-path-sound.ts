@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react";
 
 /**
  * Tiny Web Audio synthesizer for micro-feedback sounds on the skill tree.
- * No audio files — pure oscillator + gain envelope, stays under 100 bytes of state.
+ * No audio files  -  pure oscillator + gain envelope, stays under 100 bytes of state.
  */
 export function usePathSound() {
   const ctxRef = useRef<AudioContext | null>(null);

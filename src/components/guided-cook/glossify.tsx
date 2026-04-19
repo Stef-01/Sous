@@ -10,7 +10,7 @@ import {
 } from "@/data/cook-glossary";
 
 /**
- * Glossify — wraps a string of cook-step instruction text and underlines
+ * Glossify  -  wraps a string of cook-step instruction text and underlines
  * any term that appears in the curated `cookGlossary`. Tapping or hovering
  * an underlined term reveals a one-line plain-English explanation.
  *
@@ -18,7 +18,7 @@ import {
  *   Recipe verbs ("deglaze", "temper", "sweat") are a silent barrier for
  *   anyone who didn't grow up in a cooking-heavy home. The gloss is a
  *   zero-clutter way to teach the language without turning the step into
- *   a textbook — the extra detail only appears on demand.
+ *   a textbook  -  the extra detail only appears on demand.
  *
  * Rendering note: returns a fragment of inline <span>s so it can safely be
  * dropped inside a <p> or any flow-content container.

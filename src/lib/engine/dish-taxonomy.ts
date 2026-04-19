@@ -1,9 +1,9 @@
 /**
- * Dish taxonomy — enriches each dish (meal or side) with structured,
+ * Dish taxonomy  -  enriches each dish (meal or side) with structured,
  * orthogonal tags that describe *what makes it feel like what it feels like*:
  * protein, sauce family, technique, flavor, cuisine, form, and dairy level.
  *
- * Derived from name/aliases/description/tags via a small, explicit lookup —
+ * Derived from name/aliases/description/tags via a small, explicit lookup  -
  * no LLM, no network, deterministic. Used by `findClosestDishes` for
  * semantic-ish matching on the craving input.
  *
@@ -94,7 +94,7 @@ export interface DishTaxonomy {
   forms: Form[];
   dairy: DairyLevel;
   isMeal: boolean;
-  /** Normalized keyword bag — used by the query matcher. */
+  /** Normalized keyword bag  -  used by the query matcher. */
   keywords: string[];
 }
 
@@ -421,7 +421,7 @@ export function getDishTaxonomyIndex(): DishTaxonomy[] {
   return index;
 }
 
-/** Reset the memoised index — exported for tests. */
+/** Reset the memoised index  -  exported for tests. */
 export function _resetTaxonomyCache(): void {
   cachedIndex = null;
 }

@@ -41,7 +41,7 @@ import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 
 /**
- * Combined Cook Page — guides the user through cooking a main dish + 1-3 sides
+ * Combined Cook Page  -  guides the user through cooking a main dish + 1-3 sides
  * in a single session. Follows the same Mission → Grab → Cook → Win shell.
  *
  * URL: /cook/combined?main=SLUG&sides=SLUG1,SLUG2
@@ -328,7 +328,7 @@ function CombinedCookContent() {
         setCompletedDishName(justCompletedName);
         setShowTransition(true);
       } else {
-        // All dishes done — go to win screen
+        // All dishes done  -  go to win screen
         if (sessionIdRef.current) {
           const result = completeSession(sessionIdRef.current, {});
 
@@ -429,11 +429,11 @@ function CombinedCookContent() {
             expandedChip: null,
           });
         } else if (currentDishIndex > 0) {
-          // At first step of a subsequent dish — can't go back to previous dish easily
+          // At first step of a subsequent dish  -  can't go back to previous dish easily
           // Go back to grab instead
           setPhase("grab");
         } else {
-          // First step of first dish — go back to grab or mission
+          // First step of first dish  -  go back to grab or mission
           if (allIngredients.length > 0) {
             setPhase("grab");
           } else {
@@ -584,7 +584,7 @@ function CombinedCookContent() {
       {/* Content */}
       <main className="mx-auto max-w-md px-4 py-6">
         <AnimatePresence mode="popLayout">
-          {/* MISSION — Combined overview */}
+          {/* MISSION  -  Combined overview */}
           {currentPhase === "mission" && mainDish && (
             <CombinedMissionScreen
               key="mission"
@@ -603,7 +603,7 @@ function CombinedCookContent() {
             />
           )}
 
-          {/* GRAB — Per-dish watchlist stack + segmented ingredient list.
+          {/* GRAB  -  Per-dish watchlist stack + segmented ingredient list.
               Each watchlist is per-dish scoped so MistakeChip suppression
               from prior cooks respects per-dish boundaries. */}
           {currentPhase === "grab" && (
@@ -628,7 +628,7 @@ function CombinedCookContent() {
             </div>
           )}
 
-          {/* COOK — Empty steps guard */}
+          {/* COOK  -  Empty steps guard */}
           {currentPhase === "cook" &&
             !showTransition &&
             !currentCookStep &&
@@ -665,7 +665,7 @@ function CombinedCookContent() {
               </motion.div>
             )}
 
-          {/* COOK — Step-by-step, one dish at a time */}
+          {/* COOK  -  Step-by-step, one dish at a time */}
           {currentPhase === "cook" &&
             !showTransition &&
             currentCookStep &&
@@ -677,7 +677,7 @@ function CombinedCookContent() {
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ type: "spring", stiffness: 260, damping: 25 }}
               >
-                {/* Timer stack — parallel-lane pills for every running
+                {/* Timer stack  -  parallel-lane pills for every running
                     timer. Hidden when nothing is running. */}
                 <TimerStack />
 
@@ -748,7 +748,7 @@ function CombinedCookContent() {
               </motion.div>
             )}
 
-          {/* TRANSITION — Between dishes. We show the NEXT dish's position
+          {/* TRANSITION  -  Between dishes. We show the NEXT dish's position
               in the plate (index+2) because the user has just finished
               dish `currentDishIndex + 1` and is about to start the next.
               See AUDIT-2026-04-17 P1-3. */}
@@ -767,7 +767,7 @@ function CombinedCookContent() {
             />
           )}
 
-          {/* WIN — Celebrate the full plate */}
+          {/* WIN  -  Celebrate the full plate */}
           {currentPhase === "win" && (
             <WinScreen
               key="win"
@@ -844,7 +844,7 @@ function CombinedMissionScreen({
       animate={{ opacity: 1 }}
       className="flex flex-col gap-5 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image — gradient+emoji fallback when no image */}
+      {/* Hero image  -  gradient+emoji fallback when no image */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -982,7 +982,7 @@ function CombinedMissionScreen({
         {mainDishDescription}
       </motion.p>
 
-      {/* Plan-my-cook — uses sequencer-adjusted time when available so the
+      {/* Plan-my-cook  -  uses sequencer-adjusted time when available so the
           computed start reflects parallelization savings. */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
@@ -997,7 +997,7 @@ function CombinedMissionScreen({
         <PlanCookChip totalMinutes={displayTime} />
       </motion.div>
 
-      {/* Big-hands — session-scoped opt-in for the rest of this cook */}
+      {/* Big-hands  -  session-scoped opt-in for the rest of this cook */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
@@ -1006,7 +1006,7 @@ function CombinedMissionScreen({
         <BigHandsToggle />
       </motion.div>
 
-      {/* CTA — mt-auto pins to bottom for no-scroll compliance at 375×667 */}
+      {/* CTA  -  mt-auto pins to bottom for no-scroll compliance at 375×667 */}
       <motion.button
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}

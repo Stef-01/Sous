@@ -50,7 +50,7 @@ export function useFriendsLastSeen() {
  * Convert a human-ish `postedAgo` label ("3h", "yesterday", "2d") into
  * an approximate number of milliseconds.
  *
- * Deterministic + conservative — we'd rather miss a dot than fabricate one.
+ * Deterministic + conservative  -  we'd rather miss a dot than fabricate one.
  */
 export function parsePostedAgoMs(label: string): number | null {
   const trimmed = label.trim().toLowerCase();

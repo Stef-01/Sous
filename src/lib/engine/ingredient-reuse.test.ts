@@ -80,7 +80,7 @@ describe("matchIngredientReuse", () => {
     expect(hint).toBeNull();
   });
 
-  it("is deterministic — same input yields same output", () => {
+  it("is deterministic  -  same input yields same output", () => {
     const input = {
       currentIngredientNames: ["cilantro", "lime"],
       pastSessions: [

@@ -1,5 +1,5 @@
 /**
- * Phase 4 — Upgraded Deterministic Plate Evaluation Engine
+ * Phase 4  -  Upgraded Deterministic Plate Evaluation Engine
  *
  * Evaluates the proposed main + sides plate before cooking.
  * Produces a structured evaluation with:
@@ -9,7 +9,7 @@
  * - "One best move" recommendation (swap, add, or keep)
  * - Confidence-first appraisal (5-10 words)
  *
- * No AI required — entirely deterministic.
+ * No AI required  -  entirely deterministic.
  */
 
 import type { SideDish, Meal, PairingScore } from "@/types";
@@ -124,12 +124,12 @@ export function evaluatePlate({
     signals.push("veg_light");
   }
 
-  // Freshness missing — no bright/acidic/fresh flavors across the plate
+  // Freshness missing  -  no bright/acidic/fresh flavors across the plate
   if (!hasFlavor(allTags, FRESH_FLAVORS)) {
     signals.push("freshness_missing");
   }
 
-  // Texture contrast missing — all similar textures
+  // Texture contrast missing  -  all similar textures
   const hasCrunchy = hasFlavor(allTags, CRUNCHY_TEXTURES);
   const hasCreamy = hasFlavor(allTags, CREAMY_TEXTURES);
   if (!hasCrunchy && !hasCreamy) {
@@ -226,7 +226,7 @@ function computeOneBestMove(
     return { type: "keep_as_is", message: "Your plate looks great as-is." };
   }
 
-  // Priority 1: Carb-heavy — swap the weakest carb side for a veg
+  // Priority 1: Carb-heavy  -  swap the weakest carb side for a veg
   if (signals.includes("carb_heavy")) {
     const carbSideIdx = sides.findIndex((s) => s.nutritionCategory === "carb");
     if (carbSideIdx !== -1) {
@@ -249,7 +249,7 @@ function computeOneBestMove(
     if (nonVegIdx !== -1) {
       return {
         type: "swap_side",
-        message: `Try swapping ${sides[nonVegIdx].name} for a green side — your body will thank you.`,
+        message: `Try swapping ${sides[nonVegIdx].name} for a green side  -  your body will thank you.`,
         targetSideIndex: nonVegIdx,
         targetSideName: sides[nonVegIdx].name,
         replacementHint: "vegetable",
@@ -312,30 +312,30 @@ function computeAppraisal(
   switch (status) {
     case "balanced":
       return {
-        appraisal: "Balanced plate — well composed.",
+        appraisal: "Balanced plate  -  well composed.",
         appraisalTone: "balanced",
       };
     case "good_start":
       if (signals.includes("freshness_missing")) {
         return {
-          appraisal: "Good start — could use some freshness.",
+          appraisal: "Good start  -  could use some freshness.",
           appraisalTone: "strong",
         };
       }
       if (signals.includes("texture_contrast_missing")) {
         return {
-          appraisal: "Solid base — add some texture contrast.",
+          appraisal: "Solid base  -  add some texture contrast.",
           appraisalTone: "strong",
         };
       }
       return {
-        appraisal: "Good foundation — one tweak away.",
+        appraisal: "Good foundation  -  one tweak away.",
         appraisalTone: "strong",
       };
     case "needs_improvement":
       if (signals.includes("carb_heavy")) {
         return {
-          appraisal: "Heavy on carbs — swap one for greens.",
+          appraisal: "Heavy on carbs  -  swap one for greens.",
           appraisalTone: "needs-work",
         };
       }

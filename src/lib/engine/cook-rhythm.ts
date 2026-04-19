@@ -1,5 +1,5 @@
 /**
- * cook-rhythm — derive the user's habitual cooking cadence from session history.
+ * cook-rhythm  -  derive the user's habitual cooking cadence from session history.
  *
  * Sprint D, Phase 1: The Path surface tells the user what Sous has learned
  * about _what_ they cook; this utility gives the Today surface a single line
@@ -27,7 +27,7 @@ const LONG_NAMES: Record<DayName, string> = {
 };
 
 /**
- * Hour-of-day bucketing. Keep it coarse — the user does not want to read
+ * Hour-of-day bucketing. Keep it coarse  -  the user does not want to read
  * "you cook at 18:37 on average".
  */
 type TimeBucket = "morning" | "midday" | "evening" | "late";
@@ -58,7 +58,7 @@ export interface CookRhythm {
  *
  * Returns `null` below the minimum-cooks threshold or when no pattern is
  * strong enough to be honest about (e.g. the user cooks once on every day of
- * the week — no pattern exists).
+ * the week  -  no pattern exists).
  */
 export function deriveCookRhythm(
   sessions: CookSessionRecord[],
@@ -87,7 +87,7 @@ export function deriveCookRhythm(
   const totalDayHits = dayCounts.reduce((a, b) => a + b, 0);
   if (totalDayHits === 0) return null;
 
-  // Require the peak day to be at least 1.5x the mean — otherwise no pattern.
+  // Require the peak day to be at least 1.5x the mean  -  otherwise no pattern.
   const meanPerDay = totalDayHits / 7;
   if (peakDayCount < Math.max(2, meanPerDay * 1.5)) return null;
 

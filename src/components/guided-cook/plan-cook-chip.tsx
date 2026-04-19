@@ -30,7 +30,7 @@ function parseEatTime(value: string): Date | null {
 }
 
 /**
- * PlanCookChip — "When do you want to eat?" → "Start cooking at 6:42 pm."
+ * PlanCookChip  -  "When do you want to eat?" → "Start cooking at 6:42 pm."
  *
  * Pure session-local math. No storage, no notifications. A single, quiet
  * scheduling assist that matches the "one decision per screen" rule without

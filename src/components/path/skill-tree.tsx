@@ -36,13 +36,13 @@ const ROW_HEIGHT = 120;
 const NODE_RADIUS = 32;
 /** Horizontal padding so edge nodes aren't clipped */
 const H_PAD = NODE_RADIUS + 4;
-/** Maximum tree width — scales down to fit narrow screens */
+/** Maximum tree width  -  scales down to fit narrow screens */
 const MAX_TREE_WIDTH = 420;
 /** Extra bottom padding */
 const BOTTOM_PAD = 80;
 
 /**
- * Cuisine mastery card — shown in the grid section below the skill tree.
+ * Cuisine mastery card  -  shown in the grid section below the skill tree.
  * Wider card format rather than a circular node since these are parallel paths.
  */
 function MasteryCuisineCard({
@@ -106,7 +106,7 @@ function MasteryCuisineCard({
 }
 
 /**
- * Skill Tree — vertically scrollable node map.
+ * Skill Tree  -  vertically scrollable node map.
  *
  * Renders SVG connector lines behind positioned node buttons.
  * Nodes are placed on a grid using their position.x (0–100) and position.y (row).
@@ -194,7 +194,7 @@ export const SkillTree = memo(function SkillTree({
     return positions;
   }, [treeNodes, drawWidth]);
 
-  // Total canvas height — based on tree nodes only
+  // Total canvas height  -  based on tree nodes only
   const canvasHeight = useMemo(() => {
     if (treeNodes.length === 0) return 300;
     const maxY = Math.max(...treeNodes.map((n) => n.position.y));
@@ -377,7 +377,7 @@ export const SkillTree = memo(function SkillTree({
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
-              Cuisine mastery — pick a lane
+              Cuisine mastery - pick a lane
             </span>
           </motion.div>
           <motion.div

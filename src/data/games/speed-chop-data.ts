@@ -1,5 +1,5 @@
 /**
- * Speed Chop — ingredient categorization data.
+ * Speed Chop  -  ingredient categorization data.
  * Each round has a question and items to sort left or right.
  */
 

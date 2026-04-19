@@ -1,7 +1,7 @@
 import type { ScoredCandidate, ScoreBreakdown } from "./types";
 
 /**
- * Explainer — generates human-readable "why this won" text from score dimensions.
+ * Explainer  -  generates human-readable "why this won" text from score dimensions.
  *
  * Picks the top 2 scoring dimensions and composes a plain-language explanation.
  */

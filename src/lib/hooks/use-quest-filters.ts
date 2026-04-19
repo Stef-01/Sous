@@ -40,7 +40,7 @@ function persistState(state: QuestFilterState): void {
   try {
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
-    // sessionStorage unavailable — filters will reset on reload, no big deal.
+    // sessionStorage unavailable  -  filters will reset on reload, no big deal.
   }
 }
 
@@ -52,7 +52,7 @@ export function cookTimeCapMinutes(filter: CookTimeFilter): number {
 }
 
 /**
- * useQuestFilters — session-scoped filter state for the Today quest card.
+ * useQuestFilters  -  session-scoped filter state for the Today quest card.
  *
  * Persists in sessionStorage so filters survive navigation within a tab but
  * reset fresh when the user closes and reopens the app. Matches the Sous

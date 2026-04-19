@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 /** Storage key for rest-day entries (local-only; no remote sync). */
 const STORAGE_KEY = "sous-rest-days";
-/** Max one rest day per rolling 7-day window — prevents streak laundering. */
+/** Max one rest day per rolling 7-day window  -  prevents streak laundering. */
 export const REST_WINDOW_DAYS = 7;
 /** How far back `computeStreakWithRest` will walk looking for `lastCookDate`. */
 export const MAX_REST_LOOKBACK_DAYS = 14;
@@ -47,11 +47,11 @@ function persist(restDays: string[]) {
       window.dispatchEvent(new Event("sous-rest-days-updated"));
     }
   } catch {
-    /* storage full / unavailable — silently drop */
+    /* storage full / unavailable  -  silently drop */
   }
 }
 
-/** Returns true if a rest day can be taken today — i.e. none of the last
+/** Returns true if a rest day can be taken today  -  i.e. none of the last
  *  `REST_WINDOW_DAYS` calendar days are already marked as rest days. */
 export function canTakeRestDay(
   restDays: string[],
@@ -83,7 +83,7 @@ export function computeStreakWithRest(
 
   const restSet = new Set(restDays);
   // Walk back from today. Any day between today and lastCookDate must be a
-  // rest day (today itself is exempt — it is the current moment, not a miss).
+  // rest day (today itself is exempt  -  it is the current moment, not a miss).
   for (let i = 1; i <= MAX_REST_LOOKBACK_DAYS; i++) {
     const key = toDateKey(addDays(today, -i));
     if (key === lastCookDate) return currentStreak;
@@ -130,7 +130,7 @@ export function useRestDays(): UseRestDaysResult {
     const current = loadRestDays();
     if (current.includes(todayKey)) return;
     if (!canTakeRestDay(current)) return;
-    // Keep the list small — only the last 30 days are relevant for display
+    // Keep the list small  -  only the last 30 days are relevant for display
     // and streak bridging combined. Older entries drop off.
     const trimmed = [...current, todayKey].slice(-30);
     persist(trimmed);

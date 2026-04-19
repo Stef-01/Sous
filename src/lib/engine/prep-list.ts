@@ -7,11 +7,11 @@
  *   - Ingredients with the same normalised name are merged; their
  *     quantities are concatenated with " + " so the user still sees
  *     both contributions ("1 cup + 1/2 cup").
- *   - Each merged entry is classified into a station — cutting board,
- *     stove, oven, blender, or other — by scanning the cook steps for
+ *   - Each merged entry is classified into a station  -  cutting board,
+ *     stove, oven, blender, or other  -  by scanning the cook steps for
  *     verbs and references to that ingredient.
  *
- * Deterministic by design. No recipe invention, no AI — just a
+ * Deterministic by design. No recipe invention, no AI  -  just a
  * re-organisation of already-authored data.
  */
 
@@ -45,7 +45,7 @@ export const PREP_STATION_LABEL: Record<PrepStation, string> = {
 };
 
 export interface PrepListItem {
-  /** Stable id — the first source ingredient's id, prefixed with "prep-". */
+  /** Stable id  -  the first source ingredient's id, prefixed with "prep-". */
   id: string;
   name: string;
   /** Combined quantity string ("1 cup + 1/2 cup"). Empty when none. */

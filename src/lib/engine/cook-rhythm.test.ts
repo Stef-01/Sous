@@ -54,7 +54,7 @@ describe("deriveCookRhythm", () => {
   });
 
   it("uses the midday bucket when lunch is dominant", () => {
-    // Three Tuesdays at 12:30 — same day-of-week, so peak count is high.
+    // Three Tuesdays at 12:30  -  same day-of-week, so peak count is high.
     const sessions = [
       make("2026-03-24T12:30:00"),
       make("2026-03-31T13:00:00"),
@@ -65,7 +65,7 @@ describe("deriveCookRhythm", () => {
     expect(result!.sentence).toContain("around midday");
   });
 
-  it("is deterministic — same input yields same output", () => {
+  it("is deterministic  -  same input yields same output", () => {
     const sessions = [
       make("2026-03-24T19:00:00"),
       make("2026-03-31T19:00:00"),

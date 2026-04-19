@@ -1,5 +1,5 @@
 /**
- * Achievement definitions — milestones that reward consistent cooking.
+ * Achievement definitions  -  milestones that reward consistent cooking.
  * Each achievement has a condition checked against user stats.
  */
 

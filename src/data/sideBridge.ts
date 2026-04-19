@@ -16,13 +16,13 @@ const ENGINE_TO_APP: Record<string, string> = {
   "Mirchi Ka Salan": "mirchi-ka-salan",
   Papadum: "papadum",
 
-  // Raita variants — app has a single "raita" entry
+  // Raita variants  -  app has a single "raita" entry
   "Cucumber Raita": "raita",
 
-  // Rice variants — app has a single "basmati-rice" entry
+  // Rice variants  -  app has a single "basmati-rice" entry
   "Instant Pot Basmati Rice": "basmati-rice",
 
-  // Naan — engine says "Garlic Naan", app has "naan-bread"
+  // Naan  -  engine says "Garlic Naan", app has "naan-bread"
   "Garlic Naan": "naan-bread",
 
   // Samosa
@@ -78,6 +78,6 @@ export function resolveEngineSideId(engineSideName: string): string | null {
     return slug;
   }
 
-  // 3. No match — this engine side has no app counterpart
+  // 3. No match  -  this engine side has no app counterpart
   return null;
 }

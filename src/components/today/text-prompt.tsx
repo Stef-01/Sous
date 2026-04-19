@@ -35,7 +35,7 @@ interface LocalResultAxes {
 interface LocalResult {
   name: string;
   cuisine: string;
-  /** Why this dish surfaced — e.g. "Same pasta · cream sauce". Only set for
+  /** Why this dish surfaced  -  e.g. "Same pasta · cream sauce". Only set for
    *  semantically-matched suggestions. */
   reason?: string;
   /** `true` when this row came from the semantic matcher (not a literal
@@ -116,7 +116,7 @@ function searchLocal(
   const results: LocalResult[] = [];
   const seen = new Set<string>();
 
-  // Pass 1 — literal substring hits (fast, predictable).
+  // Pass 1  -  literal substring hits (fast, predictable).
   for (const meal of meals) {
     const hit =
       meal.name.toLowerCase().includes(q) ||
@@ -140,7 +140,7 @@ function searchLocal(
     }
   }
 
-  // Pass 2 — semantic "closest" matches from the taxonomy index. These
+  // Pass 2  -  semantic "closest" matches from the taxonomy index. These
   // only surface dishes we did not already catch literally, and each
   // carries a short reason ("Same pasta · cream sauce"). We cap the list
   // so the literal matches still dominate when they exist.
@@ -347,7 +347,7 @@ export function TextPrompt({
         </div>
       </div>
 
-      {/* Recent craving history — shown on focus when empty. One-tap rerun. */}
+      {/* Recent craving history  -  shown on focus when empty. One-tap rerun. */}
       <AnimatePresence mode="wait">
         {showHistory && (
           <motion.div
@@ -385,7 +385,7 @@ export function TextPrompt({
           </motion.div>
         )}
 
-        {/* Popular suggestion chips — shown when input is empty */}
+        {/* Popular suggestion chips  -  shown when input is empty */}
         {showSuggestions && (
           <motion.div
             key="suggestions"

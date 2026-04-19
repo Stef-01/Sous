@@ -1,5 +1,5 @@
 /**
- * Cuisine Compass — dish origin data for the geography game.
+ * Cuisine Compass  -  dish origin data for the geography game.
  * Each dish maps to a region with coordinates for scoring.
  */
 

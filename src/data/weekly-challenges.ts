@@ -1,5 +1,5 @@
 /**
- * Weekly Challenges — rotating cooking goals that award bonus XP.
+ * Weekly Challenges  -  rotating cooking goals that award bonus XP.
  * A new challenge rotates each Monday. Deterministic: same week = same challenge.
  */
 

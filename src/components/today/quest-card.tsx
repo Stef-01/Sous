@@ -52,7 +52,7 @@ interface QuestDish {
   tags: string[];
   ingredientCount: number;
   /** Normalized ingredient names used for pantry-fit scoring. May be empty
-   *  when a dish lacks static cook data — in that case pantryFit is 0 and
+   *  when a dish lacks static cook data  -  in that case pantryFit is 0 and
    *  the chip is never shown. */
   ingredientNames: string[];
   hasGuidedCook: boolean;
@@ -388,7 +388,7 @@ function buildMealTags(
 }
 
 /**
- * QuestCard — swipeable Tinder-style card stack.
+ * QuestCard  -  swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
  * Swipe right to cook, left to skip. Heart saves to localStorage.
  * Pass userPreferences to surface preference-matched dishes first.
@@ -415,7 +415,7 @@ export function QuestCard({
     [userPreferences, cookHistory, pantryItems, pantryMounted],
   );
   // Quest filters: cook-time cap + cuisine. Both session-scoped so they
-  // never become permanent settings — they reset at app close.
+  // never become permanent settings  -  they reset at app close.
   const filters = useQuestFilters();
 
   // Build the cuisine option list from the actual dish index so we never
@@ -552,7 +552,7 @@ export function QuestCard({
     return out;
   }, [currentIndex, questDishes]);
 
-  // One-line "Because you cooked X" rationale for the top card — silent
+  // One-line "Because you cooked X" rationale for the top card  -  silent
   // until the user has ≥5 completed cooks and the pick shares ≥2 taxonomy
   // axes with something they cooked in the last 21 days.
   const topSlug = visibleCards[0]?.slug;
@@ -631,7 +631,7 @@ export function QuestCard({
 
   return (
     <div className="space-y-1.5">
-      {/* Section header + filter pills — two clickable dropdowns replace the
+      {/* Section header + filter pills  -  two clickable dropdowns replace the
           old binary "Under 20 min" toggle. Both reset at tab close. */}
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="shrink-0 text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
@@ -671,7 +671,7 @@ export function QuestCard({
         </div>
       </div>
 
-      {/* Card stack container — minHeight 460 pushes action chips below fold at 375×667 */}
+      {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
       <div className="relative" style={{ minHeight: 460 }}>
         <AnimatePresence mode="popLayout">
           {visibleCards
@@ -748,7 +748,7 @@ function SwipeCard({
   onSave: () => void;
   exitDirection: "left" | "right" | null;
   /** Optional ambient rationale rendered below the flavor tags. Only the
-   *  top card receives one — silent on deeper cards and for new users. */
+   *  top card receives one  -  silent on deeper cards and for new users. */
   rationale: string | null;
   /** Optional "reuses cilantro from yesterday's tacos" hint. Only the top
    *  card receives one. Silent when no recent ingredient overlap exists. */
@@ -814,9 +814,9 @@ function SwipeCard({
           isTop && "cursor-grab active:cursor-grabbing shadow-md",
         )}
         role="article"
-        aria-label={`${dish.dishName} — ${dish.cuisineFamily}${dish.isVerified ? ", Nourish Verified" : ""}`}
+        aria-label={`${dish.dishName}  -  ${dish.cuisineFamily}${dish.isVerified ? ", Nourish Verified" : ""}`}
       >
-        {/* Swipe feedback overlays — only on top card */}
+        {/* Swipe feedback overlays  -  only on top card */}
         {isTop && (
           <>
             <motion.div
@@ -873,13 +873,13 @@ function SwipeCard({
           )}
           {/* Bottom gradient for text readability */}
           <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/15 to-transparent" />
-          {/* Cuisine family badge — bottom left of hero image */}
+          {/* Cuisine family badge  -  bottom left of hero image */}
           <div className="absolute bottom-2 left-3 rounded-full bg-black/30 backdrop-blur-sm px-2.5 py-0.5">
             <span className="text-[11px] font-semibold text-white tracking-wide">
               {dish.cuisineFamily}
             </span>
           </div>
-          {/* Skip (X) button — top right, min 44px touch target */}
+          {/* Skip (X) button  -  top right, min 44px touch target */}
           {isTop && (
             <button
               onClick={(e) => {
@@ -933,7 +933,7 @@ function SwipeCard({
               {dish.ingredientCount} ingredients
             </span>
           </div>
-          {/* Pantry-fit signal — only surfaces when most ingredients are
+          {/* Pantry-fit signal  -  only surfaces when most ingredients are
               already on hand. Turns the ranking win into a visible reason. */}
           {dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD && (
             <div className="flex items-center gap-1 pt-0.5">
@@ -954,14 +954,14 @@ function SwipeCard({
               </span>
             ))}
           </div>
-          {/* Memory line — ambient, italic, visually quiet. Only renders
+          {/* Memory line  -  ambient, italic, visually quiet. Only renders
               when the rationale builder cleared its threshold. */}
           {rationale && (
             <p className="pt-1 text-[11px] italic leading-snug text-[var(--nourish-subtext)]">
               {rationale}.
             </p>
           )}
-          {/* Ingredient-reuse hint — surfaced only when a recent cook shares
+          {/* Ingredient-reuse hint  -  surfaced only when a recent cook shares
               a non-staple ingredient with this dish. */}
           {ingredientReuse && (
             <p className="text-[11px] leading-snug text-[var(--nourish-green)]/80">
@@ -970,9 +970,9 @@ function SwipeCard({
           )}
         </div>
 
-        {/* Action row — heart save + Start cooking */}
+        {/* Action row  -  heart save + Start cooking */}
         <div className="flex items-center gap-3 px-4 pb-4 pt-1.5">
-          {/* Save for later — heart button */}
+          {/* Save for later  -  heart button */}
           <div className="group relative">
             <motion.button
               onClick={(e) => {
@@ -1002,7 +1002,7 @@ function SwipeCard({
             </div>
           </div>
 
-          {/* Primary CTA — cook if guided, find sides otherwise */}
+          {/* Primary CTA  -  cook if guided, find sides otherwise */}
           <motion.button
             onClick={(e) => {
               e.stopPropagation();

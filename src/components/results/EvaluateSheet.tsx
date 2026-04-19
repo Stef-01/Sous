@@ -16,7 +16,7 @@ interface EvaluateSheetProps {
 }
 
 /**
- * Evaluate A Sheet — bottom sheet overlay that shows the full plate evaluation.
+ * Evaluate A Sheet  -  bottom sheet overlay that shows the full plate evaluation.
  * Opens over pairer context, never a new page.
  * Confidence-first: strengths shown before suggestions.
  * One CTA: "Finish my plate" or "Looks great" depending on status.
@@ -30,7 +30,7 @@ export function EvaluateSheet({
   onClose,
   onFinishPlate,
 }: EvaluateSheetProps) {
-  // AI-enhanced appraisal — only fires when sheet is open
+  // AI-enhanced appraisal  -  only fires when sheet is open
   const aiAppraisal = trpc.ai.rewriteAppraisal.useQuery(
     {
       deterministic: evaluation.appraisal,
@@ -72,7 +72,7 @@ export function EvaluateSheet({
 
   return (
     <>
-      {/* Backdrop — separate AnimatePresence */}
+      {/* Backdrop  -  separate AnimatePresence */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -86,7 +86,7 @@ export function EvaluateSheet({
         )}
       </AnimatePresence>
 
-      {/* Sheet — separate AnimatePresence; flex-col avoids sticky+transform bug */}
+      {/* Sheet  -  separate AnimatePresence; flex-col avoids sticky+transform bug */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -166,7 +166,7 @@ export function EvaluateSheet({
                   </div>
                 </div>
 
-                {/* Already working — strengths first */}
+                {/* Already working  -  strengths first */}
                 {evaluation.alreadyWorking.length > 0 && (
                   <div className="space-y-2">
                     <h3 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
@@ -189,7 +189,7 @@ export function EvaluateSheet({
                   </div>
                 )}
 
-                {/* One best move — only if not keep_as_is */}
+                {/* One best move  -  only if not keep_as_is */}
                 {evaluation.oneBestMove &&
                   evaluation.oneBestMove.type !== "keep_as_is" && (
                     <div className="space-y-2">
@@ -223,12 +223,12 @@ export function EvaluateSheet({
                       type="button"
                     >
                       {evaluation.status === "balanced"
-                        ? "Looks great — let's cook"
-                        : "Got it — let's cook"}
+                        ? "Looks great  -  let's cook"
+                        : "Got it  -  let's cook"}
                     </button>
                   )}
 
-                  {/* Skip link — always available */}
+                  {/* Skip link  -  always available */}
                   <button
                     onClick={onClose}
                     className="mt-2 w-full text-center text-xs text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"

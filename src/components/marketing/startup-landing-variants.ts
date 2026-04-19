@@ -1,4 +1,4 @@
-/** Shared Framer Motion variants — startup landing (HealthifyMe-style depth + YC polish). */
+/** Shared Framer Motion variants  -  startup landing (HealthifyMe-style depth + YC polish). */
 
 export const springSnappy = {
   type: "spring" as const,

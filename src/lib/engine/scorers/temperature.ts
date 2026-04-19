@@ -32,7 +32,7 @@ function inferMainTemperature(main: MainDishIntent): string {
     return "room-temp";
   }
 
-  // Default — most mains are hot
+  // Default  -  most mains are hot
   return "hot";
 }
 
@@ -51,7 +51,7 @@ export const temperatureScorer: Scorer = {
     if (sideTemp === "room-temp") return 0.7;
     if (mainTemp === "room-temp") return 0.7;
 
-    // Same temperature — acceptable but less interesting
+    // Same temperature  -  acceptable but less interesting
     if (mainTemp === sideTemp) return 0.5;
 
     return 0.6;

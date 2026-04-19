@@ -13,7 +13,7 @@ interface PathHeroProps {
   /** Total completed cooks across all time. */
   totalCooks: number;
   /** ISO timestamp of the most recent completed cook. Undefined when the user
-   *  has never cooked — in that case the "start tonight" copy wins. */
+   *  has never cooked  -  in that case the "start tonight" copy wins. */
   lastCookedAt?: string;
 }
 
@@ -28,7 +28,7 @@ function resolveTimeBand(date: Date): TimeBand {
   return "evening";
 }
 
-/** Calm palettes — cream-toned so the rest of the Path UI still reads crisply on top. */
+/** Calm palettes  -  cream-toned so the rest of the Path UI still reads crisply on top. */
 const GRADIENTS: Record<TimeBand, string> = {
   morning:
     "linear-gradient(180deg, #fff4e4 0%, #faeed9 28%, #f7efe1 62%, var(--nourish-cream) 100%)",
@@ -61,7 +61,7 @@ function resolveHeadline(
     return "Welcome back. Let's start easy.";
   }
   if (cooksThisWeek >= weeklyGoal) {
-    return "You hit your cooking goal this week — nice.";
+    return "You hit your cooking goal this week  -  nice.";
   }
   if (weeklyGoal - cooksThisWeek === 1) {
     return "One more cook this week and you've hit your goal.";
@@ -76,7 +76,7 @@ function resolveHeadline(
 }
 
 /**
- * Path Hero — the calm, time-of-day-tinted area immediately below the sticky
+ * Path Hero  -  the calm, time-of-day-tinted area immediately below the sticky
  * header. It sets the emotional tone of Path without consuming vertical space
  * that crowds the skill tree. One headline, one soft gradient.
  *
@@ -90,7 +90,7 @@ export function PathHero({
   lastCookedAt,
 }: PathHeroProps) {
   // Resolve band + days-since on the client so the SSR/client branch cannot
-  // mismatch. Intentional state-sets on mount — impure Date reads are
+  // mismatch. Intentional state-sets on mount  -  impure Date reads are
   // forbidden during render but are the whole point of these effects.
   const [band, setBand] = useState<TimeBand>("afternoon");
   const [daysSinceLastCook, setDaysSinceLastCook] = useState<

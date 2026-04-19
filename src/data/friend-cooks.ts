@@ -1,9 +1,9 @@
 /**
- * Friend-cooks seed — a small, honest, clearly-mock social feed.
+ * Friend-cooks seed  -  a small, honest, clearly-mock social feed.
  *
  * These are placeholders until a real social graph ships. Names are fictional,
  * time-ago values are recent so the feed feels alive without deception. Images
- * are all existing photos in `/public/food_images/` — no invented assets.
+ * are all existing photos in `/public/food_images/`  -  no invented assets.
  *
  * When `useCookSessions().completedSessions` has data, we layer the user's
  * own cooks on top so their journey shows up in the same feed.
@@ -12,7 +12,7 @@
 export interface FriendCook {
   /** Stable synthetic ID. */
   id: string;
-  /** Friend's short display name. First names only — feels personal. */
+  /** Friend's short display name. First names only  -  feels personal. */
   friend: string;
   /** Single initial for the avatar circle when no photo is available. */
   initial: string;

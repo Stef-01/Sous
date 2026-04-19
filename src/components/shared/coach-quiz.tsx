@@ -32,7 +32,7 @@ const EFFORT_LABELS: Record<string, string> = {
   willing: "All in",
 };
 
-/** Progress dots — filled circles for completed, outlined for upcoming */
+/** Progress dots  -  filled circles for completed, outlined for upcoming */
 function ProgressDots({ total, current }: { total: number; current: number }) {
   return (
     <div className="flex items-center justify-center gap-1.5">
@@ -66,7 +66,7 @@ function ProgressDots({ total, current }: { total: number; current: number }) {
 }
 
 /**
- * CoachQuiz — onboarding preference quiz.
+ * CoachQuiz  -  onboarding preference quiz.
  *
  * Flow: welcome screen → 5 questions → "You're all set!" result screen.
  * Slide transitions between questions. Progress dots + bar at top.

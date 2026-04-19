@@ -117,7 +117,7 @@ export const useCookStore = create<CookStore>((set, get) => ({
         currentStepIndex: 0,
         totalSteps: dishes[nextIdx].totalSteps,
         expandedChip: null,
-        // Dish boundaries are a natural reset — any stragglers from the
+        // Dish boundaries are a natural reset  -  any stragglers from the
         // previous dish should not bleed into the next.
         timers: [],
       });
@@ -135,7 +135,7 @@ export const useCookStore = create<CookStore>((set, get) => ({
     if (seconds <= 0) return;
     const resolvedLabel = (label ?? "Timer").trim() || "Timer";
     const { timers } = get();
-    // Dedupe by label — accidental double-taps on the same timer chip
+    // Dedupe by label  -  accidental double-taps on the same timer chip
     // should not spawn two pills. Completed timers (remaining === 0) don't
     // block a fresh start.
     const alreadyActive = timers.some(

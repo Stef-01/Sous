@@ -55,12 +55,12 @@ function persistMap(map: SubMemoryMap): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
   } catch {
-    // quota / disabled — silent fallback.
+    // quota / disabled  -  silent fallback.
   }
 }
 
 /**
- * useSubstitutionMemory — remembers accepted substitutions keyed by
+ * useSubstitutionMemory  -  remembers accepted substitutions keyed by
  * `<dishSlug>::<ingredientId>` for 90 days so the next cook of the same dish
  * auto-suggests the same swap.
  */

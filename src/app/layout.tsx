@@ -27,16 +27,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Sous — Cook Confidently Tonight",
+  title: "Sous  -  Cook Confidently Tonight",
   description:
-    "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
+    "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking  -  from craving to table in 60 seconds.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://sous.vercel.app",
   ),
   openGraph: {
-    title: "Sous — Cook Confidently Tonight",
+    title: "Sous  -  Cook Confidently Tonight",
     description:
-      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
+      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking  -  from craving to table in 60 seconds.",
     siteName: "Sous",
     type: "website",
     images: [
@@ -44,15 +44,15 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Sous — cooking confidence app with guided recipes and smart side dish pairing",
+        alt: "Sous  -  cooking confidence app with guided recipes and smart side dish pairing",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sous — Cook Confidently Tonight",
+    title: "Sous  -  Cook Confidently Tonight",
     description:
-      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking — from craving to table in 60 seconds.",
+      "Tell Sous what you're craving. Get 3 perfectly paired sides and step-by-step guided cooking  -  from craving to table in 60 seconds.",
     images: ["/og-image.png"],
   },
   manifest: "/manifest.json",

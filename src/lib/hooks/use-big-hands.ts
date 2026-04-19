@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 /**
- * useBigHands — session-scoped "make everything bigger" mode.
+ * useBigHands  -  session-scoped "make everything bigger" mode.
  *
  * Session-scoped by design. Lives in sessionStorage so it auto-expires when
  * the tab closes; the user re-opts-in each cook if they want it. This avoids
@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
  *
  * The hook also tracks edge taps on step-advance controls. After 3 edge
  * taps inside one session it flips a nudge flag; callers can surface an
- * inline chip like "Tap here feels tight — try bigger controls?" and flip
+ * inline chip like "Tap here feels tight  -  try bigger controls?" and flip
  * `enabled` when the user accepts.
  */
 
@@ -37,7 +37,7 @@ function writeFlag(key: string, value: string | null): void {
       window.sessionStorage.setItem(key, value);
     }
   } catch {
-    // sessionStorage quota / privacy mode — fail silently.
+    // sessionStorage quota / privacy mode  -  fail silently.
   }
 }
 

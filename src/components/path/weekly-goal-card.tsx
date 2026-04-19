@@ -166,8 +166,8 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
         {isComplete
           ? `Challenge complete! +${challenge.bonusXP} XP earned`
           : progress.current > 0
-            ? `${remaining} more to go — ${daysRemaining} days left!`
-            : "A new challenge awaits — start cooking!"}
+            ? `${remaining} more to go  -  ${daysRemaining} days left!`
+            : "A new challenge awaits  -  start cooking!"}
       </p>
     </motion.div>
   );

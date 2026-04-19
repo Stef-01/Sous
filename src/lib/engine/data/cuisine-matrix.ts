@@ -16,7 +16,7 @@ const DEFAULT_COMPATIBILITY = 0.5;
 const SELF_SCORE = 1.0;
 
 /**
- * Regional affinity groups — cuisines that naturally pair well.
+ * Regional affinity groups  -  cuisines that naturally pair well.
  */
 const REGIONAL_AFFINITIES: Record<string, string[]> = {
   "south-asian": ["indian", "middle-eastern", "southeast-asian"],
@@ -62,7 +62,7 @@ export function getCuisineCompatibility(
   const affinities = REGIONAL_AFFINITIES[sideNorm];
   if (affinities?.includes(mainNorm)) return 0.8;
 
-  // Check reverse — if main's cuisine considers side's cuisine an affinity
+  // Check reverse  -  if main's cuisine considers side's cuisine an affinity
   const reverseAffinities = REGIONAL_AFFINITIES[mainNorm];
   if (reverseAffinities?.includes(sideNorm)) return 0.75;
 
@@ -70,6 +70,6 @@ export function getCuisineCompatibility(
   if (sideNorm === "comfort-classic" || mainNorm === "comfort-classic")
     return 0.6;
 
-  // Default — distant cuisines
+  // Default  -  distant cuisines
   return DEFAULT_COMPATIBILITY;
 }

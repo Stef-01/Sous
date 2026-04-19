@@ -90,7 +90,7 @@ describe("pickRepeatCandidate", () => {
   });
 
   it("is silent in the 14-21 day dead zone", () => {
-    // 17 days ago — between the recent window and revive window.
+    // 17 days ago  -  between the recent window and revive window.
     const dead = session({
       rating: 5,
       completedAt: "2024-12-28T12:00:00Z",

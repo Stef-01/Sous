@@ -24,7 +24,7 @@ interface MissionScreenProps {
 }
 
 /**
- * Mission Screen — introduces the side dish and what the user will learn.
+ * Mission Screen  -  introduces the side dish and what the user will learn.
  * First phase of the Guided Cook flow.
  */
 export function MissionScreen({
@@ -47,7 +47,7 @@ export function MissionScreen({
       animate={{ opacity: 1 }}
       className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image — fixed height so CTA stays above fold on 375px phones */}
+      {/* Hero image  -  fixed height so CTA stays above fold on 375px phones */}
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -135,10 +135,10 @@ export function MissionScreen({
         </div>
       </div>
 
-      {/* Recall line — "Last cooked 12 days ago · you rated it 5★" */}
+      {/* Recall line  -  "Last cooked 12 days ago · you rated it 5★" */}
       {dishSlug && <DishRecallLine dishSlug={dishSlug} />}
 
-      {/* Description — clamped to 3 lines so CTA is never pushed off-screen */}
+      {/* Description  -  clamped to 3 lines so CTA is never pushed off-screen */}
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -148,7 +148,7 @@ export function MissionScreen({
         {description}
       </motion.p>
 
-      {/* Plan-my-cook — optional eat-time → start-time assist */}
+      {/* Plan-my-cook  -  optional eat-time → start-time assist */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
@@ -162,7 +162,7 @@ export function MissionScreen({
         <PlanCookChip totalMinutes={totalTime} />
       </motion.div>
 
-      {/* Big-hands mode — calm opt-in for the rest of this session */}
+      {/* Big-hands mode  -  calm opt-in for the rest of this session */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
@@ -176,7 +176,7 @@ export function MissionScreen({
         <BigHandsToggle />
       </motion.div>
 
-      {/* CTA — mt-auto pins to bottom of the flex container */}
+      {/* CTA  -  mt-auto pins to bottom of the flex container */}
       <motion.button
         initial={false}
         animate={{ opacity: 1, y: 0 }}

@@ -8,14 +8,14 @@ import { useMistakeSuppression } from "@/lib/hooks/use-mistake-suppression";
 import type { StaticCookStep } from "@/data/guided-cook-steps";
 
 interface CookWatchlistProps {
-  /** Slug of the dish — used to respect per-dish mistake suppressions. */
+  /** Slug of the dish  -  used to respect per-dish mistake suppressions. */
   dishSlug?: string;
   /** All cook steps for this dish. Only those with `mistakeWarning` contribute. */
   steps: StaticCookStep[];
 }
 
 /**
- * Cook Watchlist — collapsed chip at the top of the Grab phase that lists every
+ * Cook Watchlist  -  collapsed chip at the top of the Grab phase that lists every
  * step's mistake warning in one glance. Pulls from `guidedCookSteps` only and
  * respects per-dish `useMistakeSuppression`. Silent when nothing to watch for.
  */

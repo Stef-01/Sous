@@ -16,7 +16,7 @@ interface PhaseIndicatorProps {
 }
 
 /**
- * Phase Indicator — visual progress through Mission → Grab → Cook → Win.
+ * Phase Indicator  -  visual progress through Mission → Grab → Cook → Win.
  * Shows four circles, filled up to and including the current phase.
  */
 export function PhaseIndicator({ currentPhase }: PhaseIndicatorProps) {

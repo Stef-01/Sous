@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 
 /**
- * XP System — tracks experience points, levels, and milestones.
+ * XP System  -  tracks experience points, levels, and milestones.
  *
  * XP sources:
  * - Complete any cook: +25 XP

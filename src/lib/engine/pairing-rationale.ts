@@ -1,11 +1,11 @@
 /**
- * pairing-rationale — build "Because you cooked X, we picked Y" lines.
+ * pairing-rationale  -  build "Because you cooked X, we picked Y" lines.
  *
  * Sprint C, Phase 2. Silent until the user has enough history (≥5 completed
  * cooks) and the pick is meaningfully close to something they loved in the
  * last 21 days (≥2 taxonomy axes overlap on cuisine, form, sauce, protein,
  * or flavor). When both thresholds are met we return a single short
- * sentence — never more than one — to the QuestCard caller.
+ * sentence  -  never more than one  -  to the QuestCard caller.
  *
  * Deterministic: same inputs → same sentence, zero randomness.
  */
@@ -29,7 +29,7 @@ export interface PairingRationale {
   /** The dish the user cooked recently that drove this rationale. */
   priorDishName: string;
   /** One-line rationale, e.g. "Because you loved Carbonara, this shares
-   *  the pasta + cream feel." — ready to render. No trailing period. */
+   *  the pasta + cream feel."  -  ready to render. No trailing period. */
   text: string;
   /** Which axes overlapped. Useful for tests / debugging. */
   matchedAxes: string[];
@@ -100,11 +100,11 @@ function countOverlap(
 interface BuildOpts {
   /** Slug of the dish we're offering right now (QuestCard current card). */
   currentDishSlug: string;
-  /** Display name — used as a fallback when taxonomy lookup fails. */
+  /** Display name  -  used as a fallback when taxonomy lookup fails. */
   currentDishName?: string;
   /** All cook sessions (completed ones will be considered). */
   cookHistory: CookSessionRecord[];
-  /** Defaults to `Date.now()` — passed in for tests. */
+  /** Defaults to `Date.now()`  -  passed in for tests. */
   now?: number;
 }
 
@@ -141,7 +141,7 @@ export function buildPairingRationale({
     .sort((a, b) => b.ts - a.ts);
 
   // Find the first recent session that clears the overlap threshold and
-  // has a taxonomy entry we can read from. Take the first match — callers
+  // has a taxonomy entry we can read from. Take the first match  -  callers
   // treat the rationale as secondary information, so the most recent
   // qualifying cook is the kindest anchor.
   for (const { session } of recent) {
@@ -160,7 +160,7 @@ export function buildPairingRationale({
   }
 
   // No rationale available. If we have a display name we could fall back
-  // to a generic line — but the Phase 2 brief explicitly asks us to stay
+  // to a generic line  -  but the Phase 2 brief explicitly asks us to stay
   // silent below the threshold, so we do.
   void currentDishName;
   return null;

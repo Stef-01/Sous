@@ -14,7 +14,7 @@ export default function CookLoading() {
         </div>
       </header>
 
-      {/* Content skeleton — mission screen shape */}
+      {/* Content skeleton  -  mission screen shape */}
       <main className="mx-auto max-w-md px-4 py-6 space-y-6">
         {/* Hero image */}
         <div className="w-full aspect-[4/3] rounded-2xl shimmer" />

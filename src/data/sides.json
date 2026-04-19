@@ -1621,7 +1621,53 @@
     "description": "Tender asparagus spears roasted with olive oil and sea salt until their tips turn delicately crispy and caramelised.",
     "pairingReason": "elegant green vegetable for fine dining mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Preheat oven to 425°F and line a baking sheet with parchment or foil. Take 1 lb asparagus and snap or trim off the woody bottom inch from each spear — bend a single spear and it will naturally snap where tender meets tough.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Skipping the trim leaves a fibrous, stringy end that no amount of cooking will fix.",
+        "hackChip": "If your asparagus is pencil-thin, just rinse and trim. If it's thick (1/2 inch+), peel the lower 2 inches with a vegetable peeler for tender bites.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Spread the asparagus in a single layer on the baking sheet. Drizzle with 1.5 tablespoons olive oil and toss with your hands so every spear is coated. Sprinkle with 1/2 teaspoon kosher salt and freshly cracked black pepper.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Crowding asparagus on a small pan steams it instead of roasting it. Use a big enough sheet that the spears don't touch.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "Roast at 425°F until the spears are tender and lightly browned with blistered tips: 10-12 minutes for thin (pencil) asparagus, 15-18 minutes for thick spears. Shake the pan halfway through.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 12,
+        "mistakeWarning": "Don't walk away — asparagus goes from snappy to limp in the last 2 minutes. Check it at minute 10.",
+        "hackChip": "For thicker spears, tossing in a tablespoon of grated Parmesan during the last 3 minutes creates a crispy savory crust.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "Remove from the oven and immediately squeeze fresh lemon juice over the spears (about half a lemon). Transfer to a serving plate and finish with flaky sea salt or shaved Parmesan if desired.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "A drizzle of good balsamic glaze takes roasted asparagus from side dish to restaurant-level in 5 seconds.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "mashed-potatoes",
@@ -1631,7 +1677,75 @@
     "description": "Buttery, cloud-like mashed potatoes whipped with cream and a pinch of nutmeg for the ultimate comfort side.",
     "pairingReason": "velvety comfort to catch gravies and jus",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Peel 2 lbs Yukon Gold potatoes (for creamy) or Russets (for fluffy). Cut into uniform 1-1.5 inch chunks so they cook evenly. Place in a large pot and cover with cold water by 1 inch.",
+        "duration": 8,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Always start potatoes in cold water — dropping them into boiling water cooks the outside before the inside, leaving them grainy.",
+        "hackChip": "Cut all chunks the same size — uneven pieces mean some are mush while others are still firm.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "Add 2 tablespoons of kosher salt to the water. Bring to a boil over high heat, then reduce to a simmer. Cook until a paring knife slides through with no resistance, 15-20 minutes depending on size.",
+        "duration": 20,
+        "timerTrigger": true,
+        "timerMinutes": 18,
+        "mistakeWarning": "Under-cooked potatoes will mash into a sticky, lumpy mess. Test with a knife — it should slide through like room-temperature butter.",
+        "hackChip": "Salt the water like pasta — heavily. It's the only chance to season the potato itself.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "While potatoes cook, in a small saucepan warm 1 cup whole milk with 8 tablespoons (1 stick) unsalted butter over low heat until the butter melts. Keep warm — cold dairy makes gluey potatoes.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Adding cold milk and butter is one of the top reasons home mashed potatoes turn gummy and dense.",
+        "hackChip": "For ultra-rich mash, swap half the milk for heavy cream or use cultured butter.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "Drain potatoes thoroughly in a colander. Return them to the empty hot pot off the heat and shake them around for 30 seconds to evaporate excess moisture — they should look slightly powdery.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Skipping the dry-out step traps water in the potato, creating dilute, watery mash.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Press the hot potatoes through a ricer or food mill back into the pot. Or use a hand masher and work just until smooth. Never use a food processor or hand mixer — they release starch and turn the potatoes glue-like.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "A food processor or stand mixer is the fastest way to ruin mashed potatoes — the over-worked starch turns them into wallpaper paste.",
+        "hackChip": "A potato ricer is the single best $15 investment for ultra-fluffy potatoes — it presses without smashing the cells.",
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "finish",
+        "instruction": "Pour in the warm milk-butter mixture in stages, folding gently with a rubber spatula. Add 1 to 1.5 teaspoons of salt and a few grinds of black pepper. Taste and adjust salt — under-seasoning is the most common flaw.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "If they end up a touch thick, splash in more warm milk a tablespoon at a time. Don't try to thin them with cold milk.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "coleslaw",
@@ -1785,7 +1899,53 @@
     "description": "Bright green broccoli florets steamed until just tender-crisp, finished with a squeeze of lemon and a pat of butter.",
     "pairingReason": "simple green for a nutritionally balanced plate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Cut 1 large head of broccoli (about 1 lb) into florets of similar size, roughly 1.5 inches across. Don't toss the stems — peel the woody outer layer, then slice into 1/4-inch coins for the steamer.",
+        "duration": 4,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Wildly different floret sizes mean some are mushy while others are raw. Aim for uniform pieces.",
+        "hackChip": "The peeled stems are the sweetest part of the plant — they cook in the same time as the florets and add great texture.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "Add about 1 inch of water to a pot and bring to a strong simmer. Set a steamer basket inside (the water shouldn't touch the basket). Add the broccoli, cover, and steam for exactly 4-5 minutes.",
+        "duration": 5,
+        "timerTrigger": true,
+        "timerMinutes": 4,
+        "mistakeWarning": "Over-steaming is the death of broccoli. At 6 minutes you start losing the bright green color and crunchy bite.",
+        "hackChip": "No steamer basket? Put 1 inch of water in a wide skillet, add the broccoli, cover, and steam — works just as well.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "At the 4-minute mark, lift the lid and pierce a stem with a fork. It should slide in with a little resistance for tender-crisp. If you want it softer, give it 1 more minute. The broccoli should be vibrant emerald green.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "If the color shifts to dull olive or yellow-green, it's already overcooked. Pull it immediately.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "Transfer to a serving bowl. Drizzle with 1 tablespoon olive oil or a pat of butter, finish with kosher salt, fresh black pepper, and a generous squeeze of lemon. Optional: a pinch of red pepper flakes or grated Parmesan.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "If serving later, dunk the steamed broccoli into a bowl of ice water for 30 seconds — it locks in the color and stops the cooking. Drain well before saucing.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "hummus",
@@ -3045,7 +3205,64 @@
     "description": "Tender spinach leaves wilted and folded into a rich, garlicky cream sauce with a hint of nutmeg.",
     "pairingReason": "rich, creamy greens alongside steak",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Bring a large pot of well-salted water to a boil. Blanch 1.5 lbs fresh baby spinach in batches for 30 seconds, then immediately transfer to an ice bath. Drain and squeeze HARD with your hands until almost no liquid comes out. Roughly chop. (Or use 16 oz frozen spinach, thawed and squeezed dry.)",
+        "duration": 8,
+        "timerTrigger": true,
+        "timerMinutes": 1,
+        "mistakeWarning": "Failing to squeeze the spinach is the #1 reason creamed spinach turns watery and bland. Squeeze until your hands hurt.",
+        "hackChip": "A potato ricer is the fastest way to wring water out of cooked spinach — load it in, press down, and you're done.",
+        "cuisineFact": "American steakhouse creamed spinach descends from French épinards à la crème, which arrived in U.S. fine-dining via Delmonico's in the 19th century."
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "Melt 4 tablespoons unsalted butter in a large skillet over medium heat. Add 1 finely diced small yellow onion and a pinch of salt. Cook, stirring, until soft and translucent, about 4-5 minutes. Add 3 minced garlic cloves and cook 30 seconds until fragrant.",
+        "duration": 6,
+        "timerTrigger": true,
+        "timerMinutes": 5,
+        "mistakeWarning": "Burnt garlic turns bitter — add it AFTER the onion is soft, not at the start.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "Sprinkle 3 tablespoons all-purpose flour over the onions and whisk constantly for 1-2 minutes until the mixture is foamy and smells nutty (but doesn't darken). This cooks out the raw flour taste.",
+        "duration": 2,
+        "timerTrigger": true,
+        "timerMinutes": 2,
+        "mistakeWarning": "Skipping the flour cook-off leaves a chalky, raw-flour aftertaste in the finished dish.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "Slowly stream in 1 cup whole milk and 1/2 cup heavy cream while whisking constantly. Bring to a gentle simmer and cook, stirring often, until the sauce thickens and coats the back of a spoon — about 4-5 minutes.",
+        "duration": 5,
+        "timerTrigger": true,
+        "timerMinutes": 4,
+        "mistakeWarning": "Pouring in cold cream all at once causes lumps. Add it slowly and whisk constantly.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Stir in the squeezed spinach until evenly coated. Add 1/2 cup grated Parmesan, 1/4 teaspoon freshly grated nutmeg, 3/4 teaspoon kosher salt, and a few grinds of black pepper. Cook 2 more minutes to heat through.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't skip the nutmeg — it's the secret ingredient that turns plain creamed spinach into the steakhouse version.",
+        "hackChip": "A few drops of fresh lemon juice at the end brightens the heavy sauce without making it taste lemony.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "baked-potato",
@@ -3055,7 +3272,64 @@
     "description": "A russet potato baked until the skin is crispy and the inside is fluffy, split open and loaded with butter and sour cream.",
     "pairingReason": "loaded baked potato for a hearty companion",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Preheat oven to 425°F. Scrub 4 large Russet potatoes (about 12 oz each) under cold water with a brush. Pat completely dry with a towel — wet skin won't crisp up.",
+        "duration": 4,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't skip drying — moisture is the enemy of crispy skin.",
+        "hackChip": "Russets are the king for baked potatoes because their thick, starchy skin crisps best while the inside fluffs up.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Pierce each potato 6-8 times with a fork to let steam escape. Rub each one all over with about 1 teaspoon olive oil and sprinkle generously with kosher salt — really pack it on.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Wrapping in foil is the BIGGEST mistake — it traps steam, leaves the skin soft and limp instead of crispy. Bake naked.",
+        "hackChip": "The salt isn't just for flavor — it draws moisture out and gives you that signature crusty, salty steakhouse skin.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "cook",
+        "instruction": "Place potatoes directly on the middle oven rack (or on a foil-lined sheet pan to catch drips). Bake at 425°F for 50-65 minutes until a paring knife slides easily into the center and the skin is dry and crisp.",
+        "duration": 60,
+        "timerTrigger": true,
+        "timerMinutes": 50,
+        "mistakeWarning": "Pulling them too early leaves a hard, undercooked center. The skin will look done before the inside is fluffy.",
+        "hackChip": "For peak fluff, an instant-read thermometer in the center should read 205-210°F.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "Pull from the oven and let rest 5 minutes. Slash the top with an X using a knife and squeeze the ends gently to fluff the inside. The interior should burst out steamy and pillowy.",
+        "duration": 5,
+        "timerTrigger": true,
+        "timerMinutes": 5,
+        "mistakeWarning": null,
+        "hackChip": "Don't slice straight down — the X-slash and squeeze technique lifts the flesh up and creates more surface area for butter to soak in.",
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Top with butter, sour cream, chives, sharp cheddar, crumbled bacon, or whatever you like. Always season the inside with a pinch more salt and fresh black pepper before serving — the inside is bland without it.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Forgetting to salt the fluffy inside is why a lot of homemade baked potatoes feel bland under loaded toppings.",
+        "hackChip": null,
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "greek-salad",

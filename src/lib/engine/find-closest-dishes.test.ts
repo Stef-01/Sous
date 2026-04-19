@@ -37,7 +37,7 @@ describe("findClosestDishes", () => {
     }
   });
 
-  it("matches aliases — 'makhani' should find butter chicken", () => {
+  it("matches aliases  -  'makhani' should find butter chicken", () => {
     const matches = findClosestDishes("makhani");
     const names = matches.map((m) => m.dish.name.toLowerCase());
     expect(names.some((n) => n.includes("butter chicken"))).toBe(true);

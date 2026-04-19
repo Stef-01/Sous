@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useReducedMotion,
@@ -21,6 +21,7 @@ import {
   easeOutExpo,
 } from "./startup-landing-variants";
 import type { CatalogStats } from "./diet-journey-comparison";
+import { LandingHeroChart } from "./landing-hero-chart";
 
 // Below-the-fold modules are loaded lazily on the client to improve LCP on the
 // marketing page. Each lands with a subtle opacity-only fade once intersected,
@@ -31,13 +32,6 @@ const AppPreviewSection = dynamic(
       default: mod.AppPreviewSection,
     })),
   { ssr: false, loading: () => <div className="min-h-[40vh]" /> },
-);
-const ScreenshotCarousel = dynamic(
-  () =>
-    import("./screenshot-carousel").then((mod) => ({
-      default: mod.ScreenshotCarousel,
-    })),
-  { ssr: false, loading: () => <div className="min-h-[50vh]" /> },
 );
 const TrustStrip = dynamic(
   () => import("./trust-strip").then((mod) => ({ default: mod.TrustStrip })),
@@ -52,12 +46,12 @@ const DietJourneyComparison = dynamic(
 );
 
 /** ----------------------------------------------------------------------
- * Sous — editorial landing.
+ * Sous  -  editorial landing.
  *
  * Principles:
  *  - Typography does the work. No bordered cards, no blocks, no slabs.
- *  - Every section earns its space with a novel visual moment — a tally,
- *    a meter, a week strip, a trajectory — rendered as type, not chart.
+ *  - Every section earns its space with a novel visual moment  -  a tally,
+ *    a meter, a week strip, a trajectory  -  rendered as type, not chart.
  *  - Strategic claims (moat-shaped, network-effect-shaped) are never
  *    stated. They hide under hover on specific words, phrased as quiet
  *    sensory observations. Readers who look closely are rewarded; the
@@ -131,53 +125,7 @@ function Rule() {
 }
 
 /* ======================================================================
- * Novel moment #1 — Craving ticker
- * A rotating italic phrase under the hero. Same shape, different craving.
- * Shows range without a feature list.
- * ==================================================================== */
-
-const CRAVINGS = [
-  "pad thai that feels like dinner",
-  "something light — we\u2019ve been heavy all week",
-  "soup weather, but more",
-  "the fridge, before it becomes an archaeological dig",
-  "a photo of the dish we had in Tokyo",
-];
-
-function CravingTicker() {
-  const reduceMotion = useReducedMotion();
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (reduceMotion) return;
-    const id = setInterval(() => setI((n) => (n + 1) % CRAVINGS.length), 4200);
-    return () => clearInterval(id);
-  }, [reduceMotion]);
-  return (
-    <span
-      aria-live="polite"
-      className="relative inline-block align-baseline text-[#2d5a3d]"
-    >
-      <span className="invisible whitespace-nowrap italic">
-        {CRAVINGS.reduce((a, b) => (a.length >= b.length ? a : b))}
-      </span>
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -6 }}
-          transition={{ duration: 0.55, ease: easeOutExpo }}
-          className="absolute inset-0 whitespace-nowrap italic"
-        >
-          {CRAVINGS[i]}
-        </motion.span>
-      </AnimatePresence>
-    </span>
-  );
-}
-
-/* ======================================================================
- * Novel moment #2 — Saved / Cooked tally
+ * Novel moment #1  -  Saved / Cooked tally
  * Typographic dot-tally. The gap is the insight.
  * ==================================================================== */
 
@@ -263,7 +211,7 @@ function Tally() {
 }
 
 /* ======================================================================
- * Novel moment #3 — Six-axis meter
+ * Novel moment #3  -  Six-axis meter
  * The pairing logic, as a set of thin animated bars.
  * ==================================================================== */
 
@@ -322,89 +270,7 @@ function AxisMeter() {
 }
 
 /* ======================================================================
- * Novel moment #4 — A week, quietly
- * Seven glyphs for seven days. The product proving it survives.
- * ==================================================================== */
-
-const WEEK: {
-  day: string;
-  kind: "cook" | "replan" | "out" | "host";
-  label: string;
-}[] = [
-  { day: "Mon", kind: "cook", label: "lemongrass chicken" },
-  { day: "Tue", kind: "cook", label: "leftovers, reshaped" },
-  { day: "Wed", kind: "replan", label: "skipped → rebuilt around rice" },
-  { day: "Thu", kind: "cook", label: "miso salmon, fast" },
-  { day: "Fri", kind: "out", label: "dinner out" },
-  { day: "Sat", kind: "host", label: "friends over" },
-  { day: "Sun", kind: "cook", label: "one-pot braise" },
-];
-
-function WeekGlyph({ kind }: { kind: (typeof WEEK)[number]["kind"] }) {
-  const base = "block h-3 w-3";
-  if (kind === "cook")
-    return (
-      <span aria-hidden className={cn(base, "rounded-full bg-[#2d5a3d]")} />
-    );
-  if (kind === "replan")
-    return (
-      <span
-        aria-hidden
-        className={cn(
-          base,
-          "rounded-full border border-dashed border-[#2d5a3d]",
-        )}
-      />
-    );
-  if (kind === "out")
-    return (
-      <span
-        aria-hidden
-        className={cn(
-          base,
-          "rounded-full border border-[#c9ccd1] bg-transparent",
-        )}
-      />
-    );
-  return (
-    <span
-      aria-hidden
-      className={cn(base, "rotate-45 bg-[#0d0d0d]")}
-      style={{ width: 10, height: 10 }}
-    />
-  );
-}
-
-function WeeklyStrip() {
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={viewportOnce}
-      variants={containerStagger}
-      className="grid grid-cols-7 gap-x-2 gap-y-3"
-    >
-      {WEEK.map((d) => (
-        <motion.div
-          key={d.day}
-          variants={fadeUpTight}
-          className="flex flex-col items-start gap-2"
-        >
-          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-[#9aa0a6]">
-            {d.day}
-          </span>
-          <WeekGlyph kind={d.kind} />
-          <span className="text-[11px] leading-[1.5] text-[#4b5563]">
-            {d.label}
-          </span>
-        </motion.div>
-      ))}
-    </motion.div>
-  );
-}
-
-/* ======================================================================
- * Novel moment #5 — Trajectory
+ * Novel moment #4  -  Trajectory
  * Three dots on a hairline, showing the arc from weeknight to hosting.
  * ==================================================================== */
 
@@ -526,7 +392,7 @@ export function StartupLanding({
       />
 
       {/* ============================================================
-          HEADER — serif wordmark, minimal nav, single CTA.
+          HEADER  -  serif wordmark, minimal nav, single CTA.
          ============================================================ */}
       <motion.header
         className={cn(
@@ -540,7 +406,7 @@ export function StartupLanding({
           <Link
             href="/"
             className="font-serif text-[22px] leading-none tracking-tight text-[#0d0d0d]"
-            aria-label="Sous — home"
+            aria-label="Sous home"
           >
             Sous
           </Link>
@@ -549,19 +415,13 @@ export function StartupLanding({
             className="hidden items-center gap-8 text-[13px] text-[#6b6b6b] md:flex"
           >
             <a href="#truth" className="transition-colors hover:text-[#0d0d0d]">
-              Realistic change
+              Approach
             </a>
             <a href="#idea" className="transition-colors hover:text-[#0d0d0d]">
               The gap
             </a>
-            <a
-              href="#pairing"
-              className="transition-colors hover:text-[#0d0d0d]"
-            >
-              How it decides
-            </a>
             <a href="#arc" className="transition-colors hover:text-[#0d0d0d]">
-              The arc
+              Practice
             </a>
           </nav>
           <Link
@@ -575,111 +435,55 @@ export function StartupLanding({
       </motion.header>
 
       <main id="main">
-        {/* ==========================================================
-            HERO — large serif, asymmetric lede, craving ticker.
-            No watermark numeral, no card, no slab.
-           ========================================================= */}
+        {/* Hero: headline + illustrative chart (first screenful) */}
         <motion.section
           ref={heroRef}
           style={{ y: heroLift, opacity: heroFade }}
-          className="relative px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28"
+          className="relative px-6 pb-16 pt-16 md:px-10 md:pb-24 md:pt-20"
         >
-          <div className="mx-auto max-w-[1160px]">
-            {/* Hero top: headline uses full column width on desktop — no 18ch rail */}
-            <div className="grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-10 xl:gap-14">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={containerStagger}
-                className="lg:col-span-7"
-              >
-                <Eyebrow>An app for cooking at home</Eyebrow>
-
-                <motion.h1
-                  variants={fadeUpItem}
-                  className="mt-6 text-balance font-serif text-[13.5vw] leading-[0.96] tracking-[-0.025em] text-[#0d0d0d] sm:text-[76px] md:text-[88px] lg:text-[96px]"
-                >
-                  <span className="md:hidden">
-                    You don&rsquo;t
-                    <br />
-                    need more
-                    <br />
-                    <span className="italic text-[#2d5a3d]">recipes</span>.
-                  </span>
-                  <span className="hidden md:inline">
-                    You don&rsquo;t need more{" "}
-                    <span className="italic text-[#2d5a3d]">recipes</span>.
-                  </span>
-                </motion.h1>
-              </motion.div>
-
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={containerStagger}
-                className="border-l-2 border-[#2d5a3d]/25 pl-6 lg:col-span-5"
-              >
-                <motion.p
-                  variants={fadeUpItem}
-                  className="font-serif text-[22px] leading-[1.25] tracking-tight text-[#1a1a1a] md:text-[26px]"
-                >
-                  Make your diet work for you — not the perfect diet on paper,{" "}
-                  <span className="text-[#2d5a3d]">your</span> perfect diet.
-                </motion.p>
-                <motion.p
-                  variants={fadeUpItem}
-                  className="mt-4 text-[14px] leading-[1.7] text-[#4b5563] md:text-[15px]"
-                >
-                  Start with sides on the meals you already make. Layer in mains
-                  from our library. Big-picture changes you can repeat — without
-                  obsessing over every calorie.
-                </motion.p>
-              </motion.div>
-            </div>
-
-            {/* Asymmetric lede */}
+          <div className="mx-auto max-w-[920px]">
             <motion.div
               initial="hidden"
               animate="visible"
               variants={containerStagger}
-              className="mt-14 grid gap-10 md:mt-20 md:grid-cols-12"
+              className="text-center"
             >
+              <Eyebrow>An app for cooking at home</Eyebrow>
+
+              <motion.h1
+                variants={fadeUpItem}
+                className="mt-5 text-balance font-serif text-[clamp(2.4rem,9vw,4.25rem)] leading-[1.02] tracking-[-0.03em] text-[#0d0d0d]"
+              >
+                You don&rsquo;t need more{" "}
+                <span className="italic text-[#2d5a3d]">recipes</span>.
+              </motion.h1>
+
               <motion.p
                 variants={fadeUpItem}
-                className="font-serif text-[28px] leading-[1.12] tracking-tight text-[#0d0d0d] md:col-span-7 md:col-start-2 md:text-[38px]"
+                className="mx-auto mt-6 max-w-[34ch] font-serif text-[1.35rem] leading-snug tracking-tight text-[#1a1a1a] md:text-[1.6rem]"
               >
-                Type anything —{" "}
-                <span className="relative inline-block">
-                  <CravingTicker />
-                </span>{" "}
-                — and get a dinner that fits tonight.
-              </motion.p>
-              <motion.p
-                variants={fadeUpItem}
-                className="max-w-[38ch] text-[15px] leading-[1.72] text-[#4b5563] md:col-span-4 md:col-start-9 md:mt-2 md:text-[16px]"
-              >
-                One main, three{" "}
-                <Aside label="sides that belong">
-                  Ranked on six axes — cuisine, contrast, nutrition, prep,
-                  temperature, and what you&rsquo;ve cooked before. Same inputs,
-                  same picks.
-                </Aside>
-                , and a short cook flow that stays out of your mood. No feed, no
-                endless scroll, no{" "}
-                <Aside label="quiet ledger">
-                  Sous pays more attention to what you&rsquo;ve actually cooked
-                  than what you&rsquo;ve saved. The two diverge fast, and the
-                  interesting one is smaller.
-                </Aside>{" "}
-                of 400 untouched saves.
+                Make your diet work for you, not the perfect diet on paper.{" "}
+                <span className="text-[#2d5a3d]">Your</span> perfect diet.
               </motion.p>
             </motion.div>
+
+            <LandingHeroChart className="mx-auto mt-10 max-w-[640px] md:mt-12" />
+
+            <motion.p
+              initial="hidden"
+              animate="visible"
+              variants={fadeUpItem}
+              className="mx-auto mt-8 max-w-[40ch] text-center text-[15px] leading-relaxed text-[#6b7280]"
+            >
+              One main, three pairings, one short cook flow. No feed, no endless
+              scroll.
+            </motion.p>
 
             <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.6, ease: easeOutExpo }}
-              className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-4 md:mt-20"
+              transition={{ delay: 0.2, duration: 0.55, ease: easeOutExpo }}
+              className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
             >
               <Link
                 href="/today"
@@ -696,7 +500,7 @@ export function StartupLanding({
                 href="#idea"
                 className="group inline-flex items-baseline gap-2 text-[14px] font-medium text-[#1a1a1a] transition-colors hover:text-[#2d5a3d]"
               >
-                How it works
+                Why Sous
                 <span
                   aria-hidden
                   className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition-all duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
@@ -713,12 +517,12 @@ export function StartupLanding({
         <Rule />
 
         {/* ==========================================================
-            IDEA — "Saved six, cooked two" — the gap is the product.
+            IDEA  -  "Saved six, cooked two"  -  the gap is the product.
             Novel moment: typographic tally.
            ========================================================= */}
         <section
           id="idea"
-          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
+          className="scroll-mt-[80px] px-6 py-20 md:px-10 md:py-24"
         >
           <div className="mx-auto max-w-[1160px]">
             <motion.div
@@ -758,9 +562,8 @@ export function StartupLanding({
                   variants={fadeUpItem}
                   className="mt-5 max-w-[56ch] text-[17px] leading-[1.75] text-[#374151] md:text-[18px]"
                 >
-                  Sous starts after the idea — a craving, a photo, a half-empty
-                  pantry — and ends at the plate. One short sequence, every
-                  time.
+                  Sous starts after the idea: a craving, a photo, a half-empty
+                  pantry, and ends at the plate. One short sequence, every time.
                 </motion.p>
               </div>
             </motion.div>
@@ -773,17 +576,13 @@ export function StartupLanding({
 
         <Rule />
 
-        <ScreenshotCarousel />
-
-        <Rule />
-
         {/* ==========================================================
-            PAIRING — "How it decides."
+            PAIRING  -  "How it decides."
             Novel moment: six-axis meter rendered as editorial type.
            ========================================================= */}
         <section
           id="pairing"
-          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
+          className="scroll-mt-[80px] px-6 py-20 md:px-10 md:py-24"
         >
           <div className="mx-auto max-w-[1160px]">
             <motion.div
@@ -808,8 +607,8 @@ export function StartupLanding({
                   className="mt-8 max-w-[36ch] text-[16px] leading-[1.75] text-[#374151] md:text-[17px]"
                 >
                   No feed-guessing. Every candidate is scored on six dimensions,
-                  and the top three ship. Deterministic — same inputs, same
-                  picks — and the inputs include everything you&rsquo;ve{" "}
+                  and the top three ship. Deterministic: same inputs, same
+                  picks. The inputs include everything you&rsquo;ve{" "}
                   <Aside label="actually cooked">
                     What you&rsquo;ve cooked is a better signal than what
                     you&rsquo;ve saved. The more you cook, the less guessing the
@@ -851,97 +650,12 @@ export function StartupLanding({
         <Rule />
 
         {/* ==========================================================
-            WEEK — "A plan that survives Wednesday."
-            Novel moment: seven-glyph strip for a real week.
-           ========================================================= */}
-        <section className="px-6 py-28 md:px-10 md:py-36">
-          <div className="mx-auto max-w-[1160px]">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={viewportOnce}
-              variants={containerStagger}
-              className="grid gap-12 md:grid-cols-12"
-            >
-              <div className="md:col-span-7">
-                <Eyebrow>A week that survives</Eyebrow>
-                <motion.h2
-                  variants={fadeUpItem}
-                  className="mt-6 font-serif text-[40px] leading-[1.04] tracking-tight text-[#0d0d0d] md:text-[60px]"
-                >
-                  Sunday plans die
-                  <br />
-                  <span className="italic text-[#2d5a3d]">on Wednesday</span>.
-                  Not this one.
-                </motion.h2>
-
-                <motion.div variants={fadeUpItem} className="mt-10">
-                  <WeeklyStrip />
-                </motion.div>
-
-                <motion.p
-                  variants={fadeUpItem}
-                  className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px] text-[#6b6b6b]"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-[#2d5a3d]" />{" "}
-                    cooked
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full border border-dashed border-[#2d5a3d]" />{" "}
-                    replanned
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full border border-[#c9ccd1]" />{" "}
-                    out
-                  </span>
-                  <span className="inline-flex items-center gap-2">
-                    <span
-                      className="rotate-45 bg-[#0d0d0d]"
-                      style={{ width: 7, height: 7 }}
-                    />{" "}
-                    hosted
-                  </span>
-                </motion.p>
-              </div>
-
-              <div className="md:col-span-5 md:mt-16">
-                <motion.p
-                  variants={fadeUpItem}
-                  className="text-[16px] leading-[1.75] text-[#374151] md:text-[17px]"
-                >
-                  Most plans assume the week you imagined. Sous assumes the week
-                  you&rsquo;re having. If Tuesday&rsquo;s rice is still in the
-                  fridge, Wednesday&rsquo;s pairings already{" "}
-                  <Aside label="know">
-                    What the pantry still holds. What you&rsquo;ve cooked this
-                    week. How tired you said you were. All of it becomes input
-                    quietly — nothing to configure.
-                  </Aside>
-                  . If you skipped Monday entirely, the plan rebuilds around
-                  what&rsquo;s left.
-                </motion.p>
-                <motion.p
-                  variants={fadeUpItem}
-                  className="mt-5 text-[14px] leading-[1.7] text-[#6b6b6b]"
-                >
-                  No guilt screens. No red badges. Missing a night is an input,
-                  not a failure.
-                </motion.p>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        <Rule />
-
-        {/* ==========================================================
-            ARC — "Cooking that looks like practice."
+            ARC  -  "Cooking that looks like practice."
             Novel moment: three-dot trajectory arc.
            ========================================================= */}
         <section
           id="arc"
-          className="scroll-mt-[80px] px-6 py-28 md:px-10 md:py-36"
+          className="scroll-mt-[80px] px-6 py-20 md:px-10 md:py-24"
         >
           <div className="mx-auto max-w-[1160px]">
             <motion.div
@@ -974,12 +688,12 @@ export function StartupLanding({
                   Every finished plate joins a{" "}
                   <Aside label="scrapbook">
                     Private by default. Shared between cooking friends, it
-                    slowly becomes the only food feed you want to open — because
+                    slowly becomes the only food feed you want to open, because
                     it is only people you actually trust with dinner.
                   </Aside>{" "}
                   with plating notes and the techniques you&rsquo;ve used. Six
-                  months in, you can see the arc — not as a number, as the
-                  plates themselves.
+                  months in, you can see the arc: not as a number, as the plates
+                  themselves.
                 </motion.p>
 
                 <TrajectoryArc />
@@ -991,12 +705,12 @@ export function StartupLanding({
         <Rule />
 
         {/* ==========================================================
-            TRUST — editorial dotted strip + Stanford line.
+            TRUST  -  editorial dotted strip + Stanford line.
            ========================================================= */}
         <TrustStrip />
 
         {/* ==========================================================
-            CLOSER — "Try it tonight." Confident, minimal.
+            CLOSER  -  "Try it tonight." Confident, minimal.
            ========================================================= */}
         <section className="px-6 pb-28 pt-8 md:px-10 md:pb-40">
           <div className="mx-auto max-w-[1160px]">
@@ -1021,7 +735,7 @@ export function StartupLanding({
                 className="mt-10 grid gap-6 md:grid-cols-12 md:items-end"
               >
                 <p className="text-[16px] leading-[1.72] text-[#4b5563] md:col-span-6 md:text-[17px]">
-                  The demo is the product — a craving, three pairings, a short
+                  The demo is the product: a craving, three pairings, a short
                   cook flow. Five minutes, no signup.
                 </p>
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:col-span-6 md:justify-end">
@@ -1054,7 +768,7 @@ export function StartupLanding({
       </main>
 
       {/* ============================================================
-          FOOTER — minimal, colophon-style.
+          FOOTER  -  minimal, colophon-style.
          ============================================================ */}
       <footer className="border-t border-[#eceef2] px-6 py-10 md:px-10">
         <div className="mx-auto flex max-w-[1160px] flex-col gap-4 text-[13px] text-[#6b6b6b] md:flex-row md:items-center md:justify-between">

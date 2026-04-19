@@ -58,7 +58,7 @@ function selectRankedSides(
   while (results.length < count) {
     // Wrap around if we've gone past the end
     if (pointer >= ranked.length) {
-      if (looped) break; // Already wrapped once — pool exhausted
+      if (looped) break; // Already wrapped once  -  pool exhausted
       pointer = 0;
       looped = true;
     }
@@ -147,7 +147,7 @@ export function swapOneSide(
     );
 
     if (next.length === 0) {
-      // All ranked sides exhausted — try excluding only current (allow re-use of previously used)
+      // All ranked sides exhausted  -  try excluding only current (allow re-use of previously used)
       const { sides: fallback, nextOffset: fbOffset } = selectRankedSides(
         ranked,
         1,

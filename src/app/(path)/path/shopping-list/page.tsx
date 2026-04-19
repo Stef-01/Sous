@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
 /**
- * Shopping list — the inverse of the pantry. Things you wanted to cook with
+ * Shopping list  -  the inverse of the pantry. Things you wanted to cook with
  * but didn't have. Tap to toggle "bought"; a bought item can be sent
  * straight into your pantry with one tap.
  */
@@ -69,7 +69,7 @@ export default function ShoppingListPage() {
       <main className="mx-auto max-w-md px-4 pt-2 pb-28">
         <p className="mb-4 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
           Missing ingredients from your recent cooks show up here. Tap to mark
-          bought — then one tap sends them into your pantry.
+          bought - then one tap sends them into your pantry.
         </p>
 
         {!mounted ? (

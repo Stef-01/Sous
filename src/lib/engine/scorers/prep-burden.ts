@@ -4,7 +4,7 @@ import type { Scorer, MainDishIntent, SideDishCandidate } from "../types";
  * Prep Burden Scorer
  *
  * Scores inversely with total prep + cook time of the side.
- * Accounts for user's effort tolerance — a "minimal" effort user
+ * Accounts for user's effort tolerance  -  a "minimal" effort user
  * wants quick sides, while "willing" users are okay with longer prep.
  */
 

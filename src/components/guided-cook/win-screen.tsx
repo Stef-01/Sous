@@ -36,7 +36,7 @@ export interface SkillProgressEntry {
 
 interface WinScreenProps {
   dishName: string;
-  /** The slug of the primary dish — needed to build a shareable gift link. */
+  /** The slug of the primary dish  -  needed to build a shareable gift link. */
   dishSlug?: string;
   sideDishes?: string[];
   cuisineFamily?: string;
@@ -57,7 +57,7 @@ interface WinScreenProps {
 }
 
 /** Where the sender's first name lives between sessions. Collected lazily
- *  the first time the user taps "Send to a friend" — intentionally not an
+ *  the first time the user taps "Send to a friend"  -  intentionally not an
  *  onboarding question, and intentionally not tied to auth. */
 const GIFT_SENDER_NAME_KEY = "sous-gift-sender-name";
 
@@ -75,7 +75,7 @@ function saveGiftSenderName(name: string) {
   try {
     localStorage.setItem(GIFT_SENDER_NAME_KEY, name);
   } catch {
-    // localStorage unavailable — the feature still works, it just won't
+    // localStorage unavailable  -  the feature still works, it just won't
     // remember the name between cooks.
   }
 }
@@ -189,7 +189,7 @@ function detectMilestone(ctx: {
         />
       ),
       headline: "Your first cook!",
-      message: `${ctx.dishName} — and your cooking journey begins.`,
+      message: `${ctx.dishName}  -  and your cooking journey begins.`,
     };
   }
   if (ctx.streak === 7) {
@@ -202,7 +202,7 @@ function detectMilestone(ctx: {
         />
       ),
       headline: "7-day streak!",
-      message: `${ctx.dishName} done. A full week of cooking — you're unstoppable.`,
+      message: `${ctx.dishName} done. A full week of cooking  -  you're unstoppable.`,
     };
   }
   if (ctx.streak === 14) {
@@ -228,7 +228,7 @@ function detectMilestone(ctx: {
         />
       ),
       headline: "30-day streak!",
-      message: `${ctx.dishName} done. A full month of cooking — you're a chef now.`,
+      message: `${ctx.dishName} done. A full month of cooking  -  you're a chef now.`,
     };
   }
   if (ctx.streak > 0 && ctx.streak % 10 === 0) {
@@ -258,7 +258,7 @@ function detectMilestone(ctx: {
 }
 
 /**
- * Win Screen — celebration after completing a cook.
+ * Win Screen  -  celebration after completing a cook.
  *
  * Layout designed to show all key elements above fold at 375×667:
  * confetti + "You cooked X!" + streak + stars + save CTA + home button.
@@ -346,11 +346,11 @@ export function WinScreen({
 
     // Prompt for a first name the first time. Keeping this as a simple
     // browser prompt (rather than building a modal) keeps the surface tiny
-    // and aligns with "no settings page" — it only appears once.
+    // and aligns with "no settings page"  -  it only appears once.
     let senderName = loadGiftSenderName();
     if (!senderName) {
       const entered = window.prompt(
-        "Your first name — your friend will see this on the gift page:",
+        "Your first name  -  your friend will see this on the gift page:",
         "",
       );
       if (!entered) return;
@@ -369,7 +369,7 @@ export function WinScreen({
     // desktops); fall back to clipboard so the user always gets a link.
     const shareData = {
       title: `${senderName} cooked ${dishName}`,
-      text: `${senderName} made ${dishName} on Sous. Try it yourself —`,
+      text: `${senderName} made ${dishName} on Sous. Try it yourself  - `,
       url: giftUrl,
     };
     try {
@@ -390,7 +390,7 @@ export function WinScreen({
         recipient: senderName,
       });
     } catch {
-      // Share dialog dismissed — don't flip the button to "sent" state.
+      // Share dialog dismissed  -  don't flip the button to "sent" state.
     }
   };
 
@@ -403,13 +403,13 @@ export function WinScreen({
       dishSlug,
     )}?${params.toString()}`;
     const name = inviteFriendName.trim();
-    const greeting = name ? `Hey ${name} — ` : "";
+    const greeting = name ? `Hey ${name}  -  ` : "";
     const body = `${greeting}I made ${dishName} on Sous tonight. Want to cook it with me next week? ${giftUrl}`;
     const href = `sms:?&body=${encodeURIComponent(body)}`;
     try {
       window.location.href = href;
     } catch {
-      // Device refused sms: — silently mark dismissed so we don't retry.
+      // Device refused sms:  -  silently mark dismissed so we don't retry.
     }
     invitePrompts.dismiss(dishSlug);
   };
@@ -422,7 +422,7 @@ export function WinScreen({
 
   return (
     <div className="relative">
-      {/* Confetti burst — fixed overlay, auto-hides */}
+      {/* Confetti burst  -  fixed overlay, auto-hides */}
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
 
       <motion.div
@@ -529,7 +529,7 @@ export function WinScreen({
               Path tab unlocked!
             </p>
             <p className="text-xs text-[var(--nourish-subtext)] mt-0.5">
-              3 cooks complete — your journey begins.
+              3 cooks complete - your journey begins.
             </p>
           </motion.div>
         )}
@@ -592,13 +592,13 @@ export function WinScreen({
                 className="text-xs text-[var(--nourish-subtext)] italic"
               >
                 {rating >= 4
-                  ? "Nice work — tap reflect to see what you nailed."
+                  ? "Nice work  -  tap reflect to see what you nailed."
                   : "Every cook teaches you something."}
               </motion.p>
             )}
           </AnimatePresence>
 
-          {/* Low-star capture — 3 chips, one tap, silent above 2 ★ */}
+          {/* Low-star capture  -  3 chips, one tap, silent above 2 ★ */}
           <AnimatePresence>
             {rating > 0 && rating <= 2 && (
               <motion.div
@@ -638,7 +638,7 @@ export function WinScreen({
                 </div>
                 {feedback && (
                   <p className="mt-1.5 text-[10px] text-[var(--nourish-subtext)]/70 italic">
-                    Thanks — Sous will adjust next time.
+                    Thanks - Sous will adjust next time.
                   </p>
                 )}
               </motion.div>
@@ -646,7 +646,7 @@ export function WinScreen({
           </AnimatePresence>
         </motion.div>
 
-        {/* ── CTAs — primary action first ── */}
+        {/* ── CTAs  -  primary action first ── */}
         <motion.div
           initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
@@ -658,7 +658,7 @@ export function WinScreen({
           }}
           className="w-full space-y-2"
         >
-          {/* Back to Today — dominant green, always first */}
+          {/* Back to Today  -  dominant green, always first */}
           <motion.button
             onClick={onBackToday}
             whileTap={{ scale: 0.96 }}
@@ -670,7 +670,7 @@ export function WinScreen({
             Back to Today
           </motion.button>
 
-          {/* Save to scrapbook — visually subordinate text link */}
+          {/* Save to scrapbook  -  visually subordinate text link */}
           <motion.button
             onClick={onSave}
             disabled={saved}
@@ -693,7 +693,7 @@ export function WinScreen({
             {saved ? "Saved ✓" : "Save to scrapbook"}
           </motion.button>
 
-          {/* Send to a friend — secondary text link; only rendered once we
+          {/* Send to a friend  -  secondary text link; only rendered once we
               have a slug to share. Deliberately quiet so it doesn't compete
               with Back to Today. */}
           {dishSlug && (
@@ -718,7 +718,7 @@ export function WinScreen({
           )}
         </motion.div>
 
-        {/* ── Cook-with-a-friend invite — one-time per dish, only at ≥4★ ── */}
+        {/* ── Cook-with-a-friend invite  -  one-time per dish, only at ≥4★ ── */}
         <AnimatePresence>
           {showInvitePrompt && (
             <motion.div

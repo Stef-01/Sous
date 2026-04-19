@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 /**
- * Pantry — a lightweight, local-first set of ingredient names the user
+ * Pantry  -  a lightweight, local-first set of ingredient names the user
  * currently has at home. Every cook checks against this set so routine
  * ingredients are pre-checked on the Grab screen.
  *

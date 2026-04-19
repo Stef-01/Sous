@@ -1,5 +1,5 @@
 /**
- * ingredient-reuse — derive a single "reuses X from Y" hint when a suggested
+ * ingredient-reuse  -  derive a single "reuses X from Y" hint when a suggested
  * dish shares a named ingredient with a recent cook.
  *
  * Sprint D, Phase 2: Pair rationale says "because you cooked X"; this goes
@@ -7,7 +7,7 @@
  * the fridge that can be reused today.
  *
  * Deterministic: first match by session recency, then by ingredient
- * alphabetical order. Never fires when no overlap exists — zero false
+ * alphabetical order. Never fires when no overlap exists  -  zero false
  * positives.
  */
 
@@ -18,7 +18,7 @@
 export const REUSE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * Ingredients that almost everyone has in staples — suggesting reuse here
+ * Ingredients that almost everyone has in staples  -  suggesting reuse here
  * is useless noise. Keep deliberately short.
  */
 const STAPLE_BLOCKLIST = new Set([

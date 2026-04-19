@@ -1,5 +1,5 @@
 /**
- * Seed runner — migrates existing sides.json data into the V1 database.
+ * Seed runner  -  migrates existing sides.json data into the V1 database.
  *
  * Usage: pnpm db:seed
  *

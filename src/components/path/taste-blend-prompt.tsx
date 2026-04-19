@@ -34,7 +34,7 @@ export function TasteBlendPrompt() {
               </p>
               <p className="text-[11px] text-[var(--nourish-subtext)]">
                 We&apos;ll blend their taste into your pairings. One knob, no
-                extra account — change it anytime from the Today tab.
+                extra account - change it anytime from the Today tab.
               </p>
               <div className="flex gap-2 pt-1">
                 <button

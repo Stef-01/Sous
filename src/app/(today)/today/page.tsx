@@ -168,7 +168,7 @@ function TodayPageContent() {
     }
   }, [cravingParam, router]);
 
-  // tRPC query — rerollSeed busts the cache without polluting the query text
+  // tRPC query  -  rerollSeed busts the cache without polluting the query text
   const pairingQuery = trpc.pairing.suggest.useQuery(
     {
       mainDish: mainDishQuery,
@@ -368,7 +368,7 @@ function TodayPageContent() {
         </div>
       )}
 
-      {/* Header — Sous + streak chip + bird */}
+      {/* Header  -  Sous + streak chip + bird */}
       <header className="app-header px-4 py-2.5">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <div className="flex flex-col">
@@ -390,29 +390,29 @@ function TodayPageContent() {
               ) : null;
             })()}
           </div>
-          {/* Owl mascot — profile position */}
+          {/* Owl mascot  -  profile position */}
           <OwlAvatar onClick={handleOpenSearch} />
         </div>
       </header>
 
       {/* Main content */}
       <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
-        {/* Primary craving trigger — search bar */}
+        {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
 
-        {/* Cook rhythm — a single italic line about when the user usually
+        {/* Cook rhythm  -  a single italic line about when the user usually
             cooks. Silent below three completed cooks. */}
         <CookRhythmLine sessions={completedSessions} />
 
-        {/* Tonight's commitment — persistent banner only (the commit flow now
+        {/* Tonight's commitment  -  persistent banner only (the commit flow now
             lives in the More options drawer; surface stays calm). */}
         <TonightChip mode="banner-only" />
 
-        {/* Repeat-cook shortcut — hidden unless the last cook was ≥4 stars
+        {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
 
-        {/* Today's Quest — swipeable card stack (the hero of this surface) */}
+        {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard
           key={questKey}
           userPreferences={effectivePreferences}
@@ -436,7 +436,7 @@ function TodayPageContent() {
           </motion.button>
         </div>
 
-        {/* Friends social feed — below fold, horizontal-scroll social proof */}
+        {/* Friends social feed  -  below fold, horizontal-scroll social proof */}
         <FriendsStrip
           sessions={completedSessions}
           onDishSelect={(dishName) => {
@@ -454,7 +454,7 @@ function TodayPageContent() {
         onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
       />
 
-      {/* Search popout — slides up from bottom */}
+      {/* Search popout  -  slides up from bottom */}
       <SearchPopout isOpen={showSearch} onClose={handleCloseSearch}>
         <AnimatePresence mode="wait">
           {/* Camera overlay */}
@@ -542,7 +542,7 @@ function TodayPageContent() {
               </div>
             )}
 
-            {/* Results — no sides returned */}
+            {/* Results  -  no sides returned */}
             {view.type === "results" &&
               pairingQuery.data?.success &&
               pairingQuery.data.sides.length === 0 && (
@@ -555,7 +555,7 @@ function TodayPageContent() {
                     Hmm, we couldn&apos;t find a match
                   </p>
                   <p className="text-xs text-[var(--nourish-subtext)]">
-                    Try a different craving — like &ldquo;pasta&rdquo;,
+                    Try a different craving - like &ldquo;pasta&rdquo;,
                     &ldquo;tacos&rdquo;, or &ldquo;chicken stir-fry&rdquo;.
                   </p>
                 </div>
@@ -659,7 +659,7 @@ function TodayPageContent() {
         )}
       </SearchPopout>
 
-      {/* Coach onboarding quiz — full-screen overlay */}
+      {/* Coach onboarding quiz  -  full-screen overlay */}
       <AnimatePresence>
         {showCoachQuiz && (
           <CoachQuiz

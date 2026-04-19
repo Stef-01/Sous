@@ -22,7 +22,7 @@ function daysAgoLabel(completedAt: string, now: number = Date.now()): string {
 }
 
 /**
- * A single stat line on the Mission screen — "Last cooked 12 days ago —
+ * A single stat line on the Mission screen  -  "Last cooked 12 days ago  -
  * you rated it 5 stars." Silent if the user has never cooked this dish
  * before. No scolding, no auto-rebook prompt.
  */

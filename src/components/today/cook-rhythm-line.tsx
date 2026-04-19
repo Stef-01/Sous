@@ -11,7 +11,7 @@ interface CookRhythmLineProps {
 /**
  * A single italic caption that describes _when_ the user usually cooks.
  * Silent below `RHYTHM_MIN_COOKS`. Intentionally one-line, no chrome, no
- * button — a note from the app, not a control surface.
+ * button  -  a note from the app, not a control surface.
  */
 export function CookRhythmLine({ sessions }: CookRhythmLineProps) {
   const rhythm = useMemo(() => deriveCookRhythm(sessions), [sessions]);

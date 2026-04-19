@@ -6,7 +6,7 @@ import {
   coachQuizQuestions,
 } from "./coach-quiz";
 
-describe("Coach Quiz — Preference Computation", () => {
+describe("Coach Quiz  -  Preference Computation", () => {
   it("returns moderate effort tolerance with all nulls (skipped)", () => {
     const result = computePreferencesFromAnswers([
       null,
@@ -66,7 +66,7 @@ describe("Coach Quiz — Preference Computation", () => {
   });
 });
 
-describe("Coach Quiz — Edge Cases", () => {
+describe("Coach Quiz  -  Edge Cases", () => {
   it("handles empty answers array", () => {
     const result = computePreferencesFromAnswers([]);
     expect(result.effortTolerance).toBe("moderate");
@@ -93,7 +93,7 @@ describe("Coach Quiz — Edge Cases", () => {
   });
 });
 
-describe("Coach Quiz — Summary Helpers", () => {
+describe("Coach Quiz  -  Summary Helpers", () => {
   it("topCuisines returns labels for positive cuisine preferences", () => {
     const prefs = { japanese: 0.8, indian: 0.5, mexican: -0.2 };
     const result = topCuisines(prefs, 2);

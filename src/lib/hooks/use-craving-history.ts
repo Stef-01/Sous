@@ -48,7 +48,7 @@ function normalize(q: string): string {
 }
 
 /**
- * useCravingHistory — remembers the user's last N unique craving queries
+ * useCravingHistory  -  remembers the user's last N unique craving queries
  * for 30 days, MRU-ordered. One-tap rerun support. Silent dedupe by
  * case-insensitive match so "pasta" and "Pasta" don't both appear.
  */

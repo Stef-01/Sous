@@ -1,5 +1,5 @@
 /**
- * Claude AI Provider — real Anthropic API integration for bounded AI surfaces.
+ * Claude AI Provider  -  real Anthropic API integration for bounded AI surfaces.
  *
  * Uses Vercel AI SDK's generateObject() for schema-validated responses.
  * Falls back to MockAIProvider on any failure.
@@ -81,7 +81,7 @@ Tags: ${input.tags.join(", ")}`,
         cookQuestionResultSchema,
         `You are a calm, supportive cooking guide for the Sous app.
 Answer the user's cooking question briefly (under 300 chars).
-Only use information from the recipe context provided — never guess.
+Only use information from the recipe context provided  -  never guess.
 If you're unsure, say so honestly and suggest they check the step instructions.
 Set confidence to "high" if the answer is clearly in context, "medium" if inferred, "low" if uncertain.`,
         `Recipe: ${input.recipeName}
@@ -127,8 +127,8 @@ ${input.availableIngredients ? `Available: ${input.availableIngredients.join(", 
 Generate a short, warm congratulatory message for completing a cook.
 The headline should be punchy (under 60 chars). The message should be encouraging (under 200 chars).
 Be specific to what was cooked. Never be generic. Never use exclamation marks more than once.
-${input.isFirstCook ? "This is the user's very first cook — make it special!" : ""}
-${input.currentStreak && input.currentStreak >= 3 ? `The user has a ${input.currentStreak}-day cooking streak — acknowledge it!` : ""}`,
+${input.isFirstCook ? "This is the user's very first cook  -  make it special!" : ""}
+${input.currentStreak && input.currentStreak >= 3 ? `The user has a ${input.currentStreak}-day cooking streak  -  acknowledge it!` : ""}`,
         `Completed: ${input.dishName}
 Sides: ${input.sideDishes.join(", ")}
 Cuisine: ${input.cuisineFamily}
@@ -178,7 +178,7 @@ Rules:
 - Suggestions must be type: "plating", "ratio", "technique", or "finish"
 - Never use failure language, grading, or criticism
 - Keep each string under 120 characters
-- Tone is always "encouraging" — like a kind mentor, not a judge
+- Tone is always "encouraging"  -  like a kind mentor, not a judge
 - If it's the user's first cook, celebrate that milestone
 - If there's a streak, acknowledge the momentum`,
         `Dish: ${input.dishName}

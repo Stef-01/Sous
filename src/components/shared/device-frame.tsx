@@ -31,7 +31,7 @@ export function useDeviceMode() {
 const STORAGE_KEY = "sous-device-mode";
 
 /**
- * DeviceFrame — wraps the app in a phone-shaped container on desktop.
+ * DeviceFrame  -  wraps the app in a phone-shaped container on desktop.
  *
  * Behaviour:
  * - On real mobile devices (touch + narrow viewport): renders fullscreen, no frame.
@@ -60,7 +60,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Detect real mobile devices: touch support + narrow viewport.
-    // setState is intentional here — window is only available client-side.
+    // setState is intentional here  -  window is only available client-side.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsRealMobile(
       window.matchMedia("(max-width: 768px)").matches &&
@@ -92,7 +92,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
     );
   }
 
-  // Marketing homepage — full viewport (no phone chrome), no device toggle
+  // Marketing homepage  -  full viewport (no phone chrome), no device toggle
   if (isStartupHome) {
     return (
       <DeviceFrameContext.Provider value={{ mode: "desktop", setMode }}>
@@ -101,7 +101,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
     );
   }
 
-  // Desktop — fullscreen mode
+  // Desktop  -  fullscreen mode
   if (mode === "desktop") {
     return (
       <DeviceFrameContext.Provider value={{ mode, setMode }}>
@@ -111,11 +111,11 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
     );
   }
 
-  // Desktop — phone frame mode
+  // Desktop  -  phone frame mode
   return (
     <DeviceFrameContext.Provider value={{ mode, setMode }}>
       <div className="fixed inset-0 flex items-center justify-center bg-neutral-100 overflow-hidden p-4">
-        {/* Phone bezel — scales down on smaller viewports while maintaining aspect ratio */}
+        {/* Phone bezel  -  scales down on smaller viewports while maintaining aspect ratio */}
         <div
           className="relative w-[390px] max-w-full"
           style={{ aspectRatio: "390 / 844", maxHeight: "calc(100vh - 2rem)" }}
@@ -127,7 +127,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
               <div className="h-[30px] w-[120px] rounded-b-2xl bg-neutral-800" />
             </div>
 
-            {/* Status bar — rendered above the app content */}
+            {/* Status bar  -  rendered above the app content */}
             <div className="absolute top-0 left-0 right-0 z-[99] flex items-center justify-between px-8 pt-[8px]">
               <span className="text-[11px] font-semibold text-white select-none">
                 9:41
@@ -252,7 +252,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        {/* Toggle — outside the phone */}
+        {/* Toggle  -  outside the phone */}
         <DeviceToggle mode={mode} onToggle={handleToggle} />
       </div>
     </DeviceFrameContext.Provider>

@@ -18,7 +18,7 @@ export function getDb(): NeonHttpDatabase<typeof schema> {
   return _db;
 }
 
-// Convenience alias — lazily initialized on first property access
+// Convenience alias  -  lazily initialized on first property access
 export const db = new Proxy({} as NeonHttpDatabase<typeof schema>, {
   get(_, prop) {
     const instance = getDb();

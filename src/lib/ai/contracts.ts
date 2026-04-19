@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Phase 5 — AI Provider Contract
+ * Phase 5  -  AI Provider Contract
  *
  * Typed interface for all bounded AI surfaces.
  * Every AI call has a typed input, a Zod-validated output schema,

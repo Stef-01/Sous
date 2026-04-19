@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils/cn";
 
 interface TonightChipProps {
   /**
-   * Optional dish name to seed the input with — typically the currently
+   * Optional dish name to seed the input with  -  typically the currently
    * displayed quest dish. Makes "commit to this" a one-tap action.
    */
   suggested?: string;
@@ -24,7 +24,7 @@ interface TonightChipProps {
 }
 
 /**
- * TonightChip — a soft, one-line ritual at the top of Today.
+ * TonightChip  -  a soft, one-line ritual at the top of Today.
  *
  * Pre-commit: a single pill invites the user to name tonight's cook.
  * Post-commit: a calm banner affirms the choice and offers an equally
@@ -46,7 +46,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
 
   useEffect(() => {
     if (expanded && suggested && !value) {
-      // Seed the field exactly once when the form opens — mirrors the
+      // Seed the field exactly once when the form opens  -  mirrors the
       // hydration pattern we use elsewhere when a client-only fact must
       // appear in controlled state.
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -56,7 +56,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
 
   if (!mounted) {
     // Reserve a tiny placeholder in `full` mode so layout doesn't jump.
-    // Drawer + banner-only modes can render nothing — the drawer's own
+    // Drawer + banner-only modes can render nothing  -  the drawer's own
     // layout handles spacing.
     if (mode === "full") return <div className="h-[46px]" aria-hidden />;
     return null;

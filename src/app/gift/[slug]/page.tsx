@@ -7,10 +7,10 @@ import {
   type StaticDishData,
 } from "@/data/guided-cook-steps";
 
-/** Gift page — a read-only preview of a dish a friend has sent you.
+/** Gift page  -  a read-only preview of a dish a friend has sent you.
  *
  *  Opens anonymously at `/gift/<slug>?from=<firstname>&stars=<rating>`. No
- *  signup wall, no auth — the whole point is that a recipient can see what
+ *  signup wall, no auth  -  the whole point is that a recipient can see what
  *  their friend cooked and enjoyed, and the single CTA drops them into
  *  Today with the dish pre-cued so they can try it themselves.
  *
@@ -36,7 +36,7 @@ function clampStars(raw: string | undefined): number {
 
 function safeFirstName(raw: string | undefined): string {
   if (!raw) return "A friend";
-  // Allow letters/numbers/spaces/hyphens/apostrophes — strip anything else
+  // Allow letters/numbers/spaces/hyphens/apostrophes  -  strip anything else
   // and clamp length so nobody can jam rendering with a novel.
   const cleaned = raw.replace(/[^\p{L}\p{N}\s'\-]/gu, "").trim();
   return cleaned.slice(0, 24) || "A friend";
@@ -94,7 +94,7 @@ export default async function GiftPage({
           )}
         </header>
 
-        {/* Dish card — read-only preview */}
+        {/* Dish card  -  read-only preview */}
         <section
           aria-label={`${dish.name} preview`}
           className="overflow-hidden rounded-3xl border border-[var(--nourish-border-strong)] bg-white shadow-sm"
@@ -132,7 +132,7 @@ export default async function GiftPage({
           </div>
         </section>
 
-        {/* Single CTA — no signup wall, lands on Today with the dish cued */}
+        {/* Single CTA  -  no signup wall, lands on Today with the dish cued */}
         <Link
           href={`/today?craving=${encodeURIComponent(dish.name)}`}
           className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] py-4 text-base font-semibold text-white shadow-sm shadow-[var(--nourish-green)]/20 transition-colors hover:bg-[var(--nourish-dark-green)]"
@@ -145,7 +145,7 @@ export default async function GiftPage({
         </Link>
 
         <p className="text-center text-[11px] text-[var(--nourish-subtext)]">
-          Sous — one screen, one action, one win.
+          Sous - one screen, one action, one win.
         </p>
       </main>
     </div>

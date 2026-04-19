@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
-// Lazy imports — only load when credentials are available
+// Lazy imports  -  only load when credentials are available
 let _db: unknown = null;
 function getDbSafe() {
   if (_db) return _db;
@@ -30,7 +30,7 @@ export async function createTRPCContext(): Promise<TRPCContext> {
       const result = await auth();
       userId = result.userId;
     } catch {
-      // Clerk not configured — continue as anonymous
+      // Clerk not configured  -  continue as anonymous
     }
   } else {
     // TODO: Re-enable Clerk auth for V1 launch

@@ -21,7 +21,7 @@ const RADIUS = 28;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 /**
- * CookTimer — floating countdown ring showing the most urgent active timer.
+ * CookTimer  -  floating countdown ring showing the most urgent active timer.
  * When multiple timers run in parallel (combined cooks), the ring follows the
  * lowest-remaining one; the full set is visible in the TimerStack pill strip
  * above the step card.
@@ -37,7 +37,7 @@ export function CookTimer() {
   const vibratedForRef = useRef<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Global 1 Hz ticker — runs only while any timer is in flight.
+  // Global 1 Hz ticker  -  runs only while any timer is in flight.
   useEffect(() => {
     if (timers.length === 0) return;
     const interval = setInterval(() => tickTimers(), 1000);
@@ -59,7 +59,7 @@ export function CookTimer() {
       /* unsupported */
     }
     // Flash the "Done!" label for the linger window. Guard is satisfied via
-    // `vibratedForRef` above — this effect only runs once per finished timer.
+    // `vibratedForRef` above  -  this effect only runs once per finished timer.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowDone(true);
     const id = setTimeout(() => setShowDone(false), 1800);

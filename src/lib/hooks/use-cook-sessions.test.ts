@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 /**
- * Tests for cook session logic — streak computation and stats serialization.
+ * Tests for cook session logic  -  streak computation and stats serialization.
  * We test the pure-logic portions that don't need React rendering.
  */
 

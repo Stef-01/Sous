@@ -9,7 +9,7 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
 
 /**
- * Favorites — filtered view of favorite cooks only.
+ * Favorites  -  filtered view of favorite cooks only.
  */
 export default function FavoritesPage() {
   const { favoriteSessions, toggleFavorite } = useCookSessions();
@@ -83,7 +83,7 @@ export default function FavoritesPage() {
               </p>
               <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
                 Finish a cook and tap the heart on the win screen to favorite it
-                — your go-to cooks, always one tap away.
+                - your go-to cooks, always one tap away.
               </p>
             </div>
             <motion.button

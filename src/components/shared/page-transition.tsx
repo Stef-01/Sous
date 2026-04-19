@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 /**
- * PageTransition — wraps a page in a fade + slide-up entrance.
+ * PageTransition  -  wraps a page in a fade + slide-up entrance.
  * Uses a spring for natural deceleration when switching tabs.
  */
 export function PageTransition({ children }: { children: ReactNode }) {

@@ -7,13 +7,13 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
 
 /**
- * ScreenshotCarousel — horizontal-scroll row of captioned "product moments".
+ * ScreenshotCarousel  -  horizontal-scroll row of captioned "product moments".
  *
  * We don't have a fleet of polished app screenshots, and rendering real app
  * UI inside every tile would turn the page into a component graveyard. So:
  * each slide is a real food photo (from /food_images) + a dish-name caption
  * + a one-line product moment. The row communicates rhythm and texture,
- * not exact screen layouts — the AppPreviewSection above already does that.
+ * not exact screen layouts  -  the AppPreviewSection above already does that.
  */
 
 interface Slide {

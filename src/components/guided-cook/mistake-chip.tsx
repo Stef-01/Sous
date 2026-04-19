@@ -12,13 +12,13 @@ interface MistakeChipProps {
   /** Slug of the current recipe. When present alongside `stepNumber`,
    *  enables per-dish suppression via the little `×` button. */
   dishSlug?: string;
-  /** Step number — stable enough to serve as a per-dish mistake id for
+  /** Step number  -  stable enough to serve as a per-dish mistake id for
    *  suppression, without needing a separate `mistakeId` field. */
   stepNumber?: number;
 }
 
 /**
- * MistakeChip — the "common mistake" warning surfaced mid-step.
+ * MistakeChip  -  the "common mistake" warning surfaced mid-step.
  *
  * Excellent on cook #1, patronising on cook #5. When the user has already
  * learned the lesson on a specific dish they can dismiss this chip via the
@@ -86,7 +86,7 @@ export function MistakeChip({
               "transition-colors",
             )}
             type="button"
-            aria-label="I've got this — don't show this reminder again"
+            aria-label="I've got this  -  don't show this reminder again"
             title="I've got this"
           >
             <X size={14} strokeWidth={2.4} />

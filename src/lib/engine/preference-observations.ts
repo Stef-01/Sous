@@ -1,5 +1,5 @@
 /**
- * preference-observations — derive warm, human sentences from cook history.
+ * preference-observations  -  derive warm, human sentences from cook history.
  *
  * Sprint C, Phase 1: Users cannot feel the engine learning unless we show
  * it. Percentages feel creepy; bars feel like a dashboard. So instead we
@@ -10,20 +10,20 @@
  * Deterministic: given identical session inputs and the same `now`, output
  * is identical. No random tiebreakers, sentences sorted by signal strength.
  *
- * Silent by default below MIN_COOKS — until the user has enough history
+ * Silent by default below MIN_COOKS  -  until the user has enough history
  * to speak about, we stay quiet.
  */
 
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 /** Minimum cooks before any observation fires. Below this the strip is
- *  silent — speaking too early feels like cold reading, not insight. */
+ *  silent  -  speaking too early feels like cold reading, not insight. */
 export const PREFERENCE_MIN_COOKS = 5;
 
 export interface PreferenceObservation {
   /** Stable key for React + testing. */
   id: string;
-  /** Human-readable sentence. No trailing period — caller renders one. */
+  /** Human-readable sentence. No trailing period  -  caller renders one. */
   text: string;
   /** Internal score used for ordering. Higher = stronger signal. */
   score: number;
@@ -138,7 +138,7 @@ export function derivePreferenceObservations(
   ) {
     observations.push({
       id: "weekend-range",
-      text: "Weekends are when you roam — more cuisines land on Sat/Sun",
+      text: "Weekends are when you roam  -  more cuisines land on Sat/Sun",
       score: 55,
     });
   }
@@ -181,7 +181,7 @@ export function derivePreferenceObservations(
   if (recentCount >= 4) {
     observations.push({
       id: "momentum-recent",
-      text: `${recentCount} cooks in the last two weeks — you are on a roll`,
+      text: `${recentCount} cooks in the last two weeks  -  you are on a roll`,
       score: 45,
     });
   }

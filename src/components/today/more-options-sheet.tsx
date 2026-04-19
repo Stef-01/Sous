@@ -16,7 +16,7 @@ interface MoreOptionsSheetProps {
 }
 
 /**
- * MoreOptionsSheet — a bottom-sheet that gathers the Today page's
+ * MoreOptionsSheet  -  a bottom-sheet that gathers the Today page's
  * non-primary controls into a single hidden surface.
  *
  * Rationale: older first-time users were seeing Tonight-commit, Cook-for-two,

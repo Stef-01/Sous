@@ -12,7 +12,7 @@ interface CameraInputProps {
 }
 
 /**
- * Camera Input — captures a photo of the user's main dish.
+ * Camera Input  -  captures a photo of the user's main dish.
  * Falls back to file upload on devices without camera access.
  */
 export function CameraInput({
@@ -110,7 +110,7 @@ export function CameraInput({
                     className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[var(--nourish-dark)] hover:bg-white transition-colors"
                   >
                     <Keyboard size={12} />
-                    Didn&apos;t work — try typing instead
+                    Didn&apos;t work - try typing instead
                   </button>
                 )}
               </div>
@@ -182,7 +182,7 @@ export function CameraInput({
               )}
               type="button"
             >
-              {isProcessing ? "Identifying..." : "Looks right — Pair"}
+              {isProcessing ? "Identifying..." : "Looks right  -  Pair"}
             </button>
           </>
         )}

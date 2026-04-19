@@ -14,7 +14,7 @@ import {
 import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
 
 /**
- * AppPreviewSection — phone-frame marketing row showing the three canonical
+ * AppPreviewSection  -  phone-frame marketing row showing the three canonical
  * Sous screens: Today, Path, Win.
  *
  * Rather than slot in opaque PNG screenshots that drift out of date the moment
@@ -115,7 +115,7 @@ function PhoneFrame({
           : "shadow-[0_20px_40px_-18px_rgba(13,13,13,0.22)]"
       }`}
     >
-      {/* Inner safe-area — leaves room for notch + caption */}
+      {/* Inner safe-area  -  leaves room for notch + caption */}
       <div className="flex h-full flex-col">
         <div className="h-[18px] bg-transparent" aria-hidden />
         {children}

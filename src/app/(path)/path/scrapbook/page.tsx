@@ -9,7 +9,7 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
 
 /**
- * Scrapbook — memory lane + meal evaluator preview.
+ * Scrapbook  -  memory lane + meal evaluator preview.
  * Dual use: sentimental archive and longitudinal plating / technique growth.
  */
 export default function ScrapbookPage() {
@@ -71,7 +71,7 @@ export default function ScrapbookPage() {
                 <span className="font-semibold text-[var(--nourish-dark)]">
                   meal evaluator
                 </span>{" "}
-                — plating eye, technique line, and coach notes — so you can feel
+                - plating eye, technique line, and coach notes - so you can feel
                 the arc from home-cook nights to confident dinner-party energy.
               </p>
               <p className="flex items-center gap-1 text-[11px] font-medium text-[var(--nourish-green)]">
@@ -120,7 +120,7 @@ export default function ScrapbookPage() {
             </div>
             <div className="space-y-1">
               <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-                No polaroids yet — your first victory lap is one cook away.
+                No polaroids yet - your first victory lap is one cook away.
               </p>
               <p className="text-xs leading-relaxed text-[var(--nourish-subtext)] max-w-[260px]">
                 Finish a guided cook from Today. We will frame the plate, tuck

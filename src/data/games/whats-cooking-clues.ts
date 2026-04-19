@@ -77,7 +77,7 @@ export const dishClues: DishClue[] = [
     emoji: "🥐",
     clues: [
       "My shape tells the story of a military victory centuries ago.",
-      "I require extreme patience — fold, chill, repeat.",
+      "I require extreme patience  -  fold, chill, repeat.",
       "Butter accounts for over a quarter of my weight.",
       "Paris adopted me, though Vienna claims to have invented me.",
       "A flaky, crescent-shaped pastry best enjoyed warm.",
@@ -114,7 +114,7 @@ export const dishClues: DishClue[] = [
     clues: [
       "Mughal emperors demanded I be served at every royal feast.",
       "Saffron paints me gold, and rose water perfumes my soul.",
-      "I am layered, not mixed — each stratum tells a different story.",
+      "I am layered, not mixed  -  each stratum tells a different story.",
       "Basmati rice and aromatic spices are slow-cooked together.",
       "India's beloved layered rice dish with meat or vegetables.",
     ],
@@ -142,7 +142,7 @@ export const dishClues: DishClue[] = [
     emoji: "🍪",
     clues: [
       "I was a happy accident at a Massachusetts inn in the 1930s.",
-      "Ruth Wakefield expected me to melt completely — I didn't.",
+      "Ruth Wakefield expected me to melt completely  -  I didn't.",
       "Brown sugar gives me my chewy center and crispy edges.",
       "Nestlé bought the recipe for a lifetime supply of chocolate.",
       "America's favorite cookie with melty chocolate pieces.",
@@ -165,8 +165,8 @@ export const dishClues: DishClue[] = [
     acceptedAnswers: ["guacamole", "guac"],
     emoji: "🥑",
     clues: [
-      "The Aztecs called my main ingredient 'ahuacatl' — a fertility symbol.",
-      "I am best when my base is perfectly ripe — too early or late ruins me.",
+      "The Aztecs called my main ingredient 'ahuacatl'  -  a fertility symbol.",
+      "I am best when my base is perfectly ripe  -  too early or late ruins me.",
       "A stone mortar called a molcajete is my traditional birthplace.",
       "Lime juice, cilantro, and onion join mashed green fruit.",
       "Mexico's famous avocado dip, essential for chips and tacos.",
@@ -191,7 +191,7 @@ export const dishClues: DishClue[] = [
     clues: [
       "I may be one of the oldest street foods still eaten today.",
       "Egypt and Lebanon both claim me as their own creation.",
-      "I am made from raw, soaked legumes — never cooked before frying.",
+      "I am made from raw, soaked legumes  -  never cooked before frying.",
       "Deep-fried balls or patties made from ground chickpeas.",
       "A Middle Eastern classic often served in pita with tahini.",
     ],

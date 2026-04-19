@@ -33,7 +33,7 @@ export interface ConfidenceReading {
 }
 
 /** Derive the confidence reading from existing stats + completed sessions.
- *  Pure — the dial is a visualisation of data the user has already produced,
+ *  Pure  -  the dial is a visualisation of data the user has already produced,
  *  no new storage is introduced.
  *
  *  Weighting: cook count is the strongest signal (people cook by doing),
@@ -104,10 +104,10 @@ interface ConfidenceDialProps {
 }
 
 /**
- * ConfidenceDial — a derived "kitchen confidence" gauge below the
+ * ConfidenceDial  -  a derived "kitchen confidence" gauge below the
  * constellation. No number, just a label ("Steady" → "Bold" → "Fluent" →
  * "Master") and a filled arc. The dial moves as the user cooks more, covers
- * more cuisines, and racks up well-rated cooks — so the compounding value of
+ * more cuisines, and racks up well-rated cooks  -  so the compounding value of
  * the product is legible without being loud.
  */
 export function ConfidenceDial({
@@ -119,7 +119,7 @@ export function ConfidenceDial({
     [stats, completedSessions],
   );
 
-  // Nothing to show for a brand-new user — keep the path screen calm.
+  // Nothing to show for a brand-new user  -  keep the path screen calm.
   if (stats.completedCooks === 0) return null;
 
   const radius = 58;
@@ -138,7 +138,7 @@ export function ConfidenceDial({
         className="overflow-visible"
         aria-hidden
       >
-        {/* Track — the full 270° arc in a muted tone */}
+        {/* Track  -  the full 270° arc in a muted tone */}
         <path
           d={arcPath(DIAL_START, DIAL_END, radius)}
           fill="none"
@@ -147,7 +147,7 @@ export function ConfidenceDial({
           strokeLinecap="round"
         />
 
-        {/* Tier ticks — thin marks at each threshold */}
+        {/* Tier ticks  -  thin marks at each threshold */}
         {CONFIDENCE_TIERS.slice(1).map((t) => {
           const deg = DIAL_START + DIAL_SPAN * t.min;
           const inner = polar(deg, radius - 7);
@@ -166,7 +166,7 @@ export function ConfidenceDial({
           );
         })}
 
-        {/* Fill — animates from start to current score. Use pathLength so
+        {/* Fill  -  animates from start to current score. Use pathLength so
             the stroke-dasharray animation is independent of the path's
             actual SVG length and stays smooth. */}
         <motion.path

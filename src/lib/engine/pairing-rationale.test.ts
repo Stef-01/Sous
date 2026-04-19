@@ -52,7 +52,7 @@ describe("buildPairingRationale", () => {
       cookHistory: sessions,
       now: Date.parse("2026-04-01T00:00:00Z"),
     });
-    // Bibimbap (korean bowl) vs carbonara (italian pasta) — different
+    // Bibimbap (korean bowl) vs carbonara (italian pasta)  -  different
     // axes, nothing to surface.
     expect(result).toBeNull();
   });

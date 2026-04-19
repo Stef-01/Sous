@@ -149,7 +149,7 @@ export default function GuidedCookPage({
 
     setStepDirection(1);
     if (currentStepIndex >= cookSteps.length - 1) {
-      // Last cook step — complete session, record skill progress, and go to win
+      // Last cook step  -  complete session, record skill progress, and go to win
       if (sessionIdRef.current) {
         const result = completeSession(sessionIdRef.current, {});
 
@@ -232,7 +232,7 @@ export default function GuidedCookPage({
             expandedChip: null,
           });
         } else {
-          // First cook step — go back to grab (or mission if no ingredients)
+          // First cook step  -  go back to grab (or mission if no ingredients)
           if (data?.ingredients && data.ingredients.length > 0) {
             setPhase("grab");
           } else {
