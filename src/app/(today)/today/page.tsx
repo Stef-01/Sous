@@ -608,6 +608,7 @@ function TodayPageContent() {
                     }
                   }}
                   onReroll={handleReroll}
+                  isRerolling={pairingQuery.isFetching}
                 />
               )}
 

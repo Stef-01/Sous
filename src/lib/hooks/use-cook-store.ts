@@ -39,7 +39,6 @@ interface CookStore {
   currentDishIndex: number;
 
   // actions
-  startSession: (sessionId: string, totalSteps: number) => void;
   startCombinedSession: (dishes: CookDishEntry[]) => void;
   setPhase: (phase: Phase) => void;
   setTotalSteps: (total: number) => void;
@@ -81,9 +80,6 @@ function nextTimerId(): string {
 
 export const useCookStore = create<CookStore>((set, get) => ({
   ...initialState,
-
-  startSession: (sessionId, totalSteps) =>
-    set({ ...initialState, sessionId, totalSteps, cookMode: "single" }),
 
   startCombinedSession: (dishes) =>
     set({

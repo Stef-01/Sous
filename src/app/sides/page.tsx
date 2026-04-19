@@ -259,6 +259,7 @@ function SidesPageContent() {
                 onCookThis={handleCookThis}
                 onCookSelected={handleCookSelected}
                 onReroll={handleReroll}
+                isRerolling={pairingQuery.isFetching}
               />
             </motion.div>
           )}

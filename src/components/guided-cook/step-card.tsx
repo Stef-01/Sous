@@ -45,8 +45,6 @@ interface StepCardProps {
   onPrev: () => void;
   isFirst: boolean;
   isLast: boolean;
-  personalNote?: string;
-  onAddPersonalNote?: (note: string) => void;
   /** Slug of the dish being cooked. When set, the MistakeChip's per-dish
    *  suppression affordance is enabled. */
   dishSlug?: string;
@@ -78,8 +76,6 @@ export function StepCard({
   onPrev,
   isFirst,
   isLast,
-  personalNote,
-  onAddPersonalNote,
   dishSlug,
 }: StepCardProps) {
   const [showQA, setShowQA] = useState(false);
@@ -264,29 +260,6 @@ export function StepCard({
       >
         <Glossify>{instruction}</Glossify>
       </p>
-
-      {/* Personal note overlay indicator */}
-      {personalNote && (
-        <div className="rounded-lg bg-amber-50 border border-amber-200/50 px-3 py-2">
-          <p className="text-xs text-amber-800">
-            <span className="font-medium">Your note:</span> {personalNote}
-          </p>
-        </div>
-      )}
-
-      {/* Add personal note button */}
-      {onAddPersonalNote && !personalNote && (
-        <button
-          type="button"
-          onClick={() => {
-            const note = window.prompt("Add a personal note for this step:");
-            if (note?.trim()) onAddPersonalNote(note.trim());
-          }}
-          className="self-start text-[11px] text-[var(--nourish-subtext)] underline underline-offset-2 hover:text-[var(--nourish-dark)]"
-        >
-          + Add a note
-        </button>
-      )}
 
       {/* Doneness cue */}
       {donenessCue && (

@@ -118,7 +118,8 @@ export const pairingRouter = router({
         mainDish: z.string(),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
-        _rerollSeed: z.number().optional(), // Cache buster for reroll — not used in logic
+        /** Busts TanStack Query cache when the client rerolls; ignored on the server. */
+        _rerollSeed: z.number().optional(),
         userPreferences: z.record(z.number()).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
@@ -167,6 +168,7 @@ export const pairingRouter = router({
       return {
         success: true as const,
         intent,
+        intentParseSource: parseResult.source,
         resolvedMealSlug: mainHasGuidedCook ? resolvedMealSlug : null,
         sides: result.data.sides.map((s) => ({
           id: s.sideDish.id,
@@ -248,6 +250,7 @@ export const pairingRouter = router({
 
       return {
         success: true as const,
+        intentParseSource: parseResult.source,
         side: {
           id: s.sideDish.id,
           slug: s.sideDish.slug,

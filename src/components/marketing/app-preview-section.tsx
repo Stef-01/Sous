@@ -202,10 +202,19 @@ function TodayMini() {
         </p>
         <div className="mt-0.5 flex gap-1 overflow-hidden">
           {[
-            "/food_images/pasta_carbonara.png",
-            "/food_images/butter_chicken.png",
-            "/food_images/pad_thai.png",
-          ].map((src, i) => (
+            {
+              src: "/food_images/pasta_carbonara.png",
+              alt: "Friend’s cook: pasta carbonara",
+            },
+            {
+              src: "/food_images/butter_chicken.png",
+              alt: "Friend’s cook: butter chicken",
+            },
+            {
+              src: "/food_images/pad_thai.png",
+              alt: "Friend’s cook: pad thai",
+            },
+          ].map(({ src, alt }, i) => (
             <div
               key={src}
               className="relative aspect-[4/5] w-1/3 overflow-hidden rounded-md"
@@ -213,7 +222,7 @@ function TodayMini() {
             >
               <Image
                 src={src}
-                alt="friend cook"
+                alt={alt}
                 fill
                 sizes="80px"
                 className="object-cover"

@@ -97,6 +97,8 @@ function CombinedCookContent() {
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
   const sessionIdRef = useRef<string | null>(null);
+  /** Matches single-cook StepCard: back navigation reverses slide direction. */
+  const [stepDirection, setStepDirection] = useState<1 | -1>(1);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
   const [winMeta, setWinMeta] = useState<{
@@ -314,6 +316,8 @@ function CombinedCookContent() {
       isAdvancingRef.current = false;
     }, 400);
 
+    setStepDirection(1);
+
     if (currentStepIndex >= currentCookSteps.length - 1) {
       // Completed the current dish's cook steps
       const justCompletedName = currentDish?.dish.name ?? "";
@@ -381,6 +385,7 @@ function CombinedCookContent() {
   ]);
 
   const handleTransitionContinue = useCallback(() => {
+    setStepDirection(1);
     nextDish(); // Advance to the next dish in the store
     setShowTransition(false);
   }, [nextDish]);
@@ -418,6 +423,7 @@ function CombinedCookContent() {
           return;
         }
         if (currentStepIndex > 0) {
+          setStepDirection(-1);
           useCookStore.setState({
             currentStepIndex: currentStepIndex - 1,
             expandedChip: null,
@@ -737,6 +743,7 @@ function CombinedCookContent() {
                     currentDishIndex === dishes.length - 1
                   }
                   dishSlug={currentDish.dish.slug}
+                  direction={stepDirection}
                 />
               </motion.div>
             )}

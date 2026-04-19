@@ -24,8 +24,8 @@ export function OwlAvatar({ onClick }: { onClick: () => void }) {
         viewBox="0 0 64 44"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        aria-label="Sous mascot"
-        role="img"
+        aria-hidden="true"
+        focusable="false"
       >
         {/* Head */}
         <circle cx="32" cy="26" r="14" fill="var(--nourish-green)" />

@@ -13,16 +13,21 @@ Rules:
 
 Be precise and concise. If the input is vague, make reasonable assumptions.`;
 
+export type CravingParseSource = "llm" | "heuristic";
+
+export type ParseCravingResult =
+  | { success: true; data: CravingIntent; source: CravingParseSource }
+  | { success: false; error: string };
+
 /**
  * Parse a user's freeform craving text into structured intent.
  * Uses Claude with structured output (Zod schema) when API key is available.
  * Falls back to heuristic parser otherwise.
+ *
+ * `source` distinguishes structured model output from heuristics so callers
+ * can log, debug, or surface a subtle signal when the LLM path failed.
  */
-export async function parseCraving(
-  text: string,
-): Promise<
-  { success: true; data: CravingIntent } | { success: false; error: string }
-> {
+export async function parseCraving(text: string): Promise<ParseCravingResult> {
   // Only attempt AI parsing if Anthropic key is configured
   if (process.env.ANTHROPIC_API_KEY) {
     try {
@@ -36,7 +41,7 @@ export async function parseCraving(
         prompt: text,
       });
 
-      return { success: true, data: result.object };
+      return { success: true, data: result.object, source: "llm" };
     } catch (error) {
       console.error(
         "Craving parser AI error, falling back to heuristics:",
@@ -49,6 +54,7 @@ export async function parseCraving(
   return {
     success: true,
     data: buildFallbackIntent(text),
+    source: "heuristic",
   };
 }
 
