@@ -22,9 +22,9 @@ export function TrustStrip() {
           transition={{ duration: 0.7, ease: easeOutExpo }}
           className="font-serif text-[22px] leading-[1.5] text-[#4b5563] md:text-[26px]"
         >
-          Health guidance is written with{" "}
-          <span className="text-[#0d0d0d]">Stanford clinicians</span> — worked
-          in, not bolted on.
+          Nutrition notes are reviewed with{" "}
+          <span className="text-[#0d0d0d]">Stanford Medicine–affiliated</span>{" "}
+          clinicians — not influencer guesswork, layered in from the start.
         </motion.p>
 
         <motion.div

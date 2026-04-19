@@ -20,6 +20,7 @@ import {
   viewportOnce,
   easeOutExpo,
 } from "./startup-landing-variants";
+import type { CatalogStats } from "./diet-journey-comparison";
 
 // Below-the-fold modules are loaded lazily on the client to improve LCP on the
 // marketing page. Each lands with a subtle opacity-only fade once intersected,
@@ -41,6 +42,13 @@ const ScreenshotCarousel = dynamic(
 const TrustStrip = dynamic(
   () => import("./trust-strip").then((mod) => ({ default: mod.TrustStrip })),
   { ssr: false, loading: () => <div className="min-h-[20vh]" /> },
+);
+const DietJourneyComparison = dynamic(
+  () =>
+    import("./diet-journey-comparison").then((mod) => ({
+      default: mod.DietJourneyComparison,
+    })),
+  { ssr: false, loading: () => <div className="min-h-[50vh]" /> },
 );
 
 /** ----------------------------------------------------------------------
@@ -474,7 +482,11 @@ function TrajectoryArc() {
  * Page
  * ==================================================================== */
 
-export function StartupLanding() {
+export function StartupLanding({
+  catalogStats,
+}: {
+  catalogStats: CatalogStats;
+}) {
   const reduceMotion = useReducedMotion();
   const [headerElevated, setHeaderElevated] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
@@ -536,8 +548,11 @@ export function StartupLanding() {
             aria-label="Sections"
             className="hidden items-center gap-8 text-[13px] text-[#6b6b6b] md:flex"
           >
+            <a href="#truth" className="transition-colors hover:text-[#0d0d0d]">
+              Realistic change
+            </a>
             <a href="#idea" className="transition-colors hover:text-[#0d0d0d]">
-              The idea
+              The gap
             </a>
             <a
               href="#pairing"
@@ -570,25 +585,57 @@ export function StartupLanding() {
           className="relative px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28"
         >
           <div className="mx-auto max-w-[1160px]">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={containerStagger}
-              className="max-w-[18ch]"
-            >
-              <Eyebrow>An app for cooking at home</Eyebrow>
-
-              <motion.h1
-                variants={fadeUpItem}
-                className="mt-6 font-serif text-[14vw] leading-[0.96] tracking-[-0.025em] text-[#0d0d0d] sm:text-[80px] md:text-[104px] lg:text-[120px]"
+            {/* Hero top: headline uses full column width on desktop — no 18ch rail */}
+            <div className="grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-10 xl:gap-14">
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={containerStagger}
+                className="lg:col-span-7"
               >
-                You don&rsquo;t
-                <br />
-                need more
-                <br />
-                <span className="italic text-[#2d5a3d]">recipes</span>.
-              </motion.h1>
-            </motion.div>
+                <Eyebrow>An app for cooking at home</Eyebrow>
+
+                <motion.h1
+                  variants={fadeUpItem}
+                  className="mt-6 text-balance font-serif text-[13.5vw] leading-[0.96] tracking-[-0.025em] text-[#0d0d0d] sm:text-[76px] md:text-[88px] lg:text-[96px]"
+                >
+                  <span className="md:hidden">
+                    You don&rsquo;t
+                    <br />
+                    need more
+                    <br />
+                    <span className="italic text-[#2d5a3d]">recipes</span>.
+                  </span>
+                  <span className="hidden md:inline">
+                    You don&rsquo;t need more{" "}
+                    <span className="italic text-[#2d5a3d]">recipes</span>.
+                  </span>
+                </motion.h1>
+              </motion.div>
+
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={containerStagger}
+                className="border-l-2 border-[#2d5a3d]/25 pl-6 lg:col-span-5"
+              >
+                <motion.p
+                  variants={fadeUpItem}
+                  className="font-serif text-[22px] leading-[1.25] tracking-tight text-[#1a1a1a] md:text-[26px]"
+                >
+                  Make your diet work for you — not the perfect diet on paper,{" "}
+                  <span className="text-[#2d5a3d]">your</span> perfect diet.
+                </motion.p>
+                <motion.p
+                  variants={fadeUpItem}
+                  className="mt-4 text-[14px] leading-[1.7] text-[#4b5563] md:text-[15px]"
+                >
+                  Start with sides on the meals you already make. Layer in mains
+                  from our library. Big-picture changes you can repeat — without
+                  obsessing over every calorie.
+                </motion.p>
+              </motion.div>
+            </div>
 
             {/* Asymmetric lede */}
             <motion.div
@@ -658,6 +705,10 @@ export function StartupLanding() {
             </motion.div>
           </div>
         </motion.section>
+
+        <Rule />
+
+        <DietJourneyComparison stats={catalogStats} />
 
         <Rule />
 
@@ -1026,7 +1077,7 @@ export function StartupLanding() {
               Path
             </Link>
             <Link
-              href="/scrapbook"
+              href="/path/scrapbook"
               className="text-[#1a1a1a] underline-offset-4 transition-colors hover:text-[#2d5a3d] hover:underline"
             >
               Scrapbook
