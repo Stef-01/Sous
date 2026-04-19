@@ -306,23 +306,41 @@ function TrajectoryArc() {
           viewport={viewportOnce}
           transition={{ duration: 1.6, ease: easeOutExpo }}
         />
-        {ARC.map((p, idx) => (
-          <motion.circle
-            key={p.month}
-            cx={p.x * 100}
-            cy={p.y * 40}
-            r={idx === ARC.length - 1 ? 1.4 : 1}
-            fill={idx === ARC.length - 1 ? "#2d5a3d" : "#0d0d0d"}
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={viewportOnce}
-            transition={{
-              delay: 0.4 + idx * 0.25,
-              duration: 0.4,
-              ease: easeOutExpo,
-            }}
-          />
-        ))}
+        {ARC.map((p, idx) => {
+          const cx = p.x * 100;
+          const cy = p.y * 40;
+          const r = idx === ARC.length - 1 ? 1.4 : 1;
+          const label = `${p.month}: ${p.note}`;
+          return (
+            <g key={p.month}>
+              {/* Wide invisible hit target so hover titles work at real viewport sizes */}
+              <circle
+                cx={cx}
+                cy={cy}
+                r="5"
+                fill="transparent"
+                pointerEvents="all"
+              >
+                <title>{label}</title>
+              </circle>
+              <motion.circle
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill={idx === ARC.length - 1 ? "#2d5a3d" : "#0d0d0d"}
+                pointerEvents="none"
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={viewportOnce}
+                transition={{
+                  delay: 0.4 + idx * 0.25,
+                  duration: 0.4,
+                  ease: easeOutExpo,
+                }}
+              />
+            </g>
+          );
+        })}
       </svg>
       <div className="mt-2 grid grid-cols-3 gap-6">
         {ARC.map((p) => (
