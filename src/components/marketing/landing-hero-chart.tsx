@@ -6,31 +6,21 @@ import { cn } from "@/lib/utils/cn";
 import { easeOutExpo } from "./startup-landing-variants";
 
 /**
- * Hero dual-curve chart (reference: static illustration, no hover UI).
- *
- * RCA summary (why live diverged from design):
- * 1. Problem: Axis copy looked wrong vs mock — SVG <text> + rotate + default
- *    baselines clipped/mis-centered labels; X sat inside a cramped viewBox.
- * 2. Evidence: Image 2 shows labels beside axes; our SVG-only labels fought
- *    font metrics and padding (especially Y).
- * 3. Contributing: Heavy ring/card vs flat #f9f8f6 reference; curve endpoints
- *    not matching “red ends mid + uptick / green high start + rippled fall.”
- * 4. Root cause: Typography and layout should use the same stack as the page
- *    (HTML/CSS), not raw SVG text, for rotated English labels.
- * 5. Fix: HTML for both axis titles; SVG holds only geometry; drop duplicate
- *    figcaption (copy lives in DietJourneyComparison).
+ * Illustrative weight-over-time chart (static; no interactive points).
+ * SVG coords: smaller y = higher on screen = heavier body weight in this sketch.
+ * Red: yo-yo pattern (regain/large swings). Green: net loss with small real-life noise.
  */
 
-/** Typical overhaul: smooth yo-yo; ends mid with a slight final uptick. */
+/** Yo-yo dieting: smooth swings up (regain) and down (lose) — not monotonic. */
 const RED_PATH =
-  "M 52 96 C 80 158 96 172 118 154 C 140 136 148 54 170 48 C 192 42 204 148 226 156 C 248 164 258 44 288 38 C 312 32 328 150 348 156 C 362 160 368 98 372 102 C 374 104 376 100 378 94";
+  "M 52 96 C 78 138 92 154 112 158 C 132 162 142 64 168 54 C 194 44 208 150 232 158 C 256 166 268 52 302 46 C 328 42 342 145 358 152 C 374 159 382 72 378 88";
 
-/** Sous-shaped: starts slightly above red; rippled monotonic drift toward bottom. */
+/** With Sous: same starting weight as red; gradual net loss (y increases) + ripples. */
 function buildGreenRipplePath(): string {
   const x0 = 52;
   const x1 = 378;
-  const yStart = 90;
-  const yEnd = 166;
+  const yStart = 96;
+  const yEnd = 160;
   const steps = 64;
   const parts: string[] = [];
   for (let i = 0; i <= steps; i++) {
@@ -38,14 +28,18 @@ function buildGreenRipplePath(): string {
     const x = Math.round(x0 + t * (x1 - x0));
     const base = yStart + t * (yEnd - yStart);
     const ripple =
-      3.8 * Math.sin(i * 0.92) +
-      1.0 * Math.sin(i * 2.15) +
-      0.55 * Math.sin(i * 3.4);
+      3.2 * Math.sin(i * 0.92) +
+      0.9 * Math.sin(i * 2.15) +
+      0.5 * Math.sin(i * 3.4);
     const y = Math.round(base + ripple);
     parts.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
   }
   return parts.join(" ");
 }
+
+/** Plot band y=36..168: two guides at equal thirds. */
+const GRID_Y_UPPER = 80;
+const GRID_Y_LOWER = 124;
 
 export function LandingHeroChart({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
@@ -55,25 +49,25 @@ export function LandingHeroChart({ className }: { className?: string }) {
   return (
     <figure className={cn("w-full", className)} aria-labelledby={titleId}>
       <p id={titleId} className="sr-only">
-        Illustrative chart comparing a volatile overhaul with Sous-shaped change
-        over several weeks.
+        Illustrative chart of body weight over weeks: yo-yo dieting swings up
+        and down; with Sous, weight trends gradually lower with small
+        fluctuations.
       </p>
 
       <div className="rounded-2xl bg-[#f9f8f6] px-2 pb-3 pt-4 md:px-4 md:pb-4 md:pt-5">
-        <div className="mb-3 flex items-baseline justify-between gap-4 px-1">
-          <span className="text-[11px] font-medium tracking-wide text-[#c25e5e]">
-            Typical overhaul
+        <div className="mb-3 flex items-baseline justify-between gap-3 px-1">
+          <span className="max-w-[48%] text-left text-[11px] font-medium leading-snug tracking-wide text-[#c25e5e]">
+            Yo-yo dieting
           </span>
-          <span className="text-[11px] font-medium tracking-wide text-[#2d5a3d]">
-            Sous-shaped change
+          <span className="max-w-[48%] text-right text-[11px] font-medium leading-snug tracking-wide text-[#2d5a3d]">
+            With Sous (small steps)
           </span>
         </div>
 
-        {/* Plot: HTML Y-label (avoids SVG text metric bugs) + geometry-only SVG */}
-        <div className="flex items-stretch gap-1 sm:gap-2">
-          <div className="flex w-[1.125rem] shrink-0 items-center justify-center sm:w-6">
-            <p className="m-0 origin-center -rotate-90 whitespace-nowrap text-[11px] leading-none text-[#8f959c]">
-              Sticking with it
+        <div className="flex items-stretch gap-1.5 sm:gap-2">
+          <div className="flex w-8 shrink-0 flex-col items-center justify-center sm:w-9">
+            <p className="m-0 origin-center -rotate-90 whitespace-nowrap text-center text-[11px] leading-none text-[#8f959c]">
+              Body weight
             </p>
           </div>
 
@@ -84,20 +78,39 @@ export function LandingHeroChart({ className }: { className?: string }) {
               preserveAspectRatio="xMidYMid meet"
               aria-hidden
             >
+              <text
+                x="54"
+                y="44"
+                fill="#b0b6bd"
+                fontSize="9"
+                fontFamily="ui-sans-serif, system-ui, sans-serif"
+              >
+                Heavier
+              </text>
+              <text
+                x="54"
+                y="166"
+                fill="#b0b6bd"
+                fontSize="9"
+                fontFamily="ui-sans-serif, system-ui, sans-serif"
+              >
+                Lighter
+              </text>
+
               <line
                 x1="48"
-                y1="72"
+                y1={GRID_Y_UPPER}
                 x2="376"
-                y2="72"
+                y2={GRID_Y_UPPER}
                 stroke="#d8d4cc"
                 strokeWidth="1"
                 strokeDasharray="2 6"
               />
               <line
                 x1="48"
-                y1="128"
+                y1={GRID_Y_LOWER}
                 x2="376"
-                y2="128"
+                y2={GRID_Y_LOWER}
                 stroke="#d8d4cc"
                 strokeWidth="1"
                 strokeDasharray="2 6"
