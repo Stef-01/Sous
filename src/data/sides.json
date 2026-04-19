@@ -1795,7 +1795,75 @@
     "description": "Silky-smooth chickpea purée blended with tahini, lemon juice, and garlic, swirled with olive oil and a dusting of paprika.",
     "pairingReason": "creamy dip to spread on wraps and pitas",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Drain and rinse one 15-oz can of chickpeas. For ultra-smooth hummus, pinch each chickpea between your fingers to pop off the papery skin — it takes 10 minutes but transforms the texture. Reserve the liquid (aquafaba).",
+        "duration": 10,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Skipping the peeling step is the #1 reason homemade hummus ends up gritty instead of silky.",
+        "hackChip": "Shortcut: simmer the chickpeas with 1/2 teaspoon baking soda for 20 minutes — the skins loosen and float, then you just skim them off.",
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Into a food processor add 1/2 cup tahini and 1/4 cup fresh lemon juice (about 2 lemons). Process on high for a full 2 minutes. The mixture will thicken and turn pale, creamy, and fluffy.",
+        "duration": 2,
+        "timerTrigger": true,
+        "timerMinutes": 2,
+        "mistakeWarning": "Using bitter, low-quality tahini will make the whole batch bitter. A smooth pourable tahini (Soom, Seed+Mill, or Al Wadi) is worth the upgrade.",
+        "hackChip": "Whipping the tahini and lemon juice first before adding anything else is the single biggest secret to restaurant-style smooth hummus.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Add 1 small garlic clove (minced or microplaned), 3/4 teaspoon kosher salt, and 1/2 teaspoon ground cumin. Process for 30 seconds until fully combined, scraping down the sides once.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Raw garlic can dominate — start with one small clove. You can always add more, but you can't take it back.",
+        "hackChip": null,
+        "cuisineFact": "Hummus in its modern form traces to the Levant; the earliest written recipes appear in 13th-century Arabic cookbooks from Cairo."
+      },
+      {
+        "step": 4,
+        "phase": "cook",
+        "instruction": "Add half the chickpeas and process for 1 minute. Scrape the sides, then add the remaining chickpeas and process another 1-2 minutes until the mixture is thick and paste-like.",
+        "duration": 3,
+        "timerTrigger": true,
+        "timerMinutes": 3,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "With the processor running, slowly drizzle in 2-3 tablespoons of ice water until the hummus is pale, fluffy, and airy — about 2 minutes. Taste and adjust salt, lemon, or cumin.",
+        "duration": 2,
+        "timerTrigger": true,
+        "timerMinutes": 2,
+        "mistakeWarning": "Don't skip the ice water — it's what creates that light, whipped-cloud texture instead of a dense paste.",
+        "hackChip": "Run the processor longer than you think — 4-5 minutes total of processing after adding chickpeas makes it noticeably fluffier.",
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "finish",
+        "instruction": "Spoon into a shallow bowl and use the back of a spoon to make a swooping well in the center. Drizzle generously with extra virgin olive oil, dust with paprika or sumac, and garnish with a few whole chickpeas and chopped parsley.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "Serve slightly warm or at room temperature — cold from the fridge mutes the flavors.",
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "tabbouleh",
@@ -1805,7 +1873,75 @@
     "description": "A bright herb salad of finely chopped parsley, mint, bulgur wheat, tomato, and lemon-olive oil dressing.",
     "pairingReason": "herby, lemony freshness to lighten the plate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Place 1/4 cup extra-fine (#1) bulgur in a small bowl. Cover with 1/2 cup warm water and let soak 10-15 minutes until tender and plump. Drain well, pressing out excess water.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 12,
+        "mistakeWarning": "Using coarse bulgur is the biggest mistake — it stays chewy and dominates the salad. Look for #1 extra-fine bulgur; it's the only kind used in authentic tabbouleh.",
+        "hackChip": "In a hurry? Soak the bulgur directly in the lemon juice for 10 minutes — it absorbs the flavor as it rehydrates.",
+        "cuisineFact": "Tabbouleh is considered one of the national dishes of Lebanon, and is judged at competitions on parsley-to-bulgur ratio — parsley always wins."
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Wash 3 large bunches of flat-leaf (Italian) parsley. Dry very thoroughly in a salad spinner or between towels. Strip the leaves from the stems — you should have about 4 cups loosely packed.",
+        "duration": 8,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Wet parsley makes soggy tabbouleh. Dry the leaves completely — this step matters more than you'd think.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Finely chop the parsley with a sharp knife — rock the blade through it multiple times until very fine but not pulverized. Do the same with 1/2 cup fresh mint leaves. Do NOT use a food processor.",
+        "duration": 10,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "A food processor bruises the parsley and releases bitter juices. A sharp knife is the only way.",
+        "hackChip": "Keep the knife sharp — a dull knife is why people hate chopping parsley. Hone it right before you start.",
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "prep",
+        "instruction": "Dice 2 medium firm, ripe tomatoes into tiny 1/4-inch cubes. Slice 4-5 green onions (both white and green parts) very thinly. Combine tomatoes, green onions, parsley, and mint in a large bowl.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't use mushy, watery tomatoes. Firm Roma or vine tomatoes hold their shape without weeping.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "In a small bowl, whisk 1/4 cup fresh lemon juice, 1/3 cup extra virgin olive oil, 3/4 teaspoon kosher salt, and 1/4 teaspoon ground allspice (optional but traditional). Add the drained bulgur to the salad along with the dressing. Toss gently.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "finish",
+        "instruction": "Taste and adjust salt and lemon. Let sit 10-15 minutes at room temperature before serving so the bulgur absorbs the dressing and the flavors marry.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 15,
+        "mistakeWarning": "Tabbouleh eaten immediately after mixing tastes flat. That short rest is when it becomes tabbouleh.",
+        "hackChip": null,
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "baba-ganoush",
@@ -1815,7 +1951,75 @@
     "description": "Smoky, fire-roasted eggplant mashed with tahini, garlic, and lemon juice for a velvety, deeply flavoured dip.",
     "pairingReason": "smoky depth from fire-roasted eggplant",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "You need 2 medium-large eggplants (about 2 lbs total). Pierce each one 6-8 times with a fork or paring knife so steam can escape during cooking.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't skip piercing — un-pierced eggplants can explode in the oven. That's not a joke.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "cook",
+        "instruction": "For the smokiest flavor, char the eggplants directly over a gas burner on medium-high heat, turning with tongs every 3-4 minutes until the skin is blackened and the flesh collapses — about 15-20 minutes total. Alternatively, broil on high, turning, for about 20 minutes.",
+        "duration": 20,
+        "timerTrigger": true,
+        "timerMinutes": 18,
+        "mistakeWarning": "If you skip the char step and just oven-roast, you lose the signature smokiness. Direct flame wins every time.",
+        "hackChip": "No gas stove? Broil on the top rack until fully blackened, then finish in a 400°F oven for 10 minutes to soften fully.",
+        "cuisineFact": "Baba ganoush translates roughly to 'pampered father' in Arabic — a playful name possibly referring to a member of a sultan's harem."
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Transfer the charred eggplants to a colander set over a bowl. Let them cool and drain for 15-20 minutes. The liquid that drains off is bitter — you want it out.",
+        "duration": 20,
+        "timerTrigger": true,
+        "timerMinutes": 20,
+        "mistakeWarning": "Skipping the drain step leaves the dip watery and bitter. Patience here pays off.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "prep",
+        "instruction": "Peel off and discard the blackened skin — the flesh underneath should be soft and golden. Chop the flesh roughly or mash it in a bowl with a fork for a rustic texture (traditional), or pulse briefly in a food processor for smoother.",
+        "duration": 5,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Over-processing in a food processor makes baba ganoush gummy and strange. Keep it coarse — it's meant to be rustic.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Stir in 1/4 cup tahini, 3 tablespoons fresh lemon juice, 1 minced garlic clove, 2 tablespoons extra virgin olive oil, and 3/4 teaspoon kosher salt. Taste and adjust.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": "A pinch of ground cumin or a dusting of smoked paprika rounds out the flavor beautifully.",
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "finish",
+        "instruction": "Spread in a shallow bowl, swirl with extra olive oil, and top with chopped parsley and a few pomegranate seeds if you have them. Serve with warm pita.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "fattoush",
@@ -1845,7 +2049,64 @@
     "description": "A refreshing Greek dip of thick strained yogurt, grated cucumber, garlic, dill, and a drizzle of olive oil.",
     "pairingReason": "cool cucumber dip to tame grilled meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Grate 1 medium English cucumber (about 1 cup grated) on the large holes of a box grater. You don't need to peel it — the skin adds color and nutrition.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Place the grated cucumber in a clean kitchen towel or fine-mesh sieve. Sprinkle with 1/2 teaspoon salt, let sit 10 minutes, then squeeze firmly over the sink until almost no liquid comes out.",
+        "duration": 12,
+        "timerTrigger": true,
+        "timerMinutes": 10,
+        "mistakeWarning": "Skipping the squeeze is the #1 tzatziki mistake. Wet cucumber makes watery sauce within an hour. Squeeze until it feels dry.",
+        "hackChip": "A potato ricer works incredibly well to squeeze cucumber — more efficient than a towel.",
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "For extra-thick tzatziki, line a fine strainer with cheesecloth or a paper towel and let 2 cups of full-fat Greek yogurt drain over a bowl in the fridge for 1 hour (or skip if you're using a very thick yogurt like Fage Total 5%).",
+        "duration": 60,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Low-fat or regular (non-Greek) yogurt will make thin, watery tzatziki. Use whole-milk Greek yogurt.",
+        "hackChip": null,
+        "cuisineFact": "Authentic Greek tzatziki traditionally uses strained sheep or goat yogurt — hence why Greek-style (strained) yogurt is the closest substitute."
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "In a bowl, combine the yogurt, squeezed cucumber, 2 finely minced garlic cloves, 1 tablespoon extra virgin olive oil, 1 tablespoon red wine vinegar or fresh lemon juice, and 2 tablespoons finely chopped fresh dill (or mint).",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't go overboard on garlic — 2 cloves is plenty. It'll get stronger as it sits.",
+        "hackChip": "For mellower garlic, grate it on a microplane and let it mingle with the lemon juice for 5 minutes before adding yogurt — the acid tames the bite.",
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Season with 1/2 teaspoon kosher salt and black pepper. Cover and refrigerate at least 30 minutes (overnight is better) to let flavors meld. Drizzle with olive oil before serving.",
+        "duration": 30,
+        "timerTrigger": true,
+        "timerMinutes": 30,
+        "mistakeWarning": "Tzatziki tastes raw and harsh straight after mixing. That 30-minute rest is non-negotiable — it's when the sauce comes together.",
+        "hackChip": null,
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "pita-chips",
@@ -2804,7 +3065,75 @@
     "description": "Juicy tomatoes, cucumber, red onion, Kalamata olives, and a slab of creamy feta, dressed in olive oil and oregano.",
     "pairingReason": "classic Mediterranean salad for freshness",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "guidedCookSteps": [
+      {
+        "step": 1,
+        "phase": "prep",
+        "instruction": "Choose the ripest tomatoes you can find — this salad lives or dies by the tomato. Cut 4 medium tomatoes into wedges or thick 1-inch chunks (not slices). Transfer to a shallow bowl.",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Out-of-season pale tomatoes will make a sad Greek salad. If your tomatoes aren't great, cherry or grape tomatoes are a better substitute than mealy big tomatoes.",
+        "hackChip": "Sprinkle the cut tomatoes with a pinch of salt immediately — it draws out their juices, which become part of the dressing.",
+        "cuisineFact": "Authentic horiatiki has no lettuce — the 'Greek salad' with lettuce is a Western invention. In Greece, it's just tomato, cucumber, pepper, onion, olives, and feta."
+      },
+      {
+        "step": 2,
+        "phase": "prep",
+        "instruction": "Peel 1 English cucumber partially (leave stripes of skin for color), then slice in half lengthwise and cut into thick 1/2-inch half-moons. Add to the bowl with the tomatoes.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Thin slices turn soggy fast. Keep the cucumber chunky so it stays crisp.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 3,
+        "phase": "prep",
+        "instruction": "Slice 1 small red onion into very thin half-moons. Core and slice 1 green bell pepper into thin rings. Add both to the bowl along with 1/2 cup Kalamata olives (pitted or whole — whole is traditional).",
+        "duration": 3,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Raw red onion can overpower the salad. If yours is sharp, soak the slices in cold water for 10 minutes to mellow them.",
+        "hackChip": null,
+        "cuisineFact": null
+      },
+      {
+        "step": 4,
+        "phase": "finish",
+        "instruction": "Drizzle the vegetables with 3-4 tablespoons good extra virgin olive oil and 1 tablespoon red wine vinegar. Season with 1/2 teaspoon kosher salt and a generous sprinkle of dried Greek oregano — crush it between your palms as you add it.",
+        "duration": 2,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Don't skimp on the olive oil — it's the main dressing. Use the best you have.",
+        "hackChip": "Crushing the oregano between your palms wakes up the essential oils and releases way more aroma than just sprinkling.",
+        "cuisineFact": null
+      },
+      {
+        "step": 5,
+        "phase": "finish",
+        "instruction": "Top the salad with a thick 1/2-inch slab of feta (about 4 oz), placed whole on top rather than crumbled. Drizzle with a bit more olive oil, crush more oregano over the feta, and finish with cracked pepper.",
+        "duration": 1,
+        "timerTrigger": false,
+        "timerMinutes": null,
+        "mistakeWarning": "Pre-crumbled feta is usually drier and less flavorful. Buy a block of feta in brine (Greek or Bulgarian) and slice it yourself.",
+        "hackChip": "Greek tradition: don't toss the salad. Let the feta sit on top; each diner breaks off pieces as they eat.",
+        "cuisineFact": null
+      },
+      {
+        "step": 6,
+        "phase": "finish",
+        "instruction": "Let the salad rest at room temperature for 10-15 minutes before serving. Scoop up the olive-oil-and-tomato-juice 'pan sauce' at the bottom with crusty bread — that's the best part.",
+        "duration": 15,
+        "timerTrigger": true,
+        "timerMinutes": 10,
+        "mistakeWarning": null,
+        "hackChip": null,
+        "cuisineFact": null
+      }
+    ]
   },
   {
     "id": "spanakopita",
