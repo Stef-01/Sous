@@ -147,6 +147,8 @@ The V1 internal database targets 80-100 side dishes across 8-10 cuisine families
 
 ## Karpathy Coding Principles
 
+> Source: https://raw.githubusercontent.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md
+
 Behavioral guidelines to reduce common LLM coding mistakes.
 
 ### 1. Think Before Coding
