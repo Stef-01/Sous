@@ -118,23 +118,47 @@ export default function CuisineCompassGame() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
-        <div className="mx-auto flex max-w-md items-center justify-between">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/games")}
             whileTap={{ scale: 0.88 }}
-            className="flex items-center justify-center rounded-lg min-h-11 min-w-11 text-[var(--nourish-subtext)]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--nourish-subtext)]"
             type="button"
-            aria-label="Back"
+            aria-label="Back to Arcade"
           >
             <ArrowLeft size={20} />
           </motion.button>
-          <p className="text-xs font-medium text-[var(--nourish-subtext)]">
-            {currentIdx + 1}/{ROUNDS}
-          </p>
-          <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
+          <div className="flex flex-col items-center">
+            <p className="font-serif text-[14px] font-semibold text-[var(--nourish-dark)]">
+              Cuisine Compass
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+              Round {currentIdx + 1} of {ROUNDS}
+            </p>
+          </div>
+          <span className="tabular-nums text-sm font-bold text-[var(--nourish-dark)]">
             {score} pts
           </span>
+        </div>
+        {/* Round-progress dots — same telemetry pattern as What's Cooking. */}
+        <div
+          className="mx-auto mt-2 flex max-w-md items-center justify-center gap-1.5"
+          aria-hidden
+        >
+          {Array.from({ length: ROUNDS }).map((_, idx) => (
+            <span
+              key={idx}
+              className={cn(
+                "h-1.5 w-1.5 rounded-full transition-colors",
+                idx < currentIdx
+                  ? "bg-[var(--nourish-green)]"
+                  : idx === currentIdx
+                    ? "bg-[var(--nourish-green)]/60"
+                    : "bg-neutral-200",
+              )}
+            />
+          ))}
         </div>
       </header>
 
