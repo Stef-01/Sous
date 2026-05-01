@@ -40,6 +40,23 @@ seasonal eating (Halloween + holidays), celiac and special diets,
 pediatric gut health, **protein myth-busting (adult-side), GLP-1
 behaviour-change microsteps.**
 
+## Sprint 2 — Stanford content run #2 (2026-05-01)
+
+| #   | Source URL                                                                                      | Author                                                                                      | Original date | Sous shape | Sous id                                      |
+| --- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ---------- | -------------------------------------------- |
+| 11  | `/en/gaps-in-pediatric-obesity-treatment-need-attention-especially-from-an-equity-perspective/` | Thomas Robinson, MD (Pediatric Weight Control Program, Stanford Medicine Children's Health) | 2024-06-18    | article    | `stanford-art-pediatric-obesity-equity`      |
+| 12  | `/en/just-cook-kids-moderation-part-1-let-eat-cake-just-much/`                                  | Maya Adam, MD (Stanford / Just Cook for Kids)                                               | 2014-11-24    | article    | `stanford-art-moderation-let-them-eat-cake`  |
+| 13  | `/en/moderation-part-2-good-things-come-small-packages/`                                        | Maya Adam, MD (Stanford / Just Cook for Kids)                                               | 2014-12-16    | article    | `stanford-art-moderation-small-packages`     |
+| 14  | `/en/healthy-halloween-possible/`                                                               | Shiri Sadeh-Sharvit, PhD (Eating Disorders Research Program, Stanford)                      | 2015-10-22    | article    | `stanford-art-healthy-halloween-flexibility` |
+
+**Themes added by run #2:** family-based behavioural treatment for
+pediatric weight care, equity gaps in treatment access, moderation
+mechanics ("the half trick", screen-free eating, small plates),
+seasonal eating navigated through psychology rather than restriction.
+
+**Total Stanford-attributed content live in the Content tab after run
+#2:** 13 articles + 1 research brief + 8 expert voices.
+
 **Verbatim discipline.** Each card includes ≤ 30 verbatim words from its
 source, in quotation marks where used at all. The rest is original
 Sous wording.

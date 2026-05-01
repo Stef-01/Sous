@@ -384,9 +384,14 @@ export default function PathPage() {
         {/* Skill tree */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
-        {/* Quick links at bottom (above tab bar) */}
-        <div className="px-4 pb-24 pt-2">
-          <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
+        {/* Quick links at bottom (above tab bar). Section kicker uses
+            the same uppercase tracking pattern as the rest of Path
+            home and the Content tab — visual rhythm consistency. */}
+        <div className="mx-auto max-w-md px-4 pb-24 pt-4">
+          <h2 className="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
+            Your kitchen
+          </h2>
+          <div className="grid grid-cols-2 gap-2">
             {[
               {
                 href: "/path/scrapbook",
@@ -416,7 +421,7 @@ export default function PathPage() {
               >
                 <Link
                   href={href}
-                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
                 >
                   <Icon size={14} />
                   {label}
