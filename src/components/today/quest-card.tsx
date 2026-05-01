@@ -786,6 +786,27 @@ function SwipeCard({
   const likeScale = useTransform(x, [0, 80], [0.8, 1.1]);
   const nopeScale = useTransform(x, [-80, 0], [1.1, 0.8]);
 
+  // W22b animation: snap-feedback as the card crosses the like/discard
+  // threshold. Card scales ~2% and a green/rose glow shadow blooms in
+  // so the swipe "commits" feel earned rather than mute. Pure motion
+  // transforms — no state, no re-render.
+  const cardScale = useTransform(
+    x,
+    [-160, -80, 0, 80, 160],
+    [1.02, 1.005, 1, 1.005, 1.02],
+  );
+  const cardShadow = useTransform(
+    x,
+    [-160, -80, 0, 80, 160],
+    [
+      "0 16px 32px -10px rgba(244,63,94,0.45)",
+      "0 8px 16px -8px rgba(244,63,94,0.20)",
+      "0 4px 12px -4px rgba(13,13,13,0.10)",
+      "0 8px 16px -8px rgba(45,90,61,0.20)",
+      "0 16px 32px -10px rgba(45,90,61,0.45)",
+    ],
+  );
+
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     if (Math.abs(info.offset.x) > SWIPE_THRESHOLD) {
       onSwipe(info.offset.x > 0 ? "right" : "left");
@@ -829,11 +850,14 @@ function SwipeCard({
       dragElastic={0.7}
       onDragEnd={isTop ? handleDragEnd : undefined}
     >
-      <div
+      <motion.div
         className={cn(
           "overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm",
           isTop && "cursor-grab active:cursor-grabbing shadow-md",
         )}
+        // W22b: drag-driven scale + shadow snap-feedback. Top card only;
+        // inactive cards keep static rendering.
+        style={isTop ? { scale: cardScale, boxShadow: cardShadow } : undefined}
         role="article"
         aria-label={`${dish.dishName}  -  ${dish.cuisineFamily}${dish.isVerified ? ", Nourish Verified" : ""}`}
       >
@@ -1073,7 +1097,7 @@ function SwipeCard({
                 : "Find sides"}
           </motion.button>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

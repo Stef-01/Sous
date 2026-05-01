@@ -444,12 +444,21 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                   whileTap={{ scale: 0.97 }}
                   animate={
                     selectedOption === idx
-                      ? { scale: 1.02, borderColor: "var(--nourish-green)" }
+                      ? {
+                          // W22b animation: pulse on selection (1 → 1.06 →
+                          // settle at 1.02). Reads as "yes, that one."
+                          scale: [1, 1.06, 1.02],
+                          borderColor: "var(--nourish-green)",
+                        }
                       : selectedOption !== null
                         ? { opacity: 0.5, scale: 0.98 }
                         : { opacity: 1, scale: 1 }
                   }
-                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  transition={
+                    selectedOption === idx
+                      ? { duration: 0.45, times: [0, 0.4, 1], ease: "easeOut" }
+                      : { type: "spring", stiffness: 400, damping: 20 }
+                  }
                   className={cn(
                     "w-full rounded-xl border-2 px-5 py-4 text-left text-sm font-medium",
                     "transition-colors duration-150",

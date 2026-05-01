@@ -62,10 +62,26 @@ export function ToastHost() {
         {active && (
           <motion.div
             key={active.id}
-            initial={{ opacity: 0, y: 40, scale: 0.92 }}
+            // W22b: achievement + level-up toasts slide up further +
+            // settle with a softer spring so they feel like a celebration
+            // sheet rather than a notification chip. Other variants keep
+            // the original tighter motion.
+            initial={
+              active.variant === "achievement" || active.variant === "level-up"
+                ? { opacity: 0, y: 80, scale: 0.86 }
+                : { opacity: 0, y: 40, scale: 0.92 }
+            }
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            exit={
+              active.variant === "achievement" || active.variant === "level-up"
+                ? { opacity: 0, y: 60, scale: 0.9 }
+                : { opacity: 0, y: 40, scale: 0.92 }
+            }
+            transition={
+              active.variant === "achievement" || active.variant === "level-up"
+                ? { type: "spring", stiffness: 220, damping: 20, mass: 0.95 }
+                : { type: "spring", stiffness: 300, damping: 22 }
+            }
             className="pointer-events-auto w-full"
           >
             <ToastCard toast={active} />
