@@ -117,9 +117,10 @@ end-to-end + Reels**. The top 5 below are non-negotiable.
 - **Section-kicker rhythm is now codebase-wide.** Path home quick
   links, Content tab section headers, skill-tree milestone labels,
   forum "Replies" header, and the Stanford-attribution kicker all
-  use `text-[10/11px] font-bold uppercase tracking-[0.12-0.16em]
-text-[var(--nourish-subtext|green)]`. Sprint 5's consistency audit
-  can codify this as a token.
+  use the same recipe: a 10–11px font, `font-bold uppercase` with
+  `tracking-[0.12em]` to `tracking-[0.16em]`, coloured with either
+  `text-[var(--nourish-subtext)]` or `text-[var(--nourish-green)]`.
+  Sprint 5's consistency audit can codify this as a token.
 
 ## Acceptance for sprint close
 

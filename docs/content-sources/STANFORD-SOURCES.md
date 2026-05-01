@@ -57,6 +57,21 @@ seasonal eating navigated through psychology rather than restriction.
 **Total Stanford-attributed content live in the Content tab after run
 #2:** 13 articles + 1 research brief + 8 expert voices.
 
+## Sprint 3 — Stanford content run #3 (2026-05-01)
+
+| #   | Source URL                                        | Author                                                                                 | Original date | Sous shape | Sous id                               |
+| --- | ------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------- | ---------- | ------------------------------------- |
+| 15  | `/en/the-2020-version-of-healthy-holiday-eating/` | Venus Kalami + Jami Zamyad (Stanford Medicine Children's Health Clinical Nutrition)    | 2020-11-23    | article    | `stanford-art-holiday-2020`           |
+| 16  | `/en/may-is-celiac-awareness-month/`              | Venus Kalami (Lucile Packard Children's Hospital, Stanford Medicine Children's Health) | 2020-05-07    | article    | `stanford-art-celiac-awareness-month` |
+
+**Themes added by run #3:** holiday meal-rhythm tactics, kitchen
+build-out for celiac households (separate toaster, cutting boards,
+condiment hygiene), label-literacy on commercial gluten-free
+products.
+
+**Total Stanford-attributed content after run #3:** 15 articles + 1
+research brief + 9 expert voices.
+
 **Verbatim discipline.** Each card includes ≤ 30 verbatim words from its
 source, in quotation marks where used at all. The rest is original
 Sous wording.

@@ -38,17 +38,24 @@ export default function ResearchBriefPage({
 
       <header className="mt-3 space-y-3 px-4">
         <div className="flex items-start justify-between gap-3">
-          <p className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--nourish-green)]">
-            <Microscope size={12} /> {brief.labName}
+          <p className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--nourish-green)]">
+            <Microscope size={12} aria-hidden /> {brief.labName}
           </p>
           <BookmarkButton kind="research" id={brief.id} label={brief.title} />
         </div>
         <h1 className="font-serif text-2xl leading-tight text-[var(--nourish-dark)]">
           {brief.title}
         </h1>
-        <p className="text-[12px] italic text-[var(--nourish-subtext)]">
-          Brief based on: {brief.paperTitle}
-        </p>
+        {/* Citation block lifted from a thin italic line into a proper
+            paper-card so the source paper feels load-bearing. */}
+        <div className="rounded-xl border border-neutral-200/80 bg-white/70 px-3 py-2">
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+            Source paper
+          </p>
+          <p className="mt-0.5 text-[12px] leading-snug text-[var(--nourish-dark)]/85">
+            {brief.paperTitle}
+          </p>
+        </div>
       </header>
 
       <div className="relative mx-4 mt-4 aspect-[4/3] overflow-hidden rounded-2xl bg-[var(--nourish-cream)]">

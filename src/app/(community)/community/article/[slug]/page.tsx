@@ -95,14 +95,24 @@ export default function ArticleDetailPage({
         />
       </div>
 
-      <div className="space-y-4 px-5 pt-5">
-        <p className="text-base font-medium text-[var(--nourish-dark)]">
+      {/* Body: deliberate reading rhythm. Excerpt sits separately as a
+          lede above the body so the eye lands on it first; first body
+          paragraph gets a slightly heavier weight; subsequent
+          paragraphs use a generous leading for sustained reading. */}
+      <div className="px-5 pt-5">
+        <p className="border-l-2 border-[var(--nourish-green)]/40 pl-3 text-[15px] font-medium leading-[1.55] text-[var(--nourish-dark)]">
           {article.excerpt}
         </p>
+      </div>
+      <div className="space-y-5 px-5 pt-5">
         {article.body.map((paragraph, idx) => (
           <p
             key={idx}
-            className="text-[15px] leading-[1.65] text-[var(--nourish-dark)]/85"
+            className={
+              idx === 0
+                ? "text-[15.5px] font-medium leading-[1.7] text-[var(--nourish-dark)]"
+                : "text-[15px] leading-[1.72] text-[var(--nourish-dark)]/85"
+            }
           >
             {paragraph}
           </p>

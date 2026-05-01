@@ -58,11 +58,18 @@ export default function ExpertProfilePage({
       </p>
 
       <section className="mt-7 space-y-2 px-4">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-          From {expert.name.split(" ")[0]}
-        </h2>
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+            From {expert.name.split(" ")[0]}
+          </h2>
+          {articles.length > 0 && (
+            <span className="tabular-nums text-[11px] text-[var(--nourish-subtext)]">
+              {articles.length} article{articles.length === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
         {articles.length === 0 ? (
-          <p className="text-[12px] text-[var(--nourish-subtext)]">
+          <p className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-4 py-6 text-center text-[12px] text-[var(--nourish-subtext)]">
             No articles yet from this expert.
           </p>
         ) : (
