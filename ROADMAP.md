@@ -1,7 +1,7 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-05-01
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/STAGE-3-LEAN-CONTENT.md` (lean-vibe inventory + Content tab spec), **`docs/STAGE-1-2-6MO-TIMELINE.md` (active 6-month Stage 1+2 plan, week-by-week)**, **`docs/PARENT-MODE-PLAN.md` (Parent Mode feature design)**, **`docs/PARENT-MODE-RESEARCH.md` (research synthesis: child-food sensory science, pediatric nutrition, competitor apps, FDA/FTC claims)**, `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/PATH-OVERLAP-RCA.md`
 
 ---
 

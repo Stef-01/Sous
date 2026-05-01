@@ -98,15 +98,16 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 - **Prereq:** Week 1 ADR.
 - **DOD:** Tables + threshold function + 12+ vitest tests green.
 
-### Week 3 (May 18–22) — Per-recipe nutrition population (wave 1)
+### Week 3 (May 18–22) — Per-recipe nutrition population (wave 1) + Stanford content wave 1
 
-- **Deliverable:** Per-serving nutrition data attached to the top-30 quest-card-eligible meals in `meals.json` (or a sibling `nutrition.json` keyed by slug).
+- **Deliverable:** Per-serving nutrition data attached to the top-30 quest-card-eligible meals + first Stanford-attributed content swap (2 articles + 2 reels) per [`CONTENT-POPULATION-PHASE.md`](./CONTENT-POPULATION-PHASE.md) §5.
 - **Activities:**
   - Run the chosen pipeline (USDA mapping or API ingest) over 30 meals.
   - Spot-check against published nutrition labels for 5 known dishes.
   - Add a `nutrition-coverage.test.ts` that fails the build if a quest-eligible meal lacks nutrition data once `nutritionRequired: true` flag flips.
+  - **Stanford content wave 1:** ship `scripts/content/save-stanford-image.ts` (download + sharp-resize + write to `/public/content/<slug>/`). Replace 2 articles + 2 reels in-place with Stanford Lifestyle Medicine flagship pieces. New attribution fields populated.
 - **Prereq:** Week 2 schema.
-- **DOD:** 30 meals have nutrition; coverage test green; sample comparisons within ±15 % of label.
+- **DOD:** 30 meals have nutrition; coverage test green; sample comparisons within ±15 % of label; 4 Stanford-real items live with full provenance.
 
 ### Week 4 (May 25–29) — Safe phrasings + nutrient spotlight engine
 
@@ -190,16 +191,17 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 - **Prereq:** Week 8 hook.
 - **DOD:** Both surfaces functional in guided cook; visual regression on 5 representative recipes.
 
-### Week 11 (July 13–17) — Make-it-kid-friendly chip + AI swap suggestor
+### Week 11 (July 13–17) — Make-it-kid-friendly chip + AI swap suggestor + Stanford content wave 2
 
-- **Deliverable:** `kid-swap-chip.tsx` on QuestCards + `ai.suggestKidSwaps` endpoint + deterministic-first lookup.
+- **Deliverable:** `kid-swap-chip.tsx` on QuestCards + `ai.suggestKidSwaps` endpoint + deterministic-first lookup; **plus** Stanford content wave 2 (2 research briefs + 1 expert voice, parent-relevant) per [`CONTENT-POPULATION-PHASE.md`](./CONTENT-POPULATION-PHASE.md) §5.
 - **Activities:**
   - Build the deterministic swap lookup table covering the 60 labeled meals.
   - Wire the AI fallback through the existing AI provider abstraction with mock-provider deterministic responses.
   - Bottom sheet UI for the 2–3 swap chips; tap to apply (writes to recipe overlay).
   - Latency budget: deterministic ≤ 100 ms, AI fallback ≤ 2.5 s p95.
-- **Prereq:** Week 5 labels, week 6 scorer.
-- **DOD:** Chip works on 60-meal set; 3+ vitest cases on the lookup; manual smoke on 10 dishes.
+  - **Stanford content wave 2:** swap 2 research briefs + 1 expert voice from Stanford Children's Health / SPRC / a Nutrition faculty profile. Coincides with PM ship so parents have at-tab content from day one.
+- **Prereq:** Week 5 labels, Week 6 scorer, Week 3 image-saving script.
+- **DOD:** Chip works on 60-meal set; 3+ vitest cases on the lookup; manual smoke on 10 dishes; 3 more real-attributed content items live (running tally: 4 articles + 4 reels + 2 briefs + 1 expert).
 
 ### Week 12 (July 20–24) — Win screen kids-ate-it + lunchbox + nutrient spotlight + Content parent track
 
@@ -265,15 +267,16 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 - **Prereq:** Week 13 auth.
 - **DOD:** Redis live; 429 responses on burst tests; cache hit-rate visible in logs.
 
-### Week 17 (August 24–28) — Sentry + Vercel Analytics + funnels
+### Week 17 (August 24–28) — Sentry + Vercel Analytics + funnels + Stanford content wave 3
 
-- **Deliverable:** Sentry capturing client + server errors with source maps; Vercel Analytics expanded with real funnel events.
+- **Deliverable:** Sentry + analytics shipped + the largest Stanford wave: 4 articles + 4 reels + 2 research briefs (general nutrition + cooking) per [`CONTENT-POPULATION-PHASE.md`](./CONTENT-POPULATION-PHASE.md) §5.
 - **Activities:**
   - Sentry init for client + server; alert rules on AI failures, pairing engine errors, DB query failures.
   - Replace stub events in `src/lib/analytics.ts` with real ones: search submitted, pairing viewed, cook started, cook completed, kids-ate-it logged, parent-mode toggled.
   - Build a "Parent Mode funnel" view: toggle-on → first cook → first kids-ate-it → 4th cook (week-2 retention proxy).
-- **Prereq:** Weeks 13–14.
-- **DOD:** Sentry receiving events; analytics dashboard set up; funnel visible.
+  - **Stanford content wave 3:** the broadest sweep — 4 articles, 4 reels, 2 briefs across Stanford Lifestyle Medicine + SPRC + The Dish on Science + Stanford Magazine. Now on R2-hosted images (W15) so the saved Stanford assets serve from CDN.
+- **Prereq:** Weeks 13–14, W15 R2 hosting live.
+- **DOD:** Sentry receiving events; analytics dashboard set up; funnel visible; 10 more Stanford-real items live (running tally: 8 articles + 8 reels + 4 briefs + 1 expert).
 
 ### Week 18 (August 31 – September 4) — Performance pass + Lighthouse + bundle audit
 
@@ -295,15 +298,16 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 
 > Goal: turn the working product into a launchable one. Real content, real legal review, real user feedback.
 
-### Week 19 (September 7–11) — Content tab editorial wave 1 (parent-relevant)
+### Week 19 (September 7–11) — Content tab editorial wave 4 (parent-relevant Stanford pull)
 
-- **Deliverable:** Stage-3 Content tab gets 6 new parent-tagged articles, 4 new parent-tagged reels, 3 parent-tagged research briefs. All clearly attributed (still placeholder authors unless an editorial partner has signed).
+- **Deliverable:** 4 articles + 2 research briefs + 1 expert voice swapped from `isPlaceholder: true` to real Stanford-attributed material. All five attribution fields populated. See [`CONTENT-POPULATION-PHASE.md`](./CONTENT-POPULATION-PHASE.md) §5 (W19 row).
 - **Activities:**
-  - Author drafts in `src/data/content/articles.ts` etc. (or migrate to a CMS if Phase B time saved permits).
-  - Topics from research §2 and §3: "How to introduce bitter greens (4–6 exposures)," "What 'good source of calcium' actually means," "The build-your-own dinner that pleases everyone," etc.
-  - All copy passes the SAFE phrasings cheatsheet.
-- **Prereq:** Stage-3 infrastructure.
-- **DOD:** 13 new content items live with `audience: 'parent'` tag; Content parent track shows them when PM on.
+  - Pull source URLs from Stanford Lifestyle Medicine, Stanford Children's Health, SPRC, faculty profiles.
+  - Run `scripts/content/save-stanford-image.ts` for each cover image (W3 deliverable).
+  - Replace seed items in-place (same `id` to preserve bookmarks); set `audience: 'parent'` where applicable so the parent track surfaces them.
+  - All copy passes the SAFE phrasings cheatsheet (and the W23 build-time linter once landed).
+- **Prereq:** Stage-3 infrastructure + W3 image-saving script + W11/W17 prior content waves.
+- **DOD:** 7 new real-attributed items live; running tally per CONTENT-POPULATION-PHASE.md §5 hits 12 articles + 8 reels + 5 research briefs + 4 expert voices by end of week.
 
 ### Week 20 (September 14–18) — Kid-friendliness label expansion (wave 2)
 
@@ -326,16 +330,17 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 - **Prereq:** Phase C complete.
 - **DOD:** Cohort 1 done; report written in `docs/beta-cohort-1.md` with prioritized fix list.
 
-### Week 22a (September 28 – October 2) — Beta-driven fixes + accessibility + i18n scaffolding
+### Week 22a (September 28 – October 2) — Beta-driven fixes + accessibility + i18n scaffolding + Stanford content freshen
 
-- **Deliverable:** Top-5 beta fixes shipped; WCAG 2.1 AA audit passed on core flows; i18n scaffolding (Spanish first locale).
+- **Deliverable:** Top-5 beta fixes shipped; WCAG 2.1 AA audit passed on core flows; i18n scaffolding (Spanish first locale); **plus** Stanford content freshen pass per [`CONTENT-POPULATION-PHASE.md`](./CONTENT-POPULATION-PHASE.md) §5 (last sweep before W23 legal review).
 - **Activities:**
   - Fix top-5 beta-cohort-1 friction items.
   - Full nav-integrity sweep across every route in the app per `POLISH-CHECKLIST.md` Pass A — both legacy and Parent-Mode-era surfaces.
   - Run WCAG 2.1 AA audit on Today, Cook, Win, Content, Path. Fix any AA-blocking findings.
   - Add `next-intl` (or similar) scaffolding; extract Today + Cook strings; ship Spanish translations.
-- **Prereq:** Week 21.
-- **DOD:** Beta fixes merged; audit report committed; Spanish locale switchable end-to-end on Today + Cook; navigation report committed in `docs/nav-audit-2026-09.md`.
+  - **Stanford content freshen:** refresh `sourceFetchedAt` on every real-attributed item; re-run `save-stanford-image.ts` for any Stanford pages updated since their original snapshot; verify every `permissionEvidence` file still resolves.
+- **Prereq:** Week 21, all prior Stanford content waves.
+- **DOD:** Beta fixes merged; audit report committed; Spanish locale switchable end-to-end on Today + Cook; navigation report committed in `docs/nav-audit-2026-09.md`; freshen run logged with date-stamped item list.
 
 ### Week 22b (October 5–9, week 1 of 2 in October) — Reels V2 (TikTok feed) + Duolingo-grade animation deep-dive
 

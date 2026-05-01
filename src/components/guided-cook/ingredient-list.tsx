@@ -22,6 +22,7 @@ import {
   type PrepListGroup,
 } from "@/lib/engine/prep-list";
 import type { StaticDishData } from "@/data/guided-cook-steps";
+import { InstacartHint } from "./instacart-hint";
 
 interface Ingredient {
   id: string;
@@ -441,6 +442,11 @@ export function IngredientList({
             list
           </motion.button>
         )}
+
+        {/* Instacart placeholder hint — single line below the shopping
+            CTA. Encourages "keep going" instead of "give up" when an
+            ingredient is missing. No screen, no modal. */}
+        <InstacartHint missingCount={missingCount} />
 
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (

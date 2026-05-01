@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bookmark } from "lucide-react";
@@ -15,14 +15,14 @@ import {
 import { CategoryFilterStrip } from "@/components/content/category-filter-strip";
 import { FeaturedHeroCarousel } from "@/components/content/featured-hero-carousel";
 import { ReelsRail } from "@/components/content/reels-rail";
-import { ReelPlayerSheet } from "@/components/content/reel-player-sheet";
+// Reel player sheet retired in W22b — Reels now live in the immersive
+// vertical feed at /community/reels (deep-linked via #reel-id).
 import { ArticleCard } from "@/components/content/article-card";
 import { ResearchBriefCard } from "@/components/content/research-brief-card";
 import { ExpertVoicesRow } from "@/components/content/expert-voices-row";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
-import type { Reel } from "@/types/content";
 
 /**
  * Content tab home — Stage 3 lean-vibe magazine surface.
@@ -36,7 +36,6 @@ import type { Reel } from "@/types/content";
 export default function ContentPage() {
   const router = useRouter();
   const { filter, setFilter } = useContentFilter();
-  const [activeReel, setActiveReel] = useState<Reel | null>(null);
 
   const featured = useMemo(() => getFeaturedArticles(), []);
   const sortedArticles = useMemo(
@@ -113,7 +112,7 @@ export default function ContentPage() {
         {showReels && (
           <ReelsRail
             reels={sortedReels}
-            onSelect={(reel) => setActiveReel(reel)}
+            onSelect={(reel) => router.push(`/community/reels#${reel.id}`)}
             onSeeAll={() => router.push("/community/reels")}
           />
         )}
@@ -160,8 +159,6 @@ export default function ContentPage() {
 
         <ContentDisclaimer />
       </main>
-
-      <ReelPlayerSheet reel={activeReel} onClose={() => setActiveReel(null)} />
     </div>
   );
 }

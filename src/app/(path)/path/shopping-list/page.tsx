@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { InstacartHint } from "@/components/guided-cook/instacart-hint";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -67,10 +68,16 @@ export default function ShoppingListPage() {
       </header>
 
       <main className="mx-auto max-w-md px-4 pt-2 pb-28">
-        <p className="mb-4 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
+        <p className="mb-1 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
           Missing ingredients from your recent cooks show up here. Tap to mark
           bought - then one tap sends them into your pantry.
         </p>
+        {/* Instacart placeholder hint — same minimal pattern as the
+            in-cook IngredientList. Encourages "keep going" instead of
+            "give up" by surfacing how fast the missing items can land. */}
+        <div className="mb-4">
+          <InstacartHint missingCount={unboughtCount} />
+        </div>
 
         {!mounted ? (
           <div className="space-y-2 animate-pulse">

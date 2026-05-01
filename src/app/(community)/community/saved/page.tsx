@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Bookmark } from "lucide-react";
 import {
   ARTICLES,
@@ -14,15 +15,12 @@ import { ArticleCard } from "@/components/content/article-card";
 import { ResearchBriefCard } from "@/components/content/research-brief-card";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ReelsRail } from "@/components/content/reels-rail";
-import { ReelPlayerSheet } from "@/components/content/reel-player-sheet";
 import { BackLink } from "@/components/content/back-link";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
-import { useState } from "react";
-import type { Reel } from "@/types/content";
 
 export default function SavedContentPage() {
+  const router = useRouter();
   const { bookmarks } = useContentBookmarks();
-  const [activeReel, setActiveReel] = useState<Reel | null>(null);
 
   const savedArticles = useMemo(() => {
     const ids = new Set(
@@ -107,7 +105,7 @@ export default function SavedContentPage() {
         {savedReels.length > 0 && (
           <ReelsRail
             reels={savedReels}
-            onSelect={(reel) => setActiveReel(reel)}
+            onSelect={(reel) => router.push(`/community/reels#${reel.id}`)}
           />
         )}
 
@@ -130,8 +128,6 @@ export default function SavedContentPage() {
 
         <ContentDisclaimer />
       </main>
-
-      <ReelPlayerSheet reel={activeReel} onClose={() => setActiveReel(null)} />
     </div>
   );
 }
