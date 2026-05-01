@@ -30,11 +30,33 @@ const ProfileSettingsSheet = dynamic(
   { ssr: false },
 );
 import { FriendsStrip } from "@/components/today/friends-strip";
-import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
-import { ResultStack } from "@/components/today/result-stack";
-import { CameraInput } from "@/components/today/camera-input";
-import { CorrectionChips } from "@/components/today/correction-chips";
+
+// W18 perf round 2: post-interaction surfaces are dynamic-imported.
+// SearchPopout opens on the search-bar tap, CameraInput on the
+// camera affordance, ResultStack only after a search returns, and
+// CorrectionChips only during the recognition-correction flow.
+// Paying their cost only when the trigger fires is correct minimalism
+// (POLISH-CHECKLIST §1.5.2 + CLAUDE.md rule 6).
+const SearchPopout = dynamic(
+  () => import("@/components/today/search-popout").then((m) => m.SearchPopout),
+  { ssr: false },
+);
+const ResultStack = dynamic(
+  () => import("@/components/today/result-stack").then((m) => m.ResultStack),
+  { ssr: false },
+);
+const CameraInput = dynamic(
+  () => import("@/components/today/camera-input").then((m) => m.CameraInput),
+  { ssr: false },
+);
+const CorrectionChips = dynamic(
+  () =>
+    import("@/components/today/correction-chips").then(
+      (m) => m.CorrectionChips,
+    ),
+  { ssr: false },
+);
 
 const CoachQuiz = dynamic(() =>
   import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
