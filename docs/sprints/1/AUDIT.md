@@ -27,32 +27,33 @@ Scoring on the IDEO 1-4 rubric:
 Surface weight: Today / Cook / Win = 3, Path home / Content home /
 Reels = 2, all others = 1.
 
-| Route | I | M | C | P | Avg | Weight | Notes |
-|---|---|---|---|---|---|---|---|
-| `/today` | 4 | 3 | 4 | 4 | 3.75 | 3 | The home surface. Quest stack + above-fold CTA hold up; W22b drag snap-feedback adds polish. M=3 because the Friends / hidden-card stack adds density that earns its space but pushes the M ceiling. |
-| `/cook/[slug]` | 4 | 4 | 4 | 4 | 4.00 | 3 | Single-flow Guided Cook. Step card, timer, mistake chip, hack chip all consistent with the design language. The strongest surface in the app. |
-| `/cook/combined` | 4 | 3 | 3 | 3 | 3.25 | 3 | Combined-cook flow handles main+side parallelism well but is the heaviest page (1,122 lines). C/P drop slightly: dual-track stepper has its own visual register that diverges from single-cook. **Sprint 1 fix candidate.** |
-| Win screen (within cook flow) | 4 | 4 | 4 | 4 | 4.00 | 3 | Sparkle burst, level-up toast, journal prompt — already at IDEO bar. |
-| `/path` | 3 | 3 | 3 | 3 | 3.00 | 2 | Skill-tree + cuisine grid + tiles read clearly. Carry-forward into Sprint 2 (Path × Games × Pantry sprint). |
-| `/path/favorites` | 3 | 3 | 3 | 3 | 3.00 | 1 | Healthy empty-state needed once. |
-| `/path/pantry` | 3 | 3 | 3 | 3 | 3.00 | 1 | Pantry CRUD is functional but visually lean — Sprint 2 deepening target. |
-| `/path/scrapbook` | 3 | 4 | 3 | 3 | 3.25 | 1 | Cook journal layout is clean. |
-| `/path/shopping-list` | 3 | 3 | 3 | 3 | 3.00 | 1 | Has the Instacart placeholder integrated; PM unread state is implicit. |
-| `/community` | 4 | 4 | 4 | 4 | 4.00 | 2 | **Now anchors with real Stanford content.** Hero carousel pulls "How to encourage healthy eating habits…" with the FROM STANFORD CHILDREN'S HEALTH kicker + Venus Kalami byline. Verified live (see screenshot). |
-| `/community/article/[slug]` | 3 | 4 | 3 | 3 | 3.25 | 1 | Article-detail layout reads well; typography rhythm could be tightened in Sprint 3. |
-| `/community/expert/[slug]` | 3 | 4 | 3 | 3 | 3.25 | 1 | Expert detail pages now include real Stanford clinicians (Venus Kalami, Maya Adam, etc). |
-| `/community/forum/[id]` | 2 | 3 | 3 | 2 | 2.50 | 1 | **Cell ≤2.** Forum thread layout is the thinnest surface in the app — minimal effort signal. Sprint 3 target. |
-| `/community/reels` | 4 | 4 | 4 | 4 | 4.00 | 2 | Reels V2 (TikTok-style infinite feed) is one of the strongest surfaces. |
-| `/community/research/[slug]` | 3 | 4 | 3 | 3 | 3.25 | 1 | Now includes the Stanford gut-health brief with real Stanford byline. |
-| `/community/saved` | 3 | 4 | 3 | 3 | 3.25 | 1 | Bookmark surface. Empty-state intentional. |
-| `/games` | 3 | 3 | 3 | 3 | 3.00 | 2 | Hub functional. Carry-forward into Sprint 2. |
-| `/games/cuisine-compass` | 3 | 3 | 3 | 3 | 3.00 | 1 | 232-line page, decent. |
-| `/games/flavor-pairs` | 3 | 3 | 3 | 3 | 3.00 | 1 | 363-line. |
-| `/games/speed-chop` | 3 | 3 | 3 | 3 | 3.00 | 1 | 340-line. |
-| `/games/whats-cooking` | 3 | 3 | 3 | 3 | 3.00 | 1 | 401-line — heaviest game. **Stefan flagged that quiz games can't look like minimal-effort throwaways → Sprint 2 deepening target.** |
-| `/sides` | 3 | 4 | 3 | 3 | 3.25 | 1 | Sides browse works; serves as a power-user fallback. |
+| Route                         | I   | M   | C   | P   | Avg  | Weight | Notes                                                                                                                                                                                                                       |
+| ----------------------------- | --- | --- | --- | --- | ---- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/today`                      | 4   | 3   | 4   | 4   | 3.75 | 3      | The home surface. Quest stack + above-fold CTA hold up; W22b drag snap-feedback adds polish. M=3 because the Friends / hidden-card stack adds density that earns its space but pushes the M ceiling.                        |
+| `/cook/[slug]`                | 4   | 4   | 4   | 4   | 4.00 | 3      | Single-flow Guided Cook. Step card, timer, mistake chip, hack chip all consistent with the design language. The strongest surface in the app.                                                                               |
+| `/cook/combined`              | 4   | 3   | 3   | 3   | 3.25 | 3      | Combined-cook flow handles main+side parallelism well but is the heaviest page (1,122 lines). C/P drop slightly: dual-track stepper has its own visual register that diverges from single-cook. **Sprint 1 fix candidate.** |
+| Win screen (within cook flow) | 4   | 4   | 4   | 4   | 4.00 | 3      | Sparkle burst, level-up toast, journal prompt — already at IDEO bar.                                                                                                                                                        |
+| `/path`                       | 3   | 3   | 3   | 3   | 3.00 | 2      | Skill-tree + cuisine grid + tiles read clearly. Carry-forward into Sprint 2 (Path × Games × Pantry sprint).                                                                                                                 |
+| `/path/favorites`             | 3   | 3   | 3   | 3   | 3.00 | 1      | Healthy empty-state needed once.                                                                                                                                                                                            |
+| `/path/pantry`                | 3   | 3   | 3   | 3   | 3.00 | 1      | Pantry CRUD is functional but visually lean — Sprint 2 deepening target.                                                                                                                                                    |
+| `/path/scrapbook`             | 3   | 4   | 3   | 3   | 3.25 | 1      | Cook journal layout is clean.                                                                                                                                                                                               |
+| `/path/shopping-list`         | 3   | 3   | 3   | 3   | 3.00 | 1      | Has the Instacart placeholder integrated; PM unread state is implicit.                                                                                                                                                      |
+| `/community`                  | 4   | 4   | 4   | 4   | 4.00 | 2      | **Now anchors with real Stanford content.** Hero carousel pulls "How to encourage healthy eating habits…" with the FROM STANFORD CHILDREN'S HEALTH kicker + Venus Kalami byline. Verified live (see screenshot).            |
+| `/community/article/[slug]`   | 3   | 4   | 3   | 3   | 3.25 | 1      | Article-detail layout reads well; typography rhythm could be tightened in Sprint 3.                                                                                                                                         |
+| `/community/expert/[slug]`    | 3   | 4   | 3   | 3   | 3.25 | 1      | Expert detail pages now include real Stanford clinicians (Venus Kalami, Maya Adam, etc).                                                                                                                                    |
+| `/community/forum/[id]`       | 2   | 3   | 3   | 2   | 2.50 | 1      | **Cell ≤2.** Forum thread layout is the thinnest surface in the app — minimal effort signal. Sprint 3 target.                                                                                                               |
+| `/community/reels`            | 4   | 4   | 4   | 4   | 4.00 | 2      | Reels V2 (TikTok-style infinite feed) is one of the strongest surfaces.                                                                                                                                                     |
+| `/community/research/[slug]`  | 3   | 4   | 3   | 3   | 3.25 | 1      | Now includes the Stanford gut-health brief with real Stanford byline.                                                                                                                                                       |
+| `/community/saved`            | 3   | 4   | 3   | 3   | 3.25 | 1      | Bookmark surface. Empty-state intentional.                                                                                                                                                                                  |
+| `/games`                      | 3   | 3   | 3   | 3   | 3.00 | 2      | Hub functional. Carry-forward into Sprint 2.                                                                                                                                                                                |
+| `/games/cuisine-compass`      | 3   | 3   | 3   | 3   | 3.00 | 1      | 232-line page, decent.                                                                                                                                                                                                      |
+| `/games/flavor-pairs`         | 3   | 3   | 3   | 3   | 3.00 | 1      | 363-line.                                                                                                                                                                                                                   |
+| `/games/speed-chop`           | 3   | 3   | 3   | 3   | 3.00 | 1      | 340-line.                                                                                                                                                                                                                   |
+| `/games/whats-cooking`        | 3   | 3   | 3   | 3   | 3.00 | 1      | 401-line — heaviest game. **Stefan flagged that quiz games can't look like minimal-effort throwaways → Sprint 2 deepening target.**                                                                                         |
+| `/sides`                      | 3   | 4   | 3   | 3   | 3.25 | 1      | Sides browse works; serves as a power-user fallback.                                                                                                                                                                        |
 
 **Bolded ≤2 cells (sprint-blockers):**
+
 - `/community/forum/[id]` Intentionality and Polish
 
 ## Ranked deficiency list (top 30, ordered by `(4-avg) × weight`)

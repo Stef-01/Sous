@@ -829,7 +829,9 @@ function SwipeCard({
   // Stack positioning: scale down, shift back, and rotate for peek effect
   const scale = 1 - stackIndex * 0.04;
   const translateY = stackIndex * 14;
-  const peekRotation = stackIndex === 1 ? 2 : stackIndex === 2 ? -1.5 : 0;
+  // Sprint 1 W2.3: trim peek-card rotation 2°/-1.5° → 1.5°/-1° so the
+  // hidden cards register as "stacked" without yelling for attention.
+  const peekRotation = stackIndex === 1 ? 1.5 : stackIndex === 2 ? -1 : 0;
 
   return (
     <motion.div
