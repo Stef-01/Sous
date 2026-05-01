@@ -1,7 +1,17 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-05-01
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/STAGE-3-LEAN-CONTENT.md` (lean-vibe inventory + Content tab spec), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/STAGE-3-LEAN-CONTENT.md` (lean-vibe inventory + Content tab spec), **`docs/STAGE-1-2-6MO-TIMELINE.md` (active 6-month Stage 1+2 plan, week-by-week)**, **`docs/PARENT-MODE-PLAN.md` (Parent Mode feature design)**, **`docs/PARENT-MODE-RESEARCH.md` (research synthesis: child-food sensory science, pediatric nutrition, competitor apps, FDA/FTC claims)**, `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## ACTIVE WORKSTREAM: STAGE 1+2 6-MONTH PLAN — IN PROGRESS
+
+> Authored 2026-05-01. The full 26-week plan is in `docs/STAGE-1-2-6MO-TIMELINE.md`. Headline: ship Parent Mode (research-backed, FDA-claim-safe) AND complete production hardening (Clerk, Neon, R2, Redis, Sentry, perf, a11y) by 2026-10-30. Stage 1 prototype is complete; Stage 3 Content tab is complete; this plan integrates remaining production-hardening work with the new Parent Mode feature workstream.
+>
+> Five phases: A (foundation, weeks 1–8), B (Parent Mode UX, weeks 9–12), C (production hardening, weeks 13–18), D (polish + content + closed beta + legal review, weeks 19–24), E (launch prep + buffer, weeks 25–26).
+>
+> See `docs/PARENT-MODE-RESEARCH.md` for the research that grounds the feature design and `docs/PARENT-MODE-PLAN.md` for the surface-by-surface design with prerequisites.
 
 ---
 
