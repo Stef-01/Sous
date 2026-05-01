@@ -352,7 +352,10 @@ function TodayPageContent() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.18 }}
     >
-      {/* Pull-to-refresh indicator */}
+      {/* Pull-to-refresh indicator — W22b animation #8: bird-mascot
+          eyelid blink replaces the bare chevron. Eyes close as the
+          pull approaches threshold; on trigger they open wide. The
+          owl is the same glyph as the header mascot — visual continuity. */}
       {pullState.pulling && (
         <div
           className="flex items-center justify-center overflow-hidden transition-all duration-150"
@@ -363,21 +366,65 @@ function TodayPageContent() {
             style={{ opacity: pullState.progress }}
           >
             <svg
-              className="text-[var(--nourish-green)]"
-              style={{
-                transform: `rotate(${pullState.triggered ? 180 : pullState.progress * 180}deg)`,
-                transition: "transform 0.15s ease",
-              }}
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              viewBox="0 0 64 44"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              aria-hidden
             >
-              <polyline points="6 9 12 15 18 9" />
+              {/* Head */}
+              <circle cx="32" cy="26" r="14" fill="var(--nourish-green)" />
+              {/* Eye whites */}
+              <circle cx="26" cy="24" r="3.5" fill="white" />
+              <circle cx="38" cy="24" r="3.5" fill="white" />
+              {/* Pupils — open when triggered, otherwise scale by progress */}
+              <circle
+                cx="27"
+                cy="23.5"
+                r={
+                  pullState.triggered
+                    ? 1.8
+                    : 1.8 * (1 - pullState.progress * 0.6)
+                }
+                fill="#0D0D0D"
+                style={{ transition: "r 0.12s ease" }}
+              />
+              <circle
+                cx="39"
+                cy="23.5"
+                r={
+                  pullState.triggered
+                    ? 1.8
+                    : 1.8 * (1 - pullState.progress * 0.6)
+                }
+                fill="#0D0D0D"
+                style={{ transition: "r 0.12s ease" }}
+              />
+              {/* Eyelids that drop down with the pull progress */}
+              <rect
+                x="22.5"
+                y={20.5 + pullState.progress * 4}
+                width="7"
+                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                rx="1"
+                fill="var(--nourish-green)"
+                style={{ transition: "height 0.12s ease" }}
+              />
+              <rect
+                x="34.5"
+                y={20.5 + pullState.progress * 4}
+                width="7"
+                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                rx="1"
+                fill="var(--nourish-green)"
+                style={{ transition: "height 0.12s ease" }}
+              />
+              {/* Beak */}
+              <path d="M30 29 L32 33 L34 29" fill="var(--nourish-gold)" />
+              {/* Chef hat */}
+              <ellipse cx="32" cy="14" rx="11" ry="4.5" fill="white" />
+              <rect x="25" y="9" width="14" height="7" rx="2" fill="white" />
+              <circle cx="32" cy="8" r="3.5" fill="white" />
             </svg>
             {pullState.triggered ? "Release to refresh" : "Pull to refresh"}
           </div>

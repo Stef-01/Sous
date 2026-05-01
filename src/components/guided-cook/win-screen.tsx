@@ -170,6 +170,65 @@ function ConfettiLayer() {
   );
 }
 
+/**
+ * SparkleBurst — W22b animation #7. Spring-physics burst of small
+ * sparkles from the center of the screen, fired once on mount.
+ * Complements (does NOT replace) the existing falling-confetti layer;
+ * sparkle gives the cook a sharper "earned" moment alongside the
+ * background party. Pointer-events disabled. Respects reduced-motion
+ * via Framer's useReducedMotion default.
+ */
+function SparkleBurst() {
+  // Stable per-mount sparkle layout. Math.random() is impure under
+  // the repo's react-compiler rule; useState lazy-init runs the
+  // generator exactly once and never re-runs on re-render.
+  const [sparkles] = useState(() =>
+    Array.from({ length: 14 }, (_, i) => {
+      const angle = (i / 14) * Math.PI * 2;
+      const distance = 110 + Math.random() * 60;
+      return {
+        id: i,
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance,
+        delay: i * 0.022,
+        color: i % 2 === 0 ? "#FFFFFF" : "#FFD466", // white + warm gold
+      };
+    }),
+  );
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-1/3 z-[5]"
+      aria-hidden
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      {sparkles.map((s) => (
+        <motion.span
+          key={s.id}
+          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+          animate={{
+            x: s.x,
+            y: s.y,
+            scale: [0, 1.2, 0],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 0.9,
+            delay: s.delay,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="absolute block rounded-full"
+          style={{
+            width: 8,
+            height: 8,
+            background: s.color,
+            boxShadow: `0 0 12px ${s.color}aa`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 interface Milestone {
   icon: React.ReactNode;
   headline: string;
@@ -427,6 +486,9 @@ export function WinScreen({
     <div className="relative">
       {/* Confetti burst  -  fixed overlay, auto-hides */}
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
+      {/* W22b: spring-physics sparkle burst from center, additive to
+          the falling confetti above. Sharper "earned" moment. */}
+      <AnimatePresence>{showConfetti && <SparkleBurst />}</AnimatePresence>
 
       <motion.div
         initial={false}
