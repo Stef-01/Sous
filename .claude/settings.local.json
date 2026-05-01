@@ -15,7 +15,10 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(curl -s 'http://localhost:3000/community')",
       "Bash(curl -s 'http://localhost:3000/community?xx=1')",
-      "Bash(curl -s 'http://localhost:3000/community?xx=2')"
+      "Bash(curl -s 'http://localhost:3000/community?xx=2')",
+      "Bash(qmd --help)",
+      "WebSearch",
+      "mcp__Claude_in_Chrome__tabs_context_mcp"
     ],
     "deny": []
   }
