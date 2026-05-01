@@ -6,6 +6,7 @@ import {
   motion,
   useMotionValue,
   useTransform,
+  useReducedMotion,
   AnimatePresence,
   type PanInfo,
 } from "framer-motion";
@@ -776,6 +777,7 @@ function SwipeCard({
   parentModeOn: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
+  const reducedMotion = useReducedMotion();
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
 
@@ -790,21 +792,32 @@ function SwipeCard({
   // threshold. Card scales ~2% and a green/rose glow shadow blooms in
   // so the swipe "commits" feel earned rather than mute. Pure motion
   // transforms — no state, no re-render.
+  // Reduced motion: collapse the scale envelope to a no-op (constant 1)
+  // and keep the shadow flat. Drag still works; the celebratory bloom
+  // is what we suppress.
   const cardScale = useTransform(
     x,
     [-160, -80, 0, 80, 160],
-    [1.02, 1.005, 1, 1.005, 1.02],
+    reducedMotion ? [1, 1, 1, 1, 1] : [1.02, 1.005, 1, 1.005, 1.02],
   );
   const cardShadow = useTransform(
     x,
     [-160, -80, 0, 80, 160],
-    [
-      "0 16px 32px -10px rgba(244,63,94,0.45)",
-      "0 8px 16px -8px rgba(244,63,94,0.20)",
-      "0 4px 12px -4px rgba(13,13,13,0.10)",
-      "0 8px 16px -8px rgba(45,90,61,0.20)",
-      "0 16px 32px -10px rgba(45,90,61,0.45)",
-    ],
+    reducedMotion
+      ? [
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+        ]
+      : [
+          "0 16px 32px -10px rgba(244,63,94,0.45)",
+          "0 8px 16px -8px rgba(244,63,94,0.20)",
+          "0 4px 12px -4px rgba(13,13,13,0.10)",
+          "0 8px 16px -8px rgba(45,90,61,0.20)",
+          "0 16px 32px -10px rgba(45,90,61,0.45)",
+        ],
   );
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {

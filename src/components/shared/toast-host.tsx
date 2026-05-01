@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import {
   useActiveToast,
@@ -41,6 +41,7 @@ const VARIANT_STYLES: Record<
  */
 export function ToastHost() {
   const active = useActiveToast();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (!active) return;
@@ -65,22 +66,32 @@ export function ToastHost() {
             // W22b: achievement + level-up toasts slide up further +
             // settle with a softer spring so they feel like a celebration
             // sheet rather than a notification chip. Other variants keep
-            // the original tighter motion.
+            // the original tighter motion. Reduced-motion: collapses to
+            // an opacity-only fade with no y-translate.
             initial={
-              active.variant === "achievement" || active.variant === "level-up"
-                ? { opacity: 0, y: 80, scale: 0.86 }
-                : { opacity: 0, y: 40, scale: 0.92 }
+              reducedMotion
+                ? { opacity: 0 }
+                : active.variant === "achievement" ||
+                    active.variant === "level-up"
+                  ? { opacity: 0, y: 80, scale: 0.86 }
+                  : { opacity: 0, y: 40, scale: 0.92 }
             }
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={
-              active.variant === "achievement" || active.variant === "level-up"
-                ? { opacity: 0, y: 60, scale: 0.9 }
-                : { opacity: 0, y: 40, scale: 0.92 }
+              reducedMotion
+                ? { opacity: 0 }
+                : active.variant === "achievement" ||
+                    active.variant === "level-up"
+                  ? { opacity: 0, y: 60, scale: 0.9 }
+                  : { opacity: 0, y: 40, scale: 0.92 }
             }
             transition={
-              active.variant === "achievement" || active.variant === "level-up"
-                ? { type: "spring", stiffness: 220, damping: 20, mass: 0.95 }
-                : { type: "spring", stiffness: 300, damping: 22 }
+              reducedMotion
+                ? { duration: 0.12 }
+                : active.variant === "achievement" ||
+                    active.variant === "level-up"
+                  ? { type: "spring", stiffness: 220, damping: 20, mass: 0.95 }
+                  : { type: "spring", stiffness: 300, damping: 22 }
             }
             className="pointer-events-auto w-full"
           >

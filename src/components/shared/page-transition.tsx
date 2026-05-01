@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -40,6 +40,7 @@ function tabOrderFor(pathname: string): number | null {
 
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const reducedMotion = useReducedMotion();
   const [prevPathname, setPrevPathname] = useState<string | null>(null);
 
   const currentOrder = tabOrderFor(pathname);
@@ -62,6 +63,22 @@ export function PageTransition({ children }: { children: ReactNode }) {
       setPrevPathname(pathname);
     }
   }, [pathname, prevPathname]);
+
+  // Reduced motion: collapse the directional slide to an opacity-only
+  // fade. Keeps page swaps visually distinct without the lateral move
+  // that triggers vestibular sensitivity.
+  if (reducedMotion) {
+    return (
+      <motion.div
+        key={pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+      >
+        {children}
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

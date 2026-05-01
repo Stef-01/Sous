@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   X,
   ArrowLeft,
@@ -80,6 +80,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
   const [result, setResult] = useState<CoachQuizResult | null>(null);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const reducedMotion = useReducedMotion();
 
   const question = coachQuizQuestions[currentQ];
 
@@ -444,18 +445,26 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                   whileTap={{ scale: 0.97 }}
                   animate={
                     selectedOption === idx
-                      ? {
-                          // W22b animation: pulse on selection (1 → 1.06 →
-                          // settle at 1.02). Reads as "yes, that one."
-                          scale: [1, 1.06, 1.02],
-                          borderColor: "var(--nourish-green)",
-                        }
+                      ? reducedMotion
+                        ? {
+                            // Reduced-motion: settle at 1.02 directly,
+                            // no keyframe pulse.
+                            scale: 1.02,
+                            borderColor: "var(--nourish-green)",
+                          }
+                        : {
+                            // W22b animation: pulse on selection
+                            // (1 → 1.06 → settle at 1.02). Reads as
+                            // "yes, that one."
+                            scale: [1, 1.06, 1.02],
+                            borderColor: "var(--nourish-green)",
+                          }
                       : selectedOption !== null
                         ? { opacity: 0.5, scale: 0.98 }
                         : { opacity: 1, scale: 1 }
                   }
                   transition={
-                    selectedOption === idx
+                    selectedOption === idx && !reducedMotion
                       ? { duration: 0.45, times: [0, 0.4, 1], ease: "easeOut" }
                       : { type: "spring", stiffness: 400, damping: 20 }
                   }
