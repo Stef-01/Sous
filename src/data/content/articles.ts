@@ -10,8 +10,9 @@
  */
 
 import type { Article } from "@/types/content";
+import { STANFORD_ARTICLES } from "./stanford";
 
-export const ARTICLES: Article[] = [
+const PLACEHOLDER_ARTICLES: Article[] = [
   {
     id: "art-myth-carbs",
     category: "articles",
@@ -140,6 +141,16 @@ export const ARTICLES: Article[] = [
     tags: ["recovery", "performance", "rest-day"],
     createdAt: "2026-04-16T09:00:00.000Z",
   },
+];
+
+/**
+ * Real Stanford-attributed articles get prepended so they surface first
+ * in any unsorted list. Sprint-1 Stanford content run #1 is the first
+ * batch; subsequent runs append to STANFORD_ARTICLES in ./stanford.ts.
+ */
+export const ARTICLES: Article[] = [
+  ...STANFORD_ARTICLES,
+  ...PLACEHOLDER_ARTICLES,
 ];
 
 export function getArticleBySlug(slug: string): Article | undefined {

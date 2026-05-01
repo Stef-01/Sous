@@ -7,8 +7,9 @@
  */
 
 import type { ExpertVoice } from "@/types/content";
+import { STANFORD_EXPERTS } from "./stanford";
 
-export const EXPERT_VOICES: ExpertVoice[] = [
+const PLACEHOLDER_EXPERTS: ExpertVoice[] = [
   {
     id: "expert-maya-patel",
     category: "experts",
@@ -65,6 +66,12 @@ export const EXPERT_VOICES: ExpertVoice[] = [
     createdAt: "2026-04-15T10:00:00.000Z",
     articleIds: ["art-protein-debate", "art-rest-day-fueling"],
   },
+];
+
+/** Real Stanford clinicians prepended; placeholders follow. */
+export const EXPERT_VOICES: ExpertVoice[] = [
+  ...STANFORD_EXPERTS,
+  ...PLACEHOLDER_EXPERTS,
 ];
 
 export function getExpertById(id: string): ExpertVoice | undefined {

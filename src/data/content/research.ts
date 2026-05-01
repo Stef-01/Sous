@@ -10,8 +10,9 @@
  */
 
 import type { ResearchBrief } from "@/types/content";
+import { STANFORD_RESEARCH_BRIEFS } from "./stanford";
 
-export const RESEARCH_BRIEFS: ResearchBrief[] = [
+const PLACEHOLDER_RESEARCH_BRIEFS: ResearchBrief[] = [
   {
     id: "rsrch-fiber-gut",
     category: "research",
@@ -138,6 +139,12 @@ export const RESEARCH_BRIEFS: ResearchBrief[] = [
     coverImageUrl: "/food_images/sambar.png",
     createdAt: "2026-04-15T09:00:00.000Z",
   },
+];
+
+/** Real Stanford-attributed briefs prepended; placeholders follow. */
+export const RESEARCH_BRIEFS: ResearchBrief[] = [
+  ...STANFORD_RESEARCH_BRIEFS,
+  ...PLACEHOLDER_RESEARCH_BRIEFS,
 ];
 
 export function getResearchBriefBySlug(
