@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Flame, MoreHorizontal } from "lucide-react";
 import { useRestDays } from "@/lib/hooks/use-rest-days";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
@@ -23,6 +23,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
   const [confirming, setConfirming] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { canRestToday, todayIsRestDay, markRestDay, mounted } = useRestDays();
+  const reducedMotion = useReducedMotion();
   const { awardXP } = useXPSystem();
 
   // Close the popover on outside tap / Escape, matching the existing subtle
@@ -77,7 +78,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         <motion.span
           aria-label="streak"
           animate={
-            streak >= 3
+            streak >= 3 && !reducedMotion
               ? { scale: [1, 1.08, 1], opacity: [1, 0.85, 1] }
               : undefined
           }

@@ -487,8 +487,11 @@ export function WinScreen({
       {/* Confetti burst  -  fixed overlay, auto-hides */}
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
       {/* W22b: spring-physics sparkle burst from center, additive to
-          the falling confetti above. Sharper "earned" moment. */}
-      <AnimatePresence>{showConfetti && <SparkleBurst />}</AnimatePresence>
+          the falling confetti above. Sharper "earned" moment. Skipped
+          under prefers-reduced-motion. */}
+      <AnimatePresence>
+        {showConfetti && !prefersReducedMotion && <SparkleBurst />}
+      </AnimatePresence>
 
       <motion.div
         initial={false}
