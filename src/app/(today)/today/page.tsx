@@ -12,6 +12,7 @@ import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
+import { ProfileSettingsSheet } from "@/components/shared/profile-settings-sheet";
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
@@ -63,6 +64,7 @@ function TodayPageContent() {
   const [showSearch, setShowSearch] = useState(false);
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
@@ -391,7 +393,11 @@ function TodayPageContent() {
             })()}
           </div>
           {/* Owl mascot  -  profile position */}
-          <OwlAvatar onClick={handleOpenSearch} />
+          {/* Mascot is the entry point to Profile & Settings (W9 design pivot:
+              CLAUDE.md rule 3 amendment for a single sheet — see
+              docs/PARENT-MODE-PLAN.md §4.1). Search has its own primary entry
+              via CravingSearchBar so this repurposing is non-destructive. */}
+          <OwlAvatar onClick={() => setShowProfileSettings(true)} />
         </div>
       </header>
 
@@ -452,6 +458,13 @@ function TodayPageContent() {
         onRescueFridge={handleRescueFridge}
         onPlayGame={() => router.push("/games")}
         onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
+      />
+
+      {/* Profile & settings — opened by tapping the owl mascot. Holds the
+          Parent Mode toggle + age band picker. NOT a tab. */}
+      <ProfileSettingsSheet
+        open={showProfileSettings}
+        onClose={() => setShowProfileSettings(false)}
       />
 
       {/* Search popout  -  slides up from bottom */}

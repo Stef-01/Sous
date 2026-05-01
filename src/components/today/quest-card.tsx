@@ -39,6 +39,7 @@ import {
 } from "@/components/shared/filter-dropdown";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
+import { KidFriendlyHint } from "@/components/today/kid-friendly-hint";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
@@ -968,6 +969,10 @@ function SwipeCard({
               {ingredientReuse}.
             </p>
           )}
+          {/* Parent-mode kid-friendly hint  -  silent unless PM is on AND
+              the dish has a hand-curated label that scores >= 0.65. Top
+              card only (Stage-2 W9). */}
+          {isTop && <KidFriendlyHint dishSlug={dish.slug} />}
         </div>
 
         {/* Action row  -  heart save + Start cooking */}

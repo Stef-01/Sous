@@ -123,20 +123,24 @@ Content tab ─── parent-track reorders Articles, Reels, Research by parent-
 
 ## 4. Surface-by-surface design
 
-### 4.1 The toggle (no settings page)
+### 4.1 The toggle (Profile & Settings sheet — W9 design pivot)
 
-**Where it lives:** A contextual chip on the Today page header, surfaced via the coach quiz's "Cooking for kids today?" question (first time) and a permanent small chip near the streak counter once enabled.
+**Where it lives:** A new **Profile & Settings sheet** opened by tapping the owl mascot in the top-right of the Today header. The sheet is a bottom sheet (NOT a tab — bottom nav stays Today · Path · Content). The Parent Mode toggle + age band picker live inside this sheet alongside a profile placeholder (until Stage 2 W13 Clerk lands) and an about/disclaimer block.
 
-**Why no settings page:** CLAUDE.md rule 3. Preferences are learned or captured through playful coach interactions, never through a settings panel.
+**CLAUDE.md rule 3 amendment:** This sheet is the single permitted exception to the "no settings pages" rule. The amendment is captured in CLAUDE.md rule 3 itself. New configuration UI must NOT pile into the sheet without a written rule-3 amendment.
 
-**First-time capture:**
+**Why the mascot button:** Search (the mascot's previous tap target) keeps its primary entry via `CravingSearchBar` directly below the header, so repurposing the mascot is non-destructive. The mascot was already a visible "you" affordance in the profile-position slot; making it the actual profile entry is what users expect.
 
-- During the existing coach quiz (first visit), add ONE question: _"Who's at the table tonight?"_ with chips: `Just me`, `Adults only`, `Kids too`.
-- Selecting "Kids too" reveals one optional follow-up: _"Roughly how old?"_ with chips: `1–3`, `4–8`, `9–13`, `Mix`. (Used for DV reference; default 4–8 if skipped.)
+**First-time capture (unchanged):**
 
-**Persistent toggle:**
+- During the existing coach quiz (first visit), the new "Who's at the table tonight?" question (W7) captures: `Just me`, `Adults only`, `Toddlers (1–3)`, `Little kids (4–8)`, `Big kids (9–13)`, `Mixed ages`.
+- A kid-bearing answer auto-enables Parent Mode with the matching age band; the user can change either via the sheet thereafter.
 
-- A small `Parent Mode · ON` chip near the Today header. Tap to flip. No menu.
+**Sheet sections (W9 V1):**
+
+1. **Profile** — placeholder block; real auth lands in Stage 2 W13.
+2. **Parent Mode** — toggle (animated rocker) + Age band picker (5 chips: 1–3, 4–8, 9–13, 14–18, Mixed) shown only when PM is on. Includes the standard inline disclaimer.
+3. **About** — free-public-good positioning + sample-content reminder.
 
 **Persistence:** `localStorage:sous-parent-mode-v1`.
 
