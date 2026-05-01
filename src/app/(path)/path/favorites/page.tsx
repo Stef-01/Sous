@@ -43,11 +43,27 @@ export default function FavoritesPage() {
           <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
             Favorites
           </h1>
+          {mounted && favoriteSessions.length > 0 && (
+            <span className="ml-auto text-xs text-[var(--nourish-subtext)]">
+              {favoriteSessions.length} saved
+            </span>
+          )}
         </div>
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-md px-4 pt-4 pb-28 space-y-2">
+      <main className="mx-auto max-w-md space-y-2 px-4 pt-4 pb-28">
+        {mounted && favoriteSessions.length > 0 && (
+          <p className="mb-2 flex items-center gap-1.5 text-[11px] text-[var(--nourish-subtext)]">
+            <Heart
+              size={11}
+              fill="currentColor"
+              className="text-pink-400"
+              aria-hidden
+            />
+            <span>Tap any card to cook it again.</span>
+          </p>
+        )}
         {!mounted ? (
           <div className="space-y-2 animate-pulse">
             <div className="rounded-xl bg-neutral-100 h-20" />

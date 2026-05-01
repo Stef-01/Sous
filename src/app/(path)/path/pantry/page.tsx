@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Bookmark, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
 
 /**
@@ -14,6 +14,7 @@ import { usePantry } from "@/lib/hooks/use-pantry";
  */
 export default function PantryPage() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { items, mounted, remove, clear, size } = usePantry();
 
   return (
@@ -63,22 +64,43 @@ export default function PantryPage() {
             <p className="text-sm font-medium text-[var(--nourish-dark)]">
               Nothing stashed yet.
             </p>
-            <p className="mt-1 text-xs text-[var(--nourish-subtext)]">
-              Tap the bookmark next to any ingredient while you cook.
+            <p className="mx-auto mt-1 max-w-[260px] text-xs text-[var(--nourish-subtext)]">
+              Tap the bookmark next to any ingredient while you cook — the
+              pantry remembers, so you don&rsquo;t have to.
             </p>
+            <button
+              onClick={() => router.push("/today")}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97]"
+              type="button"
+            >
+              Find something to cook
+            </button>
           </div>
         ) : (
           <>
+            <div className="mb-3 flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/8 px-3 py-1.5 text-[11px] text-[var(--nourish-green)]">
+              <Sparkles size={11} aria-hidden />
+              <span>Auto-applied to your next cook&rsquo;s Grab screen.</span>
+            </div>
+
             <ul className="space-y-1.5">
               <AnimatePresence initial={false}>
                 {items.map((name) => (
                   <motion.li
                     key={name}
-                    layout
-                    initial={{ opacity: 0, y: 4 }}
+                    layout={!reducedMotion}
+                    initial={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }
+                    }
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: 40 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
+                    exit={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
+                    }
+                    transition={
+                      reducedMotion
+                        ? { duration: 0.15 }
+                        : { type: "spring", stiffness: 300, damping: 26 }
+                    }
                     className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
                   >
                     <Bookmark

@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
@@ -94,13 +94,47 @@ export default function ShoppingListPage() {
             <p className="text-sm font-medium text-[var(--nourish-dark)]">
               List is empty.
             </p>
-            <p className="mt-1 text-xs text-[var(--nourish-subtext)]">
+            <p className="mx-auto mt-1 max-w-[260px] text-xs text-[var(--nourish-subtext)]">
               Tap &ldquo;Add to shopping list&rdquo; on the Grab screen while
-              you cook.
+              you cook — missing ingredients land here.
             </p>
+            <button
+              onClick={() => router.push("/today")}
+              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97]"
+              type="button"
+            >
+              Find something to cook
+            </button>
           </div>
         ) : (
           <>
+            {/* Quiet progress strip — only shows once at least one
+                item has been bought, so an unstarted list stays clean. */}
+            {boughtItems.length > 0 && unboughtCount > 0 && (
+              <div
+                className="mb-3 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-[11px] tabular-nums text-[var(--nourish-subtext)] ring-1 ring-neutral-200"
+                aria-label={`${boughtItems.length} of ${items.length} bought`}
+              >
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  {boughtItems.length}
+                </span>
+                <span>of {items.length} bought</span>
+                <span
+                  aria-hidden
+                  className="ml-auto h-1.5 w-20 overflow-hidden rounded-full bg-neutral-200"
+                >
+                  <span
+                    className="block h-full bg-[var(--nourish-green)] transition-[width] duration-300"
+                    style={{
+                      width: `${Math.round(
+                        (boughtItems.length / items.length) * 100,
+                      )}%`,
+                    }}
+                  />
+                </span>
+              </div>
+            )}
+
             <ul className="space-y-1.5">
               <AnimatePresence initial={false}>
                 {unboughtItems.map((item) => (
@@ -182,13 +216,18 @@ function ShoppingRow({
   onToggle: () => void;
   onRemove: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.li
-      layout
-      initial={{ opacity: 0, y: 4 }}
+      layout={!reducedMotion}
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: 40 }}
-      transition={{ type: "spring", stiffness: 300, damping: 26 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }}
+      transition={
+        reducedMotion
+          ? { duration: 0.15 }
+          : { type: "spring", stiffness: 300, damping: 26 }
+      }
       className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
     >
       <button
