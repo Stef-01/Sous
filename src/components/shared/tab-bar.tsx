@@ -144,6 +144,8 @@ function TabIcon({
         </svg>
       );
     case "community":
+      // Stack-of-cards icon — signals the Content magazine surface
+      // (reels + articles + research) better than the old "users" glyph.
       return (
         <svg
           width={size}
@@ -157,10 +159,10 @@ function TabIcon({
           aria-hidden="true"
           focusable="false"
         >
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          <rect x="4" y="3" width="16" height="14" rx="2.5" />
+          <path d="M8 7h8" />
+          <path d="M8 11h6" />
+          <path d="M3 20h14" />
         </svg>
       );
   }

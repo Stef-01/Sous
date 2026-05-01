@@ -92,7 +92,7 @@ src/
 2. **One primary action per screen**: Never show two equally-weighted CTAs. One button dominates; alternatives are visually subordinate.
 3. **No settings pages**: Preferences are learned from behavior or captured through playful coach interactions. Never expose filter panels, preference checklists, or configuration screens.
 4. **Quest shell consistency**: Every recipe — internal, user-created, or externally retrieved — renders through the same Mission → Grab → Cook → Win flow. No exceptions.
-5. **Progressive interface**: New users see only the Today tab. Path reveals after 3 completed cooks. Community after 30 days. This is enforced in the layout, not optional.
+5. **Progressive interface (superseded by Stage 3)**: Originally Today → Path (3 cooks) → Community (30 days). As of Stage 3, all three tabs are always visible: **Today · Path · Content**. The third tab is now a Flo-style content magazine, not a social-graph product, so the unlock gate no longer applies.
 6. **Simplicity-first UI**: When in doubt, remove it. Badges, labels, metadata, and decorative elements should be stripped unless they directly drive the user to cook. The home screen should feel clean and inviting, not information-dense. Every element must earn its pixel space.
 7. **No invented recipes or images**: Never generate new dish entries or images that don't already exist in the dataset (`sides.json`, `meals.json`). When adding guided cook instructions, only add step-by-step cook flows to existing meals and sides already present in the data layer. New recipes must come from real, reputable online sources and be added to the existing side/meal catalog first.
 8. **Consult STRATEGY.md before planning new features**: Before designing or implementing any new feature, read STRATEGY.md to ensure the feature aligns with the strategic thesis, strengthens a compounding moat, and passes the feature prioritization criteria. Update STRATEGY.md's decision log when making significant feature decisions.
@@ -100,6 +100,7 @@ src/
 10. **No-scroll navigation**: The primary CTA and all navigation elements on every screen must be visible without scrolling on a 375px × 667px viewport (iPhone SE). If content pushes the CTA below the fold, use flex layout with `mt-auto` to pin it to the bottom. This is non-negotiable.
 11. **Current feature state (do not revert)**: The following features are intentional design decisions and must not be removed or changed without explicit user approval:
     - Path tab is ALWAYS visible in the tab bar (no progressive unlock gate)
+    - **Content tab (route id `community`, label `Content`) is ALWAYS visible** — Stage 3 dropped the 30-day unlock gate. Three permanent tabs: Today · Path · Content.
     - Friends social meals section is on the Today page, BELOW the fold (scroll to see)
     - Coach quiz runs on first visit only
     - Cuisine mastery paths (8 cuisines) are in the skill tree as a separate grid section
@@ -108,6 +109,7 @@ src/
     - Sides: 98/205 have imageUrl (food_images/\*.png), rest use gradient+emoji fallback
     - Do NOT generate new images — that is handled by a separate AI pipeline
     - Clerk auth is bypassed with mock user (re-enable for production only)
+    - **Content tab editorial copy is sample/placeholder** with `isPlaceholder: true` flags and clearly fictional author names + `(sample)` affiliation suffixes. Do NOT swap in real clinician names or real lab affiliations without an editorial workstream — that is a Stage-2 effort. See `docs/STAGE-3-LEAN-CONTENT.md` for the full Content tab spec and lean-vibe inventory.
 
 ## AI integration notes
 

@@ -1,7 +1,38 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-17
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Updated:** 2026-05-01
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/STAGE-3-LEAN-CONTENT.md` (lean-vibe inventory + Content tab spec), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## STAGE 3: LEAN VIBE-CODED + CONTENT TAB — COMPLETE
+
+> Pushed before Stage 2 (production hardening). Per Stefan's directive, grow user-facing surface as far as the lean prototype credibly can before paying the production-tax of Clerk + Neon + R2 + Sentry + Redis. Full spec in `docs/STAGE-3-LEAN-CONTENT.md`.
+
+### Lean-vibe posture (zero new infra)
+
+- All persistence remains `localStorage` + static JSON.
+- All AI keeps its mock-provider fallback.
+- Auth still bypassed with the mock user.
+- Stage-2 concerns (Clerk, Neon, R2, Redis, Sentry, PWA, i18n, real video transcoding, content moderation, clinician verification) are explicitly deferred and called out in the Stage-3 doc.
+
+### What shipped
+
+- **Tab bar restructure** — third tab renamed `Content` (route id `community` preserved for compat), always-visible. Tab order is now Today · Path · Content.
+- **Content home** (`/community`) — header, bookmark launcher, category filter strip (`For You · Reels · Articles · Research · Experts · Forum`), 3-card featured hero carousel, horizontal Reels rail, 2-column Articles grid, Research Spotlight stack, Expert Voices avatar row, Forum thread list, sample-content disclaimer.
+- **Reel player sheet** — full-screen vertical sheet with simulated player chrome (poster image, progress bar, play overlay, like/save/share rail). Honest about the lack of real video. Like + view-count state persists locally via `useReelEngagement`.
+- **Detail routes** — `/community/article/[slug]`, `/community/research/[slug]`, `/community/expert/[slug]`, `/community/forum/[id]`, `/community/reels`, `/community/saved`. Each has matching back nav, bookmark toggle, and disclaimer footer.
+- **Forum reply box** — `useForumDrafts` writes mock-replies to localStorage; replies render in-thread with a "(local draft)" tag so the prototype is never confused with a server-backed forum.
+- **Saved page** — bookmarked articles, reels, briefs, and threads in one surface, with empty state.
+- **Sample content seed** — 6 articles, 8 reels, 6 research briefs, 4 expert profiles, 5 forum threads. Every item carries `isPlaceholder: true`. All authors are fictional. Affiliations carry the `(sample)` suffix. No new images invented — only `/public/food_images/*.png` already in repo.
+- **New hooks** — `useContentBookmarks` (kind:id keyed, 100-cap), `useContentFilter` (sessionStorage), `useReelEngagement`, `useForumDrafts`.
+- **CLAUDE.md updated** — rule 5 superseded note, rule 11 extended with Content tab + sample-content guardrails.
+
+### What did not move
+
+- Production hardening — Stage 2 still untouched.
+- Recipe data, pairing engine, Today/Path surfaces — unchanged.
+- AI router and mock fallback — unchanged.
 
 ---
 
