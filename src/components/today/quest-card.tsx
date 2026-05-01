@@ -40,6 +40,7 @@ import {
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
 import { KidFriendlyHint } from "@/components/today/kid-friendly-hint";
+import { KidSwapChip } from "@/components/today/kid-swap-chip";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
@@ -973,6 +974,19 @@ function SwipeCard({
               the dish has a hand-curated label that scores >= 0.65. Top
               card only (Stage-2 W9). */}
           {isTop && <KidFriendlyHint dishSlug={dish.slug} />}
+          {/* Parent-mode kid-swap chip  -  surfaces only on borderline
+              middle-of-the-road dishes (0.30 <= score < 0.65). Sheet
+              writes the chosen swap to the recipe-overlay system so it
+              re-appears at next cook. (Stage-2 W11) */}
+          {isTop && (
+            <div className="pt-1">
+              <KidSwapChip
+                dishSlug={dish.slug}
+                cuisineFamily={dish.cuisineFamily}
+                recipeName={dish.dishName}
+              />
+            </div>
+          )}
         </div>
 
         {/* Action row  -  heart save + Start cooking */}

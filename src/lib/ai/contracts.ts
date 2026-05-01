@@ -143,6 +143,45 @@ export type PostCookReflectionResult = z.infer<
 
 // ── Provider Interface ──────────────────────────────────
 
+// ── Kid-friendly swaps (W11) ────────────────────────────
+
+export const kidSwapsInputSchema = z.object({
+  recipeName: z.string(),
+  cuisineFamily: z.string(),
+  /** The 8-field kid-friendliness label fields (or partial subset). */
+  signals: z.object({
+    bitterLoad: z.number().int().min(0).max(3),
+    smellIntensity: z.number().int().min(0).max(3),
+    textureRisk: z.number().int().min(0).max(3),
+    visibleGreenFlecks: z.boolean(),
+    deconstructable: z.boolean(),
+    heatLevel: z.number().int().min(0).max(4),
+    familiarityAnchor: z.boolean(),
+    colorBrightness: z.number().int().min(0).max(3),
+  }),
+  /** Pediatric age band so AI can tune wording. */
+  ageBand: z.enum(["1-3", "4-8", "9-13", "14-18", "mix"]),
+});
+
+export type KidSwapsInput = z.infer<typeof kidSwapsInputSchema>;
+
+export const kidSwapsResultSchema = z.object({
+  /** 2-3 swap chips. Each is one short imperative line. */
+  swaps: z
+    .array(
+      z.object({
+        /** Short label for the chip ("Mild cheese", "Sauce on side"). */
+        label: z.string().max(40),
+        /** One-sentence rationale. Tap-to-expand. */
+        rationale: z.string().max(160),
+      }),
+    )
+    .min(1)
+    .max(3),
+});
+
+export type KidSwapsResult = z.infer<typeof kidSwapsResultSchema>;
+
 export interface AIProvider {
   explainPairing(input: ExplainPairingInput): Promise<ExplainPairingResult>;
   answerCookQuestion(input: CookQuestionInput): Promise<CookQuestionResult>;
@@ -154,4 +193,5 @@ export interface AIProvider {
   generateReflection(
     input: PostCookReflectionInput,
   ): Promise<PostCookReflectionResult>;
+  suggestKidSwaps(input: KidSwapsInput): Promise<KidSwapsResult>;
 }

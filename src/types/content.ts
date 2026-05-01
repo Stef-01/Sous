@@ -18,7 +18,22 @@ export interface BaseContentItem {
   category: ContentCategory;
   title: string;
   createdAt: string;
-  isPlaceholder: true;
+  /**
+   * `true` for Stage 3 seed items (sample/placeholder authors and
+   * affiliations). Items swapped for real Stanford-attributed content
+   * via the Content Population Phase set this to `false` and populate
+   * the four sourceXxx + permissionEvidence fields below.
+   * Kept literal `true` on the seed items for type safety.
+   */
+  isPlaceholder: boolean;
+  /** Stanford-domain (or other authorised) origin URL when real. */
+  sourceUrl?: string;
+  /** Human-readable source title rendered next to the byline. */
+  sourceTitle?: string;
+  /** ISO timestamp of the last refresh of the saved snapshot. */
+  sourceFetchedAt?: string;
+  /** Path inside docs/ proving the team had permission. */
+  permissionEvidence?: string;
 }
 
 export interface Article extends BaseContentItem {
