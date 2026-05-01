@@ -42,6 +42,7 @@ import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
 import { KidFriendlyHint } from "@/components/today/kid-friendly-hint";
 import { KidSwapChip } from "@/components/today/kid-swap-chip";
 import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
+import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
@@ -364,7 +365,13 @@ function buildMealTags(
   description: string,
   poolSize: number,
 ): string[] {
-  const tags = [cuisine];
+  // Cuisine is already shown as the image-overlay pill — do NOT duplicate
+  // it here as a tag chip (W12 minimalism audit fix; CLAUDE.md rule 6).
+  // `cuisine` is intentionally referenced via the eslint-disable below
+  // to keep the function signature stable for buildSideTags + callers.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature stable; cuisine surfaced via image-overlay pill instead
+  const _cuisineSurface = cuisine;
+  const tags: string[] = [];
   const desc = description.toLowerCase();
   const flavorWords: [string, string][] = [
     ["spicy", "Spicy"],
@@ -466,6 +473,12 @@ export function QuestCard({
     null,
   );
   const { saveDish, isDishSaved } = useSavedDishes();
+  // Parent Mode profile is consulted at the QuestCard level so we can
+  // pass `parentModeOn` down to SwipeCard. When PM is on, we suppress
+  // the rationale + ingredient-reuse lines on the top card so PM hints
+  // (kid hint / kid swap / nutrient spotlight) don't stack into a wall
+  // of supplementary lines (W12 minimalism audit fix, POLISH §1.5.2).
+  const { profile: parentProfile } = useParentMode();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
   const haptic = useHaptic();
@@ -700,6 +713,7 @@ export function QuestCard({
                     ? (topIngredientReuse?.text ?? null)
                     : null
                 }
+                parentModeOn={parentProfile.enabled}
               />
             ))}
         </AnimatePresence>
@@ -740,6 +754,7 @@ function SwipeCard({
   exitDirection,
   rationale,
   ingredientReuse,
+  parentModeOn,
 }: {
   dish: QuestDish & { stackIndex: number };
   stackIndex: number;
@@ -756,6 +771,9 @@ function SwipeCard({
   /** Optional "reuses cilantro from yesterday's tacos" hint. Only the top
    *  card receives one. Silent when no recent ingredient overlap exists. */
   ingredientReuse: string | null;
+  /** When true, suppresses rationale + ingredient-reuse on the top card
+   *  so PM hints don't stack into a wall of supplementary lines. */
+  parentModeOn: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
   const x = useMotionValue(0);
@@ -946,27 +964,32 @@ function SwipeCard({
               </span>
             </div>
           )}
-          {/* Flavor tags */}
-          <div className="flex items-center gap-1.5 pt-0.5">
-            {dish.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          {/* Memory line  -  ambient, italic, visually quiet. Only renders
-              when the rationale builder cleared its threshold. */}
-          {rationale && (
+          {/* Flavor tags — row hides entirely when empty (CLAUDE.md rule 6:
+              counts/elements that are zero hide the whole element). */}
+          {dish.tags.length > 0 && (
+            <div className="flex items-center gap-1.5 pt-0.5">
+              {dish.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+          {/* Supplementary lines below the description are capped at 2
+              total under Parent Mode (W12 audit fix): when PM is on,
+              the kid hint / kid swap / nutrient spotlight take priority,
+              so we suppress rationale + ingredient-reuse on the top
+              card. Non-PM cards render rationale + ingredient-reuse as
+              before (also <= 2 lines). */}
+          {!parentModeOn && rationale && (
             <p className="pt-1 text-[11px] italic leading-snug text-[var(--nourish-subtext)]">
               {rationale}.
             </p>
           )}
-          {/* Ingredient-reuse hint  -  surfaced only when a recent cook shares
-              a non-staple ingredient with this dish. */}
-          {ingredientReuse && (
+          {!parentModeOn && ingredientReuse && (
             <p className="text-[11px] leading-snug text-[var(--nourish-green)]/80">
               {ingredientReuse}.
             </p>
