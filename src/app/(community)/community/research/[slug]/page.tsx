@@ -55,7 +55,7 @@ export default function ResearchBriefPage({
           <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
             Takeaway
           </p>
-          <p className="mt-1.5 text-[15px] font-medium leading-relaxed text-[var(--nourish-dark)]">
+          <p className="mt-1.5 text-[15px] font-medium leading-[1.6] text-[var(--nourish-dark)]">
             {brief.takeaway}
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function ResearchBriefPage({
         {brief.body.map((paragraph, idx) => (
           <p
             key={idx}
-            className="text-[15px] leading-relaxed text-[var(--nourish-dark)]/85"
+            className="text-[15px] leading-[1.65] text-[var(--nourish-dark)]/85"
           >
             {paragraph}
           </p>
@@ -73,7 +73,7 @@ export default function ResearchBriefPage({
           <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]">
             Why it matters
           </p>
-          <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--nourish-dark)]/90">
+          <p className="mt-1.5 text-[14px] leading-[1.6] text-[var(--nourish-dark)]/90">
             {brief.whyItMatters}
           </p>
         </div>

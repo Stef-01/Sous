@@ -25,7 +25,11 @@ export function CategoryFilterStrip({ active, onChange }: Props) {
       className="-mx-4 overflow-x-auto px-4 scrollbar-hide"
     >
       <LayoutGroup>
-        <ul className="flex items-center gap-2 py-1">
+        {/* W19b delta #1: pill height + horizontal padding bumped ~12%
+            for a tap-target that lands cleanly on a thumb (Apple News /
+            Headspace pattern). gap also bumped from 2 → 2.5 so pills
+            breathe rather than stack visually. */}
+        <ul className="flex items-center gap-2.5 py-1.5">
           {CONTENT_FILTERS.map((id) => {
             const isActive = id === active;
             return (
@@ -35,7 +39,7 @@ export function CategoryFilterStrip({ active, onChange }: Props) {
                   onClick={() => onChange(id)}
                   aria-pressed={isActive}
                   className={cn(
-                    "relative rounded-full px-4 py-2 text-[12px] font-semibold transition-colors",
+                    "relative rounded-full px-[18px] py-[9px] text-[12px] font-semibold transition-colors",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                     isActive
                       ? "text-white"

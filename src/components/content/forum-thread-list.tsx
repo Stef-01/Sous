@@ -39,14 +39,18 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
         </span>
       </div>
 
+      {/* W19b bonus: forum threads now use a subtle inset shadow + a
+          green pill reply count so they read as conversation, not as
+          another article card. Inspired by BBC Good Food's
+          differentiation of community vs editorial content. */}
       <ul className="space-y-2">
         {visible.map((thread) => (
           <li key={thread.id}>
             <Link
               href={`/community/forum/${thread.id}`}
-              className="group flex items-start gap-3 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group flex items-start gap-3 rounded-2xl bg-[var(--nourish-cream)] p-3 ring-1 ring-inset ring-[var(--nourish-green)]/15 transition-shadow hover:ring-[var(--nourish-green)]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]">
                 <MessageSquare size={16} />
               </span>
               <div className="min-w-0 flex-1 space-y-1">
@@ -57,10 +61,10 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
                   {thread.body}
                 </p>
                 <p className="flex items-center gap-2 pt-0.5 text-[10px] text-[var(--nourish-subtext)]">
-                  <span className="rounded-full bg-neutral-100 px-2 py-0.5 font-semibold uppercase tracking-[0.08em]">
+                  <span className="rounded-full bg-white px-2 py-0.5 font-semibold uppercase tracking-[0.08em] ring-1 ring-inset ring-[var(--nourish-border)]">
                     #{thread.topTag}
                   </span>
-                  <span>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/12 px-2 py-0.5 font-semibold text-[var(--nourish-green)]">
                     {thread.replies.length}{" "}
                     {thread.replies.length === 1 ? "reply" : "replies"}
                   </span>

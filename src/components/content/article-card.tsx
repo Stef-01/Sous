@@ -55,7 +55,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
       href={`/community/article/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--nourish-cream)]">
+      <div className="relative aspect-[1/1] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image
           src={article.coverImageUrl}
           alt={article.title}

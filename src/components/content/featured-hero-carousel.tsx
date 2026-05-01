@@ -47,7 +47,7 @@ export function FeaturedHeroCarousel({ articles }: Props) {
             <Link
               key={article.id}
               href={`/community/article/${article.slug}`}
-              className="group relative block aspect-[4/5] w-[88%] shrink-0 snap-center overflow-hidden rounded-3xl bg-[var(--nourish-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group relative block aspect-[3/2] w-[88%] shrink-0 snap-center overflow-hidden rounded-3xl bg-[var(--nourish-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             >
               <Image
                 src={article.coverImageUrl}

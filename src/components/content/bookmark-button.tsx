@@ -1,7 +1,7 @@
 "use client";
 
 import { Bookmark, BookmarkCheck } from "lucide-react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { useContentBookmarks } from "@/lib/hooks/use-content-bookmarks";
 import type { SaveableKind } from "@/types/content";
@@ -17,6 +17,11 @@ interface Props {
 /**
  * BookmarkButton — toggleable save icon for any saveable content item.
  * "ghost" sits inline; "overlay" sits over imagery (white tint, drop shadow).
+ *
+ * W19b delta #9: instead of a single-frame icon swap, the icon now
+ * cross-fades + spring-pops on every state change. The inactive state
+ * still spring-shrinks on tap. Respects prefers-reduced-motion (falls
+ * back to a no-animation swap).
  */
 export function BookmarkButton({
   kind,
@@ -26,6 +31,7 @@ export function BookmarkButton({
   className,
 }: Props) {
   const { isBookmarked, toggle } = useContentBookmarks();
+  const reducedMotion = useReducedMotion();
   const saved = isBookmarked(kind, id);
 
   return (
@@ -51,7 +57,26 @@ export function BookmarkButton({
         className,
       )}
     >
-      {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={saved ? "saved" : "unsaved"}
+          initial={
+            reducedMotion ? undefined : { scale: 0.6, opacity: 0, rotate: -8 }
+          }
+          animate={
+            reducedMotion
+              ? undefined
+              : { scale: [1.15, 1], opacity: 1, rotate: 0 }
+          }
+          exit={
+            reducedMotion ? undefined : { scale: 0.6, opacity: 0, rotate: 8 }
+          }
+          transition={{ type: "spring", stiffness: 500, damping: 22 }}
+          className="inline-flex"
+        >
+          {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+        </motion.span>
+      </AnimatePresence>
     </motion.button>
   );
 }

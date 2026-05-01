@@ -89,7 +89,7 @@ export default function ArticleDetailPage({
         {article.body.map((paragraph, idx) => (
           <p
             key={idx}
-            className="text-[15px] leading-relaxed text-[var(--nourish-dark)]/85"
+            className="text-[15px] leading-[1.65] text-[var(--nourish-dark)]/85"
           >
             {paragraph}
           </p>
