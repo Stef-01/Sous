@@ -1,7 +1,7 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-05-01
-> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/PATH-OVERLAP-RCA.md`
+> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/CONTENT-VISUAL-PHASE.md`** (W19b screenshots-vs-competitors audit + V2 redesign week), **`docs/QUICK-WINS-PUNCHLIST.md`** (4-item non-functional-buttons list, slotted into W11/W18), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/PATH-OVERLAP-RCA.md`
 
 ---
 

@@ -200,8 +200,9 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
   - Bottom sheet UI for the 2–3 swap chips; tap to apply (writes to recipe overlay).
   - Latency budget: deterministic ≤ 100 ms, AI fallback ≤ 2.5 s p95.
   - **Stanford content wave 2:** swap 2 research briefs + 1 expert voice from Stanford Children's Health / SPRC / a Nutrition faculty profile. Coincides with PM ship so parents have at-tab content from day one.
+  - **Quick-win #3 from [`QUICK-WINS-PUNCHLIST.md`](./QUICK-WINS-PUNCHLIST.md):** add a copy-to-clipboard fallback + toast on the Reels action-rail Share button when `navigator.share` is undefined (~15 lines).
 - **Prereq:** Week 5 labels, Week 6 scorer, Week 3 image-saving script.
-- **DOD:** Chip works on 60-meal set; 3+ vitest cases on the lookup; manual smoke on 10 dishes; 3 more real-attributed content items live (running tally: 4 articles + 4 reels + 2 briefs + 1 expert).
+- **DOD:** Chip works on 60-meal set; 3+ vitest cases on the lookup; manual smoke on 10 dishes; 3 more real-attributed content items live (running tally: 4 articles + 4 reels + 2 briefs + 1 expert); Reels share button has graceful fallback verified on desktop Safari.
 
 ### Week 12 (July 20–24) — Win screen kids-ate-it + lunchbox + nutrient spotlight + Content parent track
 
@@ -278,7 +279,7 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
 - **Prereq:** Weeks 13–14, W15 R2 hosting live.
 - **DOD:** Sentry receiving events; analytics dashboard set up; funnel visible; 10 more Stanford-real items live (running tally: 8 articles + 8 reels + 4 briefs + 1 expert).
 
-### Week 18 (August 31 – September 4) — Performance pass + Lighthouse + bundle audit
+### Week 18 (August 31 – September 4) — Performance pass + Lighthouse + bundle audit + dead-end fix
 
 - **Deliverable:** Lighthouse mobile ≥ 90 on Today, Path, Content, Cook routes.
 - **Activities:**
@@ -287,8 +288,9 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
   - Bundle audit; trim to ≤ 150 KB initial gzipped per `planning.md` target.
   - Add ISR or edge caching to `pairing.suggest`.
   - Lighthouse CI in GitHub Actions for PRs touching Today / Cook / Content.
+  - **Quick-win #2 from [`QUICK-WINS-PUNCHLIST.md`](./QUICK-WINS-PUNCHLIST.md):** kill the "steps coming soon" dead-end on `/cook/[slug]` + `/cook/combined` by filtering dishes-without-steps out of the QuestCard pool, OR adding a "Steps pending" badge so the user sets expectations before tapping.
 - **Prereq:** Weeks 14–17.
-- **DOD:** Lighthouse ≥ 90 on the 4 key routes; CI gate live.
+- **DOD:** Lighthouse ≥ 90 on the 4 key routes; CI gate live; no user can land on a steps-coming-soon empty state via Today.
 
 > **End-of-Phase-C gate:** Production infra is real. We can take real users.
 
@@ -308,6 +310,20 @@ Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen shee
   - All copy passes the SAFE phrasings cheatsheet (and the W23 build-time linter once landed).
 - **Prereq:** Stage-3 infrastructure + W3 image-saving script + W11/W17 prior content waves.
 - **DOD:** 7 new real-attributed items live; running tally per CONTENT-POPULATION-PHASE.md §5 hits 12 articles + 8 reels + 5 research briefs + 4 expert voices by end of week.
+
+### Week 19b (September 7–11, parallel sub-track to W19) — Content visual-comparison audit + V2 redesign
+
+Carved from the Phase D buffer per [`CONTENT-VISUAL-PHASE.md`](./CONTENT-VISUAL-PHASE.md). Runs in parallel with the W19 editorial wave because the two are decoupled (Stefan's editorial team handles the Stanford swap; engineering handles the visual delta). If they cannot run in parallel, push W19b to October 12–16 and slip Week 23 legal review one week — the W26 buffer covers that contingency.
+
+- **Deliverable:** Content surface visual parity with Flo / Apple News / Headspace at the level of cohort-1 beta feedback. Audit HTML sheet + before/after screenshots committed.
+- **Activities (5 days, per CONTENT-VISUAL-PHASE §5):**
+  - Mon: capture all surfaces (Sous + 8 peers) at 375×667 + 390×844; build `docs/screenshots/2026-09-content-audit/audit-sheet.html`.
+  - Tue: tag deltas; triage ship-this-week / schedule-W22b / won't-do.
+  - Wed: ArticleCard, ResearchBriefCard, ForumThreadList, byline (with Stanford attribution variant) component-level changes.
+  - Thu: surface-level changes: section header rhythm, hero carousel dot indicator, filter strip density. Reading-view typography pass (Apple News line-height 1.6, wider measure).
+  - Fri: empty-state illustrations (Headspace pattern), 375×667 audit, Lighthouse run, commit + push.
+- **Prereq:** W19 Stanford swap (so the byline 2-line variant has real attribution to render).
+- **DOD:** All ship-this-week deltas merged; 375×667 + 390×844 audit clean (no horizontal scroll except named rails; primary CTA above fold on every Content surface); Lighthouse Mobile on Content home / article / saved ≥ 90; before/after screenshots in `docs/screenshots/2026-09-content-audit/before-after/`; POLISH-CHECKLIST §1.5 four-pass on every changed surface.
 
 ### Week 20 (September 14–18) — Kid-friendliness label expansion (wave 2)
 
