@@ -1,10 +1,11 @@
 # Stage 1 + 2 — 6-Month Vibe-Coded Timeline (Pre-Production)
 
 > **Authored:** 2026-05-01
+> **Last revised:** 2026-05-01 (added: nav-integrity audit week, scattered polish slots, dedicated Duolingo-grade animation week W22b, Reels V2 TikTok-style infinite vertical feed)
 > **Window:** 2026-05-04 (Week 1, Mon) → 2026-10-30 (Week 26, Fri). Six calendar months, 26 working weeks.
-> **Reads from:** [`PARENT-MODE-RESEARCH.md`](./PARENT-MODE-RESEARCH.md), [`PARENT-MODE-PLAN.md`](./PARENT-MODE-PLAN.md), [`STAGE-3-LEAN-CONTENT.md`](./STAGE-3-LEAN-CONTENT.md), [`ROADMAP.md`](../ROADMAP.md)
+> **Reads from:** [`PARENT-MODE-RESEARCH.md`](./PARENT-MODE-RESEARCH.md), [`PARENT-MODE-PLAN.md`](./PARENT-MODE-PLAN.md), [`STAGE-3-LEAN-CONTENT.md`](./STAGE-3-LEAN-CONTENT.md), [`REELS-V2-PLAN.md`](./REELS-V2-PLAN.md), [`POLISH-CHECKLIST.md`](./POLISH-CHECKLIST.md), [`ROADMAP.md`](../ROADMAP.md), [`adr/0001-nutrition-data-source.md`](./adr/0001-nutrition-data-source.md)
 > **Karpathy guard:** Each week states a single deliverable, the prerequisites it depends on, and a verifiable acceptance line. No speculative work. If a week is blocked, we re-plan rather than spin.
-> **Convention:** "DOD" = Definition of Done. Every week ends with `pnpm lint && pnpm test && pnpm build` clean and a commit on main.
+> **Convention:** "DOD" = Definition of Done. Every week ends with `pnpm lint && pnpm test && pnpm build` clean, a polish-checklist pass on the surface that just shipped, and a commit on main.
 
 ---
 
@@ -47,6 +48,28 @@ Weeks 25–26┘
 **Why this order?** The research → data → scoring → UX → infra → polish chain matches the Karpathy "verifiable goals" model: each phase makes the next phase safe. We build the kid-friendliness scoring primitives first because the UX work is meaningless without them. We delay auth/DB until after the user-facing feature lands so we can validate UX with localStorage before paying the production tax.
 
 **Parallelism note:** Phases A & C have parallelizable strands. Where this matters, the week notes flag it.
+
+---
+
+## 1.5 Cross-cutting workstreams (woven into every week)
+
+Four standing concerns run through every week of the timeline rather than being one-off phases. They are called out here, scheduled inline in the week descriptions, and tracked against [`POLISH-CHECKLIST.md`](./POLISH-CHECKLIST.md).
+
+### 1.5.1 Navigation integrity audit (every week's polish slot, Pass A)
+
+Catalysed by the live "stuck on Content" bug — the (community) route group shipped without a `layout.tsx`, so the tab bar disappeared on every Content sub-page. Fixed retroactively in this revision. From here on, **every new route is walked end-to-end before merge** against `POLISH-CHECKLIST.md` Pass A. No new top-level route group ships without its own layout that mounts the TabBar (or explicitly opts out for fullscreen modes like Reels V2).
+
+### 1.5.2 UI scaling, text fit, minimalism (every week's polish slot, Passes B + C)
+
+The CLAUDE.md no-scroll rule + simplicity-first rule are checked **on every shipped surface** during the weekly polish slot. Specific viewports walked: 375 × 667, 390 × 844, 414 × 896, 768 × 1024 portrait. Long-copy German-length test string is the worst-case clamp check. Minimalism cull is binding: every chip / icon / badge must answer the "does removing this hurt the cook decision?" test.
+
+### 1.5.3 Animation polish — Duolingo-grade (Passes D, with one dedicated deep-dive week)
+
+Each visible week's polish slot runs the animation pass on the new surface (spring physics, tap-feedback, list staggers, reduced-motion respect, haptic). On top of the recurring slot, **Week 22b is a dedicated animation deep-dive**: skill-tree node bloom, win-screen sparkle burst, streak-flame flicker, QuestCard swipe snap, coach-quiz answer pulse, achievement-toast slide-up, pull-to-refresh bird blink, route-direction-aware page transitions. Acceptance + concrete moves in [`POLISH-CHECKLIST.md`](./POLISH-CHECKLIST.md) §3.
+
+### 1.5.4 Reels V2 — TikTok-style infinite vertical feed (Week 22b)
+
+Stage 3 shipped Reels as a horizontal poster rail + single-shot full-screen sheet (placeholder). Real reels are vertical infinite feed with snap-scroll, autoplay-on-view, long-press pause, swipe-up-for-next. **Week 22b ships the V2 immersive feed**, retires the old `reel-player-sheet.tsx`, and re-points the rail's tap action to open the feed at the chosen reel. Full design in [`REELS-V2-PLAN.md`](./REELS-V2-PLAN.md). Real video assets remain Stage 3+ work; V2.0 keeps simulated player chrome.
 
 ---
 
@@ -303,17 +326,42 @@ Weeks 25–26┘
 - **Prereq:** Phase C complete.
 - **DOD:** Cohort 1 done; report written in `docs/beta-cohort-1.md` with prioritized fix list.
 
-### Week 22 (September 28 – October 2) — Beta-driven fixes + accessibility + i18n scaffolding
+### Week 22a (September 28 – October 2) — Beta-driven fixes + accessibility + i18n scaffolding
 
 - **Deliverable:** Top-5 beta fixes shipped; WCAG 2.1 AA audit passed on core flows; i18n scaffolding (Spanish first locale).
 - **Activities:**
   - Fix top-5 beta-cohort-1 friction items.
+  - Full nav-integrity sweep across every route in the app per `POLISH-CHECKLIST.md` Pass A — both legacy and Parent-Mode-era surfaces.
   - Run WCAG 2.1 AA audit on Today, Cook, Win, Content, Path. Fix any AA-blocking findings.
   - Add `next-intl` (or similar) scaffolding; extract Today + Cook strings; ship Spanish translations.
 - **Prereq:** Week 21.
-- **DOD:** Beta fixes merged; audit report committed; Spanish locale switchable end-to-end on Today + Cook.
+- **DOD:** Beta fixes merged; audit report committed; Spanish locale switchable end-to-end on Today + Cook; navigation report committed in `docs/nav-audit-2026-09.md`.
 
-### Week 23 (October 5–9) — Legal review + safe-phrasings audit + disclaimer pass
+### Week 22b (October 5–9, week 1 of 2 in October) — Reels V2 (TikTok feed) + Duolingo-grade animation deep-dive
+
+This week splits the original Week 22 scope. The polish slot grows into a full week because animation and Reels V2 both need real time. Phase D drops nothing — Week 23 (legal) shifts to **October 12–16** and Week 24 (cohort 2) to **October 19–23**.
+
+- **Deliverable:** [`REELS-V2-PLAN.md`](./REELS-V2-PLAN.md) §4 acceptance + [`POLISH-CHECKLIST.md`](./POLISH-CHECKLIST.md) §3 acceptance both met.
+- **Activities (Reels V2):**
+  - Build `src/components/content/reels-feed.tsx`, `reel-card.tsx`, `reel-action-rail.tsx` per the design doc.
+  - Add `use-active-reel.ts` (IntersectionObserver) + `use-reels-feed-cursor.ts` (deterministic infinite shuffle).
+  - Replace `src/app/(community)/community/reels/page.tsx` with the immersive vertical feed.
+  - Re-point the Content-home rail's tap action to push `/community/reels#<reel-id>`.
+  - Delete `src/components/content/reel-player-sheet.tsx` and prune its imports.
+  - 6+ vitest cases on the new hooks.
+- **Activities (animation deep-dive):**
+  - Skill-tree node bloom upgrade.
+  - Win-screen sparkle burst replacement.
+  - Streak-flame flicker.
+  - QuestCard swipe snap-feedback.
+  - Coach-quiz answer pulse.
+  - Achievement-toast slide-up sheet replacement.
+  - Pull-to-refresh bird-mascot blink.
+  - Route-direction-aware page transitions (Today → Path = right, reverse = left).
+- **Prereq:** Week 21 cohort 1 signal + Week 22a fixes; the existing Stage-3 Content reels rail.
+- **DOD:** Reels V2 acceptance criteria all green; eight animation moves shipped with reduced-motion fallbacks; before/after 30-sec recording in `docs/screenshots/2026-10-w22b/`; Lighthouse Mobile no regression > 3 pts on Today / Path / Win / Content.
+
+### Week 23 (October 12–16) — Legal review + safe-phrasings audit + disclaimer pass
 
 - **Deliverable:** Food-advertising counsel sign-off on Parent Mode UI strings + disclaimer pattern.
 - **Activities:**
@@ -321,7 +369,7 @@ Weeks 25–26┘
   - Provide them: the SAFE/UNSAFE cheatsheet, the templated phrasings, the methodology page draft, the standard disclaimer.
   - Apply any redlines.
   - Lock down `safe-phrasings.ts` with a build-time linter that fails the build if a string outside the lock list ships.
-- **Prereq:** Week 4 phrasings, Week 22 polish.
+- **Prereq:** Week 4 phrasings, Weeks 22a + 22b polish.
 - **DOD:** Counsel sign-off in writing; phrasings locked; disclaimer live on every nutrient surface.
 
 ### Week 24 (October 12–16) — Closed beta cohort 2 (50 households)
