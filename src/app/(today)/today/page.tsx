@@ -11,16 +11,30 @@ import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
-import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
-import { ProfileSettingsSheet } from "@/components/shared/profile-settings-sheet";
+// W18 perf: both sheets are lazy-loaded behind next/dynamic so the
+// initial Today bundle does not pay their cost (~10KB combined). Both
+// only mount on user action (More-Options button / mascot tap).
+import dynamic from "next/dynamic";
+const MoreOptionsSheet = dynamic(
+  () =>
+    import("@/components/today/more-options-sheet").then(
+      (m) => m.MoreOptionsSheet,
+    ),
+  { ssr: false },
+);
+const ProfileSettingsSheet = dynamic(
+  () =>
+    import("@/components/shared/profile-settings-sheet").then(
+      (m) => m.ProfileSettingsSheet,
+    ),
+  { ssr: false },
+);
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
 import { CameraInput } from "@/components/today/camera-input";
 import { CorrectionChips } from "@/components/today/correction-chips";
-
-import dynamic from "next/dynamic";
 
 const CoachQuiz = dynamic(() =>
   import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
@@ -190,7 +204,7 @@ function TodayPageContent() {
   // Transition from loading → results when query resolves for the CURRENT query.
   // If the query errors while still in loading, fall back to search so the
   // skeleton UI doesn't stack on top of the error block (AUDIT P1-5).
-  /* eslint-disable react-hooks/set-state-in-effect -- async query result drives view state machine */
+
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -208,6 +222,7 @@ function TodayPageContent() {
       pairingQuery.isError &&
       pendingQueryRef.current === mainDishQuery
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- legitimate: react to external pairingQuery error
       setView({ type: "idle" });
     }
   }, [
@@ -217,7 +232,6 @@ function TodayPageContent() {
     view,
     mainDishQuery,
   ]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── Handlers ──────────────────────────────────────────
 

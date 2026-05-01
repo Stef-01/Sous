@@ -126,6 +126,19 @@ export function SkillNodeComponent({
         {status === "completed" ? (
           <>
             <SkillIcon skillId={id} size={26} className="text-white" />
+            {/* W22b: bloom ring ripples outward on mount when the node
+                lands in the completed state. 700ms easeOut. Plays once
+                (initial → animate, no repeat). Pointer-events disabled
+                so it never blocks the underlying tap target. */}
+            <motion.div
+              className="pointer-events-none absolute inset-0 rounded-full"
+              style={{
+                border: "2px solid rgba(34,197,94,0.6)",
+              }}
+              initial={{ scale: 0.4, opacity: 0.7 }}
+              animate={{ scale: 2.4, opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            />
             {/* Checkmark badge */}
             <motion.div
               initial={{ scale: 0 }}
