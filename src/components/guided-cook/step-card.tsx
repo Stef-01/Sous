@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,8 +17,17 @@ import { MistakeChip } from "./mistake-chip";
 import { HackChip } from "./hack-chip";
 import { FactChip } from "./fact-chip";
 import { Glossify } from "./glossify";
+import { SpiceSlider } from "./spice-slider";
+import { ComponentSplitToggle } from "./component-split-toggle";
 import { trpc } from "@/lib/trpc/client";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
+import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { useSpiceTolerance } from "@/lib/hooks/use-spice-tolerance";
+import {
+  containsChiliHeat,
+  rewriteForSpice,
+  type SpiceTolerance,
+} from "@/lib/parent-mode/spice-rewrite";
 
 interface StepCardProps {
   /** +1 when advancing forward, -1 when going back. Controls slide direction. */
@@ -82,6 +91,21 @@ export function StepCard({
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const bigHands = useBigHands();
+  const { profile: parentProfile } = useParentMode();
+  const { tolerance: householdSpice, setTolerance: setHouseholdSpice } =
+    useSpiceTolerance();
+  // Per-step session override; falls back to the household default.
+  const [stepSpiceOverride, setStepSpiceOverride] =
+    useState<SpiceTolerance | null>(null);
+  const effectiveSpice = stepSpiceOverride ?? householdSpice;
+  const heatStep = containsChiliHeat(instruction);
+  const adjustedInstruction = useMemo(
+    () =>
+      heatStep && effectiveSpice < 5
+        ? rewriteForSpice(instruction, effectiveSpice)
+        : instruction,
+    [heatStep, effectiveSpice, instruction],
+  );
   const [lastAnswer, setLastAnswer] = useState<{
     answer: string;
     confidence: string;
@@ -245,8 +269,28 @@ export function StepCard({
         </div>
       )}
 
+      {/* Spice slider  -  Stage 2 W10. Renders only when the step text
+          mentions chili/cayenne/etc. AND Parent Mode is on, so it stays
+          out of the way for users who don't need it. Adjusting the
+          slider rewrites the visible instruction below in real time. */}
+      {parentProfile.enabled && heatStep && (
+        <SpiceSlider
+          value={effectiveSpice}
+          onChange={(next) => {
+            setStepSpiceOverride(next);
+            // Persist as the new household default — the W10 contract
+            // is "household-level default". Per-step override is
+            // session-only via React state above.
+            setHouseholdSpice(next);
+          }}
+          alwaysShow
+        />
+      )}
+
       {/* Main instruction  -  technique words are tap-to-reveal via Glossify.
-          Double-tap anywhere on the body re-speaks the step (Phase 12). */}
+          Double-tap anywhere on the body re-speaks the step (Phase 12).
+          Stage 2 W10: instruction is rewritten when Parent Mode lowers
+          the spice tolerance (deterministic transform, not AI). */}
       <p
         className="cook-prose text-[var(--nourish-dark)] select-text"
         onDoubleClick={
@@ -258,8 +302,13 @@ export function StepCard({
             : undefined
         }
       >
-        <Glossify>{instruction}</Glossify>
+        <Glossify>{adjustedInstruction}</Glossify>
       </p>
+
+      {/* Component split toggle  -  Stage 2 W10. Last-step only, only
+          for deconstructable dishes, only when Parent Mode is on.
+          Component itself returns null in any other case. */}
+      {isLast && dishSlug && <ComponentSplitToggle dishSlug={dishSlug} />}
 
       {/* Doneness cue */}
       {donenessCue && (
