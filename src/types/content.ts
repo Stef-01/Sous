@@ -34,6 +34,12 @@ export interface BaseContentItem {
   sourceFetchedAt?: string;
   /** Path inside docs/ proving the team had permission. */
   permissionEvidence?: string;
+  /**
+   * Audience tag — drives the Content tab's parent-track ranking when
+   * Parent Mode is on (Stage 2 W12). Default 'general'; explicit
+   * 'parent' items are promoted to the top of mixed lists for PM users.
+   */
+  audience?: "parent" | "general";
 }
 
 export interface Article extends BaseContentItem {

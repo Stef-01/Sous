@@ -23,6 +23,9 @@ import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
 import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
+import { KidsAteItPrompt } from "@/components/guided-cook/kids-ate-it-prompt";
+import { LunchboxSuggestChip } from "@/components/guided-cook/lunchbox-suggest-chip";
+import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -817,6 +820,19 @@ export function WinScreen({
             Again
           </motion.button>
         </motion.div>
+
+        {/* ── Parent Mode block (W12) — KidsAteIt + Lunchbox + Spotlight ─
+             All three components self-render null when PM is off so this
+             block has zero footprint for non-parents. */}
+        {dishSlug && (
+          <div className="w-full space-y-3 pt-1">
+            <KidsAteItPrompt recipeSlug={dishSlug} />
+            <NutrientSpotlight recipeSlug={dishSlug} variant="full" />
+            <div className="flex justify-center">
+              <LunchboxSuggestChip dishSlug={dishSlug} recipeName={dishName} />
+            </div>
+          </div>
+        )}
 
         {/* ── Note input (expandable) ── */}
         <AnimatePresence>

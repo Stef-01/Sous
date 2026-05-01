@@ -23,6 +23,8 @@ import { ExpertVoicesRow } from "@/components/content/expert-voices-row";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
+import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { rankForParentMode } from "@/lib/content/parent-track";
 
 /**
  * Content tab home — Stage 3 lean-vibe magazine surface.
@@ -36,31 +38,43 @@ import { useContentFilter } from "@/lib/hooks/use-content-filter";
 export default function ContentPage() {
   const router = useRouter();
   const { filter, setFilter } = useContentFilter();
+  // Parent Mode promotes audience: 'parent' items to the top of every
+  // mixed list. (Stage 2 W12.)
+  const { profile } = useParentMode();
 
   const featured = useMemo(() => getFeaturedArticles(), []);
   const sortedArticles = useMemo(
     () =>
-      [...ARTICLES].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      rankForParentMode(
+        [...ARTICLES].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+        profile.enabled,
       ),
-    [],
+    [profile.enabled],
   );
   const sortedReels = useMemo(
     () =>
-      [...REELS].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      rankForParentMode(
+        [...REELS].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+        profile.enabled,
       ),
-    [],
+    [profile.enabled],
   );
   const sortedResearch = useMemo(
     () =>
-      [...RESEARCH_BRIEFS].sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      rankForParentMode(
+        [...RESEARCH_BRIEFS].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+        profile.enabled,
       ),
-    [],
+    [profile.enabled],
   );
   const sortedThreads = useMemo(
     () =>

@@ -75,6 +75,7 @@ export const ARTICLES: Article[] = [
     readMinutes: 5,
     tags: ["cardiovascular", "potassium", "clinician"],
     featured: true,
+    audience: "parent",
     createdAt: "2026-04-25T09:00:00.000Z",
   },
   {

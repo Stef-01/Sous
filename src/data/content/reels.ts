@@ -24,6 +24,7 @@ export const REELS: Reel[] = [
     likes: 18243,
     technique: "tadka",
     dishSlug: "butter-chicken",
+    audience: "parent",
     createdAt: "2026-04-29T14:00:00.000Z",
   },
   {

@@ -41,6 +41,7 @@ import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
 import { KidFriendlyHint } from "@/components/today/kid-friendly-hint";
 import { KidSwapChip } from "@/components/today/kid-swap-chip";
+import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
@@ -987,6 +988,11 @@ function SwipeCard({
               />
             </div>
           )}
+          {/* Parent-mode nutrient spotlight  -  one ambient line, only
+              when (a) PM is on (b) per-recipe nutrition data exists
+              and (c) at least one nutrient passes the FDA threshold.
+              Otherwise renders null. (Stage-2 W12) */}
+          {isTop && <NutrientSpotlight recipeSlug={dish.slug} />}
         </div>
 
         {/* Action row  -  heart save + Start cooking */}

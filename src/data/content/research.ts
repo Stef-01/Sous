@@ -31,6 +31,7 @@ export const RESEARCH_BRIEFS: ResearchBrief[] = [
     whyItMatters:
       "If you can change one thing this month, a daily serving of beans is among the highest-leverage moves available. It is cheap, it travels across cuisines, and the body responds.",
     coverImageUrl: "/food_images/masoor_dal.png",
+    audience: "parent",
     createdAt: "2026-04-30T09:00:00.000Z",
   },
   {
