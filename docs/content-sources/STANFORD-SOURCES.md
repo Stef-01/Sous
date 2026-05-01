@@ -28,9 +28,17 @@ false`, `sourceUrl`, `sourceTitle`, `sourceFetchedAt`, and
 | 7   | `/en/staying-celiac-strong-together/`                               | Stanford Center for Pediatric IBD and Celiac Disease (Michael Rosen, MD; Hilary Jericho, MD) | 2023-06-20    | article        | `stanford-art-celiac-strong-together` |
 | 8   | `/en/what-you-need-to-know-about-improving-your-childs-gut-health/` | Dr. Katya Gerwein + Venus Kalami                                                             | 2022-06-28    | research-brief | `stanford-rb-gut-health`              |
 
+### Run #1 extension (2026-05-01) — Stanford Medicine Insights
+
+| #   | Source URL                                                                                                       | Author                                                         | Original date | Sous shape | Sous id                        |
+| --- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------- | ---------- | ------------------------------ |
+| 9   | `https://med.stanford.edu/news/insights/2026/03/how-much-protein.html`                                           | Marily Oppezzo, PhD (Stanford Prevention Research Center)      | 2026-03-25    | article    | `stanford-art-protein-enough`  |
+| 10  | `https://med.stanford.edu/news/insights/2026/03/giving-glp-1-users-bite-sized-nudges-toward-healthy-habits.html` | Maya Adam, MD, PhD (Stanford Medicine Health Media Innovation) | 2026-03-09    | article    | `stanford-art-glp1-microsteps` |
+
 **Themes covered:** family meals, school lunches, picky eating,
 seasonal eating (Halloween + holidays), celiac and special diets,
-pediatric gut health.
+pediatric gut health, **protein myth-busting (adult-side), GLP-1
+behaviour-change microsteps.**
 
 **Verbatim discipline.** Each card includes ≤ 30 verbatim words from its
 source, in quotation marks where used at all. The rest is original
