@@ -45,6 +45,11 @@ export default function ExpertProfilePage({
           <p className="text-[11px] italic text-[var(--nourish-subtext)]">
             {expert.affiliation}
           </p>
+          {expert.isPlaceholder === false && (
+            <p className="mt-1 inline-flex items-center rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
+              Verified clinician
+            </p>
+          )}
         </div>
       </header>
 
