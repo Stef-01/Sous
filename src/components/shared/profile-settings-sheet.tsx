@@ -18,8 +18,9 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Check, Heart, UserRound, X } from "lucide-react";
+import { Check, Heart, Mic, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
@@ -41,6 +42,7 @@ const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
 
 export function ProfileSettingsSheet({ open, onClose }: Props) {
   const { profile, toggle, setAgeBand } = useParentMode();
+  const voicePref = useVoiceCookPref();
   const haptic = useHaptic();
   const reducedMotion = useReducedMotion();
 
@@ -229,6 +231,58 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                   </motion.div>
                 )}
               </AnimatePresence>
+            </section>
+
+            {/* Voice Cook section (Stage-5 W16). Opt-in, off by default.
+                Per CLAUDE.md rule 3, this lives in the single Settings
+                sheet — there is NO separate voice-cook page. */}
+            <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                  >
+                    <Mic size={16} />
+                  </span>
+                  <div className="space-y-1">
+                    <SectionKicker as="p" size="10px">
+                      Voice cook
+                    </SectionKicker>
+                    <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+                      Hands-free step navigation. The coach reads each step out
+                      loud; say &ldquo;next&rdquo;, &ldquo;back&rdquo;,
+                      &ldquo;repeat&rdquo;, or set a timer with your voice.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={voicePref.enabled}
+                  onClick={() => {
+                    haptic();
+                    voicePref.setEnabled(!voicePref.enabled);
+                  }}
+                  className={cn(
+                    "relative h-7 w-12 shrink-0 rounded-full transition-colors",
+                    voicePref.enabled
+                      ? "bg-[var(--nourish-green)]"
+                      : "bg-neutral-200",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
+                      voicePref.enabled ? "translate-x-5" : "translate-x-0.5",
+                    )}
+                  />
+                </button>
+              </div>
+              <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
+                Works on Chrome and Safari. Microphone permission required at
+                first use. Per-device only — preference doesn&rsquo;t sync.
+              </p>
             </section>
 
             {/* About section */}
