@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Joystick } from "lucide-react";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
+import { MetaPill } from "@/components/shared/meta-pill";
 
 interface GameCard {
   id: string;
@@ -106,12 +107,14 @@ export default function GamesArcadePage() {
                 type="button"
               >
                 {hasPlayed ? null : (
-                  <span
-                    className="absolute right-2 top-2 inline-flex items-center rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]"
+                  <MetaPill
+                    variant="green"
+                    size="xs"
+                    className="absolute right-2 top-2 font-bold uppercase tracking-[0.12em]"
                     aria-label="New game, never played"
                   >
                     New
-                  </span>
+                  </MetaPill>
                 )}
                 <div
                   className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${game.color}`}

@@ -29,6 +29,7 @@ import {
 } from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
+import { SectionKicker } from "@/components/shared/section-kicker";
 
 /**
  * Path home  -  Duolingo-style skill tree for cooking progression.
@@ -388,9 +389,7 @@ export default function PathPage() {
             the same uppercase tracking pattern as the rest of Path
             home and the Content tab — visual rhythm consistency. */}
         <div className="mx-auto max-w-md px-4 pb-24 pt-4">
-          <h2 className="mb-2 px-1 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
-            Your kitchen
-          </h2>
+          <SectionKicker className="mb-2 px-1">Your kitchen</SectionKicker>
           <div className="grid grid-cols-2 gap-2">
             {[
               {

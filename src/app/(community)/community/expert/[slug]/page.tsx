@@ -7,6 +7,8 @@ import { ARTICLES, getExpertBySlug } from "@/data/content";
 import { ArticleCard } from "@/components/content/article-card";
 import { BackLink } from "@/components/content/back-link";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
+import { SectionKicker } from "@/components/shared/section-kicker";
+import { MetaPill } from "@/components/shared/meta-pill";
 
 export default function ExpertProfilePage({
   params,
@@ -46,9 +48,13 @@ export default function ExpertProfilePage({
             {expert.affiliation}
           </p>
           {expert.isPlaceholder === false && (
-            <p className="mt-1 inline-flex items-center rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
+            <MetaPill
+              variant="green"
+              size="xs"
+              className="mt-1 font-bold uppercase"
+            >
               Verified clinician
-            </p>
+            </MetaPill>
           )}
         </div>
       </header>
@@ -59,9 +65,7 @@ export default function ExpertProfilePage({
 
       <section className="mt-7 space-y-2 px-4">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-            From {expert.name.split(" ")[0]}
-          </h2>
+          <SectionKicker>From {expert.name.split(" ")[0]}</SectionKicker>
           {articles.length > 0 && (
             <span className="tabular-nums text-[11px] text-[var(--nourish-subtext)]">
               {articles.length} article{articles.length === 1 ? "" : "s"}

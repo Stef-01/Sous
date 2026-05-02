@@ -8,6 +8,8 @@ import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { useForumDrafts } from "@/lib/hooks/use-forum-drafts";
+import { SectionKicker } from "@/components/shared/section-kicker";
+import { MetaPill } from "@/components/shared/meta-pill";
 
 function formatRelative(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -112,10 +114,8 @@ export default function ForumThreadPage({
 
       <section className="mt-7 space-y-3 px-4">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-            Replies
-          </h2>
-          <span className="text-[11px] tabular-nums text-[var(--nourish-subtext)]">
+          <SectionKicker>Replies</SectionKicker>
+          <span className="tabular-nums text-[11px] text-[var(--nourish-subtext)]">
             {totalReplies}
           </span>
         </div>
@@ -169,9 +169,9 @@ export default function ForumThreadPage({
                     <span className="font-semibold text-[var(--nourish-dark)]">
                       You
                     </span>
-                    <span className="rounded-full bg-[var(--nourish-green)]/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
+                    <MetaPill variant="green" size="xs">
                       Local draft
-                    </span>
+                    </MetaPill>
                   </span>
                   <span className="tabular-nums">
                     {formatRelative(reply.createdAt)}

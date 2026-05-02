@@ -22,6 +22,8 @@ import { Check, Heart, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
+import { SectionKicker } from "@/components/shared/section-kicker";
+import { SHEET, RM } from "@/lib/utils/motion";
 import type { AgeBand } from "@/types/nutrition";
 
 interface Props {
@@ -74,11 +76,7 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
             initial={reducedMotion ? { opacity: 0 } : { y: 32, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
-            transition={
-              reducedMotion
-                ? { duration: 0.15 }
-                : { type: "spring", stiffness: 320, damping: 28 }
-            }
+            transition={reducedMotion ? RM : SHEET}
             className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-8 shadow-2xl sm:m-4 sm:rounded-3xl"
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
@@ -108,9 +106,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                   <UserRound size={16} />
                 </span>
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+                  <SectionKicker as="p" size="10px">
                     Profile
-                  </p>
+                  </SectionKicker>
                   <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
                     Sign-in is coming. Today, your cooks live on this device
                     only — fast, private, no account required.
@@ -123,9 +121,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
             <section className="mt-4 rounded-2xl bg-white p-4 border border-neutral-100/80 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+                  <SectionKicker as="p" size="10px">
                     Parent Mode
-                  </p>
+                  </SectionKicker>
                   <p className="text-[13px] text-[var(--nourish-dark)]">
                     Tilt suggestions toward meals kids and adults will both
                     enjoy — no cooking twice.
@@ -183,9 +181,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                     transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+                    <SectionKicker as="p" size="10px" className="mt-4">
                       Age at the table
-                    </p>
+                    </SectionKicker>
                     <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
                       {AGE_BANDS.map((band) => {
                         const isActive = profile.ageBand === band.id;
@@ -235,9 +233,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
 
             {/* About section */}
             <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+              <SectionKicker as="p" size="10px">
                 About
-              </p>
+              </SectionKicker>
               <p className="mt-1.5 text-[12px] leading-snug text-[var(--nourish-subtext)]">
                 Sous is a free public-good cooking app. No ads, no paid tier.
                 Stanford-attributed content carries the source URL on each
