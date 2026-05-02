@@ -214,3 +214,155 @@ describe("parseCookVoiceIntent — stress: poisoned-data", () => {
     });
   });
 });
+
+// W18 — MVP 1 of the Google-Maps-style cooking initiative.
+// "Done <X>" extension. Maps to 'done' kind (semantically advances
+// to next, but preserves the X for analytics). Negated forms bail.
+describe("parseCookVoiceIntent — done intent (W18 MVP 1)", () => {
+  it("recognises bare 'done'", () => {
+    expect(parseCookVoiceIntent("done")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  it("recognises 'done chopping onions' with context", () => {
+    expect(parseCookVoiceIntent("done chopping onions")).toEqual({
+      kind: "done",
+      context: "chopping onions",
+    });
+  });
+
+  it("recognises 'done with the onions'", () => {
+    expect(parseCookVoiceIntent("done with the onions")).toEqual({
+      kind: "done",
+      context: "onions",
+    });
+  });
+
+  it("recognises 'finished' alone", () => {
+    expect(parseCookVoiceIntent("finished")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  it("recognises 'all done'", () => {
+    expect(parseCookVoiceIntent("all done")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  it('recognises "I\'m done" with context (apostrophe stripped)', () => {
+    // After normaliseUtterance, "I'm done" → "im done"
+    expect(parseCookVoiceIntent("I'm done")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  it("recognises 'ready' as a completion phrase", () => {
+    expect(parseCookVoiceIntent("ready")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  // Negation guards — Stefan's directive: "done" alone vs
+  // "I'm not done" must produce different intents.
+  it("does NOT fire done on 'not done'", () => {
+    expect(parseCookVoiceIntent("not done")).toEqual({ kind: "unknown" });
+  });
+
+  it('does NOT fire done on "I\'m not done"', () => {
+    expect(parseCookVoiceIntent("I'm not done")).toEqual({ kind: "unknown" });
+  });
+
+  it("does NOT fire done on 'almost done'", () => {
+    expect(parseCookVoiceIntent("almost done")).toEqual({ kind: "unknown" });
+  });
+
+  it("does NOT fire done on 'not yet done with the onions'", () => {
+    expect(parseCookVoiceIntent("not yet done with the onions")).toEqual({
+      kind: "unknown",
+    });
+  });
+
+  it("does NOT fire done on 'still chopping'", () => {
+    expect(parseCookVoiceIntent("still chopping")).toEqual({
+      kind: "unknown",
+    });
+  });
+
+  // Priority: 'done' should fire before 'next' for utterances that
+  // start with 'done'. Test that 'next' for plain 'next' still works.
+  it("plain 'next' still fires next, not done", () => {
+    expect(parseCookVoiceIntent("next")).toEqual({ kind: "next" });
+  });
+});
+
+// W18 stress loops on the new done branch.
+describe("parseCookVoiceIntent — stress: done-intent ambiguity", () => {
+  it("survives a 5000-char done-prefixed utterance without crashing", () => {
+    const long = "done " + "yada ".repeat(1000);
+    const result = parseCookVoiceIntent(long);
+    expect(result.kind).toBe("done");
+  });
+
+  it("is deterministic across 1000 calls on a done-utterance", () => {
+    const utterance = "done chopping the onions";
+    let last = parseCookVoiceIntent(utterance);
+    for (let i = 0; i < 1000; i += 1) {
+      const next = parseCookVoiceIntent(utterance);
+      expect(next).toEqual(last);
+      last = next;
+    }
+  });
+
+  it("doesn't false-positive on 'undone' or 'redone' (sub-string trap)", () => {
+    // The matcher uses startsWith + space, so 'undone' shouldn't
+    // match 'done'. Pin the contract.
+    expect(parseCookVoiceIntent("undone")).toEqual({ kind: "unknown" });
+    expect(parseCookVoiceIntent("redone")).toEqual({ kind: "unknown" });
+  });
+
+  it("respects negation even when the done-phrase appears later in the utterance", () => {
+    expect(parseCookVoiceIntent("no I'm not done")).toEqual({
+      kind: "unknown",
+    });
+  });
+});
+
+describe("extractDoneContext", () => {
+  it("returns null for bare 'done'", () => {
+    // The matcher only invokes extractDoneContext after the phrase
+    // has been recognised, but the helper itself should handle a
+    // bare phrase too.
+    expect(parseCookVoiceIntent("done")).toEqual({
+      kind: "done",
+      context: null,
+    });
+  });
+
+  it("strips 'with the' filler", () => {
+    expect(parseCookVoiceIntent("done with the onions")).toEqual({
+      kind: "done",
+      context: "onions",
+    });
+  });
+
+  it("strips 'with' filler", () => {
+    expect(parseCookVoiceIntent("done with prep")).toEqual({
+      kind: "done",
+      context: "prep",
+    });
+  });
+
+  it("preserves multi-word context", () => {
+    expect(parseCookVoiceIntent("done dicing the bell peppers")).toEqual({
+      kind: "done",
+      context: "dicing the bell peppers",
+    });
+  });
+});

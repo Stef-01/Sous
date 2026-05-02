@@ -19,6 +19,12 @@ export type CookVoiceIntent =
   | { kind: "next" }
   | { kind: "back" }
   | { kind: "repeat" }
+  /** Step-completion intent (Stage-5 W18 MVP 1). Maps to "next"
+   *  semantically but the consumer can also log the `context`
+   *  (the "what" the user said they were done with) for
+   *  analytics / per-step duration tracking. The Google-Maps-
+   *  style "done chopping onions" flow. */
+  | { kind: "done"; context: string | null }
   | { kind: "timer-set"; seconds: number }
   | { kind: "timer-cancel" }
   | { kind: "timer-status" }
@@ -87,6 +93,54 @@ const TIMER_STATUS_PHRASES = [
 
 const PAUSE_PHRASES = ["pause", "wait", "hold on"];
 const RESUME_PHRASES = ["resume", "continue", "start again"];
+
+/** Step-completion phrases (W18 MVP 1). Positive forms only —
+ *  negation gating is handled separately. */
+const DONE_PHRASES = [
+  "done",
+  "all done",
+  "finished",
+  "i'm done",
+  "im done",
+  "im finished",
+  "i'm finished",
+  "ive finished",
+  "i've finished",
+  "ready",
+  "all ready",
+];
+
+/** Negation prefixes/markers that flip the meaning of a completion
+ *  phrase. The presence of any of these in the utterance disables
+ *  the "done" intent path. */
+const DONE_NEGATIONS = [
+  "not done",
+  "not finished",
+  "not ready",
+  "not yet",
+  "almost done",
+  "almost there",
+  "nearly done",
+  "still",
+  "no",
+];
+
+/** Pure helper: extract the "what" context from a completion
+ *  utterance (e.g. "done chopping onions" → "chopping onions";
+ *  "done" → null). Exported for unit testing. */
+export function extractDoneContext(normalised: string): string | null {
+  // Strip a leading "I'm" / "ive" / "im" / "i've" if present.
+  const stripped = normalised.replace(/^(i ?'?ve|im|i ?'?m)\s+/u, "").trim();
+  // Strip the head verb ("done" / "finished" / "ready") + filler
+  // ("with the", "with", "the"). RCA from W18 Loop 2: regex
+  // alternation is left-to-right greedy, so longer alternatives
+  // must come first — '(with the|with|the)' not '(with|the|with the)'.
+  const m = stripped.match(
+    /^(done|finished|ready)(?:\s+(?:with the|with|the))?\s+(.+)$/u,
+  );
+  if (m && m[2]) return m[2].trim() || null;
+  return null;
+}
 
 /**
  * Parse a duration phrase like "5 minutes", "30 seconds",
@@ -236,6 +290,27 @@ export function parseCookVoiceIntent(input: string): CookVoiceIntent {
   }
   if (RESUME_PHRASES.some((p) => normalised === p)) {
     return { kind: "resume" };
+  }
+
+  // Step-completion intent (W18 MVP 1). Negation gate first —
+  // "I'm not done" / "almost done" / "not yet" all bail before
+  // any positive-form match. The negation list is checked as
+  // substrings because they often appear mid-utterance.
+  if (DONE_NEGATIONS.some((n) => normalised.includes(n))) {
+    return { kind: "unknown" };
+  }
+  // Positive-form check: utterance starts with one of the DONE
+  // phrases OR exact-equals one of them. The startsWith form picks
+  // up "done chopping onions"; the equality form picks up bare
+  // "done" / "finished".
+  const matchedDone = DONE_PHRASES.find(
+    (p) => normalised === p || normalised.startsWith(`${p} `),
+  );
+  if (matchedDone) {
+    return {
+      kind: "done",
+      context: extractDoneContext(normalised),
+    };
   }
 
   return { kind: "unknown" };
