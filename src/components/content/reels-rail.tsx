@@ -5,6 +5,7 @@ import { Play } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Reel } from "@/types/content";
 import { BookmarkButton } from "./bookmark-button";
+import { SectionKicker } from "@/components/shared/section-kicker";
 
 interface Props {
   reels: Reel[];
@@ -34,9 +35,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
   return (
     <section aria-label="Cooking reels" className="space-y-2">
       <div className="flex items-baseline justify-between px-1">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-          Reels worth watching
-        </h2>
+        <SectionKicker>Reels worth watching</SectionKicker>
         {onSeeAll && (
           <button
             type="button"

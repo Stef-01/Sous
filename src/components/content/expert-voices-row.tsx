@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ExpertVoice } from "@/types/content";
+import { SectionKicker } from "@/components/shared/section-kicker";
 
 interface Props {
   experts: ExpertVoice[];
@@ -18,13 +19,8 @@ export function ExpertVoicesRow({ experts }: Props) {
   if (experts.length === 0) return null;
   return (
     <section aria-label="Expert voices" className="space-y-2">
-      <div className="flex items-baseline justify-between px-1">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-          Expert voices
-        </h2>
-        <span className="text-[10px] text-[var(--nourish-subtext)]/70">
-          Tap to read
-        </span>
+      <div className="px-1">
+        <SectionKicker>Expert voices</SectionKicker>
       </div>
 
       <ul className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">

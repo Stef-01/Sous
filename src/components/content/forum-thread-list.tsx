@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
 import type { ForumThread } from "@/types/content";
+import { SectionKicker } from "@/components/shared/section-kicker";
 
 interface Props {
   threads: ForumThread[];
@@ -30,13 +31,8 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
   if (visible.length === 0) return null;
   return (
     <section aria-label="Forum threads" className="space-y-2">
-      <div className="flex items-baseline justify-between px-1">
-        <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-          Forum talk
-        </h2>
-        <span className="text-[10px] text-[var(--nourish-subtext)]/70">
-          Tap to read
-        </span>
+      <div className="px-1">
+        <SectionKicker>Forum talk</SectionKicker>
       </div>
 
       {/* W19b bonus: forum threads now use a subtle inset shadow + a
