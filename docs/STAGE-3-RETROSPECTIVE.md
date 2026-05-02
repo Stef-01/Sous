@@ -48,13 +48,15 @@ sprint dump.
 
 ## What didn't work
 
-**The Tailwind JIT + markdown gotcha.** A `text-[var(--nourish-subtext|green)]`
-notation in the Sprint 2 IDEO doc got extracted by Tailwind as a
-real arbitrary-value class candidate, then failed to compile because
-`|` is invalid inside CSS values — broke the dev server. Took ~10
-minutes to track down (production build was fine, only dev choked).
-Stage 4: any `text-[…]` notation in IDEO docs must split the bracket
-across two valid class names instead of combining with `|`.
+**The Tailwind JIT + markdown gotcha.** A bracketed text-color
+shorthand combining two CSS-var names with a pipe (the kind we
+discovered Tailwind eagerly extracts as a class candidate) got into
+the Sprint 2 IDEO doc, then failed to compile because the pipe is
+invalid inside CSS values — broke the dev server. Took ~10 minutes
+to track down (production build was fine, only dev choked).
+Stage 4: any text-bracket notation in IDEO docs must split the
+bracket across two valid class names rather than combine them with
+a pipe inside a single set of brackets.
 
 **Over-aggressive Stanford content target (48).** The plan budgeted
 48 Stanford items by W26 across 5 runs. We landed 28. The gap reflects

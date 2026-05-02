@@ -4,6 +4,9 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
+import { MetaPill } from "@/components/shared/meta-pill";
+import { GLIDE, RM } from "@/lib/utils/motion";
 
 /**
  * Pantry  -  the quiet ledger. Ingredients you've marked as "I have this".
@@ -56,32 +59,20 @@ export default function PantryPage() {
             <div className="rounded-xl bg-neutral-100 h-12" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-5 py-8 text-center">
-            <Bookmark
-              size={24}
-              className="mx-auto mb-2 text-[var(--nourish-subtext)]"
-            />
-            <p className="text-sm font-medium text-[var(--nourish-dark)]">
-              Nothing stashed yet.
-            </p>
-            <p className="mx-auto mt-1 max-w-[260px] text-xs text-[var(--nourish-subtext)]">
-              Tap the bookmark next to any ingredient while you cook — the
-              pantry remembers, so you don&rsquo;t have to.
-            </p>
-            <button
-              onClick={() => router.push("/today")}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97]"
-              type="button"
-            >
-              Find something to cook
-            </button>
-          </div>
+          <EmptyStateCTA
+            icon={Bookmark}
+            iconSize={24}
+            primary="Nothing stashed yet."
+            helper="Tap the bookmark next to any ingredient while you cook — the pantry remembers, so you don't have to."
+            cta={{ label: "Find something to cook" }}
+            href="/today"
+          />
         ) : (
           <>
-            <div className="mb-3 flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/8 px-3 py-1.5 text-[11px] text-[var(--nourish-green)]">
+            <MetaPill variant="green" className="mb-3">
               <Sparkles size={11} aria-hidden />
               <span>Auto-applied to your next cook&rsquo;s Grab screen.</span>
-            </div>
+            </MetaPill>
 
             <ul className="space-y-1.5">
               <AnimatePresence initial={false}>
@@ -96,11 +87,7 @@ export default function PantryPage() {
                     exit={
                       reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
                     }
-                    transition={
-                      reducedMotion
-                        ? { duration: 0.15 }
-                        : { type: "spring", stiffness: 300, damping: 26 }
-                    }
+                    transition={reducedMotion ? RM : GLIDE}
                     className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
                   >
                     <Bookmark

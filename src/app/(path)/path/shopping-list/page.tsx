@@ -7,6 +7,8 @@ import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
+import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
+import { GLIDE, RM } from "@/lib/utils/motion";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -86,26 +88,14 @@ export default function ShoppingListPage() {
             <div className="rounded-xl bg-neutral-100 h-12" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-5 py-8 text-center">
-            <ShoppingCart
-              size={24}
-              className="mx-auto mb-2 text-[var(--nourish-subtext)]"
-            />
-            <p className="text-sm font-medium text-[var(--nourish-dark)]">
-              List is empty.
-            </p>
-            <p className="mx-auto mt-1 max-w-[260px] text-xs text-[var(--nourish-subtext)]">
-              Tap &ldquo;Add to shopping list&rdquo; on the Grab screen while
-              you cook — missing ingredients land here.
-            </p>
-            <button
-              onClick={() => router.push("/today")}
-              className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97]"
-              type="button"
-            >
-              Find something to cook
-            </button>
-          </div>
+          <EmptyStateCTA
+            icon={ShoppingCart}
+            iconSize={24}
+            primary="List is empty."
+            helper={`Tap "Add to shopping list" on the Grab screen while you cook — missing ingredients land here.`}
+            cta={{ label: "Find something to cook" }}
+            href="/today"
+          />
         ) : (
           <>
             {/* Quiet progress strip — only shows once at least one
@@ -223,11 +213,7 @@ function ShoppingRow({
       initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }}
-      transition={
-        reducedMotion
-          ? { duration: 0.15 }
-          : { type: "spring", stiffness: 300, damping: 26 }
-      }
+      transition={reducedMotion ? RM : GLIDE}
       className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
     >
       <button

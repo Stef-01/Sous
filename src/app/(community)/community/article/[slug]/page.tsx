@@ -4,23 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
 import { notFound } from "next/navigation";
-import { ExternalLink } from "lucide-react";
 import { getArticleBySlug, getExpertById, ARTICLES } from "@/data/content";
 import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
-
-function formatFetchedAt(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return iso;
-  }
-}
+import { SourceAttribution } from "@/components/shared/source-attribution";
 
 export default function ArticleDetailPage({
   params,
@@ -130,32 +118,13 @@ export default function ArticleDetailPage({
         </div>
 
         {article.sourceUrl && article.sourceTitle && (
-          <aside
-            className="mt-5 rounded-2xl border border-[var(--nourish-green)]/25 bg-[var(--nourish-green)]/5 p-4 text-[12px] text-[var(--nourish-dark)]/85"
-            aria-label="Original source"
-          >
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--nourish-green)]">
-              Sourced from
-            </p>
-            <p className="font-semibold text-[var(--nourish-dark)]">
-              {article.sourceTitle}
-            </p>
-            <a
-              href={article.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] shadow-sm ring-1 ring-[var(--nourish-green)]/20 hover:ring-[var(--nourish-green)]/40"
-            >
-              Read the original
-              <ExternalLink size={11} aria-hidden />
-            </a>
-            {article.sourceFetchedAt && (
-              <p className="mt-2 text-[10px] text-[var(--nourish-subtext)]">
-                Summary captured {formatFetchedAt(article.sourceFetchedAt)} ·
-                Sous paraphrase, not a reproduction.
-              </p>
-            )}
-          </aside>
+          <SourceAttribution
+            sourceUrl={article.sourceUrl}
+            sourceTitle={article.sourceTitle}
+            sourceFetchedAt={article.sourceFetchedAt}
+            variant="tinted"
+            className="mt-5"
+          />
         )}
       </div>
 

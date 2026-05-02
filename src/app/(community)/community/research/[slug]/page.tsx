@@ -3,19 +3,8 @@
 import Image from "next/image";
 import { use } from "react";
 import { notFound } from "next/navigation";
-import { ExternalLink, Microscope } from "lucide-react";
-
-function formatFetchedAt(iso: string): string {
-  try {
-    return new Date(iso).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  } catch {
-    return iso;
-  }
-}
+import { Microscope } from "lucide-react";
+import { SourceAttribution } from "@/components/shared/source-attribution";
 import { getResearchBriefBySlug } from "@/data/content";
 import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
@@ -98,32 +87,13 @@ export default function ResearchBriefPage({
         </div>
 
         {brief.sourceUrl && brief.sourceTitle && (
-          <aside
-            className="mt-3 rounded-2xl border border-[var(--nourish-green)]/25 bg-white p-4 text-[12px] text-[var(--nourish-dark)]/85"
-            aria-label="Original source"
-          >
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--nourish-green)]">
-              Sourced from
-            </p>
-            <p className="font-semibold text-[var(--nourish-dark)]">
-              {brief.sourceTitle}
-            </p>
-            <a
-              href={brief.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-cream)] px-3 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] ring-1 ring-[var(--nourish-green)]/20 hover:ring-[var(--nourish-green)]/40"
-            >
-              Read the original
-              <ExternalLink size={11} aria-hidden />
-            </a>
-            {brief.sourceFetchedAt && (
-              <p className="mt-2 text-[10px] text-[var(--nourish-subtext)]">
-                Summary captured {formatFetchedAt(brief.sourceFetchedAt)} · Sous
-                paraphrase, not a reproduction.
-              </p>
-            )}
-          </aside>
+          <SourceAttribution
+            sourceUrl={brief.sourceUrl}
+            sourceTitle={brief.sourceTitle}
+            sourceFetchedAt={brief.sourceFetchedAt}
+            variant="card"
+            className="mt-3"
+          />
         )}
       </div>
 
