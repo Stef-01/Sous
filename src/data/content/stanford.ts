@@ -733,6 +733,35 @@ export const STANFORD_ARTICLES: Article[] = [
     sourceFetchedAt: FETCHED_AT,
     permissionEvidence: PERMISSION_DOC,
   },
+  {
+    id: "stanford-art-halloween-safety",
+    category: "articles",
+    isPlaceholder: false,
+    slug: "stanford-healthy-happy-halloween",
+    kicker: "From Stanford Children's Health",
+    title: "A safer Halloween: the non-candy half of the night",
+    excerpt:
+      "Stanford-affiliated pediatricians on the trick-or-treating safety basics that the candy conversation tends to crowd out.",
+    coverImageUrl: "/food_images/sweet_potato.png",
+    body: [
+      "Halloween coverage almost always centres on candy — the sugar load, the moderation tactics, the parental anxiety about the haul. The Stanford Medicine Children's Health pediatric teams in Bayside, Livermore, Pleasanton, and San Ramon make a quieter point worth holding next to all of that: most of what makes Halloween safer or unsafer for a child has nothing to do with food.",
+      "Supervision is the first lever. Young children need an adult walking with them. Older children in independent groups should agree on a route in advance, carry phones, and check in at fixed intervals. The route plan is what makes the night work; improvising on the sidewalk at 8 p.m. is what creates problems.",
+      "Visibility and motion are next. Reflective tape on costumes, working flashlights, costumes that fit and don't drag — drivers see costumed kids late at night, and the small choices (tape, light, fit) move the safety needle dramatically. Walking, not running. Crossing at intersections. Facing oncoming traffic on streets without sidewalks.",
+      "Candy inspection is the bridge back to the food conversation. Open packages get tossed. Homemade items from outside the household get politely declined. The familiar wrapped commercial candy is what stays.",
+      "And the structural option for what comes home: donate it. Operation Gratitude and similar programs route the surplus to military personnel overseas. The act of donating turns a moderation conversation into a generosity one — which lands far better with kids of every age.",
+    ],
+    authorId: "expert-stanford-healthy-weight",
+    readMinutes: 4,
+    tags: ["seasonal", "safety", "stanford"],
+    featured: false,
+    audience: "parent",
+    createdAt: "2016-10-17T00:00:00.000Z",
+    sourceUrl:
+      "https://healthier.stanfordchildrens.org/en/healthy-happy-halloween/",
+    sourceTitle: "Stanford Medicine Children's Health — Healthier, Happy Lives",
+    sourceFetchedAt: FETCHED_AT,
+    permissionEvidence: PERMISSION_DOC,
+  },
 ];
 
 export const STANFORD_RESEARCH_BRIEFS: ResearchBrief[] = [

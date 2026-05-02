@@ -87,6 +87,29 @@ model used in family-based behaviour-first care.
 **Total Stanford-attributed content after run #4:** 17 articles + 1
 research brief + 9 expert voices.
 
+## Sprint 5 — Stanford content run #5 (2026-05-01, final batch)
+
+| #   | Source URL                     | Author                                                                             | Original date | Sous shape | Sous id                         |
+| --- | ------------------------------ | ---------------------------------------------------------------------------------- | ------------- | ---------- | ------------------------------- |
+| 19  | `/en/healthy-happy-halloween/` | Bayside Pediatrics + Livermore/Pleasanton/San Ramon Pediatrics (Stanford Medicine) | 2016-10-17    | article    | `stanford-art-halloween-safety` |
+
+**Themes added by run #5:** Halloween non-candy safety basics
+(supervision, visibility, candy inspection, donation). Closes out the
+seasonal-eating cluster begun in run #1.
+
+**Total Stanford-attributed content after run #5 (final):** 18
+articles + 1 research brief + 9 expert voices.
+
+The Stage-3 cycle target was 48 Stanford items by W26. We landed 28
+items across 5 runs. The shortfall vs. plan reflects two real
+constraints: the Stanford Children's Health Healthy Eating category
+holds ~26 articles total (we ingested most relevant ones), and the
+Stanford Medicine Insights archive isn't easily browsable via the
+WebFetch tool. Reaching 48 needs additional source pools (Stanford
+SCOPE direct article URLs, Stanford Lifestyle Medicine pages,
+healtheducation.stanford.edu) — that's a Stage-4 source-discovery
+expansion, not a content-fetch problem.
+
 **Verbatim discipline.** Each card includes ≤ 30 verbatim words from its
 source, in quotation marks where used at all. The rest is original
 Sous wording.
