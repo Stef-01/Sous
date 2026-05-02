@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 interface CuisineConstellationProps {
@@ -94,6 +94,7 @@ function starAppearance(ratio: number): {
 export function CuisineConstellation({
   completedSessions,
 }: CuisineConstellationProps) {
+  const reducedMotion = useReducedMotion();
   const [selected, setSelected] = useState<string | null>(null);
 
   const progress = useMemo(() => {
@@ -238,10 +239,10 @@ export function CuisineConstellation({
           {selectedCuisine ? (
             <motion.div
               key={`info-${selectedCuisine.id}`}
-              initial={{ opacity: 0, y: 4 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 2 }}
-              transition={{ duration: 0.18 }}
+              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 2 }}
+              transition={{ duration: reducedMotion ? 0 : 0.18 }}
               className="pointer-events-none absolute inset-x-0 bottom-2 flex items-center justify-center gap-1.5 px-3"
             >
               <span className="text-base leading-none" aria-hidden>

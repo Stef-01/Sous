@@ -3,7 +3,7 @@
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
@@ -45,6 +45,7 @@ export default function SidesPage() {
 }
 
 function SidesPageContent() {
+  const reducedMotion = useReducedMotion();
   const router = useRouter();
   const searchParams = useSearchParams();
   const mainDish = searchParams.get("main") ?? "";
@@ -143,9 +144,13 @@ function SidesPageContent() {
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)] pb-8"
-      initial={{ opacity: 0, x: 40 }}
+      initial={reducedMotion ? false : { opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ type: "spring", stiffness: 280, damping: 28 }}
+      transition={
+        reducedMotion
+          ? { duration: 0.12 }
+          : { type: "spring", stiffness: 280, damping: 28 }
+      }
     >
       {/* Header with main dish thumbnail */}
       <header className="app-header px-4 py-3">

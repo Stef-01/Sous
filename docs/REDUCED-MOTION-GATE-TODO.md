@@ -44,6 +44,16 @@
   `src/components/guided-cook/mission-screen.tsx` (9).
   **146 violations remaining.** -56 from this wave; -138 cumulative
   (49% of original 284 cleared).
+- **2026-05-01 (W7 cont.)** — Tier 3 remediation wave B: next-5
+  by-violation-density.
+  Imports + consumers landed on:
+  `src/components/today/result-stack.tsx` (8),
+  `src/components/path/next-unlock-card.tsx` (7),
+  `src/app/sides/page.tsx` (7),
+  `src/components/path/path-header.tsx` (6),
+  `src/components/path/cuisine-constellation.tsx` (6).
+  **112 violations remaining.** -34 from this wave; -172 cumulative
+  (61% of original 284 cleared).
 
 ## Why these aren't "real" bugs (yet)
 
