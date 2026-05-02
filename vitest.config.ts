@@ -4,7 +4,7 @@ import path from "path";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "eslint-rules/**/*.test.js"],
     coverage: {
       provider: "v8",
       include: ["src/lib/engine/**"],
