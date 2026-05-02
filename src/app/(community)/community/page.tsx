@@ -210,9 +210,6 @@ function ContentPageInner() {
           <section aria-label="Articles" className="space-y-2">
             <div className="flex items-baseline justify-between px-1">
               <SectionKicker>Articles &amp; blogs</SectionKicker>
-              <span className="text-[10px] text-[var(--nourish-subtext)]/70">
-                Long reads
-              </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {(!tagFilterActive && filter === "for-you"
@@ -253,9 +250,6 @@ function ContentPageInner() {
           <section aria-label="Research spotlight" className="space-y-2">
             <div className="flex items-baseline justify-between px-1">
               <SectionKicker>Research spotlight</SectionKicker>
-              <span className="text-[10px] text-[var(--nourish-subtext)]/70">
-                Plain-language briefs
-              </span>
             </div>
             <div className="space-y-2">
               {(filter === "for-you"
