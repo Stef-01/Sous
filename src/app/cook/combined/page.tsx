@@ -39,6 +39,13 @@ import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import {
+  buildCombinedDisplayName,
+  buildCombinedSlug,
+  buildIngredientSections,
+  buildOrderedDishes,
+  buildParallelHintMap,
+} from "@/lib/cook/combined-shapers";
 
 /**
  * Combined Cook Page  -  guides the user through cooking a main dish + 1-3 sides
@@ -141,15 +148,11 @@ function CombinedCookContent() {
   );
 
   // Build ordered dish data based on cookOrder
-  const orderedDishes = useMemo(() => {
-    if (!data) return [];
-    const lookup = new Map<string, typeof data.main>();
-    if (data.main) lookup.set(data.main.dish.slug, data.main);
-    data.sides.forEach((s) => lookup.set(s.dish.slug, s));
-    return data.cookOrder
-      .map((slug) => lookup.get(slug))
-      .filter((d): d is NonNullable<typeof d> => d !== null && d !== undefined);
-  }, [data]);
+  const orderedDishes = useMemo(
+    () =>
+      data ? buildOrderedDishes(data.main, data.sides, data.cookOrder) : [],
+    [data],
+  );
 
   // Current dish being cooked
   const currentDish = orderedDishes[currentDishIndex] ?? null;
@@ -190,13 +193,9 @@ function CombinedCookContent() {
       // multi-dish cook from a single-dish one. See AUDIT-2026-04-17 P1-10.
       if (!sessionIdRef.current) {
         const firstDish = orderedDishes[0];
-        const combinedSlug =
-          orderedDishes.length > 1
-            ? orderedDishes.map((d) => d.dish.slug).join("+")
-            : firstDish.dish.slug;
         sessionIdRef.current = startSession(
-          combinedSlug,
-          `${orderedDishes.map((d) => d.dish.name).join(" + ")}`,
+          buildCombinedSlug(orderedDishes),
+          buildCombinedDisplayName(orderedDishes),
           firstDish.dish.cuisineFamily,
         );
       }
@@ -204,13 +203,10 @@ function CombinedCookContent() {
   }, [data, orderedDishes, startCombinedSession, startSession]);
 
   // Build segmented ingredient sections for the Grab phase
-  const ingredientSections = useMemo<IngredientSection[]>(() => {
-    if (!orderedDishes.length) return [];
-    return orderedDishes.map((d) => ({
-      label: `For ${d.dish.name}`,
-      ingredients: d.ingredients,
-    }));
-  }, [orderedDishes]);
+  const ingredientSections = useMemo<IngredientSection[]>(
+    () => buildIngredientSections(orderedDishes),
+    [orderedDishes],
+  );
 
   // Flat ingredients for backward-compat (used by step card)
   const allIngredients = useMemo(
@@ -255,15 +251,10 @@ function CombinedCookContent() {
   }, [orderedDishes]);
 
   // Sequencer parallel hints: map of "dishSlug-stepIndex" -> hint text
-  const parallelHintMap = useMemo(() => {
-    const map = new Map<string, string>();
-    if (data?.sequencerHints) {
-      for (const h of data.sequencerHints) {
-        map.set(`${h.dishSlug}-${h.stepIndex}`, h.hint);
-      }
-    }
-    return map;
-  }, [data]);
+  const parallelHintMap = useMemo(
+    () => buildParallelHintMap(data?.sequencerHints),
+    [data?.sequencerHints],
+  );
 
   // Current step parallel hint
   const currentParallelHint =
@@ -593,8 +584,8 @@ function CombinedCookContent() {
             <CombinedMissionScreen
               key="mission"
               mainDishName={mainDish.name}
-              mainDishDescription={mainDish.description}
-              mainDishHeroImage={mainDish.heroImageUrl}
+              mainDishDescription={mainDish.description ?? ""}
+              mainDishHeroImage={mainDish.heroImageUrl ?? null}
               companionDishes={orderedDishes
                 .filter((d) => d.dish.slug !== mainDish.slug)
                 .map((d) => d.dish.name)}
