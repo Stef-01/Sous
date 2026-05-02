@@ -13,6 +13,16 @@
 - **284 violations across 64 files.**
 - Generated via `pnpm lint 2>&1 | grep reduced-motion-gate`.
 
+## Progress log
+
+- **2026-05-01 (W7)** — rule introduced; 284 violations live.
+- **2026-05-01 (W7 cont.)** — Tier 1 remediation wave A: imports +
+  page-shell entrance gates landed on
+  `src/app/(today)/today/page.tsx`,
+  `src/app/cook/[slug]/page.tsx`,
+  `src/app/cook/combined/page.tsx`,
+  `src/app/(path)/path/page.tsx`. **243 violations remaining.**
+
 ## Why these aren't "real" bugs (yet)
 
 Most of these files already work fine for users without

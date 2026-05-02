@@ -10,7 +10,7 @@ import {
 } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ChefHat,
@@ -66,6 +66,10 @@ export default function CombinedCookPage() {
 function CombinedCookContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // W7 follow-up: reduced-motion gate. Consumed by the page-shell
+  // entrance below; full per-site gating queued in Tier 1 of
+  // docs/REDUCED-MOTION-GATE-TODO.md.
+  const reducedMotion = useReducedMotion();
 
   const mainSlug = searchParams.get("main") ?? "";
   const sidesParam = searchParams.get("sides") ?? "";
@@ -544,9 +548,9 @@ function CombinedCookContent() {
     <motion.div
       data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0, y: 8 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
       <header className="app-header px-4 py-3">

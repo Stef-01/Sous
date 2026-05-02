@@ -2,7 +2,7 @@
 
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
@@ -35,6 +35,9 @@ export default function GuidedCookPage({
   const { slug } = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
+  // W7 follow-up: useReducedMotion gate available across this file's
+  // motion sites. Currently consumed by the page-shell entrance below.
+  const reducedMotion = useReducedMotion();
 
   // Main dish context passed from the Today page (e.g. "Chicken Tikka Masala")
   const mainDishInput = searchParams.get("main") ?? undefined;
@@ -382,9 +385,9 @@ export default function GuidedCookPage({
     <motion.div
       data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0, y: 8 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
       <header className="app-header px-4 py-3">

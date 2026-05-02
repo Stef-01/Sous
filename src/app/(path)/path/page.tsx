@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion, LayoutGroup } from "framer-motion";
+import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
 import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
@@ -39,6 +39,9 @@ import { SectionKicker } from "@/components/shared/section-kicker";
  * a detail sheet with associated practice dishes.
  */
 export default function PathPage() {
+  // W7 follow-up: reduced-motion gate available across this file's
+  // motion sites. Consumed by the page-shell entrance below.
+  const reducedMotion = useReducedMotion();
   const {
     mounted,
     nodesWithStatus,
@@ -248,7 +251,7 @@ export default function PathPage() {
         className="min-h-dvh bg-[var(--nourish-cream)]"
         initial={false}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.18 }}
+        transition={{ duration: reducedMotion ? 0 : 0.18 }}
       >
         {/* Header with stats */}
         <PathHeader

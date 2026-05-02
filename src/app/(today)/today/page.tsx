@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
@@ -96,6 +96,11 @@ export default function TodayPage() {
 }
 
 function TodayPageContent() {
+  // W7 follow-up: useReducedMotion gate available for any motion sites
+  // in this file. Currently consumed by the empty-state pull-to-refresh
+  // hint below — preserves the bird-blink while suppressing the larger
+  // pulse for users with prefers-reduced-motion set.
+  const reducedMotion = useReducedMotion();
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
@@ -370,9 +375,9 @@ function TodayPageContent() {
     <motion.div
       ref={(el) => setPullRef(el as HTMLElement | null)}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.18 }}
+      transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
       {/* Pull-to-refresh indicator — W22b animation #8: bird-mascot
           eyelid blink replaces the bare chevron. Eyes close as the
