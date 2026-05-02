@@ -25,6 +25,14 @@ import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { rankForParentMode } from "@/lib/content/parent-track";
+import { SectionKicker } from "@/components/shared/section-kicker";
+
+/** Cap the For-You view at this many cards per category before
+ *  showing a "See all" link that switches to the dedicated tab.
+ *  Codifies the pagination decision from STAGE-3-RETROSPECTIVE.md
+ *  ("17 Stanford articles is starting to feel substantial"). */
+const FOR_YOU_ARTICLE_LIMIT = 6;
+const FOR_YOU_RESEARCH_LIMIT = 3;
 
 /**
  * Content tab home — Stage 3 lean-vibe magazine surface.
@@ -134,36 +142,58 @@ export default function ContentPage() {
         {showArticles && (
           <section aria-label="Articles" className="space-y-2">
             <div className="flex items-baseline justify-between px-1">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-                Articles &amp; blogs
-              </h2>
+              <SectionKicker>Articles &amp; blogs</SectionKicker>
               <span className="text-[10px] text-[var(--nourish-subtext)]/70">
                 Long reads
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {sortedArticles.map((article) => (
+              {(filter === "for-you"
+                ? sortedArticles.slice(0, FOR_YOU_ARTICLE_LIMIT)
+                : sortedArticles
+              ).map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
+            {filter === "for-you" &&
+              sortedArticles.length > FOR_YOU_ARTICLE_LIMIT && (
+                <button
+                  type="button"
+                  onClick={() => setFilter("articles")}
+                  className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-full bg-white px-4 py-2 text-[12px] font-semibold text-[var(--nourish-green)] ring-1 ring-[var(--nourish-green)]/20 hover:ring-[var(--nourish-green)]/40"
+                >
+                  See all {sortedArticles.length} articles →
+                </button>
+              )}
           </section>
         )}
 
         {showResearch && (
           <section aria-label="Research spotlight" className="space-y-2">
             <div className="flex items-baseline justify-between px-1">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-                Research spotlight
-              </h2>
+              <SectionKicker>Research spotlight</SectionKicker>
               <span className="text-[10px] text-[var(--nourish-subtext)]/70">
                 Plain-language briefs
               </span>
             </div>
             <div className="space-y-2">
-              {sortedResearch.map((brief) => (
+              {(filter === "for-you"
+                ? sortedResearch.slice(0, FOR_YOU_RESEARCH_LIMIT)
+                : sortedResearch
+              ).map((brief) => (
                 <ResearchBriefCard key={brief.id} brief={brief} />
               ))}
             </div>
+            {filter === "for-you" &&
+              sortedResearch.length > FOR_YOU_RESEARCH_LIMIT && (
+                <button
+                  type="button"
+                  onClick={() => setFilter("research")}
+                  className="mt-2 inline-flex w-full items-center justify-center gap-1 rounded-full bg-white px-4 py-2 text-[12px] font-semibold text-[var(--nourish-green)] ring-1 ring-[var(--nourish-green)]/20 hover:ring-[var(--nourish-green)]/40"
+                >
+                  See all {sortedResearch.length} briefs →
+                </button>
+              )}
           </section>
         )}
 
