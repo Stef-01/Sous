@@ -22,6 +22,7 @@ import { ResearchBriefCard } from "@/components/content/research-brief-card";
 import { ExpertVoicesRow } from "@/components/content/expert-voices-row";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
+import { TagCloud } from "@/components/content/tag-cloud";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { rankForParentMode } from "@/lib/content/parent-track";
@@ -275,6 +276,17 @@ function ContentPageInner() {
         {showExperts && <ExpertVoicesRow experts={EXPERT_VOICES} />}
 
         {showForum && <ForumThreadList threads={sortedThreads} limit={4} />}
+
+        {/* W9: tag cloud for discovery. Only renders on the For-You
+            view (not when a tag is already selected — would be
+            self-referential — and not on category-isolated views
+            where the user has already narrowed). Sources tags from
+            the FULL article corpus, not the parent-mode-ranked
+            sortedArticles, so the cloud reflects the catalog rather
+            than the current filter. */}
+        {!tagFilterActive && filter === "for-you" && (
+          <TagCloud articles={ARTICLES} limit={12} />
+        )}
 
         <ContentDisclaimer />
       </main>
