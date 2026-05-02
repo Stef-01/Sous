@@ -33,6 +33,17 @@
   (`src/app/games/whats-cooking/page.tsx` already gated, no change.)
   **202 violations remaining.** -41 from this wave; -82 cumulative
   from rule introduction.
+- **2026-05-01 (W7 cont.)** — Tier 3 remediation wave A: top-5
+  by-violation-density components.
+  Imports + per-file consumers landed on:
+  `src/components/path/skill-detail-sheet.tsx` (13 violations
+  cleared),
+  `src/components/guided-cook/step-card.tsx` (12),
+  `src/components/today/text-prompt.tsx` (11),
+  `src/components/guided-cook/ingredient-list.tsx` (11),
+  `src/components/guided-cook/mission-screen.tsx` (9).
+  **146 violations remaining.** -56 from this wave; -138 cumulative
+  (49% of original 284 cleared).
 
 ## Why these aren't "real" bugs (yet)
 

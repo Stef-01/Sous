@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -87,6 +87,7 @@ export function StepCard({
   isLast,
   dishSlug,
 }: StepCardProps) {
+  const reducedMotion = useReducedMotion();
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -191,10 +192,14 @@ export function StepCard({
     <motion.div
       key={stepNumber}
       custom={direction}
-      initial={{ opacity: 0, x: slideX }}
+      initial={reducedMotion ? false : { opacity: 0, x: slideX }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -slideX }}
-      transition={{ type: "spring", stiffness: 300, damping: 28 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -slideX }}
+      transition={
+        reducedMotion
+          ? { duration: 0.12 }
+          : { type: "spring", stiffness: 300, damping: 28 }
+      }
       className="flex flex-col gap-5"
     >
       {/* Step counter + progress bar + read-aloud */}

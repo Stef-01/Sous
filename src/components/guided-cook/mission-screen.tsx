@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { PlanCookChip } from "./plan-cook-chip";
@@ -38,6 +38,7 @@ export function MissionScreen({
   dishSlug,
   onStart,
 }: MissionScreenProps) {
+  const reducedMotion = useReducedMotion();
   const [imgError, setImgError] = useState(false);
   const totalTime = prepTimeMinutes + cookTimeMinutes;
 
@@ -49,9 +50,13 @@ export function MissionScreen({
     >
       {/* Hero image  -  fixed height so CTA stays above fold on 375px phones */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25 }
+        }
         className="relative h-[160px] overflow-hidden rounded-2xl"
       >
         {heroImageUrl && !imgError ? (

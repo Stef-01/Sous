@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Lock, Check, ArrowRight, ChefHat } from "lucide-react";
 import { SkillIcon } from "@/components/shared/skill-icon";
 import { IconButton } from "@/components/ui/icon-button";
@@ -34,6 +34,7 @@ export function SkillDetailSheet({
   onStartCook,
   onPracticeDish,
 }: SkillDetailSheetProps) {
+  const reducedMotion = useReducedMotion();
   // Note: do NOT return null when node is null  -  AnimatePresence needs to render
   // to fire the exit animation. The `open` prop and `node` will both be falsy
   // at the same time (both derived from selectedNodeId), so gating on `open`
@@ -59,7 +60,7 @@ export function SkillDetailSheet({
           <motion.div
             key="skill-detail-backdrop"
             className="fixed inset-0 z-[55] bg-black/55 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Check,
   Circle,
@@ -73,6 +73,7 @@ export function IngredientList({
   onReady,
   onSelectSides,
 }: IngredientListProps) {
+  const reducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
@@ -211,7 +212,7 @@ export function IngredientList({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col"
       style={{ minHeight: "calc(100dvh - 180px)" }}
