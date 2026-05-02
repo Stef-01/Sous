@@ -108,12 +108,13 @@ export default function ArticleDetailPage({
 
         <div className="flex flex-wrap gap-2 pt-2">
           {article.tags.map((tag) => (
-            <span
+            <Link
               key={tag}
-              className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]"
+              href={`/community?tag=${encodeURIComponent(tag)}`}
+              className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-green)]/10 hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/30"
             >
               #{tag}
-            </span>
+            </Link>
           ))}
         </div>
 

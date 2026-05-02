@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Bookmark } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Bookmark, X } from "lucide-react";
 import {
   ARTICLES,
   EXPERT_VOICES,
@@ -44,24 +44,56 @@ const FOR_YOU_RESEARCH_LIMIT = 3;
  * for the spec).
  */
 export default function ContentPage() {
+  // useSearchParams must be wrapped in Suspense for static prerender
+  // to succeed (Next 16 / Turbopack requirement). The fallback uses
+  // the same shell as the inner page so the FOUC is invisible.
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
+          <header className="space-y-3 px-4 pt-6">
+            <div className="space-y-0.5">
+              <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
+                Content
+              </h1>
+              <p className="text-[12px] text-[var(--nourish-subtext)]">
+                Loading…
+              </p>
+            </div>
+          </header>
+        </div>
+      }
+    >
+      <ContentPageInner />
+    </Suspense>
+  );
+}
+
+function ContentPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTag = searchParams.get("tag");
   const { filter, setFilter } = useContentFilter();
   // Parent Mode promotes audience: 'parent' items to the top of every
   // mixed list. (Stage 2 W12.)
   const { profile } = useParentMode();
 
   const featured = useMemo(() => getFeaturedArticles(), []);
-  const sortedArticles = useMemo(
-    () =>
-      rankForParentMode(
-        [...ARTICLES].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        ),
-        profile.enabled,
+  const sortedArticles = useMemo(() => {
+    const ranked = rankForParentMode(
+      [...ARTICLES].sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       ),
-    [profile.enabled],
-  );
+      profile.enabled,
+    );
+    if (!activeTag) return ranked;
+    // Tag-filter view: keep only articles that carry the active tag.
+    // Case-insensitive match — the tag URL param is whatever the user
+    // tapped on the article-detail page.
+    const needle = activeTag.toLowerCase();
+    return ranked.filter((a) => a.tags.some((t) => t.toLowerCase() === needle));
+  }, [profile.enabled, activeTag]);
   const sortedReels = useMemo(
     () =>
       rankForParentMode(
@@ -94,12 +126,23 @@ export default function ContentPage() {
     [],
   );
 
-  const showHero = filter === "for-you" || filter === "articles";
-  const showReels = filter === "for-you" || filter === "reels";
-  const showArticles = filter === "for-you" || filter === "articles";
-  const showResearch = filter === "for-you" || filter === "research";
-  const showExperts = filter === "for-you" || filter === "experts";
-  const showForum = filter === "for-you" || filter === "forum";
+  // When a tag is active, narrow the view to articles only — the
+  // tag is an article-side concept, so the other section types
+  // (reels, research, experts, forum) would be misleading next to a
+  // filtered article grid.
+  const tagFilterActive = !!activeTag;
+  const showHero =
+    !tagFilterActive && (filter === "for-you" || filter === "articles");
+  const showReels =
+    !tagFilterActive && (filter === "for-you" || filter === "reels");
+  const showArticles =
+    tagFilterActive || filter === "for-you" || filter === "articles";
+  const showResearch =
+    !tagFilterActive && (filter === "for-you" || filter === "research");
+  const showExperts =
+    !tagFilterActive && (filter === "for-you" || filter === "experts");
+  const showForum =
+    !tagFilterActive && (filter === "for-you" || filter === "forum");
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
@@ -124,6 +167,30 @@ export default function ContentPage() {
         </div>
 
         <CategoryFilterStrip active={filter} onChange={setFilter} />
+
+        {tagFilterActive && (
+          <div className="flex items-center justify-between gap-2 rounded-2xl bg-[var(--nourish-green)]/8 px-3 py-2">
+            <p className="flex flex-wrap items-center gap-1.5 text-[12px] text-[var(--nourish-dark)]">
+              <span className="text-[var(--nourish-subtext)]">
+                Showing articles tagged
+              </span>
+              <span className="font-bold text-[var(--nourish-green)]">
+                #{activeTag}
+              </span>
+              <span className="tabular-nums text-[var(--nourish-subtext)]">
+                ({sortedArticles.length})
+              </span>
+            </p>
+            <Link
+              href="/community"
+              className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-subtext)] ring-1 ring-neutral-200 hover:text-[var(--nourish-dark)]"
+              aria-label="Clear tag filter"
+            >
+              Clear
+              <X size={11} aria-hidden />
+            </Link>
+          </div>
+        )}
       </header>
 
       <main className="space-y-7 px-4 pt-5">
@@ -148,14 +215,15 @@ export default function ContentPage() {
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {(filter === "for-you"
+              {(!tagFilterActive && filter === "for-you"
                 ? sortedArticles.slice(0, FOR_YOU_ARTICLE_LIMIT)
                 : sortedArticles
               ).map((article) => (
                 <ArticleCard key={article.id} article={article} />
               ))}
             </div>
-            {filter === "for-you" &&
+            {!tagFilterActive &&
+              filter === "for-you" &&
               sortedArticles.length > FOR_YOU_ARTICLE_LIMIT && (
                 <button
                   type="button"
@@ -165,6 +233,19 @@ export default function ContentPage() {
                   See all {sortedArticles.length} articles →
                 </button>
               )}
+            {tagFilterActive && sortedArticles.length === 0 && (
+              <p className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-5 py-7 text-center text-[12px] text-[var(--nourish-subtext)]">
+                No articles tagged{" "}
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  #{activeTag}
+                </span>
+                . Tap{" "}
+                <span className="font-semibold text-[var(--nourish-green)]">
+                  Clear
+                </span>{" "}
+                above to see everything.
+              </p>
+            )}
           </section>
         )}
 
