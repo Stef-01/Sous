@@ -72,6 +72,21 @@ products.
 **Total Stanford-attributed content after run #3:** 15 articles + 1
 research brief + 9 expert voices.
 
+## Sprint 4 — Stanford content run #4 (2026-05-01)
+
+| #   | Source URL                                                   | Author                                                                                    | Original date | Sous shape | Sous id                                     |
+| --- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ------------- | ---------- | ------------------------------------------- |
+| 17  | `/en/four-ways-to-support-families-facing-childhood-cancer/` | Bass Center for Childhood Cancer and Blood Diseases (Stanford Medicine Children's Health) | 2017-09-21    | article    | `stanford-art-supporting-cancer-families`   |
+| 18  | `/en/weight-control-program-turns-ellens-life-around/`       | Cindy Zedeck, MA + Nadia Al-Lami (Stanford Pediatric Weight Control Program)              | 2014-12-10    | article    | `stanford-art-weight-control-program-story` |
+
+**Themes added by run #4:** community support during pediatric medical
+crises (with food as a structural support), 25-year history of
+Stanford's Pediatric Weight Control Program + the food traffic-light
+model used in family-based behaviour-first care.
+
+**Total Stanford-attributed content after run #4:** 17 articles + 1
+research brief + 9 expert voices.
+
 **Verbatim discipline.** Each card includes ≤ 30 verbatim words from its
 source, in quotation marks where used at all. The rest is original
 Sous wording.
