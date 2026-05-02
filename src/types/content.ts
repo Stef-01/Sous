@@ -94,6 +94,16 @@ export interface ForumReply {
   authorHandle: string;
   body: string;
   createdAt: string;
+  /** When set, this reply is a response to the named reply (reply-
+   *  to-reply nesting introduced in Stage-4 W8). Single level of
+   *  nesting only — replies-to-replies-to-replies render as flat
+   *  replies-to-the-OP visually. Null/undefined means top-level
+   *  reply-to-OP. */
+  inReplyToId?: string;
+  /** Lightweight "thanks" reaction count. Per-device persistence
+   *  via `useForumReactions`. Stage-4 W8 stub; real per-user
+   *  attribution arrives with the founder-gated auth unlock. */
+  thanksCount?: number;
 }
 
 export interface ForumThread extends BaseContentItem {

@@ -9,6 +9,10 @@ export interface ForumDraftReply {
   threadId: string;
   body: string;
   createdAt: string;
+  /** Set when the reply targets another reply (W8 nesting). The
+   *  `inReplyToId` is either an existing thread reply's id OR a
+   *  draft reply's id. */
+  inReplyToId?: string;
 }
 
 function load(): ForumDraftReply[] {
@@ -43,7 +47,7 @@ export function useForumDrafts(threadId: string) {
   }, [threadId]);
 
   const addReply = useCallback(
-    (body: string): ForumDraftReply | null => {
+    (body: string, inReplyToId?: string): ForumDraftReply | null => {
       const trimmed = body.trim();
       if (trimmed.length === 0) return null;
       const all = load();
@@ -52,6 +56,7 @@ export function useForumDrafts(threadId: string) {
         threadId,
         body: trimmed,
         createdAt: new Date().toISOString(),
+        inReplyToId,
       };
       const next = [...all, reply];
       persist(next);
