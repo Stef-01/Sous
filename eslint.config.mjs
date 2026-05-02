@@ -24,12 +24,12 @@ const eslintConfig = defineConfig([
     rules: {
       "react-compiler/react-compiler": "warn",
       // Custom: catch any motion site missing the useReducedMotion
-      // gate. Initially "warn" — pre-rule violations surface in lint
-      // output without failing CI; new code that adds motion without
-      // a gate is visible immediately. Plan: convert to "error" once
-      // the existing violations are remediated (tracked in
-      // docs/REDUCED-MOTION-GATE-TODO.md).
-      "sous/reduced-motion-gate": "warn",
+      // gate. Started as "warn" with 284 pre-existing violations.
+      // After Tier-1 → Tier-3 wave D remediation cleared them all,
+      // flipped to "error" so any new motion code that lacks the
+      // gate fails CI. Acceptance gate from
+      // docs/REDUCED-MOTION-GATE-TODO.md hit on 2026-05-02.
+      "sous/reduced-motion-gate": "error",
     },
   },
   // Override default ignores of eslint-config-next.

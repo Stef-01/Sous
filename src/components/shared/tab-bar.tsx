@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, LayoutGroup } from "framer-motion";
+import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
 import { useNavigation } from "@/lib/hooks/use-navigation";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { cn } from "@/lib/utils/cn";
@@ -12,6 +12,8 @@ export function TabBar({
 }: {
   user: { pathUnlocked: boolean; communityUnlocked: boolean } | null;
 }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const tabs = useNavigation(user);
   const pathname = usePathname();
   const haptic = useHaptic();

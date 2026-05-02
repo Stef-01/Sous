@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Star,
   Heart,
@@ -34,6 +34,8 @@ function formatRelativeDate(isoString: string): string {
 }
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const pct = (value / 5) * 100;
   return (
     <div className="space-y-0.5">

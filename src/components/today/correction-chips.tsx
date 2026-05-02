@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -24,6 +24,8 @@ export function CorrectionChips({
   onConfirm,
   onCustom,
 }: CorrectionChipsProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const confidencePct = Math.round(confidence * 100);
 
   return (

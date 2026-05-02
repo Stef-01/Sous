@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, LayoutGroup } from "framer-motion";
+import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import {
   CONTENT_FILTERS,
@@ -19,6 +19,8 @@ interface Props {
  * shared layoutId background so transitions feel native.
  */
 export function CategoryFilterStrip({ active, onChange }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <nav
       aria-label="Content categories"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Clock, X } from "lucide-react";
 
 interface PlanCookChipProps {
@@ -37,6 +37,8 @@ function parseEatTime(value: string): Date | null {
  * adding a new destination.
  */
 export function PlanCookChip({ totalMinutes }: PlanCookChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [eatTime, setEatTime] = useState<string>("");
   const [expanded, setExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X, Moon, Users, Snowflake, Gamepad2, Sparkles } from "lucide-react";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { CookForTwoChip } from "@/components/today/cook-for-two-chip";
@@ -31,6 +31,7 @@ export function MoreOptionsSheet({
   onPlayGame,
   onPersonalize,
 }: MoreOptionsSheetProps) {
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -45,10 +46,10 @@ export function MoreOptionsSheet({
       {open && (
         <motion.div
           className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
-          initial={{ opacity: 0 }}
+          initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
+          transition={{ duration: reducedMotion ? 0 : 0.18 }}
         >
           <button
             type="button"

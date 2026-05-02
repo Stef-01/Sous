@@ -20,7 +20,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -45,6 +45,7 @@ interface Props {
 }
 
 export function KidSwapChip({ dishSlug, cuisineFamily, recipeName }: Props) {
+  const reducedMotion = useReducedMotion();
   const { profile } = useParentMode();
   const [open, setOpen] = useState(false);
   const haptic = useHaptic();
@@ -59,8 +60,12 @@ export function KidSwapChip({ dishSlug, cuisineFamily, recipeName }: Props) {
     <>
       <motion.button
         type="button"
-        whileTap={{ scale: 0.93 }}
-        transition={{ type: "spring", stiffness: 420, damping: 18 }}
+        whileTap={reducedMotion ? undefined : { scale: 0.93 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 420, damping: 18 }
+        }
         onClick={() => {
           haptic();
           setOpen(true);

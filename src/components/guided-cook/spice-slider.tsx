@@ -14,7 +14,7 @@
  *     default 3 (zero footprint for users who don't care).
  */
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import type { SpiceTolerance } from "@/lib/parent-mode/spice-rewrite";
@@ -35,6 +35,8 @@ const PREVIEW: Record<SpiceTolerance, string> = {
 };
 
 export function SpiceSlider({ value, onChange, alwaysShow }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const haptic = useHaptic();
   if (!alwaysShow && value === 3) return null;
 

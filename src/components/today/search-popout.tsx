@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 
 interface SearchPopoutProps {
@@ -19,6 +19,7 @@ interface SearchPopoutProps {
  * is always visible regardless of scroll position.
  */
 export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
+  const reducedMotion = useReducedMotion();
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: KeyboardEvent) => {
@@ -35,10 +36,10 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
         {isOpen && (
           <motion.div
             key="search-backdrop"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: reducedMotion ? 0 : 0.15 }}
             className="fixed inset-0 z-40 bg-black/30"
             onClick={onClose}
           />

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import type { Article } from "@/types/content";
 import { getExpertById } from "@/data/content";
@@ -20,6 +20,8 @@ interface Props {
  * the visible card.
  */
 export function FeaturedHeroCarousel({ articles }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 

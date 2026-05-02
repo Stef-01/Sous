@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Play } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { Reel } from "@/types/content";
 import { BookmarkButton } from "./bookmark-button";
 import { SectionKicker } from "@/components/shared/section-kicker";
@@ -30,6 +30,8 @@ function formatDuration(seconds: number): string {
  * playback is mocked, so we never claim a video file we don't have.
  */
 export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   if (reels.length === 0) return null;
 
   return (

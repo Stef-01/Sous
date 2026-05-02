@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   cookGlossary,
   glossaryRegexSource,
@@ -31,6 +31,8 @@ export function Glossify({
   children: string;
   className?: string;
 }): ReactNode {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const parts: ReactNode[] = [];
   const re = new RegExp(glossaryRegexSource, "giu");
   let lastIdx = 0;

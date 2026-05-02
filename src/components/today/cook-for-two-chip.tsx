@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { Users, X } from "lucide-react";
 import { useTasteBlend } from "@/lib/hooks/use-taste-blend";
@@ -15,6 +15,8 @@ import { useTasteBlend } from "@/lib/hooks/use-taste-blend";
  *  attention. It's the kind of thing you reach for occasionally, not every
  *  cook. */
 export function CookForTwoChip() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { mounted, duo, alpha, setDuo, setAlpha } = useTasteBlend();
   const [open, setOpen] = useState(false);
 

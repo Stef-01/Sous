@@ -8,7 +8,7 @@
  * feedback + haptic on every action.
  */
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, BookmarkCheck, Heart, Send } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -27,6 +27,8 @@ function compact(n: number): string {
 }
 
 export function ReelActionRail({ reel }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const haptic = useHaptic();
   const { isLiked, toggleLike } = useReelEngagement();
   const { isBookmarked, toggle: toggleBookmark } = useContentBookmarks();

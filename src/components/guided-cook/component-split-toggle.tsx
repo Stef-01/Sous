@@ -18,7 +18,7 @@
  */
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
@@ -29,6 +29,8 @@ interface Props {
 }
 
 export function ComponentSplitToggle({ dishSlug }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { profile } = useParentMode();
   const [open, setOpen] = useState(false);
   const haptic = useHaptic();

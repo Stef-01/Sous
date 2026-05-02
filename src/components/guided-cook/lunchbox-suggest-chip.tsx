@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Sandwich as LunchIcon, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -29,6 +29,8 @@ interface Props {
 }
 
 export function LunchboxSuggestChip({ dishSlug, recipeName }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { profile } = useParentMode();
   const haptic = useHaptic();
   const [open, setOpen] = useState(false);

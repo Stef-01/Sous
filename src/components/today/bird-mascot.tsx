@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
 
 /**
@@ -19,6 +19,8 @@ export function OwlAvatar({
   onClick: () => void;
   ariaLabel?: string;
 }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <motion.button
       onClick={onClick}

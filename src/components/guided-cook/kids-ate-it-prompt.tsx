@@ -13,7 +13,7 @@
  */
 
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
@@ -48,6 +48,8 @@ const CONFIRM_COPY: Record<KidsAteItVerdict, string> = {
 };
 
 export function KidsAteItPrompt({ cookSessionId, recipeSlug }: Props) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { profile } = useParentMode();
   const { log } = useKidsAteIt();
   const haptic = useHaptic();

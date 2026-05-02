@@ -54,6 +54,28 @@
   `src/components/path/cuisine-constellation.tsx` (6).
   **112 violations remaining.** -34 from this wave; -172 cumulative
   (61% of original 284 cleared).
+- **2026-05-02 (W7 cont.)** — Tier 3 remediation wave C: next-10
+  components (diet-journey, tonight-chip, weekly-goal, journey-summary,
+  search-popout, more-options-sheet, kid-swap-chip, EvaluateSheet,
+  path-tutorial, trust-strip).
+  **66 violations remaining.** -46 from this wave.
+- **2026-05-02 (W7 cont.)** — Tier 3 remediation wave D: bulk
+  import + consumer add via two new scripts
+  (`scripts/bulk-add-reduced-motion-import.mjs` +
+  `scripts/bulk-add-reduced-motion-consumer.mjs`) on the long tail
+  of 34 single- to triple-violation files. Consumer-script
+  heuristic missed glossify (inserted into a while loop) and
+  icon-button (forwardRef shape) — fixed by hand.
+  **0 violations remaining.** -66 from this wave; **284 → 0
+  (100% of original violations cleared)**.
+
+## Rule level flipped
+
+- **2026-05-02** — `eslint.config.mjs` flipped
+  `sous/reduced-motion-gate` from `warn` → `error`. Any future
+  motion code missing the useReducedMotion import fails CI.
+  Acceptance gate from this TODO doc hit; doc is now historical
+  audit trail rather than active queue.
 
 ## Why these aren't "real" bugs (yet)
 
