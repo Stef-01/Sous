@@ -17,8 +17,8 @@
  */
 
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { X, Check } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Check, Heart, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -40,6 +40,7 @@ const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
 export function ProfileSettingsSheet({ open, onClose }: Props) {
   const { profile, toggle, setAgeBand } = useParentMode();
   const haptic = useHaptic();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (!open) return;
@@ -70,11 +71,15 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
             role="dialog"
             aria-modal="true"
             aria-label="Profile and settings"
-            initial={{ y: 32, opacity: 0 }}
+            initial={reducedMotion ? { opacity: 0 } : { y: 32, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 24, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-8 shadow-2xl sm:rounded-3xl sm:m-4"
+            exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
+            transition={
+              reducedMotion
+                ? { duration: 0.15 }
+                : { type: "spring", stiffness: 320, damping: 28 }
+            }
+            className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-8 shadow-2xl sm:m-4 sm:rounded-3xl"
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
             <div className="flex items-center justify-between">
@@ -91,15 +96,27 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
               </button>
             </div>
 
-            {/* Profile placeholder section */}
-            <section className="mt-5 rounded-2xl bg-white p-4 border border-neutral-100/80 shadow-sm">
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-                Profile
-              </p>
-              <p className="mt-1.5 text-[13px] text-[var(--nourish-dark)]">
-                Sign-in is coming with Stage 2 (Clerk auth). Today, your cooks
-                live on this device only.
-              </p>
+            {/* Profile placeholder section. Friendlier framing of the
+                "no auth yet" state — explains the trade-off without
+                making it feel half-built. */}
+            <section className="mt-5 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+              <div className="flex items-start gap-3">
+                <span
+                  aria-hidden
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                >
+                  <UserRound size={16} />
+                </span>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+                    Profile
+                  </p>
+                  <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+                    Sign-in is coming. Today, your cooks live on this device
+                    only — fast, private, no account required.
+                  </p>
+                </div>
+              </div>
             </section>
 
             {/* Parent Mode section */}
@@ -135,8 +152,12 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                   )}
                 >
                   <motion.span
-                    layout
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    layout={!reducedMotion}
+                    transition={
+                      reducedMotion
+                        ? { duration: 0.12 }
+                        : { type: "spring", stiffness: 500, damping: 30 }
+                    }
                     className={cn(
                       "inline-block h-5 w-5 rounded-full bg-white shadow",
                       profile.enabled ? "ml-6" : "ml-1",
@@ -148,10 +169,18 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
               <AnimatePresence initial={false}>
                 {profile.enabled && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
+                    initial={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }
+                    }
+                    animate={
+                      reducedMotion
+                        ? { opacity: 1 }
+                        : { opacity: 1, height: "auto" }
+                    }
+                    exit={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }
+                    }
+                    transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
                     className="overflow-hidden"
                   >
                     <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
@@ -205,14 +234,23 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
             </section>
 
             {/* About section */}
-            <section className="mt-4 rounded-2xl bg-white p-4 border border-neutral-100/80 shadow-sm">
+            <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
               <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
                 About
               </p>
-              <p className="mt-1.5 text-[12px] text-[var(--nourish-subtext)] leading-snug">
+              <p className="mt-1.5 text-[12px] leading-snug text-[var(--nourish-subtext)]">
                 Sous is a free public-good cooking app. No ads, no paid tier.
-                Sample editorial content in the Content tab carries placeholder
-                authors and is marked as such.
+                Stanford-attributed content carries the source URL on each
+                article; sample placeholder content is clearly labeled.
+              </p>
+              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-[var(--nourish-subtext)]/70">
+                <Heart
+                  size={10}
+                  fill="currentColor"
+                  className="text-pink-400/70"
+                  aria-hidden
+                />
+                <span>Made for cooking confidence at home.</span>
               </p>
             </section>
           </motion.div>
