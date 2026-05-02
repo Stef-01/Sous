@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   motion,
   useMotionValue,
+  useMotionValueEvent,
   useTransform,
   useReducedMotion,
   AnimatePresence,
@@ -313,7 +314,59 @@ export function buildQuestDishes(
   return result;
 }
 
+// Tinder-grade swipe physics. Researched against the canonical
+// `react-tinder-card` library (default 300px position threshold + a
+// velocity mode that commits on flick speed regardless of distance)
+// and Framer Motion's PanInfo conventions.
+//
+// We use BOTH gates: a small position gate (80px) so the user can
+// commit a swipe with a deliberate drag, plus a velocity gate so a
+// quick flick across a small distance also commits. Either gate
+// triggering counts as a swipe — that's what makes the interaction
+// feel "alive" rather than measured.
 const SWIPE_THRESHOLD = 80;
+const SWIPE_VELOCITY_THRESHOLD = 500;
+
+/**
+ * Tinder-grade swipe-commit decision. Pure function so it can be
+ * unit-tested without a DOM or pointer events.
+ *
+ * Returns `null` when the user released the card without enough
+ * intent (under both gates) — the card snaps back. Returns "left" or
+ * "right" when either the position OR velocity gate triggered;
+ * direction is inferred from velocity when velocity dominates,
+ * otherwise from offset.
+ */
+export function decideSwipe(
+  offsetX: number,
+  velocityX: number,
+): "left" | "right" | null {
+  const offsetCommit = Math.abs(offsetX) > SWIPE_THRESHOLD;
+  const velocityCommit = Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD;
+  if (!offsetCommit && !velocityCommit) return null;
+  if (velocityCommit) return velocityX > 0 ? "right" : "left";
+  return offsetX > 0 ? "right" : "left";
+}
+
+/**
+ * Compute the velocity-preserving exit distance for a committed
+ * swipe. Pure function for unit testing.
+ *
+ * Base distance is ±320px (just past the visible card). A flick
+ * adds up to 200px of momentum boost based on velocity * 0.18,
+ * capped so a wild over-flick can't fling the card halfway across
+ * the screen (perceptual upper bound: 520px from center).
+ */
+export function exitDistanceFor(
+  direction: "left" | "right" | null,
+  velocityX: number,
+): number {
+  if (!direction) return 0;
+  const baseDistance = direction === "right" ? 320 : -320;
+  const velocityBoost = Math.min(Math.abs(velocityX) * 0.18, 200);
+  const signed = direction === "right" ? velocityBoost : -velocityBoost;
+  return baseDistance + signed;
+}
 
 /** Cuisine-specific gradient backgrounds for cards without images. */
 function getCuisineGradient(cuisine: string): string {
@@ -778,6 +831,7 @@ function SwipeCard({
 }) {
   const [imgError, setImgError] = useState(false);
   const reducedMotion = useReducedMotion();
+  const haptic = useHaptic();
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
 
@@ -787,6 +841,26 @@ function SwipeCard({
   // Scale labels as drag approaches threshold
   const likeScale = useTransform(x, [0, 80], [0.8, 1.1]);
   const nopeScale = useTransform(x, [-80, 0], [1.1, 0.8]);
+
+  // Tinder-grade detail #1: a single quiet haptic the moment the
+  // user crosses the swipe-commit threshold in either direction.
+  // Mirrors the iOS pattern where the device taps once when the
+  // drag has gone "far enough" — the user knows they can release.
+  // Tracked via ref so the threshold-cross only fires once per drag,
+  // not on every motion frame.
+  const hapticArmedRef = useRef<"left" | "right" | null>(null);
+  useMotionValueEvent(x, "change", (latest) => {
+    if (!isTop) return;
+    if (Math.abs(latest) > SWIPE_THRESHOLD) {
+      const dir = latest > 0 ? "right" : "left";
+      if (hapticArmedRef.current !== dir) {
+        haptic();
+        hapticArmedRef.current = dir;
+      }
+    } else {
+      hapticArmedRef.current = null;
+    }
+  });
 
   // W22b animation: snap-feedback as the card crosses the like/discard
   // threshold. Card scales ~2% and a green/rose glow shadow blooms in
@@ -820,11 +894,24 @@ function SwipeCard({
         ],
   );
 
+  // Tinder-grade detail #2: capture the flick velocity at the
+  // moment the user lets go, so the exit animation can feel
+  // continuous with the gesture rather than ramping into a fresh
+  // animation on its own clock. State (not ref) because Framer reads
+  // the exit prop during render — react-hooks/refs strict rule.
+  const [exitVelocity, setExitVelocity] = useState(0);
+
   const handleDragEnd = (_: unknown, info: PanInfo) => {
-    if (Math.abs(info.offset.x) > SWIPE_THRESHOLD) {
-      onSwipe(info.offset.x > 0 ? "right" : "left");
+    const direction = decideSwipe(info.offset.x, info.velocity.x);
+    if (direction) {
+      setExitVelocity(info.velocity.x);
+      onSwipe(direction);
     }
+    // No commit → Framer auto-snaps back via dragConstraints + the
+    // spring transition on the wrapper, no manual reset needed.
   };
+
+  const exitX = exitDistanceFor(exitDirection, exitVelocity);
 
   // Stack positioning: scale down, shift back, and rotate for peek effect
   const scale = 1 - stackIndex * 0.04;
@@ -852,14 +939,41 @@ function SwipeCard({
         opacity: 1,
       }}
       exit={{
-        x:
-          exitDirection === "right" ? 300 : exitDirection === "left" ? -300 : 0,
-        rotate:
-          exitDirection === "right" ? 20 : exitDirection === "left" ? -20 : 0,
+        // Tinder-grade detail #4: exit honours the captured flick
+        // velocity, so the exit feels like a continuation of the
+        // user's gesture rather than a fresh animation. Reduced-
+        // motion users get an opacity-only fade that doesn't fly
+        // anywhere — preserves the same "card is gone" signal
+        // without any vestibular cost.
+        x: reducedMotion ? 0 : exitX,
+        rotate: reducedMotion
+          ? 0
+          : exitDirection === "right"
+            ? 20
+            : exitDirection === "left"
+              ? -20
+              : 0,
         opacity: 0,
-        transition: { duration: 0.25, ease: "easeIn" },
+        transition: reducedMotion
+          ? { duration: 0.18 }
+          : {
+              // Spring with `velocity` injected from the captured flick
+              // so the spring already knows how fast the card is
+              // moving when it takes over from the drag. This is the
+              // single most "Tinder-feeling" detail in the upgrade.
+              type: "spring",
+              velocity: exitVelocity,
+              stiffness: 220,
+              damping: 28,
+              restDelta: 0.5,
+            },
       }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      // Snap-back spring: the wrapper's transition is what runs when
+      // the user releases below the swipe threshold. SHEET-like
+      // tuning (stiffness 320 / damping 28) gives the card a
+      // physical "grab" feeling when it returns to center, vs the
+      // earlier squishier 300/30.
+      transition={{ type: "spring", stiffness: 320, damping: 28, mass: 0.7 }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.7}
