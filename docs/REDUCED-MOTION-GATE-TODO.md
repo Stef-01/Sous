@@ -22,6 +22,17 @@
   `src/app/cook/[slug]/page.tsx`,
   `src/app/cook/combined/page.tsx`,
   `src/app/(path)/path/page.tsx`. **243 violations remaining.**
+- **2026-05-01 (W7 cont.)** — Tier 2 remediation wave A: imports +
+  page-shell / empty-state entrance gates landed on
+  `src/app/(path)/path/favorites/page.tsx`,
+  `src/app/(path)/path/scrapbook/page.tsx`,
+  `src/app/games/page.tsx`,
+  `src/app/games/cuisine-compass/page.tsx`,
+  `src/app/games/flavor-pairs/page.tsx`,
+  `src/app/games/speed-chop/page.tsx`.
+  (`src/app/games/whats-cooking/page.tsx` already gated, no change.)
+  **202 violations remaining.** -41 from this wave; -82 cumulative
+  from rule introduction.
 
 ## Why these aren't "real" bugs (yet)
 

@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Heart } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -12,6 +12,7 @@ import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
  * Favorites  -  filtered view of favorite cooks only.
  */
 export default function FavoritesPage() {
+  const reducedMotion = useReducedMotion();
   const { favoriteSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -85,9 +86,13 @@ export default function FavoritesPage() {
           ))
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 25 }
+            }
             className="flex flex-col items-center gap-4 surface-card px-6 py-12 text-center mt-8"
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pink-50">

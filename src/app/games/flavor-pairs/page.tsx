@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import {
   getRandomPairs,
@@ -49,6 +49,7 @@ function buildCards(pairs: FlavorPair[]): CardState[] {
 
 export default function FlavorPairsGame() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { recordScore } = useGameScores();
   const { awardXP } = useXPSystem();
 
@@ -258,7 +259,7 @@ export default function FlavorPairsGame() {
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
       <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">

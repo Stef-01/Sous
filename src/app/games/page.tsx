@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Joystick } from "lucide-react";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
 import { MetaPill } from "@/components/shared/meta-pill";
@@ -52,12 +52,13 @@ const games: GameCard[] = [
 
 export default function GamesArcadePage() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { getScore, mounted } = useGameScores();
 
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
       <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">

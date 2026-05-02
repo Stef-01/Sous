@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Sparkles, Camera } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -13,6 +13,7 @@ import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
  * Dual use: sentimental archive and longitudinal plating / technique growth.
  */
 export default function ScrapbookPage() {
+  const reducedMotion = useReducedMotion();
   const { completedSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
@@ -106,9 +107,13 @@ export default function ScrapbookPage() {
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 25 }
+            }
             className="mt-6 flex flex-col items-center gap-4 rounded-2xl border border-dashed border-[#d9d0c4] bg-white/70 px-6 py-14 text-center shadow-inner"
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
