@@ -35,10 +35,10 @@ describe("computePantryFit", () => {
 describe("decideSwipe — Tinder-grade commit logic", () => {
   it("returns null when both offset and velocity are below threshold", () => {
     expect(decideSwipe(50, 100)).toBe(null);
-    expect(decideSwipe(-79, -499)).toBe(null);
+    expect(decideSwipe(-99, -599)).toBe(null);
   });
 
-  it("commits right via offset alone (slow drag past threshold)", () => {
+  it("commits right via offset alone (slow drag past 100px threshold)", () => {
     expect(decideSwipe(120, 50)).toBe("right");
   });
 
@@ -46,30 +46,47 @@ describe("decideSwipe — Tinder-grade commit logic", () => {
     expect(decideSwipe(-150, -100)).toBe("left");
   });
 
-  it("commits right via velocity flick even when offset is small", () => {
-    // The whole point: a fast right-flick across only 30px commits.
+  it("commits right via velocity flick when offset agrees in sign", () => {
+    // Small but rightward offset + strong rightward flick = commit.
     expect(decideSwipe(30, 800)).toBe("right");
   });
 
-  it("commits left via velocity flick", () => {
-    expect(decideSwipe(-20, -750)).toBe("left");
+  it("commits left via velocity flick when offset agrees", () => {
+    expect(decideSwipe(-20, -800)).toBe("left");
   });
 
-  it("trusts velocity direction when velocity dominates", () => {
-    // User flicked right but their finger ended slightly to the
-    // left of center — Tinder honours the flick, not the resting
-    // position.
-    expect(decideSwipe(-10, 900)).toBe("right");
-    expect(decideSwipe(15, -700)).toBe("left");
+  it("commits via velocity even when offset is exactly zero", () => {
+    expect(decideSwipe(0, 800)).toBe("right");
+    expect(decideSwipe(0, -800)).toBe("left");
   });
 
-  it("falls back to offset direction when only offset triggers", () => {
-    expect(decideSwipe(100, 0)).toBe("right");
-    expect(decideSwipe(-100, 0)).toBe("left");
+  it("snaps back when velocity-only sign disagrees with offset (release-finger noise)", () => {
+    // RCA fix: at finger-lift the velocity can briefly kick the
+    // OPPOSITE direction of the drag. The previous algorithm
+    // mis-committed these as the velocity direction. The fix:
+    // velocity-only path requires sign agreement, otherwise snap back.
+    expect(decideSwipe(-10, 900)).toBe(null);
+    expect(decideSwipe(15, -700)).toBe(null);
+  });
+
+  it("trusts offset for direction even when velocity disagrees (offset-already-committed case)", () => {
+    // User dragged firmly right (120px). Release-finger kick made
+    // velocity briefly negative. Offset is the source of truth for
+    // where the card visibly is — commit right.
+    expect(decideSwipe(120, -700)).toBe("right");
+    expect(decideSwipe(-150, 800)).toBe("left");
   });
 
   it("treats zero motion as a no-op", () => {
     expect(decideSwipe(0, 0)).toBe(null);
+  });
+
+  it("respects the new 100px / 600 px-s thresholds", () => {
+    // Exactly at threshold = no commit (strict greater-than).
+    expect(decideSwipe(100, 0)).toBe(null);
+    expect(decideSwipe(99, 599)).toBe(null);
+    expect(decideSwipe(101, 0)).toBe("right");
+    expect(decideSwipe(0, 601)).toBe("right");
   });
 });
 

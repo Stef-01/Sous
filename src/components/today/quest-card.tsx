@@ -315,27 +315,40 @@ export function buildQuestDishes(
 }
 
 // Tinder-grade swipe physics. Researched against the canonical
-// `react-tinder-card` library (default 300px position threshold + a
-// velocity mode that commits on flick speed regardless of distance)
-// and Framer Motion's PanInfo conventions.
+// `react-tinder-card` library and Framer Motion's PanInfo conventions.
 //
-// We use BOTH gates: a small position gate (80px) so the user can
-// commit a swipe with a deliberate drag, plus a velocity gate so a
-// quick flick across a small distance also commits. Either gate
-// triggering counts as a swipe — that's what makes the interaction
-// feel "alive" rather than measured.
-const SWIPE_THRESHOLD = 80;
-const SWIPE_VELOCITY_THRESHOLD = 500;
+// Position threshold (100px) and velocity threshold (600 px/s) were
+// tightened from the Tinder upgrade's first iteration after a real
+// user reported (a) accidental commits while peeking and (b) the
+// occasional "swiped left but committed right" misregister.
+//
+// RCA on the directional misregister: at the moment a finger lifts,
+// the captured velocity can briefly kick in the OPPOSITE direction
+// of the drag — a natural finger-lift artifact. The previous
+// algorithm trusted velocity when |velocity| > threshold, which
+// would mis-commit a left-drag as a right-swipe whenever the lift
+// happened to kick right. Fix below: offset is the single source of
+// truth for DIRECTION (it's where the card visibly is); velocity is
+// only a commit-permission gate. If the two disagree in sign, the
+// user reversed mid-gesture — snap back, don't commit.
+const SWIPE_THRESHOLD = 100;
+const SWIPE_VELOCITY_THRESHOLD = 600;
 
 /**
  * Tinder-grade swipe-commit decision. Pure function so it can be
  * unit-tested without a DOM or pointer events.
  *
- * Returns `null` when the user released the card without enough
- * intent (under both gates) — the card snaps back. Returns "left" or
- * "right" when either the position OR velocity gate triggered;
- * direction is inferred from velocity when velocity dominates,
- * otherwise from offset.
+ * Direction is always taken from `offsetX` (where the card visibly
+ * is at release). `velocityX` only acts as a "permission to commit"
+ * gate — a fast flick across a small distance still commits, but
+ * only if the flick direction agrees with the offset direction.
+ *
+ * Returns `null` when:
+ * - Neither offset nor velocity passes its threshold (the user
+ *   barely moved — snap back).
+ * - Velocity passes but its sign disagrees with the offset's sign
+ *   (release-finger kick — the user didn't actually mean that
+ *   direction; snap back).
  */
 export function decideSwipe(
   offsetX: number,
@@ -344,7 +357,21 @@ export function decideSwipe(
   const offsetCommit = Math.abs(offsetX) > SWIPE_THRESHOLD;
   const velocityCommit = Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD;
   if (!offsetCommit && !velocityCommit) return null;
-  if (velocityCommit) return velocityX > 0 ? "right" : "left";
+
+  // Velocity-only path: the user flicked across a small distance.
+  // We only honour it if the flick direction agrees with where the
+  // card is (or if the card is exactly at center). Otherwise it's
+  // release-noise from the finger lift.
+  if (velocityCommit && !offsetCommit) {
+    if (offsetX === 0) return velocityX > 0 ? "right" : "left";
+    if (Math.sign(velocityX) !== Math.sign(offsetX)) return null;
+    return velocityX > 0 ? "right" : "left";
+  }
+
+  // Offset path (with or without velocity agreeing): the card is
+  // far enough out that the user clearly intended this direction.
+  // If velocity disagrees in sign, that's the finger-lift artifact —
+  // ignore it; trust the offset.
   return offsetX > 0 ? "right" : "left";
 }
 
@@ -976,7 +1003,13 @@ function SwipeCard({
       transition={{ type: "spring", stiffness: 320, damping: 28, mass: 0.7 }}
       drag={isTop ? "x" : false}
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.7}
+      // Lower elastic = tighter, more controlled drag. The previous
+      // 0.7 felt rubbery and let the card travel ~70% past the
+      // visible threshold while held — which is what the user
+      // experienced as "accidentally goes in screen". 0.55 keeps
+      // the card meaningfully responsive while making the commit
+      // threshold feel intentional.
+      dragElastic={0.55}
       onDragEnd={isTop ? handleDragEnd : undefined}
     >
       <motion.div
