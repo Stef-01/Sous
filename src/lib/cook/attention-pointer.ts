@@ -36,6 +36,14 @@ export interface AttentionPointer {
    *  pointer. Use when the visual alone wouldn't tell the cook
    *  what to look for ("watch for sizzle"). */
   label?: string;
+  /** Y2 W23 — sequence-runner schema delta. Seconds elapsed in
+   *  the step before this pointer renders. 0 / unset = reveal
+   *  immediately (W22 behaviour). Positive = sequence in.
+   *  Existing content has no field set; the runner treats that
+   *  as instant reveal so legacy steps are unaffected.
+   *  Negative / non-finite values normalise to 0 via
+   *  `normaliseRevealAtSecond`. */
+  revealAtSecond?: number;
 }
 
 /** Clamp a single coordinate value to [0,1]. NaN / Infinity / null
@@ -51,13 +59,14 @@ export function clampPointerCoord(value: number | null | undefined): number {
 }
 
 /** Resolve a pointer's display coordinates — clamped x/y plus a
- *  trimmed label. Pure / idempotent; safe to call inside a render
- *  body. */
+ *  trimmed label + normalised reveal time. Pure / idempotent;
+ *  safe to call inside a render body. */
 export function resolvePointer(p: AttentionPointer): {
   shape: AttentionPointerShape;
   xPct: number;
   yPct: number;
   label: string | null;
+  revealAtSecond: number;
 } {
   return {
     shape: p.shape,
@@ -67,5 +76,63 @@ export function resolvePointer(p: AttentionPointer): {
       typeof p.label === "string" && p.label.trim().length > 0
         ? p.label.trim().slice(0, 24)
         : null,
+    revealAtSecond: normaliseRevealAtSecond(p.revealAtSecond),
+  };
+}
+
+/** Y2 W23 — clamp a revealAtSecond value to a sane non-negative
+ *  finite number. Undefined / null / NaN / Infinity / negative
+ *  values all collapse to 0 (reveal immediately).
+ *
+ *  The cap of 600s = 10 minutes covers every sensible cook step;
+ *  longer than that is almost certainly a content-authoring bug
+ *  (the user shouldn't watch a single step for >10 min anyway).
+ *  Cap rather than reject so the pointer still renders. */
+export function normaliseRevealAtSecond(
+  value: number | null | undefined,
+): number {
+  if (value === null || value === undefined) return 0;
+  if (!Number.isFinite(value)) return 0;
+  if (value <= 0) return 0;
+  if (value > 600) return 600;
+  return value;
+}
+
+/** Y2 W23 — order pointers by reveal time so the W24 sequence
+ *  runner can iterate in chronological order. Stable: pointers
+ *  with identical reveal times retain their input order so a
+ *  recipe author's authoring sequence wins as a tiebreaker.
+ *
+ *  Returns a NEW array (no mutation of input). Pointers with
+ *  unset / NaN / negative reveal time bucket as 0. */
+export function sortPointersByRevealTime(
+  pointers: ReadonlyArray<AttentionPointer>,
+): AttentionPointer[] {
+  return pointers
+    .map((p, idx) => ({
+      pointer: p,
+      revealAt: normaliseRevealAtSecond(p.revealAtSecond),
+      idx,
+    }))
+    .sort((a, b) => {
+      if (a.revealAt !== b.revealAt) return a.revealAt - b.revealAt;
+      return a.idx - b.idx;
+    })
+    .map((entry) => entry.pointer);
+}
+
+/** Y2 W23 — migrate a legacy AttentionPointer (which may lack
+ *  `revealAtSecond`) to the W23 shape. Idempotent: applying
+ *  twice yields the same result. Use when persisting authored
+ *  pointers + want a stable on-disk shape. */
+export function migrateAttentionPointer(
+  legacy: AttentionPointer,
+): AttentionPointer {
+  return {
+    shape: legacy.shape,
+    x: legacy.x,
+    y: legacy.y,
+    ...(legacy.label !== undefined ? { label: legacy.label } : {}),
+    revealAtSecond: normaliseRevealAtSecond(legacy.revealAtSecond),
   };
 }
