@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Pencil, Play, Plus } from "lucide-react";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
 import { SectionKicker } from "@/components/shared/section-kicker";
 
 export default function MyRecipesPage() {
@@ -53,7 +54,12 @@ export default function MyRecipesPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-6 px-4 pt-4">
+        {/* W43 templates — always visible. The user can fork a
+            seed recipe as a starting point regardless of whether
+            their My-recipes list is empty or populated. */}
+        <TemplatesRow />
+
         {!mounted ? (
           // Pre-hydration skeleton — matches the height of one card so
           // the page doesn't jump when localStorage resolves.
@@ -104,6 +110,36 @@ export default function MyRecipesPage() {
         )}
       </main>
     </motion.div>
+  );
+}
+
+function TemplatesRow() {
+  return (
+    <section className="space-y-2">
+      <SectionKicker className="px-1">Start from a template</SectionKicker>
+      <div className="-mx-4 overflow-x-auto px-4">
+        <ul className="flex w-max gap-2 pb-1">
+          {RECIPE_TEMPLATES.map((t) => (
+            <li key={t.slug} className="w-44 shrink-0">
+              <Link
+                href={`/path/recipes/new?fork=${t.slug}`}
+                className="flex h-full flex-col gap-1 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition hover:border-neutral-200 hover:shadow-md"
+              >
+                <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
+                  {t.cuisine}
+                </span>
+                <span className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
+                  {t.name}
+                </span>
+                <span className="line-clamp-2 text-[11px] text-[var(--nourish-subtext)]">
+                  {t.pitch}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 

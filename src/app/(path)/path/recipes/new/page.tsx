@@ -8,21 +8,54 @@
  *   - W23 pure draft helpers (defaultRecipeDraft, append/remove/reorder)
  *   - W23 react-hook-form (consensus pick from LIBRARY-RECOMMENDATIONS.md)
  *   - W24 useRecipeDrafts (localStorage persistence)
+ *   - W43 seed-fork adapter (templates the user can fork)
  *
  * The form surface itself lives in `RecipeForm`, shared with
  * `/path/recipes/[id]/edit` (W29). This page is just the header
- * shell + a `defaultRecipeDraft()` factory call.
+ * shell + a `defaultRecipeDraft()` factory call (or a forked-seed
+ * draft when `?fork=<slug>` is present).
  */
 
-import { useRouter } from "next/navigation";
+import { Suspense, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { defaultRecipeDraft } from "@/lib/recipe-authoring/recipe-draft";
+import {
+  defaultRecipeDraft,
+  type RecipeDraft,
+} from "@/lib/recipe-authoring/recipe-draft";
+import { seedToRecipeDraft } from "@/lib/recipe-authoring/seed-fork";
 import { RecipeForm } from "@/components/recipe-authoring/recipe-form";
+import {
+  getStaticCookData,
+  getStaticMealCookData,
+} from "@/data/guided-cook-steps";
 
 export default function NewRecipePage() {
+  return (
+    <Suspense fallback={null}>
+      <NewRecipePageContent />
+    </Suspense>
+  );
+}
+
+function NewRecipePageContent() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
+  const searchParams = useSearchParams();
+  const forkSlug = searchParams.get("fork");
+
+  const initialDraft = useMemo<RecipeDraft>(() => {
+    if (!forkSlug) return defaultRecipeDraft();
+    const seed = getStaticCookData(forkSlug) ?? getStaticMealCookData(forkSlug);
+    if (!seed) return defaultRecipeDraft();
+    return seedToRecipeDraft(seed);
+  }, [forkSlug]);
+
+  const heading =
+    forkSlug && initialDraft.title.startsWith("My ")
+      ? "Fork recipe"
+      : "New recipe";
 
   return (
     <motion.div
@@ -42,12 +75,12 @@ export default function NewRecipePage() {
             <ArrowLeft size={18} />
           </button>
           <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-            New recipe
+            {heading}
           </h1>
         </div>
       </header>
 
-      <RecipeForm initialValues={defaultRecipeDraft()} mode="new" />
+      <RecipeForm initialValues={initialDraft} mode="new" />
     </motion.div>
   );
 }
