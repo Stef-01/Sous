@@ -23,6 +23,7 @@ import type { IngredientSection } from "@/components/guided-cook/ingredient-list
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { ParallelHintBanner } from "@/components/guided-cook/parallel-hint-banner";
+import { DishProgressStrip } from "@/components/guided-cook/dish-progress-strip";
 import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
 import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
@@ -262,6 +263,18 @@ function CombinedCookContent() {
       ? (parallelHintMap.get(`${currentDish.dish.slug}-${currentStepIndex}`) ??
         null)
       : null;
+
+  // W29 dish-progress strip input — name + total cook steps per
+  // dish, fed into the dual-track strip alongside the cook-store
+  // active indices.
+  const dishProgressInputs = useMemo(
+    () =>
+      orderedDishes.map((d) => ({
+        name: d.dish.name,
+        totalSteps: d.steps.filter((s) => s.phase === "cook").length,
+      })),
+    [orderedDishes],
+  );
 
   // Combined totals for mission screen
   const totalPrepTime = useMemo(
@@ -676,17 +689,17 @@ function CombinedCookContent() {
                     timer. Hidden when nothing is running. */}
                 <TimerStack />
 
-                {/* Current dish label */}
-                {dishes.length > 1 && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 25 }}
-                    className="text-xs font-medium text-[var(--nourish-green)] mb-3"
-                  >
-                    {currentDish.dish.name}
-                  </motion.p>
-                )}
+                {/* W29 dual-track step-progress strip — only renders
+                    when there are 2+ dishes. Replaces the standalone
+                    "current dish label" row by including the active
+                    name (highlighted) plus every other dish's
+                    progress. */}
+                <DishProgressStrip
+                  dishes={dishProgressInputs}
+                  activeDishIndex={currentDishIndex}
+                  activeStepIndex={currentStepIndex}
+                  className="mb-3"
+                />
 
                 {/* Parallel cooking hint from sequencer */}
                 <ParallelHintBanner hint={currentParallelHint} />
