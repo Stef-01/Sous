@@ -15,6 +15,7 @@ import { preferenceScorer } from "./scorers/preference";
 import { rankCandidates, topK } from "./ranker";
 import { addExplanations } from "./explainer";
 import { applyTimeOfDayRerank, type TimeRerankContext } from "./time-rerank";
+import { applyPantryRerank, type PantryRerankContext } from "./pantry-rerank";
 
 /**
  * All scorers used by the engine.
@@ -54,6 +55,11 @@ export type SuggestSidesResult =
  *   that boosts hot sides on winter evenings, cold sides on summer
  *   afternoons, etc. Pass `{ now: new Date() }` from the call site.
  *   Omitting it keeps Y1 behaviour exactly.
+ * @param pantryContext - Y2 W16 pantry-coverage post-process context.
+ *   When provided + the pantry is non-empty, candidates whose
+ *   ingredients are mostly already in the user's pantry get a
+ *   coverage-weighted boost (0.10× below 0.7 coverage, 0.20× at or
+ *   above). Empty pantry → no-op (regression guard).
  */
 export function suggestSides(
   main: MainDishIntent,
@@ -62,6 +68,7 @@ export function suggestSides(
   weights?: Partial<Record<keyof ScoreBreakdown, number>>,
   count: number = 3,
   rerankContext?: TimeRerankContext,
+  pantryContext?: PantryRerankContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -82,9 +89,17 @@ export function suggestSides(
   // (not just topK) so a hot side at position 50 can climb into
   // top 3 on a winter evening if the nudge is enough. Small
   // cohort cost: O(n) on ~200 sides today.
-  const reranked = rerankContext
+  const timeReranked = rerankContext
     ? applyTimeOfDayRerank(ranked, rerankContext)
     : ranked;
+
+  // W16 pantry rerank — same shape as the time-rerank, but
+  // boosts candidates whose ingredients are mostly in the user's
+  // pantry. No-pantry users see identical output (empty-pantry
+  // regression guard inside applyPantryRerank).
+  const reranked = pantryContext
+    ? applyPantryRerank(timeReranked, pantryContext)
+    : timeReranked;
 
   // Select top K
   const top = topK(reranked, count);
