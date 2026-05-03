@@ -522,20 +522,82 @@ founder-unlock.
 
 ### W46 — IDEO Sprint-I close
 
-## Sprint J (W47-W51) — Stage-7 W2: 2nd-pass on every H2 surface
+## Sprint K (W47-W51) — Stage-7 W2: Cooking Pod Challenge
 
-H2 surfaces (engine V2, smart shopping, meal calendar, cook-along)
-all get a 2nd-pass IDEO review. By design.
+> **Plan revision 2026-05-02:** Sprint J's "2nd-pass polish on H2
+> surfaces" is pushed to early Year-2 (most surfaces are already
+> at 4.0+ per the Sprint H IDEO review). Sprint K replaces that
+> polish week with the Cooking Pod Challenge build per
+> `docs/COOKING-POD-CHALLENGE.md`. Polish carries forward into
+> Y2 W1-W2.
 
-### W47 — Engine V2 polish + RCA on any user-reported quirks
+Friends or workplaces form a 2-8 person pod. Every Monday a
+weekly challenge recipe drops, filtered through the pod's
+combined dietary constraints. Each member cooks it on their
+own time and submits a photo. The pod's collective completion
+rate is the streak. Sunday 9pm pod-local: photos drop
+simultaneously as a gallery. Optional Donate-a-Cook layer
+tracks meals shared / charity bake-sale proceeds.
 
-### W48 — Smart shopping list polish
+V1 is **founder-gated** for the public launch (needs auth +
+Postgres + R2). Sprint K ships the substrate + single-device
+mock UI; Year-2 W1-W4 swaps localStorage → Postgres + Clerk +
+R2 for the multi-device flow.
 
-### W49 — Meal calendar polish
+See `docs/COOKING-POD-CHALLENGE.md` for the full design brief
+including addiction-loop analysis, friction modes, fraud-
+detection thinking, social-good integration, and open
+questions.
 
-### W50 — Cook-along polish
+### W47 — Schema + pure helpers (substrate)
 
-### W51 — IDEO Sprint-J close (cross-cutting H2 review)
+`ChallengePod`, `PodMember`, `PodChallengeWeek`, `PodSubmission`
+zod schemas. localStorage-hook substrate (single-pod-per-device
+V1). Pure helpers: `weekKey(date)`, `aggregateDietaryFromMembers`,
+`computePodCompletion(submissions, members, threshold)`,
+`shouldRevealGallery(weekStartedAt, now)`. All unit-tested.
+
+**Acceptance:** all helpers unit-tested; types compile; no UI.
+
+### W48 — `/community/pod` home (mock single-device)
+
+Pod home page with three states (no-pod CTA, mid-week, gallery
+reveal). Reads from a single localStorage pod fixture.
+Win-screen integration: "Submit to pod challenge" toggle when
+the cooked dish matches the active challenge.
+
+**Acceptance:** all three states render; toggle on win screen
+writes to local pod state; gallery shows a 4-photo grid.
+
+### W49 — Pod creation + invite-code flow + photo dedupe
+
+Pod creation form (name, member roster, dietary intersection
+display). Invite code (6-digit, localStorage-only). `/community/pod/join`
+redemption page. Perceptual-hash photo dedupe at submit time.
+
+**Acceptance:** localStorage round-trip of a 4-member pod; reveal
+time computed Sunday 9pm pod-local; perceptual hash dedupes the
+same photo across two submissions.
+
+### W50 — Donate-a-Cook tagging + dietary-aware challenge picker
+
+Photo submission gains opt-in tags (shared / bake-sale /
+cooked-together). Pod-home gallery aggregates the counts.
+Weekly challenge picker (deterministic, week-key-seeded) filters
+the seed catalog by the pod's dietary union.
+
+**Acceptance:** pod with any dietary constraint surfaces only
+compatible recipes; tags surface in the gallery.
+
+### W51 — Founder-unlock prep + IDEO Sprint-K close
+
+Postgres schema stub. R2 photo upload contract stub. Stripe +
+nonprofit-list research note (Donate-a-Cook V2 prep). Update
+`docs/FOUNDER-UNLOCK-RUNBOOK.md` with the pod-backend swap.
+IDEO close doc.
+
+**Acceptance:** founder-unlock entry filed; mock-multi-device
+wires have explicit "→ Postgres" comments at the swap points.
 
 ## W52 — Year-1 close
 
