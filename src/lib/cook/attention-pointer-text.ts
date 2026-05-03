@@ -8,15 +8,21 @@
  * readable format, the form parses it back to
  * `AttentionPointer[]`.
  *
- * Line format:
+ * Line format (Y1 W44, still supported):
  *
  *   <shape>: <x>, <y> [- <label>]
+ *
+ * Line format (Y2 W25 extension — sequenced reveal):
+ *
+ *   <shape>: <x>, <y> [@ <seconds>s] [- <label>]
  *
  * Examples:
  *
  *   circle: 0.3, 0.5
  *   circle: 0.3, 0.5 - watch the bubbles
  *   arrow: 0.7, 0.2 - stir here
+ *   circle: 0.3, 0.5 @ 8s - watch the bubbles    (Y2 W25)
+ *   arrow: 0.7, 0.2 @ 0.5s                        (sub-second OK)
  *
  * Conservative on parse errors: bad lines silently drop. The
  * caller stays in flow; the form's submit-time schema validation
@@ -25,10 +31,22 @@
  * Pure / dependency-free.
  */
 
-import type { AttentionPointer } from "./attention-pointer";
+import {
+  normaliseRevealAtSecond,
+  type AttentionPointer,
+} from "./attention-pointer";
 
+/** Match a single pointer line. Capture groups:
+ *    1. shape (circle / arrow)
+ *    2. x coordinate
+ *    3. y coordinate
+ *    4. revealAtSecond (Y2 W25 — optional)
+ *    5. label (optional)
+ *
+ *  The `s` after the seconds value is optional so authors can
+ *  type "@ 8" or "@ 8s" — both read fine. */
 const LINE_RE =
-  /^\s*(circle|arrow)\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*(?:[-–—]\s*(.*))?$/i;
+  /^\s*(circle|arrow)\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*(?:@\s*(\d+(?:\.\d+)?)\s*s?\s*)?(?:[-–—]\s*(.*))?$/i;
 
 /** Parse a pointer block — one pointer per line. Bad lines drop
  *  silently; the resulting array can be fed straight into the
@@ -45,9 +63,27 @@ export function parsePointerLines(text: string): AttentionPointer[] {
     const x = Number(m[2]);
     const y = Number(m[3]);
     if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
-    const labelRaw = (m[4] ?? "").trim();
+
+    // Y2 W25: optional @ Ns reveal-time segment
+    const revealRaw = m[4];
+    const revealParsed =
+      typeof revealRaw === "string" && revealRaw.length > 0
+        ? Number(revealRaw)
+        : undefined;
+    const revealAtSecond =
+      revealParsed !== undefined && Number.isFinite(revealParsed)
+        ? normaliseRevealAtSecond(revealParsed)
+        : undefined;
+
+    const labelRaw = (m[5] ?? "").trim();
     const label = labelRaw.length > 0 ? labelRaw.slice(0, 24) : undefined;
-    out.push(label === undefined ? { shape, x, y } : { shape, x, y, label });
+
+    const pointer: AttentionPointer = { shape, x, y };
+    if (label !== undefined) pointer.label = label;
+    if (revealAtSecond !== undefined && revealAtSecond > 0) {
+      pointer.revealAtSecond = revealAtSecond;
+    }
+    out.push(pointer);
   }
   return out;
 }
@@ -61,7 +97,10 @@ export function serialisePointerLines(
   if (!pointers || pointers.length === 0) return "";
   return pointers
     .map((p) => {
-      const head = `${p.shape}: ${formatCoord(p.x)}, ${formatCoord(p.y)}`;
+      let head = `${p.shape}: ${formatCoord(p.x)}, ${formatCoord(p.y)}`;
+      // Y2 W25: emit @ Ns segment when reveal time is set + > 0
+      const reveal = normaliseRevealAtSecond(p.revealAtSecond);
+      if (reveal > 0) head += ` @ ${formatCoord(reveal)}s`;
       return p.label && p.label.trim().length > 0
         ? `${head} - ${p.label.trim()}`
         : head;

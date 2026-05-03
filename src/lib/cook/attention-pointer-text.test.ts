@@ -155,3 +155,127 @@ describe("parse → serialise round-trip", () => {
     expect(parsePointerLines(serialised)).toEqual(parsed);
   });
 });
+
+// ── Y2 W25: @ Ns reveal-time format extension ─────────────
+
+describe("parsePointerLines — Y2 W25 @ Ns reveal-time", () => {
+  it("parses '@ 8s' segment into revealAtSecond", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 8s");
+    expect(out.length).toBe(1);
+    expect(out[0]?.revealAtSecond).toBe(8);
+  });
+
+  it("parses '@ 8' (no 's' unit) — friendly authoring", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 8");
+    expect(out[0]?.revealAtSecond).toBe(8);
+  });
+
+  it("parses fractional seconds '@ 0.5s'", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 0.5s");
+    expect(out[0]?.revealAtSecond).toBe(0.5);
+  });
+
+  it("@ Ns segment + label — both parsed correctly", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 8s - watch the bubbles");
+    expect(out[0]?.revealAtSecond).toBe(8);
+    expect(out[0]?.label).toBe("watch the bubbles");
+  });
+
+  it("backwards-compatible: line without @ → no revealAtSecond field", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 - watch");
+    expect(out[0]).toEqual({
+      shape: "circle",
+      x: 0.3,
+      y: 0.5,
+      label: "watch",
+    });
+    expect("revealAtSecond" in (out[0] ?? {})).toBe(false);
+  });
+
+  it("@ 0s (or @ 0) → no revealAtSecond field (immediate is the default)", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 0s - watch");
+    expect("revealAtSecond" in (out[0] ?? {})).toBe(false);
+  });
+
+  it("@ Ns over the 600s sanity cap → clamped via normaliseRevealAtSecond", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @ 9999s");
+    expect(out[0]?.revealAtSecond).toBe(600);
+  });
+
+  it("error tolerance: '@ abc' (non-numeric) → line drops cleanly", () => {
+    // The whole line should fail to match the regex (the @ Ns
+    // group requires \d+) so it should drop rather than parsing
+    // partially.
+    const out = parsePointerLines("circle: 0.3, 0.5 @ abc - watch");
+    expect(out.length).toBe(0);
+  });
+
+  it("error tolerance: '@@ 8s' (extra @) → drops cleanly", () => {
+    const out = parsePointerLines("circle: 0.3, 0.5 @@ 8s - watch");
+    expect(out.length).toBe(0);
+  });
+
+  it("multi-line block: mixes legacy + new format", () => {
+    const text = [
+      "circle: 0.3, 0.5 - first",
+      "arrow: 0.7, 0.2 @ 5s - second",
+      "circle: 0.5, 0.5 @ 10s - third",
+    ].join("\n");
+    const out = parsePointerLines(text);
+    expect(out.length).toBe(3);
+    expect(out[0]?.revealAtSecond).toBeUndefined();
+    expect(out[1]?.revealAtSecond).toBe(5);
+    expect(out[2]?.revealAtSecond).toBe(10);
+  });
+});
+
+describe("serialisePointerLines — Y2 W25 @ Ns reveal-time", () => {
+  it("emits @ Ns segment when revealAtSecond > 0", () => {
+    const text = serialisePointerLines([
+      { shape: "circle", x: 0.3, y: 0.5, revealAtSecond: 8 },
+    ]);
+    expect(text).toContain("@ 8s");
+  });
+
+  it("emits fractional reveal time", () => {
+    const text = serialisePointerLines([
+      { shape: "circle", x: 0.3, y: 0.5, revealAtSecond: 0.5 },
+    ]);
+    expect(text).toContain("@ 0.5s");
+  });
+
+  it("does NOT emit @ when revealAtSecond is 0 / unset", () => {
+    expect(
+      serialisePointerLines([{ shape: "circle", x: 0.3, y: 0.5 }]),
+    ).not.toContain("@");
+    expect(
+      serialisePointerLines([
+        { shape: "circle", x: 0.3, y: 0.5, revealAtSecond: 0 },
+      ]),
+    ).not.toContain("@");
+  });
+
+  it("@ Ns segment + label — order is `coords @ Ns - label`", () => {
+    const text = serialisePointerLines([
+      {
+        shape: "circle",
+        x: 0.3,
+        y: 0.5,
+        revealAtSecond: 8,
+        label: "watch the bubbles",
+      },
+    ]);
+    expect(text).toBe("circle: 0.3, 0.5 @ 8s - watch the bubbles");
+  });
+
+  it("round-trips a sequenced authoring block", () => {
+    const text = [
+      "circle: 0.3, 0.5",
+      "arrow: 0.7, 0.2 @ 5s - stir here",
+      "circle: 0.5, 0.5 @ 10s - look",
+    ].join("\n");
+    const parsed = parsePointerLines(text);
+    const serialised = serialisePointerLines(parsed);
+    expect(parsePointerLines(serialised)).toEqual(parsed);
+  });
+});
