@@ -64,6 +64,7 @@ const CoachQuiz = dynamic(() =>
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
+import { WhosAtTable } from "@/components/today/whos-at-table";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -512,6 +513,11 @@ function TodayPageContent() {
         {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
+
+        {/* W35 "Who's at the table" picker — household-memory surface.
+            Renders a CTA → /path/household when no members exist;
+            renders the picker + aggregate constraints once they do. */}
+        <WhosAtTable />
 
         {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard
