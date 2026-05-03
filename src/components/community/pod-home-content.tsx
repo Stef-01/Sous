@@ -28,6 +28,7 @@ import {
   activeMemberIds,
   listSubmissionsForWeek,
 } from "@/lib/pod/use-current-pod";
+import { resolvePublicUriForGallery } from "@/lib/storage/photo-pipeline";
 import type {
   ChallengePod,
   PodChallengeWeek,
@@ -372,9 +373,13 @@ function GalleryCard({
   submission: PodSubmission;
   author: PodMember | undefined;
 }) {
+  // Y2 W4 photo-pipeline integration. resolvePublicUriForGallery
+  // rewrites bare object keys to R2 public URLs when configured;
+  // data URIs / http URLs pass through unchanged. Branchless
+  // resolver — no UI change when R2 is off.
+  const resolvedUri = resolvePublicUriForGallery(submission.photoUri);
   const isPlaceholder =
-    !submission.photoUri.startsWith("http") &&
-    !submission.photoUri.startsWith("data:");
+    !resolvedUri.startsWith("http") && !resolvedUri.startsWith("data:");
   return (
     <li className="overflow-hidden rounded-2xl border border-neutral-100/80 bg-white shadow-sm">
       <div className="relative aspect-[4/5] bg-neutral-100">
@@ -384,7 +389,7 @@ function GalleryCard({
           </div>
         ) : (
           <Image
-            src={submission.photoUri}
+            src={resolvedUri}
             alt={`${author?.displayName ?? "Pod member"}'s ${prettySlug(
               "this-cook",
             )}`}
