@@ -18,12 +18,23 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Pencil, Play, Plus } from "lucide-react";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
+import {
+  matchesRecipeFilter,
+  useRecipeFilter,
+} from "@/lib/recipe-authoring/use-recipe-filter";
+import { RecipeFilterChips } from "@/components/recipe-authoring/recipe-filter-chips";
 import { SectionKicker } from "@/components/shared/section-kicker";
 
 export default function MyRecipesPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { drafts, mounted } = useRecipeDrafts();
+  // W47 source filter — chip row drives both the templates row
+  // (treated as nourish-verified) and the user-drafts list.
+  const { filter } = useRecipeFilter();
+  const filteredDrafts = drafts.filter((d) =>
+    matchesRecipeFilter(d.source, filter),
+  );
 
   return (
     <motion.div
@@ -55,27 +66,41 @@ export default function MyRecipesPage() {
       </header>
 
       <main className="mx-auto max-w-md space-y-6 px-4 pt-4">
-        {/* W43 templates — always visible. The user can fork a
-            seed recipe as a starting point regardless of whether
-            their My-recipes list is empty or populated. */}
-        <TemplatesRow />
+        {/* W47 source-filter chip row — pivots both the templates
+            row (Nourish-verified) and the user-drafts list. */}
+        <RecipeFilterChips className="px-1" />
+
+        {/* W43 templates — visible whenever the filter accepts
+            Nourish-verified recipes (i.e. "all" or "nourish-
+            verified"). Hidden under "mine" / "community" so the
+            user sees only what they're filtering for. */}
+        {(filter === "all" || filter === "nourish-verified") && (
+          <TemplatesRow />
+        )}
 
         {!mounted ? (
           // Pre-hydration skeleton — matches the height of one card so
           // the page doesn't jump when localStorage resolves.
           <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
-        ) : drafts.length === 0 ? (
-          <EmptyState onCreate={() => router.push("/path/recipes/new")} />
+        ) : filteredDrafts.length === 0 ? (
+          drafts.length === 0 ? (
+            <EmptyState onCreate={() => router.push("/path/recipes/new")} />
+          ) : (
+            <FilteredEmptyState filter={filter} />
+          )
         ) : (
           <ul className="space-y-3">
-            {drafts.map((recipe) => (
+            {filteredDrafts.map((recipe) => (
               <li
                 key={recipe.id}
                 className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm"
               >
-                <SectionKicker as="p" size="10px">
-                  {recipe.cuisineFamily}
-                </SectionKicker>
+                <div className="flex items-center justify-between gap-2">
+                  <SectionKicker as="p" size="10px">
+                    {recipe.cuisineFamily}
+                  </SectionKicker>
+                  <SourceBadge source={recipe.source} />
+                </div>
                 <h2 className="mt-1 font-serif text-base font-semibold text-[var(--nourish-dark)]">
                   {recipe.title}
                 </h2>
@@ -140,6 +165,57 @@ function TemplatesRow() {
         </ul>
       </div>
     </section>
+  );
+}
+
+function SourceBadge({
+  source,
+}: {
+  source: "user" | "community" | "nourish-verified";
+}) {
+  if (source === "user") return null; // no badge for own recipes
+  if (source === "nourish-verified") {
+    return (
+      <span
+        title="Nourish-verified"
+        className="inline-flex items-center rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-[var(--nourish-green)]"
+      >
+        Nourish ✓
+      </span>
+    );
+  }
+  return (
+    <span
+      title="Community recipe (awaiting Nourish verification)"
+      className="inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold tracking-wide text-amber-700"
+    >
+      Community
+    </span>
+  );
+}
+
+function FilteredEmptyState({
+  filter,
+}: {
+  filter: "mine" | "community" | "nourish-verified" | "all";
+}) {
+  const label =
+    filter === "mine"
+      ? "your authored recipes"
+      : filter === "community"
+        ? "community recipes"
+        : filter === "nourish-verified"
+          ? "Nourish-verified recipes"
+          : "recipes";
+  return (
+    <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/40 px-4 py-6 text-center">
+      <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+        No {label} yet
+      </p>
+      <p className="mt-1 text-xs text-[var(--nourish-subtext)]">
+        Switch the filter to see other recipes, or add a new one.
+      </p>
+    </div>
   );
 }
 

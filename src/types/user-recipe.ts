@@ -146,6 +146,25 @@ export const userRecipeSchema = z.object({
   createdAt: z.string().datetime(),
   /** ISO timestamp of last edit. */
   updatedAt: z.string().datetime(),
+
+  /** W47 source tag — drives the filter chip row on
+   *  `/path/recipes` + templates row. Three states:
+   *  - "user" — this user authored it.
+   *  - "community" — another user authored it; awaiting admin
+   *    approval. Only the author + admin can see it pre-approval.
+   *  - "nourish-verified" — seed catalog OR community recipe
+   *    approved by an admin. */
+  source: z.enum(["user", "community", "nourish-verified"]).default("user"),
+  /** ISO timestamp the admin approved a community recipe. Null
+   *  until verified. Always null for `user` and seed-implicit
+   *  `nourish-verified` entries. */
+  nourishApprovedAt: z.string().datetime().nullable().optional(),
+  /** Admin id (or "system" for seed-implicit Nourish-verified)
+   *  who verified the recipe. */
+  nourishApprovedBy: z.string().max(64).nullable().optional(),
+  /** Author display name for community recipes. Surfaced on the
+   *  recipe card so the recipient knows who shared it. */
+  authorDisplayName: z.string().max(40).nullable().optional(),
 });
 
 export type UserRecipe = z.infer<typeof userRecipeSchema>;

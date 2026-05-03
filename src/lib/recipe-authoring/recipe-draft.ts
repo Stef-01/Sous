@@ -44,6 +44,10 @@ export type RecipeDraft = Omit<
 export function defaultRecipeDraft(): RecipeDraft {
   return {
     schemaVersion: SCHEMA_VERSION,
+    source: "user",
+    nourishApprovedAt: null,
+    nourishApprovedBy: null,
+    authorDisplayName: null,
     title: "",
     dishName: "",
     cuisineFamily: "",
@@ -204,5 +208,13 @@ export function commitDraft(
     steps: draft.steps,
     createdAt: draft.createdAt ?? now,
     updatedAt: now,
+    // W47 source-tag passthrough. New drafts default to "user";
+    // forks of seed recipes inherit the seed-fork override; an
+    // admin-promoted community recipe round-trips through edits
+    // with its "nourish-verified" tag preserved.
+    source: draft.source ?? "user",
+    nourishApprovedAt: draft.nourishApprovedAt ?? null,
+    nourishApprovedBy: draft.nourishApprovedBy ?? null,
+    authorDisplayName: draft.authorDisplayName ?? null,
   };
 }

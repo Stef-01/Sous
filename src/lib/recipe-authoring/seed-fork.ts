@@ -54,6 +54,14 @@ export function seedToRecipeDraft(seed: StaticDishData): RecipeDraft {
 
   return {
     schemaVersion: SCHEMA_VERSION,
+    // W47 — a fork of a Nourish-verified seed becomes a "user"
+    // recipe when saved. The user authored the customisation;
+    // they can later opt into the community-submission flow if
+    // they want admin verification.
+    source: "user",
+    nourishApprovedAt: null,
+    nourishApprovedBy: null,
+    authorDisplayName: null,
     title: `My ${seed.name}`,
     dishName: seed.name,
     cuisineFamily: seed.cuisineFamily,

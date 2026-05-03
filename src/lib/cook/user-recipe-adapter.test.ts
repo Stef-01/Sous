@@ -51,6 +51,10 @@ function makeRecipe(overrides: Partial<UserRecipe> = {}): UserRecipe {
     ],
     createdAt: "2026-04-01T12:00:00Z",
     updatedAt: "2026-04-01T12:00:00Z",
+    source: "user",
+    nourishApprovedAt: null,
+    nourishApprovedBy: null,
+    authorDisplayName: null,
     ...overrides,
   };
 }
