@@ -65,6 +65,7 @@ import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { WhosAtTable } from "@/components/today/whos-at-table";
+import { WeeklyRhythmWidget } from "@/components/today/weekly-rhythm-widget";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -518,6 +519,10 @@ function TodayPageContent() {
             Renders a CTA → /path/household when no members exist;
             renders the picker + aggregate constraints once they do. */}
         <WhosAtTable />
+
+        {/* W36 weekly rhythm widget — quiet below 2 cooks-this-week so
+            cold-start users see the existing welcome line instead. */}
+        <WeeklyRhythmWidget sessions={completedSessions} />
 
         {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard
