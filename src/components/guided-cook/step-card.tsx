@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
+  Image as ImageIcon,
   MessageCircleQuestion,
   Send,
   Volume2,
@@ -28,6 +29,7 @@ import {
   rewriteForSpice,
   type SpiceTolerance,
 } from "@/lib/parent-mode/spice-rewrite";
+import { resolveVisualStepImage } from "@/lib/cook/resolve-visual-step-image";
 
 interface StepCardProps {
   /** +1 when advancing forward, -1 when going back. Controls slide direction. */
@@ -45,6 +47,14 @@ interface StepCardProps {
   cuisineFact?: string | null;
   donenessCue?: string | null;
   imageUrl?: string | null;
+  /** Dish-level hero image. Used as the visual-mode fallback when
+   *  the step itself has no image (most steps in V1 don't). */
+  heroImageUrl?: string | null;
+  /** When true, promote the step image to a hero-sized element and
+   *  shrink the instruction text — Google-Maps "look, don't read".
+   *  Wired up to the user's persisted preference (W22 toggle in
+   *  profile settings → W27 page-side adoption). */
+  visualMode?: boolean;
   expandedChip: string | null;
   onToggleChip: (chip: string | null) => void;
   /** `label` identifies which timer in the stack this is  -  passes through to
@@ -78,6 +88,8 @@ export function StepCard({
   cuisineFact,
   donenessCue,
   imageUrl,
+  heroImageUrl,
+  visualMode = false,
   expandedChip,
   onToggleChip,
   onStartTimer,
@@ -186,6 +198,14 @@ export function StepCard({
   // Clamp so a misconfigured step list (totalSteps === 0) never yields NaN.
   const progress = totalSteps > 0 ? stepNumber / totalSteps : 0;
 
+  // W22 / W27: visual-mode resolves which image to render. Step
+  // image wins; dish hero is the visually-related fallback;
+  // otherwise we render a textual placeholder.
+  const visualImage = useMemo(
+    () => resolveVisualStepImage(imageUrl, heroImageUrl),
+    [imageUrl, heroImageUrl],
+  );
+
   const slideX = 56 * direction;
 
   return (
@@ -261,17 +281,60 @@ export function StepCard({
         </div>
       </div>
 
-      {/* Step image (optional) */}
-      {imageUrl && (
-        <div className="relative aspect-video overflow-hidden rounded-xl">
-          <Image
-            src={imageUrl}
-            alt={`Step ${stepNumber}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 448px"
-            className="object-cover"
-          />
-        </div>
+      {/* Step image (optional). Layout depends on visualMode:
+          - off → small aspect-video thumb when a step image exists.
+          - on  → hero-sized aspect-[4/5] element. Dish hero is used
+                  as the fallback when the step itself has no image,
+                  with a small "dish photo" badge so the user knows
+                  this isn't the literal step. When neither source
+                  exists, a textual placeholder renders instead. */}
+      {visualMode ? (
+        visualImage.isPlaceholder ? (
+          <div
+            data-testid="visual-mode-placeholder"
+            className="flex aspect-[4/5] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-200 bg-neutral-50 text-center"
+          >
+            <ImageIcon
+              size={32}
+              className="text-[var(--nourish-subtext)]/60"
+              aria-hidden
+            />
+            <p className="text-xs font-medium text-[var(--nourish-subtext)]">
+              Step image coming soon
+            </p>
+          </div>
+        ) : (
+          <div className="relative aspect-[4/5] overflow-hidden rounded-xl">
+            <Image
+              src={visualImage.src as string}
+              alt={`Step ${stepNumber}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              className="object-cover"
+              priority
+            />
+            {visualImage.isFallback && (
+              <span
+                data-testid="visual-mode-fallback-badge"
+                className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur"
+              >
+                Dish photo
+              </span>
+            )}
+          </div>
+        )
+      ) : (
+        imageUrl && (
+          <div className="relative aspect-video overflow-hidden rounded-xl">
+            <Image
+              src={imageUrl}
+              alt={`Step ${stepNumber}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              className="object-cover"
+            />
+          </div>
+        )
       )}
 
       {/* Spice slider  -  Stage 2 W10. Renders only when the step text
@@ -297,7 +360,13 @@ export function StepCard({
           Stage 2 W10: instruction is rewritten when Parent Mode lowers
           the spice tolerance (deterministic transform, not AI). */}
       <p
-        className="cook-prose text-[var(--nourish-dark)] select-text"
+        data-visual-mode={visualMode ? "true" : undefined}
+        className={cn(
+          "select-text text-[var(--nourish-dark)]",
+          // Visual mode shrinks the instruction so the image carries
+          // the primary signal (Google-Maps-style "look, don't read").
+          visualMode ? "text-sm leading-snug" : "cook-prose",
+        )}
         onDoubleClick={
           mounted && hasSpeechSynthesis ? handleReadAloud : undefined
         }

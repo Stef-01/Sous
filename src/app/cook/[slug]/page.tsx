@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Mic } from "lucide-react";
 import { useVoiceCook } from "@/lib/voice/use-voice-cook";
+import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
@@ -66,6 +67,9 @@ export default function GuidedCookPage({
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
   const { enabled: bigHands } = useBigHands();
+  // W22 visual-mode preference + W27 page-side adoption — when on,
+  // StepCard promotes the step image and shrinks the instruction.
+  const { enabled: visualMode } = useVisualModePref();
   const sessionIdRef = useRef<string | null>(null);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
@@ -556,6 +560,8 @@ export default function GuidedCookPage({
               cuisineFact={currentCookStep.cuisineFact}
               donenessCue={currentCookStep.donenessCue}
               imageUrl={currentCookStep.imageUrl}
+              heroImageUrl={dish.heroImageUrl}
+              visualMode={visualMode}
               expandedChip={expandedChip}
               onToggleChip={handleToggleChip}
               onStartTimer={handleStartTimer}
