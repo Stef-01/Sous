@@ -28,6 +28,10 @@ import {
   removeStepAt,
   type RecipeDraft,
 } from "@/lib/recipe-authoring/recipe-draft";
+import {
+  parsePointerLines,
+  serialisePointerLines,
+} from "@/lib/cook/attention-pointer-text";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { userRecipeSchema } from "@/types/user-recipe";
 import { toast } from "@/lib/hooks/use-toast";
@@ -288,6 +292,28 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
                   {...form.register(`steps.${idx}.imageUrl`)}
                   placeholder="https://… (optional)"
                   className={inputClass}
+                />
+              </FormField>
+              <FormField label="Attention pointers (one per line)">
+                <textarea
+                  defaultValue={serialisePointerLines(
+                    form.getValues(`steps.${idx}.attentionPointers`),
+                  )}
+                  onBlur={(e) =>
+                    form.setValue(
+                      `steps.${idx}.attentionPointers`,
+                      parsePointerLines(e.target.value),
+                      { shouldDirty: true },
+                    )
+                  }
+                  placeholder={
+                    "circle: 0.3, 0.5 - watch the bubbles\narrow: 0.7, 0.2 - stir here"
+                  }
+                  rows={3}
+                  className={cn(
+                    inputClass,
+                    "resize-none font-mono text-[12px]",
+                  )}
                 />
               </FormField>
             </div>

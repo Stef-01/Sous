@@ -16,6 +16,7 @@
  */
 
 import type { UserRecipe } from "@/types/user-recipe";
+import type { AttentionPointer } from "./attention-pointer";
 
 /** Output shape — matches the static-data branch of
  *  `cookRouter.getSteps` so the cook page's existing rendering
@@ -47,6 +48,10 @@ export interface CookPageDishShape {
     cuisineFact: string | null;
     donenessCue: string | null;
     imageUrl: string | null;
+    /** W44 — authored attention pointers for visual mode. Null
+     *  when none authored; cook page passes through to StepCard
+     *  unchanged. */
+    attentionPointers: AttentionPointer[] | null;
   }>;
   ingredients: Array<{
     id: string;
@@ -90,6 +95,12 @@ export function adaptUserRecipeForCook(recipe: UserRecipe): CookPageDishShape {
       cuisineFact: s.cuisineFact ?? null,
       donenessCue: s.donenessCue ?? null,
       imageUrl: s.imageUrl ?? null,
+      // W44 — authored attention pointers passthrough. Coerce
+      // the input to a fresh array so a downstream caller can't
+      // mutate the recipe via the adapter result.
+      attentionPointers: s.attentionPointers
+        ? s.attentionPointers.map((p) => ({ ...p }))
+        : null,
     })),
     ingredients: recipe.ingredients.map((i) => ({
       id: i.id,

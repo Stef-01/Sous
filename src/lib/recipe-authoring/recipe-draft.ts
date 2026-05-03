@@ -75,6 +75,7 @@ export function defaultRecipeDraft(): RecipeDraft {
         cuisineFact: null,
         donenessCue: null,
         imageUrl: null,
+        attentionPointers: null,
       },
     ],
   };
@@ -129,6 +130,7 @@ export function appendBlankStep(steps: ReadonlyArray<UserStep>): UserStep[] {
       cuisineFact: null,
       donenessCue: null,
       imageUrl: null,
+      attentionPointers: null,
     },
   ];
 }

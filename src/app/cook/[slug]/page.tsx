@@ -616,6 +616,7 @@ export default function GuidedCookPage({
               imageUrl={currentCookStep.imageUrl}
               heroImageUrl={dish.heroImageUrl}
               visualMode={visualMode}
+              attentionPointers={currentCookStep.attentionPointers ?? null}
               expandedChip={expandedChip}
               onToggleChip={handleToggleChip}
               onStartTimer={handleStartTimer}

@@ -61,6 +61,24 @@ export const userStepSchema = z.object({
    *  pipeline post-W52 (founder-unlock day); until then it's
    *  pasteable. */
   imageUrl: z.string().nullable().optional(),
+  /** Optional SVG attention pointers laid over the step image
+   *  in visual mode (W29 MVP 4 of the cook-nav initiative).
+   *  Each pointer carries a normalised x/y in [0,1] + a shape
+   *  + an optional 24-char label. Capped at 6 per step so a
+   *  busy authoring fingerstroke can't bury the image. Schema
+   *  field added W44; authored via the step-detail panel. */
+  attentionPointers: z
+    .array(
+      z.object({
+        shape: z.enum(["circle", "arrow"]),
+        x: z.number(),
+        y: z.number(),
+        label: z.string().max(24).optional(),
+      }),
+    )
+    .max(6)
+    .nullable()
+    .optional(),
 });
 
 export const userRecipeSchema = z.object({
