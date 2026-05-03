@@ -15,7 +15,17 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat, Pencil, Play, Plus, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ChefHat,
+  Pencil,
+  Play,
+  Plus,
+  Share2,
+  Sparkles,
+} from "lucide-react";
+import { buildSharePayload } from "@/lib/share/cook-deeplink";
+import { toast } from "@/lib/hooks/use-toast";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
 import {
@@ -137,6 +147,56 @@ export default function MyRecipesPage() {
                   >
                     <Pencil size={12} aria-hidden /> Edit
                   </Link>
+                  <button
+                    type="button"
+                    aria-label={`Share ${recipe.title}`}
+                    onClick={async () => {
+                      const payload = buildSharePayload({
+                        slug: recipe.slug,
+                        recipeTitle: recipe.title,
+                        authorDisplayName: recipe.authorDisplayName,
+                        origin:
+                          typeof window !== "undefined"
+                            ? window.location.origin
+                            : undefined,
+                      });
+                      if (!payload) return;
+                      const nav = (
+                        typeof navigator === "undefined" ? null : navigator
+                      ) as Navigator | null;
+                      try {
+                        const canShare =
+                          nav !== null && typeof nav.share === "function";
+                        if (canShare && nav) {
+                          await nav.share({
+                            title: payload.title,
+                            text: payload.text,
+                            url: payload.url,
+                          });
+                          return;
+                        }
+                        if (nav && nav.clipboard) {
+                          await nav.clipboard.writeText(payload.text);
+                        }
+                        toast.push({
+                          variant: "success",
+                          title: "Link copied",
+                          body: "Paste it anywhere to share.",
+                          dedupKey: `share-${recipe.id}`,
+                        });
+                      } catch {
+                        toast.push({
+                          variant: "info",
+                          title: "Couldn't copy",
+                          body: payload.url,
+                          dedupKey: `share-fail-${recipe.id}`,
+                        });
+                      }
+                    }}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+                  >
+                    <Share2 size={12} aria-hidden /> Share
+                  </button>
                 </div>
               </li>
             ))}
