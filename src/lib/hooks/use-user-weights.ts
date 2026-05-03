@@ -22,10 +22,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useCookSessions } from "./use-cook-sessions";
-import {
-  trainUserWeights,
-  type UserWeights,
-} from "@/lib/engine/user-weight-trainer";
+import { type UserWeights } from "@/lib/engine/user-weight-trainer";
+import { composeUserWeights } from "@/lib/engine/user-weight-trainer-hybrid";
+import type { TrainerMode } from "@/lib/engine/user-weight-trainer-hybrid";
 import { DEFAULT_WEIGHTS } from "@/lib/engine/types";
 
 const STORAGE_KEY = "sous-user-weights-v1";
@@ -118,21 +117,14 @@ export function useUserWeights() {
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // Retrain whenever the cook-history changes. trainUserWeights
-  // is pure + cheap (one pass over history); useMemo guards the
-  // call site from per-render churn.
-  const trainedWeights = useMemo<UserWeights>(
-    () =>
-      trainUserWeights(
-        sessions.map((s) => ({
-          completedAt: s.completedAt,
-          cuisineFamily: s.cuisineFamily,
-          rating: s.rating,
-          favorite: s.favorite,
-        })),
-      ),
-    [sessions],
-  );
+  // Y2 W8 hybrid composer: V3 when ≥ 8 score-breakdown-rich
+  // cooks exist, V2 when ≥ 5 V2-eligible cooks, default
+  // otherwise. The trainer choice is invisible to the user (we
+  // expose `trainerMode` for the IDEO retro / dev tools, not
+  // for UI surfacing).
+  const trainedResult = useMemo(() => composeUserWeights(sessions), [sessions]);
+  const trainedWeights = trainedResult.weights;
+  const trainerMode: TrainerMode = trainedResult.mode;
 
   // Persist whenever the freshly-trained vector differs from
   // what's already on disk. Avoids hammering localStorage on
@@ -160,6 +152,11 @@ export function useUserWeights() {
     weights: trainedWeights,
     samples: persisted.samples,
     trainedAt: persisted.trainedAt,
+    /** Y2 W8 telemetry — which trainer fired this composition.
+     *  Surfaces in dev / Sprint-B IDEO; not user-visible. */
+    trainerMode,
+    breakdownCookCount: trainedResult.breakdownCookCount,
+    v2EligibleCookCount: trainedResult.v2EligibleCookCount,
   };
 }
 
