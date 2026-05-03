@@ -41,6 +41,13 @@ import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import { useCurrentPod } from "@/lib/pod/use-current-pod";
+import {
+  computeCookScore,
+  dayKey,
+  normaliseStarRating,
+} from "@/lib/pod/pod-score";
+import { POD_SCHEMA_VERSION } from "@/types/challenge-pod";
 
 export default function GuidedCookPage({
   params,
@@ -56,6 +63,12 @@ export default function GuidedCookPage({
 
   // Main dish context passed from the Today page (e.g. "Chicken Tikka Masala")
   const mainDishInput = searchParams.get("main") ?? undefined;
+  // W46 pod-challenge context. The pod home's "Cook this week's
+  // challenge" deeplink stamps `?pod=<id>&week=<key>` so the
+  // win-screen integration can attribute the cook back to the
+  // pod without needing extra cross-page state.
+  const podIdParam = searchParams.get("pod");
+  const weekKeyParam = searchParams.get("week");
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
@@ -79,6 +92,18 @@ export default function GuidedCookPage({
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
   const { enabled: bigHands } = useBigHands();
+  // W46 pod-challenge state. The pod-home "Cook this week's
+  // challenge" deeplink stamps `?pod=<id>&week=<key>`; we use
+  // those to attribute the win-screen submission back to the
+  // correct pod week. Local rating state mirrors the cook
+  // session so the pod-challenge slot can preview the score
+  // before the user submits.
+  const {
+    pod: currentPod,
+    submissions: podSubmissions,
+    upsertSubmission,
+  } = useCurrentPod();
+  const [podRating, setPodRating] = useState(0);
   // W22 visual-mode preference + W27 page-side adoption — when on,
   // StepCard promotes the step image and shrinks the instruction.
   const { enabled: visualMode } = useVisualModePref();
@@ -387,6 +412,7 @@ export default function GuidedCookPage({
 
   const handleRate = useCallback(
     (stars: number) => {
+      setPodRating(stars);
       if (sessionIdRef.current) {
         updateSession(sessionIdRef.current, { rating: stars });
         awardXP("rate_dish", XP_AWARDS.RATE_DISH);
@@ -410,6 +436,92 @@ export default function GuidedCookPage({
     }
     setWinMeta((prev) => ({ ...prev, saved: true }));
   }, [updateSession]);
+
+  // W46 pod-challenge slot composition. Active iff:
+  //   - the URL stamps a pod id + week that matches the local pod
+  //   - the pod's owner = "the user on this device" (V1
+  //     single-device assumption; auth-tied id when Y2 lands)
+  //   - the cook's recipe slug matches the dish slug (so a user
+  //     who navigated to a different recipe doesn't accidentally
+  //     submit to the wrong week)
+  const podSlotActive =
+    currentPod !== null &&
+    podIdParam === currentPod.id &&
+    weekKeyParam !== null &&
+    weekKeyParam.length > 0;
+  const existingPodSubmission = useMemo(() => {
+    if (!podSlotActive || !currentPod) return null;
+    for (const sub of Object.values(podSubmissions)) {
+      if (
+        sub.podId === currentPod.id &&
+        sub.weekKey === weekKeyParam &&
+        sub.memberId === currentPod.ownerId
+      ) {
+        return sub;
+      }
+    }
+    return null;
+  }, [podSlotActive, currentPod, podSubmissions, weekKeyParam]);
+  const podStepCompletion =
+    cookSteps.length > 0 ? Math.min(currentStepIndex / cookSteps.length, 1) : 0;
+  const podComputedScore = useMemo(
+    () =>
+      computeCookScore({
+        stepCompletion: podStepCompletion,
+        selfRating:
+          podRating > 0
+            ? normaliseStarRating(podRating)
+            : existingPodSubmission
+              ? normaliseStarRating(existingPodSubmission.selfRating)
+              : 0.6, // neutral preview before user rates
+        aesthetic: 0.5, // V1 placeholder per pod-score doc
+        captionLength: 0,
+        hasStepImage: false,
+      }),
+    [podStepCompletion, podRating, existingPodSubmission],
+  );
+
+  const handlePodSubmit = useCallback(() => {
+    if (!podSlotActive || !currentPod || !weekKeyParam) return;
+    const now = new Date();
+    const id =
+      existingPodSubmission?.id ??
+      `sub-${currentPod.id}-${weekKeyParam}-${currentPod.ownerId}-${now.getTime()}`;
+    upsertSubmission({
+      schemaVersion: POD_SCHEMA_VERSION,
+      id,
+      podId: currentPod.id,
+      weekKey: weekKeyParam,
+      memberId: currentPod.ownerId,
+      dayKey: dayKey(now),
+      submittedAt: now.toISOString(),
+      photoUri: `pod-photo-${now.getTime()}-placeholder`,
+      selfRating: podRating > 0 ? podRating : 4,
+      caption: null,
+      donateTags: [],
+      stepCompletion: podStepCompletion,
+      aestheticScore: 0.5,
+      hasStepImage: false,
+      computedScore: podComputedScore,
+    });
+    toast.push({
+      variant: "success",
+      title: existingPodSubmission
+        ? "Pod submission updated"
+        : "Submitted to pod",
+      body: `${Math.round(podComputedScore)}/100 toward this week.`,
+      dedupKey: "pod-submitted",
+    });
+  }, [
+    podSlotActive,
+    currentPod,
+    weekKeyParam,
+    existingPodSubmission,
+    upsertSubmission,
+    podRating,
+    podStepCompletion,
+    podComputedScore,
+  ]);
 
   // ── Loading / error states ────────────────────────
 
@@ -648,6 +760,16 @@ export default function GuidedCookPage({
               onSave={handleSave}
               onCookAgain={handleCookAgain}
               onBackToday={handleBackToday}
+              podChallenge={
+                podSlotActive && currentPod
+                  ? {
+                      podName: currentPod.name,
+                      computedScore: podComputedScore,
+                      alreadySubmitted: existingPodSubmission !== null,
+                      onSubmit: handlePodSubmit,
+                    }
+                  : null
+              }
             />
           )}
         </AnimatePresence>
