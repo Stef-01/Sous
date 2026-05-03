@@ -64,7 +64,10 @@ export default function MyRecipesPage() {
           <ul className="space-y-3">
             {drafts.map((recipe) => (
               <li key={recipe.id}>
-                <article className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+                <Link
+                  href={`/path/recipes/${recipe.id}/edit`}
+                  className="block rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm transition hover:border-neutral-200 hover:shadow-md"
+                >
                   <SectionKicker as="p" size="10px">
                     {recipe.cuisineFamily}
                   </SectionKicker>
@@ -78,7 +81,7 @@ export default function MyRecipesPage() {
                     {recipe.ingredients.length} ingredients ·{" "}
                     {recipe.steps.length} steps · serves {recipe.serves}
                   </p>
-                </article>
+                </Link>
               </li>
             ))}
           </ul>
