@@ -8,6 +8,7 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
+import { CookAgainChip } from "@/components/today/cook-again-chip";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
@@ -520,6 +521,12 @@ function TodayPageContent() {
         {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
+
+        {/* Y2 W13 cook-again chip — surfaces a 5★ recipe from
+            21-90 days ago, scored by recency × seasonality ×
+            cuisine-rotation. Renders nothing when no eligible
+            candidate exists. */}
+        <CookAgainChip sessions={completedSessions} />
 
         {/* W35 "Who's at the table" picker — household-memory surface.
             Renders a CTA → /path/household when no members exist;
