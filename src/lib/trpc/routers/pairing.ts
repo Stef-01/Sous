@@ -121,6 +121,11 @@ export const pairingRouter = router({
         /** Busts TanStack Query cache when the client rerolls; ignored on the server. */
         _rerollSeed: z.number().optional(),
         userPreferences: z.record(z.number()).optional(),
+        /** W30 pairing-engine V2 — per-user weight vector trained
+         *  client-side from cook history. Validated as positive
+         *  numbers; the engine itself defaults to DEFAULT_WEIGHTS
+         *  when this field is absent. */
+        userWeights: z.record(z.number().nonnegative()).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
     )
@@ -146,9 +151,16 @@ export const pairingRouter = router({
         intent.effortTolerance = input.effortTolerance;
       }
 
-      // 2. Run pairing engine (with optional user preferences from coach quiz)
+      // 2. Run pairing engine (with optional user preferences from
+      // coach quiz + W30 V2 trained weight vector if the client
+      // provided one).
       const candidates = getCandidates();
-      const result = suggestSides(intent, candidates, input.userPreferences);
+      const result = suggestSides(
+        intent,
+        candidates,
+        input.userPreferences,
+        input.userWeights,
+      );
 
       if (!result.success) {
         return { success: false as const, error: result.error, sides: [] };
@@ -203,6 +215,7 @@ export const pairingRouter = router({
         excludeIds: z.array(z.string()),
         cuisineHint: z.string().optional(),
         userPreferences: z.record(z.number()).optional(),
+        userWeights: z.record(z.number().nonnegative()).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
     )
@@ -233,7 +246,7 @@ export const pairingRouter = router({
         intent,
         candidates,
         input.userPreferences,
-        undefined,
+        input.userWeights,
         1,
       );
 

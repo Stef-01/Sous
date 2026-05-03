@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
+import { useUserWeights } from "@/lib/hooks/use-user-weights";
 
 export default function SidesPage() {
   return (
@@ -56,6 +57,9 @@ function SidesPageContent() {
     "minimal" | "moderate" | "willing" | undefined
   >();
   const [imgError, setImgError] = useState(false);
+  // W30 pairing-engine V2: trained weight vector flows into the
+  // /sides browse page too, not just the Today craving flow.
+  const { weights: userWeights } = useUserWeights();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -82,6 +86,7 @@ function SidesPageContent() {
       inputMode: "text",
       _rerollSeed: rerollSeed || undefined,
       userPreferences: preferences,
+      userWeights,
       effortTolerance,
     },
     { enabled: !!mainDish },

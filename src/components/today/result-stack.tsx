@@ -18,6 +18,7 @@ import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { trpc } from "@/lib/trpc/client";
+import { useUserWeights } from "@/lib/hooks/use-user-weights";
 
 export interface SideResult {
   id: string;
@@ -99,11 +100,16 @@ export function ResultStack({
     });
   }, []);
 
+  // W30 pairing-engine V2: trained weight vector. Reroll respects
+  // the same personalisation as the initial pairing.
+  const { weights: userWeights } = useUserWeights();
+
   // Per-side reroll via tRPC
   const rerollQuery = trpc.pairing.rerollSide.useQuery(
     {
       mainDish,
       excludeIds: Array.from(seenIds),
+      userWeights,
     },
     {
       enabled: rerollingIndex !== null,
