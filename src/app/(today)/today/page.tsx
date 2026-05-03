@@ -66,6 +66,7 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { WhosAtTable } from "@/components/today/whos-at-table";
 import { WeeklyRhythmWidget } from "@/components/today/weekly-rhythm-widget";
+import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -131,6 +132,9 @@ function TodayPageContent() {
   // the engine already uses, so this is invisible to new users
   // and starts personalising silently as history accumulates.
   const { weights: userWeights } = useUserWeights();
+  // W37 household table aggregate — feeds the pairing engine the
+  // dietary union across the "who's at the table" selection.
+  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
   const tasteBlend = useTasteBlend();
   const effectivePreferences = blendPreferences(
     userPreferences,
@@ -227,6 +231,8 @@ function TodayPageContent() {
       _rerollSeed: rerollSeed || undefined,
       userPreferences: effectivePreferences,
       userWeights,
+      householdDietaryFlags:
+        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
       effortTolerance,
     },
     {

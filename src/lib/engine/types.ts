@@ -31,6 +31,13 @@ export interface SideDishCandidate {
   tags: string[];
   pairingReason: string | null;
   nutritionCategory: string | null;
+  /** Dietary flags this dish is COMPATIBLE WITH — vegan,
+   *  vegetarian, gluten-free, dairy-free, nut-allergy,
+   *  shellfish-allergy. Populated by `inferDietaryFlags` from
+   *  the dish's tags + description (W37). The pairing engine
+   *  filters candidates whose set isn't a superset of the
+   *  household's required flags. */
+  dietaryFlags: string[];
 }
 
 export interface ScoreBreakdown {

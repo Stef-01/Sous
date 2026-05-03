@@ -54,6 +54,7 @@ const tabbouleh: SideDishCandidate = {
   tags: ["no-cook", "vegan", "high-fiber"],
   pairingReason: "Adds brightness",
   nutritionCategory: "vegetable",
+  dietaryFlags: ["vegan", "vegetarian", "dairy-free"],
 };
 
 const naan: SideDishCandidate = {
@@ -73,6 +74,7 @@ const naan: SideDishCandidate = {
   tags: ["bread", "indian"],
   pairingReason: "Warm bread for scooping",
   nutritionCategory: "carb",
+  dietaryFlags: ["vegetarian", "nut-allergy", "shellfish-allergy"],
 };
 
 const raita: SideDishCandidate = {
@@ -92,6 +94,12 @@ const raita: SideDishCandidate = {
   tags: ["yogurt", "indian", "no-cook"],
   pairingReason: "Cooling contrast to spice",
   nutritionCategory: "protein",
+  dietaryFlags: [
+    "vegetarian",
+    "gluten-free",
+    "nut-allergy",
+    "shellfish-allergy",
+  ],
 };
 
 const fries: SideDishCandidate = {
@@ -111,6 +119,14 @@ const fries: SideDishCandidate = {
   tags: ["fried", "american"],
   pairingReason: "Classic combo",
   nutritionCategory: "carb",
+  dietaryFlags: [
+    "vegan",
+    "vegetarian",
+    "gluten-free",
+    "dairy-free",
+    "nut-allergy",
+    "shellfish-allergy",
+  ],
 };
 
 const allCandidates = [tabbouleh, naan, raita, fries];

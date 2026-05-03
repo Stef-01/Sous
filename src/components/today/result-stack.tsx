@@ -19,6 +19,7 @@ import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { trpc } from "@/lib/trpc/client";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
+import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 
 export interface SideResult {
   id: string;
@@ -103,6 +104,9 @@ export function ResultStack({
   // W30 pairing-engine V2: trained weight vector. Reroll respects
   // the same personalisation as the initial pairing.
   const { weights: userWeights } = useUserWeights();
+  // W37 household dietary constraint — reroll respects the same
+  // hard filter as the initial pairing so swaps stay compliant.
+  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
 
   // Per-side reroll via tRPC
   const rerollQuery = trpc.pairing.rerollSide.useQuery(
@@ -110,6 +114,8 @@ export function ResultStack({
       mainDish,
       excludeIds: Array.from(seenIds),
       userWeights,
+      householdDietaryFlags:
+        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
     },
     {
       enabled: rerollingIndex !== null,

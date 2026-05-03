@@ -38,6 +38,7 @@ function makeSide(
     tags: [],
     pairingReason: null,
     nutritionCategory: null,
+    dietaryFlags: [],
     ...overrides,
   };
 }

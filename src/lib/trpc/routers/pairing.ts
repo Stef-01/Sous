@@ -8,6 +8,10 @@ import {
 } from "@/data/guided-cook-steps";
 import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
+import {
+  inferDietaryFlags,
+  satisfiesDietaryRequirement,
+} from "@/lib/engine/dietary-inferer";
 
 // Import static data as fallback (until DB is seeded)
 import existingSides from "@/data/sides.json";
@@ -45,6 +49,12 @@ function buildCandidatesFromStatic(): SideDishCandidate[] {
     pairingReason: side.pairingReason,
     nutritionCategory:
       side.nutritionCategory === "dairy" ? "protein" : side.nutritionCategory,
+    // W37: derive dietary flags from tags + description so the
+    // household table aggregate can hard-filter candidates.
+    dietaryFlags: inferDietaryFlags({
+      tags: side.tags,
+      description: side.description,
+    }),
   }));
 }
 
@@ -126,6 +136,11 @@ export const pairingRouter = router({
          *  numbers; the engine itself defaults to DEFAULT_WEIGHTS
          *  when this field is absent. */
         userWeights: z.record(z.number().nonnegative()).optional(),
+        /** W37 household dietary constraints — union of dietary
+         *  flags across the "who's at the table" selection on
+         *  /today. Engine hard-filters candidates whose
+         *  dietaryFlags don't include every entry here. */
+        householdDietaryFlags: z.array(z.string()).max(20).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
     )
@@ -152,9 +167,16 @@ export const pairingRouter = router({
       }
 
       // 2. Run pairing engine (with optional user preferences from
-      // coach quiz + W30 V2 trained weight vector if the client
-      // provided one).
-      const candidates = getCandidates();
+      // coach quiz + W30 V2 trained weight vector + W37 household
+      // dietary constraints if the client provided them).
+      const allCandidates = getCandidates();
+      const householdRequired = input.householdDietaryFlags ?? [];
+      const candidates =
+        householdRequired.length > 0
+          ? allCandidates.filter((c) =>
+              satisfiesDietaryRequirement(c.dietaryFlags, householdRequired),
+            )
+          : allCandidates;
       const result = suggestSides(
         intent,
         candidates,
@@ -216,6 +238,7 @@ export const pairingRouter = router({
         cuisineHint: z.string().optional(),
         userPreferences: z.record(z.number()).optional(),
         userWeights: z.record(z.number().nonnegative()).optional(),
+        householdDietaryFlags: z.array(z.string()).max(20).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),
     )
@@ -241,7 +264,12 @@ export const pairingRouter = router({
       }
 
       const excludeSet = new Set(input.excludeIds);
-      const candidates = getCandidates().filter((c) => !excludeSet.has(c.id));
+      const householdRequired = input.householdDietaryFlags ?? [];
+      const candidates = getCandidates().filter(
+        (c) =>
+          !excludeSet.has(c.id) &&
+          satisfiesDietaryRequirement(c.dietaryFlags, householdRequired),
+      );
       const result = suggestSides(
         intent,
         candidates,

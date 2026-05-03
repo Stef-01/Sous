@@ -8,6 +8,7 @@ import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
+import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 
 export default function SidesPage() {
   return (
@@ -60,6 +61,8 @@ function SidesPageContent() {
   // W30 pairing-engine V2: trained weight vector flows into the
   // /sides browse page too, not just the Today craving flow.
   const { weights: userWeights } = useUserWeights();
+  // W37 household dietary constraint — same shape as /today.
+  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -87,6 +90,8 @@ function SidesPageContent() {
       _rerollSeed: rerollSeed || undefined,
       userPreferences: preferences,
       userWeights,
+      householdDietaryFlags:
+        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
       effortTolerance,
     },
     { enabled: !!mainDish },
