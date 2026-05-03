@@ -6,6 +6,11 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Mic } from "lucide-react";
 import { useVoiceCook } from "@/lib/voice/use-voice-cook";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
+import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import {
+  adaptUserRecipeForCook,
+  findUserRecipeBySlug,
+} from "@/lib/cook/user-recipe-adapter";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
@@ -100,16 +105,32 @@ export default function GuidedCookPage({
   }, [reset]);
 
   // Fetch steps from tRPC
-  const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
-    { sideDishSlug: slug },
-    { enabled: !!slug },
-  );
+  const {
+    data: tRPCData,
+    isLoading,
+    error,
+  } = trpc.cook.getSteps.useQuery({ sideDishSlug: slug }, { enabled: !!slug });
 
-  // Cuisine family for this dish (side or meal)
+  // W31 user-recipe → cook flow integration. When the seed catalog
+  // doesn't have this slug, fall back to user-authored recipes from
+  // localStorage. The adapter shapes the result identically to the
+  // tRPC payload so the rest of the page is unconditional.
+  // CLAUDE.md rule 4: every recipe goes through the same Quest shell.
+  const { drafts: userDrafts, mounted: userDraftsMounted } = useRecipeDrafts();
+  const data = useMemo(() => {
+    if (tRPCData?.dish) return tRPCData;
+    const fromDrafts = findUserRecipeBySlug(userDrafts, slug);
+    if (fromDrafts) return adaptUserRecipeForCook(fromDrafts);
+    return tRPCData;
+  }, [tRPCData, userDrafts, slug]);
+
+  // Cuisine family for this dish (side, meal, or user recipe).
   const cuisine = useMemo(() => {
     const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
-    return staticData?.cuisineFamily ?? "unknown";
-  }, [slug]);
+    if (staticData?.cuisineFamily) return staticData.cuisineFamily;
+    const userRecipe = findUserRecipeBySlug(userDrafts, slug);
+    return userRecipe?.cuisineFamily ?? "unknown";
+  }, [slug, userDrafts]);
 
   // Start session on mount (once data is available)
   useEffect(() => {
@@ -362,7 +383,10 @@ export default function GuidedCookPage({
 
   // ── Loading / error states ────────────────────────
 
-  if (isLoading) {
+  // W31: hold the loading state until the user-drafts hook has
+  // hydrated. Otherwise a user-authored recipe briefly shows the
+  // "Cook steps coming soon" screen while localStorage resolves.
+  if (isLoading || (!tRPCData?.dish && !userDraftsMounted)) {
     return (
       <div className="min-h-full bg-[var(--nourish-cream)]">
         {/* Header skeleton */}

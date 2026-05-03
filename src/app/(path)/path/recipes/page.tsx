@@ -15,7 +15,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat, Plus } from "lucide-react";
+import { ArrowLeft, ChefHat, Pencil, Play, Plus } from "lucide-react";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { SectionKicker } from "@/components/shared/section-kicker";
 
@@ -63,25 +63,41 @@ export default function MyRecipesPage() {
         ) : (
           <ul className="space-y-3">
             {drafts.map((recipe) => (
-              <li key={recipe.id}>
-                <Link
-                  href={`/path/recipes/${recipe.id}/edit`}
-                  className="block rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm transition hover:border-neutral-200 hover:shadow-md"
-                >
-                  <SectionKicker as="p" size="10px">
-                    {recipe.cuisineFamily}
-                  </SectionKicker>
-                  <h2 className="mt-1 font-serif text-base font-semibold text-[var(--nourish-dark)]">
-                    {recipe.title}
-                  </h2>
-                  <p className="mt-1 line-clamp-2 text-sm text-[var(--nourish-subtext)]">
-                    {recipe.description}
-                  </p>
-                  <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
-                    {recipe.ingredients.length} ingredients ·{" "}
-                    {recipe.steps.length} steps · serves {recipe.serves}
-                  </p>
-                </Link>
+              <li
+                key={recipe.id}
+                className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm"
+              >
+                <SectionKicker as="p" size="10px">
+                  {recipe.cuisineFamily}
+                </SectionKicker>
+                <h2 className="mt-1 font-serif text-base font-semibold text-[var(--nourish-dark)]">
+                  {recipe.title}
+                </h2>
+                <p className="mt-1 line-clamp-2 text-sm text-[var(--nourish-subtext)]">
+                  {recipe.description}
+                </p>
+                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
+                  {recipe.ingredients.length} ingredients ·{" "}
+                  {recipe.steps.length} steps · serves {recipe.serves}
+                </p>
+                {/* W31 actions row — Cook (primary) + Edit (secondary).
+                    Cook navigates to /cook/<slug>; the cook step
+                    page falls back to user recipes when the seed
+                    catalog has no match. */}
+                <div className="mt-3 flex gap-2">
+                  <Link
+                    href={`/cook/${recipe.slug}`}
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+                  >
+                    <Play size={12} aria-hidden /> Cook
+                  </Link>
+                  <Link
+                    href={`/path/recipes/${recipe.id}/edit`}
+                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+                  >
+                    <Pencil size={12} aria-hidden /> Edit
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
