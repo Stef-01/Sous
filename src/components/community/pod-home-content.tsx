@@ -28,6 +28,11 @@ import {
   activeMemberIds,
   listSubmissionsForWeek,
 } from "@/lib/pod/use-current-pod";
+import {
+  buildPodWeekRingRows,
+  summarisePodWeekProgress,
+} from "@/lib/pod/pod-week-rings";
+import { MadeItRing } from "@/components/shared/made-it-ring";
 import { resolvePublicUriForGallery } from "@/lib/storage/photo-pipeline";
 import type {
   ChallengePod,
@@ -203,6 +208,22 @@ function GalleryState({
     return m;
   }, [pod]);
 
+  // Y3 W2: per-member made-it ring rows for the gallery strip.
+  // Pure helper: counts this-week submissions per active member.
+  const ringRows = useMemo(
+    () =>
+      buildPodWeekRingRows({
+        members: pod.members,
+        submissions,
+        activeMemberIds: activeIds,
+      }),
+    [pod.members, submissions, activeIds],
+  );
+  const ringSummary = useMemo(
+    () => summarisePodWeekProgress(ringRows),
+    [ringRows],
+  );
+
   return (
     <>
       <PodHeader pod={pod} week={week} />
@@ -225,6 +246,38 @@ function GalleryState({
           consistency = {Math.round(podScore.total)} pod points
         </p>
       </section>
+
+      {/* Y3 W2: Per-member made-it ring strip — pattern #10.
+          Sits between the score headline and the photo grid so
+          "who's on track" reads at a glance regardless of
+          whether they've submitted a photo yet. */}
+      {ringRows.length > 0 && (
+        <section className="rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
+            This week
+          </p>
+          <p className="mt-0.5 mb-2 text-xs text-[var(--nourish-dark)]">
+            <span className="font-semibold">{ringSummary.done}</span> of{" "}
+            {ringSummary.total} cooked
+          </p>
+          <ul className="flex flex-wrap gap-3">
+            {ringRows.map(({ member, count, target }) => (
+              <li key={member.id} className="flex flex-col items-center gap-1">
+                <MadeItRing
+                  count={count}
+                  target={target}
+                  size={36}
+                  centerGlyph={member.avatar}
+                  ariaLabel={`${member.displayName}: ${count} of ${target} this week`}
+                />
+                <span className="max-w-[64px] truncate text-[10px] text-[var(--nourish-subtext)]">
+                  {member.displayName.split(" ")[0]}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Photo grid */}
       {submissions.length === 0 ? (
