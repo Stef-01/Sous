@@ -40,6 +40,19 @@ export interface SideResult {
   imageUrl: string;
   description: string;
   hasGuidedCook?: boolean;
+  /** Y2 W17 pantry-coverage badge data. Optional + nullable so
+   *  legacy + no-pantry-data candidates degrade silently to "no
+   *  badge". Populated end-to-end once the pairing API threads
+   *  ingredient data through to coverage compute (substrate
+   *  ready, founder-gated on the seed-catalog ingredient
+   *  expansion).
+   *  - pantryCoverage: 0..1 fractional coverage
+   *  - pantryHaveCount / pantryTotalCount: raw counts for the
+   *    "X / Y from pantry" badge label
+   */
+  pantryCoverage?: number | null;
+  pantryHaveCount?: number | null;
+  pantryTotalCount?: number | null;
 }
 
 interface ResultStackProps {
@@ -544,6 +557,22 @@ function ResultCard({
                   </span>
                 </>
               )}
+              {/* W17 pantry badge — renders only when coverage
+                  data is populated AND coverage clears the
+                  "you have most of this" threshold (matching
+                  W16's discontinuity). */}
+              {typeof side.pantryCoverage === "number" &&
+                side.pantryCoverage >= 0.7 && (
+                  <>
+                    <span className="text-neutral-300">·</span>
+                    <span className="uppercase text-[var(--nourish-green)]">
+                      {typeof side.pantryHaveCount === "number" &&
+                      typeof side.pantryTotalCount === "number"
+                        ? `${side.pantryHaveCount}/${side.pantryTotalCount} from pantry`
+                        : "From pantry"}
+                    </span>
+                  </>
+                )}
             </div>
 
             {/* Title */}
