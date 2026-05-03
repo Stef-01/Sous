@@ -14,6 +14,7 @@ import { temperatureScorer } from "./scorers/temperature";
 import { preferenceScorer } from "./scorers/preference";
 import { rankCandidates, topK } from "./ranker";
 import { addExplanations } from "./explainer";
+import { applyTimeOfDayRerank, type TimeRerankContext } from "./time-rerank";
 
 /**
  * All scorers used by the engine.
@@ -48,6 +49,11 @@ export type SuggestSidesResult =
  * @param userPreferences - User's implicit preference vector (optional)
  * @param weights - Custom scoring weights (optional, uses defaults)
  * @param count - Number of sides to return (default 3)
+ * @param rerankContext - Y2 W11 time-of-day + season reranker context.
+ *   When provided, applies a small ±0.07-bounded post-process nudge
+ *   that boosts hot sides on winter evenings, cold sides on summer
+ *   afternoons, etc. Pass `{ now: new Date() }` from the call site.
+ *   Omitting it keeps Y1 behaviour exactly.
  */
 export function suggestSides(
   main: MainDishIntent,
@@ -55,6 +61,7 @@ export function suggestSides(
   userPreferences?: Record<string, number>,
   weights?: Partial<Record<keyof ScoreBreakdown, number>>,
   count: number = 3,
+  rerankContext?: TimeRerankContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -71,8 +78,16 @@ export function suggestSides(
     userPreferences,
   );
 
+  // W11 time-of-day rerank — applied to the FULL ranked list
+  // (not just topK) so a hot side at position 50 can climb into
+  // top 3 on a winter evening if the nudge is enough. Small
+  // cohort cost: O(n) on ~200 sides today.
+  const reranked = rerankContext
+    ? applyTimeOfDayRerank(ranked, rerankContext)
+    : ranked;
+
   // Select top K
-  const top = topK(ranked, count);
+  const top = topK(reranked, count);
 
   // Generate explanations
   const explained = addExplanations(top);
