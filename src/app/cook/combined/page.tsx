@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   ChefHat,
   ChevronRight,
-  Timer,
   UtensilsCrossed,
 } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
@@ -23,6 +22,7 @@ import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
+import { ParallelHintBanner } from "@/components/guided-cook/parallel-hint-banner";
 import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
 import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
@@ -689,26 +689,7 @@ function CombinedCookContent() {
                 )}
 
                 {/* Parallel cooking hint from sequencer */}
-                {currentParallelHint && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 25,
-                    }}
-                    className="mb-3 rounded-xl bg-amber-50 border border-amber-200/60 px-3.5 py-2.5 flex items-start gap-2"
-                  >
-                    <Timer
-                      size={16}
-                      className="text-amber-600 mt-0.5 shrink-0"
-                    />
-                    <p className="text-xs text-amber-800 leading-relaxed">
-                      {currentParallelHint}
-                    </p>
-                  </motion.div>
-                )}
+                <ParallelHintBanner hint={currentParallelHint} />
                 <StepCard
                   stepNumber={currentStepIndex + 1}
                   totalSteps={currentCookSteps.length}
