@@ -22,10 +22,13 @@
 import { use } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat } from "lucide-react";
+import { ArrowLeft, ChefHat, Send } from "lucide-react";
 import { RecipeForm } from "@/components/recipe-authoring/recipe-form";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import type { RecipeDraft } from "@/lib/recipe-authoring/recipe-draft";
+import { submitForCommunityReview } from "@/lib/recipe-authoring/admin-approval";
+import { toast } from "@/lib/hooks/use-toast";
+import type { UserRecipe } from "@/types/user-recipe";
 
 export default function EditRecipePage({
   params,
@@ -35,13 +38,30 @@ export default function EditRecipePage({
   const { id } = use(params);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
-  const { drafts, mounted } = useRecipeDrafts();
+  const { drafts, mounted, upsert } = useRecipeDrafts();
 
   // UserRecipe is a strict superset of RecipeDraft (the draft has
   // four optional fields that UserRecipe always provides), so the
   // cast is safe. RecipeForm's `commitDraft` step preserves id /
   // slug / createdAt verbatim and bumps updatedAt.
   const recipe = drafts.find((r) => r.id === id);
+
+  // W48 community submission. Visible only when the user owns the
+  // recipe (source === "user") and has typed a non-empty title.
+  const handleSubmitForReview = (r: UserRecipe) => {
+    upsert(
+      submitForCommunityReview(r, {
+        now: new Date().toISOString(),
+        authorDisplayName: r.authorDisplayName ?? "A community cook",
+      }),
+    );
+    toast.push({
+      variant: "success",
+      title: `"${r.title}" submitted for verification`,
+      body: "An admin will review it for the Nourish ✓ tag.",
+      dedupKey: `submit-${r.id}`,
+    });
+  };
 
   return (
     <motion.div
@@ -73,10 +93,37 @@ export default function EditRecipePage({
           <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
         </div>
       ) : recipe ? (
-        <RecipeForm
-          initialValues={recipe as unknown as RecipeDraft}
-          mode="edit"
-        />
+        <>
+          <RecipeForm
+            initialValues={recipe as unknown as RecipeDraft}
+            mode="edit"
+          />
+          {recipe.source === "user" && (
+            <div className="mx-auto mt-2 max-w-md px-4">
+              <button
+                type="button"
+                onClick={() => handleSubmitForReview(recipe)}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--nourish-green)]/30 bg-white py-2.5 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              >
+                <Send size={14} aria-hidden /> Submit for Nourish verification
+              </button>
+              <p className="mt-1.5 px-1 text-[11px] text-[var(--nourish-subtext)]">
+                An admin will review this recipe and add a Nourish ✓ tag if
+                it&apos;s a fit. Until then it stays private to you.
+              </p>
+            </div>
+          )}
+          {recipe.source === "community" && (
+            <p className="mx-auto mt-2 max-w-md px-4 text-[11px] text-[var(--nourish-subtext)]">
+              This recipe is awaiting admin review for the Nourish ✓ tag.
+            </p>
+          )}
+          {recipe.source === "nourish-verified" && (
+            <p className="mx-auto mt-2 max-w-md px-4 text-[11px] text-[var(--nourish-green)]">
+              ✓ Verified by Nourish on {recipe.nourishApprovedAt?.slice(0, 10)}.
+            </p>
+          )}
+        </>
       ) : (
         <NotFoundCard onBack={() => router.push("/path/recipes")} />
       )}
