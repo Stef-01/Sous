@@ -41,6 +41,8 @@ const ROUTES: Route[] = [
   { path: "/path/pantry", landmark: "Pantry" },
   { path: "/path/scrapbook", landmark: /scrapbook|trophy/i },
   { path: "/path/shopping-list", landmark: "Shopping list" },
+  { path: "/path/recipes", landmark: /recipes|cook/i },
+  { path: "/path/recipes/new", landmark: /New recipe|Title/i },
 
   // Content tab + sub-routes
   { path: "/community", landmark: "Content" },
