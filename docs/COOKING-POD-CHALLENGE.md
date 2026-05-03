@@ -1,487 +1,236 @@
-# Cooking Pod Challenge — Design Brief
+# Cooking Pod Challenge — Design Brief (V2)
 
 > Status: design brief, not yet built. Brainstormed via the
 > Karpathy "think before coding" process at the request of
-> Stefan, 2026-05-02.
+> Stefan, 2026-05-02. **V2 reflects Stefan's six-question
+> answers + a mechanic pivot from streaks to score-based
+> cooking.**
 >
-> This doc captures the design hypothesis, the addiction-loop
-> analysis, the fraud-detection thinking, the social-good angle,
-> and the proposed build sequence in the 12-month plan. The
-> implementation lives in Sprint K (proposed addition); see
-> §"Build sequence" below.
-
-## TL;DR
-
-Friends or workplaces form a 2-8 person **pod**. Every Monday a
-**single weekly challenge recipe** drops, filtered through the
-pod's combined dietary constraints. Each member cooks it on their
-own time and submits a photo. **The pod's collective completion
-rate is the streak** — your friends are waiting on you, not
-some abstract gamification number. End of week → all photos drop
-simultaneously as a **pod gallery**. Optional opt-in
-**"Donate-a-Cook"** layer lets pods track meals shared with
-neighbours, charity bake-sale proceeds, etc.
-
-The mechanic is structurally novel: every fitness/learning app
-has personal streaks. Almost none have **group streaks where a
-specific person you know is the chain link**. That asymmetry is
-the bet.
-
-## Karpathy assumptions stated up front
+> The implementation slot is **Sprint I W45-W46** (squeezed
+> in; Sprint J polish stays). Sprint K (W47-W51) is now the
+> Recipe Ecosystem V2 work — see
+> `docs/RECIPE-ECOSYSTEM-V2.md`.
 
-1. **Multi-device is non-negotiable.** A pod can't live on one
-   device — by definition every member is on a different phone.
-   This means the V1 user-facing launch is **founder-gated**:
-   needs auth (Clerk) + DB (Neon Postgres) + photo storage (R2).
-   Vibecode work is substrate + mock single-device demo only.
-
-2. **Friend trust beats fraud detection.** People don't fake
-   workout photos in their close-friend running clubs. They
-   might in an anonymous global leaderboard. Pod size cap 8 +
-   self-curated invite list keeps social trust in play. V1
-   ships with timestamp-only verification; AI dish recognition
-   is a V2 polish.
+## Stefan's six-question answers (V2 anchor)
 
-3. **The challenge is OPT-IN at every layer.** Users who don't
-   join a pod see nothing. Users in a pod can skip a week
-   without breaking their friendship. Pods can disable the
-   leaderboard entirely if it stresses them out (just use the
-   gallery).
+| Question                           | V1 design            | Stefan's V2 directive               |
+| ---------------------------------- | -------------------- | ----------------------------------- |
+| Sprint scope                       | Sprint K (W47-W51)   | **Squeeze into Sprint I** (W45-W46) |
+| Vibecode-only V1 acceptable?       | Open                 | **Yes**                             |
+| Reveal cadence                     | Sunday 9pm pod-local | **Sunday pod-local (kept)**         |
+| Pod admin model                    | Single creator       | **Shared admin** (multi-admin)      |
+| Recipe pool                        | Seed + user          | **Seed only**                       |
+| Donate-a-Cook V1 honour-system OK? | Open                 | **Yes (kept)**                      |
 
-4. **No accounts inside the app for V1.** Pod identity = user's
-   Clerk identity (whenever Clerk lands). No separate login.
+Plus the load-bearing change: **drop the streak; use cook scores instead.**
 
-5. **The 12-month plan currently has no entry for this.** Sprint
-   I (W42-W46) is "cook-along community moments" — adjacent,
-   but the simpler/older version. Sprint K (W47-W52) is
-   currently "2nd-pass polish on H2 surfaces"; we propose
-   replacing some of that with the pod challenge build (and
-   pushing polish into Year-2).
+## Mechanic pivot — from streak loss aversion to score-based cooking
 
-## The addiction loop — what makes pods STICKY
+V1 anchored on group streak loss aversion ("don't be the one who broke the chain"). Stefan's directive shifts the mechanic to **positive-reinforcement scoring** with structural protections:
 
-Five levers, ranked by load-bearing-ness:
+- Each completed cook earns a **0-100 score** combining visual aesthetic + quality.
+- **Hard cap: 2 cooks per member per day.** Prevents one person farming all the points.
+- **Pod-consistency multiplier** rewards even distribution. A pod where all members cook ~equally gets full score; a pod where one person carries gets multiplied down.
+- Pod's weekly score = `sum(member_scores) × consistency_multiplier`.
 
-### 1. Group streak loss aversion (LOAD-BEARING)
+This trades anxiety (streak pain) for craft signal (better cooks score higher) + collective growth (consistency rewards everyone, not just the leader).
 
-Personal streaks: "I broke my 12-day streak" — abstract pain.
+### Why this is structurally better
 
-Group streaks: "Maya and Ben cooked it Tuesday. I'm the one who
-hasn't. They're going to notice." Concrete pain. The streak isn't
-yours alone — it's a chain where you're a link, and the rest of
-the chain has names you actually care about.
+1. **Aligns with CLAUDE.md rule 1.** The Today screen exists to make the user cook. Score-based feedback directly rewards the cooking act, not its absence.
+2. **Removes the failure mode where it becomes a chore.** No streak to break = no panic-cooking on Saturday night.
+3. **Lets quality matter.** A rushed-but-edible cook still counts (it's a completed cook), but doesn't pull the same weight as a well-plated, well-cooked one. The user who cooks well gets recognition, the user who cooks badly still participates without shame.
+4. **Caps farming via 2/day limit.** A motivated member can't grind 10 cooks in a single afternoon to dominate.
+5. **Pod consistency multiplier creates positive peer pressure WITHOUT loss aversion.** Helping a teammate cook (sending them encouragement, suggesting easy weeknight options) is the natural play, not stress about your own chain.
 
-Implementation:
+### Per-cook score formula (V1 — pure, testable)
 
-- Pod has a "weeks completed" counter. A week is "complete" when
-  ≥ N% of members submitted (default N=70, configurable per pod
-  to accommodate vacation / sick / etc.).
-- Streak resets to 0 if completion drops below threshold.
-- Each member's individual streak ALSO tracks within the pod —
-  but the salient number is the pod's, not theirs.
+```
+cook_score = (
+  step_completion_score × 0.30 +
+  self_rating_score     × 0.30 +
+  aesthetic_score       × 0.40
+) × 100   // scale 0-100
+```
 
-### 2. Dropped-simultaneously photo gallery
+Where:
 
-Sunday 9pm pod-local time: all submitted photos drop together.
-Before then, members see "Maya cooked it" but no photo. The
-moment of simultaneous reveal turns a week of solo cooking into a
-single shared event.
+- **step_completion_score** ∈ [0, 1]: fraction of guided cook steps the user actually tapped through (vs skipping ahead). Already tracked by the cook store. Rewards the user for engaging with the guided flow rather than just snapping a photo of something they made off-app.
+- **self_rating_score** ∈ [0, 1]: user's 1-5 star rating of their own cook, normalised. Already collected by the win screen. Self-rating gives the user agency — a 5-star self-rating signals "I'm proud of this cook" which is the right anchor.
+- **aesthetic_score** ∈ [0, 1]: AI vision aesthetic score (V2 with OpenAI Vision; **V1 vibecode default = 0.5 placeholder**). When the AI lands, scores composition, plating, lighting heuristics. Doesn't judge correctness — that's what self-rating + step-completion handle.
 
-Why this works: it's the same dramaturgy as a Friday-night group
-text catching up on the week. Manufactured, but effective.
+**Bonus** (optional, additive):
 
-Implementation:
+- **+5** if the user submitted a non-empty caption ("what I'd do differently")
+- **+5** if the user used a per-step image (visual-mode authored)
 
-- Submissions stored privately until end-of-week
-- All released at once at a pod-set "reveal time"
-- Push notification fires: "Your pod's gallery just dropped"
-- Three reaction emoji per photo (👏 ❤️ 🔥) + nothing else (no
-  comments in V1 — keeps the surface gentle)
+Capped at 100.
 
-### 3. Variable creative reward
+### Daily cap enforcement
 
-Same recipe, but each pod member plates their own. The
-constraint (the recipe) plus the latitude (your kitchen, your
-plating, your photo angle) is the structure that creates novelty
-without choice paralysis. This is the same shape as Wordle: same
-puzzle, different individual experience.
+```
+daily_cooks(member, day) ≤ 2
+```
 
-Implementation:
+The 3rd cook of the day still completes (user can still cook!) but doesn't add to the pod's weekly score. The win screen surfaces a small "you've earned today's pod max — cook for joy" message when the cap is hit. **No nag, no block on the cook itself.**
 
-- Recipe has a base spec, but the pod can vote each week on a
-  "twist" (vegetarian / spicy / leftover-mode / kids-cook /
-  budget). Top-voted twist becomes the constraint.
-- No required caption. Optional 1-line "what I'd do differently"
-  field surfaces in the gallery.
+### Pod-consistency multiplier
 
-### 4. Lightweight social proof during the week
+```
+individual_totals = [sum(m.scores_this_week) for m in active_members]
 
-Mid-week mid-app glance: "3 of 6 cooked. You and Casey haven't
-yet." Not nagging. Not push-notification-spammy. Just visible
-when the user opens /community/pod.
+if len(active_members) < 2 or sum(individual_totals) === 0:
+  consistency_multiplier = 1.0  // edge case: no penalty when there's nothing to compare
+else:
+  μ = mean(individual_totals)
+  σ = std(individual_totals)
+  cv = σ / μ                                // coefficient of variation
+  consistency_multiplier = clamp(1 - cv * 0.5, 0.5, 1.0)
 
-Implementation:
+pod_weekly_score = sum(individual_totals) × consistency_multiplier
+```
 
-- Pod-home page shows a small "this week" tile with the
-  challenge recipe + member completion list (avatars + checkmark).
-- ZERO outbound notifications until the Sunday reveal.
+So:
 
-### 5. Identity reinforcement
+- **Perfect even distribution** (cv = 0): multiplier 1.0, full score.
+- **Moderate variance** (cv = 0.4): multiplier 0.8.
+- **Wildly uneven** (one carrier, others zero): cv ≈ √(N-1)/N → multiplier 0.5 floor.
 
-"I'm someone who cooks for my friends every week" is a stronger
-identity than "I'm someone who logs my meals". The pod surfaces
-the identity claim back to the user (badge/title in /path:
-"Pod-cook for 14 weeks").
+The 0.5 floor matters: even a wildly uneven pod still gets half their raw score. This is positive-sum, not zero-sum. The carrier isn't penalised personally — the pod just multiplies down. The carrier can lift the whole pod's score by inviting / encouraging the others.
 
-Implementation:
+### Vacation-mode interaction
 
-- /path gains a small "Pod" sub-tile in the Your Kitchen grid
-  showing pod streak + photo count
-- New XP_AWARDS entry: pod_completion += 30 (vs. 10 for solo cook)
+Members in vacation mode (3 missed weeks) drop out of the `active_members` denominator for the week. So a 6-member pod with 2 vacationing has its consistency computed across the 4 active members. No silent penalty.
 
-## Friction analysis — what makes pods FAIL
+### Anti-gaming notes
 
-### Failure mode 1: invite-friction kills adoption
+- A pod can't game the multiplier by everyone scoring 0 — `sum(totals) === 0` short-circuits to 1.0 multiplier, which means the pod score is also 0. Correct outcome.
+- Self-rating fraud (always rating 5 stars) is bounded by the 30% weight — even a gaming user can only push the score up by 30 points × 2 cooks/day = 60 per day, which gets multiplied down by consistency if they're the only carrier.
+- Step-completion fraud requires actually opening the cook flow and tapping through, which is the desired behaviour anyway.
 
-Pod creator: "Cool, I'll send the code to 5 people." 4 of them
-forget. 1 joins, can't see anyone else, loses interest.
+## Sunday-night pod-local gallery (kept from V1)
 
-**Mitigation:** invite via deeplink (one tap on iOS Messages →
-opens Sous → joins pod → done). Falls back to 6-digit code for
-non-Sous users (they install + redeem on first open).
+Sunday 9pm pod-local: photos drop simultaneously. Member completion list visible mid-week (binary, no day-of-cook info). Three reaction emoji per photo (👏 ❤️ 🔥), no comments. Same dramaturgy.
 
-### Failure mode 2: dietary mismatch kills the recipe
+**New** — gallery shows individual scores + the pod's consistency multiplier + the weekly total. The number is the takeaway: "You guys cooked 287 points × 0.91 consistency = 261 this week."
 
-Pod has a vegan member. Week's recipe is shrimp scampi. Vegan
-member can't participate.
+The score is grounded in the photos — you can see who got the high aesthetic score (it's the pretty plate). This makes the score trustable and a fun comparison surface.
 
-**Mitigation:** Pod creation captures dietary constraints (auto-
-populated from each member's household-memory profile from
-Sprint G/H). Weekly challenge picker filters via the **union**
-of all dietary flags. Worst case: the pod has overlapping
-constraints so tight that the recipe pool empties — pod admin
-sees this and can manually override.
+## Shared admin model
 
-### Failure mode 3: schedule mismatch creates anxiety
+Multi-admin per pod (Stefan's directive). Any admin can:
 
-Pod sees Maya cooked Monday. Now everyone feels like they should
-have cooked Monday. By Friday those who haven't started are
-stressed.
+- Pause the pod for a week ("vacation week")
+- Configure dietary constraints
+- Set the Sunday reveal time (default 9pm pod-local)
+- Boot a member (with confirmation)
+- Promote another member to admin
 
-**Mitigation:** Don't show day-of-cook publicly. Just show "did
-or didn't" — binary. Member-private "I cooked it Tuesday" detail
-isn't surfaced until the Sunday gallery drops.
+Single point of failure removed: if the founder leaves, the pod doesn't dissolve.
 
-### Failure mode 4: end-of-week reveal needs real-time feel
+UI: small star icon on admin members in the gallery. "Admin" badge on the pod home for current user when applicable.
 
-A real-time reveal needs a backend timer that nudges all clients
-simultaneously. Vibecode-doable but adds complexity.
+## Friction failure modes (V2 — same six modes, mechanic pivot updates the analysis)
 
-**Mitigation:** Each client polls for the pod's reveal_at
-timestamp (set by the server when the challenge week ends).
-Client-side comparison-to-now triggers the reveal UI. No
-WebSocket. Cheap.
+1. **Invite friction kills adoption** — same mitigation as V1 (deeplinks + 6-digit fallback).
+2. **Dietary mismatch** — same: pod creation captures union of all members' household-memory dietary flags from Sprint G/H. Weekly challenge filters via the union.
+3. **Schedule anxiety** — V1 fix (binary completion, no day-of-cook) STILL APPLIES, plus the score model removes the streak pressure that drove the anxiety in the first place.
+4. **End-of-week reveal** — same mitigation: client-side polling on `reveal_at` timestamp.
+5. **Member dropout** — auto-pause "vacation mode" after 3 missed weeks, drops out of the consistency-multiplier denominator.
+6. **Becoming a chore** — substantially mitigated by the pivot. Score-based + 2/day cap + admin pause week = no anxiety driver.
 
-### Failure mode 5: a member drops out
+## Fraud detection — V1 unchanged
 
-Person leaves the pod or stops engaging. Pod size shrinks, harder
-to maintain threshold completion rate.
+- Server timestamp on submit (when auth lands)
+- Single submission per member per day (and 2/day cap)
+- Perceptual hash dedupe across submissions
+- EXIF date-taken sanity check
+- Cook-session-time correlation
 
-**Mitigation:** Auto-pause: if a member misses 3 weeks straight,
-they're moved to "vacation mode" (don't count toward the
-denominator). They can re-engage anytime.
+V2 (post-launch): OpenAI Vision dish recognition + cross-pod hash check.
 
-### Failure mode 6: it becomes a chore
+## Social-good angle — Donate-a-Cook (V1 honour-system, kept)
 
-The whole thing dies if cooking-for-friends starts feeling like
-a job.
+Three opt-in tags at submit time:
 
-**Mitigation:** Pod admin can pause the pod for a week.
-"Vacation week: no challenge — see you next Monday." Single tap.
-This is the most important affordance — opt-out without leaving.
+- 🥡 **"Shared a portion"**
+- 🍰 **"For the bake-sale"**
+- 🤝 **"Cooked together"**
 
-## Fraud detection — Karpathy "don't over-engineer"
+Aggregates per pod. Visible in the gallery sub-line. No payment integration in V1.
 
-The user surfaced this as a concern: photo timestamping + fraud
-detection. Worth thinking through but **not the load-bearing
-piece**.
+V2: Pod-Pledge-Cook (Stripe + curated nonprofit list). V3: Bake-sale tooling.
 
-### What we ship in V1
+## Where it lives in the app (kept minimal per CLAUDE.md rule 6)
 
-Cheap, real, pragmatic:
+`/community/pod` — pod home with three states (no-pod CTA / mid-week / gallery reveal).
 
-1. **Server-side timestamp on submit.** The photo's
-   `submittedAt` is set by the server, not the client. Can't
-   backdate.
-2. **Single submission per member per week.** Resubmissions
-   replace the old photo and bump submittedAt. Pod members can
-   see if you resubmitted multiple times.
-3. **No reuse across pods or weeks.** Image hash check (perceptual
-   hash, not cryptographic) — same photo submitted twice gets
-   flagged.
-4. **EXIF date-taken comparison.** If the photo's EXIF
-   `DateTimeOriginal` is more than 7 days before submittedAt,
-   flag it for the pod admin (don't block; just surface).
-5. **Photo carries the cook-session timestamp from the app.** If
-   the user used the in-app photo affordance during a cook
-   session, the photo carries that session's start time as
-   metadata. This is the strongest signal for non-fraudulent
-   submissions.
+One tile in the Content tab home grid. NOT a separate top-level tab.
 
-That's it. No AI. No blockchain. Friend trust does the heavy
-lifting.
+Win-screen integration: when the user is in a pod and the dish matches the week's challenge, the photo upload shows a "Submit to pod challenge" toggle. Score breakdown surfaces on the win screen after submit ("step completion: 92%, your rating: 5★, aesthetic: pending → score: 56/100").
 
-### What lands in V2 (post-launch)
+**No new flow to learn for the user who's already cooking.**
 
-- **OpenAI Vision dish recognition** — at submit time, vision
-  model checks "does this look like ${challengeRecipe.name}?".
-  Outputs a confidence score; pod admin sees flagged-low. Doesn't
-  block submission.
-- **Cross-pod hash check** — photo hash compared against ALL
-  prior submissions to ANY pod for that recipe. Catches "borrowed
-  photo from Instagram" attacks.
-- **Time-correlation with the cook session log** — submission
-  must align with a recent cook session for the challenge recipe
-  in the user's local cook history.
+## Build sequence — Sprint I W45-W46 (squeezed)
 
-### What we don't ship
+Two weeks. Vibecode V1 is single-device mock; multi-device public launch is Year-2 W1-W4.
 
-- Cryptographic timestamping (overkill)
-- Public-key photo signing (overkill)
-- Zero-knowledge proofs (insane overkill)
-- Anti-spoof liveness checks (this isn't TikTok)
+### W45 — Schema + score helpers + per-cook score logic
 
-If the social-trust layer holds, fraud detection above V1
-isn't needed.
+- `ChallengePod`, `PodMember`, `PodAdmin[]`, `PodChallengeWeek`, `PodSubmission` Zod schemas (W17 pattern).
+- localStorage-hook substrate `useCurrentPod` (single-pod-per-device V1).
+- Pure helpers in `src/lib/pod/`:
+  - `weekKey(date, podTimezone)` → "2026-W18"
+  - `aggregateDietaryFromMembers(members)` (composes with W35 `aggregateTable`)
+  - `computeCookScore({ stepCompletion, selfRating, aesthetic, captionLength, hasStepImage })` → 0-100
+  - `computeConsistencyMultiplier(individualTotals)` → 0.5-1.0
+  - `computePodWeeklyScore(submissions, members)` → { raw, multiplier, total }
+  - `enforceDailyCap(submissions, dayKey, maxPerDay = 2)` (filters submissions past cap)
+  - `shouldRevealGallery(weekStartedAt, revealAtHour, now, podTimezone)`
+- Tests: 30+ for the score math (boundary conditions, monotonicity invariants, daily-cap enforcement, multiplier floor at 0.5, even-distribution → 1.0 multiplier, edge cases when sum is 0 or single-member).
 
-## Social-good angle — opt-in layer
+**Acceptance:** all helpers unit-tested; types compile; no UI yet.
 
-The user mentioned charity / bake-sale. Don't force it; offer it.
+### W46 — Pod home + win-screen integration + Sprint I IDEO close
 
-### Donate-a-Cook (V1 — soft)
+- `/community/pod` page (3 states: no-pod CTA, mid-week, gallery).
+- Photos rendered in the gallery with score breakdown chips.
+- Pod creation form (`/community/pod/create`) + invite-code (`/community/pod/join`).
+- Win-screen `Submit to pod challenge` toggle when active.
+- Score-breakdown chip on win screen post-submit.
+- Sprint I IDEO close doc.
 
-When submitting a photo, the user can tag:
+**Acceptance:** all three states render with mock fixtures; win-screen submit writes to local pod state; gallery shows 4-photo grid with scores; admin pause/vacation flow works; localStorage round-trip of a 6-member pod with 5 weeks of submissions.
 
-- 🥡 **"Shared a portion"** — cooked extra for a neighbour /
-  coworker / homeless shelter / etc.
-- 🍰 **"For the bake-sale"** — pod is doing a real-world
-  bake-sale; this cook is a contribution.
-- 🤝 **"Cooked together"** — pod members cooked simultaneously
-  in person or on a video call.
+## What we're NOT shipping in Sprint I (deferred)
 
-These tags aggregate to a pod-level counter visible in the
-gallery. No payment integration. Self-reported. The honour
-system works in friend groups.
+- Real multi-device backend (Y2 W1-W4: Postgres + Clerk + R2)
+- AI vision aesthetic scoring (Y2 W5+: OpenAI Vision integration; V1 default 0.5 placeholder)
+- Pod-Pledge-Cook financial donation (Y2 W6+: Stripe + nonprofit list)
+- Workplace pods (Y2 W7+)
+- City-level aggregate (Y2 W8+)
+- AI fraud detection (Y2 W9+)
 
-### Pod-Pledge-Cook (V2 — financial)
+## Open questions resolved by Stefan (V2)
 
-Pod commits to donating $X per completed-week to a chosen
-nonprofit. Charged to the pod admin's card monthly. Receipts
-surface in the gallery. Founder-gated: needs Stripe + nonprofit
-list curation.
+All six V1 open questions are now answered. **No new open questions.**
 
-### Recipe-from-Charity weeks (V2 — content)
+## Why this is a good Year-1 bet (kept from V1)
 
-Sous curates recipes from refugee kitchens / community-supported
-farms / nonprofit cookbooks. Pod cooks them; portion of platform
-revenue flows to the source. Founder-gated: needs editorial
-workstream + revenue share agreements.
-
-### Bake-sale tooling (V3 — civic infrastructure)
-
-For pods running real bake-sales: shared shopping list, role
-assignment, table-staffing schedule, a "we raised $X for Y"
-post-mortem card the pod can share. Not a payment processor —
-just coordination. Founder-gated: real surface area, real users
-needed first.
-
-## Where it lives in the app
-
-User said "content/community section somewhere minimal." Right.
-
-### The home
-
-`/community/pod` — pod home. Three states:
-
-1. **No pod yet (most users)** — small "Cook with friends"
-   tile inviting pod creation or invite-code redemption. One tap.
-2. **In a pod, mid-week** — challenge recipe card + member
-   completion list (binary, no day-of-cook info) + a "Cook this
-   week's challenge" button that deeplinks to /cook/<slug> with
-   the pod context attached.
-3. **In a pod, gallery week** — photo grid of all submissions +
-   reaction emoji per photo + the optional "what I'd do
-   differently" line + pod stats (streak, total cooks, meals
-   shared).
-
-### Entry point in the existing nav
-
-The Content tab gains one tile in its home grid. Stays minimal
-per CLAUDE.md rule 6. The pod challenge is NOT a separate
-top-level tab; it sits inside Content.
-
-### Cook-flow integration
-
-The Win screen on `/cook/[slug]` gets a single new affordance:
-when the user is in a pod and the dish matches the week's
-challenge, the photo upload shows a "Submit to pod challenge"
-toggle. One tap. Inherits from existing handleAddPhoto.
-
-That's it. **No new flow to learn for the user who's already
-cooking.**
-
-### What's NOT in the surface
-
-- No public city leaderboard in V1 (adds anxiety, requires
-  moderation)
-- No comments (just emoji reactions)
-- No DMs between pod members
-- No notifications until the Sunday reveal
-- No real-time chat
-- No public profile pages
-
-## Build sequence — proposed Sprint K (W47-W52)
-
-The current 12-month plan has W47-W51 as "2nd-pass polish on
-H2 surfaces" and W52 as Year-1 close. We propose:
-
-- Push polish to early Year-2 (most surfaces are already at 4.0+
-  per the Sprint H IDEO)
-- Sprint K = Cooking Pod Challenge build
-- W52 stays Year-1 close
-
-### W47 — Schema + pure helpers
-
-`ChallengePod`, `PodMember`, `PodChallengeWeek`, `PodSubmission`
-zod schemas. localStorage-hook substrate (single-pod-per-device
-V1). Pure helpers: `weekKey(date)`, `aggregateDietaryFromMembers`,
-`computePodCompletion(submissions, members, threshold)`,
-`shouldRevealGallery(weekStartedAt, now)`. Tests for everything.
-
-**Acceptance:** all helpers unit-tested; types compile; no UI.
-
-### W48 — `/community/pod` home (mock single-device)
-
-Pod home page. Pre-hydration skeleton, no-pod CTA, in-pod
-mid-week view, in-pod gallery view. Reads from a single localStorage
-pod fixture — multi-device wiring is W51 founder-unlock.
-Win-screen integration: "Submit to pod challenge" toggle when the
-fixture indicates an active challenge.
-
-**Acceptance:** all three states render correctly with mock
-fixtures; toggle on win screen writes to the local pod state;
-gallery shows a 4-photo grid.
-
-### W49 — Pod creation + invite-code flow (mock)
-
-Pod creation form (name, member roster, dietary intersection
-display). Invite code generation (6-digit, localStorage-only).
-Redemption page at `/community/pod/join` accepts a code and
-mock-joins. Photo dedupe via perceptual hash.
-
-**Acceptance:** localStorage round-trip of a 4-member pod creation
-
-- 4 mock submissions; reveal-time computation lands at Sunday
-  9pm pod-local; perceptual hash dedupes the same photo.
-
-### W50 — Donate-a-Cook tagging + dietary-aware challenge picker
-
-Photo submission gains the three opt-in tags (shared / bake-sale
-/ cooked-together). Pod-home gallery aggregates the counts.
-Weekly challenge picker (deterministic, week-key-seeded) filters
-the seed catalog by the pod's dietary union and picks a recipe.
-
-**Acceptance:** pod with any dietary constraint surfaces only
-compatible recipes; tags surface in the gallery sub-line.
-
-### W51 — Founder-unlock prep + IDEO Sprint-K close
-
-Schema-on-Postgres prep stub. R2 photo upload contract stub.
-Stripe + nonprofit list research note (Donate-a-Cook V2 prep).
-IDEO review.
-
-**Acceptance:** founder-unlock-runbook gets a new entry; all
-mock-multi-device wires have explicit "→ Postgres" comments at
-the swap points; IDEO close doc shipped.
-
-### W52 — Year-1 close (unchanged from existing plan)
-
-`docs/YEAR-1-RETROSPECTIVE.md` + Year-2 kickoff. The pod challenge
-infrastructure ships behind a flag; surfaces visible to the
-founder + flagged users only. Public launch is a Year-2 W1-W4
-beat (auth + DB + R2 + Stripe).
-
-## Year-2 follow-on (post-W52)
-
-### Y2 Sprint A: Pod backend + auth + R2 (founder-gated)
-
-Real multi-device pods. Postgres tables, Clerk-tied membership,
-R2 photo storage, server-side reveal scheduling, push notifications.
-
-### Y2 Sprint B: Workplace pods
-
-Email-domain auto-grouping. Workplaces ≥ 8 members get optional
-sub-pods (departments). Anonymous-mode for shy participants.
-
-### Y2 Sprint C: City-level aggregate
-
-Opt-in "your city cooked X meals this week" feel-good number.
-NOT a leaderboard between pods (anxiety / moderation surface).
-
-### Y2 Sprint D: AI verification + Pod-Pledge-Cook
-
-OpenAI Vision dish recognition. Stripe + curated nonprofit list.
-Pod-Pledge-Cook financial donation flow.
-
-### Y2+: Bake-sale tooling, charity recipe weeks, pod marketplace
-
-Long-tail features that depend on real-user signal.
-
-## Why this is a good Year-1 bet
-
-Three reasons it should land in Year-1 rather than Year-2:
-
-1. **It compounds the Year-1 work.** Household memory (Sprint G+H),
-   pairing engine V2, recipe authoring, attention pointers — all
-   were built for individual users. Pods are the multi-user
-   surface that makes those investments visible to the user's
-   friends.
-
-2. **It's the "what's the moat" answer.** A recipe app's moat is
-   either content (which we don't own) or social structure
-   (which we can build). Pods are social structure with cooking
-   as the substrate. A user who's in a 6-week pod streak with
-   their college friends doesn't churn.
-
-3. **It's the most plausible viral loop in the product.** "Join
-   my Sous pod, here's the code" is share-able in a way that
-   "try this app I like" isn't. The invite is functional, not
-   promotional.
+1. Compounds Year-1 work — household memory, pairing engine V2, recipe authoring, attention pointers were built for individual users. Pods are the multi-user surface that makes those investments visible to the user's friends.
+2. Social structure is the moat. Recipe content isn't owned; user's pod relationships are.
+3. "Join my Sous pod, here's the code" is share-able in a way "try this app" isn't.
 
 ## What would kill this feature
 
-- If we ship V1 with a real backend before validating that
-  friend groups will actually form pods
-- If we ship the leaderboard before the gallery (anxiety > joy)
-- If we let pods grow beyond 8 (intimacy lost)
-- If we enable city/global leaderboards in V1 (moderation
-  problem)
-- If we monetise the social-good angle in V1 (legitimacy
-  question)
+- If we rebuilt the streak mechanic by accident (anxiety > joy)
+- If we let the 2/day cap leak in a way that lets carriers dominate
+- If we shipped AI aesthetic scoring before validating self-rating + step-completion are sufficient signals on their own
+- If pods grew beyond 8 (intimacy lost)
+- If we monetised the social-good angle in V1 (legitimacy question)
 
-## Open questions for Stefan
+## Companion docs
 
-1. **Sprint K scope:** is replacing W47-W51 polish with pod-
-   challenge build the right call, or should we squeeze a
-   smaller pod MVP into Sprint I (cook-along) and keep the
-   polish week?
-2. **Vibecode-only V1 acceptable?** Single-device mock with
-   "Pod backend lands Year-2" caveat — vs. delaying the design
-   ship until auth/DB are unlocked.
-3. **Reveal cadence:** weekly Sunday 9pm pod-local. Is that
-   right? Some pods may want Friday or Saturday.
-4. **Pod admin model:** single creator-as-admin, or shared
-   admin?
-5. **Recipe pool for the weekly pick:** seed catalog only, or
-   include user-authored fork recipes?
-6. **Donate-a-Cook V1 honour-system OK?** Or wait for Stripe.
+- `docs/RECIPE-ECOSYSTEM-V2.md` — Stefan's directives on recipe storage modernisation, source tagging, reel-to-cook integration, agentic autogen, and sharing. Sprint K W47-W51.
+- `docs/STAGE-3-VIBECODE-AUTONOMOUS-12MO.md` — 12-month plan with Sprint I (W45-W46 pod) + Sprint K (W47-W51 recipe ecosystem) slots updated.
+- `docs/FOUNDER-UNLOCK-RUNBOOK.md` — backend / Stripe / R2 / Vision-API integration plan for Year-2.

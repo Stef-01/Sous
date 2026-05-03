@@ -504,100 +504,177 @@ A 7-day meal plan that drives the shopping list.
 
 ### W41 — IDEO Sprint-H close + Stanford content run #9
 
-## Sprint I (W42-W46) — Stage-7 W1: cook-along community moments
+## Sprint I (W42-W46) — Stage-7 W1: content polish + Cooking Pod MVP
 
-Async "cook the same dish at the same time" — a shared moment
-without a real-time backend. Vibecode-scoped: localStorage
-"signal that you cooked X today", surface to other devices via a
-shared deeplink, no actual server. Real backend version is
-founder-unlock.
+> **Plan revision 2026-05-02:** original cook-along entries
+> partially shipped under different names during the autonomous
+> build (W42 = `/sides` filter hint, W43 = recipe templates,
+> W44 = attention-pointer authoring). **W45-W46 now squeeze in
+> the Cooking Pod Challenge MVP per Stefan's directive** —
+> see `docs/COOKING-POD-CHALLENGE.md`.
 
-### W42 — "Tonight's chef pick" deeplink generator
+### W42 — `/sides` household-filter visual hint (shipped 4210b6b)
 
-### W43 — Receive-side cook-along surface
+`HouseholdFilterHint` banner surfaces active dietary flags on
+`/sides` so the user understands why pairings are narrowed.
+Closes the Sprint H IDEO carry-forward.
 
-### W44 — Asynchronous reaction trail
+### W43 — Recipe-authoring template library (shipped f9dbdc4)
 
-### W45 — Cook-along result aggregator (per-device)
+`RECIPE_TEMPLATES` manifest + `seedToRecipeDraft` adapter +
+`/path/recipes/new?fork=<slug>` flow. 6-template "Start from a
+template" row on `/path/recipes`. 21 new tests.
 
-### W46 — IDEO Sprint-I close
+### W44 — Attention-pointer authoring + adapter passthrough (shipped 8fd8869)
 
-## Sprint K (W47-W51) — Stage-7 W2: Cooking Pod Challenge
+Schema migration adds `attentionPointers` to `userStepSchema`.
+Textarea-based authoring (`circle: 0.3, 0.5 - watch the bubbles`)
+with structured parse + serialise round-trip. 21 new tests.
 
-> **Plan revision 2026-05-02:** Sprint J's "2nd-pass polish on H2
-> surfaces" is pushed to early Year-2 (most surfaces are already
-> at 4.0+ per the Sprint H IDEO review). Sprint K replaces that
-> polish week with the Cooking Pod Challenge build per
-> `docs/COOKING-POD-CHALLENGE.md`. Polish carries forward into
-> Y2 W1-W2.
+### W45 — Cooking Pod schema + score helpers (substrate)
 
-Friends or workplaces form a 2-8 person pod. Every Monday a
-weekly challenge recipe drops, filtered through the pod's
-combined dietary constraints. Each member cooks it on their
-own time and submits a photo. The pod's collective completion
-rate is the streak. Sunday 9pm pod-local: photos drop
-simultaneously as a gallery. Optional Donate-a-Cook layer
-tracks meals shared / charity bake-sale proceeds.
+> Implements the V2 design from `docs/COOKING-POD-CHALLENGE.md`.
+> Mechanic anchor: **completed-cook scores** (visual aesthetic +
+> quality), 2 cooks/day cap, pod-consistency multiplier.
+> Streaks explicitly OUT.
 
-V1 is **founder-gated** for the public launch (needs auth +
-Postgres + R2). Sprint K ships the substrate + single-device
-mock UI; Year-2 W1-W4 swaps localStorage → Postgres + Clerk +
-R2 for the multi-device flow.
+- `ChallengePod`, `PodMember`, `PodAdmin[]` (shared admin),
+  `PodChallengeWeek`, `PodSubmission` Zod schemas.
+- localStorage-hook substrate `useCurrentPod` (single-pod-per-
+  device V1; Stefan-confirmed vibecode acceptable).
+- Pure helpers in `src/lib/pod/`:
+  - `weekKey(date, podTimezone)` → "2026-W18"
+  - `aggregateDietaryFromMembers(members)` (composes with W35)
+  - `computeCookScore({ stepCompletion, selfRating, aesthetic,
+captionLength, hasStepImage })` → 0-100
+  - `computeConsistencyMultiplier(individualTotals)` → 0.5-1.0
+  - `computePodWeeklyScore(submissions, members)` →
+    `{ raw, multiplier, total }`
+  - `enforceDailyCap(submissions, dayKey, maxPerDay = 2)`
+  - `shouldRevealGallery(weekStartedAt, revealAtHour, now,
+podTimezone)` (Sunday 9pm pod-local default per Stefan)
 
-See `docs/COOKING-POD-CHALLENGE.md` for the full design brief
-including addiction-loop analysis, friction modes, fraud-
-detection thinking, social-good integration, and open
-questions.
+**Acceptance:** 30+ tests for the score math: boundary
+conditions, monotonicity, daily-cap enforcement, multiplier
+floor at 0.5, even-distribution → 1.0 multiplier, edge cases
+(sum=0, single-member). Types compile; no UI yet.
 
-### W47 — Schema + pure helpers (substrate)
+### W46 — Pod home + win-screen integration + Sprint I IDEO close
 
-`ChallengePod`, `PodMember`, `PodChallengeWeek`, `PodSubmission`
-zod schemas. localStorage-hook substrate (single-pod-per-device
-V1). Pure helpers: `weekKey(date)`, `aggregateDietaryFromMembers`,
-`computePodCompletion(submissions, members, threshold)`,
-`shouldRevealGallery(weekStartedAt, now)`. All unit-tested.
+- `/community/pod` page (3 states: no-pod CTA, mid-week,
+  gallery reveal). One tile in the Content tab home grid.
+- Pod creation form (`/community/pod/create`) — captures name,
+  shared-admin roster, dietary intersection (auto-pulled from
+  member household-memory profiles), Sunday reveal time.
+- `/community/pod/join` invite-code redemption (6-digit,
+  localStorage-only V1).
+- Win-screen `Submit to pod challenge` toggle when active.
+  Score breakdown chip post-submit ("step completion: 92%,
+  rating: 5★, aesthetic: pending → 56/100").
+- Three reaction emoji per gallery photo (👏 ❤️ 🔥), no
+  comments. Donate-a-Cook tags (🥡 🍰 🤝) honour-system.
+- Sprint I IDEO close doc.
 
-**Acceptance:** all helpers unit-tested; types compile; no UI.
+**Acceptance:** all three states render with mock fixtures;
+win-screen submit writes to local pod state with score
+breakdown; gallery shows 4-photo grid with score chips and
+consistency multiplier; admin pause/vacation flow works;
+localStorage round-trip of a 6-member pod with 5 weeks of
+submissions.
 
-### W48 — `/community/pod` home (mock single-device)
+## Sprint J (W47-W51) — Stage-7 W2: Recipe Ecosystem V2
 
-Pod home page with three states (no-pod CTA, mid-week, gallery
-reveal). Reads from a single localStorage pod fixture.
-Win-screen integration: "Submit to pod challenge" toggle when
-the cooked dish matches the active challenge.
+> **Plan revision 2026-05-02:** original "2nd-pass polish on
+> H2 surfaces" pushed to early Year-2 (most surfaces are
+> already at 4.0+ per the Sprint H IDEO). Sprint J replaces
+> that polish week with the Recipe Ecosystem V2 build per
+> Stefan's 2026-05-02 directive — see
+> `docs/RECIPE-ECOSYSTEM-V2.md`.
 
-**Acceptance:** all three states render; toggle on win screen
-writes to local pod state; gallery shows a 4-photo grid.
+Five Stefan-mandated upgrades, all under CLAUDE.md rule 6
+(simplicity-first):
 
-### W49 — Pod creation + invite-code flow + photo dedupe
+1. Source tagging (`user` / `community` / `nourish-verified`)
+   with admin approval flow
+2. Reel-to-cook integration (one-tap "Cook this" on
+   `/community/reels`)
+3. Agentic recipe autogen — frictionless first-draft creation
+   from plain-text description
+4. Sharing — clipboard deeplink to the cook flow
+5. Strictly minimalist surface; no new top-level tabs
 
-Pod creation form (name, member roster, dietary intersection
-display). Invite code (6-digit, localStorage-only). `/community/pod/join`
-redemption page. Perceptual-hash photo dedupe at submit time.
+### W47 — Source tagging schema + filter UI
 
-**Acceptance:** localStorage round-trip of a 4-member pod; reveal
-time computed Sunday 9pm pod-local; perceptual hash dedupes the
-same photo across two submissions.
+- `userRecipeSchema` adds `source` ("user" | "community" |
+  "nourish-verified"), `nourishApprovedAt`, `nourishApprovedBy`,
+  `authorDisplayName` fields. Migration helper defaults legacy
+  records to `source: "user"`.
+- `useRecipeFilter` hook (localStorage-persisted; default "All").
+- Filter chip row on `/path/recipes` and the templates row:
+  `[ All ] [ Mine ] [ Community ] [ Nourish ✓ ]`.
+- User-recipe-adapter + tRPC cook router emit
+  `source: "nourish-verified"` for seed dishes.
 
-### W50 — Donate-a-Cook tagging + dietary-aware challenge picker
+**Acceptance:** filter chip persists across navigation; seed
+dishes show "Nourish ✓" badge; user-authored shows no badge;
+mock community recipes show "Community" badge. 20+ tests.
 
-Photo submission gains opt-in tags (shared / bake-sale /
-cooked-together). Pod-home gallery aggregates the counts.
-Weekly challenge picker (deterministic, week-key-seeded) filters
-the seed catalog by the pod's dietary union.
+### W48 — Admin approval flow (mock single-device)
 
-**Acceptance:** pod with any dietary constraint surfaces only
-compatible recipes; tags surface in the gallery.
+- `useIsAdmin()` reads `sous-is-admin` localStorage flag.
+- `/community/admin` approval queue page (gated on admin flag).
+- Read-only RecipeForm preview + Verify / Reject actions.
+  Verify stamps `source = "nourish-verified"` +
+  `nourishApprovedAt` + `nourishApprovedBy`. Reject reverts to
+  `source = "user"` with reason note.
 
-### W51 — Founder-unlock prep + IDEO Sprint-K close
+**Acceptance:** non-admins see no admin tile; admins see the
+queue; verify-then-back shows recipe with Nourish ✓ badge.
+10+ tests.
 
-Postgres schema stub. R2 photo upload contract stub. Stripe +
-nonprofit-list research note (Donate-a-Cook V2 prep). Update
-`docs/FOUNDER-UNLOCK-RUNBOOK.md` with the pod-backend swap.
-IDEO close doc.
+### W49 — Reel-to-cook integration
 
-**Acceptance:** founder-unlock entry filed; mock-multi-device
-wires have explicit "→ Postgres" comments at the swap points.
+- `ReelItem` schema gains optional `recipeSlug?: string`.
+- `/community/reels` reel card gains `Cook this` button when
+  `recipeSlug` is set; one-tap navigates to `/cook/<slug>`.
+- Mock reel data updated so existing reels link to seed-catalog
+  recipes.
+
+**Acceptance:** reels with recipe slugs show the button; tap
+navigates; reels without don't show it. 8+ tests.
+
+### W50 — Agentic autogen substrate + UI
+
+- `src/lib/recipe-authoring/autogen-prompt.ts` — pure prompt
+  builder (system + user prompt + structured-output schema).
+- `src/lib/recipe-authoring/autogen-parser.ts` — pure response
+  parser (Zod-validates LLM output, returns `RecipeDraft`).
+- `src/lib/trpc/routers/recipeAutogen.ts` — `autogen.draft`
+  procedure. **Stub mode** (deterministic chana-masala draft)
+  when no `ANTHROPIC_API_KEY`; real Vercel AI SDK call when
+  configured. Pattern matches existing AI-gated work.
+- `/path/recipes/quick-add` page — single textarea + "Generate
+  first draft" button. On success, redirects to the existing
+  RecipeForm pre-populated. User edits as usual.
+
+**Acceptance:** quick-add page renders; stub-mode generates a
+hardcoded chana-masala first draft; real-mode call is contract-
+tested with mock fetch; pre-populated form preserves all
+generated fields. 25+ tests.
+
+### W51 — Sharing + IDEO Sprint-J close
+
+- "Share" button on the recipe-save success toast +
+  `/path/recipes/<id>/edit` save flow. Copies cook deeplink
+  to clipboard (`https://sous.app/cook/<slug>?author=...`).
+- `docs/FOUNDER-UNLOCK-RUNBOOK.md` updates: auth + Postgres
+  → community recipes server-side; R2 → photo storage;
+  Anthropic API key → autogen prod; admin role → server-side
+  moderation queue.
+- Sprint J IDEO close doc.
+
+**Acceptance:** Share button copies the deeplink; toast
+confirms; runbook entries filed; close doc shipped.
 
 ## W52 — Year-1 close
 
