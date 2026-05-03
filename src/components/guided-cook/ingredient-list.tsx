@@ -23,6 +23,7 @@ import {
 } from "@/lib/engine/prep-list";
 import type { StaticDishData } from "@/data/guided-cook-steps";
 import { InstacartHint } from "./instacart-hint";
+import { IngredientPantryDot } from "@/components/shared/ingredient-pantry-dot";
 
 interface Ingredient {
   id: string;
@@ -556,6 +557,14 @@ function IngredientRow({
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
           <div className="flex items-baseline gap-2">
+            {/* Y3 W4 polish: pantry-status dot — feature 1.3 from
+                the pantry-novelty plan. Subtle visual signal that
+                'I can start this now' without taps. */}
+            <IngredientPantryDot
+              status={inPantry ? "have" : "missing"}
+              optional={item.isOptional ?? false}
+              className="self-center"
+            />
             <span
               className={cn(
                 "text-sm font-medium",
