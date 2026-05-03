@@ -114,11 +114,29 @@ describe("adaptUserRecipeForCook", () => {
     );
   });
 
-  it("nulls cuisineFact and imageUrl (not yet authored on user recipes)", () => {
+  it("nulls cuisineFact and imageUrl when the step doesn't carry them", () => {
     const recipe = makeRecipe();
     const result = adaptUserRecipeForCook(recipe);
     expect(result.steps[0].cuisineFact).toBe(null);
     expect(result.steps[0].imageUrl).toBe(null);
+  });
+
+  it("passes cuisineFact + imageUrl through when set (W40 schema)", () => {
+    const recipe = makeRecipe({
+      steps: [
+        {
+          stepNumber: 1,
+          instruction: "Toast the cumin.",
+          cuisineFact: "Cumin is one of the oldest cultivated spices.",
+          imageUrl: "/img/cumin-toasting.png",
+        },
+      ],
+    });
+    const result = adaptUserRecipeForCook(recipe);
+    expect(result.steps[0].cuisineFact).toBe(
+      "Cumin is one of the oldest cultivated spices.",
+    );
+    expect(result.steps[0].imageUrl).toBe("/img/cumin-toasting.png");
   });
 
   it("normalises optional null fields on steps", () => {

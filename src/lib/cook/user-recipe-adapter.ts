@@ -84,14 +84,12 @@ export function adaptUserRecipeForCook(recipe: UserRecipe): CookPageDishShape {
       timerSeconds: s.timerSeconds ?? null,
       mistakeWarning: s.mistakeWarning ?? null,
       quickHack: s.quickHack ?? null,
-      // user recipes don't yet carry a cuisineFact field — leave
-      // null so the FactChip stays hidden rather than showing an
-      // empty chip.
-      cuisineFact: null,
+      // W40 schema migration: cuisineFact + imageUrl are now
+      // first-class fields on user steps, so the adapter
+      // passes them through instead of null-defaulting.
+      cuisineFact: s.cuisineFact ?? null,
       donenessCue: s.donenessCue ?? null,
-      // Per-step image authoring lands when the R2 upload
-      // pipeline ships (founder-unlock day post-W52).
-      imageUrl: null,
+      imageUrl: s.imageUrl ?? null,
     })),
     ingredients: recipe.ingredients.map((i) => ({
       id: i.id,

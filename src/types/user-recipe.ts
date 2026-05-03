@@ -47,8 +47,20 @@ export const userStepSchema = z.object({
   mistakeWarning: z.string().max(400).nullable().optional(),
   /** Optional pro-tip shown as a hack chip. */
   quickHack: z.string().max(400).nullable().optional(),
+  /** Optional cultural / culinary fact shown as a fact chip
+   *  (e.g. "Caesar salad was invented in Tijuana, not Italy").
+   *  Mirrors the seed-catalog StaticCookStep field — added in
+   *  W40 so the user-recipe → cook adapter can pass it through
+   *  directly instead of null-defaulting. */
+  cuisineFact: z.string().max(400).nullable().optional(),
   /** Optional doneness cue (visual / audible / textural). */
   donenessCue: z.string().max(400).nullable().optional(),
+  /** Optional per-step image URL. Used by visual mode (W22 toggle
+   *  + W27 page adoption) to promote the image when the user has
+   *  visual mode on. Will be populated through the R2 upload
+   *  pipeline post-W52 (founder-unlock day); until then it's
+   *  pasteable. */
+  imageUrl: z.string().nullable().optional(),
 });
 
 export const userRecipeSchema = z.object({

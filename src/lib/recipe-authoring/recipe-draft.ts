@@ -72,7 +72,9 @@ export function defaultRecipeDraft(): RecipeDraft {
         timerSeconds: null,
         mistakeWarning: null,
         quickHack: null,
+        cuisineFact: null,
         donenessCue: null,
+        imageUrl: null,
       },
     ],
   };
@@ -124,7 +126,9 @@ export function appendBlankStep(steps: ReadonlyArray<UserStep>): UserStep[] {
       timerSeconds: null,
       mistakeWarning: null,
       quickHack: null,
+      cuisineFact: null,
       donenessCue: null,
+      imageUrl: null,
     },
   ];
 }
