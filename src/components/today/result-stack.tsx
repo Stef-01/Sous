@@ -14,6 +14,10 @@ import {
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import type { ScoreBreakdown } from "@/lib/engine/types";
+import {
+  PENDING_BREAKDOWN_KEY,
+  buildPendingBreakdown,
+} from "@/lib/engine/attach-score-breakdown";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
@@ -219,18 +223,51 @@ export function ResultStack({
         ? "text-amber-600"
         : "text-[var(--nourish-subtext)]";
 
+  /** Y2 W6 V3 trainer dependency. When the user picks a side,
+   *  stash the engine's ScoreBreakdown in sessionStorage so the
+   *  cook page can attach it to the new cook session at start
+   *  time. Pure helper composes the payload; the write is a
+   *  one-liner inside the handler. */
+  const stashBreakdownForSide = useCallback((side: SideResult) => {
+    if (typeof window === "undefined") return;
+    try {
+      const pending = buildPendingBreakdown(
+        side.slug,
+        side.scores,
+        side.totalScore,
+      );
+      sessionStorage.setItem(PENDING_BREAKDOWN_KEY, JSON.stringify(pending));
+    } catch {
+      // ignore — quota / privacy mode
+    }
+  }, []);
+
+  const handleCookSingle = useCallback(
+    (side: SideResult) => {
+      stashBreakdownForSide(side);
+      onCookThis(side);
+    },
+    [stashBreakdownForSide, onCookThis],
+  );
+
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
 
     if (onCookSelected && selectedSides.length > 1) {
+      // Multi-dish cook — stash the highest-totalScore side's
+      // breakdown as the V3 signal anchor.
+      const anchor = selectedSides.reduce((best, s) =>
+        s.totalScore > best.totalScore ? s : best,
+      );
+      stashBreakdownForSide(anchor);
       onCookSelected(selectedSides);
     } else if (selectedSides.length === 1) {
-      onCookThis(selectedSides[0]);
+      handleCookSingle(selectedSides[0]);
     } else {
       // Fallback: cook first selected
-      onCookThis(selectedSides[0]);
+      handleCookSingle(selectedSides[0]);
     }
-  }, [selectedSides, onCookSelected, onCookThis]);
+  }, [selectedSides, onCookSelected, handleCookSingle, stashBreakdownForSide]);
 
   return (
     <motion.div
@@ -272,7 +309,7 @@ export function ResultStack({
             isRerolling={rerollingIndex === idx}
             onToggleSelect={() => toggleSelect(side.id)}
             onRerollSide={() => handleRerollSide(idx)}
-            onCookThis={() => onCookThis(side)}
+            onCookThis={() => handleCookSingle(side)}
           />
         ))}
       </div>

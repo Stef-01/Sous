@@ -18,6 +18,10 @@ import {
   adaptUserRecipeForCook,
   findUserRecipeBySlug,
 } from "@/lib/cook/user-recipe-adapter";
+import {
+  PENDING_BREAKDOWN_KEY,
+  parsePendingBreakdown,
+} from "@/lib/engine/attach-score-breakdown";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
@@ -166,7 +170,10 @@ export default function GuidedCookPage({
     return userRecipe?.cuisineFamily ?? "unknown";
   }, [slug, userDrafts]);
 
-  // Start session on mount (once data is available)
+  // Start session on mount (once data is available). Y2 W6:
+  // also attach the engine score breakdown stashed by the
+  // result-stack pick (V3 trainer dependency). Stash is single-
+  // use — read-then-clear.
   useEffect(() => {
     if (data?.dish && !sessionIdRef.current) {
       sessionIdRef.current = startSession(
@@ -175,8 +182,30 @@ export default function GuidedCookPage({
         cuisine,
         mainDishInput,
       );
+      if (typeof window !== "undefined") {
+        try {
+          const raw = sessionStorage.getItem(PENDING_BREAKDOWN_KEY);
+          const pending = parsePendingBreakdown(raw);
+          if (pending && pending.recipeSlug === slug) {
+            updateSession(sessionIdRef.current, {
+              engineScoreBreakdown: {
+                cuisineFit: pending.breakdown.cuisineFit,
+                flavorContrast: pending.breakdown.flavorContrast,
+                nutritionBalance: pending.breakdown.nutritionBalance,
+                prepBurden: pending.breakdown.prepBurden,
+                temperature: pending.breakdown.temperature,
+                preference: pending.breakdown.preference,
+                totalScore: pending.totalScore,
+              },
+            });
+            sessionStorage.removeItem(PENDING_BREAKDOWN_KEY);
+          }
+        } catch {
+          // ignore — privacy mode / storage unavailable
+        }
+      }
     }
-  }, [data?.dish, slug, cuisine, mainDishInput, startSession]);
+  }, [data?.dish, slug, cuisine, mainDishInput, startSession, updateSession]);
 
   // Filter steps by phase
   const cookSteps = useMemo(
