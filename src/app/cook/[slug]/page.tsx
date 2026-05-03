@@ -6,6 +6,13 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Mic } from "lucide-react";
 import { useVoiceCook } from "@/lib/voice/use-voice-cook";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
+import {
+  findMostRecentActiveTimer,
+  speakableTimerAdd,
+  speakableTimerCancel,
+  speakableTimerSet,
+  speakableTimerStatus,
+} from "@/lib/voice/timer-voice";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import {
   adaptUserRecipeForCook,
@@ -95,6 +102,8 @@ export default function GuidedCookPage({
     setTotalSteps,
     toggleChip,
     startTimer,
+    stopTimer,
+    extendTimer,
     completeSession: completeCookPhase,
     reset,
   } = useCookStore();
@@ -295,18 +304,39 @@ export default function GuidedCookPage({
         case "repeat":
           if (currentCookStep) voice.speakStep(currentCookStep.instruction);
           break;
-        case "timer-set":
-        case "timer-cancel":
-        case "timer-status":
-        case "timer-add":
-          // W21 leaves timer-voice as a toast surface — full timer-
-          // reducer wiring queued for Sprint-E later weeks.
-          toast.push({
-            variant: "info",
-            title: "Voice timer commands ship in W22",
-            dedupKey: "voice-timer-pending",
-          });
+        case "timer-set": {
+          // W39 timer-voice wiring. Voice "set 5 minutes" creates
+          // a labelled "Voice timer" so the user can distinguish
+          // it from chip-spawned timers. Speak a short
+          // confirmation so the user knows it took.
+          startTimer(action.seconds, "Voice timer");
+          voice.speakStep(speakableTimerSet(action.seconds));
           break;
+        }
+        case "timer-cancel": {
+          const hadActive =
+            findMostRecentActiveTimer(useCookStore.getState().timers) !== null;
+          stopTimer();
+          voice.speakStep(speakableTimerCancel(hadActive));
+          break;
+        }
+        case "timer-status": {
+          voice.speakStep(speakableTimerStatus(useCookStore.getState().timers));
+          break;
+        }
+        case "timer-add": {
+          const beforeActive = findMostRecentActiveTimer(
+            useCookStore.getState().timers,
+          );
+          extendTimer(action.seconds);
+          // `extendTimer` is a no-op when no active timer exists,
+          // so we can derive the applied flag from the snapshot
+          // we took before the call.
+          voice.speakStep(
+            speakableTimerAdd(action.seconds, beforeActive !== null),
+          );
+          break;
+        }
         case "ignore":
           break;
       }
