@@ -9,6 +9,7 @@ import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
+import { HouseholdFilterHint } from "@/components/shared/household-filter-hint";
 
 export default function SidesPage() {
   return (
@@ -203,6 +204,11 @@ function SidesPageContent() {
       </header>
 
       <main className="mx-auto max-w-md px-4 pt-4">
+        {/* W42 household dietary filter hint — renders nothing
+            unless the user has at least one flag active via the
+            "who's at the table" picker on /today. */}
+        <HouseholdFilterHint flags={householdDietaryFlags} />
+
         {/* Loading state */}
         {isLoading && (
           <motion.div
@@ -249,7 +255,9 @@ function SidesPageContent() {
                 No matching sides found
               </p>
               <p className="text-xs text-[var(--nourish-subtext)]">
-                Try going back and picking a different main dish.
+                {householdDietaryFlags.length > 0
+                  ? `Nothing matched the ${householdDietaryFlags.join(", ")} filter. Try a different main, or change who's at the table.`
+                  : "Try going back and picking a different main dish."}
               </p>
             </motion.div>
           )}
