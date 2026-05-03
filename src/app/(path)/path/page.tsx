@@ -4,7 +4,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
-import { BookOpen, Bookmark, ChefHat, Heart, ShoppingCart } from "lucide-react";
+import {
+  BookOpen,
+  Bookmark,
+  ChefHat,
+  Heart,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
@@ -393,7 +400,7 @@ export default function PathPage() {
             home and the Content tab — visual rhythm consistency. */}
         <div className="mx-auto max-w-md px-4 pb-24 pt-4">
           <SectionKicker className="mb-2 px-1">Your kitchen</SectionKicker>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[
               {
                 href: "/path/scrapbook",
@@ -419,6 +426,11 @@ export default function PathPage() {
                 href: "/path/recipes",
                 icon: ChefHat,
                 label: "My recipes",
+              },
+              {
+                href: "/path/household",
+                icon: Users,
+                label: "Household",
               },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div

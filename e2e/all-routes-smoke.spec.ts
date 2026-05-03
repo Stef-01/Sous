@@ -43,6 +43,7 @@ const ROUTES: Route[] = [
   { path: "/path/shopping-list", landmark: "Shopping list" },
   { path: "/path/recipes", landmark: /recipes|cook/i },
   { path: "/path/recipes/new", landmark: /New recipe|Title/i },
+  { path: "/path/household", landmark: /Household|Add member/i },
 
   // Content tab + sub-routes
   { path: "/community", landmark: "Content" },
