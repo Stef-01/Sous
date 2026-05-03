@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Play } from "lucide-react";
+import Link from "next/link";
+import { ChefHat, Play } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Reel } from "@/types/content";
 import { BookmarkButton } from "./bookmark-button";
@@ -100,6 +101,19 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
                 variant="overlay"
               />
             </div>
+            {/* W49 reel-to-cook — one-tap deeplink visible only
+                when the reel carries a dishSlug. Sibling overlay
+                so tapping it doesn't open the immersive feed. */}
+            {reel.dishSlug && (
+              <Link
+                href={`/cook/${reel.dishSlug}`}
+                className="absolute bottom-2 right-2 z-10 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white shadow-md transition hover:bg-[var(--nourish-dark-green)]"
+                aria-label={`Cook ${reel.dishSlug}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <ChefHat size={11} aria-hidden /> Cook
+              </Link>
+            )}
           </div>
         ))}
       </div>
