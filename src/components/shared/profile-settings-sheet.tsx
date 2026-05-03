@@ -18,9 +18,10 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Check, Heart, Mic, UserRound, X } from "lucide-react";
+import { Check, Eye, Heart, Mic, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
+import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
@@ -43,6 +44,7 @@ const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
 export function ProfileSettingsSheet({ open, onClose }: Props) {
   const { profile, toggle, setAgeBand } = useParentMode();
   const voicePref = useVoiceCookPref();
+  const visualPref = useVisualModePref();
   const haptic = useHaptic();
   const reducedMotion = useReducedMotion();
 
@@ -282,6 +284,62 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
               <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
                 Works on Chrome and Safari. Microphone permission required at
                 first use. Per-device only — preference doesn&rsquo;t sync.
+              </p>
+            </section>
+
+            {/* Visual Mode section (Stage-5 W22, MVP 3 of the
+                Google-Maps-style cook-nav initiative). The cook step
+                page promotes the step image to a large element when
+                this is on, with the instruction text shrunk to a
+                two-line summary. Useful for hands-free cooking when
+                voice cook is also on; equally useful for users who
+                prefer pictures to prose. */}
+            <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                  >
+                    <Eye size={16} />
+                  </span>
+                  <div className="space-y-1">
+                    <SectionKicker as="p" size="10px">
+                      Visual mode
+                    </SectionKicker>
+                    <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+                      Lean on pictures, not text. Each cook step shows a large
+                      image with a short caption. Pairs naturally with voice
+                      cook for fully hands-free cooking.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={visualPref.enabled}
+                  onClick={() => {
+                    haptic();
+                    visualPref.setEnabled(!visualPref.enabled);
+                  }}
+                  className={cn(
+                    "relative h-7 w-12 shrink-0 rounded-full transition-colors",
+                    visualPref.enabled
+                      ? "bg-[var(--nourish-green)]"
+                      : "bg-neutral-200",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
+                      visualPref.enabled ? "translate-x-5" : "translate-x-0.5",
+                    )}
+                  />
+                </button>
+              </div>
+              <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
+                Steps without an image show the dish hero photo with a gentle
+                &ldquo;step image coming soon&rdquo; badge.
               </p>
             </section>
 
