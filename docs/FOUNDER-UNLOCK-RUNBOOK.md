@@ -345,3 +345,46 @@ review on Year-1 close:
 
 No founder action required for these — they're closing
 docs, not unlock blockers.
+
+### 15. Pairing-engine V3 trainer flag (Y2 W10)
+
+**Surface unlocked:** sharper recommendations from per-dimension
+score-breakdown learning. Substrate fully shipped; default-off
+in production until the V3 trainer beats V2 on real-cohort eval.
+
+**Why gated, not auto-on:** the W9 synthetic eval (seed=42,
+100-user × 12-cook × 60-held-out cohort) showed V3 underperforms
+V2 by 4.5pp on held-out agreement. The Y2 plan acceptance
+criterion required V3 to beat V2 by ≥ 5pp before defaulting
+on; it didn't, so the flag stays off.
+
+**Two flags, same semantics** (either set to literal `"true"` flips the gate):
+
+- `SOUS_V3_TRAINER_ENABLED` — server-side reads (tRPC, eval harness).
+- `NEXT_PUBLIC_SOUS_V3_TRAINER_ENABLED` — Next.js client bundle.
+
+Set in `.env.local` for dev experimentation. Both unset =
+production V2 path.
+
+**What founder/team does on flip-day:**
+
+1. Run the V3 eval against the real-cohort distribution (after
+   ~30 cooks-with-breakdowns per user accumulate post-Postgres
+   unlock). Use `runV3Eval({seed, userCount, cooksPerUser, ...})`
+   to get reproducible numbers.
+2. Tune V3 hyperparameters (`V3_MAX_DELTA`, `V3_NOISE_FLOOR`,
+   `V3_COLD_START_THRESHOLD`) until the eval shows V3 winning
+   by ≥ 5pp on the real distribution.
+3. Flip `NEXT_PUBLIC_SOUS_V3_TRAINER_ENABLED="true"` in Vercel
+   env for staging → run a real-user A/B → confirm acceptance-
+   rate delta matches the eval prediction → flip in production.
+
+**Estimated landing:** post-Postgres unlock + ~30
+cooks-with-breakdowns per user across the bake (likely Sprint
+F W26 timeframe based on Y2 trajectory).
+
+**No founder action today.** The substrate runs dormant and
+`recipe_score_breakdowns` continues to populate so V4 has the
+backfill when retune-day comes. See
+`docs/y2/sprints/B/IDEO-REVIEW.md` for the full eval result and
+W10 gate decision.

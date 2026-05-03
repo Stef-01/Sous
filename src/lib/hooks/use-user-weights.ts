@@ -118,10 +118,16 @@ export function useUserWeights() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // Y2 W8 hybrid composer: V3 when ≥ 8 score-breakdown-rich
-  // cooks exist, V2 when ≥ 5 V2-eligible cooks, default
-  // otherwise. The trainer choice is invisible to the user (we
-  // expose `trainerMode` for the IDEO retro / dev tools, not
-  // for UI surfacing).
+  // cooks exist AND the V3 flag is on, V2 when ≥ 5 V2-eligible
+  // cooks, default otherwise.
+  //
+  // W10 gate: V3 underperformed V2 by 4.5pp on the W9 synthetic
+  // eval (seed=42), so V3 is opt-in via
+  // NEXT_PUBLIC_SOUS_V3_TRAINER_ENABLED="true". The composer
+  // reads process.env at call time — unset → V2 path active.
+  // The trainer choice is invisible to the user (we expose
+  // `trainerMode` + `v3Enabled` for the IDEO retro / dev tools,
+  // not for UI surfacing).
   const trainedResult = useMemo(() => composeUserWeights(sessions), [sessions]);
   const trainedWeights = trainedResult.weights;
   const trainerMode: TrainerMode = trainedResult.mode;
@@ -157,6 +163,11 @@ export function useUserWeights() {
     trainerMode,
     breakdownCookCount: trainedResult.breakdownCookCount,
     v2EligibleCookCount: trainedResult.v2EligibleCookCount,
+    /** W10 gate state. False here = V2 path active even if the
+     *  user has enough breakdown data; flip
+     *  NEXT_PUBLIC_SOUS_V3_TRAINER_ENABLED="true" in .env.local
+     *  to enable V3 in dev. */
+    v3Enabled: trainedResult.v3Enabled,
   };
 }
 
