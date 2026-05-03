@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
-import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
+import { BookOpen, Bookmark, ChefHat, Heart, ShoppingCart } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
@@ -414,6 +414,11 @@ export default function PathPage() {
                 href: "/path/favorites",
                 icon: Heart,
                 label: "Favorites",
+              },
+              {
+                href: "/path/recipes",
+                icon: ChefHat,
+                label: "My recipes",
               },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div
