@@ -30,6 +30,8 @@ import {
   type SpiceTolerance,
 } from "@/lib/parent-mode/spice-rewrite";
 import { resolveVisualStepImage } from "@/lib/cook/resolve-visual-step-image";
+import type { AttentionPointer } from "@/lib/cook/attention-pointer";
+import { AttentionPointerOverlay } from "./attention-pointer-overlay";
 
 interface StepCardProps {
   /** +1 when advancing forward, -1 when going back. Controls slide direction. */
@@ -55,6 +57,10 @@ interface StepCardProps {
    *  Wired up to the user's persisted preference (W22 toggle in
    *  profile settings → W27 page-side adoption). */
   visualMode?: boolean;
+  /** MVP 4 of cook-nav: per-step SVG attention pointers laid over
+   *  the visual-mode image. Only renders when visualMode is on AND
+   *  the step has at least one pointer. */
+  attentionPointers?: ReadonlyArray<AttentionPointer> | null;
   expandedChip: string | null;
   onToggleChip: (chip: string | null) => void;
   /** `label` identifies which timer in the stack this is  -  passes through to
@@ -90,6 +96,7 @@ export function StepCard({
   imageUrl,
   heroImageUrl,
   visualMode = false,
+  attentionPointers,
   expandedChip,
   onToggleChip,
   onStartTimer,
@@ -313,6 +320,10 @@ export function StepCard({
               className="object-cover"
               priority
             />
+            {/* MVP 4 cook-nav: per-step SVG attention pointers
+                overlay the image. Only meaningful in visualMode
+                because that's when the image is hero-sized. */}
+            <AttentionPointerOverlay pointers={attentionPointers} />
             {visualImage.isFallback && (
               <span
                 data-testid="visual-mode-fallback-badge"
