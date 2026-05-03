@@ -15,7 +15,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat, Pencil, Play, Plus } from "lucide-react";
+import { ArrowLeft, ChefHat, Pencil, Play, Plus, Sparkles } from "lucide-react";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
 import {
@@ -56,12 +56,21 @@ export default function MyRecipesPage() {
           <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
             My recipes
           </h1>
-          <Link
-            href="/path/recipes/new"
-            className="ml-auto inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
-          >
-            <Plus size={12} aria-hidden /> New
-          </Link>
+          <div className="ml-auto flex items-center gap-1.5">
+            <Link
+              href="/path/recipes/quick-add"
+              className="inline-flex items-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              title="Describe a recipe in plain text — autogen drafts it"
+            >
+              <Sparkles size={11} aria-hidden /> Quick
+            </Link>
+            <Link
+              href="/path/recipes/new"
+              className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+            >
+              <Plus size={12} aria-hidden /> New
+            </Link>
+          </div>
         </div>
       </header>
 

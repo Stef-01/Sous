@@ -43,6 +43,10 @@ const ROUTES: Route[] = [
   { path: "/path/shopping-list", landmark: "Shopping list" },
   { path: "/path/recipes", landmark: /recipes|cook/i },
   { path: "/path/recipes/new", landmark: /New recipe|Title/i },
+  {
+    path: "/path/recipes/quick-add",
+    landmark: /Quick add|Describe the recipe/i,
+  },
   { path: "/path/household", landmark: /Household|Add member/i },
   { path: "/community/pod", landmark: /Pod challenge|Cook with friends/i },
   { path: "/community/pod/create", landmark: /Create a pod|Pod name/i },

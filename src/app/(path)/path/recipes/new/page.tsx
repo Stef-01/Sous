@@ -39,21 +39,47 @@ export default function NewRecipePage() {
   );
 }
 
+/** sessionStorage key the W50 quick-add page writes to before
+ *  redirecting here. Single-recipe scope; cleared on read. */
+const QUICK_ADD_DRAFT_KEY = "sous-quick-add-draft";
+
+function readQuickAddDraft(): RecipeDraft | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(QUICK_ADD_DRAFT_KEY);
+    if (!raw) return null;
+    sessionStorage.removeItem(QUICK_ADD_DRAFT_KEY);
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === "object" && parsed !== null) {
+      return parsed as RecipeDraft;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 function NewRecipePageContent() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const searchParams = useSearchParams();
   const forkSlug = searchParams.get("fork");
+  const fromQuickAdd = searchParams.get("from") === "quick-add";
 
   const initialDraft = useMemo<RecipeDraft>(() => {
+    if (fromQuickAdd) {
+      const fromAutogen = readQuickAddDraft();
+      if (fromAutogen) return fromAutogen;
+    }
     if (!forkSlug) return defaultRecipeDraft();
     const seed = getStaticCookData(forkSlug) ?? getStaticMealCookData(forkSlug);
     if (!seed) return defaultRecipeDraft();
     return seedToRecipeDraft(seed);
-  }, [forkSlug]);
+  }, [forkSlug, fromQuickAdd]);
 
-  const heading =
-    forkSlug && initialDraft.title.startsWith("My ")
+  const heading = fromQuickAdd
+    ? "Edit autogen draft"
+    : forkSlug && initialDraft.title.startsWith("My ")
       ? "Fork recipe"
       : "New recipe";
 
