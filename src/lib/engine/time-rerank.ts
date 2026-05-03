@@ -24,6 +24,7 @@
  */
 
 import type { ScoredCandidate } from "./types";
+import { deriveSeasonalTags } from "./seasonal-tags";
 
 export type Season = "winter" | "spring" | "summer" | "autumn";
 export type TimeOfDay =
@@ -141,13 +142,22 @@ export function computeAdjustment(
   // Side dishes that explicitly tag themselves with a season
   // get a small extra boost when that season matches. Cooks /
   // recipe authors who tag this way are signalling intent.
+  //
+  // W12 augmentation: also infer seasonal tags from generic
+  // kitchen vocabulary in the existing tag list ("soup" /
+  // "stew" / "salad" / "squash" → derived season tags). The
+  // derivation lives in `./seasonal-tags` so callers + tests
+  // can reason about it independently. Merging here keeps the
+  // rerank a single point of truth on the season-match check.
   const seasonTags: Record<Season, ReadonlyArray<string>> = {
     winter: ["winter", "winter-warming", "winter-pick", "warming", "comfort"],
     summer: ["summer", "summer-fresh", "summer-pick", "refreshing", "light"],
     spring: ["spring", "spring-fresh", "spring-pick"],
     autumn: ["autumn", "autumn-pick", "fall", "harvest"],
   };
-  const candidateTags = new Set(side.tags.map((t) => t.toLowerCase()));
+  const derived = deriveSeasonalTags({ tags: side.tags });
+  const allTags = derived.length > 0 ? [...side.tags, ...derived] : side.tags;
+  const candidateTags = new Set(allTags.map((t) => t.toLowerCase()));
   const matchedSeasonTag = seasonTags[season].some((tag) =>
     candidateTags.has(tag),
   );
