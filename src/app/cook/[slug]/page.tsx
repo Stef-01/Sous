@@ -3,7 +3,9 @@
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat } from "lucide-react";
+import { ArrowLeft, ChefHat, Mic } from "lucide-react";
+import { useVoiceCook } from "@/lib/voice/use-voice-cook";
+import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
@@ -249,6 +251,52 @@ export default function GuidedCookPage({
     }
   }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data]);
 
+  // W21 — live cook-step-page integration of the voice-cook
+  // coordinator (Sprint-D top carry-forward). Voice cook is gated
+  // by the user's preference (toggled in profile settings); when
+  // off, the hook is a no-op. The onAction callback maps voice
+  // intents to the page's existing step navigation.
+  const voice = useVoiceCook({
+    onAction: (action) => {
+      if (currentPhase !== "cook") return;
+      switch (action.kind) {
+        case "next":
+        case "done":
+          handleNext();
+          break;
+        case "back":
+          handleBack();
+          break;
+        case "repeat":
+          if (currentCookStep) voice.speakStep(currentCookStep.instruction);
+          break;
+        case "timer-set":
+        case "timer-cancel":
+        case "timer-status":
+        case "timer-add":
+          // W21 leaves timer-voice as a toast surface — full timer-
+          // reducer wiring queued for Sprint-E later weeks.
+          toast.push({
+            variant: "info",
+            title: "Voice timer commands ship in W22",
+            dedupKey: "voice-timer-pending",
+          });
+          break;
+        case "ignore":
+          break;
+      }
+    },
+  });
+
+  // Coach-voice trigger: speak the current step's instruction
+  // when the user lands on a new step (only while voice cook is on).
+  useEffect(() => {
+    if (!voice.enabled) return;
+    if (currentPhase !== "cook") return;
+    if (!currentCookStep) return;
+    voice.speakStep(currentCookStep.instruction);
+  }, [voice, currentPhase, currentStepIndex, currentCookStep]);
+
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
     reset();
@@ -409,7 +457,17 @@ export default function GuidedCookPage({
             <ArrowLeft size={20} />
           </motion.button>
           <PhaseIndicator currentPhase={currentPhase} />
-          <div className="w-8" /> {/* Spacer */}
+          {/* W21 voice-cook listening indicator. Only renders when
+              the user has voice on AND the recogniser is actually
+              listening — keeps header clutter at zero for
+              non-voice users. */}
+          {voice.enabled && voice.listening ? (
+            <MetaPill variant="green" size="xs" aria-label="Voice listening">
+              <Mic size={10} aria-hidden /> Voice
+            </MetaPill>
+          ) : (
+            <div className="w-8" />
+          )}
         </div>
       </header>
 
