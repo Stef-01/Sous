@@ -22,6 +22,7 @@ import { ResearchBriefCard } from "@/components/content/research-brief-card";
 import { ExpertVoicesRow } from "@/components/content/expert-voices-row";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
+import { PodTile } from "@/components/community/pod-tile";
 import { TagCloud } from "@/components/content/tag-cloud";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
@@ -198,6 +199,12 @@ function ContentPageInner() {
         {showHero && featured.length > 0 && (
           <FeaturedHeroCarousel articles={featured} />
         )}
+
+        {/* W46 pod-challenge entry tile. Renders nothing intrusive
+            for users who haven't formed a pod (just a small "Cook
+            with friends" CTA tile); surfaces pod state at-a-glance
+            for users who have. */}
+        <PodTile />
 
         {showReels && (
           <ReelsRail
