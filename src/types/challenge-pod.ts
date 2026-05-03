@@ -68,10 +68,11 @@ export const challengePodSchema = z.object({
    *  union of all members' flags at pod-creation time. Refresh
    *  via the admin "rescan members" action. */
   dietaryFlags: z.array(z.string().min(1).max(40)).max(20).default([]),
-  /** IANA timezone (e.g. "America/Los_Angeles"). V1 defaults to
-   *  the host's local timezone; multi-tz pods get explicit
-   *  values when the auth/server unlock lands. */
-  podTimezone: z.string().min(1).max(64).default(""),
+  /** IANA timezone (e.g. "America/Los_Angeles"). Empty string is
+   *  the V1 sentinel for "host-local" (single-pod-per-device);
+   *  multi-tz pods get explicit IANA values when the auth/server
+   *  unlock lands. */
+  podTimezone: z.string().max(64).default(""),
   /** Hour of Sunday at which the gallery reveals (0-23). Default
    *  21 (9pm) per Stefan's directive. */
   revealAtHour: z.number().int().min(0).max(23).default(21),

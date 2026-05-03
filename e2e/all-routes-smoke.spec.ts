@@ -45,6 +45,8 @@ const ROUTES: Route[] = [
   { path: "/path/recipes/new", landmark: /New recipe|Title/i },
   { path: "/path/household", landmark: /Household|Add member/i },
   { path: "/community/pod", landmark: /Pod challenge|Cook with friends/i },
+  { path: "/community/pod/create", landmark: /Create a pod|Pod name/i },
+  { path: "/community/pod/join", landmark: /Join with code|invite code/i },
 
   // Content tab + sub-routes
   { path: "/community", landmark: "Content" },
