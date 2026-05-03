@@ -233,6 +233,65 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
               className={cn(inputClass, "resize-none")}
             />
           )}
+          renderStepDetails={(idx) => (
+            <div className="space-y-2">
+              <FormField label="Timer (seconds)">
+                <input
+                  type="number"
+                  min={0}
+                  max={7200}
+                  {...form.register(`steps.${idx}.timerSeconds`, {
+                    setValueAs: (v) =>
+                      v === "" || v === null ? null : Number(v),
+                  })}
+                  placeholder="e.g. 60"
+                  className={inputClass}
+                />
+              </FormField>
+              <FormField label="Doneness cue">
+                <input
+                  {...form.register(`steps.${idx}.donenessCue`)}
+                  placeholder="Edges should be golden, not brown."
+                  className={inputClass}
+                  maxLength={400}
+                />
+              </FormField>
+              <FormField label="Mistake warning">
+                <textarea
+                  {...form.register(`steps.${idx}.mistakeWarning`)}
+                  placeholder="Don't let the garlic burn — bitter flavour."
+                  rows={2}
+                  className={cn(inputClass, "resize-none")}
+                  maxLength={400}
+                />
+              </FormField>
+              <FormField label="Quick hack">
+                <textarea
+                  {...form.register(`steps.${idx}.quickHack`)}
+                  placeholder="Tear the bread by hand for crispier croutons."
+                  rows={2}
+                  className={cn(inputClass, "resize-none")}
+                  maxLength={400}
+                />
+              </FormField>
+              <FormField label="Cuisine fact">
+                <textarea
+                  {...form.register(`steps.${idx}.cuisineFact`)}
+                  placeholder="Caesar salad was invented in Tijuana."
+                  rows={2}
+                  className={cn(inputClass, "resize-none")}
+                  maxLength={400}
+                />
+              </FormField>
+              <FormField label="Image URL">
+                <input
+                  {...form.register(`steps.${idx}.imageUrl`)}
+                  placeholder="https://… (optional)"
+                  className={inputClass}
+                />
+              </FormField>
+            </div>
+          )}
           onReorder={(next) => stepsArray.replace(next)}
           onRemove={(idx) =>
             stepsArray.replace(removeStepAt(form.getValues("steps"), idx))

@@ -37,7 +37,8 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical, Trash2 } from "lucide-react";
+import { ChevronDown, GripVertical, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { reorderSteps } from "@/lib/recipe-authoring/recipe-draft";
 import type { UserStep } from "@/types/user-recipe";
 import { cn } from "@/lib/utils/cn";
@@ -50,6 +51,12 @@ export interface SortableStepListProps {
    *  owns the form so it doesn't have to pass `register` /
    *  `control` through. */
   renderStepInstruction: (idx: number) => React.ReactNode;
+  /** W41 optional details slot. When provided, each step gets a
+   *  chevron toggle that expands an inline details panel under
+   *  the textarea (timer, mistake warning, quick hack, cuisine
+   *  fact, doneness cue, image URL). The parent renders the
+   *  fields so it stays the single owner of `form.register`. */
+  renderStepDetails?: (idx: number) => React.ReactNode;
   /** Called with the reordered + renumbered list. Caller
    *  forwards into `useFieldArray.replace`. */
   onReorder: (next: UserStep[]) => void;
@@ -61,6 +68,7 @@ export function SortableStepList({
   fieldIds,
   steps,
   renderStepInstruction,
+  renderStepDetails,
   onReorder,
   onRemove,
   canRemove,
@@ -102,6 +110,7 @@ export function SortableStepList({
               id={id}
               idx={idx}
               renderStepInstruction={renderStepInstruction}
+              renderStepDetails={renderStepDetails}
               onRemove={() => onRemove(idx)}
               canRemove={canRemove}
             />
@@ -116,12 +125,14 @@ function SortableItem({
   id,
   idx,
   renderStepInstruction,
+  renderStepDetails,
   onRemove,
   canRemove,
 }: {
   id: string;
   idx: number;
   renderStepInstruction: (idx: number) => React.ReactNode;
+  renderStepDetails?: (idx: number) => React.ReactNode;
   onRemove: () => void;
   canRemove: boolean;
 }) {
@@ -133,6 +144,7 @@ function SortableItem({
     transition,
     isDragging,
   } = useSortable({ id });
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
@@ -144,34 +156,58 @@ function SortableItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-start gap-2 rounded-xl border border-neutral-100 bg-neutral-50/60 p-2 transition-shadow",
+        "rounded-xl border border-neutral-100 bg-neutral-50/60 p-2 transition-shadow",
         isDragging && "z-10 shadow-lg",
       )}
     >
-      {/* Drag handle — only this zone initiates the drag, so the
-          textarea body stays free for typing. */}
-      <button
-        type="button"
-        aria-label={`Reorder step ${idx + 1}`}
-        className="flex h-6 w-6 shrink-0 cursor-grab items-center justify-center rounded-md text-neutral-300 hover:text-neutral-500 active:cursor-grabbing"
-        {...attributes}
-        {...listeners}
-      >
-        <GripVertical size={14} />
-      </button>
-      <span className="mt-1.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[11px] font-semibold text-[var(--nourish-green)]">
-        {idx + 1}
-      </span>
-      {renderStepInstruction(idx)}
-      {canRemove && (
+      <div className="flex items-start gap-2">
+        {/* Drag handle — only this zone initiates the drag, so the
+            textarea body stays free for typing. */}
         <button
           type="button"
-          onClick={onRemove}
-          aria-label={`Remove step ${idx + 1}`}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+          aria-label={`Reorder step ${idx + 1}`}
+          className="flex h-6 w-6 shrink-0 cursor-grab items-center justify-center rounded-md text-neutral-300 hover:text-neutral-500 active:cursor-grabbing"
+          {...attributes}
+          {...listeners}
         >
-          <Trash2 size={14} />
+          <GripVertical size={14} />
         </button>
+        <span className="mt-1.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[11px] font-semibold text-[var(--nourish-green)]">
+          {idx + 1}
+        </span>
+        {renderStepInstruction(idx)}
+        {renderStepDetails && (
+          <button
+            type="button"
+            onClick={() => setDetailsOpen((v) => !v)}
+            aria-expanded={detailsOpen}
+            aria-label={`${detailsOpen ? "Hide" : "Show"} details for step ${idx + 1}`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+          >
+            <ChevronDown
+              size={14}
+              className={cn(
+                "transition-transform",
+                detailsOpen && "rotate-180",
+              )}
+            />
+          </button>
+        )}
+        {canRemove && (
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label={`Remove step ${idx + 1}`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+          >
+            <Trash2 size={14} />
+          </button>
+        )}
+      </div>
+      {renderStepDetails && detailsOpen && (
+        <div className="mt-2 border-t border-neutral-100 pt-2 pl-8">
+          {renderStepDetails(idx)}
+        </div>
       )}
     </li>
   );
