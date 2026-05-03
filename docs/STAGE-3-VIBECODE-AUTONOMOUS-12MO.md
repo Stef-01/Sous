@@ -57,6 +57,17 @@ These don't change between H1 and H2. They're the contract:
    for the founder runbook — the agent doesn't pretend it can ship
    it.
 
+8. **Search before you build.** For every new feature, run a
+   real web search for the consensus library before opening an
+   editor. The decision (adopt the library / hand-roll for tighter
+   fit) lands in `docs/LIBRARY-RECOMMENDATIONS.md` — that doc is
+   the master pick table for every per-feature week and gets
+   re-checked quarterly (W13/W26/W39/W52). Hand-rolling is
+   acceptable when bundle weight + feature parity favour it,
+   provided the tradeoff is documented as an ADR. This rule was
+   added 2026-05-02 after Stefan's directive that every feature
+   should explicitly survey its ecosystem before assuming a build.
+
 ## The per-week 5-step recursive-improvement loop
 
 Every week (52 of them) follows the same skeleton inside its theme:
