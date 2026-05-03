@@ -1,0 +1,269 @@
+[
+  {
+    "term": "soffritto",
+    "cuisine": "italian",
+    "definition": "A slow-cooked aromatic base of finely chopped onion, carrot, and celery sweated in olive oil until soft. Italian cooks build many sauces and braises on top of this gentle starting layer.",
+    "regionalNames": [
+      { "region": "France", "name": "mirepoix" },
+      { "region": "Spain", "name": "sofrito" },
+      { "region": "South India", "name": "tadka (analogous role)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "leeks for onion",
+        "note": "milder, sweeter base; hold the salt back a touch"
+      },
+      {
+        "swap": "fennel for celery",
+        "note": "adds a mild anise note that suits seafood"
+      }
+    ],
+    "pronunciation": "soh-FREE-toh",
+    "origin": "Northern Italian home-cooking; the foundation step in many regional ragùs."
+  },
+  {
+    "term": "tadka",
+    "cuisine": "indian",
+    "definition": "Whole spices briefly bloomed in hot oil or ghee, then poured over a finished dish to lift its aroma. Mustard seeds, cumin, dried chilies, and curry leaves are the usual suspects.",
+    "regionalNames": [
+      { "region": "South India", "name": "tarka" },
+      { "region": "Maharashtra", "name": "phodni" }
+    ],
+    "substitutions": [
+      {
+        "swap": "neutral oil for ghee",
+        "note": "vegan-friendly; loses some richness, gains heat tolerance"
+      },
+      {
+        "swap": "fresh curry leaves for dried",
+        "note": "fresh has substantially more aroma; reduce quantity if dried"
+      }
+    ],
+    "pronunciation": "TUD-kuh",
+    "origin": "Traditional finishing technique across the subcontinent."
+  },
+  {
+    "term": "umami",
+    "cuisine": "japanese",
+    "definition": "The savory taste sensation produced by glutamates and certain nucleotides. It registers as a deep, mouth-filling savoriness distinct from sweet, sour, salty, and bitter.",
+    "regionalNames": [
+      { "region": "Western kitchens", "name": "savoury" },
+      { "region": "China", "name": "xianwei" }
+    ],
+    "substitutions": [
+      {
+        "swap": "soy sauce for fish sauce",
+        "note": "vegetarian umami source; expect a less funky depth"
+      },
+      {
+        "swap": "dried shiitake stock for dashi",
+        "note": "vegan dashi alternative; longer steep needed"
+      }
+    ],
+    "pronunciation": "oo-MAH-mee",
+    "origin": "Identified and named by Kikunae Ikeda in 1908."
+  },
+  {
+    "term": "garam masala",
+    "cuisine": "indian",
+    "definition": "A warming blend of ground spices typically including cardamom, cinnamon, cloves, cumin, coriander, and black pepper. Added near the end of cooking to preserve its top-note aromatics.",
+    "regionalNames": [
+      { "region": "Bengal", "name": "garam masala (cinnamon-forward)" },
+      { "region": "Maharashtra", "name": "goda masala (related, sweeter)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "homemade roast-and-grind",
+        "note": "fresher, brighter aroma; the easiest 10-minute upgrade"
+      },
+      {
+        "swap": "Madras curry powder",
+        "note": "different profile; works in a pinch but lacks the warm finishing notes"
+      }
+    ],
+    "pronunciation": "GAH-rahm mah-SAH-lah",
+    "origin": "North Indian household spice blend; recipe varies family to family."
+  },
+  {
+    "term": "deglaze",
+    "cuisine": "french",
+    "definition": "Adding liquid to a hot pan after searing protein, then scraping up the browned fond left behind. The fond dissolves into the liquid and forms the foundation of a quick pan sauce.",
+    "regionalNames": [{ "region": "France", "name": "déglacer" }],
+    "substitutions": [
+      {
+        "swap": "white wine for stock",
+        "note": "drier, more acidic finish; pairs with poultry and pork"
+      },
+      {
+        "swap": "vinegar for wine (small splash)",
+        "note": "rescue option when you have neither wine nor stock; use sparingly"
+      }
+    ],
+    "pronunciation": "dee-GLAYZ"
+  },
+  {
+    "term": "mise en place",
+    "cuisine": "french",
+    "definition": "The pre-cook prep step: every ingredient measured, chopped, and within arm's reach before the heat goes on. Reduces cook-time scrambling and is the single biggest source of confidence for new cooks.",
+    "regionalNames": [
+      { "region": "Anglophone kitchens", "name": "everything-prepped" }
+    ],
+    "substitutions": [],
+    "pronunciation": "meez ahn plahss",
+    "origin": "Brigade-system kitchen organisation codified by Auguste Escoffier."
+  },
+  {
+    "term": "blanch",
+    "cuisine": "french",
+    "definition": "Briefly cooking food in boiling water then plunging it into ice water. Sets vivid colour in green vegetables, eases peeling on tomatoes and almonds, and partially cooks ingredients ahead of a quick finish.",
+    "regionalNames": [
+      { "region": "Italy", "name": "scottare" },
+      { "region": "China", "name": "guoshui" }
+    ],
+    "substitutions": [
+      {
+        "swap": "steam-then-shock for blanch",
+        "note": "lower nutrient loss; slightly less even colour"
+      }
+    ],
+    "pronunciation": "blahnch"
+  },
+  {
+    "term": "wok hei",
+    "cuisine": "chinese",
+    "definition": "The smoky, slightly charred aroma a well-seasoned wok imparts to food cooked over very high heat with constant motion. Hard to reproduce on home stoves; cast-iron pans get partway there.",
+    "regionalNames": [
+      { "region": "Mandarin literal", "name": "guo qi (the breath of the wok)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "carbon-steel skillet on max heat",
+        "note": "the home-stove proxy; preheat fully and don't crowd"
+      },
+      {
+        "swap": "outdoor burner setup",
+        "note": "the only true reproduction; >50,000 BTU recommended"
+      }
+    ],
+    "pronunciation": "wok-HAY",
+    "origin": "Cantonese stir-fry tradition."
+  },
+  {
+    "term": "sofrito",
+    "cuisine": "spanish",
+    "definition": "A slow-cooked tomato, onion, garlic, and pepper base, often with paprika. Distinct from Italian soffritto, which is tomato-less and more aromatic-vegetable forward.",
+    "regionalNames": [
+      { "region": "Catalan", "name": "sofregit" },
+      { "region": "Caribbean", "name": "sofrito (with cilantro and culantro)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "smoked paprika for sweet paprika",
+        "note": "deeper, smokier finish; suits chorizo dishes"
+      }
+    ],
+    "pronunciation": "soh-FREE-toh"
+  },
+  {
+    "term": "miso",
+    "cuisine": "japanese",
+    "definition": "A fermented soybean paste graded from light (white, sweeter) to dark (red, more savoury and pungent). Whisked into broths, glazes, marinades, and dressings for instant umami depth.",
+    "regionalNames": [
+      { "region": "Korea", "name": "doenjang (a deeper, funkier cousin)" },
+      { "region": "China", "name": "huangdoujiang" }
+    ],
+    "substitutions": [
+      {
+        "swap": "white miso for red miso",
+        "note": "softer, sweeter; cut quantity by ~25% if a recipe assumes red"
+      },
+      {
+        "swap": "tahini + soy",
+        "note": "rough vegetarian stand-in for white miso in dressings"
+      }
+    ],
+    "pronunciation": "MEE-soh"
+  },
+  {
+    "term": "tagine",
+    "cuisine": "north african",
+    "definition": "Both a slow-cooked North African stew and the conical earthenware vessel it cooks in. The cone shape catches steam, condenses it, and returns liquid to the pot for a long, gentle braise.",
+    "regionalNames": [
+      { "region": "Morocco", "name": "tajine" },
+      { "region": "Algeria", "name": "tajeen" }
+    ],
+    "substitutions": [
+      {
+        "swap": "Dutch oven",
+        "note": "good substitute vessel; cooks slightly drier — add a splash of stock"
+      }
+    ],
+    "pronunciation": "tah-ZHEEN"
+  },
+  {
+    "term": "al dente",
+    "cuisine": "italian",
+    "definition": "Pasta cooked to a state where it still resists the bite slightly — firm at the centre, not soft through. Drained a minute before package timing and finished in the sauce so it absorbs flavour.",
+    "regionalNames": [],
+    "substitutions": [],
+    "pronunciation": "ahl DEN-tay",
+    "origin": "Italian home cooking; literally 'to the tooth'."
+  },
+  {
+    "term": "ceviche",
+    "cuisine": "peruvian",
+    "definition": "Raw fish 'cooked' by the acidity of citrus juice — usually lime — with onion, chili, and coriander. The proteins denature without heat in fifteen to thirty minutes.",
+    "regionalNames": [
+      { "region": "Mexico", "name": "ceviche (often longer-marinated)" },
+      { "region": "Ecuador", "name": "encebollado-style" }
+    ],
+    "substitutions": [
+      {
+        "swap": "scallops for white fish",
+        "note": "shorter marinade time — they 'cook' in 5-8 minutes"
+      }
+    ],
+    "pronunciation": "seh-VEE-chay"
+  },
+  {
+    "term": "harissa",
+    "cuisine": "north african",
+    "definition": "A red chili paste from Tunisia made with roasted peppers, garlic, caraway, and coriander, bound with olive oil. Spread on bread, swirled into stews, or used as a marinade base.",
+    "regionalNames": [
+      { "region": "Tunisia", "name": "harissa (most often a smooth paste)" },
+      { "region": "Morocco", "name": "harissa (often chunkier and milder)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "gochujang",
+        "note": "very different profile — sweeter, fermented — but works as a heat substitute in marinades"
+      },
+      {
+        "swap": "smoked paprika + cayenne + garlic + olive oil",
+        "note": "rough pantry-staple version; lacks the caraway top-note"
+      }
+    ],
+    "pronunciation": "huh-REE-suh"
+  },
+  {
+    "term": "khichdi",
+    "cuisine": "indian",
+    "definition": "A one-pot rice and lentil porridge, gently spiced and easy on the digestion. Considered comfort food and a default sick-day meal across much of India.",
+    "regionalNames": [
+      { "region": "Bengal", "name": "khichuri (more vegetable-rich)" },
+      { "region": "Gujarat", "name": "khichdi (often paired with kadhi)" }
+    ],
+    "substitutions": [
+      {
+        "swap": "moong dal for toor dal",
+        "note": "lighter, faster-cooking; reduce simmer time by ~10 minutes"
+      },
+      {
+        "swap": "quinoa for rice",
+        "note": "gluten-free swap (rice is already GF); changes texture but works"
+      }
+    ],
+    "pronunciation": "KICH-dee",
+    "origin": "Ancient subcontinental dish; documented in Sanskrit and Mughal-era texts."
+  }
+]
