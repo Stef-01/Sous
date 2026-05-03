@@ -10,6 +10,7 @@ import {
   Check,
   RotateCcw,
   UtensilsCrossed,
+  Clock,
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
@@ -380,6 +381,16 @@ export function ResultStack({
   );
 }
 
+/** Pure helper: map a prepBurden score (0-1, higher = quicker)
+ *  to a qualitative effort label for the recipe-card meta strip.
+ *  See docs/UX-RECON-FRAMEWORK.md pattern #3 (time-effort-trust). */
+function effortFromPrepBurden(prepBurden: number): string {
+  if (!Number.isFinite(prepBurden)) return "Medium";
+  if (prepBurden >= 0.7) return "Easy";
+  if (prepBurden >= 0.5) return "Medium";
+  return "Worth it";
+}
+
 function ResultCard({
   side,
   mainDish,
@@ -417,6 +428,15 @@ function ResultCard({
   const displayExplanation =
     aiExplanation.data?.explanation ?? side.explanation;
 
+  // W11 hero-card upgrade — UX-RECON-FRAMEWORK pattern #1 (hero
+  // recipe card), pattern #2 (eyebrow categorisation), pattern
+  // #3 (time-effort-trust meta strip). The card now leads with
+  // a 96px hero image instead of a 44px thumbnail; eyebrow is
+  // cuisine family in caps; meta strip is effort label + match%.
+  const effortLabel = effortFromPrepBurden(side.scores.prepBurden);
+  const matchPct = Math.round(side.totalScore * 100);
+  const cuisineEyebrow = side.cuisineFamily.toUpperCase();
+
   return (
     <motion.div
       layout
@@ -424,116 +444,135 @@ function ResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.08, duration: 0.3 }}
       className={cn(
-        "overflow-hidden rounded-xl border bg-white transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border bg-white transition-all duration-200",
         selected
-          ? "border-[var(--nourish-green)]/30 shadow-[var(--shadow-card)]"
+          ? "border-[var(--nourish-green)]/40 shadow-[var(--shadow-card)]"
           : "border-neutral-100 shadow-none",
       )}
     >
-      <div className="flex w-full items-center gap-3 p-4">
-        {/* Selection checkbox  -  min 44px touch target wrapping the visual circle */}
-        <motion.button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleSelect();
-          }}
-          whileTap={{ scale: 0.85 }}
-          transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center -m-3"
-          type="button"
-          role="checkbox"
-          aria-checked={selected}
-          aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
+      {/* Selection toggle — floats top-right of the whole card.
+          Pattern #4 (save-corner): single tap target reachable
+          without crowding. 44px touch target wraps a 24px circle. */}
+      <motion.button
+        onClick={(e) => {
+          e.stopPropagation();
+          onToggleSelect();
+        }}
+        whileTap={{ scale: 0.85 }}
+        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center"
+        type="button"
+        role="checkbox"
+        aria-checked={selected}
+        aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
+      >
+        <span
+          className={cn(
+            "flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150",
+            selected
+              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+              : "border-neutral-200 bg-white",
+          )}
         >
-          <span
-            className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-150",
-              selected
-                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-                : "border-neutral-300 bg-white",
-            )}
-          >
-            {selected && (
-              <Check size={10} className="text-white" strokeWidth={3} />
-            )}
-          </span>
-        </motion.button>
+          {selected && (
+            <Check size={12} className="text-white" strokeWidth={3} />
+          )}
+        </span>
+      </motion.button>
 
-        {/* Card content (tappable to expand) */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex flex-1 items-center gap-2.5 text-left min-w-0"
-          type="button"
-          aria-expanded={expanded}
-        >
-          {/* Side dish image */}
-          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
-            {isRerolling ? (
-              <div className="flex h-full w-full items-center justify-center">
-                <RefreshCw
-                  size={16}
-                  className="animate-spin text-[var(--nourish-green)]"
-                />
-              </div>
-            ) : side.imageUrl && !imgError ? (
-              <Image
-                src={side.imageUrl}
-                alt={side.name}
-                fill
-                sizes="44px"
-                className="object-cover"
-                onError={() => setImgError(true)}
+      {/* Card body — tappable to expand. Hero image + right column. */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex w-full gap-3 p-3 text-left"
+        type="button"
+        aria-expanded={expanded}
+      >
+        {/* Hero image — 96×96 (was 44×44), rounded-xl */}
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
+          {isRerolling ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <RefreshCw
+                size={20}
+                className="animate-spin text-[var(--nourish-green)]"
               />
-            ) : (
-              <div
-                className="flex h-full w-full items-center justify-center text-lg"
-                style={{
-                  background:
-                    "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
-                }}
-              >
-                <UtensilsCrossed
-                  size={18}
-                  className="text-white drop-shadow-sm"
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : side.imageUrl && !imgError ? (
+            <Image
+              src={side.imageUrl}
+              alt={side.name}
+              fill
+              sizes="96px"
+              className="object-cover"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div
+              className="flex h-full w-full items-center justify-center text-2xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
+              }}
+            >
+              <UtensilsCrossed
+                size={28}
+                className="text-white drop-shadow-sm"
+              />
+            </div>
+          )}
+        </div>
 
-          {/* Side dish info */}
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
-              {side.name}
-            </h3>
-            {((rank === 1 && selected) || side.hasGuidedCook) && (
-              <div className="flex items-center gap-1.5 mt-0.5">
-                {rank === 1 && selected && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
+        {/* Right column — eyebrow + title + meta strip + 1-line description.
+            pr-9 reserves space for the floating selection toggle. */}
+        <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5 pr-9">
+          <div className="min-w-0">
+            {/* Eyebrow row — pattern #2 */}
+            <div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-wider text-[var(--nourish-subtext)]">
+              <span className="uppercase">{cuisineEyebrow}</span>
+              {rank === 1 && selected && (
+                <>
+                  <span className="text-neutral-300">·</span>
+                  <span className="uppercase text-[var(--nourish-green)]">
                     Best match
                   </span>
-                )}
-                {side.hasGuidedCook && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]">
+                </>
+              )}
+              {side.hasGuidedCook && (
+                <>
+                  <span className="text-neutral-300">·</span>
+                  <span className="uppercase text-[var(--nourish-gold)]">
                     Guided
                   </span>
-                )}
-              </div>
-            )}
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
-              {side.explanation}
-            </p>
+                </>
+              )}
+            </div>
+
+            {/* Title */}
+            <h3 className="mt-0.5 line-clamp-2 text-base font-semibold leading-snug text-[var(--nourish-dark)]">
+              {side.name}
+            </h3>
+
+            {/* Meta strip — pattern #3 */}
+            <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--nourish-subtext)]">
+              <Clock size={11} className="shrink-0" />
+              <span>{effortLabel}</span>
+              <span className="text-neutral-300">·</span>
+              <span className="font-medium text-[var(--nourish-green)]">
+                {matchPct}% match
+              </span>
+            </div>
           </div>
 
-          <ChevronDown
-            size={16}
-            className={cn(
-              "shrink-0 text-[var(--nourish-subtext)] transition-transform duration-200",
-              expanded && "rotate-180",
-            )}
-          />
-        </button>
+          {/* Short description */}
+          <p className="mt-1.5 line-clamp-1 text-xs text-[var(--nourish-subtext)]">
+            {side.explanation}
+          </p>
+        </div>
+      </button>
 
-        {/* Per-side reroll  -  min 44px touch target */}
+      {/* Bottom action row — Swap on left, "Why this won" on right.
+          Replaces the cramped chevron + reroll-icon column from the
+          old layout with two text-labelled affordances. */}
+      <div className="flex items-center justify-between border-t border-neutral-100 px-2 py-1.5">
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -542,18 +581,31 @@ function ResultCard({
           disabled={isRerolling}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
+          className="flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 disabled:opacity-40"
           type="button"
-          title="Swap this side"
           aria-label={`Swap ${side.name} for a different side`}
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors">
-            <RotateCcw size={12} />
-          </span>
+          <RotateCcw size={12} />
+          <span>Swap</span>
         </motion.button>
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50"
+          type="button"
+          aria-expanded={expanded}
+        >
+          <span>{expanded ? "Less" : "Why this won"}</span>
+          <ChevronDown
+            size={14}
+            className={cn(
+              "transition-transform duration-200",
+              expanded && "rotate-180",
+            )}
+          />
+        </button>
       </div>
 
-      {/* Expanded: "Why this won" + individual Cook this */}
+      {/* Expanded: score badges + AI explanation + Cook this */}
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -563,7 +615,7 @@ function ResultCard({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
+            <div className="space-y-3 border-t border-neutral-100 px-4 pb-4 pt-3">
               {/* Score highlights */}
               <div className="flex flex-wrap gap-2">
                 <ScoreBadge
@@ -582,11 +634,11 @@ function ResultCard({
               </div>
 
               {/* AI-enhanced pairing explanation */}
-              <p className="text-sm text-[var(--nourish-subtext)] leading-relaxed">
+              <p className="text-sm leading-relaxed text-[var(--nourish-subtext)]">
                 {displayExplanation}
               </p>
 
-              {/* Cook just this side  -  secondary inline action */}
+              {/* Cook just this side — secondary inline action */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();

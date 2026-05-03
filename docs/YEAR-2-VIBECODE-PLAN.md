@@ -148,6 +148,59 @@ content discovery + distillation. 30+ new items across Y2.
 Sprint A is dedicated; thereafter founder-unlock work runs as
 a 1-2 hour/week background workstream as keys come online.
 
+### 3.7 UX reconnaissance discipline (continuous, added 2026-05-03)
+
+Stefan's W11 review flagged that several Y1 + early-Y2 surfaces
+were functional but visually thin — "rudimentary" was the word.
+Fix: every sprint ships at least **one surface upgrade rooted
+in a documented observation** of how the leading food apps
+(Serious Eats, Bon Appétit, NYT Cooking, HelloFresh, Mealime,
+Tasty, Yummly, Whisk, etc.) solve the equivalent problem.
+
+The full framework — pattern library + sprint-by-sprint mapping +
+acceptance contract — lives in `docs/UX-RECON-FRAMEWORK.md`. The
+12-pattern library covers: hero recipe card, eyebrow
+categorisation, time-effort-trust meta strip, save-corner
+heart, servings stepper, sticky compact header, step-by-step
+locked progress, ingredient checklist, filter-chip row,
+made-it ring, tap-and-hold quick-add, empty-state with concrete
+preview.
+
+**IP-clean rule**: patterns are described in our own words +
+implemented as original Sous-branded code. Competitor screenshots
+captured for analysis stay in local `/tmp` or
+`docs/ux-recon/screenshots/.gitignore'd/` — they are never
+committed to the public repo.
+
+**Sprint acceptance contract** (mirrors the 4-gate test gate):
+
+1. The sprint's IDEO doc names which pattern (#1-#12) was the
+   upgrade target.
+2. The implementation is original (Sous's own colours, copy,
+   spacing — no lifted CSS/code).
+3. The sprint surface scoreboard shows a real numeric jump on
+   the upgraded surface in the IDEO doc's rubric.
+
+Per-sprint targets (also tabulated in the framework doc):
+
+| Sprint | Surface focus              | Pattern reference |
+| ------ | -------------------------- | ----------------- |
+| C      | Today result-stack         | #1 + #2 + #3 + #4 |
+| D      | Pantry add-flow            | #11 + #12         |
+| E      | Daily rhythm cards         | #6                |
+| F      | Cook flow step-progress    | #7 + #8           |
+| G      | Servings stepper           | #5                |
+| H      | Recipe-author surfaces     | #2 + #5 + #6      |
+| I      | Pod gallery + filter chips | #9 + #10          |
+| J      | Search results page        | #2 + #9           |
+| K      | Cuisine vocabulary cards   | #2 + #10          |
+| L      | Bake-sale recipe cards     | #1 + #4           |
+
+In addition to the per-sprint primary, each sprint can adopt
+**one Y1 backfill** opportunistically (Today QuestCard, Path
+skill tree consistency audit, Coach quiz visual weight, etc. —
+listed in the framework doc).
+
 ---
 
 ## 4. Sprint structure overview
