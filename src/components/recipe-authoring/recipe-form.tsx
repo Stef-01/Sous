@@ -33,6 +33,7 @@ import { userRecipeSchema } from "@/types/user-recipe";
 import { toast } from "@/lib/hooks/use-toast";
 import { SectionKicker } from "@/components/shared/section-kicker";
 import { cn } from "@/lib/utils/cn";
+import { SortableStepList } from "./sortable-step-list";
 
 export interface RecipeFormProps {
   initialValues: RecipeDraft;
@@ -221,38 +222,23 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
             <Plus size={11} aria-hidden /> Add
           </button>
         </div>
-        <ol className="space-y-2">
-          {stepsArray.fields.map((field, idx) => (
-            <li
-              key={field.id}
-              className="flex items-start gap-2 rounded-xl border border-neutral-100 bg-neutral-50/60 p-2"
-            >
-              <span className="mt-1.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[11px] font-semibold text-[var(--nourish-green)]">
-                {idx + 1}
-              </span>
-              <textarea
-                {...form.register(`steps.${idx}.instruction`)}
-                placeholder="Bloom the cumin seeds in oil for 30 seconds."
-                rows={2}
-                className={cn(inputClass, "resize-none")}
-              />
-              {stepsArray.fields.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    stepsArray.replace(
-                      removeStepAt(form.getValues("steps"), idx),
-                    )
-                  }
-                  aria-label={`Remove step ${idx + 1}`}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
-                >
-                  <Trash2 size={14} />
-                </button>
-              )}
-            </li>
-          ))}
-        </ol>
+        <SortableStepList
+          fieldIds={stepsArray.fields.map((f) => f.id)}
+          steps={form.getValues("steps")}
+          renderStepInstruction={(idx) => (
+            <textarea
+              {...form.register(`steps.${idx}.instruction`)}
+              placeholder="Bloom the cumin seeds in oil for 30 seconds."
+              rows={2}
+              className={cn(inputClass, "resize-none")}
+            />
+          )}
+          onReorder={(next) => stepsArray.replace(next)}
+          onRemove={(idx) =>
+            stepsArray.replace(removeStepAt(form.getValues("steps"), idx))
+          }
+          canRemove={stepsArray.fields.length > 1}
+        />
       </section>
 
       <button
