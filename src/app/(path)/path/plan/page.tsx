@@ -261,13 +261,21 @@ export default function SwipePlannerPage() {
         )}
 
         {isComplete && (
-          <Link
-            href="/today"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
-          >
-            See it on Today
-            <ArrowRight size={14} aria-hidden />
-          </Link>
+          <div className="mt-6 flex flex-col gap-2">
+            <Link
+              href="/path/plan/week"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
+            >
+              Review the week
+              <ArrowRight size={14} aria-hidden />
+            </Link>
+            <Link
+              href="/today"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
+            >
+              Go to Today
+            </Link>
+          </div>
         )}
       </main>
     </div>
