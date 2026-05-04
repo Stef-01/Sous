@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
   RefreshCw,
@@ -10,21 +10,14 @@ import {
   Check,
   RotateCcw,
   UtensilsCrossed,
-  Clock,
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import type { ScoreBreakdown } from "@/lib/engine/types";
-import {
-  PENDING_BREAKDOWN_KEY,
-  buildPendingBreakdown,
-} from "@/lib/engine/attach-score-breakdown";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { trpc } from "@/lib/trpc/client";
-import { useUserWeights } from "@/lib/hooks/use-user-weights";
-import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 
 export interface SideResult {
   id: string;
@@ -40,19 +33,6 @@ export interface SideResult {
   imageUrl: string;
   description: string;
   hasGuidedCook?: boolean;
-  /** Y2 W17 pantry-coverage badge data. Optional + nullable so
-   *  legacy + no-pantry-data candidates degrade silently to "no
-   *  badge". Populated end-to-end once the pairing API threads
-   *  ingredient data through to coverage compute (substrate
-   *  ready, founder-gated on the seed-catalog ingredient
-   *  expansion).
-   *  - pantryCoverage: 0..1 fractional coverage
-   *  - pantryHaveCount / pantryTotalCount: raw counts for the
-   *    "X / Y from pantry" badge label
-   */
-  pantryCoverage?: number | null;
-  pantryHaveCount?: number | null;
-  pantryTotalCount?: number | null;
 }
 
 interface ResultStackProps {
@@ -76,7 +56,6 @@ export function ResultStack({
   onReroll,
   isRerolling,
 }: ResultStackProps) {
-  const reducedMotion = useReducedMotion();
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -119,21 +98,11 @@ export function ResultStack({
     });
   }, []);
 
-  // W30 pairing-engine V2: trained weight vector. Reroll respects
-  // the same personalisation as the initial pairing.
-  const { weights: userWeights } = useUserWeights();
-  // W37 household dietary constraint — reroll respects the same
-  // hard filter as the initial pairing so swaps stay compliant.
-  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
-
   // Per-side reroll via tRPC
   const rerollQuery = trpc.pairing.rerollSide.useQuery(
     {
       mainDish,
       excludeIds: Array.from(seenIds),
-      userWeights,
-      householdDietaryFlags:
-        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
     },
     {
       enabled: rerollingIndex !== null,
@@ -237,55 +206,22 @@ export function ResultStack({
         ? "text-amber-600"
         : "text-[var(--nourish-subtext)]";
 
-  /** Y2 W6 V3 trainer dependency. When the user picks a side,
-   *  stash the engine's ScoreBreakdown in sessionStorage so the
-   *  cook page can attach it to the new cook session at start
-   *  time. Pure helper composes the payload; the write is a
-   *  one-liner inside the handler. */
-  const stashBreakdownForSide = useCallback((side: SideResult) => {
-    if (typeof window === "undefined") return;
-    try {
-      const pending = buildPendingBreakdown(
-        side.slug,
-        side.scores,
-        side.totalScore,
-      );
-      sessionStorage.setItem(PENDING_BREAKDOWN_KEY, JSON.stringify(pending));
-    } catch {
-      // ignore — quota / privacy mode
-    }
-  }, []);
-
-  const handleCookSingle = useCallback(
-    (side: SideResult) => {
-      stashBreakdownForSide(side);
-      onCookThis(side);
-    },
-    [stashBreakdownForSide, onCookThis],
-  );
-
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
 
     if (onCookSelected && selectedSides.length > 1) {
-      // Multi-dish cook — stash the highest-totalScore side's
-      // breakdown as the V3 signal anchor.
-      const anchor = selectedSides.reduce((best, s) =>
-        s.totalScore > best.totalScore ? s : best,
-      );
-      stashBreakdownForSide(anchor);
       onCookSelected(selectedSides);
     } else if (selectedSides.length === 1) {
-      handleCookSingle(selectedSides[0]);
+      onCookThis(selectedSides[0]);
     } else {
       // Fallback: cook first selected
-      handleCookSingle(selectedSides[0]);
+      onCookThis(selectedSides[0]);
     }
-  }, [selectedSides, onCookSelected, handleCookSingle, stashBreakdownForSide]);
+  }, [selectedSides, onCookSelected, onCookThis]);
 
   return (
     <motion.div
-      initial={reducedMotion ? false : { opacity: 0 }}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="space-y-4"
     >
@@ -323,7 +259,7 @@ export function ResultStack({
             isRerolling={rerollingIndex === idx}
             onToggleSelect={() => toggleSelect(side.id)}
             onRerollSide={() => handleRerollSide(idx)}
-            onCookThis={() => handleCookSingle(side)}
+            onCookThis={() => onCookThis(side)}
           />
         ))}
       </div>
@@ -394,16 +330,6 @@ export function ResultStack({
   );
 }
 
-/** Pure helper: map a prepBurden score (0-1, higher = quicker)
- *  to a qualitative effort label for the recipe-card meta strip.
- *  See docs/UX-RECON-FRAMEWORK.md pattern #3 (time-effort-trust). */
-function effortFromPrepBurden(prepBurden: number): string {
-  if (!Number.isFinite(prepBurden)) return "Medium";
-  if (prepBurden >= 0.7) return "Easy";
-  if (prepBurden >= 0.5) return "Medium";
-  return "Worth it";
-}
-
 function ResultCard({
   side,
   mainDish,
@@ -441,15 +367,6 @@ function ResultCard({
   const displayExplanation =
     aiExplanation.data?.explanation ?? side.explanation;
 
-  // W11 hero-card upgrade — UX-RECON-FRAMEWORK pattern #1 (hero
-  // recipe card), pattern #2 (eyebrow categorisation), pattern
-  // #3 (time-effort-trust meta strip). The card now leads with
-  // a 96px hero image instead of a 44px thumbnail; eyebrow is
-  // cuisine family in caps; meta strip is effort label + match%.
-  const effortLabel = effortFromPrepBurden(side.scores.prepBurden);
-  const matchPct = Math.round(side.totalScore * 100);
-  const cuisineEyebrow = side.cuisineFamily.toUpperCase();
-
   return (
     <motion.div
       layout
@@ -457,151 +374,116 @@ function ResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.08, duration: 0.3 }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border bg-white transition-all duration-200",
+        "overflow-hidden rounded-xl border bg-white transition-all duration-200",
         selected
-          ? "border-[var(--nourish-green)]/40 shadow-[var(--shadow-card)]"
+          ? "border-[var(--nourish-green)]/30 shadow-[var(--shadow-card)]"
           : "border-neutral-100 shadow-none",
       )}
     >
-      {/* Selection toggle — floats top-right of the whole card.
-          Pattern #4 (save-corner): single tap target reachable
-          without crowding. 44px touch target wraps a 24px circle. */}
-      <motion.button
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggleSelect();
-        }}
-        whileTap={{ scale: 0.85 }}
-        transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        className="absolute right-2 top-2 z-10 flex h-11 w-11 items-center justify-center"
-        type="button"
-        role="checkbox"
-        aria-checked={selected}
-        aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
-      >
-        <span
-          className={cn(
-            "flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-sm transition-all duration-150",
-            selected
-              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-              : "border-neutral-200 bg-white",
-          )}
+      <div className="flex w-full items-center gap-3 p-4">
+        {/* Selection checkbox  -  min 44px touch target wrapping the visual circle */}
+        <motion.button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleSelect();
+          }}
+          whileTap={{ scale: 0.85 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
+          className="flex h-11 w-11 shrink-0 items-center justify-center -m-3"
+          type="button"
+          role="checkbox"
+          aria-checked={selected}
+          aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
         >
-          {selected && (
-            <Check size={12} className="text-white" strokeWidth={3} />
-          )}
-        </span>
-      </motion.button>
+          <span
+            className={cn(
+              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-150",
+              selected
+                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+                : "border-neutral-300 bg-white",
+            )}
+          >
+            {selected && (
+              <Check size={10} className="text-white" strokeWidth={3} />
+            )}
+          </span>
+        </motion.button>
 
-      {/* Card body — tappable to expand. Hero image + right column. */}
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="flex w-full gap-3 p-3 text-left"
-        type="button"
-        aria-expanded={expanded}
-      >
-        {/* Hero image — 96×96 (was 44×44), rounded-xl */}
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
-          {isRerolling ? (
-            <div className="flex h-full w-full items-center justify-center">
-              <RefreshCw
-                size={20}
-                className="animate-spin text-[var(--nourish-green)]"
+        {/* Card content (tappable to expand) */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="flex flex-1 items-center gap-2.5 text-left min-w-0"
+          type="button"
+          aria-expanded={expanded}
+        >
+          {/* Side dish image */}
+          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+            {isRerolling ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <RefreshCw
+                  size={16}
+                  className="animate-spin text-[var(--nourish-green)]"
+                />
+              </div>
+            ) : side.imageUrl && !imgError ? (
+              <Image
+                src={side.imageUrl}
+                alt={side.name}
+                fill
+                sizes="44px"
+                className="object-cover"
+                onError={() => setImgError(true)}
               />
-            </div>
-          ) : side.imageUrl && !imgError ? (
-            <Image
-              src={side.imageUrl}
-              alt={side.name}
-              fill
-              sizes="96px"
-              className="object-cover"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div
-              className="flex h-full w-full items-center justify-center text-2xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
-              }}
-            >
-              <UtensilsCrossed
-                size={28}
-                className="text-white drop-shadow-sm"
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Right column — eyebrow + title + meta strip + 1-line description.
-            pr-9 reserves space for the floating selection toggle. */}
-        <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5 pr-9">
-          <div className="min-w-0">
-            {/* Eyebrow row — pattern #2 */}
-            <div className="flex items-center gap-1.5 text-[10px] font-semibold tracking-wider text-[var(--nourish-subtext)]">
-              <span className="uppercase">{cuisineEyebrow}</span>
-              {rank === 1 && selected && (
-                <>
-                  <span className="text-neutral-300">·</span>
-                  <span className="uppercase text-[var(--nourish-green)]">
-                    Best match
-                  </span>
-                </>
-              )}
-              {side.hasGuidedCook && (
-                <>
-                  <span className="text-neutral-300">·</span>
-                  <span className="uppercase text-[var(--nourish-gold)]">
-                    Guided
-                  </span>
-                </>
-              )}
-              {/* W17 pantry badge — renders only when coverage
-                  data is populated AND coverage clears the
-                  "you have most of this" threshold (matching
-                  W16's discontinuity). */}
-              {typeof side.pantryCoverage === "number" &&
-                side.pantryCoverage >= 0.7 && (
-                  <>
-                    <span className="text-neutral-300">·</span>
-                    <span className="uppercase text-[var(--nourish-green)]">
-                      {typeof side.pantryHaveCount === "number" &&
-                      typeof side.pantryTotalCount === "number"
-                        ? `${side.pantryHaveCount}/${side.pantryTotalCount} from pantry`
-                        : "From pantry"}
-                    </span>
-                  </>
-                )}
-            </div>
-
-            {/* Title */}
-            <h3 className="mt-0.5 line-clamp-2 text-base font-semibold leading-snug text-[var(--nourish-dark)]">
-              {side.name}
-            </h3>
-
-            {/* Meta strip — pattern #3 */}
-            <div className="mt-1 flex items-center gap-1.5 text-xs text-[var(--nourish-subtext)]">
-              <Clock size={11} className="shrink-0" />
-              <span>{effortLabel}</span>
-              <span className="text-neutral-300">·</span>
-              <span className="font-medium text-[var(--nourish-green)]">
-                {matchPct}% match
-              </span>
-            </div>
+            ) : (
+              <div
+                className="flex h-full w-full items-center justify-center text-lg"
+                style={{
+                  background:
+                    "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
+                }}
+              >
+                <UtensilsCrossed
+                  size={18}
+                  className="text-white drop-shadow-sm"
+                />
+              </div>
+            )}
           </div>
 
-          {/* Short description */}
-          <p className="mt-1.5 line-clamp-1 text-xs text-[var(--nourish-subtext)]">
-            {side.explanation}
-          </p>
-        </div>
-      </button>
+          {/* Side dish info */}
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
+              {side.name}
+            </h3>
+            {((rank === 1 && selected) || side.hasGuidedCook) && (
+              <div className="flex items-center gap-1.5 mt-0.5">
+                {rank === 1 && selected && (
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
+                    Best match
+                  </span>
+                )}
+                {side.hasGuidedCook && (
+                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]">
+                    Guided
+                  </span>
+                )}
+              </div>
+            )}
+            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
+              {side.explanation}
+            </p>
+          </div>
 
-      {/* Bottom action row — Swap on left, "Why this won" on right.
-          Replaces the cramped chevron + reroll-icon column from the
-          old layout with two text-labelled affordances. */}
-      <div className="flex items-center justify-between border-t border-neutral-100 px-2 py-1.5">
+          <ChevronDown
+            size={16}
+            className={cn(
+              "shrink-0 text-[var(--nourish-subtext)] transition-transform duration-200",
+              expanded && "rotate-180",
+            )}
+          />
+        </button>
+
+        {/* Per-side reroll  -  min 44px touch target */}
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -610,31 +492,18 @@ function ResultCard({
           disabled={isRerolling}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 disabled:opacity-40"
+          className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
           type="button"
+          title="Swap this side"
           aria-label={`Swap ${side.name} for a different side`}
         >
-          <RotateCcw size={12} />
-          <span>Swap</span>
+          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors">
+            <RotateCcw size={12} />
+          </span>
         </motion.button>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50"
-          type="button"
-          aria-expanded={expanded}
-        >
-          <span>{expanded ? "Less" : "Why this won"}</span>
-          <ChevronDown
-            size={14}
-            className={cn(
-              "transition-transform duration-200",
-              expanded && "rotate-180",
-            )}
-          />
-        </button>
       </div>
 
-      {/* Expanded: score badges + AI explanation + Cook this */}
+      {/* Expanded: "Why this won" + individual Cook this */}
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -644,70 +513,56 @@ function ResultCard({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="space-y-3 border-t border-neutral-100 px-4 pb-4 pt-3">
-              {/* Score highlights */}
-              <div className="flex flex-wrap gap-2">
-                <ScoreBadge
-                  label="Cuisine fit"
-                  value={side.scores.cuisineFit}
-                />
-                <ScoreBadge
-                  label="Flavor contrast"
-                  value={side.scores.flavorContrast}
-                />
-                <ScoreBadge
-                  label="Nutrition"
-                  value={side.scores.nutritionBalance}
-                />
-                <ScoreBadge label="Quick prep" value={side.scores.prepBurden} />
-              </div>
+            <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
+              {/* "Why this pairs well" header */}
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
+                Why this pairs well
+              </p>
 
               {/* AI-enhanced pairing explanation */}
-              <p className="text-sm leading-relaxed text-[var(--nourish-subtext)]">
+              <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
                 {displayExplanation}
               </p>
 
-              {/* Cook just this side — secondary inline action */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCookThis();
-                }}
-                className={cn(
-                  "w-full rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-xs font-medium",
-                  "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
-                  "transition-colors duration-200",
-                  "flex items-center justify-center gap-2",
-                )}
-                type="button"
-              >
-                {side.hasGuidedCook && <ChefHat size={14} />}
-                {side.hasGuidedCook
-                  ? "Start guided cook"
-                  : "Cook just this one"}
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-function ScoreBadge({ label, value }: { label: string; value: number }) {
-  const pct = Math.round(value * 100);
-  return (
-    <span
-      className={cn(
-        "rounded-full px-2 py-0.5 text-[11px] font-medium",
-        pct >= 70
-          ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-          : pct >= 50
-            ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
-            : "bg-neutral-100 text-[var(--nourish-subtext)]",
-      )}
-    >
-      {label} {pct}%
-    </span>
-  );
-}
+              {/* Dimension-by-dimension breakdown */}
+              <div className="space-y-1.5">
+                <PairingDimension
+                  label="Cuisine fit"
+                  value={side.scores.cuisineFit}
+                  reason={
+                    side.scores.cuisineFit >= 0.7
+                      ? "Comes from the same culinary tradition"
+                      : side.scores.cuisineFit >= 0.4
+                        ? "Bridges flavors across cuisines"
+                        : "An adventurous cross-cuisine pick"
+                  }
+                />
+                <PairingDimension
+                  label="Flavor contrast"
+                  value={side.scores.flavorContrast}
+                  reason={
+                    side.scores.flavorContrast >= 0.7
+                      ? "Bright, contrasting flavors cut through richness"
+                      : side.scores.flavorContrast >= 0.4
+                        ? "Adds complementary taste notes"
+                        : "Similar flavor profile — a harmonious match"
+                  }
+                />
+                <PairingDimension
+                  label="Nutrition balance"
+                  value={side.scores.nutritionBalance}
+                  reason={
+                    side.scores.nutritionBalance >= 0.7
+                      ? "Fills gaps in the meal's nutritional profile"
+                      : "Adds variety to the plate"
+                  }
+                />
+                <PairingDimension
+                  label="Prep burden"
+                  value={side.scores.prepBurden}
+                  reason={
+                    side.scores.prepBurden >= 0.7
+                      ? "Quick to prepare alongside your main"
+                      : "A bit more involved, but worth the effort"
+                  }
+              

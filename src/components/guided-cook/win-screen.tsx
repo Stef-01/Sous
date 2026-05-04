@@ -18,14 +18,16 @@ import {
   PartyPopper,
   Award,
   Send,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
 import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
-import { KidsAteItPrompt } from "@/components/guided-cook/kids-ate-it-prompt";
-import { LunchboxSuggestChip } from "@/components/guided-cook/lunchbox-suggest-chip";
-import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
+import {
+  generateShareCard,
+  shareOrDownload,
+} from "@/lib/utils/share-card";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -45,6 +47,8 @@ interface WinScreenProps {
   cuisineFamily?: string;
   isFirstCook?: boolean;
   streak?: number;
+  /** How many cooks in this cuisine (including this one). */
+  cuisineCookCount?: number;
   totalSteps?: number;
   pathJustUnlocked?: boolean;
   saved?: boolean;
@@ -57,27 +61,6 @@ interface WinScreenProps {
   onSave: () => void;
   onCookAgain: () => void;
   onBackToday: () => void;
-  /** W46 pod-challenge integration. When set, the win screen
-   *  surfaces a "Submit to pod challenge" affordance with the
-   *  pod's name + the per-cook score. Tap → onSubmit. */
-  podChallenge?: PodChallengeWinSlot | null;
-}
-
-/** Slot for the W46 pod-challenge surface on the win screen.
- *  The cook page builds this when the user is in a pod and the
- *  cooked dish matches the active week's challenge. */
-export interface PodChallengeWinSlot {
-  /** Display label — usually the pod name. */
-  podName: string;
-  /** Computed cook score (0-100) at win-screen render time.
-   *  Pre-computed so the toggle shows the user what they're
-   *  about to submit. */
-  computedScore: number;
-  /** True iff a submission already exists for this user-week
-   *  pair. The toggle flips to "Update" mode in that case. */
-  alreadySubmitted: boolean;
-  /** Toggle handler — caller persists the PodSubmission. */
-  onSubmit: () => void;
 }
 
 /** Where the sender's first name lives between sessions. Collected lazily
@@ -130,17 +113,23 @@ interface ConfettiParticle {
 }
 
 function generateConfetti(): ConfettiParticle[] {
-  return Array.from({ length: 50 }, (_, i) => {
-    const startX = 40 + (Math.random() - 0.5) * 60;
-    const drift = (i % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15);
+  return Array.from({ length: 60 }, (_, i) => {
+    // First 20 particles burst from center, rest rain from top
+    const isBurst = i < 20;
+    const startX = isBurst
+      ? 50 + (Math.random() - 0.5) * 10
+      : 10 + Math.random() * 80;
+    const drift = isBurst
+      ? (Math.random() - 0.5) * 60
+      : (i % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15);
     return {
       id: i,
       x: startX,
       xEnd: startX + drift,
       color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      delay: Math.random() * 0.5,
-      duration: 1.8 + Math.random() * 1.2,
-      size: 5 + Math.random() * 8,
+      delay: isBurst ? Math.random() * 0.15 : 0.2 + Math.random() * 0.5,
+      duration: isBurst ? 1.4 + Math.random() * 0.8 : 1.8 + Math.random() * 1.2,
+      size: isBurst ? 6 + Math.random() * 10 : 5 + Math.random() * 8,
       rotation: Math.random() * 360,
       isCircle: i % 4 === 0,
       isSquare: i % 3 !== 0,
@@ -191,76 +180,33 @@ function ConfettiLayer() {
   );
 }
 
-/**
- * SparkleBurst — W22b animation #7. Spring-physics burst of small
- * sparkles from the center of the screen, fired once on mount.
- * Complements (does NOT replace) the existing falling-confetti layer;
- * sparkle gives the cook a sharper "earned" moment alongside the
- * background party. Pointer-events disabled. Respects reduced-motion
- * via Framer's useReducedMotion default.
- */
-function SparkleBurst() {
-  // Stable per-mount sparkle layout. Math.random() is impure under
-  // the repo's react-compiler rule; useState lazy-init runs the
-  // generator exactly once and never re-runs on re-render.
-  const [sparkles] = useState(() =>
-    Array.from({ length: 14 }, (_, i) => {
-      const angle = (i / 14) * Math.PI * 2;
-      const distance = 110 + Math.random() * 60;
-      return {
-        id: i,
-        x: Math.cos(angle) * distance,
-        y: Math.sin(angle) * distance,
-        delay: i * 0.022,
-        color: i % 2 === 0 ? "#FFFFFF" : "#FFD466", // white + warm gold
-      };
-    }),
-  );
-  return (
-    <div
-      className="pointer-events-none absolute left-1/2 top-1/3 z-[5]"
-      aria-hidden
-      style={{ transform: "translate(-50%, -50%)" }}
-    >
-      {sparkles.map((s) => (
-        <motion.span
-          key={s.id}
-          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
-          animate={{
-            x: s.x,
-            y: s.y,
-            scale: [0, 1.2, 0],
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 0.9,
-            delay: s.delay,
-            ease: [0.16, 1, 0.3, 1],
-          }}
-          className="absolute block rounded-full"
-          style={{
-            width: 8,
-            height: 8,
-            background: s.color,
-            boxShadow: `0 0 12px ${s.color}aa`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 interface Milestone {
   icon: React.ReactNode;
   headline: string;
   message: string;
 }
 
+/** Emoji flag for the cuisine — used in milestone headlines. */
+const CUISINE_EMOJI: Record<string, string> = {
+  japanese: "🇯🇵",
+  korean: "🇰🇷",
+  thai: "🇹🇭",
+  chinese: "🇨🇳",
+  vietnamese: "🇻🇳",
+  filipino: "🇵🇭",
+  indian: "🇮🇳",
+  italian: "🇮🇹",
+  mexican: "🇲🇽",
+  mediterranean: "🫒",
+};
+
 function detectMilestone(ctx: {
   isFirstCook: boolean;
   streak: number;
   cuisineFamily: string;
   dishName: string;
+  /** How many cooks the user has completed in this cuisine (including this one). */
+  cuisineCookCount?: number;
 }): Milestone {
   if (ctx.isFirstCook) {
     return {
@@ -327,6 +273,52 @@ function detectMilestone(ctx: {
       message: `${ctx.dishName} done. ${ctx.streak} days strong.`,
     };
   }
+
+  // ── Cuisine milestones ──────────────────────────────
+  const cc = ctx.cuisineCookCount ?? 0;
+  const cuisineName = ctx.cuisineFamily;
+  const flag = CUISINE_EMOJI[cuisineName.toLowerCase()] ?? "🍽️";
+
+  if (cc === 1) {
+    return {
+      icon: (
+        <Sparkles
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `First ${cuisineName} cook! ${flag}`,
+      message: `${ctx.dishName} marks the start of your ${cuisineName} journey.`,
+    };
+  }
+  if (cc === 5) {
+    return {
+      icon: (
+        <Trophy
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `${cuisineName} explorer! ${flag}`,
+      message: `5 ${cuisineName} dishes down. You're building real range.`,
+    };
+  }
+  if (cc === 10) {
+    return {
+      icon: (
+        <ChefHat
+          size={32}
+          className="text-[var(--nourish-green)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `${cuisineName} specialist! ${flag}`,
+      message: `10 ${cuisineName} cooks. This cuisine is becoming second nature.`,
+    };
+  }
+
   return {
     icon: (
       <PartyPopper
@@ -354,6 +346,7 @@ export function WinScreen({
   cuisineFamily = "",
   isFirstCook = false,
   streak = 0,
+  cuisineCookCount = 0,
   totalSteps = 0,
   pathJustUnlocked,
   saved = false,
@@ -365,7 +358,6 @@ export function WinScreen({
   onSave,
   onCookAgain,
   onBackToday,
-  podChallenge = null,
 }: WinScreenProps) {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -374,9 +366,13 @@ export function WinScreen({
   const [showReflection, setShowReflection] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const [showConfetti, setShowConfetti] = useState(!prefersReducedMotion);
+  const [showGlow, setShowGlow] = useState(!prefersReducedMotion);
   const [photoAdded, setPhotoAdded] = useState(false);
   const [giftSent, setGiftSent] = useState(false);
   const [inviteFriendName, setInviteFriendName] = useState("");
+  const [shareStatus, setShareStatus] = useState<
+    "idle" | "generating" | "shared" | "copied" | "downloaded"
+  >("idle");
   const invitePrompts = useInvitePrompts();
 
   const winMessage = trpc.ai.generateWinMessage.useQuery(
@@ -395,6 +391,7 @@ export function WinScreen({
     streak,
     cuisineFamily,
     dishName,
+    cuisineCookCount,
   });
   const headline = winMessage.data?.headline ?? milestone.headline;
   const message = winMessage.data?.message ?? milestone.message;
@@ -416,8 +413,13 @@ export function WinScreen({
 
   useEffect(() => {
     const timer = setTimeout(() => setShowConfetti(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+    const glowTimer = setTimeout(() => setShowGlow(false), 2500);
+    // Haptic feedback on cook completion (mobile)
+    if (!prefersReducedMotion && typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([80, 60, 120]); } catch { /* no-op */ }
+    }
+    return () => { clearTimeout(timer); clearTimeout(glowTimer); };
+  }, [prefersReducedMotion]);
 
   const handleRate = (stars: number) => {
     setRating(stars);
@@ -498,6 +500,23 @@ export function WinScreen({
     invitePrompts.dismiss(dishSlug);
   };
 
+  const handleShareCard = async () => {
+    if (shareStatus !== "idle") return;
+    setShareStatus("generating");
+    try {
+      const blob = await generateShareCard({
+        dishName,
+        cookTimeMinutes: undefined, // not passed as prop currently
+        rating: rating || undefined,
+        cuisineFamily: cuisineFamily || undefined,
+      });
+      const result = await shareOrDownload(blob, dishName);
+      setShareStatus(result);
+    } catch {
+      setShareStatus("idle");
+    }
+  };
+
   const showInvitePrompt =
     !!dishSlug &&
     invitePrompts.mounted &&
@@ -508,12 +527,6 @@ export function WinScreen({
     <div className="relative">
       {/* Confetti burst  -  fixed overlay, auto-hides */}
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
-      {/* W22b: spring-physics sparkle burst from center, additive to
-          the falling confetti above. Sharper "earned" moment. Skipped
-          under prefers-reduced-motion. */}
-      <AnimatePresence>
-        {showConfetti && !prefersReducedMotion && <SparkleBurst />}
-      </AnimatePresence>
 
       <motion.div
         initial={false}
@@ -532,13 +545,28 @@ export function WinScreen({
           }}
           className="space-y-1.5"
         >
-          <motion.div
-            animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
-            transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
-            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
-          >
-            {milestone.icon}
-          </motion.div>
+          <div className="relative flex items-center justify-center">
+            {/* Golden glow pulse ring */}
+            <AnimatePresence>
+              {showGlow && (
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: [0.5, 1.8, 2.2], opacity: [0, 0.4, 0] }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.6, ease: "easeOut" }}
+                  className="absolute h-16 w-16 rounded-2xl bg-[var(--nourish-gold)]/30"
+                  aria-hidden
+                />
+              )}
+            </AnimatePresence>
+            <motion.div
+              animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
+              transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
+              className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
+            >
+              {milestone.icon}
+            </motion.div>
+          </div>
           <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)] leading-snug">
             {headline}
           </h1>
@@ -906,75 +934,39 @@ export function WinScreen({
             <RotateCcw size={14} />
             Again
           </motion.button>
-        </motion.div>
 
-        {/* ── W46 pod-challenge submit slot ───────────────────
-             Renders only when the cook page has wired a podChallenge
-             prop (i.e. the user is in a pod and the cooked dish
-             matches the active week's challenge). */}
-        {podChallenge && (
-          <button
-            type="button"
-            onClick={podChallenge.onSubmit}
+          {/* Share cook card */}
+          <motion.button
+            onClick={handleShareCard}
+            disabled={shareStatus === "generating"}
+            whileTap={
+              shareStatus === "generating" ? undefined : { scale: 0.92 }
+            }
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition",
-              podChallenge.alreadySubmitted
-                ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10"
-                : "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
+              "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+              shareStatus === "shared" ||
+                shareStatus === "copied" ||
+                shareStatus === "downloaded"
+                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
             )}
+            type="button"
+            aria-label="Share a cook card image"
           >
-            <span aria-hidden className="text-2xl">
-              🤝
-            </span>
-            <span className="min-w-0 flex-1">
-              <span
-                className={cn(
-                  "block text-[11px] font-semibold uppercase tracking-[0.06em]",
-                  podChallenge.alreadySubmitted
-                    ? "text-[var(--nourish-green)]"
-                    : "text-white/80",
-                )}
-              >
-                {podChallenge.podName}
-              </span>
-              <span
-                className={cn(
-                  "block font-serif text-sm font-semibold",
-                  podChallenge.alreadySubmitted
-                    ? "text-[var(--nourish-dark)]"
-                    : "text-white",
-                )}
-              >
-                {podChallenge.alreadySubmitted
-                  ? "Update pod submission"
-                  : "Submit to pod challenge"}
-              </span>
-            </span>
-            <span
-              className={cn(
-                "rounded-full px-2.5 py-1 text-[12px] font-bold tabular-nums",
-                podChallenge.alreadySubmitted
-                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-                  : "bg-white/20 text-white",
-              )}
-            >
-              {Math.round(podChallenge.computedScore)}
-            </span>
-          </button>
-        )}
-
-        {/* ── Parent Mode block (W12) — KidsAteIt + Lunchbox + Spotlight ─
-             All three components self-render null when PM is off so this
-             block has zero footprint for non-parents. */}
-        {dishSlug && (
-          <div className="w-full space-y-3 pt-1">
-            <KidsAteItPrompt recipeSlug={dishSlug} />
-            <NutrientSpotlight recipeSlug={dishSlug} variant="full" />
-            <div className="flex justify-center">
-              <LunchboxSuggestChip dishSlug={dishSlug} recipeName={dishName} />
-            </div>
-          </div>
-        )}
+            <Share2
+              size={14}
+              className={
+                shareStatus === "generating" ? "animate-pulse" : ""
+              }
+            />
+            {shareStatus === "idle" && "Share"}
+            {shareStatus === "generating" && "..."}
+            {shareStatus === "shared" && "Shared!"}
+            {shareStatus === "copied" && "Copied!"}
+            {shareStatus === "downloaded" && "Saved!"}
+          </motion.button>
+        </motion.div>
 
         {/* ── Note input (expandable) ── */}
         <AnimatePresence>
@@ -1050,84 +1042,4 @@ export function WinScreen({
                   {reflection.isLoading && (
                     <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
                       <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
-                        Thinking about your cook...
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.isError && (
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
-                      <p className="text-xs text-[var(--nourish-subtext)]">
-                        Great job completing this cook! Reflection unavailable
-                        right now.
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.data && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 260,
-                        damping: 25,
-                      }}
-                      className="space-y-3"
-                    >
-                      <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
-                          What went well
-                        </p>
-                        {reflection.data.strengths.map((s, i) => (
-                          <motion.p
-                            key={i}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{
-                              delay: i * 0.1,
-                              type: "spring",
-                              stiffness: 260,
-                              damping: 25,
-                            }}
-                            className="text-sm text-[var(--nourish-dark)] leading-relaxed"
-                          >
-                            {s}
-                          </motion.p>
-                        ))}
-                      </div>
-
-                      {reflection.data.nextTimeSuggestions.length > 0 && (
-                        <div className="rounded-xl border border-[var(--nourish-gold)]/20 bg-[var(--nourish-gold)]/5 p-4 space-y-2 text-left">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
-                            For next time
-                          </p>
-                          {reflection.data.nextTimeSuggestions.map((s, i) => (
-                            <motion.p
-                              key={i}
-                              initial={{ opacity: 0, x: -8 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{
-                                delay: 0.3 + i * 0.1,
-                                type: "spring",
-                                stiffness: 260,
-                                damping: 25,
-                              }}
-                              className="text-sm text-[var(--nourish-dark)] leading-relaxed"
-                            >
-                              {s.message}
-                            </motion.p>
-                          ))}
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
+                        Thinking abo
