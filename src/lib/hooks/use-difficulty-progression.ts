@@ -2,7 +2,10 @@
 
 import { useMemo } from "react";
 import type { CookSessionRecord } from "./use-cook-sessions";
-import { getStaticCookData, getStaticMealCookData } from "@/data/guided-cook-steps";
+import {
+  getStaticCookData,
+  getStaticMealCookData,
+} from "@/data/guided-cook-steps";
 
 const STORAGE_KEY = "sous-difficulty-progression";
 

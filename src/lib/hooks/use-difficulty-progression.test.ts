@@ -4,10 +4,43 @@ import type { CookSessionRecord } from "./use-cook-sessions";
 // Mock the guided-cook-steps module
 vi.mock("@/data/guided-cook-steps", () => ({
   getStaticCookData: vi.fn((slug: string) => {
-    const data: Record<string, { prepTimeMinutes: number; cookTimeMinutes: number; ingredients: { name: string }[] }> = {
-      "easy-salad": { prepTimeMinutes: 5, cookTimeMinutes: 5, ingredients: [{ name: "lettuce" }, { name: "tomato" }, { name: "dressing" }] },
-      "medium-stir-fry": { prepTimeMinutes: 10, cookTimeMinutes: 15, ingredients: [{ name: "chicken" }, { name: "peppers" }, { name: "soy sauce" }, { name: "rice" }, { name: "oil" }, { name: "garlic" }, { name: "ginger" }] },
-      "hard-biryani": { prepTimeMinutes: 20, cookTimeMinutes: 30, ingredients: Array.from({ length: 12 }, (_, i) => ({ name: `ingredient-${i}` })) },
+    const data: Record<
+      string,
+      {
+        prepTimeMinutes: number;
+        cookTimeMinutes: number;
+        ingredients: { name: string }[];
+      }
+    > = {
+      "easy-salad": {
+        prepTimeMinutes: 5,
+        cookTimeMinutes: 5,
+        ingredients: [
+          { name: "lettuce" },
+          { name: "tomato" },
+          { name: "dressing" },
+        ],
+      },
+      "medium-stir-fry": {
+        prepTimeMinutes: 10,
+        cookTimeMinutes: 15,
+        ingredients: [
+          { name: "chicken" },
+          { name: "peppers" },
+          { name: "soy sauce" },
+          { name: "rice" },
+          { name: "oil" },
+          { name: "garlic" },
+          { name: "ginger" },
+        ],
+      },
+      "hard-biryani": {
+        prepTimeMinutes: 20,
+        cookTimeMinutes: 30,
+        ingredients: Array.from({ length: 12 }, (_, i) => ({
+          name: `ingredient-${i}`,
+        })),
+      },
     };
     return data[slug] ?? null;
   }),
