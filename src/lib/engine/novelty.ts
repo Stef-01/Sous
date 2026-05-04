@@ -238,9 +238,10 @@ function familiarityDiscount(
 }
 
 /** Pure: pattern-quality score. V1 stub: every pattern in the
- *  table is curated, so quality is 0.9 by default. W17 swaps
- *  this for the aroma-compound cosine-similarity score. */
-function patternPairingScore(_pattern: DishShapePattern): number {
+ *  table is curated, so quality is 0.9 by default. W17 will
+ *  re-add the `pattern` parameter + score via aroma-compound
+ *  cosine-similarity once the seed catalog ships. */
+function patternPairingScore(): number {
   return 0.9;
 }
 
@@ -265,7 +266,7 @@ export function generateDailyNovelty(
       matched,
       input.recentCookIngredientSets,
     );
-    const pairing = patternPairingScore(pattern);
+    const pairing = patternPairingScore();
     // Novelty composite — pairing × familiarity × (1.0 base).
     // Bounded to [0, 1]; threshold compared in the consumer.
     const score = Math.min(1, Math.max(0, pairing * familiarity));
