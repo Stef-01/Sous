@@ -89,76 +89,13 @@ interface DishShapePattern {
   pairingExplanation: string;
 }
 
-const DISH_PATTERNS: ReadonlyArray<DishShapePattern> = [
-  {
-    requiredAny: [
-      ["ham", "prosciutto", "salami"],
-      ["sharp cheese", "cheddar", "gruyere", "manchego"],
-      ["pear", "apple", "fig"],
-    ],
-    dishName: "Argyle pear & sharp-cheese sandwich",
-    dishType: "sandwich",
-    prepTimeMinutes: 8,
-    pairingExplanation:
-      "Salty cured meat, sharp cheese, and ripe stone-fruit share fruity-sweet aroma compounds.",
-  },
-  {
-    requiredAny: [
-      ["tomato", "tomatoes", "cherry tomato"],
-      ["mozzarella", "burrata"],
-      ["basil"],
-    ],
-    dishName: "Caprese plate with torn herbs",
-    dishType: "salad",
-    prepTimeMinutes: 6,
-    pairingExplanation:
-      "The summer-bright tomato + milky cheese pairing leans on shared green-fresh aroma notes.",
-  },
-  {
-    requiredAny: [
-      ["chickpeas", "garbanzo"],
-      ["lemon", "lemon zest"],
-      ["olive oil"],
-    ],
-    dishName: "Smashed chickpea + lemon snack-board",
-    dishType: "snack-board",
-    prepTimeMinutes: 10,
-    pairingExplanation:
-      "Toasty legume meets bright citrus through complementary herbal-citrus volatiles.",
-  },
-  {
-    requiredAny: [
-      ["eggs", "egg"],
-      ["spinach", "kale", "swiss chard"],
-      ["feta", "goat cheese"],
-    ],
-    dishName: "Greens + feta egg scramble",
-    dishType: "skillet",
-    prepTimeMinutes: 12,
-    pairingExplanation:
-      "Earthy greens balance briny cheese; eggs carry the savoury frame.",
-  },
-  {
-    requiredAny: [["greek yogurt", "yogurt"], ["cucumber"], ["dill", "mint"]],
-    dishName: "Cool yogurt-cucumber dip",
-    dishType: "dip",
-    prepTimeMinutes: 7,
-    pairingExplanation:
-      "Fresh herbal volatiles bridge tangy yogurt and crisp cucumber.",
-  },
-  {
-    requiredAny: [
-      ["bread", "sourdough", "ciabatta"],
-      ["avocado"],
-      ["lemon", "lime"],
-    ],
-    dishName: "Avocado smash on toast",
-    dishType: "toast",
-    prepTimeMinutes: 5,
-    pairingExplanation:
-      "Buttery fat + citrus brightness against toasted bread structure.",
-  },
-];
+// Y3 W18: pattern catalog moved out to a curated JSON file so
+// the engine code stays tight + the catalog can grow
+// independently. ~16 patterns at W18 scale; the W21+ expansion
+// will widen toward the plan's 200-pattern target.
+import dishShapePatternsRaw from "@/data/dish-shape-patterns.json";
+const DISH_PATTERNS: ReadonlyArray<DishShapePattern> =
+  dishShapePatternsRaw as ReadonlyArray<DishShapePattern>;
 
 /** Pure: does the pantry cover this required-any pattern?
  *  Each `requiredAny` slot is a SET of acceptable substitutes;
