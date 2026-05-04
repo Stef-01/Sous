@@ -161,10 +161,7 @@ function SidesPageContent() {
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-subtext)]">
-              Pick sides for
-            </p>
-            <h1 className="truncate font-serif text-base font-semibold text-[var(--nourish-dark)]">
+            <h1 className="truncate font-serif text-xl font-semibold text-[var(--nourish-dark)]">
               {mainDish}
             </h1>
           </div>

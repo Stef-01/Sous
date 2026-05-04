@@ -225,29 +225,6 @@ export function ResultStack({
       animate={{ opacity: 1 }}
       className="space-y-4"
     >
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-[var(--nourish-subtext)]">
-          For:{" "}
-          <span className="font-medium text-[var(--nourish-dark)]">
-            {mainDish}
-          </span>
-        </p>
-        <button
-          onClick={onReroll}
-          disabled={isRerolling}
-          className={cn(
-            "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
-            "border border-neutral-200 text-[var(--nourish-subtext)]",
-            "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
-            "disabled:opacity-50 transition-all duration-200",
-          )}
-          type="button"
-        >
-          <RefreshCw size={14} className={isRerolling ? "animate-spin" : ""} />
-          Reroll all
-        </button>
-      </div>
-
       <div className="space-y-3">
         {sides.map((side, idx) => (
           <ResultCard
@@ -263,6 +240,18 @@ export function ResultStack({
           />
         ))}
       </div>
+
+      {/* Reroll moved below the stack as a quiet text link — out
+          of the way of the cards but still discoverable. */}
+      <button
+        onClick={onReroll}
+        disabled={isRerolling}
+        className="flex w-full items-center justify-center gap-1.5 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] disabled:opacity-50 transition-colors"
+        type="button"
+      >
+        <RefreshCw size={12} className={isRerolling ? "animate-spin" : ""} />
+        Reroll all
+      </button>
 
       {/* Cook selected  -  primary CTA */}
       <motion.button
@@ -367,6 +356,19 @@ function ResultCard({
   const displayExplanation =
     aiExplanation.data?.explanation ?? side.explanation;
 
+  // Minimalist redesign: eyebrow is just the cuisine name in
+  // soft sentence case + up to 2 flavor adjectives from tags.
+  // Match% / "Best match" / "Guided" labels removed — they don't
+  // make the user cook (rule 6: simplicity-first).
+  const effortLabel = effortFromPrepBurden(side.scores.prepBurden);
+  const cuisineEyebrow = side.cuisineFamily;
+  // Pull up to 2 plain-language flavor descriptors from tags for
+  // the eyebrow row. Falls back to the cuisine alone when tags
+  // are sparse.
+  const flavorTags = side.tags
+    .filter((t) => /^[a-z][a-z -]+$/.test(t)) // lowercase plain words
+    .slice(0, 2);
+
   return (
     <motion.div
       layout
@@ -374,116 +376,71 @@ function ResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.08, duration: 0.3 }}
       className={cn(
-        "overflow-hidden rounded-xl border bg-white transition-all duration-200",
+        "relative overflow-hidden rounded-2xl border transition-all duration-200",
         selected
-          ? "border-[var(--nourish-green)]/30 shadow-[var(--shadow-card)]"
-          : "border-neutral-100 shadow-none",
+          ? "border-[var(--nourish-green)]/30 bg-white shadow-[var(--shadow-card)]"
+          : "border-neutral-100 bg-white shadow-none",
       )}
     >
-      <div className="flex w-full items-center gap-3 p-4">
-        {/* Selection checkbox  -  min 44px touch target wrapping the visual circle */}
-        <motion.button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleSelect();
-          }}
-          whileTap={{ scale: 0.85 }}
-          transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center -m-3"
-          type="button"
-          role="checkbox"
-          aria-checked={selected}
-          aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
-        >
-          <span
-            className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-150",
-              selected
-                ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-                : "border-neutral-300 bg-white",
-            )}
-          >
-            {selected && (
-              <Check size={10} className="text-white" strokeWidth={3} />
-            )}
-          </span>
-        </motion.button>
-
-        {/* Card content (tappable to expand) */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex flex-1 items-center gap-2.5 text-left min-w-0"
-          type="button"
-          aria-expanded={expanded}
-        >
-          {/* Side dish image */}
-          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
-            {isRerolling ? (
-              <div className="flex h-full w-full items-center justify-center">
-                <RefreshCw
-                  size={16}
-                  className="animate-spin text-[var(--nourish-green)]"
-                />
-              </div>
-            ) : side.imageUrl && !imgError ? (
-              <Image
-                src={side.imageUrl}
-                alt={side.name}
-                fill
-                sizes="44px"
-                className="object-cover"
-                onError={() => setImgError(true)}
+      {/* Card body — tappable to expand. Hero image + right column.
+          Selection lives in the bottom action row now, not as a
+          floating corner circle. */}
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex w-full gap-3 p-3 text-left"
+        type="button"
+        aria-expanded={expanded}
+      >
+        {/* Hero image — 96×96, rounded-xl */}
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-neutral-100">
+          {isRerolling ? (
+            <div className="flex h-full w-full items-center justify-center">
+              <RefreshCw
+                size={20}
+                className="animate-spin text-[var(--nourish-green)]"
               />
-            ) : (
-              <div
-                className="flex h-full w-full items-center justify-center text-lg"
-                style={{
-                  background:
-                    "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 60%, #a8d8b9 100%)",
-                }}
-              >
-                <UtensilsCrossed
-                  size={18}
-                  className="text-white drop-shadow-sm"
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : side.imageUrl && !imgError ? (
+            <Image
+              src={side.imageUrl}
+              alt={side.name}
+              fill
+              sizes="96px"
+              className="object-cover"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[var(--nourish-cream)]">
+              <UtensilsCrossed
+                size={24}
+                className="text-[var(--nourish-subtext)]/40"
+                strokeWidth={1.5}
+              />
+            </div>
+          )}
+        </div>
 
-          {/* Side dish info */}
-          <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-[var(--nourish-dark)] truncate">
-              {side.name}
-            </h3>
-            {((rank === 1 && selected) || side.hasGuidedCook) && (
-              <div className="flex items-center gap-1.5 mt-0.5">
-                {rank === 1 && selected && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
-                    Best match
-                  </span>
-                )}
-                {side.hasGuidedCook && (
-                  <span className="shrink-0 rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]">
-                    Guided
-                  </span>
-                )}
-              </div>
-            )}
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)] line-clamp-1">
-              {side.explanation}
-            </p>
-          </div>
+        {/* Right column — title-led, single faint metadata line.
+            No eyebrow caps, no match%, no description echo —
+            keeps appetite on the title and lets the placeholder
+            tile rest. */}
+        <div className="flex min-w-0 flex-1 flex-col justify-center py-0.5">
+          <h3 className="line-clamp-2 font-serif text-base font-semibold leading-snug text-[var(--nourish-dark)]">
+            {side.name}
+          </h3>
+          <p className="mt-1 text-[11px] text-[var(--nourish-subtext)]">
+            {[cuisineEyebrow, ...flavorTags, effortLabel.toLowerCase()]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        </div>
+      </button>
 
-          <ChevronDown
-            size={16}
-            className={cn(
-              "shrink-0 text-[var(--nourish-subtext)] transition-transform duration-200",
-              expanded && "rotate-180",
-            )}
-          />
-        </button>
-
-        {/* Per-side reroll  -  min 44px touch target */}
+      {/* Bottom action row — Swap, Selected toggle, expand chevron.
+          Selection used to live as a floating green check circle
+          on the image; moved here as a quiet text toggle so the
+          card doesn't shout. */}
+      <div className="flex items-center justify-between border-t border-neutral-100 px-2 py-1.5">
         <motion.button
           onClick={(e) => {
             e.stopPropagation();
@@ -492,18 +449,55 @@ function ResultCard({
           disabled={isRerolling}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
+          className="flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 disabled:opacity-40"
           type="button"
-          title="Swap this side"
           aria-label={`Swap ${side.name} for a different side`}
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)] transition-colors">
-            <RotateCcw size={12} />
-          </span>
+          <RotateCcw size={12} />
+          <span>Swap</span>
         </motion.button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleSelect();
+            }}
+            className={cn(
+              "flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors",
+              selected
+                ? "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5"
+                : "text-[var(--nourish-subtext)] hover:bg-neutral-50",
+            )}
+            type="button"
+            role="checkbox"
+            aria-checked={selected}
+            aria-label={`${selected ? "Deselect" : "Select"} ${side.name}`}
+          >
+            {selected && <Check size={12} strokeWidth={2.5} />}
+            <span>{selected ? "Selected" : "Add"}</span>
+          </button>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50"
+            type="button"
+            aria-expanded={expanded}
+            aria-label={expanded ? "Hide details" : "Show details"}
+          >
+            <ChevronDown
+              size={16}
+              className={cn(
+                "transition-transform duration-200",
+                expanded && "rotate-180",
+              )}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Expanded: "Why this won" + individual Cook this */}
+      {/* Expanded: description leads, then a single nutrition star
+          row, then the primary cook CTA. The four-percentage-chip
+          dashboard is gone — the engine no longer apologises for
+          itself in the user's face. */}
       <AnimatePresence>
         {expanded && (
           <motion.div
@@ -513,56 +507,73 @@ function ResultCard({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
-              {/* "Why this pairs well" header */}
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
-                Why this pairs well
-              </p>
-
-              {/* AI-enhanced pairing explanation */}
-              <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
+            <div className="space-y-3 border-t border-neutral-100 px-4 pb-4 pt-3">
+              {/* Description leads — the "why" in one paragraph,
+                  with the AI-enhanced version when expanded. */}
+              <p className="text-sm leading-relaxed text-[var(--nourish-dark)]">
                 {displayExplanation}
               </p>
 
-              {/* Dimension-by-dimension breakdown */}
-              <div className="space-y-1.5">
-                <PairingDimension
-                  label="Cuisine fit"
-                  value={side.scores.cuisineFit}
-                  reason={
-                    side.scores.cuisineFit >= 0.7
-                      ? "Comes from the same culinary tradition"
-                      : side.scores.cuisineFit >= 0.4
-                        ? "Bridges flavors across cuisines"
-                        : "An adventurous cross-cuisine pick"
-                  }
-                />
-                <PairingDimension
-                  label="Flavor contrast"
-                  value={side.scores.flavorContrast}
-                  reason={
-                    side.scores.flavorContrast >= 0.7
-                      ? "Bright, contrasting flavors cut through richness"
-                      : side.scores.flavorContrast >= 0.4
-                        ? "Adds complementary taste notes"
-                        : "Similar flavor profile — a harmonious match"
-                  }
-                />
-                <PairingDimension
-                  label="Nutrition balance"
-                  value={side.scores.nutritionBalance}
-                  reason={
-                    side.scores.nutritionBalance >= 0.7
-                      ? "Fills gaps in the meal's nutritional profile"
-                      : "Adds variety to the plate"
-                  }
-                />
-                <PairingDimension
-                  label="Prep burden"
-                  value={side.scores.prepBurden}
-                  reason={
-                    side.scores.prepBurden >= 0.7
-                      ? "Quick to prepare alongside your main"
-                      : "A bit more involved, but worth the effort"
-                  }
-              
+              {/* Single 5-star nutrition rating replaces the four
+                  percentage chips. One health signal, no dashboard. */}
+              <NutritionStars score={side.scores.nutritionBalance} />
+
+              {/* Primary cook CTA — solid green fill. The strongest
+                  visual element on the expanded card. */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCookThis();
+                }}
+                className={cn(
+                  "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold",
+                  "bg-[var(--nourish-green)] text-white shadow-[var(--shadow-cta)]",
+                  "hover:bg-[var(--nourish-dark-green)] active:scale-[0.98]",
+                  "transition-all duration-200",
+                )}
+                type="button"
+              >
+                <ChefHat size={16} />
+                Start guided cook
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function NutritionStars({ score }: { score: number }) {
+  // Map 0..1 score → 0..5 stars, rounding up so anything above
+  // 0.9 reads as 5. Empty stars stay neutral; filled stars use
+  // a quiet sage tone (not the brand-green hero accent — that
+  // belongs to the CTA).
+  const filled = Math.min(5, Math.max(0, Math.round(score * 5)));
+  return (
+    <div
+      className="flex items-center gap-1.5 text-[11px] text-[var(--nourish-subtext)]"
+      aria-label={`Nutrition ${filled} out of 5`}
+    >
+      <div className="flex" aria-hidden>
+        {[0, 1, 2, 3, 4].map((i) => (
+          <svg
+            key={i}
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            className={cn(
+              i < filled ? "text-[var(--nourish-green)]" : "text-neutral-200",
+            )}
+          >
+            <path
+              d="M6 1l1.545 3.13L11 4.635l-2.5 2.435L9.09 11 6 9.375 2.91 11l.59-3.93L1 4.635l3.455-.505L6 1z"
+              fill="currentColor"
+            />
+          </svg>
+        ))}
+      </div>
+      <span>Nutrition</span>
+    </div>
+  );
+}

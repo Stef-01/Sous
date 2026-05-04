@@ -1,19 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Star,
-  Heart,
-  RotateCcw,
-  Sparkles,
-  UtensilsCrossed,
-} from "lucide-react";
+import { Star, Heart, Sparkles, UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 
 interface ScrapbookEntryCardProps {
   session: CookSessionRecord;
-  onReplay: (slug: string) => void;
   onToggleFavorite: (sessionId: string) => void;
   index?: number;
   /** Placeholder evaluator scores (1–5) until rubric is persisted on sessions. */
@@ -59,7 +52,6 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
  */
 export function ScrapbookEntryCard({
   session,
-  onReplay,
   onToggleFavorite,
   index = 0,
   evaluatorScores,
@@ -185,15 +177,6 @@ export function ScrapbookEntryCard({
           &ldquo;{session.note}&rdquo;
         </p>
       )}
-
-      <button
-        onClick={() => onReplay(session.recipeSlug)}
-        className="mt-2 flex items-center gap-1 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:underline active:scale-95"
-        type="button"
-      >
-        <RotateCcw size={11} />
-        Cook again
-      </button>
     </motion.article>
   );
 }
