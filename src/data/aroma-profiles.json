@@ -1,0 +1,50 @@
+{
+  "fruity-sweet": {
+    "label": "Fruity-sweet",
+    "tags": ["fruity-sweet", "floral-bright"]
+  },
+  "citrus-bright": {
+    "label": "Citrus-bright",
+    "tags": ["fruity-sweet", "citrus-zest", "herbal-fresh"]
+  },
+  "herbal-fresh": {
+    "label": "Herbal-fresh",
+    "tags": ["herbal-fresh", "green-vegetal", "floral-bright"]
+  },
+  "umami-deep": {
+    "label": "Umami-deep",
+    "tags": ["umami-rich", "earthy-deep", "savoury-meaty"]
+  },
+  "savoury-meaty": {
+    "label": "Savoury-meaty",
+    "tags": ["savoury-meaty", "umami-rich", "smoky-warm"]
+  },
+  "smoky-warm": {
+    "label": "Smoky-warm",
+    "tags": ["smoky-warm", "earthy-deep", "savoury-meaty"]
+  },
+  "earthy-deep": {
+    "label": "Earthy-deep",
+    "tags": ["earthy-deep", "umami-rich", "musty-aged"]
+  },
+  "creamy-rich": {
+    "label": "Creamy-rich",
+    "tags": ["creamy-rich", "buttery-warm", "umami-rich"]
+  },
+  "spicy-warm": {
+    "label": "Spicy-warm",
+    "tags": ["spicy-warm", "smoky-warm", "earthy-deep"]
+  },
+  "starchy-comforting": {
+    "label": "Starchy-comforting",
+    "tags": ["starchy-comforting", "buttery-warm"]
+  },
+  "fermented-tangy": {
+    "label": "Fermented-tangy",
+    "tags": ["fermented-tangy", "umami-rich", "musty-aged"]
+  },
+  "sweet-baked": {
+    "label": "Sweet-baked",
+    "tags": ["sweet-baked", "buttery-warm", "fruity-sweet"]
+  }
+}
