@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  COOK_AGAIN_HIGHLIGHT_THRESHOLD,
   COOK_AGAIN_MAX_AGE_DAYS,
   COOK_AGAIN_MIN_AGE_DAYS,
+  cookAgainHighlightTier,
   cuisineRotationScore,
   pickReSuggestion,
   recencyScore,
@@ -40,6 +42,9 @@ describe("recencyScore", () => {
   });
 
   it("above MAX window → 0", () => {
+    // Y3 W6: MAX tightened from 90d to 56d. Anything past 56d
+    // collapses to 0.
+    expect(recencyScore(57)).toBe(0);
     expect(recencyScore(91)).toBe(0);
     expect(recencyScore(365)).toBe(0);
   });
@@ -52,7 +57,7 @@ describe("recencyScore", () => {
     expect(recencyScore(COOK_AGAIN_MIN_AGE_DAYS)).toBeCloseTo(0.3, 5);
   });
 
-  it("at MAX edge (90d) → 0.3", () => {
+  it("at MAX edge (56d post-W6) → 0.3", () => {
     expect(recencyScore(COOK_AGAIN_MAX_AGE_DAYS)).toBeCloseTo(0.3, 5);
   });
 
@@ -64,10 +69,12 @@ describe("recencyScore", () => {
     expect(c).toBeGreaterThan(b);
   });
 
-  it("monotonic ramp down from 35d to 90d", () => {
+  it("monotonic ramp down from 35d to MAX", () => {
+    // Y3 W6: MAX tightened from 90d to 56d. Sample within the
+    // new window so the ramp-down still has values to compare.
     const a = recencyScore(35);
-    const b = recencyScore(60);
-    const c = recencyScore(85);
+    const b = recencyScore(45);
+    const c = recencyScore(55);
     expect(a).toBeGreaterThan(b);
     expect(b).toBeGreaterThan(c);
   });
@@ -348,5 +355,38 @@ describe("pickReSuggestion — determinism", () => {
     const a = pickReSuggestion(history, now);
     const b = pickReSuggestion(history, now);
     expect(a).toEqual(b);
+  });
+});
+
+// ── cookAgainHighlightTier (Y3 W6) ────────────────────────
+
+describe("cookAgainHighlightTier", () => {
+  it("score above threshold → true", () => {
+    expect(cookAgainHighlightTier(0.9)).toBe(true);
+    expect(cookAgainHighlightTier(1.0)).toBe(true);
+  });
+
+  it("score at threshold → true (inclusive)", () => {
+    expect(cookAgainHighlightTier(COOK_AGAIN_HIGHLIGHT_THRESHOLD)).toBe(true);
+  });
+
+  it("score just below threshold → false", () => {
+    expect(cookAgainHighlightTier(COOK_AGAIN_HIGHLIGHT_THRESHOLD - 0.001)).toBe(
+      false,
+    );
+  });
+
+  it("score well below threshold → false", () => {
+    expect(cookAgainHighlightTier(0.5)).toBe(false);
+    expect(cookAgainHighlightTier(0)).toBe(false);
+  });
+
+  it("non-finite score → false (defensive)", () => {
+    expect(cookAgainHighlightTier(Number.NaN)).toBe(false);
+    expect(cookAgainHighlightTier(Number.POSITIVE_INFINITY)).toBe(false);
+  });
+
+  it("threshold constant is 0.85 per the W6 plan", () => {
+    expect(COOK_AGAIN_HIGHLIGHT_THRESHOLD).toBe(0.85);
   });
 });

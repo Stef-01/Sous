@@ -39,10 +39,32 @@ import { inferSeason, type Hemisphere, type Season } from "./time-rerank";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** Hard gate: a session is eligible to re-suggest only when its
- *  age falls in this window. < 21d is still fresh; > 90d the
- *  user has moved on. */
+ *  age falls in this window. < 21d is still fresh; > 56d (8 weeks)
+ *  the user has moved on. Tightened from 90d (12 weeks) at Y3 W6
+ *  per the polish-year plan: a 14-week-old cook surfacing felt
+ *  stale even when the rating was 5★. */
 export const COOK_AGAIN_MIN_AGE_DAYS = 21;
-export const COOK_AGAIN_MAX_AGE_DAYS = 90;
+export const COOK_AGAIN_MAX_AGE_DAYS = 56;
+
+/** Y3 W6: composite-score threshold above which a candidate
+ *  is rendered with the "highlight tier" star-glow visual on
+ *  the cook-again chip. The cook-again candidate score is
+ *  recency × seasonality × rotation × ratingFactor; 0.85 means
+ *  every factor is firing strongly. Below this the chip is
+ *  rendered without the glow.
+ *
+ *  Threshold tuned so the glow lights up about 1 in 4 chips
+ *  in normal use — common enough to be a recognisable signal,
+ *  rare enough to feel earned. */
+export const COOK_AGAIN_HIGHLIGHT_THRESHOLD = 0.85;
+
+/** Pure: should the cook-again chip render with the highlight
+ *  tier (star-glow) treatment? Returns true when the candidate's
+ *  composite score crosses the threshold. */
+export function cookAgainHighlightTier(score: number): boolean {
+  if (!Number.isFinite(score)) return false;
+  return score >= COOK_AGAIN_HIGHLIGHT_THRESHOLD;
+}
 
 /** Hard gate: only re-suggest 5★ recipes. Below 5 the user
  *  isn't signalling enough enthusiasm to justify the nudge. */
