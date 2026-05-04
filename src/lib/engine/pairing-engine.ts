@@ -12,6 +12,8 @@ import { nutritionBalanceScorer } from "./scorers/nutrition-balance";
 import { prepBurdenScorer } from "./scorers/prep-burden";
 import { temperatureScorer } from "./scorers/temperature";
 import { preferenceScorer } from "./scorers/preference";
+import { seasonalScorer } from "./scorers/seasonal";
+import { antiMonotonyScorer } from "./scorers/anti-monotony";
 import { rankCandidates, topK } from "./ranker";
 import { addExplanations } from "./explainer";
 
@@ -25,6 +27,8 @@ const ALL_SCORERS: Scorer[] = [
   prepBurdenScorer,
   temperatureScorer,
   preferenceScorer,
+  seasonalScorer,
+  antiMonotonyScorer,
 ];
 
 export type SuggestSidesResult =

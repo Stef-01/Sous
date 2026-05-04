@@ -5,11 +5,20 @@ Given a user's freeform craving text, extract structured intent about what they 
 
 Rules:
 - dishName: Identify the most specific dish. "something cheesy" → "mac and cheese" or "grilled cheese"
-- cuisineSignals: Infer cuisine families. "tikka masala" → ["indian", "south-asian"]
-- isHomemade: Default true unless they mention takeout, delivery, restaurant, or leftovers
-- effortTolerance: "quick" or "easy" → minimal. "I have time" → willing. Default moderate.
-- healthOrientation: "light" or "salad" → health-forward. "comfort" or "fried" → indulgent. Default balanced.
-- moodSignals: Capture vibes like comfort, quick, fancy, light, heavy, celebratory, lazy.
+- cuisineSignals: Infer cuisine families even from indirect cues. "something spicy and fresh" → ["thai", "vietnamese"]. "tikka masala" → ["indian"]. Use lowercase family names.
+- isHomemade: Default true unless they mention takeout, delivery, restaurant, or leftovers.
+- effortTolerance: "quick"/"easy"/"tired"/"lazy Sunday" → minimal. "I have time"/"from scratch"/"proper" → willing. Default moderate.
+- healthOrientation: "light"/"salad"/"clean" → health-forward. "comfort"/"fried"/"cheat day" → indulgent. Default balanced.
+- moodSignals: Capture vibes like comfort, quick, fancy, light, heavy, celebratory, lazy, cozy, adventurous.
+- dietaryConstraints: Detect from context, not just explicit keywords. "no meat" → ["vegetarian"]. "my wife is celiac" → ["gluten-free"]. "halal chicken" → ["halal"]. Empty array if none detected. Valid values: vegetarian, vegan, halal, kosher, gluten-free, dairy-free, nut-free, pescatarian, keto, low-carb.
+- moodCategory: Map the overall vibe to one primary category:
+  - "comfort" = warm, cozy, nostalgic, rainy day, hungover
+  - "celebration" = special occasion, birthday, hosting, party
+  - "healthy-reset" = detox, clean eating, post-holiday, guilt
+  - "date-night" = impressive, romantic, fancy, wine pairing
+  - "quick-fuel" = busy, between meetings, just need food fast
+  - "exploration" = trying something new, adventurous, never had before
+  - "general" = no strong mood signal
 
 Be precise and concise. If the input is vague, make reasonable assumptions.`;
 
@@ -114,11 +123,46 @@ function buildFallbackIntent(text: string): CravingIntent {
 
   // Mood signals
   const moodSignals: string[] = [];
-  if (/comfort/.test(lower)) moodSignals.push("comfort");
+  if (/comfort|cozy|warm/.test(lower)) moodSignals.push("comfort");
   if (/quick|fast/.test(lower)) moodSignals.push("quick");
-  if (/fancy|date|special/.test(lower)) moodSignals.push("fancy");
+  if (/fancy|date|special|impress/.test(lower)) moodSignals.push("fancy");
   if (/light/.test(lower)) moodSignals.push("light");
   if (/heavy|filling/.test(lower)) moodSignals.push("heavy");
+  if (/adventure|new|never tried/.test(lower)) moodSignals.push("adventurous");
+
+  // Dietary constraints detection
+  const dietaryConstraints: string[] = [];
+  if (/vegetarian|no meat|meatless|veggie/.test(lower))
+    dietaryConstraints.push("vegetarian");
+  if (/vegan|plant.?based|no animal/.test(lower))
+    dietaryConstraints.push("vegan");
+  if (/halal/.test(lower)) dietaryConstraints.push("halal");
+  if (/kosher/.test(lower)) dietaryConstraints.push("kosher");
+  if (/gluten.?free|celiac|coeliac|no gluten/.test(lower))
+    dietaryConstraints.push("gluten-free");
+  if (/dairy.?free|lactose|no dairy|no cheese/.test(lower))
+    dietaryConstraints.push("dairy-free");
+  if (/nut.?free|no nuts|nut allergy/.test(lower))
+    dietaryConstraints.push("nut-free");
+  if (/pescatarian|fish only/.test(lower))
+    dietaryConstraints.push("pescatarian");
+  if (/keto|ketogenic/.test(lower)) dietaryConstraints.push("keto");
+  if (/low.?carb|no carbs/.test(lower)) dietaryConstraints.push("low-carb");
+
+  // Mood category
+  let moodCategory: CravingIntent["moodCategory"] = "general";
+  if (/comfort|cozy|rainy|hungover|warm|soul/.test(lower))
+    moodCategory = "comfort";
+  else if (/celebrat|birthday|party|hosting|special occasion/.test(lower))
+    moodCategory = "celebration";
+  else if (/healthy|clean|detox|reset|guilt|light/.test(lower))
+    moodCategory = "healthy-reset";
+  else if (/date|romantic|impress|fancy|wine/.test(lower))
+    moodCategory = "date-night";
+  else if (/quick|busy|fast|between meetings|just need/.test(lower))
+    moodCategory = "quick-fuel";
+  else if (/adventure|new|never|explore|try something/.test(lower))
+    moodCategory = "exploration";
 
   return {
     dishName,
@@ -127,5 +171,7 @@ function buildFallbackIntent(text: string): CravingIntent {
     effortTolerance,
     healthOrientation,
     moodSignals,
+    dietaryConstraints,
+    moodCategory,
   };
 }

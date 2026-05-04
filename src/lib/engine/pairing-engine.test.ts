@@ -322,6 +322,8 @@ describe("Explainer", () => {
         prepBurden: 0.6,
         temperature: 0.5,
         preference: 0.5,
+        seasonal: 0.5,
+        antiMonotony: 0.9,
       },
       totalScore: 0.75,
       explanation: "",
@@ -433,9 +435,11 @@ describe("suggestSides (integration)", () => {
       cuisineFit: 0.1,
       flavorContrast: 0.1,
       nutritionBalance: 0.1,
-      prepBurden: 0.6,
+      prepBurden: 0.5,
       temperature: 0.05,
       preference: 0.05,
+      seasonal: 0.05,
+      antiMonotony: 0.05,
     };
     const result = suggestSides(
       chickenMain,

@@ -37,6 +37,8 @@ export function rankCandidates(
       prepBurden: scores.prepBurden ?? 0.5,
       temperature: scores.temperature ?? 0.5,
       preference: scores.preference ?? 0.5,
+      seasonal: scores.seasonal ?? 0.5,
+      antiMonotony: scores.antiMonotony ?? 0.9,
     };
 
     const totalScore = Object.entries(weights).reduce(

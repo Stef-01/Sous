@@ -22,6 +22,16 @@ export const cravingIntentSchema = z.object({
   moodSignals: z
     .array(z.string())
     .describe("Mood/vibe signals: comfort, quick, fancy, light, heavy, etc."),
+  dietaryConstraints: z
+    .array(z.string())
+    .describe(
+      "Detected dietary constraints: vegetarian, vegan, halal, gluten-free, dairy-free, nut-free, pescatarian, keto, etc. Infer from context, not just keywords.",
+    ),
+  moodCategory: z
+    .enum(["comfort", "celebration", "healthy-reset", "date-night", "quick-fuel", "exploration", "general"])
+    .describe(
+      "Primary mood category for this craving. comfort = warm/cozy, celebration = special occasion, healthy-reset = detox/light, date-night = impressive/romantic, quick-fuel = fast energy, exploration = trying something new.",
+    ),
 });
 
 export type CravingIntent = z.infer<typeof cravingIntentSchema>;

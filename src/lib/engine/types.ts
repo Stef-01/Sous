@@ -40,6 +40,8 @@ export interface ScoreBreakdown {
   prepBurden: number; // 0-1
   temperature: number; // 0-1
   preference: number; // 0-1
+  seasonal: number; // 0-1
+  antiMonotony: number; // 0-1
 }
 
 export interface ScoredCandidate {
@@ -59,10 +61,12 @@ export interface Scorer {
 }
 
 export const DEFAULT_WEIGHTS: Record<keyof ScoreBreakdown, number> = {
-  cuisineFit: 0.25,
-  flavorContrast: 0.25,
-  nutritionBalance: 0.15,
-  prepBurden: 0.15,
-  temperature: 0.1,
-  preference: 0.1,
+  cuisineFit: 0.22,
+  flavorContrast: 0.22,
+  nutritionBalance: 0.13,
+  prepBurden: 0.13,
+  temperature: 0.08,
+  preference: 0.08,
+  seasonal: 0.07,
+  antiMonotony: 0.07,
 };
