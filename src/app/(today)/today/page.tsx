@@ -10,6 +10,7 @@ import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
 import { CookAgainChip } from "@/components/today/cook-again-chip";
 import { DailyNoveltyChip } from "@/components/today/daily-novelty-chip";
+import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
@@ -522,6 +523,12 @@ function TodayPageContent() {
         {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
+
+        {/* Y3 W24 today's planned meal — surfaces the meal-plan
+            slot for today's current meal-of-day window when one
+            exists. Renders nothing on cold-start or when no
+            slot is filled. Time-of-day routes the meal pick. */}
+        <TodayPlannedSlot />
 
         {/* Y2 W13 cook-again chip — surfaces a 5★ recipe from
             21-56 days ago (W6 tightened from 90), scored by
