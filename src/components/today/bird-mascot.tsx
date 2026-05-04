@@ -1,14 +1,26 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
 
 /**
  * OwlAvatar  -  small 28x28 owl head for the header profile position.
  * Simplified SVG: head + eyes + chef hat + beak + cheeks only.
  * Tappable with a Duolingo-style spring bounce.
+ *
+ * Stage 2 W9: tap target opens the Profile & Settings sheet (containing
+ * the Parent Mode toggle). aria-label accepts an override so callers
+ * can stay accurate when they wire the mascot to a different action.
  */
-export function OwlAvatar({ onClick }: { onClick: () => void }) {
+export function OwlAvatar({
+  onClick,
+  ariaLabel = "Open profile and settings",
+}: {
+  onClick: () => void;
+  ariaLabel?: string;
+}) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <motion.button
       onClick={onClick}
@@ -16,7 +28,7 @@ export function OwlAvatar({ onClick }: { onClick: () => void }) {
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
       className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 border border-[var(--nourish-green)]/15 ambient-float"
       type="button"
-      aria-label="Open search"
+      aria-label={ariaLabel}
     >
       <svg
         width="22"

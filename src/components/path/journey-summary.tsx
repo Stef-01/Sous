@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, Flame } from "lucide-react";
 import type { CookStats } from "@/lib/hooks/use-cook-sessions";
 
@@ -59,11 +59,12 @@ function StatBlock({
 export const JourneySummary = memo(function JourneySummary({
   stats,
 }: JourneySummaryProps) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
       initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: reducedMotion ? 0 : 0.3 }}
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
     >
       <div className="flex items-center justify-between">

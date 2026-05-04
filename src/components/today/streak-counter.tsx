@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Flame, MoreHorizontal, Shield } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Flame, MoreHorizontal } from "lucide-react";
 import { useRestDays } from "@/lib/hooks/use-rest-days";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
-import { useStreakFreeze } from "@/lib/hooks/use-streak-freeze";
 import { cn } from "@/lib/utils/cn";
 
 interface StreakCounterProps {
@@ -24,8 +23,8 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
   const [confirming, setConfirming] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { canRestToday, todayIsRestDay, markRestDay, mounted } = useRestDays();
+  const reducedMotion = useReducedMotion();
   const { awardXP } = useXPSystem();
-  const { hasFreezeAvailable } = useStreakFreeze();
 
   // Close the popover on outside tap / Escape, matching the existing subtle
   // popover patterns elsewhere in the app.
@@ -70,23 +69,35 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
             "outline-dashed outline-1 outline-offset-2 outline-[var(--nourish-warm)]/60",
         )}
       >
-        <Flame
-          size={12}
-          className="text-[var(--nourish-warm)]"
-          strokeWidth={2.2}
+        {/* W22b animation: gentle continuous flicker on the flame
+            when the streak has gathered some momentum (>= 3 days).
+            Loops scale + opacity in a slow sine; respects
+            prefers-reduced-motion (handled by motion.span at the
+            global Framer level — defaults to no animation if the OS
+            asks). Cheap, never blocks the main thread. */}
+        <motion.span
           aria-label="streak"
-        />
+          animate={
+            streak >= 3 && !reducedMotion
+              ? { scale: [1, 1.08, 1], opacity: [1, 0.85, 1] }
+              : undefined
+          }
+          transition={{
+            duration: 1.6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="inline-flex"
+        >
+          <Flame
+            size={12}
+            className="text-[var(--nourish-warm)]"
+            strokeWidth={2.2}
+          />
+        </motion.span>
         <span className="text-[11px] font-bold text-[var(--nourish-warm)]">
           {streak}
         </span>
-        {hasFreezeAvailable && (
-          <Shield
-            size={10}
-            className="text-[var(--nourish-green)]"
-            strokeWidth={2.4}
-            aria-label="Streak freeze available"
-          />
-        )}
       </motion.div>
 
       {showMenuButton && (
@@ -118,17 +129,6 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
             transition={{ type: "spring", stiffness: 360, damping: 28 }}
             className="absolute left-0 top-full z-30 mt-1.5 w-56 rounded-xl border border-[var(--nourish-border-strong)] bg-white p-1.5 shadow-lg"
           >
-            {/* Streak freeze status — always shown when banked */}
-            {hasFreezeAvailable && (
-              <div className="flex items-center gap-2 px-2 py-1.5 text-[11px] text-[var(--nourish-green)] border-b border-neutral-100 mb-0.5">
-                <Shield size={12} strokeWidth={2.4} />
-                <span className="font-medium">Freeze banked</span>
-                <span className="text-[var(--nourish-subtext)] font-normal">
-                  — auto-saves your streak if you miss a day
-                </span>
-              </div>
-            )}
-
             {todayIsRestDay ? (
               <div className="flex flex-col gap-1 px-2 py-2 text-[12px] text-[var(--nourish-subtext)]">
                 <span className="font-medium text-[var(--nourish-dark)]">

@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
+  Image as ImageIcon,
   MessageCircleQuestion,
   Send,
   Volume2,
@@ -17,8 +18,20 @@ import { MistakeChip } from "./mistake-chip";
 import { HackChip } from "./hack-chip";
 import { FactChip } from "./fact-chip";
 import { Glossify } from "./glossify";
+import { SpiceSlider } from "./spice-slider";
+import { ComponentSplitToggle } from "./component-split-toggle";
 import { trpc } from "@/lib/trpc/client";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
+import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { useSpiceTolerance } from "@/lib/hooks/use-spice-tolerance";
+import {
+  containsChiliHeat,
+  rewriteForSpice,
+  type SpiceTolerance,
+} from "@/lib/parent-mode/spice-rewrite";
+import { resolveVisualStepImage } from "@/lib/cook/resolve-visual-step-image";
+import type { AttentionPointer } from "@/lib/cook/attention-pointer";
+import { AttentionPointerOverlay } from "./attention-pointer-overlay";
 
 interface StepCardProps {
   /** +1 when advancing forward, -1 when going back. Controls slide direction. */
@@ -36,6 +49,18 @@ interface StepCardProps {
   cuisineFact?: string | null;
   donenessCue?: string | null;
   imageUrl?: string | null;
+  /** Dish-level hero image. Used as the visual-mode fallback when
+   *  the step itself has no image (most steps in V1 don't). */
+  heroImageUrl?: string | null;
+  /** When true, promote the step image to a hero-sized element and
+   *  shrink the instruction text — Google-Maps "look, don't read".
+   *  Wired up to the user's persisted preference (W22 toggle in
+   *  profile settings → W27 page-side adoption). */
+  visualMode?: boolean;
+  /** MVP 4 of cook-nav: per-step SVG attention pointers laid over
+   *  the visual-mode image. Only renders when visualMode is on AND
+   *  the step has at least one pointer. */
+  attentionPointers?: ReadonlyArray<AttentionPointer> | null;
   expandedChip: string | null;
   onToggleChip: (chip: string | null) => void;
   /** `label` identifies which timer in the stack this is  -  passes through to
@@ -69,6 +94,9 @@ export function StepCard({
   cuisineFact,
   donenessCue,
   imageUrl,
+  heroImageUrl,
+  visualMode = false,
+  attentionPointers,
   expandedChip,
   onToggleChip,
   onStartTimer,
@@ -78,10 +106,26 @@ export function StepCard({
   isLast,
   dishSlug,
 }: StepCardProps) {
+  const reducedMotion = useReducedMotion();
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const bigHands = useBigHands();
+  const { profile: parentProfile } = useParentMode();
+  const { tolerance: householdSpice, setTolerance: setHouseholdSpice } =
+    useSpiceTolerance();
+  // Per-step session override; falls back to the household default.
+  const [stepSpiceOverride, setStepSpiceOverride] =
+    useState<SpiceTolerance | null>(null);
+  const effectiveSpice = stepSpiceOverride ?? householdSpice;
+  const heatStep = containsChiliHeat(instruction);
+  const adjustedInstruction = useMemo(
+    () =>
+      heatStep && effectiveSpice < 5
+        ? rewriteForSpice(instruction, effectiveSpice)
+        : instruction,
+    [heatStep, effectiveSpice, instruction],
+  );
   const [lastAnswer, setLastAnswer] = useState<{
     answer: string;
     confidence: string;
@@ -161,16 +205,28 @@ export function StepCard({
   // Clamp so a misconfigured step list (totalSteps === 0) never yields NaN.
   const progress = totalSteps > 0 ? stepNumber / totalSteps : 0;
 
+  // W22 / W27: visual-mode resolves which image to render. Step
+  // image wins; dish hero is the visually-related fallback;
+  // otherwise we render a textual placeholder.
+  const visualImage = useMemo(
+    () => resolveVisualStepImage(imageUrl, heroImageUrl),
+    [imageUrl, heroImageUrl],
+  );
+
   const slideX = 56 * direction;
 
   return (
     <motion.div
       key={stepNumber}
       custom={direction}
-      initial={{ opacity: 0, x: slideX }}
+      initial={reducedMotion ? false : { opacity: 0, x: slideX }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -slideX }}
-      transition={{ type: "spring", stiffness: 300, damping: 28 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -slideX }}
+      transition={
+        reducedMotion
+          ? { duration: 0.12 }
+          : { type: "spring", stiffness: 300, damping: 28 }
+      }
       className="flex flex-col gap-5"
     >
       {/* Step counter + progress bar + read-aloud */}
@@ -196,11 +252,11 @@ export function StepCard({
               whileTap={{ scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
-                "flex min-h-[44px] items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all",
+                "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 isSpeaking
-                  ? "bg-[var(--nourish-green)] text-white shadow-sm shadow-[var(--nourish-green)]/20"
-                  : "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/15",
+                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                  : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
               )}
               type="button"
               aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
@@ -232,23 +288,96 @@ export function StepCard({
         </div>
       </div>
 
-      {/* Step image (optional) */}
-      {imageUrl && (
-        <div className="relative aspect-video overflow-hidden rounded-xl">
-          <Image
-            src={imageUrl}
-            alt={`Step ${stepNumber}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 448px"
-            className="object-cover"
-          />
-        </div>
+      {/* Step image (optional). Layout depends on visualMode:
+          - off → small aspect-video thumb when a step image exists.
+          - on  → hero-sized aspect-[4/5] element. Dish hero is used
+                  as the fallback when the step itself has no image,
+                  with a small "dish photo" badge so the user knows
+                  this isn't the literal step. When neither source
+                  exists, a textual placeholder renders instead. */}
+      {visualMode ? (
+        visualImage.isPlaceholder ? (
+          <div
+            data-testid="visual-mode-placeholder"
+            className="flex aspect-[4/5] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-200 bg-neutral-50 text-center"
+          >
+            <ImageIcon
+              size={32}
+              className="text-[var(--nourish-subtext)]/60"
+              aria-hidden
+            />
+            <p className="text-xs font-medium text-[var(--nourish-subtext)]">
+              Step image coming soon
+            </p>
+          </div>
+        ) : (
+          <div className="relative aspect-[4/5] overflow-hidden rounded-xl">
+            <Image
+              src={visualImage.src as string}
+              alt={`Step ${stepNumber}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              className="object-cover"
+              priority
+            />
+            {/* MVP 4 cook-nav: per-step SVG attention pointers
+                overlay the image. Only meaningful in visualMode
+                because that's when the image is hero-sized. */}
+            <AttentionPointerOverlay pointers={attentionPointers} />
+            {visualImage.isFallback && (
+              <span
+                data-testid="visual-mode-fallback-badge"
+                className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur"
+              >
+                Dish photo
+              </span>
+            )}
+          </div>
+        )
+      ) : (
+        imageUrl && (
+          <div className="relative aspect-video overflow-hidden rounded-xl">
+            <Image
+              src={imageUrl}
+              alt={`Step ${stepNumber}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              className="object-cover"
+            />
+          </div>
+        )
+      )}
+
+      {/* Spice slider  -  Stage 2 W10. Renders only when the step text
+          mentions chili/cayenne/etc. AND Parent Mode is on, so it stays
+          out of the way for users who don't need it. Adjusting the
+          slider rewrites the visible instruction below in real time. */}
+      {parentProfile.enabled && heatStep && (
+        <SpiceSlider
+          value={effectiveSpice}
+          onChange={(next) => {
+            setStepSpiceOverride(next);
+            // Persist as the new household default — the W10 contract
+            // is "household-level default". Per-step override is
+            // session-only via React state above.
+            setHouseholdSpice(next);
+          }}
+          alwaysShow
+        />
       )}
 
       {/* Main instruction  -  technique words are tap-to-reveal via Glossify.
-          Double-tap anywhere on the body re-speaks the step (Phase 12). */}
+          Double-tap anywhere on the body re-speaks the step (Phase 12).
+          Stage 2 W10: instruction is rewritten when Parent Mode lowers
+          the spice tolerance (deterministic transform, not AI). */}
       <p
-        className="cook-prose text-[var(--nourish-dark)] select-text"
+        data-visual-mode={visualMode ? "true" : undefined}
+        className={cn(
+          "select-text text-[var(--nourish-dark)]",
+          // Visual mode shrinks the instruction so the image carries
+          // the primary signal (Google-Maps-style "look, don't read").
+          visualMode ? "text-sm leading-snug" : "cook-prose",
+        )}
         onDoubleClick={
           mounted && hasSpeechSynthesis ? handleReadAloud : undefined
         }
@@ -258,8 +387,13 @@ export function StepCard({
             : undefined
         }
       >
-        <Glossify>{instruction}</Glossify>
+        <Glossify>{adjustedInstruction}</Glossify>
       </p>
+
+      {/* Component split toggle  -  Stage 2 W10. Last-step only, only
+          for deconstructable dishes, only when Parent Mode is on.
+          Component itself returns null in any other case. */}
+      {isLast && dishSlug && <ComponentSplitToggle dishSlug={dishSlug} />}
 
       {/* Doneness cue */}
       {donenessCue && (
@@ -496,4 +630,9 @@ export function StepCard({
             className="shrink-0 rounded-full px-2 py-1 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
           >
             Not now
-        
+          </button>
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}

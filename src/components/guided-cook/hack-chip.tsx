@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Lightbulb } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -11,6 +11,8 @@ interface HackChipProps {
 }
 
 export function HackChip({ hack, isExpanded, onToggle }: HackChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <div>
       <button

@@ -15,7 +15,7 @@ This is the same class of infra gap as the `qmd-daily-refresh` blocker logged ea
 
 ## Why I'm not forcing a workaround
 
-The task file says explicitly: *"If no surgical opportunity exists (everything requires a big rewrite), SKIP — document why in the improvement log. Do not force a bad feature."* Driving the user's Terminal via computer-use to run git/node from outside the loop would (a) violate the platform tier rules (Terminal is tier "click" — typing is blocked), (b) bypass the task's own no-workaround clause, and (c) leave no commit hash to report.
+The task file says explicitly: _"If no surgical opportunity exists (everything requires a big rewrite), SKIP — document why in the improvement log. Do not force a bad feature."_ Driving the user's Terminal via computer-use to run git/node from outside the loop would (a) violate the platform tier rules (Terminal is tier "click" — typing is blocked), (b) bypass the task's own no-workaround clause, and (c) leave no commit hash to report.
 
 The right move is to flag the blocker so the loop can be fixed — not fake an output.
 

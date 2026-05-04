@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  getEncouragement,
-  type CoachContext,
-} from "./coach-encouragement";
+import { getEncouragement, type CoachContext } from "./coach-encouragement";
 
 describe("coach-encouragement", () => {
   const baseContext: CoachContext = {

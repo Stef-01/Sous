@@ -1,10 +1,14 @@
 /**
  * Coach Quiz  -  onboarding preference quiz.
  *
- * 5 questions covering cooking experience, flavor preferences, dietary needs,
- * favourite cuisines, and cooking goals. Answers produce a preference vector
- * that feeds the pairing engine's preference scorer.
+ * 6 questions covering cooking experience, flavor preferences, dietary needs,
+ * favourite cuisines, cooking goals, and (Stage 2 W7) household composition
+ * for Parent Mode capture. Answers produce a preference vector that feeds
+ * the pairing engine's preference scorer, plus an optional Parent Mode
+ * profile signal when "Kids too" is selected.
  */
+
+import type { AgeBand } from "@/types/nutrition";
 
 export type EffortTolerance = "minimal" | "moderate" | "willing";
 
@@ -15,6 +19,12 @@ export interface CoachQuizOption {
   preferenceUpdates: Record<string, number>;
   /** Optional effort level this answer implies. */
   effortLevel?: EffortTolerance;
+  /**
+   * Optional Parent Mode age band hint. Set on the "household" question
+   * options to carry the parent's choice through to the result. null
+   * explicitly means "no kids at the table" so the toggle stays off.
+   */
+  parentModeAgeBand?: AgeBand | null;
 }
 
 export interface CoachQuizQuestion {
@@ -181,6 +191,50 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
       },
     ],
   },
+  {
+    key: "household",
+    category: "Who's at the table",
+    categoryEmoji: "👨‍👩‍👧",
+    question: "Who's at the table tonight?",
+    options: [
+      {
+        label: "Just me",
+        emoji: "🙂",
+        preferenceUpdates: {},
+        parentModeAgeBand: null,
+      },
+      {
+        label: "Adults only",
+        emoji: "🥂",
+        preferenceUpdates: {},
+        parentModeAgeBand: null,
+      },
+      {
+        label: "Toddlers (1–3)",
+        emoji: "🍼",
+        preferenceUpdates: { "comfort-classic": 0.2 },
+        parentModeAgeBand: "1-3",
+      },
+      {
+        label: "Little kids (4–8)",
+        emoji: "🧒",
+        preferenceUpdates: { "comfort-classic": 0.2 },
+        parentModeAgeBand: "4-8",
+      },
+      {
+        label: "Big kids (9–13)",
+        emoji: "🧑",
+        preferenceUpdates: {},
+        parentModeAgeBand: "9-13",
+      },
+      {
+        label: "Mixed ages",
+        emoji: "👨‍👩‍👧‍👦",
+        preferenceUpdates: { "comfort-classic": 0.2 },
+        parentModeAgeBand: "mix",
+      },
+    ],
+  },
 ];
 
 // ── Preference computation ──────────────────────────────
@@ -190,6 +244,14 @@ export interface CoachQuizResult {
   preferences: Record<string, number>;
   /** Effort tolerance derived from experience + goal answers. */
   effortTolerance: EffortTolerance;
+  /**
+   * Parent Mode signal extracted from the household question.
+   * - null     → question was skipped; caller should leave PM untouched
+   * - "none"   → user picked Just me / Adults only; PM stays off
+   * - AgeBand  → user picked a kids-bearing option; PM should toggle on
+   *              with this age band as default
+   */
+  parentMode: { kind: "none" } | { kind: "kids"; ageBand: AgeBand } | null;
 }
 
 /**
@@ -201,6 +263,7 @@ export function computePreferencesFromAnswers(
 ): CoachQuizResult {
   const combined: Record<string, number> = {};
   let effortTolerance: EffortTolerance = "moderate";
+  let parentMode: CoachQuizResult["parentMode"] = null;
 
   for (let i = 0; i < answers.length; i++) {
     const answer = answers[i];
@@ -218,6 +281,14 @@ export function computePreferencesFromAnswers(
     if (option.effortLevel) {
       effortTolerance = option.effortLevel;
     }
+
+    if (question.key === "household") {
+      if (option.parentModeAgeBand === null) {
+        parentMode = { kind: "none" };
+      } else if (option.parentModeAgeBand) {
+        parentMode = { kind: "kids", ageBand: option.parentModeAgeBand };
+      }
+    }
   }
 
   // Clamp each value to -1..1
@@ -226,7 +297,7 @@ export function computePreferencesFromAnswers(
     preferences[key] = Math.max(-1, Math.min(1, value));
   }
 
-  return { preferences, effortTolerance };
+  return { preferences, effortTolerance, parentMode };
 }
 
 // ── Human-readable summary helpers ─────────────────────

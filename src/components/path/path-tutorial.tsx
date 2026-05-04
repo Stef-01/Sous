@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Map,
   ChefHat,
@@ -64,6 +64,7 @@ interface PathTutorialProps {
 }
 
 export function PathTutorial({ open, onComplete }: PathTutorialProps) {
+  const reducedMotion = useReducedMotion();
   const [step, setStep] = useState(0);
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
       {open && (
         <motion.div
           className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center"
-          initial={{ opacity: 0 }}
+          initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >

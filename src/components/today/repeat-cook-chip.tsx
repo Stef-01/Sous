@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { RotateCcw } from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -80,6 +80,8 @@ interface RepeatCookChipProps {
  * for new users and anyone who hasn't rated recently.
  */
 export function RepeatCookChip({ sessions }: RepeatCookChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const router = useRouter();
   const candidate = pickRepeatCandidate(sessions);
   if (!candidate) return null;

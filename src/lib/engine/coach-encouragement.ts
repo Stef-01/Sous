@@ -176,7 +176,10 @@ export function getUniqueEncouragement(
   if (!msg) return null;
 
   // Allow repeat of "return-after-absence" and "post-abandon" (these can recur)
-  if (msg.trigger === "return-after-absence" || msg.trigger === "post-abandon") {
+  if (
+    msg.trigger === "return-after-absence" ||
+    msg.trigger === "post-abandon"
+  ) {
     return msg;
   }
 

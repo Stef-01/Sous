@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, Heart, Sparkles, UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -56,6 +56,8 @@ export function ScrapbookEntryCard({
   index = 0,
   evaluatorScores,
 }: ScrapbookEntryCardProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const completedDate = session.completedAt
     ? formatRelativeDate(session.completedAt)
     : "In progress";

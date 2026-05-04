@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Sparkles, Camera } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -13,6 +13,8 @@ import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
  * Dual use: sentimental archive and longitudinal plating / technique growth.
  */
 export default function ScrapbookPage() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { completedSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);

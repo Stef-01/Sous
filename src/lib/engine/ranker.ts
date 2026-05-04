@@ -43,7 +43,7 @@ export function rankCandidates(
 
     const totalScore = Object.entries(weights).reduce(
       (sum, [key, weight]) =>
-        sum + fullScores[key as keyof ScoreBreakdown] * weight,
+        sum + (fullScores[key as keyof ScoreBreakdown] ?? 0) * weight,
       0,
     );
 

@@ -1,55 +1,5 @@
 import { create } from "zustand";
 
-// ── Mid-cook resume persistence ──────────────────────────────────────────────
-const RESUME_KEY = "sous-cook-resume-v1";
-
-export interface CookResumeData {
-  slug: string;
-  dishName: string;
-  phase: "grab" | "cook";
-  stepIndex: number;
-  savedAt: string;
-  mainDishInput?: string;
-}
-
-function loadResume(): CookResumeData | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = localStorage.getItem(RESUME_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw) as CookResumeData;
-    // Expire after 4 hours — stale sessions aren't worth resuming
-    const age = Date.now() - new Date(data.savedAt).getTime();
-    if (age > 4 * 60 * 60 * 1000) {
-      localStorage.removeItem(RESUME_KEY);
-      return null;
-    }
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-function persistResume(data: CookResumeData): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(RESUME_KEY, JSON.stringify(data));
-  } catch {
-    // localStorage unavailable
-  }
-}
-
-export function clearResume(): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.removeItem(RESUME_KEY);
-  } catch {
-    // noop
-  }
-}
-
-export { loadResume };
-
 type Phase = "mission" | "grab" | "cook" | "win";
 type ChipType = "timer" | "mistake" | "hack" | "fact" | null;
 
@@ -105,8 +55,10 @@ interface CookStore {
   tickTimers: () => void;
   /** Stop a specific timer by id, or all timers if no id is given. */
   stopTimer: (id?: string) => void;
-  /** Persist current phase + step to localStorage for mid-cook resume. */
-  saveProgress: (slug: string, dishName: string, mainDishInput?: string) => void;
+  /** Add `addSeconds` to the most recently started ACTIVE timer.
+   *  No-op when no active timer exists. W39 voice "add 5 minutes"
+   *  command. Defensive against negative inputs. */
+  extendTimer: (addSeconds: number) => void;
   completeSession: () => void;
   reset: () => void;
 }
@@ -237,27 +189,34 @@ export const useCookStore = create<CookStore>((set, get) => ({
       return { timers: state.timers.filter((t) => t.id !== id) };
     }),
 
-  saveProgress: (slug, dishName, mainDishInput) => {
-    const { currentPhase, currentStepIndex } = get();
-    if (currentPhase === "grab" || currentPhase === "cook") {
-      persistResume({
-        slug,
-        dishName,
-        phase: currentPhase,
-        stepIndex: currentStepIndex,
-        savedAt: new Date().toISOString(),
-        mainDishInput,
-      });
-    }
-  },
+  extendTimer: (addSeconds) =>
+    set((state) => {
+      if (!Number.isFinite(addSeconds) || addSeconds <= 0) return state;
+      // Find the most recently started ACTIVE timer (completedAt
+      // === null). Iterating from the end matches "the timer the
+      // user is most likely thinking about" — the latest one
+      // they started.
+      let targetIdx = -1;
+      let latestStart = -Infinity;
+      for (let i = 0; i < state.timers.length; i += 1) {
+        const t = state.timers[i];
+        if (t.completedAt === null && t.startedAt > latestStart) {
+          latestStart = t.startedAt;
+          targetIdx = i;
+        }
+      }
+      if (targetIdx === -1) return state;
+      const target = state.timers[targetIdx];
+      const next = [...state.timers];
+      next[targetIdx] = {
+        ...target,
+        remaining: target.remaining + addSeconds,
+        totalSeconds: target.totalSeconds + addSeconds,
+      };
+      return { timers: next };
+    }),
 
-  completeSession: () => {
-    clearResume();
-    set({ currentPhase: "win" });
-  },
+  completeSession: () => set({ currentPhase: "win" }),
 
-  reset: () => {
-    clearResume();
-    set(initialState);
-  },
+  reset: () => set(initialState),
 }));

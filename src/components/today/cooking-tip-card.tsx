@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Lightbulb, X } from "lucide-react";
 
 /**
@@ -78,13 +78,17 @@ function dismissToday(): void {
  * Noom's insight: daily touchpoints outside the core action build habit.
  */
 export function CookingTipCard() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [dismissed, setDismissed] = useState(true); // start hidden to avoid flash
   const [mounted, setMounted] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- legitimate hydration guard: read localStorage on mount */
   useEffect(() => {
     setMounted(true);
     setDismissed(isDismissedToday());
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   if (!mounted || dismissed) return null;
 

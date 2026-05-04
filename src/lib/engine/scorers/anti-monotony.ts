@@ -62,9 +62,7 @@ export function recordServedSide(sideId: string): void {
  * Build a map of sideId → days since last served.
  * Only includes sides served within the WINDOW_DAYS window.
  */
-export function buildRecencyMap(
-  log?: ServedEntry[],
-): Map<string, number> {
+export function buildRecencyMap(log?: ServedEntry[]): Map<string, number> {
   const entries = log ?? readServedLog();
   const now = Date.now();
   const map = new Map<string, number>();

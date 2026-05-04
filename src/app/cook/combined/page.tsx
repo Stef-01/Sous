@@ -10,12 +10,11 @@ import {
 } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ChefHat,
   ChevronRight,
-  Timer,
   UtensilsCrossed,
 } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
@@ -23,6 +22,8 @@ import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
+import { ParallelHintBanner } from "@/components/guided-cook/parallel-hint-banner";
+import { DishProgressStrip } from "@/components/guided-cook/dish-progress-strip";
 import { PlanCookChip } from "@/components/guided-cook/plan-cook-chip";
 import { BigHandsToggle } from "@/components/guided-cook/big-hands-toggle";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
@@ -39,6 +40,13 @@ import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import {
+  buildCombinedDisplayName,
+  buildCombinedSlug,
+  buildIngredientSections,
+  buildOrderedDishes,
+  buildParallelHintMap,
+} from "@/lib/cook/combined-shapers";
 
 /**
  * Combined Cook Page  -  guides the user through cooking a main dish + 1-3 sides
@@ -66,6 +74,10 @@ export default function CombinedCookPage() {
 function CombinedCookContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // W7 follow-up: reduced-motion gate. Consumed by the page-shell
+  // entrance below; full per-site gating queued in Tier 1 of
+  // docs/REDUCED-MOTION-GATE-TODO.md.
+  const reducedMotion = useReducedMotion();
 
   const mainSlug = searchParams.get("main") ?? "";
   const sidesParam = searchParams.get("sides") ?? "";
@@ -137,15 +149,11 @@ function CombinedCookContent() {
   );
 
   // Build ordered dish data based on cookOrder
-  const orderedDishes = useMemo(() => {
-    if (!data) return [];
-    const lookup = new Map<string, typeof data.main>();
-    if (data.main) lookup.set(data.main.dish.slug, data.main);
-    data.sides.forEach((s) => lookup.set(s.dish.slug, s));
-    return data.cookOrder
-      .map((slug) => lookup.get(slug))
-      .filter((d): d is NonNullable<typeof d> => d !== null && d !== undefined);
-  }, [data]);
+  const orderedDishes = useMemo(
+    () =>
+      data ? buildOrderedDishes(data.main, data.sides, data.cookOrder) : [],
+    [data],
+  );
 
   // Current dish being cooked
   const currentDish = orderedDishes[currentDishIndex] ?? null;
@@ -186,13 +194,9 @@ function CombinedCookContent() {
       // multi-dish cook from a single-dish one. See AUDIT-2026-04-17 P1-10.
       if (!sessionIdRef.current) {
         const firstDish = orderedDishes[0];
-        const combinedSlug =
-          orderedDishes.length > 1
-            ? orderedDishes.map((d) => d.dish.slug).join("+")
-            : firstDish.dish.slug;
         sessionIdRef.current = startSession(
-          combinedSlug,
-          `${orderedDishes.map((d) => d.dish.name).join(" + ")}`,
+          buildCombinedSlug(orderedDishes),
+          buildCombinedDisplayName(orderedDishes),
           firstDish.dish.cuisineFamily,
         );
       }
@@ -200,13 +204,10 @@ function CombinedCookContent() {
   }, [data, orderedDishes, startCombinedSession, startSession]);
 
   // Build segmented ingredient sections for the Grab phase
-  const ingredientSections = useMemo<IngredientSection[]>(() => {
-    if (!orderedDishes.length) return [];
-    return orderedDishes.map((d) => ({
-      label: `For ${d.dish.name}`,
-      ingredients: d.ingredients,
-    }));
-  }, [orderedDishes]);
+  const ingredientSections = useMemo<IngredientSection[]>(
+    () => buildIngredientSections(orderedDishes),
+    [orderedDishes],
+  );
 
   // Flat ingredients for backward-compat (used by step card)
   const allIngredients = useMemo(
@@ -251,15 +252,10 @@ function CombinedCookContent() {
   }, [orderedDishes]);
 
   // Sequencer parallel hints: map of "dishSlug-stepIndex" -> hint text
-  const parallelHintMap = useMemo(() => {
-    const map = new Map<string, string>();
-    if (data?.sequencerHints) {
-      for (const h of data.sequencerHints) {
-        map.set(`${h.dishSlug}-${h.stepIndex}`, h.hint);
-      }
-    }
-    return map;
-  }, [data]);
+  const parallelHintMap = useMemo(
+    () => buildParallelHintMap(data?.sequencerHints),
+    [data?.sequencerHints],
+  );
 
   // Current step parallel hint
   const currentParallelHint =
@@ -267,6 +263,18 @@ function CombinedCookContent() {
       ? (parallelHintMap.get(`${currentDish.dish.slug}-${currentStepIndex}`) ??
         null)
       : null;
+
+  // W29 dish-progress strip input — name + total cook steps per
+  // dish, fed into the dual-track strip alongside the cook-store
+  // active indices.
+  const dishProgressInputs = useMemo(
+    () =>
+      orderedDishes.map((d) => ({
+        name: d.dish.name,
+        totalSteps: d.steps.filter((s) => s.phase === "cook").length,
+      })),
+    [orderedDishes],
+  );
 
   // Combined totals for mission screen
   const totalPrepTime = useMemo(
@@ -544,9 +552,9 @@ function CombinedCookContent() {
     <motion.div
       data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0, y: 8 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
       <header className="app-header px-4 py-3">
@@ -589,8 +597,8 @@ function CombinedCookContent() {
             <CombinedMissionScreen
               key="mission"
               mainDishName={mainDish.name}
-              mainDishDescription={mainDish.description}
-              mainDishHeroImage={mainDish.heroImageUrl}
+              mainDishDescription={mainDish.description ?? ""}
+              mainDishHeroImage={mainDish.heroImageUrl ?? null}
               companionDishes={orderedDishes
                 .filter((d) => d.dish.slug !== mainDish.slug)
                 .map((d) => d.dish.name)}
@@ -681,39 +689,20 @@ function CombinedCookContent() {
                     timer. Hidden when nothing is running. */}
                 <TimerStack />
 
-                {/* Current dish label */}
-                {dishes.length > 1 && (
-                  <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 25 }}
-                    className="text-xs font-medium text-[var(--nourish-green)] mb-3"
-                  >
-                    {currentDish.dish.name}
-                  </motion.p>
-                )}
+                {/* W29 dual-track step-progress strip — only renders
+                    when there are 2+ dishes. Replaces the standalone
+                    "current dish label" row by including the active
+                    name (highlighted) plus every other dish's
+                    progress. */}
+                <DishProgressStrip
+                  dishes={dishProgressInputs}
+                  activeDishIndex={currentDishIndex}
+                  activeStepIndex={currentStepIndex}
+                  className="mb-3"
+                />
 
                 {/* Parallel cooking hint from sequencer */}
-                {currentParallelHint && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 25,
-                    }}
-                    className="mb-3 rounded-xl bg-amber-50 border border-amber-200/60 px-3.5 py-2.5 flex items-start gap-2"
-                  >
-                    <Timer
-                      size={16}
-                      className="text-amber-600 mt-0.5 shrink-0"
-                    />
-                    <p className="text-xs text-amber-800 leading-relaxed">
-                      {currentParallelHint}
-                    </p>
-                  </motion.div>
-                )}
+                <ParallelHintBanner hint={currentParallelHint} />
                 <StepCard
                   stepNumber={currentStepIndex + 1}
                   totalSteps={currentCookSteps.length}

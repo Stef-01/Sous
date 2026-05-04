@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Lock, Zap, ChevronRight, Trophy, Flame } from "lucide-react";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { SkillIcon } from "@/components/shared/skill-icon";
@@ -31,13 +31,14 @@ export function NextUnlockCard({
   lockedPreview,
   skillsCompleted,
 }: NextUnlockCardProps) {
+  const reducedMotion = useReducedMotion();
   // All skills completed
   if (!nextNode && !lockedPreview) {
     return (
       <motion.div
         initial={false}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
+        transition={{ duration: reducedMotion ? 0 : 0.3, delay: 0.2 }}
         className="rounded-2xl p-5"
         style={{
           background:

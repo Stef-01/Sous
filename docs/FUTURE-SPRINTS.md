@@ -24,9 +24,6 @@ Scope note: **no expansion of scored pairings beyond the current Indian pre-comp
 
 ## Suggested sprint boundaries
 
-0. **Sprint E — Inline Substitution + Voice Cook Pilot (NEXT UP)**:
-   Long-press ingredient substitute (§11.4) + feature-flagged voice commands during Cook (§12.2).
-   Full technical plan: `docs/NEXT-20E-PHASES.md`. This is the next build on the agenda.
 1. **Sprint A — Toast pass**: Mount + audit all toasts; motion `initial={false}` where it affects a11y/tests; one E2E per toast type.
 2. **Sprint B — Cook E2E hardening**: Single-recipe happy path to win + star rating; timer inject or shortest recipe only.
 3. **Sprint C — Performance / bundle**: Follow ROADMAP “performance” themes; measure `/today` and `/path` TTFB + JS on 4G.

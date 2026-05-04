@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import {
   getRandomPairs,
@@ -49,6 +49,7 @@ function buildCards(pairs: FlavorPair[]): CardState[] {
 
 export default function FlavorPairsGame() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { recordScore } = useGameScores();
   const { awardXP } = useXPSystem();
 
@@ -258,29 +259,29 @@ export default function FlavorPairsGame() {
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
-        <div className="mx-auto flex max-w-md items-center justify-between">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/games")}
             whileTap={{ scale: 0.88 }}
-            className="flex items-center justify-center rounded-lg min-h-11 min-w-11 text-[var(--nourish-subtext)]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--nourish-subtext)]"
             type="button"
-            aria-label="Back"
+            aria-label="Back to Arcade"
           >
             <ArrowLeft size={20} />
           </motion.button>
-          <div className="flex items-center gap-3 text-xs">
-            <span className="text-[var(--nourish-subtext)] tabular-nums">
-              {matchedPairs}/{PAIR_COUNT}
-            </span>
-            <span className="text-[var(--nourish-subtext)] tabular-nums">
-              {elapsed}s
-            </span>
+          <div className="flex flex-col items-center">
+            <p className="font-serif text-[14px] font-semibold text-[var(--nourish-dark)]">
+              Flavor Pairs
+            </p>
+            <p className="tabular-nums text-[10px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+              {matchedPairs} of {PAIR_COUNT} matched · {elapsed}s
+            </p>
           </div>
-          <span className="text-xs font-medium text-[var(--nourish-subtext)] tabular-nums">
+          <span className="tabular-nums text-xs font-medium text-[var(--nourish-subtext)]">
             {moves} moves
           </span>
         </div>

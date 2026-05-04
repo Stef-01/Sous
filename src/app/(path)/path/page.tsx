@@ -3,8 +3,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion, LayoutGroup } from "framer-motion";
-import { BookOpen, Bookmark, Heart, ShoppingCart } from "lucide-react";
+import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
+import {
+  BookOpen,
+  Bookmark,
+  ChefHat,
+  Heart,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { PathHero } from "@/components/path/path-hero";
 import { CuisineConstellation } from "@/components/path/cuisine-constellation";
@@ -29,6 +36,7 @@ import {
 } from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
 import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
+import { SectionKicker } from "@/components/shared/section-kicker";
 
 /**
  * Path home  -  Duolingo-style skill tree for cooking progression.
@@ -38,6 +46,9 @@ import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
  * a detail sheet with associated practice dishes.
  */
 export default function PathPage() {
+  // W7 follow-up: reduced-motion gate available across this file's
+  // motion sites. Consumed by the page-shell entrance below.
+  const reducedMotion = useReducedMotion();
   const {
     mounted,
     nodesWithStatus,
@@ -247,7 +258,7 @@ export default function PathPage() {
         className="min-h-dvh bg-[var(--nourish-cream)]"
         initial={false}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.18 }}
+        transition={{ duration: reducedMotion ? 0 : 0.18 }}
       >
         {/* Header with stats */}
         <PathHeader
@@ -384,9 +395,12 @@ export default function PathPage() {
         {/* Skill tree */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
-        {/* Quick links at bottom (above tab bar) */}
-        <div className="px-4 pb-24 pt-2">
-          <div className="mx-auto grid max-w-md grid-cols-2 gap-2">
+        {/* Quick links at bottom (above tab bar). Section kicker uses
+            the same uppercase tracking pattern as the rest of Path
+            home and the Content tab — visual rhythm consistency. */}
+        <div className="mx-auto max-w-md px-4 pb-24 pt-4">
+          <SectionKicker className="mb-2 px-1">Your kitchen</SectionKicker>
+          <div className="grid grid-cols-3 gap-2">
             {[
               {
                 href: "/path/scrapbook",
@@ -408,6 +422,16 @@ export default function PathPage() {
                 icon: Heart,
                 label: "Favorites",
               },
+              {
+                href: "/path/recipes",
+                icon: ChefHat,
+                label: "My recipes",
+              },
+              {
+                href: "/path/household",
+                icon: Users,
+                label: "Household",
+              },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div
                 key={href}
@@ -416,7 +440,7 @@ export default function PathPage() {
               >
                 <Link
                   href={href}
-                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
+                  className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
                 >
                   <Icon size={14} />
                   {label}

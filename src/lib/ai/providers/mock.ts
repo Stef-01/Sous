@@ -24,7 +24,11 @@ import type {
   AppraisalRewriteResult,
   PostCookReflectionInput,
   PostCookReflectionResult,
+  KidSwapsInput,
+  KidSwapsResult,
 } from "../contracts";
+import { suggestKidSwapsFromLabel } from "@/lib/parent-mode/kid-swap-lookup";
+import type { KidFriendlinessLabel } from "@/types/parent-mode";
 
 // ── Common substitution map ─────────────────────────────
 
@@ -317,6 +321,36 @@ export class MockAIProvider implements AIProvider {
       nextTimeSuggestions: suggestions.slice(0, 2),
       tone: "encouraging",
     };
+  }
+
+  async suggestKidSwaps(input: KidSwapsInput): Promise<KidSwapsResult> {
+    // Mock provider mirrors the deterministic lookup so dev parity
+    // holds when ANTHROPIC_API_KEY is absent.
+    const fakeLabel: KidFriendlinessLabel = {
+      recipeSlug: input.recipeName,
+      bitterLoad: input.signals.bitterLoad as 0 | 1 | 2 | 3,
+      smellIntensity: input.signals.smellIntensity as 0 | 1 | 2 | 3,
+      textureRisk: input.signals.textureRisk as 0 | 1 | 2 | 3,
+      visibleGreenFlecks: input.signals.visibleGreenFlecks,
+      deconstructable: input.signals.deconstructable,
+      heatLevel: input.signals.heatLevel as 0 | 1 | 2 | 3 | 4,
+      familiarityAnchor: input.signals.familiarityAnchor,
+      colorBrightness: input.signals.colorBrightness as 0 | 1 | 2 | 3,
+      parentModeEligible: true,
+    };
+    const swaps = suggestKidSwapsFromLabel(fakeLabel);
+    if (swaps.length === 0) {
+      return {
+        swaps: [
+          {
+            label: "Sauce on the side",
+            rationale:
+              "Even on a kid-safe dish, plating sauces and dressings on the side raises acceptance.",
+          },
+        ],
+      };
+    }
+    return { swaps };
   }
 }
 

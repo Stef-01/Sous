@@ -106,8 +106,11 @@ export function detectCuisineStreak(
   }
 
   // Pick a suggestion that isn't the repeated cuisine
-  const neighbors =
-    CUISINE_NEIGHBORS[firstCuisine] ?? ["japanese", "italian", "thai"];
+  const neighbors = CUISINE_NEIGHBORS[firstCuisine] ?? [
+    "japanese",
+    "italian",
+    "thai",
+  ];
   const suggestion = neighbors[0];
 
   const cuisineLabel =

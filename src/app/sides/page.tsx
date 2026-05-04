@@ -3,7 +3,7 @@
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
@@ -45,6 +45,8 @@ export default function SidesPage() {
 }
 
 function SidesPageContent() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const router = useRouter();
   const searchParams = useSearchParams();
   const mainDish = searchParams.get("main") ?? "";

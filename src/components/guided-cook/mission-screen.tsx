@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { PlanCookChip } from "./plan-cook-chip";
@@ -20,6 +20,9 @@ interface MissionScreenProps {
   /** When provided, surfaces a "last cooked N days ago" recall line if this
    *  dish has been completed before. */
   dishSlug?: string;
+  /** Y3 W9: cuisine family for the eyebrow-caps row. Optional;
+   *  the eyebrow gracefully degrades to time-only when absent. */
+  cuisineFamily?: string;
   onStart: () => void;
 }
 
@@ -36,10 +39,11 @@ export function MissionScreen({
   heroImageUrl,
   hasIngredients = true,
   dishSlug,
+  cuisineFamily,
   onStart,
 }: MissionScreenProps) {
+  const reducedMotion = useReducedMotion();
   const [imgError, setImgError] = useState(false);
-  const [imgLoaded, setImgLoaded] = useState(false);
   const totalTime = prepTimeMinutes + cookTimeMinutes;
 
   return (
@@ -48,30 +52,30 @@ export function MissionScreen({
       animate={{ opacity: 1 }}
       className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image  -  fixed height so CTA stays above fold on 375px phones */}
+      {/* Hero image — Y3 W9: locked 16:10 aspect ratio (pattern #1
+          standardisation across recipe surfaces). Falls back to a
+          gradient + name overlay when no hero image is available. */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25 }}
-        className="relative h-[160px] overflow-hidden rounded-2xl"
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25 }
+        }
+        className="relative overflow-hidden rounded-2xl"
+        style={{ aspectRatio: "16 / 10" }}
       >
         {heroImageUrl && !imgError ? (
-          <>
-            {!imgLoaded && <div className="absolute inset-0 shimmer" />}
-            <Image
-              src={heroImageUrl}
-              alt={dishName}
-              fill
-              sizes="(max-width: 768px) 100vw, 448px"
-              priority
-              className={cn(
-                "object-cover transition-opacity duration-300",
-                imgLoaded ? "opacity-100" : "opacity-0",
-              )}
-              onLoad={() => setImgLoaded(true)}
-              onError={() => setImgError(true)}
-            />
-          </>
+          <Image
+            src={heroImageUrl}
+            alt={dishName}
+            fill
+            sizes="(max-width: 768px) 100vw, 448px"
+            priority
+            className="object-cover"
+            onError={() => setImgError(true)}
+          />
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center gap-3"
@@ -94,8 +98,24 @@ export function MissionScreen({
         )}
       </motion.div>
 
-      {/* Dish name + flavor badges */}
-      <div className="space-y-3">
+      {/* Dish name + meta strip — Y3 W9 visual hierarchy:
+          eyebrow caps (#2) → title → flavor pills (#3 meta strip).
+          Time chip moves into the eyebrow row so it competes with
+          metadata, not with flavor. */}
+      <div className="space-y-2">
+        {/* Eyebrow caps — pattern #2 */}
+        <motion.p
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]"
+        >
+          {cuisineFamily ? `${cuisineFamily} · ` : ""}
+          {totalTime} min
+        </motion.p>
+
+        {/* Title — serif headline, line-clamp 2 to keep CTA above
+            the fold on 375px viewports */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,42 +125,34 @@ export function MissionScreen({
             damping: 25,
             delay: 0.1,
           }}
-          className="font-serif text-2xl text-[var(--nourish-dark)]"
+          className="line-clamp-2 font-serif text-2xl leading-tight text-[var(--nourish-dark)]"
         >
           {dishName}
         </motion.h1>
 
-        <div className="flex flex-wrap gap-2">
-          {flavorProfile.map((flavor, idx) => (
-            <motion.span
-              key={flavor}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-                delay: 0.15 + idx * 0.05,
-              }}
-              className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
-            >
-              {flavor}
-            </motion.span>
-          ))}
-          <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-              delay: 0.15 + flavorProfile.length * 0.05,
-            }}
-            className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]"
-          >
-            {totalTime} min
-          </motion.span>
-        </div>
+        {/* Flavor pills — pattern #3 meta strip. Time chip moved
+            into the eyebrow row above; this row is now flavor-only
+            so the visual category doesn't mix. */}
+        {flavorProfile.length > 0 && (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {flavorProfile.map((flavor, idx) => (
+              <motion.span
+                key={flavor}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 20,
+                  delay: 0.15 + idx * 0.05,
+                }}
+                className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
+              >
+                {flavor}
+              </motion.span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Recall line  -  "Last cooked 12 days ago · you rated it 5★" */}
@@ -197,4 +209,14 @@ export function MissionScreen({
         whileTap={{ scale: 0.96 }}
         onClick={onStart}
         className={cn(
-          "mt-auto 
+          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
+          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+          "cta-shadow transition-colors duration-200",
+        )}
+        type="button"
+      >
+        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+      </motion.button>
+    </motion.div>
+  );
+}

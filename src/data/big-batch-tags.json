@@ -1,0 +1,74 @@
+[
+  {
+    "recipeSlug": "rotisserie-chicken",
+    "leftoverLabel": "rotisserie chicken meat",
+    "expectedLeftoverItems": ["chicken-meat"],
+    "successorRecipeSlugs": [
+      "chicken-rice-bowl",
+      "chicken-salad-wrap",
+      "chicken-noodle-soup"
+    ]
+  },
+  {
+    "recipeSlug": "marinara-batch",
+    "leftoverLabel": "leftover marinara",
+    "expectedLeftoverItems": ["tomato-sauce"],
+    "successorRecipeSlugs": [
+      "spaghetti-marinara",
+      "shakshuka",
+      "marinara-poached-eggs"
+    ]
+  },
+  {
+    "recipeSlug": "pulled-pork-shoulder",
+    "leftoverLabel": "pulled pork",
+    "expectedLeftoverItems": ["pulled-pork"],
+    "successorRecipeSlugs": [
+      "pulled-pork-tacos",
+      "pork-fried-rice",
+      "pork-banh-mi"
+    ]
+  },
+  {
+    "recipeSlug": "pot-of-rice",
+    "leftoverLabel": "leftover rice",
+    "expectedLeftoverItems": ["cooked-rice"],
+    "successorRecipeSlugs": ["egg-fried-rice", "rice-pudding", "rice-arancini"]
+  },
+  {
+    "recipeSlug": "sheet-pan-roasted-vegetables",
+    "leftoverLabel": "roasted vegetables",
+    "expectedLeftoverItems": ["roasted-veg"],
+    "successorRecipeSlugs": ["veg-grain-bowl", "veg-frittata", "veg-pita"]
+  },
+  {
+    "recipeSlug": "lentil-stew",
+    "leftoverLabel": "lentil stew",
+    "expectedLeftoverItems": ["cooked-lentils"],
+    "successorRecipeSlugs": [
+      "lentil-soup",
+      "lentil-tacos",
+      "lentil-shepherds-pie"
+    ]
+  },
+  {
+    "recipeSlug": "beef-bolognese",
+    "leftoverLabel": "bolognese sauce",
+    "expectedLeftoverItems": ["bolognese"],
+    "successorRecipeSlugs": [
+      "spaghetti-bolognese",
+      "lasagna",
+      "stuffed-peppers"
+    ]
+  },
+  {
+    "recipeSlug": "pot-of-beans",
+    "leftoverLabel": "cooked beans",
+    "expectedLeftoverItems": ["cooked-beans"],
+    "successorRecipeSlugs": [
+      "bean-quesadilla",
+      "bean-soup",
+      "bean-burrito-bowl"
+    ]
+  }
+]

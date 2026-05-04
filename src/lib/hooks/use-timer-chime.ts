@@ -13,9 +13,11 @@ function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
   try {
     if (!audioCtx || audioCtx.state === "closed") {
-      audioCtx = new (window.AudioContext ||
+      audioCtx = new (
+        window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext)();
+          .webkitAudioContext
+      )();
     }
     // Resume if suspended (autoplay policy)
     if (audioCtx.state === "suspended") {
@@ -53,10 +55,7 @@ export function playTimerChime(): void {
     // Bell-like envelope: quick attack, medium decay
     gain.gain.setValueAtTime(0, now + note.start);
     gain.gain.linearRampToValueAtTime(0.3, now + note.start + 0.02);
-    gain.gain.exponentialRampToValueAtTime(
-      0.001,
-      now + note.start + note.dur,
-    );
+    gain.gain.exponentialRampToValueAtTime(0.001, now + note.start + note.dur);
 
     osc.connect(gain);
     gain.connect(ctx.destination);

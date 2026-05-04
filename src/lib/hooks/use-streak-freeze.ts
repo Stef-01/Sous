@@ -24,7 +24,8 @@ function loadState(): StreakFreezeState {
     if (!raw) return defaultState();
     const parsed = JSON.parse(raw);
     return {
-      banked: typeof parsed.banked === "number" ? Math.min(parsed.banked, 1) : 0,
+      banked:
+        typeof parsed.banked === "number" ? Math.min(parsed.banked, 1) : 0,
       earnedAt: parsed.earnedAt ?? null,
       consumedAt: parsed.consumedAt ?? null,
     };
@@ -58,10 +59,12 @@ export function useStreakFreeze() {
   const [state, setState] = useState<StreakFreezeState>(defaultState);
   const [mounted, setMounted] = useState(false);
 
+  /* eslint-disable react-hooks/set-state-in-effect -- legitimate hydration guard: load localStorage on mount */
   useEffect(() => {
     setState(loadState());
     setMounted(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const earn = useCallback(() => {
     setState((prev) => {

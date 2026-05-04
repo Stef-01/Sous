@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Moon, Check, X } from "lucide-react";
 import { useCookIntention } from "@/lib/hooks/use-cook-intention";
 import { cn } from "@/lib/utils/cn";
@@ -31,6 +31,7 @@ interface TonightChipProps {
  * light-weight way to change or drop it. No nagging, no red badges.
  */
 export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
+  const reducedMotion = useReducedMotion();
   const { intention, mounted, commit, clear } = useCookIntention();
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("");
@@ -74,10 +75,10 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={`banner-${intention.dishName}`}
-          initial={{ opacity: 0, y: 4 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.25 }}
+          exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+          transition={{ duration: reducedMotion ? 0 : 0.25 }}
           className="flex items-center gap-2 rounded-full border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-3.5 py-2.5"
         >
           <Moon

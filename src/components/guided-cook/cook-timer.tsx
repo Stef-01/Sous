@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { X, SkipForward } from "lucide-react";
+import { X } from "lucide-react";
 import type { TimerEntry } from "@/lib/hooks/use-cook-store";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
-import { playTimerChime } from "@/lib/hooks/use-timer-chime";
 
 function pickPrimary(timers: TimerEntry[]): TimerEntry | null {
   if (timers.length === 0) return null;
@@ -27,37 +26,16 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
  * lowest-remaining one; the full set is visible in the TimerStack pill strip
  * above the step card.
  */
-/** Auto-advance delay (ms) after timer completion before moving to next step. */
-const AUTO_ADVANCE_DELAY_MS = 2500;
-
 export function CookTimer() {
   const timers = useCookStore((s) => s.timers);
   const tickTimers = useCookStore((s) => s.tickTimers);
   const stopTimer = useCookStore((s) => s.stopTimer);
-  const nextStep = useCookStore((s) => s.nextStep);
-  const currentPhase = useCookStore((s) => s.currentPhase);
-  const currentStepIndex = useCookStore((s) => s.currentStepIndex);
-  const totalSteps = useCookStore((s) => s.totalSteps);
 
   const primary = pickPrimary(timers);
 
   const [showDone, setShowDone] = useState(false);
-  /** Countdown seconds until auto-advance (null = not advancing). */
-  const [autoAdvanceCountdown, setAutoAdvanceCountdown] = useState<number | null>(null);
   const vibratedForRef = useRef<string | null>(null);
-  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prefersReducedMotion = useReducedMotion();
-
-  const isLastStep = currentStepIndex >= totalSteps - 1;
-  const canAutoAdvance = currentPhase === "cook" && !isLastStep;
-
-  const cancelAutoAdvance = useCallback(() => {
-    if (autoAdvanceTimerRef.current) {
-      clearTimeout(autoAdvanceTimerRef.current);
-      autoAdvanceTimerRef.current = null;
-    }
-    setAutoAdvanceCountdown(null);
-  }, []);
 
   // Global 1 Hz ticker  -  runs only while any timer is in flight.
   useEffect(() => {
@@ -66,23 +44,13 @@ export function CookTimer() {
     return () => clearInterval(interval);
   }, [timers.length, tickTimers]);
 
-  // Play chime + vibrate once per timer when it first hits zero.
-  // Then kick off auto-advance countdown if not on the last step.
+  // Vibrate once per timer when it first hits zero.
   useEffect(() => {
     const justDone = timers.find(
       (t) => t.completedAt !== null && vibratedForRef.current !== t.id,
     );
     if (!justDone) return;
     vibratedForRef.current = justDone.id;
-
-    // Chime sound via Web Audio API
-    try {
-      playTimerChime();
-    } catch {
-      /* unsupported */
-    }
-
-    // Haptic feedback
     try {
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         navigator.vibrate([200, 100, 200, 100, 200]);
@@ -90,46 +58,13 @@ export function CookTimer() {
     } catch {
       /* unsupported */
     }
-
     // Flash the "Done!" label for the linger window. Guard is satisfied via
     // `vibratedForRef` above  -  this effect only runs once per finished timer.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowDone(true);
-    const doneId = setTimeout(() => setShowDone(false), 1800);
-
-    // Auto-advance countdown: only if we're in the cook phase and not on last step
-    if (canAutoAdvance) {
-      const seconds = Math.round(AUTO_ADVANCE_DELAY_MS / 1000);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setAutoAdvanceCountdown(seconds);
-
-      // Tick the countdown each second
-      let remaining = seconds;
-      const countdownInterval = setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) {
-          clearInterval(countdownInterval);
-          setAutoAdvanceCountdown(null);
-          nextStep();
-        } else {
-          setAutoAdvanceCountdown(remaining);
-        }
-      }, 1000);
-
-      autoAdvanceTimerRef.current = countdownInterval as unknown as ReturnType<typeof setTimeout>;
-
-      return () => {
-        clearTimeout(doneId);
-        clearInterval(countdownInterval);
-      };
-    }
-
-    return () => clearTimeout(doneId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const id = setTimeout(() => setShowDone(false), 1800);
+    return () => clearTimeout(id);
   }, [timers]);
-
-  // Clean up auto-advance on unmount
-  useEffect(() => cancelAutoAdvance, [cancelAutoAdvance]);
 
   if (!primary) return null;
 
@@ -177,4 +112,69 @@ export function CookTimer() {
       >
         <div
           className="relative flex items-center justify-center"
-          style={{ wi
+          style={{ width: 72, height: 72 }}
+        >
+          <svg width="72" height="72" className="-rotate-90">
+            <circle
+              cx="36"
+              cy="36"
+              r={RADIUS}
+              fill="none"
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="4"
+            />
+            <motion.circle
+              cx="36"
+              cy="36"
+              r={RADIUS}
+              fill="none"
+              stroke={isDone ? "#D4A84B" : isLow ? "#FF6B6B" : "#4ECDC4"}
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeDasharray={CIRCUMFERENCE}
+              animate={{ strokeDashoffset: CIRCUMFERENCE - strokeDash }}
+              transition={{ duration: 0.8, ease: "linear" }}
+            />
+          </svg>
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <AnimatePresence mode="wait">
+              {isDone && showDone ? (
+                <motion.span
+                  key="done"
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  className="text-sm font-bold text-[#D4A84B]"
+                >
+                  Done!
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="time"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="font-mono font-bold tabular-nums text-white leading-none"
+                  style={{ fontSize: remaining >= 600 ? 16 : 20 }}
+                >
+                  {display}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <button
+          onClick={() => stopTimer(primary.id)}
+          className="flex items-center justify-center rounded-full min-h-11 min-w-11 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          aria-label={`Stop ${primary.label}`}
+          type="button"
+        >
+          <X size={18} />
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}

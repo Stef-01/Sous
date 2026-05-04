@@ -1,0 +1,154 @@
+[
+  {
+    "requiredAny": [
+      ["ham", "prosciutto", "salami"],
+      ["sharp cheese", "cheddar", "gruyere", "manchego"],
+      ["pear", "apple", "fig"]
+    ],
+    "dishName": "Argyle pear & sharp-cheese sandwich",
+    "dishType": "sandwich",
+    "prepTimeMinutes": 8,
+    "pairingExplanation": "Salty cured meat, sharp cheese, and ripe stone-fruit share fruity-sweet aroma compounds."
+  },
+  {
+    "requiredAny": [
+      ["tomato", "tomatoes", "cherry tomato"],
+      ["mozzarella", "burrata"],
+      ["basil"]
+    ],
+    "dishName": "Caprese plate with torn herbs",
+    "dishType": "salad",
+    "prepTimeMinutes": 6,
+    "pairingExplanation": "The summer-bright tomato and milky cheese pairing leans on shared green-fresh aroma notes."
+  },
+  {
+    "requiredAny": [
+      ["chickpeas", "garbanzo"],
+      ["lemon", "lemon zest"],
+      ["olive oil"]
+    ],
+    "dishName": "Smashed chickpea & lemon snack-board",
+    "dishType": "snack-board",
+    "prepTimeMinutes": 10,
+    "pairingExplanation": "Toasty legume meets bright citrus through complementary herbal-citrus volatiles."
+  },
+  {
+    "requiredAny": [
+      ["eggs", "egg"],
+      ["spinach", "kale", "swiss chard"],
+      ["feta", "goat cheese"]
+    ],
+    "dishName": "Greens & feta egg scramble",
+    "dishType": "skillet",
+    "prepTimeMinutes": 12,
+    "pairingExplanation": "Earthy greens balance briny cheese; eggs carry the savoury frame."
+  },
+  {
+    "requiredAny": [["greek yogurt", "yogurt"], ["cucumber"], ["dill", "mint"]],
+    "dishName": "Cool yogurt-cucumber dip",
+    "dishType": "dip",
+    "prepTimeMinutes": 7,
+    "pairingExplanation": "Fresh herbal volatiles bridge tangy yogurt and crisp cucumber."
+  },
+  {
+    "requiredAny": [
+      ["bread", "sourdough", "ciabatta"],
+      ["avocado"],
+      ["lemon", "lime"]
+    ],
+    "dishName": "Avocado smash on toast",
+    "dishType": "toast",
+    "prepTimeMinutes": 5,
+    "pairingExplanation": "Buttery fat and citrus brightness against a toasted bread structure."
+  },
+  {
+    "requiredAny": [["spaghetti", "pasta"], ["garlic"], ["olive oil"]],
+    "dishName": "Garlic-oil spaghetti",
+    "dishType": "pasta",
+    "prepTimeMinutes": 15,
+    "pairingExplanation": "The classic three-ingredient pasta — pungent allium meets golden oil over al-dente strands."
+  },
+  {
+    "requiredAny": [["rice", "cooked rice"], ["egg", "eggs"], ["soy sauce"]],
+    "dishName": "Quick fried rice",
+    "dishType": "skillet",
+    "prepTimeMinutes": 10,
+    "pairingExplanation": "Day-old rice + a hot pan + egg creates a savoury, restaurant-style five-minute dish."
+  },
+  {
+    "requiredAny": [["pita", "flatbread"], ["hummus"], ["cucumber", "tomato"]],
+    "dishName": "Mediterranean pita plate",
+    "dishType": "plate",
+    "prepTimeMinutes": 8,
+    "pairingExplanation": "Earthy hummus, fresh produce, and warm pita anchor a no-cook plate."
+  },
+  {
+    "requiredAny": [
+      ["oats", "rolled oats"],
+      ["banana", "berries"],
+      ["honey", "maple syrup"]
+    ],
+    "dishName": "Loaded morning oats",
+    "dishType": "breakfast",
+    "prepTimeMinutes": 8,
+    "pairingExplanation": "Warming oats, fresh fruit, and a touch of natural sweetness — comforting and balanced."
+  },
+  {
+    "requiredAny": [
+      ["lentils", "cooked lentils"],
+      ["lemon", "lemon zest"],
+      ["parsley", "cilantro"]
+    ],
+    "dishName": "Bright lentil bowl",
+    "dishType": "bowl",
+    "prepTimeMinutes": 12,
+    "pairingExplanation": "Earthy lentils lifted by citrus and fresh herbs into a quick lunch bowl."
+  },
+  {
+    "requiredAny": [
+      ["chicken meat", "rotisserie chicken"],
+      ["tortilla", "wrap"],
+      ["lettuce", "spinach"]
+    ],
+    "dishName": "Chicken & greens wrap",
+    "dishType": "wrap",
+    "prepTimeMinutes": 6,
+    "pairingExplanation": "Cooked chicken, fresh greens, and a soft wrap make the leftover-friendly lunch shape."
+  },
+  {
+    "requiredAny": [
+      ["sweet potato", "sweet potatoes"],
+      ["black beans", "cooked beans"],
+      ["lime"]
+    ],
+    "dishName": "Sweet-potato bean bowl",
+    "dishType": "bowl",
+    "prepTimeMinutes": 25,
+    "pairingExplanation": "Caramelised sweet potato, earthy beans, and a citrus finish — fibre + protein in one bowl."
+  },
+  {
+    "requiredAny": [
+      ["tuna", "canned tuna"],
+      ["white beans", "cannellini"],
+      ["red onion"]
+    ],
+    "dishName": "Tuscan tuna-bean salad",
+    "dishType": "salad",
+    "prepTimeMinutes": 7,
+    "pairingExplanation": "Briny fish, creamy beans, and sharp onion — a pantry-emergency lunch that punches above its prep time."
+  },
+  {
+    "requiredAny": [["pasta", "spaghetti"], ["pesto"], ["parmesan"]],
+    "dishName": "Pesto pasta with shaved parmesan",
+    "dishType": "pasta",
+    "prepTimeMinutes": 12,
+    "pairingExplanation": "Herbaceous pesto and aged cheese build umami depth across a quick dinner."
+  },
+  {
+    "requiredAny": [["bread", "sourdough"], ["butter"], ["honey", "jam"]],
+    "dishName": "Butter-and-honey toast",
+    "dishType": "toast",
+    "prepTimeMinutes": 4,
+    "pairingExplanation": "Buttery fat plus floral sweetness on warm bread — the smallest possible weekend breakfast."
+  }
+]

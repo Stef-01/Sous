@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Check,
   Circle,
@@ -15,15 +15,15 @@ import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { useSubstitutionMemory } from "@/lib/hooks/use-substitution-memory";
-import { useLongPress } from "@/lib/hooks/use-long-press";
 import { toast } from "@/lib/hooks/use-toast";
 import {
   coalescePrepList,
   normalizePrepName,
   type PrepListGroup,
 } from "@/lib/engine/prep-list";
-import { groupByAisle } from "@/lib/engine/grocery-aisle";
 import type { StaticDishData } from "@/data/guided-cook-steps";
+import { InstacartHint } from "./instacart-hint";
+import { IngredientPantryDot } from "@/components/shared/ingredient-pantry-dot";
 
 interface Ingredient {
   id: string;
@@ -74,7 +74,8 @@ export function IngredientList({
   onReady,
   onSelectSides,
 }: IngredientListProps) {
-  const [viewMode, setViewMode] = useState<"dish" | "station" | "aisle">("dish");
+  const reducedMotion = useReducedMotion();
+  const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
   const {
@@ -166,12 +167,6 @@ export function IngredientList({
   }, [prepDishes]);
   const hasCoalescedView = prepGroups.length > 0;
 
-  // Aisle-grouped view: available for all ingredient lists (single or multi-dish)
-  const aisleGroups = useMemo(() => {
-    const allIngredients = effectiveSections.flatMap((s) => s.ingredients);
-    return groupByAisle(allIngredients);
-  }, [effectiveSections]);
-
   // Build a map: prep-item key -> list of source ingredient ids, so that
   // tapping a coalesced row can check every underlying ingredient and keep
   // the existing "all checked → go cook" state machine honest.
@@ -218,7 +213,7 @@ export function IngredientList({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col"
       style={{ minHeight: "calc(100dvh - 180px)" }}
@@ -229,27 +224,27 @@ export function IngredientList({
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             Gather these
           </h2>
-          <div
-            role="tablist"
-            aria-label="Prep view"
-            className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === "dish"}
-              onClick={() => setViewMode("dish")}
-              className={cn(
-                "rounded-full px-2.5 py-1 transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                viewMode === "dish"
-                  ? "bg-[var(--nourish-green)] text-white"
-                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-              )}
+          {hasCoalescedView && (
+            <div
+              role="tablist"
+              aria-label="Prep view"
+              className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
             >
-              {hasCoalescedView ? "By dish" : "List"}
-            </button>
-            {hasCoalescedView && (
+              <button
+                type="button"
+                role="tab"
+                aria-selected={viewMode === "dish"}
+                onClick={() => setViewMode("dish")}
+                className={cn(
+                  "rounded-full px-2.5 py-1 transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                  viewMode === "dish"
+                    ? "bg-[var(--nourish-green)] text-white"
+                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                )}
+              >
+                By dish
+              </button>
               <button
                 type="button"
                 role="tab"
@@ -265,62 +260,11 @@ export function IngredientList({
               >
                 By station
               </button>
-            )}
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === "aisle"}
-              onClick={() => setViewMode("aisle")}
-              className={cn(
-                "rounded-full px-2.5 py-1 transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                viewMode === "aisle"
-                  ? "bg-[var(--nourish-green)] text-white"
-                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-              )}
-            >
-              By aisle
-            </button>
-          </div>
+            </div>
+          )}
         </div>
 
-        {viewMode === "aisle" ? (
-          <div className="space-y-4">
-            {aisleGroups.map((group) => (
-              <div key={group.aisle.id} className="space-y-1">
-                <h3 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)] flex items-center gap-1.5">
-                  <span>{group.aisle.emoji}</span>
-                  {group.aisle.label}
-                </h3>
-                {group.items.map((item, idx) => (
-                  <IngredientRow
-                    key={item.id}
-                    item={item}
-                    idx={idx}
-                    checked={checked.has(item.id)}
-                    showingSub={askingSub === item.id}
-                    recipeName={recipeName}
-                    cuisineFamily={cuisineFamily}
-                    inPantry={pantryMounted && pantryHas(item.name)}
-                    rememberedSub={
-                      dishSlug && subMemMounted
-                        ? getRememberedSub(dishSlug, item.id)
-                        : null
-                    }
-                    onRememberSub={(sub) => {
-                      if (dishSlug) rememberSub(dishSlug, item.id, sub);
-                    }}
-                    onToggle={() => toggleItem(item.id)}
-                    onAskSub={() =>
-                      setAskingSub(askingSub === item.id ? null : item.id)
-                    }
-                    onTogglePantry={() => togglePantry(item.name)}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : viewMode === "station" && hasCoalescedView ? (
+        {viewMode === "station" && hasCoalescedView ? (
           <div className="space-y-4">
             {prepGroups.map((group) => (
               <div key={group.station} className="space-y-1">
@@ -501,6 +445,11 @@ export function IngredientList({
           </motion.button>
         )}
 
+        {/* Instacart placeholder hint — single line below the shopping
+            CTA. Encourages "keep going" instead of "give up" when an
+            ingredient is missing. No screen, no modal. */}
+        <InstacartHint missingCount={missingCount} />
+
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (
           <motion.button
@@ -600,16 +549,57 @@ function IngredientRow({
           )}
         </button>
 
-        {/* Ingredient info — long-press triggers AI substitution */}
-        <IngredientInfoButton
-          item={item}
-          checked={checked}
-          showingSub={showingSub}
-          rememberedSub={rememberedSub}
-          inPantry={inPantry}
-          onToggle={onToggle}
-          onAskSub={onAskSub}
-        />
+        {/* Ingredient info */}
+        <button
+          onClick={onToggle}
+          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
+          type="button"
+          aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
+        >
+          <div className="flex items-baseline gap-2">
+            {/* Y3 W4 polish: pantry-status dot — feature 1.3 from
+                the pantry-novelty plan. Subtle visual signal that
+                'I can start this now' without taps. */}
+            <IngredientPantryDot
+              status={inPantry ? "have" : "missing"}
+              optional={item.isOptional ?? false}
+              className="self-center"
+            />
+            <span
+              className={cn(
+                "text-sm font-medium",
+                checked
+                  ? "text-[var(--nourish-subtext)] line-through"
+                  : "text-[var(--nourish-dark)]",
+              )}
+            >
+              {item.name}
+            </span>
+            <span className="text-xs text-[var(--nourish-subtext)]">
+              {item.quantity}
+            </span>
+            {inPantry && (
+              <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
+                in pantry
+              </span>
+            )}
+            {item.isOptional && (
+              <span className="text-[11px] text-[var(--nourish-subtext)] italic">
+                optional
+              </span>
+            )}
+          </div>
+          {item.substitution && !showingSub && !rememberedSub && (
+            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
+              sub: {item.substitution}
+            </p>
+          )}
+          {rememberedSub && !showingSub && (
+            <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
+              last time: {rememberedSub}
+            </p>
+          )}
+        </button>
 
         {/* Stash in pantry  -  small bookmark toggle, preserves future cooks */}
         <button
@@ -713,8 +703,3 @@ function IngredientRow({
     </div>
   );
 }
-
-/**
- * IngredientInfoButton — wraps the ingredient label area with useLongPress
- * so that a long-press (500 ms) opens the AI substitution panel, while a
- * normal tap toggles the checkbox. This is the primary discovery aff

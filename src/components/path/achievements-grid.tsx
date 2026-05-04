@@ -1,7 +1,7 @@
 "use client";
 
 import { memo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Lock } from "lucide-react";
 import type { Achievement } from "@/data/achievements";
 
@@ -17,6 +17,8 @@ export const AchievementsGrid = memo(function AchievementsGrid({
   locked,
   showHeading = true,
 }: AchievementsGridProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const total = unlocked.length + locked.length;
 
   return (

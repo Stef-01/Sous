@@ -2,10 +2,13 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { InstacartHint } from "@/components/guided-cook/instacart-hint";
+import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
+import { GLIDE, RM } from "@/lib/utils/motion";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -67,10 +70,16 @@ export default function ShoppingListPage() {
       </header>
 
       <main className="mx-auto max-w-md px-4 pt-2 pb-28">
-        <p className="mb-4 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
+        <p className="mb-1 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
           Missing ingredients from your recent cooks show up here. Tap to mark
           bought - then one tap sends them into your pantry.
         </p>
+        {/* Instacart placeholder hint — same minimal pattern as the
+            in-cook IngredientList. Encourages "keep going" instead of
+            "give up" by surfacing how fast the missing items can land. */}
+        <div className="mb-4">
+          <InstacartHint missingCount={unboughtCount} />
+        </div>
 
         {!mounted ? (
           <div className="space-y-2 animate-pulse">
@@ -79,21 +88,43 @@ export default function ShoppingListPage() {
             <div className="rounded-xl bg-neutral-100 h-12" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-5 py-8 text-center">
-            <ShoppingCart
-              size={24}
-              className="mx-auto mb-2 text-[var(--nourish-subtext)]"
-            />
-            <p className="text-sm font-medium text-[var(--nourish-dark)]">
-              List is empty.
-            </p>
-            <p className="mt-1 text-xs text-[var(--nourish-subtext)]">
-              Tap &ldquo;Add to shopping list&rdquo; on the Grab screen while
-              you cook.
-            </p>
-          </div>
+          <EmptyStateCTA
+            icon={ShoppingCart}
+            iconSize={24}
+            primary="List is empty."
+            helper={`Tap "Add to shopping list" on the Grab screen while you cook — missing ingredients land here.`}
+            cta={{ label: "Find something to cook" }}
+            href="/today"
+          />
         ) : (
           <>
+            {/* Quiet progress strip — only shows once at least one
+                item has been bought, so an unstarted list stays clean. */}
+            {boughtItems.length > 0 && unboughtCount > 0 && (
+              <div
+                className="mb-3 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-[11px] tabular-nums text-[var(--nourish-subtext)] ring-1 ring-neutral-200"
+                aria-label={`${boughtItems.length} of ${items.length} bought`}
+              >
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  {boughtItems.length}
+                </span>
+                <span>of {items.length} bought</span>
+                <span
+                  aria-hidden
+                  className="ml-auto h-1.5 w-20 overflow-hidden rounded-full bg-neutral-200"
+                >
+                  <span
+                    className="block h-full bg-[var(--nourish-green)] transition-[width] duration-300"
+                    style={{
+                      width: `${Math.round(
+                        (boughtItems.length / items.length) * 100,
+                      )}%`,
+                    }}
+                  />
+                </span>
+              </div>
+            )}
+
             <ul className="space-y-1.5">
               <AnimatePresence initial={false}>
                 {unboughtItems.map((item) => (
@@ -175,13 +206,14 @@ function ShoppingRow({
   onToggle: () => void;
   onRemove: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.li
-      layout
-      initial={{ opacity: 0, y: 4 }}
+      layout={!reducedMotion}
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, x: 40 }}
-      transition={{ type: "spring", stiffness: 300, damping: 26 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }}
+      transition={reducedMotion ? RM : GLIDE}
       className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
     >
       <button

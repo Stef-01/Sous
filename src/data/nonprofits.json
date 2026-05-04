@@ -1,0 +1,110 @@
+[
+  {
+    "id": "placeholder-food-bank-1",
+    "name": "Sample Local Food Bank (placeholder)",
+    "url": "https://example.test/local-food-bank",
+    "ein": "",
+    "mission": "Distributes nutritious food to households facing food insecurity, partnering with grocers, farms, and volunteers. PLACEHOLDER ENTRY — replace with verified nonprofit before real-mode launch.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-meals-for-elders",
+    "name": "Sample Meals-for-Elders Program (placeholder)",
+    "url": "https://example.test/meals-for-elders",
+    "ein": "",
+    "mission": "Delivers prepared meals to homebound seniors who cannot easily shop or cook for themselves. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-school-meals",
+    "name": "Sample School-Meal Initiative (placeholder)",
+    "url": "https://example.test/school-meals",
+    "ein": "",
+    "mission": "Funds free or reduced-cost lunches for students in under-served schools, with a focus on whole-food ingredients. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-disaster-kitchen",
+    "name": "Sample Disaster-Response Kitchen (placeholder)",
+    "url": "https://example.test/disaster-kitchen",
+    "ein": "",
+    "mission": "Mobilises chefs and volunteers to cook hot meals on the ground after natural disasters. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-urban-garden",
+    "name": "Sample Urban-Garden Network (placeholder)",
+    "url": "https://example.test/urban-gardens",
+    "ein": "",
+    "mission": "Establishes community gardens in food-desert neighbourhoods and trains residents in sustainable growing. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-food-rescue",
+    "name": "Sample Food-Rescue Logistics (placeholder)",
+    "url": "https://example.test/food-rescue",
+    "ein": "",
+    "mission": "Routes surplus food from restaurants, markets, and events to shelters before it spoils. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-cooking-education",
+    "name": "Sample Cooking-Education Charity (placeholder)",
+    "url": "https://example.test/cooking-ed",
+    "ein": "",
+    "mission": "Runs free cooking classes for parents and teens, focusing on affordable nutritious recipes. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-soup-kitchen",
+    "name": "Sample Community Soup Kitchen (placeholder)",
+    "url": "https://example.test/soup-kitchen",
+    "ein": "",
+    "mission": "Operates a daily soup kitchen serving warm meals, with no questions asked at the door. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-mobile-pantry",
+    "name": "Sample Mobile-Pantry Initiative (placeholder)",
+    "url": "https://example.test/mobile-pantry",
+    "ein": "",
+    "mission": "Drives a refrigerated truck to neighbourhoods without nearby grocers, distributing fresh produce on a weekly route. PLACEHOLDER ENTRY.",
+    "country": "US",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-uk-food-trust",
+    "name": "Sample UK Food Trust (placeholder)",
+    "url": "https://example.test/uk-food-trust",
+    "ein": "",
+    "mission": "Coordinates food banks and meal services across the UK, partnering with local councils. PLACEHOLDER ENTRY.",
+    "country": "GB",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-cad-food-network",
+    "name": "Sample Canada Food Network (placeholder)",
+    "url": "https://example.test/cad-food-network",
+    "ein": "",
+    "mission": "Supports a national network of community fridges and food banks across Canada. PLACEHOLDER ENTRY.",
+    "country": "CA",
+    "verifiedByFounder": false
+  },
+  {
+    "id": "placeholder-eu-meals",
+    "name": "Sample EU Meals Coalition (placeholder)",
+    "url": "https://example.test/eu-meals",
+    "ein": "",
+    "mission": "Funds school-meal programs across multiple EU member states, with a focus on locally-sourced ingredients. PLACEHOLDER ENTRY.",
+    "country": "FR",
+    "verifiedByFounder": false
+  }
+]

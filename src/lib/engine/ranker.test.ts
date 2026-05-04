@@ -38,6 +38,7 @@ function makeSide(
     tags: [],
     pairingReason: null,
     nutritionCategory: null,
+    dietaryFlags: [],
     ...overrides,
   };
 }
@@ -120,7 +121,12 @@ describe("rankCandidates", () => {
       0.5 * weights.nutritionBalance +
       0.5 * weights.prepBurden +
       0.5 * weights.temperature +
-      0.5 * weights.preference;
+      0.5 * weights.preference +
+      // Round 4 dimensions default to seasonal=0.5, antiMonotony=0.9
+      // when no scorer provides them. Test is contract-only so we
+      // include their contribution.
+      0.5 * (weights.seasonal ?? 0) +
+      0.9 * (weights.antiMonotony ?? 0);
 
     expect(ranked[0].totalScore).toBeCloseTo(expected, 4);
   });

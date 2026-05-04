@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Heart } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -12,6 +12,8 @@ import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
  * Favorites  -  filtered view of favorite cooks only.
  */
 export default function FavoritesPage() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { favoriteSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);

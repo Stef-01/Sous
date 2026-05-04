@@ -11,7 +11,9 @@ const mockMain: MainDishIntent = {
   moodSignals: [],
 };
 
-function makeSide(overrides: Partial<SideDishCandidate> = {}): SideDishCandidate {
+function makeSide(
+  overrides: Partial<SideDishCandidate> = {},
+): SideDishCandidate {
   return {
     id: "test-side",
     slug: "test-side",
@@ -76,7 +78,10 @@ describe("seasonalScorer", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 15)); // January
 
-    const side = makeSide({ tags: ["salad", "cold", "raw"], temperature: "cold" });
+    const side = makeSide({
+      tags: ["salad", "cold", "raw"],
+      temperature: "cold",
+    });
     const score = seasonalScorer.score(mockMain, side);
     expect(score).toBeLessThan(0.4);
 

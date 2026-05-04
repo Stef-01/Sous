@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -11,6 +11,8 @@ interface FactChipProps {
 }
 
 export function FactChip({ fact, isExpanded, onToggle }: FactChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <div>
       <button

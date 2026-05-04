@@ -31,6 +31,8 @@ export interface SideDishCandidate {
   tags: string[];
   pairingReason: string | null;
   nutritionCategory: string | null;
+  /** Round 4 addition. Optional so existing fixtures compile. */
+  dietaryFlags?: string[];
 }
 
 export interface ScoreBreakdown {
@@ -40,8 +42,10 @@ export interface ScoreBreakdown {
   prepBurden: number; // 0-1
   temperature: number; // 0-1
   preference: number; // 0-1
-  seasonal: number; // 0-1
-  antiMonotony: number; // 0-1
+  /** Round 4 addition. Optional so b4393c7 callers compile. */
+  seasonal?: number;
+  /** Round 4 addition. Optional so b4393c7 callers compile. */
+  antiMonotony?: number;
 }
 
 export interface ScoredCandidate {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { X, Camera, Upload, Keyboard } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -20,6 +20,8 @@ export function CameraInput({
   onClose,
   isProcessing,
 }: CameraInputProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [showTypingFallback, setShowTypingFallback] = useState(false);

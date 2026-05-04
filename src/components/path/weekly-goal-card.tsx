@@ -1,7 +1,7 @@
 "use client";
 
 import { memo, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Award,
   Flame,
@@ -26,6 +26,7 @@ interface WeeklyGoalCardProps {
 export const WeeklyGoalCard = memo(function WeeklyGoalCard({
   completedSessions,
 }: WeeklyGoalCardProps) {
+  const reducedMotion = useReducedMotion();
   const challenge = getCurrentChallenge();
   const weekStart = getWeekStart();
   const daysRemaining = getDaysRemainingInWeek();
@@ -82,7 +83,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
     <motion.div
       initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.1 }}
+      transition={{ duration: reducedMotion ? 0 : 0.3, delay: 0.1 }}
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
     >
       <div className="flex items-center justify-between">

@@ -1,51 +1,48 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-24
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/NEXT-20E-PHASES.md` (inline substitution + voice cook pilot), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Updated:** 2026-05-01
+> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/CONTENT-VISUAL-PHASE.md`** (W19b screenshots-vs-competitors audit + V2 redesign week), **`docs/QUICK-WINS-PUNCHLIST.md`** (4-item non-functional-buttons list, slotted into W11/W18), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/PATH-OVERLAP-RCA.md`
 
 ---
 
-## STAGE 1.0: NEXT-20E INLINE SUBSTITUTION + VOICE COOK PILOT — NEXT UP
+## ACTIVE WORKSTREAM: STAGE 1+2 6-MONTH PLAN — IN PROGRESS
 
-A two-feature sprint that completes the ingredient substitution UX loop and
-pilots voice commands during the Cook phase. Both features build on plumbing
-already shipped in Sprints C and D. See `docs/NEXT-20E-PHASES.md` for the full
-technical plan.
+> Authored 2026-05-01. The full 26-week plan is in `docs/STAGE-1-2-6MO-TIMELINE.md`. Headline: ship Parent Mode (research-backed, FDA-claim-safe) AND complete production hardening (Clerk, Neon, R2, Redis, Sentry, perf, a11y) by 2026-10-30. Stage 1 prototype is complete; Stage 3 Content tab is complete; this plan integrates remaining production-hardening work with the new Parent Mode feature workstream.
+>
+> Five phases: A (foundation, weeks 1–8), B (Parent Mode UX, weeks 9–12), C (production hardening, weeks 13–18), D (polish + content + closed beta + legal review, weeks 19–24), E (launch prep + buffer, weeks 25–26).
+>
+> See `docs/PARENT-MODE-RESEARCH.md` for the research that grounds the feature design and `docs/PARENT-MODE-PLAN.md` for the surface-by-surface design with prerequisites.
 
-**Feature A — Long-Press Ingredient → Inline Substitute (P1–P6)**
+---
 
-Closes STRATEGY.md §11.4. Long-press any ingredient on the Grab screen to
-surface a one-line AI substitute inline (no modal). Wired to the live
-`ai.suggestSubstitution` endpoint and the shipped `useSubstitutionMemory` hook
-(NEXT-20D P13). Cached substitutes are instant + offline on revisit.
+## STAGE 3: LEAN VIBE-CODED + CONTENT TAB — COMPLETE
 
-- **P1** — `useLongPress` hook: touch + mouse + keyboard, scroll-cancel, haptic feedback.
-- **P2** — Inline substitute row in `IngredientList`: long-press fires AI call, renders substitute below the ingredient row in a warm chip. Cached on second press.
-- **P3** — "Saved as my swap" toast + "last time: [substitute]" hint on revisit.
-- **P4** — A11y: keyboard Space-hold trigger, `aria-live` on substitute row, `aria-description` on ingredient rows.
-- **P5** — Unit tests (9) + Playwright assertion for Grab screen substitute flow.
-- **P6** — Lint + build verification. Commit Feature A.
+> Pushed before Stage 2 (production hardening). Per Stefan's directive, grow user-facing surface as far as the lean prototype credibly can before paying the production-tax of Clerk + Neon + R2 + Sentry + Redis. Full spec in `docs/STAGE-3-LEAN-CONTENT.md`.
 
-**Feature B — Bounded-Vocabulary Voice Commands During Cook (P7–P18)**
+### Lean-vibe posture (zero new infra)
 
-Promotes STRATEGY.md §12.2 from UNDER CONSIDERATION to BUILD-PILOT. Five fixed
-voice commands ("next", "back", "repeat", "start timer", "how long") via browser
-Speech Recognition API. Feature-flagged, 10% pilot cohort.
+- All persistence remains `localStorage` + static JSON.
+- All AI keeps its mock-provider fallback.
+- Auth still bypassed with the mock user.
+- Stage-2 concerns (Clerk, Neon, R2, Redis, Sentry, PWA, i18n, real video transcoding, content moderation, clinician verification) are explicitly deferred and called out in the Stage-3 doc.
 
-- **P7** — Feature flag (`VOICE_COOK_ENABLED`), default off.
-- **P8** — `useSpeechRecognition` hook: bounded 5-command vocabulary, confidence threshold 0.6, auto-restart.
-- **P9** — Mic permission flow: one-time request, graceful denial handling.
-- **P10** — Mic toggle button on `StepCard` footer with pulsing ring when listening.
-- **P11** — Command feedback toast ("Heard: next"), 1.2s fade, local to cook screen.
-- **P12** — Wire commands to existing `StepCard` callbacks (next, prev, TTS, timer).
-- **P13** — Hold-to-talk fallback for noisy kitchens.
-- **P14** — Wake-word "hey Sous" detection (stretch, gated on P8 accuracy).
-- **P15** — Unsupported browser fallback (mic button self-hides).
-- **P16** — Unit tests (11) for voice pipeline.
-- **P17** — Playwright smoke test: mock SpeechRecognition, verify command→action.
-- **P18** — Lint + build + update STRATEGY.md §12.2 status.
+### What shipped
 
-**P19–P20** — Cross-feature integration test, ROADMAP update, final commit.
+- **Tab bar restructure** — third tab renamed `Content` (route id `community` preserved for compat), always-visible. Tab order is now Today · Path · Content.
+- **Content home** (`/community`) — header, bookmark launcher, category filter strip (`For You · Reels · Articles · Research · Experts · Forum`), 3-card featured hero carousel, horizontal Reels rail, 2-column Articles grid, Research Spotlight stack, Expert Voices avatar row, Forum thread list, sample-content disclaimer.
+- **Reel player sheet** — full-screen vertical sheet with simulated player chrome (poster image, progress bar, play overlay, like/save/share rail). Honest about the lack of real video. Like + view-count state persists locally via `useReelEngagement`.
+- **Detail routes** — `/community/article/[slug]`, `/community/research/[slug]`, `/community/expert/[slug]`, `/community/forum/[id]`, `/community/reels`, `/community/saved`. Each has matching back nav, bookmark toggle, and disclaimer footer.
+- **Forum reply box** — `useForumDrafts` writes mock-replies to localStorage; replies render in-thread with a "(local draft)" tag so the prototype is never confused with a server-backed forum.
+- **Saved page** — bookmarked articles, reels, briefs, and threads in one surface, with empty state.
+- **Sample content seed** — 6 articles, 8 reels, 6 research briefs, 4 expert profiles, 5 forum threads. Every item carries `isPlaceholder: true`. All authors are fictional. Affiliations carry the `(sample)` suffix. No new images invented — only `/public/food_images/*.png` already in repo.
+- **New hooks** — `useContentBookmarks` (kind:id keyed, 100-cap), `useContentFilter` (sessionStorage), `useReelEngagement`, `useForumDrafts`.
+- **CLAUDE.md updated** — rule 5 superseded note, rule 11 extended with Content tab + sample-content guardrails.
+
+### What did not move
+
+- Production hardening — Stage 2 still untouched.
+- Recipe data, pairing engine, Today/Path surfaces — unchanged.
+- AI router and mock fallback — unchanged.
 
 ---
 

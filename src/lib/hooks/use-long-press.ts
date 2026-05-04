@@ -85,14 +85,11 @@ export function useLongPress({
 
   // Also handle context-menu suppression on long-press so the browser
   // doesn't open a native menu on Android.
-  const onContextMenu = useCallback(
-    (e: React.MouseEvent) => {
-      if (firedRef.current) {
-        e.preventDefault();
-      }
-    },
-    [],
-  );
+  const onContextMenu = useCallback((e: React.MouseEvent) => {
+    if (firedRef.current) {
+      e.preventDefault();
+    }
+  }, []);
 
   return {
     onPointerDown,

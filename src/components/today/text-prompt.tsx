@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useId, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Search,
   Camera,
@@ -198,6 +198,7 @@ export function TextPrompt({
   isLoading,
   suggestions = ["Chicken pasta", "Tacos", "Quick rice bowl", "Something cozy"],
 }: TextPromptProps) {
+  const reducedMotion = useReducedMotion();
   const [text, setText] = useState("");
   const [localResults, setLocalResults] = useState<LocalResult[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -352,10 +353,10 @@ export function TextPrompt({
         {showHistory && (
           <motion.div
             key="history"
-            initial={{ opacity: 0, y: 4 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15 }}
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+            transition={{ duration: reducedMotion ? 0 : 0.15 }}
             className="space-y-1.5"
           >
             <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext)]/80">

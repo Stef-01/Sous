@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronDown,
   RefreshCw,
@@ -33,6 +33,12 @@ export interface SideResult {
   imageUrl: string;
   description: string;
   hasGuidedCook?: boolean;
+  /** Y2 W17 pantry-coverage badge data. Populated end-to-end
+   *  once the pairing API threads ingredient data through to
+   *  coverage compute. */
+  pantryCoverage?: number | null;
+  pantryHaveCount?: number | null;
+  pantryTotalCount?: number | null;
 }
 
 interface ResultStackProps {
@@ -56,6 +62,8 @@ export function ResultStack({
   onReroll,
   isRerolling,
 }: ResultStackProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -319,6 +327,15 @@ export function ResultStack({
   );
 }
 
+/** Pure helper: map a prepBurden score (0-1, higher = quicker)
+ *  to a qualitative effort label. */
+function effortFromPrepBurden(prepBurden: number): string {
+  if (!Number.isFinite(prepBurden)) return "Medium";
+  if (prepBurden >= 0.7) return "Easy";
+  if (prepBurden >= 0.5) return "Medium";
+  return "Worth it";
+}
+
 function ResultCard({
   side,
   mainDish,
@@ -338,6 +355,8 @@ function ResultCard({
   onRerollSide: () => void;
   onCookThis: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [expanded, setExpanded] = useState(false);
   const [imgError, setImgError] = useState(false);
 
@@ -433,6 +452,18 @@ function ResultCard({
               .filter(Boolean)
               .join(" · ")}
           </p>
+          {/* W17 pantry-coverage badge — quiet inline tag.
+              Only shows when coverage clears the "you have most
+              of this" threshold. */}
+          {typeof side.pantryCoverage === "number" &&
+            side.pantryCoverage >= 0.7 && (
+              <p className="mt-1 text-[10px] font-medium text-[var(--nourish-green)]">
+                {typeof side.pantryHaveCount === "number" &&
+                typeof side.pantryTotalCount === "number"
+                  ? `${side.pantryHaveCount}/${side.pantryTotalCount} from pantry`
+                  : "From pantry"}
+              </p>
+            )}
         </div>
       </button>
 
