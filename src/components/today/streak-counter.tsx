@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Flame, MoreHorizontal } from "lucide-react";
+import { Flame, MoreHorizontal, Shield } from "lucide-react";
 import { useRestDays } from "@/lib/hooks/use-rest-days";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
+import { useStreakFreeze } from "@/lib/hooks/use-streak-freeze";
 import { cn } from "@/lib/utils/cn";
 
 interface StreakCounterProps {
@@ -24,6 +25,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { canRestToday, todayIsRestDay, markRestDay, mounted } = useRestDays();
   const { awardXP } = useXPSystem();
+  const { hasFreezeAvailable } = useStreakFreeze();
 
   // Close the popover on outside tap / Escape, matching the existing subtle
   // popover patterns elsewhere in the app.
@@ -77,6 +79,14 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         <span className="text-[11px] font-bold text-[var(--nourish-warm)]">
           {streak}
         </span>
+        {hasFreezeAvailable && (
+          <Shield
+            size={10}
+            className="text-[var(--nourish-green)]"
+            strokeWidth={2.4}
+            aria-label="Streak freeze available"
+          />
+        )}
       </motion.div>
 
       {showMenuButton && (
@@ -108,6 +118,17 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
             transition={{ type: "spring", stiffness: 360, damping: 28 }}
             className="absolute left-0 top-full z-30 mt-1.5 w-56 rounded-xl border border-[var(--nourish-border-strong)] bg-white p-1.5 shadow-lg"
           >
+            {/* Streak freeze status — always shown when banked */}
+            {hasFreezeAvailable && (
+              <div className="flex items-center gap-2 px-2 py-1.5 text-[11px] text-[var(--nourish-green)] border-b border-neutral-100 mb-0.5">
+                <Shield size={12} strokeWidth={2.4} />
+                <span className="font-medium">Freeze banked</span>
+                <span className="text-[var(--nourish-subtext)] font-normal">
+                  — auto-saves your streak if you miss a day
+                </span>
+              </div>
+            )}
+
             {todayIsRestDay ? (
               <div className="flex flex-col gap-1 px-2 py-2 text-[12px] text-[var(--nourish-subtext)]">
                 <span className="font-medium text-[var(--nourish-dark)]">

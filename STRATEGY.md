@@ -402,6 +402,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Minimalism filter:** Hidden by default, enhances existing interaction
 - **Effort:** Low
 - **Moat strengthened:** Engine moat (intelligent recommendations)
+- **Status:** PLANNED — Sprint E Feature A (P1–P6). `ai.suggestSubstitution` endpoint + `useSubstitutionMemory` shipped in NEXT-20D P13; only the long-press input affordance remains. See `docs/NEXT-20E-PHASES.md`.
 
 ### 11.5 Noom — Micro-Lesson After Completion
 
@@ -454,7 +455,7 @@ Strategic decisions made, with rationale. Append new decisions as they arise.
 - **Upside:** Genuine utility with dirty/wet hands. Could be defining feature.
 - **Prerequisites:** Stable guided cook, browser Speech API, fallback mode
 - **Risk:** Poor recognition frustrates more than manual tapping. Privacy concerns.
-- **Status:** UNDER CONSIDERATION — browser Speech API makes basic version feasible
+- **Status:** PILOT PLANNED — Sprint E Feature B (P7–P18). Promoted from UNDER CONSIDERATION on 2026-04-24 after 6 voice-cooking competitors surfaced in weekly scan. Feature-flagged 10% pilot. See `docs/NEXT-20E-PHASES.md`.
 
 ### 12.3 AI-Generated Weekly Meal Plans
 

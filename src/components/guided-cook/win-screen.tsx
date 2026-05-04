@@ -42,6 +42,8 @@ interface WinScreenProps {
   cuisineFamily?: string;
   isFirstCook?: boolean;
   streak?: number;
+  /** How many cooks in this cuisine (including this one). */
+  cuisineCookCount?: number;
   totalSteps?: number;
   pathJustUnlocked?: boolean;
   saved?: boolean;
@@ -173,11 +175,27 @@ interface Milestone {
   message: string;
 }
 
+/** Emoji flag for the cuisine — used in milestone headlines. */
+const CUISINE_EMOJI: Record<string, string> = {
+  japanese: "🇯🇵",
+  korean: "🇰🇷",
+  thai: "🇹🇭",
+  chinese: "🇨🇳",
+  vietnamese: "🇻🇳",
+  filipino: "🇵🇭",
+  indian: "🇮🇳",
+  italian: "🇮🇹",
+  mexican: "🇲🇽",
+  mediterranean: "🫒",
+};
+
 function detectMilestone(ctx: {
   isFirstCook: boolean;
   streak: number;
   cuisineFamily: string;
   dishName: string;
+  /** How many cooks the user has completed in this cuisine (including this one). */
+  cuisineCookCount?: number;
 }): Milestone {
   if (ctx.isFirstCook) {
     return {
@@ -244,6 +262,52 @@ function detectMilestone(ctx: {
       message: `${ctx.dishName} done. ${ctx.streak} days strong.`,
     };
   }
+
+  // ── Cuisine milestones ──────────────────────────────
+  const cc = ctx.cuisineCookCount ?? 0;
+  const cuisineName = ctx.cuisineFamily;
+  const flag = CUISINE_EMOJI[cuisineName.toLowerCase()] ?? "🍽️";
+
+  if (cc === 1) {
+    return {
+      icon: (
+        <Sparkles
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `First ${cuisineName} cook! ${flag}`,
+      message: `${ctx.dishName} marks the start of your ${cuisineName} journey.`,
+    };
+  }
+  if (cc === 5) {
+    return {
+      icon: (
+        <Trophy
+          size={32}
+          className="text-[var(--nourish-gold)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `${cuisineName} explorer! ${flag}`,
+      message: `5 ${cuisineName} dishes down. You're building real range.`,
+    };
+  }
+  if (cc === 10) {
+    return {
+      icon: (
+        <ChefHat
+          size={32}
+          className="text-[var(--nourish-green)]"
+          strokeWidth={1.8}
+        />
+      ),
+      headline: `${cuisineName} specialist! ${flag}`,
+      message: `10 ${cuisineName} cooks. This cuisine is becoming second nature.`,
+    };
+  }
+
   return {
     icon: (
       <PartyPopper
@@ -271,6 +335,7 @@ export function WinScreen({
   cuisineFamily = "",
   isFirstCook = false,
   streak = 0,
+  cuisineCookCount = 0,
   totalSteps = 0,
   pathJustUnlocked,
   saved = false,
@@ -311,6 +376,7 @@ export function WinScreen({
     streak,
     cuisineFamily,
     dishName,
+    cuisineCookCount,
   });
   const headline = winMessage.data?.headline ?? milestone.headline;
   const message = winMessage.data?.message ?? milestone.message;

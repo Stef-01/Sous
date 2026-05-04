@@ -15,6 +15,7 @@ import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { useSubstitutionMemory } from "@/lib/hooks/use-substitution-memory";
+import { useLongPress } from "@/lib/hooks/use-long-press";
 import { toast } from "@/lib/hooks/use-toast";
 import {
   coalescePrepList,
@@ -541,49 +542,16 @@ function IngredientRow({
           )}
         </button>
 
-        {/* Ingredient info */}
-        <button
-          onClick={onToggle}
-          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
-          type="button"
-          aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
-        >
-          <div className="flex items-baseline gap-2">
-            <span
-              className={cn(
-                "text-sm font-medium",
-                checked
-                  ? "text-[var(--nourish-subtext)] line-through"
-                  : "text-[var(--nourish-dark)]",
-              )}
-            >
-              {item.name}
-            </span>
-            <span className="text-xs text-[var(--nourish-subtext)]">
-              {item.quantity}
-            </span>
-            {inPantry && (
-              <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
-                in pantry
-              </span>
-            )}
-            {item.isOptional && (
-              <span className="text-[11px] text-[var(--nourish-subtext)] italic">
-                optional
-              </span>
-            )}
-          </div>
-          {item.substitution && !showingSub && !rememberedSub && (
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
-              sub: {item.substitution}
-            </p>
-          )}
-          {rememberedSub && !showingSub && (
-            <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
-              last time: {rememberedSub}
-            </p>
-          )}
-        </button>
+        {/* Ingredient info — long-press triggers AI substitution */}
+        <IngredientInfoButton
+          item={item}
+          checked={checked}
+          showingSub={showingSub}
+          rememberedSub={rememberedSub}
+          inPantry={inPantry}
+          onToggle={onToggle}
+          onAskSub={onAskSub}
+        />
 
         {/* Stash in pantry  -  small bookmark toggle, preserves future cooks */}
         <button
@@ -684,6 +652,99 @@ function IngredientRow({
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+/**
+ * IngredientInfoButton — wraps the ingredient label area with useLongPress
+ * so that a long-press (500 ms) opens the AI substitution panel, while a
+ * normal tap toggles the checkbox. This is the primary discovery affordance
+ * for substitutions — the ArrowRightLeft icon remains as a secondary hint.
+ */
+function IngredientInfoButton({
+  item,
+  checked,
+  showingSub,
+  rememberedSub,
+  inPantry,
+  onToggle,
+  onAskSub,
+}: {
+  item: Ingredient;
+  checked: boolean;
+  showingSub: boolean;
+  rememberedSub: string | null;
+  inPantry: boolean;
+  onToggle: () => void;
+  onAskSub: () => void;
+}) {
+  const longPress = useLongPress({
+    threshold: 500,
+    onLongPress: () => {
+      // Only trigger substitution for non-optional, unchecked items
+      if (!checked && !item.isOptional) {
+        onAskSub();
+      }
+    },
+    onTap: onToggle,
+  });
+
+  return (
+    <div
+      {...longPress}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
+      className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform select-none touch-manipulation cursor-pointer"
+      aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
+    >
+      <div className="flex items-baseline gap-2">
+        <span
+          className={cn(
+            "text-sm font-medium",
+            checked
+              ? "text-[var(--nourish-subtext)] line-through"
+              : "text-[var(--nourish-dark)]",
+          )}
+        >
+          {item.name}
+        </span>
+        <span className="text-xs text-[var(--nourish-subtext)]">
+          {item.quantity}
+        </span>
+        {inPantry && (
+          <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
+            in pantry
+          </span>
+        )}
+        {item.isOptional && (
+          <span className="text-[11px] text-[var(--nourish-subtext)] italic">
+            optional
+          </span>
+        )}
+      </div>
+      {item.substitution && !showingSub && !rememberedSub && (
+        <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
+          sub: {item.substitution}
+        </p>
+      )}
+      {rememberedSub && !showingSub && (
+        <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
+          last time: {rememberedSub}
+        </p>
+      )}
+      {/* Hint for long-press discovery — only shown when not checked and no sub shown */}
+      {!checked && !item.isOptional && !showingSub && !rememberedSub && !item.substitution && (
+        <p className="mt-0.5 text-[10px] text-[var(--nourish-subtext)]/40 italic">
+          hold to find a swap
+        </p>
+      )}
     </div>
   );
 }

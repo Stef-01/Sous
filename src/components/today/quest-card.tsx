@@ -218,6 +218,39 @@ export function buildQuestDishes(
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
+  // ── Time-of-day scoring ─────────────────────────────────────────────────
+  // Morning (5-11): boost quick/light. Lunch (11-14): balanced. Evening (17+):
+  // boost hearty/comfort. Quiet during off-hours so it never hurts, only helps.
+  const timeOfDayBoost = (dish: QuestDish): number => {
+    const hour = now.getHours();
+    const cookTime = dish.cookTimeMinutes;
+    const tags = dish.tags.map((t) => t.toLowerCase());
+    const desc = dish.description.toLowerCase();
+
+    if (hour >= 5 && hour < 11) {
+      // Morning: boost quick dishes (≤ 20 min) and light tags
+      let bonus = 0;
+      if (cookTime <= 20) bonus += 3;
+      if (tags.some((t) => ["fresh", "light", "steamed"].includes(t))) bonus += 2;
+      return bonus;
+    }
+    if (hour >= 17 || hour < 2) {
+      // Evening/dinner: boost hearty, comfort, rich, longer cooks
+      let bonus = 0;
+      if (cookTime >= 30) bonus += 2;
+      if (
+        tags.some((t) =>
+          ["rich", "savory", "braised", "roasted", "grilled", "creamy"].includes(t),
+        ) ||
+        desc.includes("comfort") ||
+        desc.includes("hearty")
+      )
+        bonus += 3;
+      return bonus;
+    }
+    return 0; // Midday — neutral
+  };
+
   // Progressive difficulty: after 10+ cooks, boost cuisines the user hasn't tried
   const noveltyBonus =
     cookHistory && cookHistory.completedCooks >= 10
@@ -245,7 +278,8 @@ export function buildQuestDishes(
         (m.hasGuidedCook ? 5 : 0) +
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
         noveltyBonus(m.cuisineFamily) +
-        pantryBoost(m),
+        pantryBoost(m) +
+        timeOfDayBoost(m),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -260,7 +294,8 @@ export function buildQuestDishes(
         (s.heroImageUrl ? 10 : 0) +
         (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0) +
         noveltyBonus(s.cuisineFamily) +
-        pantryBoost(s),
+        pantryBoost(s) +
+        timeOfDayBoost(s),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),

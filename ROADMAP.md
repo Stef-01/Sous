@@ -1,7 +1,51 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-17
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Updated:** 2026-04-24
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/NEXT-20E-PHASES.md` (inline substitution + voice cook pilot), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+
+---
+
+## STAGE 1.0: NEXT-20E INLINE SUBSTITUTION + VOICE COOK PILOT — NEXT UP
+
+A two-feature sprint that completes the ingredient substitution UX loop and
+pilots voice commands during the Cook phase. Both features build on plumbing
+already shipped in Sprints C and D. See `docs/NEXT-20E-PHASES.md` for the full
+technical plan.
+
+**Feature A — Long-Press Ingredient → Inline Substitute (P1–P6)**
+
+Closes STRATEGY.md §11.4. Long-press any ingredient on the Grab screen to
+surface a one-line AI substitute inline (no modal). Wired to the live
+`ai.suggestSubstitution` endpoint and the shipped `useSubstitutionMemory` hook
+(NEXT-20D P13). Cached substitutes are instant + offline on revisit.
+
+- **P1** — `useLongPress` hook: touch + mouse + keyboard, scroll-cancel, haptic feedback.
+- **P2** — Inline substitute row in `IngredientList`: long-press fires AI call, renders substitute below the ingredient row in a warm chip. Cached on second press.
+- **P3** — "Saved as my swap" toast + "last time: [substitute]" hint on revisit.
+- **P4** — A11y: keyboard Space-hold trigger, `aria-live` on substitute row, `aria-description` on ingredient rows.
+- **P5** — Unit tests (9) + Playwright assertion for Grab screen substitute flow.
+- **P6** — Lint + build verification. Commit Feature A.
+
+**Feature B — Bounded-Vocabulary Voice Commands During Cook (P7–P18)**
+
+Promotes STRATEGY.md §12.2 from UNDER CONSIDERATION to BUILD-PILOT. Five fixed
+voice commands ("next", "back", "repeat", "start timer", "how long") via browser
+Speech Recognition API. Feature-flagged, 10% pilot cohort.
+
+- **P7** — Feature flag (`VOICE_COOK_ENABLED`), default off.
+- **P8** — `useSpeechRecognition` hook: bounded 5-command vocabulary, confidence threshold 0.6, auto-restart.
+- **P9** — Mic permission flow: one-time request, graceful denial handling.
+- **P10** — Mic toggle button on `StepCard` footer with pulsing ring when listening.
+- **P11** — Command feedback toast ("Heard: next"), 1.2s fade, local to cook screen.
+- **P12** — Wire commands to existing `StepCard` callbacks (next, prev, TTS, timer).
+- **P13** — Hold-to-talk fallback for noisy kitchens.
+- **P14** — Wake-word "hey Sous" detection (stretch, gated on P8 accuracy).
+- **P15** — Unsupported browser fallback (mic button self-hides).
+- **P16** — Unit tests (11) for voice pipeline.
+- **P17** — Playwright smoke test: mock SpeechRecognition, verify command→action.
+- **P18** — Lint + build + update STRATEGY.md §12.2 status.
+
+**P19–P20** — Cross-feature integration test, ROADMAP update, final commit.
 
 ---
 

@@ -26,6 +26,7 @@ const CoachQuiz = dynamic(() =>
 );
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { loadResume, clearResume, type CookResumeData } from "@/lib/hooks/use-cook-store";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -80,6 +81,13 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats, completedSessions } = useCookSessions();
+  const [resumeData, setResumeData] = useState<CookResumeData | null>(null);
+
+  // Check for an incomplete cook session on mount
+  useEffect(() => {
+    setResumeData(loadResume());
+  }, []);
+
   const tasteBlend = useTasteBlend();
   const effectivePreferences = blendPreferences(
     userPreferences,
@@ -411,6 +419,54 @@ function TodayPageContent() {
         {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
+
+        {/* Resume banner — shown when the user has an incomplete cook session */}
+        <AnimatePresence>
+          {resumeData && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="rounded-xl border border-[var(--nourish-green)]/25 bg-[var(--nourish-green)]/5 p-3"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-[var(--nourish-dark)] truncate">
+                    Continue cooking {resumeData.dishName}?
+                  </p>
+                  <p className="text-[11px] text-[var(--nourish-subtext)]">
+                    You left off at the {resumeData.phase} phase
+                    {resumeData.phase === "cook"
+                      ? `, step ${resumeData.stepIndex + 1}`
+                      : ""}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      router.push(`/cook/${resumeData.slug}${resumeData.mainDishInput ? `?main=${encodeURIComponent(resumeData.mainDishInput)}` : ""}`);
+                    }}
+                    className="rounded-lg bg-[var(--nourish-green)] px-3 py-1.5 text-[11px] font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                  >
+                    Resume
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearResume();
+                      setResumeData(null);
+                    }}
+                    className="rounded-lg px-2 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard

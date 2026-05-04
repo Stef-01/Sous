@@ -40,7 +40,7 @@ export default function GuidedCookPage({
   const mainDishInput = searchParams.get("main") ?? undefined;
 
   // Session tracking
-  const { startSession, completeSession, updateSession } = useCookSessions();
+  const { sessions, startSession, completeSession, updateSession } = useCookSessions();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const {
     awardXP,
@@ -67,9 +67,10 @@ export default function GuidedCookPage({
   const [winMeta, setWinMeta] = useState<{
     pathJustUnlocked: boolean;
     streak: number;
+    cuisineCookCount: number;
     saved: boolean;
     skillProgress: SkillProgressEntry[];
-  }>({ pathJustUnlocked: false, streak: 0, saved: false, skillProgress: [] });
+  }>({ pathJustUnlocked: false, streak: 0, cuisineCookCount: 0, saved: false, skillProgress: [] });
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
 
   // Cook store
@@ -81,6 +82,7 @@ export default function GuidedCookPage({
     setTotalSteps,
     toggleChip,
     startTimer,
+    saveProgress,
     completeSession: completeCookPhase,
     reset,
   } = useCookStore();
@@ -89,6 +91,14 @@ export default function GuidedCookPage({
   useEffect(() => {
     reset();
   }, [reset]);
+
+  // Persist progress to localStorage whenever the phase or step changes so
+  // the user can resume if they accidentally close the tab mid-cook.
+  useEffect(() => {
+    if (currentPhase === "grab" || currentPhase === "cook") {
+      saveProgress(slug, data?.dish?.name ?? slug, mainDishInput);
+    }
+  }, [currentPhase, currentStepIndex, slug, data?.dish?.name, mainDishInput, saveProgress]);
 
   // Fetch steps from tRPC
   const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
@@ -171,9 +181,19 @@ export default function GuidedCookPage({
           });
         }
 
+        // Count how many completed cooks share this cuisine (including this one)
+        const allSessions = sessions;
+        const cuisineCookCount =
+          allSessions.filter(
+            (s) =>
+              !!s.completedAt &&
+              s.cuisineFamily.toLowerCase() === cuisine.toLowerCase(),
+          ).length + 1; // +1 for the cook we just completed
+
         setWinMeta({
           pathJustUnlocked: result.pathJustUnlocked,
           streak: result.newStreak,
+          cuisineCookCount,
           saved: false,
           skillProgress: skillEntries,
         });
@@ -515,6 +535,7 @@ export default function GuidedCookPage({
               cuisineFamily={cuisine}
               isFirstCook={winMeta.streak === 1}
               streak={winMeta.streak}
+              cuisineCookCount={winMeta.cuisineCookCount}
               totalSteps={cookSteps.length}
               pathJustUnlocked={winMeta.pathJustUnlocked}
               saved={winMeta.saved}
