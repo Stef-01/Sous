@@ -77,27 +77,37 @@ export function WhosAtTable() {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-1.5">
-        {members.map((m) => {
-          const isOn = selectedIds.includes(m.id);
-          return (
-            <button
-              key={m.id}
-              type="button"
-              onClick={() => toggle(m.id)}
-              aria-pressed={isOn}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition",
-                isOn
-                  ? "bg-[var(--nourish-green)] text-white"
-                  : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
-              )}
-            >
-              <span aria-hidden>{m.avatar || "•"}</span>
-              {m.name}
-            </button>
-          );
-        })}
+      {/* Y3 W7: horizontal scroll with snap-x for 6+ member rosters
+          on narrow viewports. flex-wrap broke awkwardly into 3-row
+          stacks at 375px once the household passed five members. */}
+      <div
+        className="-mx-3 overflow-x-auto px-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory"
+        role="group"
+        aria-label="Household members at the table tonight"
+      >
+        <div className="flex gap-1.5 pb-1">
+          {members.map((m) => {
+            const isOn = selectedIds.includes(m.id);
+            const fallbackInitial = m.name.trim().charAt(0).toUpperCase();
+            return (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => toggle(m.id)}
+                aria-pressed={isOn}
+                className={cn(
+                  "inline-flex shrink-0 snap-start items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition",
+                  isOn
+                    ? "bg-[var(--nourish-green)] text-white"
+                    : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
+                )}
+              >
+                <span aria-hidden>{m.avatar || fallbackInitial}</span>
+                {m.name}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {aggregate.count > 0 && (
