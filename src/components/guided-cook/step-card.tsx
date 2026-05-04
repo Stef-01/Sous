@@ -196,11 +196,11 @@ export function StepCard({
               whileTap={{ scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
-                "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all",
+                "flex min-h-[44px] items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 isSpeaking
-                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-                  : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
+                  ? "bg-[var(--nourish-green)] text-white shadow-sm shadow-[var(--nourish-green)]/20"
+                  : "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/15",
               )}
               type="button"
               aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
@@ -496,9 +496,4 @@ export function StepCard({
             className="shrink-0 rounded-full px-2 py-1 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
           >
             Not now
-          </button>
-        </motion.div>
-      )}
-    </motion.div>
-  );
-}
+        

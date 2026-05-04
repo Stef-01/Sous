@@ -514,69 +514,55 @@ function ResultCard({
             className="overflow-hidden"
           >
             <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
-              {/* Score highlights */}
-              <div className="flex flex-wrap gap-2">
-                <ScoreBadge
-                  label="Cuisine fit"
-                  value={side.scores.cuisineFit}
-                />
-                <ScoreBadge
-                  label="Flavor contrast"
-                  value={side.scores.flavorContrast}
-                />
-                <ScoreBadge
-                  label="Nutrition"
-                  value={side.scores.nutritionBalance}
-                />
-                <ScoreBadge label="Quick prep" value={side.scores.prepBurden} />
-              </div>
+              {/* "Why this pairs well" header */}
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
+                Why this pairs well
+              </p>
 
               {/* AI-enhanced pairing explanation */}
-              <p className="text-sm text-[var(--nourish-subtext)] leading-relaxed">
+              <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
                 {displayExplanation}
               </p>
 
-              {/* Cook just this side  -  secondary inline action */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCookThis();
-                }}
-                className={cn(
-                  "w-full rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-xs font-medium",
-                  "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
-                  "transition-colors duration-200",
-                  "flex items-center justify-center gap-2",
-                )}
-                type="button"
-              >
-                {side.hasGuidedCook && <ChefHat size={14} />}
-                {side.hasGuidedCook
-                  ? "Start guided cook"
-                  : "Cook just this one"}
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
-
-function ScoreBadge({ label, value }: { label: string; value: number }) {
-  const pct = Math.round(value * 100);
-  return (
-    <span
-      className={cn(
-        "rounded-full px-2 py-0.5 text-[11px] font-medium",
-        pct >= 70
-          ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-          : pct >= 50
-            ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
-            : "bg-neutral-100 text-[var(--nourish-subtext)]",
-      )}
-    >
-      {label} {pct}%
-    </span>
-  );
-}
+              {/* Dimension-by-dimension breakdown */}
+              <div className="space-y-1.5">
+                <PairingDimension
+                  label="Cuisine fit"
+                  value={side.scores.cuisineFit}
+                  reason={
+                    side.scores.cuisineFit >= 0.7
+                      ? "Comes from the same culinary tradition"
+                      : side.scores.cuisineFit >= 0.4
+                        ? "Bridges flavors across cuisines"
+                        : "An adventurous cross-cuisine pick"
+                  }
+                />
+                <PairingDimension
+                  label="Flavor contrast"
+                  value={side.scores.flavorContrast}
+                  reason={
+                    side.scores.flavorContrast >= 0.7
+                      ? "Bright, contrasting flavors cut through richness"
+                      : side.scores.flavorContrast >= 0.4
+                        ? "Adds complementary taste notes"
+                        : "Similar flavor profile — a harmonious match"
+                  }
+                />
+                <PairingDimension
+                  label="Nutrition balance"
+                  value={side.scores.nutritionBalance}
+                  reason={
+                    side.scores.nutritionBalance >= 0.7
+                      ? "Fills gaps in the meal's nutritional profile"
+                      : "Adds variety to the plate"
+                  }
+                />
+                <PairingDimension
+                  label="Prep burden"
+                  value={side.scores.prepBurden}
+                  reason={
+                    side.scores.prepBurden >= 0.7
+                      ? "Quick to prepare alongside your main"
+                      : "A bit more involved, but worth the effort"
+                  }
+              

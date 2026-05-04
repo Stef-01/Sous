@@ -9,10 +9,15 @@ import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
+import { CookingTipCard } from "@/components/today/cooking-tip-card";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
 import { FriendsStrip } from "@/components/today/friends-strip";
+import { WeeklyChallengeCard } from "@/components/today/weekly-challenge-card";
+import { StreakHeatmap } from "@/components/today/streak-heatmap";
+import { SurpriseMeButton } from "@/components/today/surprise-me-button";
+import { useWeeklyChallenge } from "@/lib/hooks/use-weekly-challenge";
 import { SearchPopout } from "@/components/today/search-popout";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { ResultStack } from "@/components/today/result-stack";
@@ -88,6 +93,7 @@ function TodayPageContent() {
     setResumeData(loadResume());
   }, []);
 
+  const weeklyChallenge = useWeeklyChallenge(completedSessions);
   const tasteBlend = useTasteBlend();
   const effectivePreferences = blendPreferences(
     userPreferences,
@@ -408,6 +414,10 @@ function TodayPageContent() {
         {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
 
+        {/* Daily cooking tip  -  one micro-lesson per day, dismissible.
+            Builds confidence through daily touchpoints (Noom insight). */}
+        <CookingTipCard />
+
         {/* Cook rhythm  -  a single italic line about when the user usually
             cooks. Silent below three completed cooks. */}
         <CookRhythmLine sessions={completedSessions} />
@@ -476,10 +486,9 @@ function TodayPageContent() {
           cookSessions={completedSessions}
         />
 
-        {/* Tiny, deliberately unassuming "more options" entry point.
-            Everything secondary (tonight commit, cook-for-two, rescue fridge,
-            games, personalize) lives one tap away in the drawer. */}
-        <div className="flex justify-center pt-1">
+        {/* Surprise me + More options — visually subordinate row below quest */}
+        <div className="flex items-center justify-center gap-3 pt-1">
+          <SurpriseMeButton cookHistory={stats} />
           <motion.button
             type="button"
             onClick={() => setShowMoreOptions(true)}
@@ -491,6 +500,12 @@ function TodayPageContent() {
             More options
           </motion.button>
         </div>
+
+        {/* Streak heatmap — expandable 30-day calendar */}
+        <StreakHeatmap sessions={completedSessions} />
+
+        {/* Weekly challenge card — below fold, visually subordinate */}
+        <WeeklyChallengeCard challenge={weeklyChallenge} />
 
         {/* Friends social feed  -  below fold, horizontal-scroll social proof */}
         <FriendsStrip
@@ -713,28 +728,4 @@ function TodayPageContent() {
             )}
           </>
         )}
-      </SearchPopout>
-
-      {/* Coach onboarding quiz  -  full-screen overlay */}
-      <AnimatePresence>
-        {showCoachQuiz && (
-          <CoachQuiz
-            onClose={() => {
-              // Mark as done even if closed early so it doesn't re-appear.
-              // Also set component state so "Personalize" hides immediately
-              // (the deferred localStorage effect only runs once on mount).
-              try {
-                localStorage.setItem("sous-coach-quiz-done", "true");
-              } catch {
-                // localStorage unavailable
-              }
-              setQuizDone(true);
-              setShowCoachQuiz(false);
-            }}
-            onComplete={handleCoachQuizComplete}
-          />
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+      

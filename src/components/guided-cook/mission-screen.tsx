@@ -39,6 +39,7 @@ export function MissionScreen({
   onStart,
 }: MissionScreenProps) {
   const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const totalTime = prepTimeMinutes + cookTimeMinutes;
 
   return (
@@ -55,15 +56,22 @@ export function MissionScreen({
         className="relative h-[160px] overflow-hidden rounded-2xl"
       >
         {heroImageUrl && !imgError ? (
-          <Image
-            src={heroImageUrl}
-            alt={dishName}
-            fill
-            sizes="(max-width: 768px) 100vw, 448px"
-            priority
-            className="object-cover"
-            onError={() => setImgError(true)}
-          />
+          <>
+            {!imgLoaded && <div className="absolute inset-0 shimmer" />}
+            <Image
+              src={heroImageUrl}
+              alt={dishName}
+              fill
+              sizes="(max-width: 768px) 100vw, 448px"
+              priority
+              className={cn(
+                "object-cover transition-opacity duration-300",
+                imgLoaded ? "opacity-100" : "opacity-0",
+              )}
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgError(true)}
+            />
+          </>
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center gap-3"
@@ -189,14 +197,4 @@ export function MissionScreen({
         whileTap={{ scale: 0.96 }}
         onClick={onStart}
         className={cn(
-          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "cta-shadow transition-colors duration-200",
-        )}
-        type="button"
-      >
-        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
-      </motion.button>
-    </motion.div>
-  );
-}
+          "mt-auto 

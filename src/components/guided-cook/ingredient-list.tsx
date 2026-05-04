@@ -22,6 +22,7 @@ import {
   normalizePrepName,
   type PrepListGroup,
 } from "@/lib/engine/prep-list";
+import { groupByAisle } from "@/lib/engine/grocery-aisle";
 import type { StaticDishData } from "@/data/guided-cook-steps";
 
 interface Ingredient {
@@ -73,7 +74,7 @@ export function IngredientList({
   onReady,
   onSelectSides,
 }: IngredientListProps) {
-  const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
+  const [viewMode, setViewMode] = useState<"dish" | "station" | "aisle">("dish");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
   const {
@@ -165,6 +166,12 @@ export function IngredientList({
   }, [prepDishes]);
   const hasCoalescedView = prepGroups.length > 0;
 
+  // Aisle-grouped view: available for all ingredient lists (single or multi-dish)
+  const aisleGroups = useMemo(() => {
+    const allIngredients = effectiveSections.flatMap((s) => s.ingredients);
+    return groupByAisle(allIngredients);
+  }, [effectiveSections]);
+
   // Build a map: prep-item key -> list of source ingredient ids, so that
   // tapping a coalesced row can check every underlying ingredient and keep
   // the existing "all checked → go cook" state machine honest.
@@ -222,27 +229,27 @@ export function IngredientList({
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             Gather these
           </h2>
-          {hasCoalescedView && (
-            <div
-              role="tablist"
-              aria-label="Prep view"
-              className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
+          <div
+            role="tablist"
+            aria-label="Prep view"
+            className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
+          >
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "dish"}
+              onClick={() => setViewMode("dish")}
+              className={cn(
+                "rounded-full px-2.5 py-1 transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                viewMode === "dish"
+                  ? "bg-[var(--nourish-green)] text-white"
+                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+              )}
             >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === "dish"}
-                onClick={() => setViewMode("dish")}
-                className={cn(
-                  "rounded-full px-2.5 py-1 transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                  viewMode === "dish"
-                    ? "bg-[var(--nourish-green)] text-white"
-                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                )}
-              >
-                By dish
-              </button>
+              {hasCoalescedView ? "By dish" : "List"}
+            </button>
+            {hasCoalescedView && (
               <button
                 type="button"
                 role="tab"
@@ -258,11 +265,62 @@ export function IngredientList({
               >
                 By station
               </button>
-            </div>
-          )}
+            )}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "aisle"}
+              onClick={() => setViewMode("aisle")}
+              className={cn(
+                "rounded-full px-2.5 py-1 transition-colors",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                viewMode === "aisle"
+                  ? "bg-[var(--nourish-green)] text-white"
+                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+              )}
+            >
+              By aisle
+            </button>
+          </div>
         </div>
 
-        {viewMode === "station" && hasCoalescedView ? (
+        {viewMode === "aisle" ? (
+          <div className="space-y-4">
+            {aisleGroups.map((group) => (
+              <div key={group.aisle.id} className="space-y-1">
+                <h3 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)] flex items-center gap-1.5">
+                  <span>{group.aisle.emoji}</span>
+                  {group.aisle.label}
+                </h3>
+                {group.items.map((item, idx) => (
+                  <IngredientRow
+                    key={item.id}
+                    item={item}
+                    idx={idx}
+                    checked={checked.has(item.id)}
+                    showingSub={askingSub === item.id}
+                    recipeName={recipeName}
+                    cuisineFamily={cuisineFamily}
+                    inPantry={pantryMounted && pantryHas(item.name)}
+                    rememberedSub={
+                      dishSlug && subMemMounted
+                        ? getRememberedSub(dishSlug, item.id)
+                        : null
+                    }
+                    onRememberSub={(sub) => {
+                      if (dishSlug) rememberSub(dishSlug, item.id, sub);
+                    }}
+                    onToggle={() => toggleItem(item.id)}
+                    onAskSub={() =>
+                      setAskingSub(askingSub === item.id ? null : item.id)
+                    }
+                    onTogglePantry={() => togglePantry(item.name)}
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : viewMode === "station" && hasCoalescedView ? (
           <div className="space-y-4">
             {prepGroups.map((group) => (
               <div key={group.station} className="space-y-1">
@@ -659,92 +717,4 @@ function IngredientRow({
 /**
  * IngredientInfoButton — wraps the ingredient label area with useLongPress
  * so that a long-press (500 ms) opens the AI substitution panel, while a
- * normal tap toggles the checkbox. This is the primary discovery affordance
- * for substitutions — the ArrowRightLeft icon remains as a secondary hint.
- */
-function IngredientInfoButton({
-  item,
-  checked,
-  showingSub,
-  rememberedSub,
-  inPantry,
-  onToggle,
-  onAskSub,
-}: {
-  item: Ingredient;
-  checked: boolean;
-  showingSub: boolean;
-  rememberedSub: string | null;
-  inPantry: boolean;
-  onToggle: () => void;
-  onAskSub: () => void;
-}) {
-  const longPress = useLongPress({
-    threshold: 500,
-    onLongPress: () => {
-      // Only trigger substitution for non-optional, unchecked items
-      if (!checked && !item.isOptional) {
-        onAskSub();
-      }
-    },
-    onTap: onToggle,
-  });
-
-  return (
-    <div
-      {...longPress}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
-      className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform select-none touch-manipulation cursor-pointer"
-      aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
-    >
-      <div className="flex items-baseline gap-2">
-        <span
-          className={cn(
-            "text-sm font-medium",
-            checked
-              ? "text-[var(--nourish-subtext)] line-through"
-              : "text-[var(--nourish-dark)]",
-          )}
-        >
-          {item.name}
-        </span>
-        <span className="text-xs text-[var(--nourish-subtext)]">
-          {item.quantity}
-        </span>
-        {inPantry && (
-          <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
-            in pantry
-          </span>
-        )}
-        {item.isOptional && (
-          <span className="text-[11px] text-[var(--nourish-subtext)] italic">
-            optional
-          </span>
-        )}
-      </div>
-      {item.substitution && !showingSub && !rememberedSub && (
-        <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
-          sub: {item.substitution}
-        </p>
-      )}
-      {rememberedSub && !showingSub && (
-        <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
-          last time: {rememberedSub}
-        </p>
-      )}
-      {/* Hint for long-press discovery — only shown when not checked and no sub shown */}
-      {!checked && !item.isOptional && !showingSub && !rememberedSub && !item.substitution && (
-        <p className="mt-0.5 text-[10px] text-[var(--nourish-subtext)]/40 italic">
-          hold to find a swap
-        </p>
-      )}
-    </div>
-  );
-}
+ * normal tap toggles the checkbox. This is the primary discovery aff

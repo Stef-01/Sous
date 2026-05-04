@@ -18,11 +18,16 @@ import {
   PartyPopper,
   Award,
   Send,
+  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
 import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
+import {
+  generateShareCard,
+  shareOrDownload,
+} from "@/lib/utils/share-card";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -108,17 +113,23 @@ interface ConfettiParticle {
 }
 
 function generateConfetti(): ConfettiParticle[] {
-  return Array.from({ length: 50 }, (_, i) => {
-    const startX = 40 + (Math.random() - 0.5) * 60;
-    const drift = (i % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15);
+  return Array.from({ length: 60 }, (_, i) => {
+    // First 20 particles burst from center, rest rain from top
+    const isBurst = i < 20;
+    const startX = isBurst
+      ? 50 + (Math.random() - 0.5) * 10
+      : 10 + Math.random() * 80;
+    const drift = isBurst
+      ? (Math.random() - 0.5) * 60
+      : (i % 2 === 0 ? 1 : -1) * (10 + Math.random() * 15);
     return {
       id: i,
       x: startX,
       xEnd: startX + drift,
       color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
-      delay: Math.random() * 0.5,
-      duration: 1.8 + Math.random() * 1.2,
-      size: 5 + Math.random() * 8,
+      delay: isBurst ? Math.random() * 0.15 : 0.2 + Math.random() * 0.5,
+      duration: isBurst ? 1.4 + Math.random() * 0.8 : 1.8 + Math.random() * 1.2,
+      size: isBurst ? 6 + Math.random() * 10 : 5 + Math.random() * 8,
       rotation: Math.random() * 360,
       isCircle: i % 4 === 0,
       isSquare: i % 3 !== 0,
@@ -355,9 +366,13 @@ export function WinScreen({
   const [showReflection, setShowReflection] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const [showConfetti, setShowConfetti] = useState(!prefersReducedMotion);
+  const [showGlow, setShowGlow] = useState(!prefersReducedMotion);
   const [photoAdded, setPhotoAdded] = useState(false);
   const [giftSent, setGiftSent] = useState(false);
   const [inviteFriendName, setInviteFriendName] = useState("");
+  const [shareStatus, setShareStatus] = useState<
+    "idle" | "generating" | "shared" | "copied" | "downloaded"
+  >("idle");
   const invitePrompts = useInvitePrompts();
 
   const winMessage = trpc.ai.generateWinMessage.useQuery(
@@ -398,8 +413,13 @@ export function WinScreen({
 
   useEffect(() => {
     const timer = setTimeout(() => setShowConfetti(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+    const glowTimer = setTimeout(() => setShowGlow(false), 2500);
+    // Haptic feedback on cook completion (mobile)
+    if (!prefersReducedMotion && typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate([80, 60, 120]); } catch { /* no-op */ }
+    }
+    return () => { clearTimeout(timer); clearTimeout(glowTimer); };
+  }, [prefersReducedMotion]);
 
   const handleRate = (stars: number) => {
     setRating(stars);
@@ -480,6 +500,23 @@ export function WinScreen({
     invitePrompts.dismiss(dishSlug);
   };
 
+  const handleShareCard = async () => {
+    if (shareStatus !== "idle") return;
+    setShareStatus("generating");
+    try {
+      const blob = await generateShareCard({
+        dishName,
+        cookTimeMinutes: undefined, // not passed as prop currently
+        rating: rating || undefined,
+        cuisineFamily: cuisineFamily || undefined,
+      });
+      const result = await shareOrDownload(blob, dishName);
+      setShareStatus(result);
+    } catch {
+      setShareStatus("idle");
+    }
+  };
+
   const showInvitePrompt =
     !!dishSlug &&
     invitePrompts.mounted &&
@@ -508,13 +545,28 @@ export function WinScreen({
           }}
           className="space-y-1.5"
         >
-          <motion.div
-            animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
-            transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
-            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
-          >
-            {milestone.icon}
-          </motion.div>
+          <div className="relative flex items-center justify-center">
+            {/* Golden glow pulse ring */}
+            <AnimatePresence>
+              {showGlow && (
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: [0.5, 1.8, 2.2], opacity: [0, 0.4, 0] }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.6, ease: "easeOut" }}
+                  className="absolute h-16 w-16 rounded-2xl bg-[var(--nourish-gold)]/30"
+                  aria-hidden
+                />
+              )}
+            </AnimatePresence>
+            <motion.div
+              animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
+              transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
+              className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
+            >
+              {milestone.icon}
+            </motion.div>
+          </div>
           <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)] leading-snug">
             {headline}
           </h1>
@@ -882,6 +934,38 @@ export function WinScreen({
             <RotateCcw size={14} />
             Again
           </motion.button>
+
+          {/* Share cook card */}
+          <motion.button
+            onClick={handleShareCard}
+            disabled={shareStatus === "generating"}
+            whileTap={
+              shareStatus === "generating" ? undefined : { scale: 0.92 }
+            }
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+              shareStatus === "shared" ||
+                shareStatus === "copied" ||
+                shareStatus === "downloaded"
+                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+            )}
+            type="button"
+            aria-label="Share a cook card image"
+          >
+            <Share2
+              size={14}
+              className={
+                shareStatus === "generating" ? "animate-pulse" : ""
+              }
+            />
+            {shareStatus === "idle" && "Share"}
+            {shareStatus === "generating" && "..."}
+            {shareStatus === "shared" && "Shared!"}
+            {shareStatus === "copied" && "Copied!"}
+            {shareStatus === "downloaded" && "Saved!"}
+          </motion.button>
         </motion.div>
 
         {/* ── Note input (expandable) ── */}
@@ -958,84 +1042,4 @@ export function WinScreen({
                   {reflection.isLoading && (
                     <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
                       <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
-                        Thinking about your cook...
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.isError && (
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
-                      <p className="text-xs text-[var(--nourish-subtext)]">
-                        Great job completing this cook! Reflection unavailable
-                        right now.
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.data && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 260,
-                        damping: 25,
-                      }}
-                      className="space-y-3"
-                    >
-                      <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
-                          What went well
-                        </p>
-                        {reflection.data.strengths.map((s, i) => (
-                          <motion.p
-                            key={i}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{
-                              delay: i * 0.1,
-                              type: "spring",
-                              stiffness: 260,
-                              damping: 25,
-                            }}
-                            className="text-sm text-[var(--nourish-dark)] leading-relaxed"
-                          >
-                            {s}
-                          </motion.p>
-                        ))}
-                      </div>
-
-                      {reflection.data.nextTimeSuggestions.length > 0 && (
-                        <div className="rounded-xl border border-[var(--nourish-gold)]/20 bg-[var(--nourish-gold)]/5 p-4 space-y-2 text-left">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
-                            For next time
-                          </p>
-                          {reflection.data.nextTimeSuggestions.map((s, i) => (
-                            <motion.p
-                              key={i}
-                              initial={{ opacity: 0, x: -8 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{
-                                delay: 0.3 + i * 0.1,
-                                type: "spring",
-                                stiffness: 260,
-                                damping: 25,
-                              }}
-                              className="text-sm text-[var(--nourish-dark)] leading-relaxed"
-                            >
-                              {s.message}
-                            </motion.p>
-                          ))}
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
+                        Thinking abo

@@ -41,6 +41,10 @@ import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
+import {
+  useDifficultyProgression,
+  scoreDifficultyAlignment,
+} from "@/lib/hooks/use-difficulty-progression";
 
 interface QuestDish {
   dishName: string;
@@ -150,6 +154,13 @@ export function buildQuestDishes(
   userPreferences?: Record<string, number>,
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
   pantryNames?: string[],
+  difficultyProgression?: {
+    easy: number;
+    medium: number;
+    hard: number;
+    recommendedLevel: "easy" | "medium" | "hard";
+    difficultyBoost: number;
+  },
 ): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
@@ -268,6 +279,12 @@ export function buildQuestDishes(
   const pantryBoost = (dish: QuestDish) =>
     dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD ? PANTRY_FIT_BOOST_WEIGHT : 0;
 
+  // Difficulty alignment: nudges feed toward dishes that match the user's
+  // current skill level. Returns 0-4 bonus. Silent when no progression data.
+  const difficultyBoost = difficultyProgression
+    ? (slug: string) => scoreDifficultyAlignment(slug, difficultyProgression)
+    : () => 0;
+
   // Score and sort meals: prefer meals with images, then verified, then preference match
   const scoredMeals = mealDishes
     .map((m) => ({
@@ -279,7 +296,8 @@ export function buildQuestDishes(
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
         noveltyBonus(m.cuisineFamily) +
         pantryBoost(m) +
-        timeOfDayBoost(m),
+        timeOfDayBoost(m) +
+        difficultyBoost(m.slug),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -295,7 +313,8 @@ export function buildQuestDishes(
         (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0) +
         noveltyBonus(s.cuisineFamily) +
         pantryBoost(s) +
-        timeOfDayBoost(s),
+        timeOfDayBoost(s) +
+        difficultyBoost(s.slug),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -440,14 +459,16 @@ export function QuestCard({
   cookSessions?: CookSessionRecord[];
 }) {
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
+  const progression = useDifficultyProgression(cookSessions ?? []);
   const baseDishes = useMemo(
     () =>
       buildQuestDishes(
         userPreferences,
         cookHistory,
         pantryMounted ? pantryItems : undefined,
+        progression,
       ),
-    [userPreferences, cookHistory, pantryItems, pantryMounted],
+    [userPreferences, cookHistory, pantryItems, pantryMounted, progression],
   );
   // Quest filters: cook-time cap + cuisine. Both session-scoped so they
   // never become permanent settings  -  they reset at app close.
@@ -790,6 +811,7 @@ function SwipeCard({
   ingredientReuse: string | null;
 }) {
   const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
 
@@ -882,17 +904,27 @@ function SwipeCard({
         {/* Hero food image */}
         <div className="relative aspect-[3/2] bg-[var(--nourish-cream)]">
           {dish.heroImageUrl && !imgError ? (
-            <Image
-              src={dish.heroImageUrl}
-              alt={dish.dishName}
-              fill
-              sizes="(max-width: 768px) 100vw, 448px"
-              className="object-cover"
-              draggable={false}
-              loading={stackIndex === 0 ? "eager" : "lazy"}
-              priority={stackIndex === 0}
-              onError={() => setImgError(true)}
-            />
+            <>
+              {/* Shimmer placeholder visible until image loads */}
+              {!imgLoaded && (
+                <div className="absolute inset-0 shimmer" />
+              )}
+              <Image
+                src={dish.heroImageUrl}
+                alt={dish.dishName}
+                fill
+                sizes="(max-width: 768px) 100vw, 448px"
+                className={cn(
+                  "object-cover transition-opacity duration-300",
+                  imgLoaded ? "opacity-100" : "opacity-0",
+                )}
+                draggable={false}
+                loading={stackIndex === 0 ? "eager" : "lazy"}
+                priority={stackIndex === 0}
+                onLoad={() => setImgLoaded(true)}
+                onError={() => setImgError(true)}
+              />
+            </>
           ) : (
             <div
               className="absolute inset-0 flex flex-col items-center justify-center gap-3"
@@ -1030,37 +1062,4 @@ function SwipeCard({
             </motion.button>
             {/* Hover tooltip */}
             <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-              <div className="whitespace-nowrap rounded-md bg-[var(--nourish-dark)] px-2 py-0.5 text-[9px] font-medium text-white shadow-lg">
-                {isSaved ? "Saved" : "Save for later"}
-              </div>
-              <div className="mx-auto h-1.5 w-1.5 -mt-0.5 rotate-45 bg-[var(--nourish-dark)]" />
-            </div>
-          </div>
-
-          {/* Primary CTA  -  cook if guided, find sides otherwise */}
-          <motion.button
-            onClick={(e) => {
-              e.stopPropagation();
-              onStart();
-            }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className={cn(
-              "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
-              "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-              "cta-glow transition-colors duration-200",
-            )}
-            type="button"
-            aria-label={`${dish.isMeal ? "Find sides for" : dish.hasGuidedCook ? "Start cooking" : "Find sides for"} ${dish.dishName}`}
-          >
-            {dish.isMeal
-              ? "Find sides →"
-              : dish.hasGuidedCook
-                ? "Start cooking"
-                : "Find sides"}
-          </motion.button>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+              <div className="whitespace-nowrap rounded-md bg-[var(--nourish-dark)] px-2 py-0.5 text-[9px] font-medium text-white shadow-l

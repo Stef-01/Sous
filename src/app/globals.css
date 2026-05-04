@@ -42,8 +42,8 @@
      read while hands are occupied and the device sits a foot further away. */
   --sous-text-body: 15px;
   --sous-text-caption: 12px;
-  --sous-text-cook: 17px;
-  --sous-leading-cook: 1.55;
+  --sous-text-cook: 19px;
+  --sous-leading-cook: 1.6;
 }
 
 /* Cook-prose utility — applied to the main instruction on /cook/[slug]
@@ -58,8 +58,8 @@
    ~1.25×. We rebind CSS variables rather than rewriting classes, so
    existing Tailwind utilities inherit the new scale automatically. */
 [data-big-hands="true"] {
-  --sous-text-cook: 20px;
-  --sous-leading-cook: 1.6;
+  --sous-text-cook: 22px;
+  --sous-leading-cook: 1.65;
   --sous-text-body: 17px;
   --sous-text-caption: 14px;
 }

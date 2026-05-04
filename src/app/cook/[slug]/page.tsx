@@ -432,10 +432,16 @@ export default function GuidedCookPage({
 
       {/* Content */}
       <main className="mx-auto max-w-md px-4 py-6">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait">
           {currentPhase === "mission" && (
+            <motion.div
+              key="mission-wrapper"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
+            >
             <MissionScreen
-              key="mission"
               dishName={dish.name}
               description={dish.description}
               flavorProfile={dish.flavorProfile as string[]}
@@ -446,10 +452,18 @@ export default function GuidedCookPage({
               dishSlug={dish.slug}
               onStart={handleMissionStart}
             />
+            </motion.div>
           )}
 
           {currentPhase === "grab" && (
-            <div key="grab" className="space-y-3">
+            <motion.div
+              key="grab-wrapper"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
+              className="space-y-3"
+            >
               <CookWatchlist
                 dishSlug={dish.slug}
                 steps={cookSteps.map((s: unknown) => s as StaticCookStep)}
@@ -462,14 +476,16 @@ export default function GuidedCookPage({
                 onReady={handleGrabReady}
                 onSelectSides={handleSelectSides}
               />
-            </div>
+            </motion.div>
           )}
 
           {currentPhase === "cook" && !currentCookStep && (
             <motion.div
               key="cook-empty"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
               className="flex flex-col items-center gap-5 py-12 text-center"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
@@ -499,6 +515,13 @@ export default function GuidedCookPage({
           )}
 
           {currentPhase === "cook" && currentCookStep && (
+            <motion.div
+              key="cook-phase"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -30, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 280, damping: 26 }}
+            >
             <StepCard
               key={`cook-${currentStepIndex}`}
               direction={stepDirection}
@@ -524,36 +547,4 @@ export default function GuidedCookPage({
               isLast={currentStepIndex === cookSteps.length - 1}
               dishSlug={dish.slug}
             />
-          )}
-
-          {currentPhase === "win" && (
-            <WinScreen
-              key="win"
-              dishName={dish.name}
-              dishSlug={slug}
-              sideDishes={mainDishInput ? [mainDishInput] : []}
-              cuisineFamily={cuisine}
-              isFirstCook={winMeta.streak === 1}
-              streak={winMeta.streak}
-              cuisineCookCount={winMeta.cuisineCookCount}
-              totalSteps={cookSteps.length}
-              pathJustUnlocked={winMeta.pathJustUnlocked}
-              saved={winMeta.saved}
-              skillProgress={winMeta.skillProgress}
-              onRate={handleRate}
-              onFeedback={handleFeedback}
-              onAddPhoto={handleAddPhoto}
-              onAddNote={handleAddNote}
-              onSave={handleSave}
-              onCookAgain={handleCookAgain}
-              onBackToday={handleBackToday}
-            />
-          )}
-        </AnimatePresence>
-      </main>
-
-      {/* Floating timer */}
-      <CookTimer />
-    </motion.div>
-  );
-}
+            </motion.div
