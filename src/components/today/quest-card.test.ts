@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { computePantryFit, decideSwipe, exitDistanceFor } from "./quest-card";
+import {
+  computePantryFit,
+  decideSwipe,
+  exitDistanceFor,
+  partitionMetaTags,
+} from "./quest-card";
 import { normalizePantryName } from "@/lib/hooks/use-pantry";
 
 describe("computePantryFit", () => {
@@ -117,5 +122,63 @@ describe("exitDistanceFor — velocity-preserving exit", () => {
     // direction is the source of truth for sign.
     expect(exitDistanceFor("right", -400)).toBe(320 + 72);
     expect(exitDistanceFor("left", 400)).toBe(-320 - 72);
+  });
+});
+
+describe("partitionMetaTags — Popular inline + flavor row", () => {
+  it("empty tags → no Popular, empty flavor list", () => {
+    expect(partitionMetaTags([])).toEqual({
+      popularInline: false,
+      flavorTags: [],
+    });
+  });
+
+  it("only 'Popular' → inline true, flavor list empty", () => {
+    expect(partitionMetaTags(["Popular"])).toEqual({
+      popularInline: true,
+      flavorTags: [],
+    });
+  });
+
+  it("'Popular' + flavor adjectives → inline true, flavors preserved", () => {
+    expect(partitionMetaTags(["Popular", "Spicy", "Quick"])).toEqual({
+      popularInline: true,
+      flavorTags: ["Spicy", "Quick"],
+    });
+  });
+
+  it("flavors only → inline false, all preserved", () => {
+    expect(partitionMetaTags(["Cozy", "Comfort"])).toEqual({
+      popularInline: false,
+      flavorTags: ["Cozy", "Comfort"],
+    });
+  });
+
+  it("preserves order of flavor tags around Popular", () => {
+    expect(
+      partitionMetaTags(["Spicy", "Popular", "Crunchy"]).flavorTags,
+    ).toEqual(["Spicy", "Crunchy"]);
+  });
+
+  it("defensive: non-array input falls back to empty result", () => {
+    // Type system says it's always string[], but downstream APIs
+    // sometimes widen this when mock data is involved.
+    expect(
+      partitionMetaTags(undefined as unknown as readonly string[]),
+    ).toEqual({ popularInline: false, flavorTags: [] });
+    expect(partitionMetaTags(null as unknown as readonly string[])).toEqual({
+      popularInline: false,
+      flavorTags: [],
+    });
+  });
+
+  it("case-sensitive: 'popular' (lowercase) is NOT promoted inline", () => {
+    // The seed catalog uses Title-case "Popular" exclusively;
+    // case-sensitivity means a stray lowercase variant doesn't
+    // accidentally hide from the flavor row.
+    expect(partitionMetaTags(["popular"])).toEqual({
+      popularInline: false,
+      flavorTags: ["popular"],
+    });
   });
 });

@@ -546,8 +546,10 @@ function TodayPageContent() {
         <DailyNoveltyChip />
 
         {/* W35 "Who's at the table" picker — household-memory surface.
-            Renders a CTA → /path/household when no members exist;
-            renders the picker + aggregate constraints once they do. */}
+            Renders nothing when no members exist (rule 6: simplicity-
+            first; the empty-CTA hint was distracting). Picker +
+            aggregate constraints render once members are populated
+            via /path/household. */}
         <WhosAtTable />
 
         {/* W36 weekly rhythm widget — quiet below 2 cooks-this-week so

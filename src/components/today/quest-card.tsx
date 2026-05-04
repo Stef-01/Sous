@@ -441,6 +441,19 @@ function CuisineFallbackIcon({ cuisine }: { cuisine: string }) {
 }
 
 /** Extract descriptive tags for a meal from its description. */
+/** Pure: split a tags list into the inline Popular badge + the
+ *  separate flavor-tags row. Lifted out of the JSX so the
+ *  partition logic is tested via the no-tsx pure-helper rule. */
+export function partitionMetaTags(tags: ReadonlyArray<string>): {
+  popularInline: boolean;
+  flavorTags: ReadonlyArray<string>;
+} {
+  if (!Array.isArray(tags)) return { popularInline: false, flavorTags: [] };
+  const popularInline = tags.includes("Popular");
+  const flavorTags = tags.filter((t) => t !== "Popular");
+  return { popularInline, flavorTags };
+}
+
 function buildMealTags(
   cuisine: string,
   description: string,
@@ -1131,8 +1144,7 @@ function SwipeCard({
               The "Popular" pill used to live in its own tags row
               underneath; pulling it inline keeps the card compact. */}
           {(() => {
-            const popularInline = dish.tags.includes("Popular");
-            const flavorTags = dish.tags.filter((t) => t !== "Popular");
+            const { popularInline, flavorTags } = partitionMetaTags(dish.tags);
             return (
               <>
                 <div className="flex items-center gap-3 text-[11px] text-[var(--nourish-subtext)]">

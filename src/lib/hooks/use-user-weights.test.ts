@@ -97,4 +97,92 @@ describe("parseStoredUserWeights", () => {
     expect(a).not.toBe(b);
     expect(a.weights).not.toBe(b.weights);
   });
+
+  // Round-4 Partial<ScoreBreakdown> tolerance ─────────────
+
+  it("accepts a 6-key payload (pre-Round-4) without seasonal/antiMonotony", () => {
+    const incoming = {
+      cuisineFit: 0.3,
+      flavorContrast: 0.2,
+      nutritionBalance: 0.15,
+      prepBurden: 0.15,
+      temperature: 0.1,
+      preference: 0.1,
+    };
+    const raw = JSON.stringify({
+      schemaVersion: 1,
+      weights: incoming,
+      samples: 5,
+      trainedAt: "2026-04-01T12:00:00Z",
+    });
+    const parsed = parseStoredUserWeights(raw);
+    // 6 required dims preserved; seasonal/antiMonotony absent
+    // (deleted) so the round-trip equality holds.
+    expect(parsed.weights).toEqual(incoming);
+  });
+
+  it("round-trips an 8-key payload (Round 4) including seasonal/antiMonotony", () => {
+    const incoming = {
+      cuisineFit: 0.22,
+      flavorContrast: 0.22,
+      nutritionBalance: 0.13,
+      prepBurden: 0.13,
+      temperature: 0.08,
+      preference: 0.08,
+      seasonal: 0.07,
+      antiMonotony: 0.07,
+    };
+    const raw = JSON.stringify({
+      schemaVersion: 1,
+      weights: incoming,
+      samples: 12,
+      trainedAt: "2026-05-01T12:00:00Z",
+    });
+    const parsed = parseStoredUserWeights(raw);
+    expect(parsed.weights).toEqual(incoming);
+  });
+
+  it("drops invalid seasonal/antiMonotony values without nuking required dims", () => {
+    // Mixed payload: required dims valid, optional dims corrupt.
+    // Should preserve the required 6 + omit the bad optional 2.
+    const raw = JSON.stringify({
+      schemaVersion: 1,
+      weights: {
+        cuisineFit: 0.25,
+        flavorContrast: 0.25,
+        nutritionBalance: 0.15,
+        prepBurden: 0.15,
+        temperature: 0.1,
+        preference: 0.1,
+        seasonal: -1, // invalid: negative
+        antiMonotony: "oops" as unknown as number, // invalid: not a number
+      },
+      samples: 3,
+    });
+    const parsed = parseStoredUserWeights(raw);
+    expect(parsed.weights.cuisineFit).toBe(0.25);
+    expect(parsed.weights.preference).toBe(0.1);
+    // Bad optionals deleted.
+    expect("seasonal" in parsed.weights).toBe(false);
+    expect("antiMonotony" in parsed.weights).toBe(false);
+  });
+
+  it("drops a NaN/Infinity in seasonal but keeps the rest valid", () => {
+    const raw = JSON.stringify({
+      schemaVersion: 1,
+      weights: {
+        cuisineFit: 0.22,
+        flavorContrast: 0.22,
+        nutritionBalance: 0.13,
+        prepBurden: 0.13,
+        temperature: 0.08,
+        preference: 0.08,
+        seasonal: Number.POSITIVE_INFINITY,
+        antiMonotony: 0.07,
+      },
+    });
+    const parsed = parseStoredUserWeights(raw);
+    expect("seasonal" in parsed.weights).toBe(false);
+    expect(parsed.weights.antiMonotony).toBe(0.07);
+  });
 });

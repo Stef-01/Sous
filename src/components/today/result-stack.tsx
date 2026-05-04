@@ -336,6 +336,34 @@ function effortFromPrepBurden(prepBurden: number): string {
   return "Worth it";
 }
 
+/** Pure: build the faint single-line metadata under the title.
+ *  Order: cuisine · 0-2 flavor descriptors · effort. Filters out
+ *  tags that just echo the cuisine family (case-insensitive) and
+ *  drops anything that isn't a plain lowercase word. The whole
+ *  line is rendered lowercase for visual consistency.
+ *
+ *  Exported so the partition + dedup logic is unit-tested. */
+export function buildSideMetaLine(input: {
+  cuisineFamily: string;
+  tags: ReadonlyArray<string> | undefined;
+  effortLabel: string;
+}): string {
+  const cuisineLower = input.cuisineFamily.trim().toLowerCase();
+  const safeTags = Array.isArray(input.tags) ? input.tags : [];
+  const flavorTags = safeTags
+    .filter((t) => typeof t === "string")
+    .map((t) => t.trim().toLowerCase())
+    .filter((t) => /^[a-z][a-z -]*$/.test(t)) // plain lowercase words
+    .filter((t) => t !== cuisineLower) // dedup against cuisine
+    .slice(0, 2);
+  const parts = [
+    cuisineLower,
+    ...flavorTags,
+    input.effortLabel.toLowerCase(),
+  ].filter(Boolean);
+  return parts.join(" · ");
+}
+
 function ResultCard({
   side,
   mainDish,
@@ -375,18 +403,16 @@ function ResultCard({
   const displayExplanation =
     aiExplanation.data?.explanation ?? side.explanation;
 
-  // Minimalist redesign: eyebrow is just the cuisine name in
-  // soft sentence case + up to 2 flavor adjectives from tags.
-  // Match% / "Best match" / "Guided" labels removed — they don't
-  // make the user cook (rule 6: simplicity-first).
+  // Minimalist redesign: single faint metadata line —
+  // cuisine · up-to-2-flavors · effort. Match% / Best-match /
+  // Guided labels removed (rule 6: simplicity-first). The
+  // partition + dedup logic lives in the pure helper.
   const effortLabel = effortFromPrepBurden(side.scores.prepBurden);
-  const cuisineEyebrow = side.cuisineFamily;
-  // Pull up to 2 plain-language flavor descriptors from tags for
-  // the eyebrow row. Falls back to the cuisine alone when tags
-  // are sparse.
-  const flavorTags = side.tags
-    .filter((t) => /^[a-z][a-z -]+$/.test(t)) // lowercase plain words
-    .slice(0, 2);
+  const metaLine = buildSideMetaLine({
+    cuisineFamily: side.cuisineFamily,
+    tags: side.tags,
+    effortLabel,
+  });
 
   return (
     <motion.div
@@ -448,9 +474,7 @@ function ResultCard({
             {side.name}
           </h3>
           <p className="mt-1 text-[11px] text-[var(--nourish-subtext)]">
-            {[cuisineEyebrow, ...flavorTags, effortLabel.toLowerCase()]
-              .filter(Boolean)
-              .join(" · ")}
+            {metaLine}
           </p>
           {/* W17 pantry-coverage badge — quiet inline tag.
               Only shows when coverage clears the "you have most
@@ -575,12 +599,19 @@ function ResultCard({
   );
 }
 
+/** Pure: convert a 0..1 nutrition score into a 0..5 integer
+ *  star count. Defensive against NaN / undefined / out-of-range
+ *  inputs so the aria-label never surfaces "NaN out of 5". */
+export function nutritionScoreToStars(score: number): number {
+  if (!Number.isFinite(score)) return 0;
+  return Math.min(5, Math.max(0, Math.round(score * 5)));
+}
+
 function NutritionStars({ score }: { score: number }) {
-  // Map 0..1 score → 0..5 stars, rounding up so anything above
-  // 0.9 reads as 5. Empty stars stay neutral; filled stars use
-  // a quiet sage tone (not the brand-green hero accent — that
-  // belongs to the CTA).
-  const filled = Math.min(5, Math.max(0, Math.round(score * 5)));
+  // Map 0..1 score → 0..5 stars. Empty stars stay neutral;
+  // filled stars use a quiet sage tone (not the brand-green
+  // hero accent — that belongs to the CTA).
+  const filled = nutritionScoreToStars(score);
   return (
     <div
       className="flex items-center gap-1.5 text-[11px] text-[var(--nourish-subtext)]"
