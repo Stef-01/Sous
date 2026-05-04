@@ -10,7 +10,11 @@ vi.mock("@/data/weekly-challenges", () => ({
   getDaysRemainingInWeek: vi.fn(),
 }));
 
-import { getCurrentChallenge, getWeekStart, getDaysRemainingInWeek } from "@/data/weekly-challenges";
+import {
+  getCurrentChallenge,
+  getWeekStart,
+  getDaysRemainingInWeek,
+} from "@/data/weekly-challenges";
 import type { CookSessionRecord } from "./use-cook-sessions";
 
 // Since useWeeklyChallenge is a hook, we test the computation by extracting the logic
@@ -18,7 +22,9 @@ import type { CookSessionRecord } from "./use-cook-sessions";
 // For hooks that are pure useMemo wrappers, we can test the memoized function.
 
 // Helper: build a mock session
-function mockSession(overrides: Partial<CookSessionRecord> = {}): CookSessionRecord {
+function mockSession(
+  overrides: Partial<CookSessionRecord> = {},
+): CookSessionRecord {
   return {
     sessionId: `cs-${Date.now()}-${Math.random().toString(36).slice(2)}`,
     recipeSlug: "test-dish",
@@ -63,9 +69,18 @@ describe("useWeeklyChallenge computation", () => {
 
   it("tracks cuisine_cook progress correctly", () => {
     const sessions = [
-      mockSession({ cuisineFamily: "Japanese", completedAt: "2026-04-28T18:00:00" }),
-      mockSession({ cuisineFamily: "Italian", completedAt: "2026-04-29T19:00:00" }),
-      mockSession({ cuisineFamily: "Japanese", completedAt: "2026-04-30T19:00:00" }),
+      mockSession({
+        cuisineFamily: "Japanese",
+        completedAt: "2026-04-28T18:00:00",
+      }),
+      mockSession({
+        cuisineFamily: "Italian",
+        completedAt: "2026-04-29T19:00:00",
+      }),
+      mockSession({
+        cuisineFamily: "Japanese",
+        completedAt: "2026-04-30T19:00:00",
+      }),
     ];
 
     const weekStart = getWeekStart();
@@ -104,7 +119,9 @@ describe("useWeeklyChallenge computation", () => {
     const weekSessions = sessions.filter(
       (s) => new Date(s.completedAt!) >= weekStart,
     );
-    const rated = weekSessions.filter((s) => s.rating !== undefined && s.rating > 0);
+    const rated = weekSessions.filter(
+      (s) => s.rating !== undefined && s.rating > 0,
+    );
     expect(rated.length).toBe(2);
   });
 

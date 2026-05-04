@@ -144,10 +144,17 @@ export async function generateShareCard(
  * Share or download the cook card.
  * Uses Web Share API on mobile, falls back to clipboard copy.
  */
-export async function shareOrDownload(blob: Blob, dishName: string): Promise<"shared" | "downloaded" | "copied"> {
-  const file = new File([blob], `sous-${dishName.toLowerCase().replace(/\s+/g, "-")}.png`, {
-    type: "image/png",
-  });
+export async function shareOrDownload(
+  blob: Blob,
+  dishName: string,
+): Promise<"shared" | "downloaded" | "copied"> {
+  const file = new File(
+    [blob],
+    `sous-${dishName.toLowerCase().replace(/\s+/g, "-")}.png`,
+    {
+      type: "image/png",
+    },
+  );
 
   // Try Web Share API
   if (navigator.share && navigator.canShare?.({ files: [file] })) {
@@ -164,9 +171,7 @@ export async function shareOrDownload(blob: Blob, dishName: string): Promise<"sh
 
   // Try clipboard
   try {
-    await navigator.clipboard.write([
-      new ClipboardItem({ "image/png": blob }),
-    ]);
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
     return "copied";
   } catch {
     // Clipboard unavailable — fall back to download

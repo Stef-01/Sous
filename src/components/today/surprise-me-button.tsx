@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Shuffle } from "lucide-react";
 import { sides, meals } from "@/data";
 import { getAvailableCookSlugs } from "@/data/guided-cook-steps";
@@ -78,13 +78,15 @@ export function SurpriseMeButton({ cookHistory }: SurpriseMeButtonProps) {
     router.push(`/cook/${pick.slug}`);
   }, [candidates, cookHistory, router]);
 
+  const reducedMotion = useReducedMotion();
+
   if (candidates.length === 0) return null;
 
   return (
     <motion.button
       type="button"
       onClick={handleSurprise}
-      whileTap={{ scale: 0.95, rotate: 15 }}
+      whileTap={reducedMotion ? undefined : { scale: 0.95, rotate: 15 }}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
       className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3.5 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40 hover:text-[var(--nourish-green)] transition-colors shadow-sm"
       aria-label="Surprise me with a random dish"

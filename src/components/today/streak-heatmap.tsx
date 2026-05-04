@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -25,6 +25,7 @@ const DAY_LABELS = ["M", "T", "W", "T", "F", "S", "S"];
  */
 export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
   const [open, setOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   // Build a Set of date keys where the user cooked (completed sessions only)
   const cookDays = useMemo(() => {
@@ -41,7 +42,13 @@ export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
   const { days, monthLabel } = useMemo(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const result: { date: Date; key: string; cooked: boolean; isToday: boolean; isFuture: boolean }[] = [];
+    const result: {
+      date: Date;
+      key: string;
+      cooked: boolean;
+      isToday: boolean;
+      isFuture: boolean;
+    }[] = [];
 
     // Go back 29 days from today (30 days total including today)
     for (let i = 29; i >= 0; i--) {
@@ -65,7 +72,13 @@ export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
         const d = new Date(today);
         d.setDate(d.getDate() + i);
         const key = toDateKey(d);
-        result.push({ date: d, key, cooked: false, isToday: false, isFuture: true });
+        result.push({
+          date: d,
+          key,
+          cooked: false,
+          isToday: false,
+          isFuture: true,
+        });
       }
     }
 
@@ -104,10 +117,10 @@ export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={reducedMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={reducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.2 }}
             className="overflow-hidden"
           >
             <div className="rounded-xl border border-neutral-100 bg-white p-3">
@@ -138,7 +151,10 @@ export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
                         ? ""
                         : day.cooked
                           ? `Cooked on ${day.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`
-                          : day.date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+                          : day.date.toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                            })
                     }
                     className={cn(
                       "aspect-square rounded-sm transition-colors",
@@ -147,8 +163,12 @@ export function StreakHeatmap({ sessions }: StreakHeatmapProps) {
                         : day.cooked
                           ? "bg-[var(--nourish-green)]"
                           : "bg-neutral-100",
-                      day.isToday && !day.cooked && "ring-1 ring-[var(--nourish-green)]/40",
-                      day.isToday && day.cooked && "ring-1 ring-[var(--nourish-green)]",
+                      day.isToday &&
+                        !day.cooked &&
+                        "ring-1 ring-[var(--nourish-green)]/40",
+                      day.isToday &&
+                        day.cooked &&
+                        "ring-1 ring-[var(--nourish-green)]",
                     )}
                   />
                 ))}
