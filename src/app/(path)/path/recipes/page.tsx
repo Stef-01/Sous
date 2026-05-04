@@ -27,6 +27,8 @@ import {
 import { buildSharePayload } from "@/lib/share/cook-deeplink";
 import { toast } from "@/lib/hooks/use-toast";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import { usePantry } from "@/lib/hooks/use-pantry";
+import { computePantryCoverage } from "@/lib/engine/pantry-coverage";
 import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
 import {
   matchesRecipeFilter,
@@ -45,6 +47,11 @@ export default function MyRecipesPage() {
   const filteredDrafts = drafts.filter((d) =>
     matchesRecipeFilter(d.source, filter),
   );
+  // Y3 W29 polish: per-recipe pantry-coverage glance. Pure
+  // computation per render; no extra round-trips. The pantry
+  // hook hydrates async so we render coverage as null on cold
+  // start and the badge stays hidden.
+  const { set: pantrySet, mounted: pantryMounted } = usePantry();
 
   return (
     <motion.div
@@ -130,6 +137,38 @@ export default function MyRecipesPage() {
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>
+                {/* Y3 W29: pantry-coverage glance. Lights up
+                    once pantry hydrates; hidden on cold start
+                    so the recipe card doesn't flash. */}
+                {pantryMounted &&
+                  (() => {
+                    const coverage = computePantryCoverage(
+                      {
+                        ingredients: recipe.ingredients.map((i) => ({
+                          name: i.name,
+                          isOptional: i.isOptional ?? false,
+                        })),
+                      },
+                      pantrySet,
+                    );
+                    if (coverage.totalCount === 0) return null;
+                    const fullyCovered =
+                      coverage.haveCount === coverage.totalCount;
+                    return (
+                      <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[10px] font-semibold tracking-[0.04em] text-[var(--nourish-green)]">
+                        <span
+                          aria-hidden
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            fullyCovered
+                              ? "bg-[var(--nourish-green)]"
+                              : "bg-[var(--nourish-gold)]"
+                          }`}
+                        />
+                        Pantry: {coverage.haveCount}/{coverage.totalCount}
+                        {fullyCovered ? " — ready to cook" : ""}
+                      </p>
+                    );
+                  })()}
                 {/* W31 actions row — Cook (primary) + Edit (secondary).
                     Cook navigates to /cook/<slug>; the cook step
                     page falls back to user recipes when the seed
