@@ -16,8 +16,8 @@
  *   - About       - version, links, disclaimer
  */
 
-import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Drawer } from "vaul";
 import { Check, Eye, Heart, Mic, RotateCcw, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
@@ -25,7 +25,6 @@ import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
-import { SHEET, RM } from "@/lib/utils/motion";
 import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
 import { PreferencesSection } from "@/components/shared/preferences-section";
@@ -50,46 +49,30 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
   const haptic = useHaptic();
   const reducedMotion = useReducedMotion();
 
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
+    <Drawer.Root
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 z-[59] bg-black/30 backdrop-blur-[2px]" />
+        <Drawer.Content
+          aria-label="Profile and settings"
+          className="fixed inset-x-0 bottom-0 z-[60] mx-auto flex h-auto max-h-[92dvh] max-w-md flex-col rounded-t-3xl bg-[var(--nourish-cream)] shadow-2xl outline-none sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
         >
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close profile and settings"
-            className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
-          />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Profile and settings"
-            initial={reducedMotion ? { opacity: 0 } : { y: 32, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
-            transition={reducedMotion ? RM : SHEET}
-            className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-8 shadow-2xl sm:m-4 sm:rounded-3xl"
-          >
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
+          {/* Sticky header — drag handle + title + close.
+              Stays fixed while the body scrolls. */}
+          <div className="flex-shrink-0 rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-3 pb-2">
+            <div
+              aria-hidden
+              className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden"
+            />
             <div className="flex items-center justify-between">
-              <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
+              <Drawer.Title className="font-serif text-xl text-[var(--nourish-dark)]">
                 Profile &amp; settings
-              </h2>
+              </Drawer.Title>
               <button
                 type="button"
                 onClick={onClose}
@@ -99,7 +82,21 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 <X size={16} />
               </button>
             </div>
+            <Drawer.Description className="sr-only">
+              Adjust Parent Mode, Eco Mode, learned preferences, voice + visual
+              cook, and demo data.
+            </Drawer.Description>
+          </div>
 
+          {/* Scrollable body. The content stack lives here so any
+              overflow is handled inside the sheet rather than
+              spilling out of the viewport. */}
+          <div
+            className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-5"
+            style={{
+              paddingBottom: "max(2rem, env(safe-area-inset-bottom))",
+            }}
+          >
             {/* Profile placeholder section. Friendlier framing of the
                 "no auth yet" state — explains the trade-off without
                 making it feel half-built. */}
@@ -116,8 +113,7 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                     Profile
                   </SectionKicker>
                   <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
-                    Sign-in is coming. Today, your cooks live on this device
-                    only — fast, private, no account required.
+                    Sign-in is coming. For now, your cooks live on this device.
                   </p>
                 </div>
               </div>
@@ -265,9 +261,8 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                       Voice cook
                     </SectionKicker>
                     <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
-                      Hands-free step navigation. The coach reads each step out
-                      loud; say &ldquo;next&rdquo;, &ldquo;back&rdquo;,
-                      &ldquo;repeat&rdquo;, or set a timer with your voice.
+                      Hands-free step navigation — say &ldquo;next&rdquo;,
+                      &ldquo;back&rdquo;, &ldquo;repeat&rdquo;.
                     </p>
                   </div>
                 </div>
@@ -294,10 +289,6 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                   />
                 </button>
               </div>
-              <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
-                Works on Chrome and Safari. Microphone permission required at
-                first use. Per-device only — preference doesn&rsquo;t sync.
-              </p>
             </section>
 
             {/* Visual Mode section (Stage-5 W22, MVP 3 of the
@@ -321,9 +312,7 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                       Visual mode
                     </SectionKicker>
                     <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
-                      Lean on pictures, not text. Each cook step shows a large
-                      image with a short caption. Pairs naturally with voice
-                      cook for fully hands-free cooking.
+                      Lean on pictures — large image per step, short caption.
                     </p>
                   </div>
                 </div>
@@ -350,10 +339,6 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                   />
                 </button>
               </div>
-              <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
-                Steps without an image show the dish hero photo with a gentle
-                &ldquo;step image coming soon&rdquo; badge.
-              </p>
             </section>
 
             {/* Demo reset (Y5 D, audit P1 #23). Quiet text link so
@@ -410,9 +395,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 <span>Made for cooking confidence at home.</span>
               </p>
             </section>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   );
 }
