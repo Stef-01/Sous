@@ -24,6 +24,7 @@ import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { PodTile } from "@/components/community/pod-tile";
 import { ActiveChallengeBanner } from "@/components/community/active-challenge-banner";
+import { WeeklyThemeBanner } from "@/components/community/weekly-theme-banner";
 import { TagCloud } from "@/components/content/tag-cloud";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
@@ -191,6 +192,11 @@ function ContentPageInner() {
       </header>
 
       <main className="space-y-7 px-4 pt-5">
+        {/* Y5 G — Weekly pod-challenge theme rotates per ISO
+            week. Same theme for every pod globally so leaderboards
+            stack apples-to-apples. Tap → /community/leaderboard. */}
+        <WeeklyThemeBanner />
+
         {/* Active seasonal/sponsored challenge banner sits ABOVE
             the pod tile (Y5 D, audit P0 #3). Renders nothing when
             no challenge is active OR when the pod hasn't been

@@ -90,7 +90,7 @@ export function suggestPodsForUser(input: {
     const capacityScore = pod.memberCount < 8 ? 0.1 : 0;
     const total = clamp01(tierScore + weekScore + capacityScore);
     scored.push({
-      podId: pod.id ?? pod.podId,
+      podId: pod.podId,
       name: pod.name,
       memberCount: pod.memberCount,
       score: total,
@@ -197,12 +197,4 @@ function clamp01(n: number): number {
   if (n < 0) return 0;
   if (n > 1) return 1;
   return n;
-}
-
-// `id` is what the existing PodState carries; expose `podId`
-// alias on the input for forward-compat.
-declare module "./cohort-pod-matcher" {
-  interface PodCohortSummary {
-    id?: string;
-  }
 }
