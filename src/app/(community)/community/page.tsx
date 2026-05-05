@@ -152,23 +152,17 @@ function ContentPageInner() {
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-0.5">
             <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
-              Content
+              Community
             </h1>
-            <p className="text-[12px] text-[var(--nourish-subtext)]">
-              Cook smarter, eat better — backed by people who know what
-              they&rsquo;re talking about.
-            </p>
           </div>
           <Link
             href="/community/saved"
-            aria-label="Saved content"
+            aria-label="Saved"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--nourish-dark)] shadow-sm border border-neutral-100 hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <Bookmark size={18} />
           </Link>
         </div>
-
-        <CategoryFilterStrip active={filter} onChange={setFilter} />
 
         {tagFilterActive && (
           <div className="flex items-center justify-between gap-2 rounded-2xl bg-[var(--nourish-green)]/8 px-3 py-2">
@@ -196,15 +190,18 @@ function ContentPageInner() {
       </header>
 
       <main className="space-y-7 px-4 pt-5">
+        {/* Pod CTA leads — social cooking is the engagement core
+            of the Community tab. Editorial content sits below as
+            a quiet shelf, not as the hero. */}
+        <PodTile />
+
+        {/* Category filter strip moved here from header — it's
+            for the editorial shelf below, not the social header. */}
+        <CategoryFilterStrip active={filter} onChange={setFilter} />
+
         {showHero && featured.length > 0 && (
           <FeaturedHeroCarousel articles={featured} />
         )}
-
-        {/* W46 pod-challenge entry tile. Renders nothing intrusive
-            for users who haven't formed a pod (just a small "Cook
-            with friends" CTA tile); surfaces pod state at-a-glance
-            for users who have. */}
-        <PodTile />
 
         {showReels && (
           <ReelsRail
