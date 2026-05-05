@@ -9,6 +9,7 @@ import {
   Bookmark,
   ChefHat,
   Heart,
+  Leaf,
   ShoppingCart,
   Users,
 } from "lucide-react";
@@ -431,6 +432,11 @@ export default function PathPage() {
                 href: "/path/household",
                 icon: Users,
                 label: "Household",
+              },
+              {
+                href: "/path/eco",
+                icon: Leaf,
+                label: "Eco Mode",
               },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div

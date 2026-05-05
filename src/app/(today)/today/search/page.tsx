@@ -23,6 +23,7 @@ import {
   type SearchResult,
 } from "@/lib/agentic/search-adapter";
 import { cn } from "@/lib/utils/cn";
+import { AgentSearchFallback } from "@/components/agentic/agent-search-fallback";
 
 type FilterAxis = "cuisine" | "time" | "dietary";
 
@@ -170,15 +171,30 @@ export default function SearchPage() {
             ))}
           </ul>
         ) : filteredResults.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-[var(--nourish-border-strong)] bg-white/40 px-4 py-8 text-center text-xs text-[var(--nourish-subtext)]">
-            No matches yet. Try a broader query.
-          </p>
+          <div className="space-y-3">
+            <p className="rounded-xl border border-dashed border-[var(--nourish-border-strong)] bg-white/40 px-4 py-6 text-center text-xs text-[var(--nourish-subtext)]">
+              No matches yet. Try a broader query.
+            </p>
+            {/* Y5 E agentic fallback — opt-in CTA that asks the
+                autogen agent for a candidate draft. Stub-mode V1
+                returns a deterministic fixture so the UX works
+                end-to-end without a key. */}
+            <AgentSearchFallback query={query} />
+          </div>
         ) : (
-          <ul className="space-y-3">
-            {filteredResults.map((result, idx) => (
-              <SearchResultCard key={result.url} result={result} idx={idx} />
-            ))}
-          </ul>
+          <div className="space-y-3">
+            {/* Verified shelf eyebrow — pairs with the Unverified
+                agent fallback above to make the taxonomy explicit
+                when both are visible (audit P0 #14). */}
+            <p className="px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-green)]">
+              Verified · catalog
+            </p>
+            <ul className="space-y-3">
+              {filteredResults.map((result, idx) => (
+                <SearchResultCard key={result.url} result={result} idx={idx} />
+              ))}
+            </ul>
+          </div>
         )}
       </main>
     </div>

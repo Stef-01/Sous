@@ -12,6 +12,7 @@ import { CookAgainChip } from "@/components/today/cook-again-chip";
 import { DailyNoveltyChip } from "@/components/today/daily-novelty-chip";
 import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
+import { EcoProgressChip } from "@/components/today/eco-progress-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
@@ -555,6 +556,11 @@ function TodayPageContent() {
         {/* W36 weekly rhythm widget — quiet below 2 cooks-this-week so
             cold-start users see the existing welcome line instead. */}
         <WeeklyRhythmWidget sessions={completedSessions} />
+
+        {/* Y5 D Eco progress chip — quiet "X kg saved this month"
+            line gated by Eco Mode. Renders nothing when off / no
+            cooks in window / no positive savings. Tap → /path/eco. */}
+        <EcoProgressChip sessions={completedSessions} />
 
         {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard

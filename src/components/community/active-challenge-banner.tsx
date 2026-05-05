@@ -20,7 +20,7 @@
  */
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Sparkles } from "lucide-react";
 import {
   activeChallenges,
@@ -33,6 +33,14 @@ import { useCurrentPod } from "@/lib/pod/use-current-pod";
 import { listSubmissionsForWeek } from "@/lib/pod/use-current-pod";
 import { weekKey as computeWeekKey } from "@/lib/pod/pod-score";
 import { cn } from "@/lib/utils/cn";
+import {
+  CELEBRATED_CHALLENGES_STORAGE_KEY,
+  hasCelebrated,
+  markCelebrated,
+  parseCelebratedChallenges,
+  serializeCelebratedChallenges,
+} from "@/lib/eco/celebrated-challenges";
+import { toast } from "@/lib/hooks/use-toast";
 
 interface CookSnapshot {
   recipeIngredients: ReadonlyArray<string>;
@@ -91,12 +99,49 @@ export function ActiveChallengeBanner() {
     });
   }, [mounted, pod, state, challenge]);
 
-  if (!mounted || !challenge) return null;
+  // Compute progress unconditionally (challenge may be null) so the
+  // celebration effect's deps are stable. Branch the render below.
+  const progress = challenge
+    ? computeChallengeProgress({
+        challenge,
+        qualifyingCookCount: qualifyingCooks,
+      })
+    : null;
 
-  const progress = computeChallengeProgress({
-    challenge,
-    qualifyingCookCount: qualifyingCooks,
-  });
+  // One-time celebration toast on the transition into "complete".
+  // Persisted via localStorage so a return visit doesn't re-fire.
+  const lastCompletedRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (!challenge || !progress) return;
+    const wasComplete = lastCompletedRef.current;
+    lastCompletedRef.current = progress.completed;
+    if (!progress.completed || wasComplete) return;
+    if (typeof window === "undefined") return;
+
+    let state = parseCelebratedChallenges(
+      window.localStorage.getItem(CELEBRATED_CHALLENGES_STORAGE_KEY),
+    );
+    if (hasCelebrated({ state, slug: challenge.slug })) return;
+    state = markCelebrated({ state, slug: challenge.slug });
+    try {
+      window.localStorage.setItem(
+        CELEBRATED_CHALLENGES_STORAGE_KEY,
+        serializeCelebratedChallenges(state),
+      );
+    } catch {
+      // ignore — privacy mode / quota
+    }
+    toast.push({
+      variant: "achievement",
+      title: `Challenge done · ${challenge.title}`,
+      body: `Saved ${progress.totalCo2eSavedKg} kg CO₂e together — nice cooking.`,
+      emoji: challenge.sponsoredBy ? "🌟" : "🌱",
+      dedupKey: `eco-challenge-celebration:${challenge.slug}`,
+    });
+  }, [challenge, progress]);
+
+  if (!mounted || !challenge || !progress) return null;
+
   const days = daysRemaining({ challenge, now: new Date() });
   const sponsored = challenge.sponsoredBy !== null;
 
