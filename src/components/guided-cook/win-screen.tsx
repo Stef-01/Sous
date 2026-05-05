@@ -26,6 +26,7 @@ import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
 import { KidsAteItPrompt } from "@/components/guided-cook/kids-ate-it-prompt";
 import { LunchboxSuggestChip } from "@/components/guided-cook/lunchbox-suggest-chip";
 import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
+import { WinEcoSavingsLine } from "@/components/guided-cook/win-eco-savings-line";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -545,6 +546,9 @@ export function WinScreen({
           <p className="text-[var(--nourish-subtext)] text-sm leading-relaxed">
             {message}
           </p>
+          {/* Eco Mode savings line — renders only when Eco Mode is
+              on AND savings are positive. (Y5 D, audit P0 #2.) */}
+          <WinEcoSavingsLine />
         </motion.div>
 
         {/* ── Streak + skill chips ── */}

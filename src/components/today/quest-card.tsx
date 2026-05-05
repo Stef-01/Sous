@@ -47,6 +47,8 @@ import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 
 interface QuestDish {
   dishName: string;
@@ -576,6 +578,9 @@ export function QuestCard({
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
   const haptic = useHaptic();
+  // Y5 D, audit P0 #6 — emit preference signals on every swipe /
+  // save so the editable profile substrate fills in automatically.
+  const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // Clean up all pending timeouts on unmount
@@ -598,6 +603,19 @@ export function QuestCard({
     (direction: "left" | "right") => {
       if (questDishes.length === 0) return;
       haptic();
+
+      // Emit a preference signal for whichever direction the user
+      // committed to. The dish facets are best-effort — the helper
+      // returns empty arrays for axes we don't carry. (Y5 D #6.)
+      const swipedDish = questDishes[currentIndex % questDishes.length];
+      recordSignal({
+        kind: direction === "right" ? "swipe-right" : "swipe-left",
+        facets: dishToFacets({
+          cuisineFamily: swipedDish.cuisineFamily,
+          tags: swipedDish.tags,
+          ingredients: swipedDish.ingredientNames,
+        }),
+      });
 
       if (direction === "right") {
         const dish = questDishes[currentIndex % questDishes.length];
@@ -630,7 +648,7 @@ export function QuestCard({
         }, 250);
       }
     },
-    [currentIndex, questDishes, router, scheduleTimeout, haptic],
+    [currentIndex, questDishes, router, scheduleTimeout, haptic, recordSignal],
   );
 
   const handleStart = useCallback(() => {
@@ -646,10 +664,19 @@ export function QuestCard({
     const dish = questDishes[currentIndex % questDishes.length];
     const wasNew = saveDish(dish.slug, dish.dishName);
     if (wasNew) {
+      // Y5 D #6 — saved is a strong implicit preference signal.
+      recordSignal({
+        kind: "saved",
+        facets: dishToFacets({
+          cuisineFamily: dish.cuisineFamily,
+          tags: dish.tags,
+          ingredients: dish.ingredientNames,
+        }),
+      });
       setSavedToastSlug(dish.slug);
       scheduleTimeout(() => setSavedToastSlug(null), 1500);
     }
-  }, [currentIndex, questDishes, saveDish, scheduleTimeout]);
+  }, [currentIndex, questDishes, saveDish, scheduleTimeout, recordSignal]);
 
   // Show up to 3 stacked cards. Memoised so downstream memos don't flap.
   const visibleCards = useMemo(() => {

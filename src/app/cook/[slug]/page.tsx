@@ -52,6 +52,8 @@ import {
   normaliseStarRating,
 } from "@/lib/pod/pod-score";
 import { POD_SCHEMA_VERSION } from "@/types/challenge-pod";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 
 export default function GuidedCookPage({
   params,
@@ -76,6 +78,10 @@ export default function GuidedCookPage({
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  // Y5 D, audit P0 #6 — completing a cook is the strongest
+  // implicit preference signal we collect. Fired in handleNext
+  // when the last cook step transitions into the win phase.
+  const { recordSignal: recordPreferenceSignal } = usePreferenceProfile();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const {
     awardXP,
@@ -272,6 +278,19 @@ export default function GuidedCookPage({
         });
         awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
       }
+      // Strongest implicit preference signal — fired on cook
+      // completion only, not on session start. Pulls cuisine
+      // + flavor profile + ingredient names from the static
+      // recipe data.
+      const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
+      recordPreferenceSignal({
+        kind: "cooked",
+        facets: dishToFacets({
+          cuisineFamily: cuisine,
+          tags: staticData?.flavorProfile,
+          ingredients: staticData?.ingredients?.map((i) => i.name),
+        }),
+      });
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -288,6 +307,8 @@ export default function GuidedCookPage({
     recordSkillCook,
     getNodeProgress,
     awardXP,
+    cuisine,
+    recordPreferenceSignal,
   ]);
 
   const handleToggleChip = useCallback(

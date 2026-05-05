@@ -18,7 +18,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Check, Eye, Heart, Mic, UserRound, X } from "lucide-react";
+import { Check, Eye, Heart, Mic, RotateCcw, UserRound, X } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
@@ -27,6 +27,8 @@ import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
 import { SHEET, RM } from "@/lib/utils/motion";
 import type { AgeBand } from "@/types/nutrition";
+import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
+import { PreferencesSection } from "@/components/shared/preferences-section";
 
 interface Props {
   open: boolean;
@@ -235,6 +237,17 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
               </AnimatePresence>
             </section>
 
+            {/* Eco Mode (Y4 W7 substrate · Y5 D UI wire-up). Calm,
+                never-shame copy. Toggle is the same shape as Parent
+                Mode for visual consistency. */}
+            <EcoModeToggle />
+
+            {/* Preferences section (Y5 C substrate · Y5 D UI wire-up).
+                Surfaces inferred + manual tags + time-of-day patterns.
+                Tap any chip to edit; "Reset learned" wipes the
+                signal log without touching manual likes/dislikes. */}
+            <PreferencesSection />
+
             {/* Voice Cook section (Stage-5 W16). Opt-in, off by default.
                 Per CLAUDE.md rule 3, this lives in the single Settings
                 sheet — there is NO separate voice-cook page. */}
@@ -341,6 +354,40 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 Steps without an image show the dish hero photo with a gentle
                 &ldquo;step image coming soon&rdquo; badge.
               </p>
+            </section>
+
+            {/* Demo reset (Y5 D, audit P1 #23). Quiet text link so
+                it's discoverable but doesn't compete with primary
+                surfaces. Wipes the pod-demo localStorage key so the
+                next Community visit re-seeds clean teammates. */}
+            <section className="mt-4 rounded-2xl border border-dashed border-neutral-200/80 bg-transparent p-4">
+              <SectionKicker as="p" size="10px">
+                Demo
+              </SectionKicker>
+              <p className="mt-1.5 text-[12px] leading-snug text-[var(--nourish-subtext)]">
+                Reset the cooking-pod demo data — clears your pod, AI teammates,
+                and submissions. The next Community visit re-seeds a fresh
+                challenge.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  haptic();
+                  if (typeof window === "undefined") return;
+                  try {
+                    window.localStorage.removeItem("sous-pod-state-v1");
+                  } catch {
+                    // ignore — privacy mode / quota
+                  }
+                  // Hard reload so any in-memory React state seeded
+                  // off the old pod blob syncs cleanly.
+                  window.location.reload();
+                }}
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] hover:border-[var(--nourish-warm)]/30 hover:text-[var(--nourish-warm)]"
+              >
+                <RotateCcw size={11} aria-hidden />
+                Reset demo data
+              </button>
             </section>
 
             {/* About section */}

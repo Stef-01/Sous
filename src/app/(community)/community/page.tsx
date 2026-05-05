@@ -23,6 +23,7 @@ import { ExpertVoicesRow } from "@/components/content/expert-voices-row";
 import { ForumThreadList } from "@/components/content/forum-thread-list";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { PodTile } from "@/components/community/pod-tile";
+import { ActiveChallengeBanner } from "@/components/community/active-challenge-banner";
 import { TagCloud } from "@/components/content/tag-cloud";
 import { useContentFilter } from "@/lib/hooks/use-content-filter";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
@@ -190,6 +191,12 @@ function ContentPageInner() {
       </header>
 
       <main className="space-y-7 px-4 pt-5">
+        {/* Active seasonal/sponsored challenge banner sits ABOVE
+            the pod tile (Y5 D, audit P0 #3). Renders nothing when
+            no challenge is active OR when the pod hasn't been
+            seeded — earns its space only when actionable. */}
+        <ActiveChallengeBanner />
+
         {/* Pod CTA leads — social cooking is the engagement core
             of the Community tab. Editorial content sits below as
             a quiet shelf, not as the hero. */}

@@ -18,6 +18,8 @@ import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { trpc } from "@/lib/trpc/client";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 
 export interface SideResult {
   id: string;
@@ -64,6 +66,10 @@ export function ResultStack({
 }: ResultStackProps) {
   const reducedMotion = useReducedMotion();
   void reducedMotion;
+  // Y5 D, audit P0 #6 — pipe selection / reroll into the
+  // intelligence layer so the editable profile substrate fills
+  // in automatically.
+  const { recordSignal } = usePreferenceProfile();
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -171,11 +177,26 @@ export function ResultStack({
   ]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  const handleRerollSide = useCallback((index: number) => {
-    setRerollingIndex(index);
-    // Force refetch by invalidating
-    setAppliedRerollKey("");
-  }, []);
+  const handleRerollSide = useCallback(
+    (index: number) => {
+      // Y5 D #6 — record the reroll as a negative-leaning signal
+      // for the side that's being replaced.
+      const dropped = sides[index];
+      if (dropped) {
+        recordSignal({
+          kind: "rerolled",
+          facets: dishToFacets({
+            cuisineFamily: dropped.cuisineFamily,
+            tags: dropped.tags,
+          }),
+        });
+      }
+      setRerollingIndex(index);
+      // Force refetch by invalidating
+      setAppliedRerollKey("");
+    },
+    [sides, recordSignal],
+  );
 
   // Run plate evaluation on selected sides
   const evaluation = useMemo<PlateEvaluation | null>(() => {
@@ -217,6 +238,19 @@ export function ResultStack({
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
 
+    // Y5 D #6 — every picked side is a strong implicit signal.
+    // Fire one signal per selected side so multi-select cooks
+    // contribute proportionally.
+    for (const s of selectedSides) {
+      recordSignal({
+        kind: "search-result-tapped",
+        facets: dishToFacets({
+          cuisineFamily: s.cuisineFamily,
+          tags: s.tags,
+        }),
+      });
+    }
+
     if (onCookSelected && selectedSides.length > 1) {
       onCookSelected(selectedSides);
     } else if (selectedSides.length === 1) {
@@ -225,7 +259,7 @@ export function ResultStack({
       // Fallback: cook first selected
       onCookThis(selectedSides[0]);
     }
-  }, [selectedSides, onCookSelected, onCookThis]);
+  }, [selectedSides, onCookSelected, onCookThis, recordSignal]);
 
   return (
     <motion.div

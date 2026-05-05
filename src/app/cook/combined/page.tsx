@@ -47,6 +47,8 @@ import {
   buildOrderedDishes,
   buildParallelHintMap,
 } from "@/lib/cook/combined-shapers";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 
 /**
  * Combined Cook Page  -  guides the user through cooking a main dish + 1-3 sides
@@ -89,6 +91,10 @@ function CombinedCookContent() {
   const { enabled: bigHands } = useBigHands();
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  // Y5 D, audit P0 #6 — fired once at the win transition with one
+  // signal per cooked dish so multi-dish cooks contribute
+  // proportionally to the editable preference profile.
+  const { recordSignal: recordPreferenceSignal } = usePreferenceProfile();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const {
     awardXP,
@@ -371,6 +377,19 @@ function CombinedCookContent() {
           });
           awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
         }
+        // One signal per cooked dish in this combined session.
+        // Pull cuisine + flavor + ingredients from `orderedDishes`
+        // — the cook-store `dishes` array carries only thin entries.
+        for (const od of orderedDishes) {
+          recordPreferenceSignal({
+            kind: "cooked",
+            facets: dishToFacets({
+              cuisineFamily: od.dish.cuisineFamily,
+              tags: od.dish.flavorProfile ?? [],
+              ingredients: od.ingredients.map((i) => i.name),
+            }),
+          });
+        }
         completeCookPhase();
       }
     } else {
@@ -390,6 +409,8 @@ function CombinedCookContent() {
     recordSkillCook,
     getNodeProgress,
     awardXP,
+    orderedDishes,
+    recordPreferenceSignal,
   ]);
 
   const handleTransitionContinue = useCallback(() => {
