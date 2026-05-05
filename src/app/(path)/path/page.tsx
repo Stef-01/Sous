@@ -11,6 +11,7 @@ import {
   Heart,
   Leaf,
   ShoppingCart,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
@@ -437,6 +438,11 @@ export default function PathPage() {
                 href: "/path/eco",
                 icon: Leaf,
                 label: "Eco Mode",
+              },
+              {
+                href: "/path/recap",
+                icon: Sparkles,
+                label: "Recap",
               },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div
