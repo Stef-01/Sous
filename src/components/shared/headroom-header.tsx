@@ -124,9 +124,12 @@ export function HeadroomHeader({
           ? { duration: 0 }
           : { type: "tween", duration: 0.18, ease: [0.32, 0.72, 0, 1] }
       }
-      className={`sticky top-0 z-[100] ${className ?? ""}`}
+      className={`sticky top-0 z-40 ${className ?? ""}`}
       // The sticky positioning lives on this outer wrapper so the
       // Y-translate animates independently of the sticky offset.
+      // z-40 is intentional: stays above in-page content (z-10)
+      // but BELOW modals + sheets (z-50/60) so dismiss buttons +
+      // sheet titles never get covered by the brand bar.
     >
       {children}
     </motion.div>

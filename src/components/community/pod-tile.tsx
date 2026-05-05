@@ -19,9 +19,9 @@
  * tile doesn't flash from "no pod" → "in pod" on first paint.
  */
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ChevronRight, Users } from "lucide-react";
+import { ChevronRight, Sparkles, Users } from "lucide-react";
 import { useCurrentPod } from "@/lib/pod/use-current-pod";
 import {
   computePodWeeklyScore,
@@ -32,9 +32,11 @@ import {
   activeMemberIds,
   listSubmissionsForWeek,
 } from "@/lib/pod/use-current-pod";
+import { DemoChallengePicker } from "./demo-challenge-picker";
 
 export function PodTile() {
   const { state, pod, weeks, mounted } = useCurrentPod();
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const view = useMemo(() => {
     if (!mounted) return { kind: "loading" as const };
@@ -85,34 +87,53 @@ export function PodTile() {
 
   if (view.kind === "no-pod") {
     return (
-      <Link
-        href="/community/pod"
-        className="flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition hover:shadow-md"
-      >
-        <span
-          aria-hidden
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10"
-        >
-          <Users
-            size={18}
-            className="text-[var(--nourish-green)]"
-            aria-hidden
-          />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
-            Cook with friends
-          </p>
-          <p className="text-[11px] text-[var(--nourish-subtext)]">
-            Form a pod, cook the same recipe each week, share photos Sunday.
-          </p>
+      <>
+        <div className="space-y-2">
+          <Link
+            href="/community/pod"
+            className="flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition hover:shadow-md"
+          >
+            <span
+              aria-hidden
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10"
+            >
+              <Users
+                size={18}
+                className="text-[var(--nourish-green)]"
+                aria-hidden
+              />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
+                Cook with friends
+              </p>
+              <p className="text-[11px] text-[var(--nourish-subtext)]">
+                Form a pod, cook the same recipe each week, share photos Sunday.
+              </p>
+            </div>
+            <ChevronRight
+              size={16}
+              className="shrink-0 text-[var(--nourish-subtext)]"
+              aria-hidden
+            />
+          </Link>
+          {/* Demo affordance: lets the user spin up a pod with AI
+              teammates + an active challenge instantly, no admin
+              gate. Substrate at src/lib/demo/seed-pod-challenge.ts. */}
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-[var(--nourish-gold)]/40 bg-[var(--nourish-gold)]/5 px-3 py-2 text-[11px] font-medium text-[var(--nourish-gold)] hover:border-[var(--nourish-gold)]/60 transition-colors"
+          >
+            <Sparkles size={12} />
+            Pick a challenge (demo with AI teammates)
+          </button>
         </div>
-        <ChevronRight
-          size={16}
-          className="shrink-0 text-[var(--nourish-subtext)]"
-          aria-hidden
+        <DemoChallengePicker
+          open={pickerOpen}
+          onClose={() => setPickerOpen(false)}
         />
-      </Link>
+      </>
     );
   }
 
