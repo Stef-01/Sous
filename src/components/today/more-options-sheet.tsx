@@ -2,7 +2,15 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { X, Moon, Users, Snowflake, Gamepad2, Sparkles } from "lucide-react";
+import {
+  X,
+  Moon,
+  Users,
+  Snowflake,
+  Gamepad2,
+  Sparkles,
+  Utensils,
+} from "lucide-react";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { CookForTwoChip } from "@/components/today/cook-for-two-chip";
 import { cn } from "@/lib/utils/cn";
@@ -13,6 +21,7 @@ interface MoreOptionsSheetProps {
   onRescueFridge?: () => void;
   onPlayGame?: () => void;
   onPersonalize?: () => void;
+  onEatOut?: () => void;
 }
 
 /**
@@ -30,6 +39,7 @@ export function MoreOptionsSheet({
   onRescueFridge,
   onPlayGame,
   onPersonalize,
+  onEatOut,
 }: MoreOptionsSheetProps) {
   const reducedMotion = useReducedMotion();
   useEffect(() => {
@@ -120,6 +130,16 @@ export function MoreOptionsSheet({
                       label="Play a game"
                       onClick={() => {
                         onPlayGame();
+                        onClose();
+                      }}
+                    />
+                  )}
+                  {onEatOut && (
+                    <SheetActionButton
+                      icon={Utensils}
+                      label="Eat out tonight"
+                      onClick={() => {
+                        onEatOut();
                         onClose();
                       }}
                     />

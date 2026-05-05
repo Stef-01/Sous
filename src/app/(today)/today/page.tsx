@@ -602,6 +602,7 @@ function TodayPageContent() {
         onRescueFridge={handleRescueFridge}
         onPlayGame={() => router.push("/games")}
         onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
+        onEatOut={() => router.push("/eat-out")}
       />
 
       {/* Profile & settings — opened by tapping the owl mascot. Holds the
