@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import sidesCatalog from "@/data/sides.json";
+import mealsCatalog from "@/data/meals.json";
 import {
   buildDemoPodState,
   DEMO_CHALLENGE_OPTIONS,
@@ -7,6 +9,13 @@ import {
 } from "./seed-pod-challenge";
 
 const NOW = new Date("2026-05-08T20:00:00Z"); // a Friday so the week is mid-active
+
+/** Set of every recipe id the catalog ships, used to verify
+ *  demo seeds don't reference non-existent recipes. */
+const CATALOG_IDS: ReadonlySet<string> = new Set([
+  ...(sidesCatalog as Array<{ id: string }>).map((s) => s.id),
+  ...(mealsCatalog as Array<{ id: string }>).map((m) => m.id),
+]);
 
 describe("DEMO_CHALLENGE_OPTIONS", () => {
   it("includes the user-flagged challenges (Beyond Meat + Spring Greens)", () => {
@@ -34,6 +43,19 @@ describe("DEMO_CHALLENGE_OPTIONS", () => {
       expect(opt.recipeSlug.length).toBeGreaterThan(0);
       expect(opt.title.length).toBeGreaterThan(0);
       expect(opt.subtitle.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("every recipeSlug points to a real catalog id (sides.json or meals.json)", () => {
+    // Regression guard: a previous version pointed at slugs that
+    // didn't exist (asparagus-pea-pesto-pasta, beyond-meat-tacos,
+    // winter-citrus-grain-bowl, lentil-and-rice-mejadra). Tap-to-
+    // cook would have failed silently.
+    for (const opt of DEMO_CHALLENGE_OPTIONS) {
+      expect(
+        CATALOG_IDS.has(opt.recipeSlug),
+        `Demo challenge "${opt.title}" recipeSlug "${opt.recipeSlug}" not found in catalog`,
+      ).toBe(true);
     }
   });
 });
@@ -155,7 +177,7 @@ describe("findChallengeOption", () => {
   });
 
   it("matches by recipe slug", () => {
-    expect(findChallengeOption("beyond-meat-tacos")?.slug).toBe(
+    expect(findChallengeOption("tacos-al-pastor")?.slug).toBe(
       "demo-beyond-meat",
     );
   });

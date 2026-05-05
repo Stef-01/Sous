@@ -56,7 +56,7 @@ export default function ContentPage() {
           <header className="space-y-3 px-4 pt-6">
             <div className="space-y-0.5">
               <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
-                Content
+                Community
               </h1>
               <p className="text-[12px] text-[var(--nourish-subtext)]">
                 Loading…

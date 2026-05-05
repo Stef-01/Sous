@@ -41,18 +41,21 @@ export interface SeedChallengeOption {
   twist: string | null;
 }
 
-/** Curated demo-challenge options the user can pick from. The
- *  slug + recipeSlug are deterministic; the demo flow lets the
- *  user demo any of them without needing real data behind it.
+/** Curated demo-challenge options the user can pick from. Each
+ *  recipeSlug points to a REAL id in src/data/sides.json or
+ *  src/data/meals.json so the cook flow downstream of the demo
+ *  seed actually loads a recipe. (Catalog verified 2026-05-04;
+ *  remapped 4 placeholder slugs that didn't exist.)
  *
  *  Includes the user-flagged challenges:
  *    - "Cook with Beyond Meat" (sponsored)
  *    - Spring Greens (eco-conscious / seasonal)
- *  Plus a couple more so the chooser feels populated. */
+ *  Plus two more so the chooser feels populated. */
 export const DEMO_CHALLENGE_OPTIONS: ReadonlyArray<SeedChallengeOption> = [
   {
     slug: "demo-spring-greens",
-    recipeSlug: "asparagus-pea-pesto-pasta",
+    // src/data/sides.json — actual asparagus dish in the catalog.
+    recipeSlug: "asparagus-stir-fry-subzi",
     title: "Spring Greens",
     subtitle:
       "Asparagus, peas, radishes — local + in-season. See your carbon avoided.",
@@ -61,7 +64,10 @@ export const DEMO_CHALLENGE_OPTIONS: ReadonlyArray<SeedChallengeOption> = [
   },
   {
     slug: "demo-beyond-meat",
-    recipeSlug: "beyond-meat-tacos",
+    // src/data/meals.json — al-pastor tacos. The demo positions
+    // these as a Beyond-Meat-protein-swap; the vegetarian twist
+    // surfaces the plant-protein angle in the pod copy.
+    recipeSlug: "tacos-al-pastor",
     title: "Cook with Beyond Meat",
     subtitle: "Three plant-protein dinners this week. Beyond Meat presents.",
     sponsoredBy: "Beyond Meat",
@@ -69,7 +75,8 @@ export const DEMO_CHALLENGE_OPTIONS: ReadonlyArray<SeedChallengeOption> = [
   },
   {
     slug: "demo-eco-week",
-    recipeSlug: "winter-citrus-grain-bowl",
+    // src/data/meals.json — plant-forward main; low-carbon.
+    recipeSlug: "bell-pepper-curry",
     title: "Eco Week",
     subtitle: "Lowest-carbon meals across the week. Track your impact.",
     sponsoredBy: null,
@@ -77,7 +84,8 @@ export const DEMO_CHALLENGE_OPTIONS: ReadonlyArray<SeedChallengeOption> = [
   },
   {
     slug: "demo-budget-week",
-    recipeSlug: "lentil-and-rice-mejadra",
+    // src/data/meals.json — classic Indian lentil meal; ~$5/serving.
+    recipeSlug: "masoor-dal",
     title: "Budget Week",
     subtitle: "$5 dinners — pantry-led + filling.",
     sponsoredBy: null,
