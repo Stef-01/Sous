@@ -54,6 +54,7 @@ import {
 import { POD_SCHEMA_VERSION } from "@/types/challenge-pod";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
 import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
+import { DeadEndShell } from "@/components/shared/dead-end-shell";
 
 export default function GuidedCookPage({
   params,
@@ -614,34 +615,20 @@ export default function GuidedCookPage({
 
   if (error || !data?.dish) {
     return (
-      <div className="min-h-full flex flex-col items-center justify-center gap-5 px-6 text-center bg-[var(--nourish-cream)]">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
-          <ChefHat
-            size={24}
-            className="text-[var(--nourish-green)]"
-            strokeWidth={1.8}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-            {data?.dish === null
-              ? "Cook steps coming soon"
-              : "Couldn\u2019t load the recipe"}
-          </p>
-          <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
-            {data?.dish === null
-              ? "This dish doesn\u2019t have a guided cook flow yet. Try another from the Today page."
-              : "Something went wrong. Check your connection and try again."}
-          </p>
-        </div>
-        <button
-          onClick={handleBackToday}
-          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
-          type="button"
-        >
-          Back to Today
-        </button>
-      </div>
+      <DeadEndShell
+        title={
+          data?.dish === null
+            ? "Cook steps coming soon"
+            : "Couldn\u2019t load the recipe"
+        }
+        body={
+          data?.dish === null
+            ? "This dish doesn\u2019t have a guided cook flow yet. Try another from the Today page."
+            : "Something went wrong. Check your connection and try again."
+        }
+        Icon={ChefHat}
+        primary={{ label: "Back to Today", onClick: handleBackToday }}
+      />
     );
   }
 
