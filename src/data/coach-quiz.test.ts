@@ -115,3 +115,52 @@ describe("Coach Quiz  -  Summary Helpers", () => {
     expect(result).not.toContain("Creamy");
   });
 });
+
+describe("Coach Quiz  -  Household / Parent Mode signal", () => {
+  function householdIndex(): number {
+    return coachQuizQuestions.findIndex((q) => q.key === "household");
+  }
+  function answerOnly(idx: number, answer: number): (number | null)[] {
+    const filled: (number | null)[] = Array(coachQuizQuestions.length).fill(
+      null,
+    );
+    filled[idx] = answer;
+    return filled;
+  }
+
+  it("returns parentMode = null when household is skipped", () => {
+    const result = computePreferencesFromAnswers(
+      Array(coachQuizQuestions.length).fill(null),
+    );
+    expect(result.parentMode).toBeNull();
+  });
+
+  it("returns parentMode kind 'none' when 'Just me' is picked", () => {
+    const idx = householdIndex();
+    const result = computePreferencesFromAnswers(answerOnly(idx, 0));
+    expect(result.parentMode).toEqual({ kind: "none" });
+  });
+
+  it("returns parentMode kind 'none' when 'Adults only' is picked", () => {
+    const idx = householdIndex();
+    const result = computePreferencesFromAnswers(answerOnly(idx, 1));
+    expect(result.parentMode).toEqual({ kind: "none" });
+  });
+
+  it("returns parentMode kind 'kids' with the right age band for each kid option", () => {
+    const idx = householdIndex();
+    const cases: Array<{ answer: number; ageBand: string }> = [
+      { answer: 2, ageBand: "1-3" },
+      { answer: 3, ageBand: "4-8" },
+      { answer: 4, ageBand: "9-13" },
+      { answer: 5, ageBand: "mix" },
+    ];
+    for (const c of cases) {
+      const result = computePreferencesFromAnswers(answerOnly(idx, c.answer));
+      expect(result.parentMode).toEqual({
+        kind: "kids",
+        ageBand: c.ageBand,
+      });
+    }
+  });
+});

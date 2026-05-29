@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { AlertTriangle, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useMistakeSuppression } from "@/lib/hooks/use-mistake-suppression";
@@ -32,6 +32,8 @@ export function MistakeChip({
   dishSlug,
   stepNumber,
 }: MistakeChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { isSuppressed, suppress, mounted } = useMistakeSuppression();
   const mistakeId =
     typeof stepNumber === "number" ? `step-${stepNumber}` : null;

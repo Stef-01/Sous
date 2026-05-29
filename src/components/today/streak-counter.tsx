@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Flame, MoreHorizontal } from "lucide-react";
 import { useRestDays } from "@/lib/hooks/use-rest-days";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
@@ -23,6 +23,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
   const [confirming, setConfirming] = useState(false);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const { canRestToday, todayIsRestDay, markRestDay, mounted } = useRestDays();
+  const reducedMotion = useReducedMotion();
   const { awardXP } = useXPSystem();
 
   // Close the popover on outside tap / Escape, matching the existing subtle
@@ -68,12 +69,32 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
             "outline-dashed outline-1 outline-offset-2 outline-[var(--nourish-warm)]/60",
         )}
       >
-        <Flame
-          size={12}
-          className="text-[var(--nourish-warm)]"
-          strokeWidth={2.2}
+        {/* W22b animation: gentle continuous flicker on the flame
+            when the streak has gathered some momentum (>= 3 days).
+            Loops scale + opacity in a slow sine; respects
+            prefers-reduced-motion (handled by motion.span at the
+            global Framer level — defaults to no animation if the OS
+            asks). Cheap, never blocks the main thread. */}
+        <motion.span
           aria-label="streak"
-        />
+          animate={
+            streak >= 3 && !reducedMotion
+              ? { scale: [1, 1.08, 1], opacity: [1, 0.85, 1] }
+              : undefined
+          }
+          transition={{
+            duration: 1.6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="inline-flex"
+        >
+          <Flame
+            size={12}
+            className="text-[var(--nourish-warm)]"
+            strokeWidth={2.2}
+          />
+        </motion.span>
         <span className="text-[11px] font-bold text-[var(--nourish-warm)]">
           {streak}
         </span>

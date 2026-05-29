@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { cn } from "@/lib/utils/cn";
@@ -46,6 +46,8 @@ export function JourneyMontage({
   completedSessions,
   limit = 10,
 }: JourneyMontageProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const latest = completedSessions
     .filter((s) => !!s.completedAt)
     .slice(0, limit);

@@ -1,6 +1,6 @@
 "use client";
 // v2
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, Trophy, CircleHelp, Flame, Award } from "lucide-react";
 
 interface PathHeaderProps {
@@ -37,6 +37,7 @@ export function PathHeader({
   badgesTotal,
   onOpenBadges,
 }: PathHeaderProps) {
+  const reducedMotion = useReducedMotion();
   const showBadges =
     typeof onOpenBadges === "function" &&
     typeof badgesUnlocked === "number" &&
@@ -71,10 +72,12 @@ export function PathHeader({
           <div className="flex shrink-0 items-center gap-2.5">
             <motion.div
               className="flex items-center gap-1 leading-none"
-              whileTap={{ scale: 0.92 }}
+              whileTap={reducedMotion ? undefined : { scale: 0.92 }}
             >
               <motion.span
-                animate={streak > 0 ? { scale: [1, 1.15, 1] } : {}}
+                animate={
+                  streak > 0 && !reducedMotion ? { scale: [1, 1.15, 1] } : {}
+                }
                 transition={{ duration: 0.4, delay: 0.6 }}
                 className="leading-none"
               >

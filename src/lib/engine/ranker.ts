@@ -37,11 +37,13 @@ export function rankCandidates(
       prepBurden: scores.prepBurden ?? 0.5,
       temperature: scores.temperature ?? 0.5,
       preference: scores.preference ?? 0.5,
+      seasonal: scores.seasonal ?? 0.5,
+      antiMonotony: scores.antiMonotony ?? 0.9,
     };
 
     const totalScore = Object.entries(weights).reduce(
       (sum, [key, weight]) =>
-        sum + fullScores[key as keyof ScoreBreakdown] * weight,
+        sum + (fullScores[key as keyof ScoreBreakdown] ?? 0) * weight,
       0,
     );
 

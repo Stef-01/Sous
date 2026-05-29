@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Timer } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -25,6 +25,8 @@ export function TimerChip({
   onToggle,
   onStart,
 }: TimerChipProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <div>
       <button

@@ -123,6 +123,65 @@ export const quizResponses = pgTable("quiz_responses", {
   answeredAt: timestamp("answered_at").defaultNow(),
 });
 
+// ── Parent Mode tables (Stage 2 W14 prep — autonomous-prep stub) ──
+// Defined now so when the founder provisions Neon and runs
+// `pnpm db:push`, server-side persistence for the localStorage hooks
+// (`useParentMode`, `useKidsAteIt`, `useExposureLog`,
+// `useRecipeOverlays`) lands without schema work. The localStorage
+// layer remains source of truth until W14 lands; these are write-
+// through targets.
+
+export const parentProfile = pgTable("parent_profile", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .references(() => users.id)
+    .notNull()
+    .unique(),
+  enabled: boolean("enabled").notNull().default(false),
+  ageBand: text("age_band").notNull().default("4-8"), // 1-3 / 4-8 / 9-13 / 14-18 / mix
+  spiceTolerance: integer("spice_tolerance").notNull().default(3), // 1..5
+  flaggedAllergens: jsonb("flagged_allergens").$type<string[]>().default([]),
+  enabledAt: timestamp("enabled_at"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const kidFriendlinessLabel = pgTable("kid_friendliness_label", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  recipeSlug: text("recipe_slug").notNull().unique(),
+  bitterLoad: integer("bitter_load").notNull(), // 0..3
+  smellIntensity: integer("smell_intensity").notNull(), // 0..3
+  textureRisk: integer("texture_risk").notNull(), // 0..3
+  visibleGreenFlecks: boolean("visible_green_flecks").notNull(),
+  deconstructable: boolean("deconstructable").notNull(),
+  heatLevel: integer("heat_level").notNull(), // 0..4
+  familiarityAnchor: boolean("familiarity_anchor").notNull(),
+  colorBrightness: integer("color_brightness").notNull(), // 0..3
+  parentModeEligible: boolean("parent_mode_eligible").notNull(),
+  rubricNote: text("rubric_note"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const kidsAteItLog = pgTable("kids_ate_it_log", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  cookSessionId: text("cook_session_id").notNull(),
+  userId: text("user_id").references(() => users.id),
+  recipeSlug: text("recipe_slug").notNull(),
+  verdict: text("verdict").notNull(), // 'yes' | 'some' | 'no'
+  loggedAt: timestamp("logged_at").defaultNow(),
+});
+
+export const recipeOverlay = pgTable("recipe_overlay", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .references(() => users.id)
+    .notNull(),
+  recipeSlug: text("recipe_slug").notNull(),
+  stepIndex: integer("step_index").notNull(),
+  note: text("note").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Performance indexes are defined in migrations via drizzle-kit generate.
 // Key indexes to create:
 // - idx_side_dish_cuisine on side_dishes(cuisine_family)

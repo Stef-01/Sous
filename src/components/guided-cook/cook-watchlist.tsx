@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { AlertTriangle, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useMistakeSuppression } from "@/lib/hooks/use-mistake-suppression";
@@ -20,6 +20,8 @@ interface CookWatchlistProps {
  * respects per-dish `useMistakeSuppression`. Silent when nothing to watch for.
  */
 export function CookWatchlist({ dishSlug, steps }: CookWatchlistProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [expanded, setExpanded] = useState(false);
   const { isSuppressed, mounted } = useMistakeSuppression();
 

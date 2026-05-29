@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import {
   Clock,
@@ -26,6 +26,8 @@ import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
  * three devices beside the hero claim); adapted to Sous's quieter aesthetic.
  */
 export function AppPreviewSection() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   return (
     <section
       aria-label="What Sous looks like"

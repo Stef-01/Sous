@@ -1,9 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Bookmark, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
+import { MetaPill } from "@/components/shared/meta-pill";
+import { GLIDE, RM } from "@/lib/utils/motion";
 
 /**
  * Pantry  -  the quiet ledger. Ingredients you've marked as "I have this".
@@ -14,6 +17,7 @@ import { usePantry } from "@/lib/hooks/use-pantry";
  */
 export default function PantryPage() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { items, mounted, remove, clear, size } = usePantry();
 
   return (
@@ -55,30 +59,35 @@ export default function PantryPage() {
             <div className="rounded-xl bg-neutral-100 h-12" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/60 px-5 py-8 text-center">
-            <Bookmark
-              size={24}
-              className="mx-auto mb-2 text-[var(--nourish-subtext)]"
-            />
-            <p className="text-sm font-medium text-[var(--nourish-dark)]">
-              Nothing stashed yet.
-            </p>
-            <p className="mt-1 text-xs text-[var(--nourish-subtext)]">
-              Tap the bookmark next to any ingredient while you cook.
-            </p>
-          </div>
+          <EmptyStateCTA
+            icon={Bookmark}
+            iconSize={24}
+            primary="Nothing stashed yet."
+            helper="Tap the bookmark next to any ingredient while you cook — the pantry remembers, so you don't have to."
+            cta={{ label: "Find something to cook" }}
+            href="/today"
+          />
         ) : (
           <>
+            <MetaPill variant="green" className="mb-3">
+              <Sparkles size={11} aria-hidden />
+              <span>Auto-applied to your next cook&rsquo;s Grab screen.</span>
+            </MetaPill>
+
             <ul className="space-y-1.5">
               <AnimatePresence initial={false}>
                 {items.map((name) => (
                   <motion.li
                     key={name}
-                    layout
-                    initial={{ opacity: 0, y: 4 }}
+                    layout={!reducedMotion}
+                    initial={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }
+                    }
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, x: 40 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 26 }}
+                    exit={
+                      reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
+                    }
+                    transition={reducedMotion ? RM : GLIDE}
                     className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
                   >
                     <Bookmark

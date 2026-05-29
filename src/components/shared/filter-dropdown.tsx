@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -51,6 +51,8 @@ export function FilterDropdown<T extends string>({
   leadingIcon,
   align = "start",
 }: FilterDropdownProps<T>) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const listboxId = useId();

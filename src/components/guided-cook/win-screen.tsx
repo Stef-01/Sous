@@ -23,6 +23,10 @@ import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
 import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
+import { KidsAteItPrompt } from "@/components/guided-cook/kids-ate-it-prompt";
+import { LunchboxSuggestChip } from "@/components/guided-cook/lunchbox-suggest-chip";
+import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
+import { WinEcoSavingsLine } from "@/components/guided-cook/win-eco-savings-line";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -54,6 +58,27 @@ interface WinScreenProps {
   onSave: () => void;
   onCookAgain: () => void;
   onBackToday: () => void;
+  /** W46 pod-challenge integration. When set, the win screen
+   *  surfaces a "Submit to pod challenge" affordance with the
+   *  pod's name + the per-cook score. Tap → onSubmit. */
+  podChallenge?: PodChallengeWinSlot | null;
+}
+
+/** Slot for the W46 pod-challenge surface on the win screen.
+ *  The cook page builds this when the user is in a pod and the
+ *  cooked dish matches the active week's challenge. */
+export interface PodChallengeWinSlot {
+  /** Display label — usually the pod name. */
+  podName: string;
+  /** Computed cook score (0-100) at win-screen render time.
+   *  Pre-computed so the toggle shows the user what they're
+   *  about to submit. */
+  computedScore: number;
+  /** True iff a submission already exists for this user-week
+   *  pair. The toggle flips to "Update" mode in that case. */
+  alreadySubmitted: boolean;
+  /** Toggle handler — caller persists the PodSubmission. */
+  onSubmit: () => void;
 }
 
 /** Where the sender's first name lives between sessions. Collected lazily
@@ -160,6 +185,65 @@ function ConfettiLayer() {
             height: p.isSquare ? p.size * 0.5 : p.size,
             backgroundColor: p.color,
             borderRadius: p.isCircle ? "50%" : 2,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/**
+ * SparkleBurst — W22b animation #7. Spring-physics burst of small
+ * sparkles from the center of the screen, fired once on mount.
+ * Complements (does NOT replace) the existing falling-confetti layer;
+ * sparkle gives the cook a sharper "earned" moment alongside the
+ * background party. Pointer-events disabled. Respects reduced-motion
+ * via Framer's useReducedMotion default.
+ */
+function SparkleBurst() {
+  // Stable per-mount sparkle layout. Math.random() is impure under
+  // the repo's react-compiler rule; useState lazy-init runs the
+  // generator exactly once and never re-runs on re-render.
+  const [sparkles] = useState(() =>
+    Array.from({ length: 14 }, (_, i) => {
+      const angle = (i / 14) * Math.PI * 2;
+      const distance = 110 + Math.random() * 60;
+      return {
+        id: i,
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance,
+        delay: i * 0.022,
+        color: i % 2 === 0 ? "#FFFFFF" : "#FFD466", // white + warm gold
+      };
+    }),
+  );
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-1/3 z-[5]"
+      aria-hidden
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      {sparkles.map((s) => (
+        <motion.span
+          key={s.id}
+          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+          animate={{
+            x: s.x,
+            y: s.y,
+            scale: [0, 1.2, 0],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 0.9,
+            delay: s.delay,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="absolute block rounded-full"
+          style={{
+            width: 8,
+            height: 8,
+            background: s.color,
+            boxShadow: `0 0 12px ${s.color}aa`,
           }}
         />
       ))}
@@ -282,6 +366,7 @@ export function WinScreen({
   onSave,
   onCookAgain,
   onBackToday,
+  podChallenge = null,
 }: WinScreenProps) {
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -424,6 +509,12 @@ export function WinScreen({
     <div className="relative">
       {/* Confetti burst  -  fixed overlay, auto-hides */}
       <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
+      {/* W22b: spring-physics sparkle burst from center, additive to
+          the falling confetti above. Sharper "earned" moment. Skipped
+          under prefers-reduced-motion. */}
+      <AnimatePresence>
+        {showConfetti && !prefersReducedMotion && <SparkleBurst />}
+      </AnimatePresence>
 
       <motion.div
         initial={false}
@@ -455,6 +546,9 @@ export function WinScreen({
           <p className="text-[var(--nourish-subtext)] text-sm leading-relaxed">
             {message}
           </p>
+          {/* Eco Mode savings line — renders only when Eco Mode is
+              on AND savings are positive. (Y5 D, audit P0 #2.) */}
+          <WinEcoSavingsLine />
         </motion.div>
 
         {/* ── Streak + skill chips ── */}
@@ -817,6 +911,74 @@ export function WinScreen({
             Again
           </motion.button>
         </motion.div>
+
+        {/* ── W46 pod-challenge submit slot ───────────────────
+             Renders only when the cook page has wired a podChallenge
+             prop (i.e. the user is in a pod and the cooked dish
+             matches the active week's challenge). */}
+        {podChallenge && (
+          <button
+            type="button"
+            onClick={podChallenge.onSubmit}
+            className={cn(
+              "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition",
+              podChallenge.alreadySubmitted
+                ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10"
+                : "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
+            )}
+          >
+            <span aria-hidden className="text-2xl">
+              🤝
+            </span>
+            <span className="min-w-0 flex-1">
+              <span
+                className={cn(
+                  "block text-[11px] font-semibold uppercase tracking-[0.06em]",
+                  podChallenge.alreadySubmitted
+                    ? "text-[var(--nourish-green)]"
+                    : "text-white/80",
+                )}
+              >
+                {podChallenge.podName}
+              </span>
+              <span
+                className={cn(
+                  "block font-serif text-sm font-semibold",
+                  podChallenge.alreadySubmitted
+                    ? "text-[var(--nourish-dark)]"
+                    : "text-white",
+                )}
+              >
+                {podChallenge.alreadySubmitted
+                  ? "Update pod submission"
+                  : "Submit to pod challenge"}
+              </span>
+            </span>
+            <span
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[12px] font-bold tabular-nums",
+                podChallenge.alreadySubmitted
+                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                  : "bg-white/20 text-white",
+              )}
+            >
+              {Math.round(podChallenge.computedScore)}
+            </span>
+          </button>
+        )}
+
+        {/* ── Parent Mode block (W12) — KidsAteIt + Lunchbox + Spotlight ─
+             All three components self-render null when PM is off so this
+             block has zero footprint for non-parents. */}
+        {dishSlug && (
+          <div className="w-full space-y-3 pt-1">
+            <KidsAteItPrompt recipeSlug={dishSlug} />
+            <NutrientSpotlight recipeSlug={dishSlug} variant="full" />
+            <div className="flex justify-center">
+              <LunchboxSuggestChip dishSlug={dishSlug} recipeName={dishName} />
+            </div>
+          </div>
+        )}
 
         {/* ── Note input (expandable) ── */}
         <AnimatePresence>

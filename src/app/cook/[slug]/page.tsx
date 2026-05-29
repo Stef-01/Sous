@@ -2,8 +2,27 @@
 
 import { use, useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ChefHat } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ChefHat, Mic } from "lucide-react";
+import { useVoiceCook } from "@/lib/voice/use-voice-cook";
+import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
+import {
+  findMostRecentActiveTimer,
+  speakableTimerAdd,
+  speakableTimerCancel,
+  speakableTimerSet,
+  speakableTimerStatus,
+} from "@/lib/voice/timer-voice";
+import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import {
+  adaptUserRecipeForCook,
+  findUserRecipeBySlug,
+} from "@/lib/cook/user-recipe-adapter";
+import {
+  PENDING_BREAKDOWN_KEY,
+  parsePendingBreakdown,
+} from "@/lib/engine/attach-score-breakdown";
+import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
@@ -26,6 +45,16 @@ import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
 import { trpc } from "@/lib/trpc/client";
+import { useCurrentPod } from "@/lib/pod/use-current-pod";
+import {
+  computeCookScore,
+  dayKey,
+  normaliseStarRating,
+} from "@/lib/pod/pod-score";
+import { POD_SCHEMA_VERSION } from "@/types/challenge-pod";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
+import { DeadEndShell } from "@/components/shared/dead-end-shell";
 
 export default function GuidedCookPage({
   params,
@@ -35,12 +64,25 @@ export default function GuidedCookPage({
   const { slug } = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
+  // W7 follow-up: useReducedMotion gate available across this file's
+  // motion sites. Currently consumed by the page-shell entrance below.
+  const reducedMotion = useReducedMotion();
 
   // Main dish context passed from the Today page (e.g. "Chicken Tikka Masala")
   const mainDishInput = searchParams.get("main") ?? undefined;
+  // W46 pod-challenge context. The pod home's "Cook this week's
+  // challenge" deeplink stamps `?pod=<id>&week=<key>` so the
+  // win-screen integration can attribute the cook back to the
+  // pod without needing extra cross-page state.
+  const podIdParam = searchParams.get("pod");
+  const weekKeyParam = searchParams.get("week");
 
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
+  // Y5 D, audit P0 #6 — completing a cook is the strongest
+  // implicit preference signal we collect. Fired in handleNext
+  // when the last cook step transitions into the win phase.
+  const { recordSignal: recordPreferenceSignal } = usePreferenceProfile();
   const { recordSkillCook, getNodeProgress } = useSkillProgress();
   const {
     awardXP,
@@ -61,6 +103,21 @@ export default function GuidedCookPage({
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
   const { enabled: bigHands } = useBigHands();
+  // W46 pod-challenge state. The pod-home "Cook this week's
+  // challenge" deeplink stamps `?pod=<id>&week=<key>`; we use
+  // those to attribute the win-screen submission back to the
+  // correct pod week. Local rating state mirrors the cook
+  // session so the pod-challenge slot can preview the score
+  // before the user submits.
+  const {
+    pod: currentPod,
+    submissions: podSubmissions,
+    upsertSubmission,
+  } = useCurrentPod();
+  const [podRating, setPodRating] = useState(0);
+  // W22 visual-mode preference + W27 page-side adoption — when on,
+  // StepCard promotes the step image and shrinks the instruction.
+  const { enabled: visualMode } = useVisualModePref();
   const sessionIdRef = useRef<string | null>(null);
   // Guard against rapid double-tap on the "Next step" button
   const isAdvancingRef = useRef(false);
@@ -81,6 +138,8 @@ export default function GuidedCookPage({
     setTotalSteps,
     toggleChip,
     startTimer,
+    stopTimer,
+    extendTimer,
     completeSession: completeCookPhase,
     reset,
   } = useCookStore();
@@ -91,18 +150,37 @@ export default function GuidedCookPage({
   }, [reset]);
 
   // Fetch steps from tRPC
-  const { data, isLoading, error } = trpc.cook.getSteps.useQuery(
-    { sideDishSlug: slug },
-    { enabled: !!slug },
-  );
+  const {
+    data: tRPCData,
+    isLoading,
+    error,
+  } = trpc.cook.getSteps.useQuery({ sideDishSlug: slug }, { enabled: !!slug });
 
-  // Cuisine family for this dish (side or meal)
+  // W31 user-recipe → cook flow integration. When the seed catalog
+  // doesn't have this slug, fall back to user-authored recipes from
+  // localStorage. The adapter shapes the result identically to the
+  // tRPC payload so the rest of the page is unconditional.
+  // CLAUDE.md rule 4: every recipe goes through the same Quest shell.
+  const { drafts: userDrafts, mounted: userDraftsMounted } = useRecipeDrafts();
+  const data = useMemo(() => {
+    if (tRPCData?.dish) return tRPCData;
+    const fromDrafts = findUserRecipeBySlug(userDrafts, slug);
+    if (fromDrafts) return adaptUserRecipeForCook(fromDrafts);
+    return tRPCData;
+  }, [tRPCData, userDrafts, slug]);
+
+  // Cuisine family for this dish (side, meal, or user recipe).
   const cuisine = useMemo(() => {
     const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
-    return staticData?.cuisineFamily ?? "unknown";
-  }, [slug]);
+    if (staticData?.cuisineFamily) return staticData.cuisineFamily;
+    const userRecipe = findUserRecipeBySlug(userDrafts, slug);
+    return userRecipe?.cuisineFamily ?? "unknown";
+  }, [slug, userDrafts]);
 
-  // Start session on mount (once data is available)
+  // Start session on mount (once data is available). Y2 W6:
+  // also attach the engine score breakdown stashed by the
+  // result-stack pick (V3 trainer dependency). Stash is single-
+  // use — read-then-clear.
   useEffect(() => {
     if (data?.dish && !sessionIdRef.current) {
       sessionIdRef.current = startSession(
@@ -111,8 +189,30 @@ export default function GuidedCookPage({
         cuisine,
         mainDishInput,
       );
+      if (typeof window !== "undefined") {
+        try {
+          const raw = sessionStorage.getItem(PENDING_BREAKDOWN_KEY);
+          const pending = parsePendingBreakdown(raw);
+          if (pending && pending.recipeSlug === slug) {
+            updateSession(sessionIdRef.current, {
+              engineScoreBreakdown: {
+                cuisineFit: pending.breakdown.cuisineFit,
+                flavorContrast: pending.breakdown.flavorContrast,
+                nutritionBalance: pending.breakdown.nutritionBalance,
+                prepBurden: pending.breakdown.prepBurden,
+                temperature: pending.breakdown.temperature,
+                preference: pending.breakdown.preference,
+                totalScore: pending.totalScore,
+              },
+            });
+            sessionStorage.removeItem(PENDING_BREAKDOWN_KEY);
+          }
+        } catch {
+          // ignore — privacy mode / storage unavailable
+        }
+      }
     }
-  }, [data?.dish, slug, cuisine, mainDishInput, startSession]);
+  }, [data?.dish, slug, cuisine, mainDishInput, startSession, updateSession]);
 
   // Filter steps by phase
   const cookSteps = useMemo(
@@ -179,6 +279,19 @@ export default function GuidedCookPage({
         });
         awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
       }
+      // Strongest implicit preference signal — fired on cook
+      // completion only, not on session start. Pulls cuisine
+      // + flavor profile + ingredient names from the static
+      // recipe data.
+      const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
+      recordPreferenceSignal({
+        kind: "cooked",
+        facets: dishToFacets({
+          cuisineFamily: cuisine,
+          tags: staticData?.flavorProfile,
+          ingredients: staticData?.ingredients?.map((i) => i.name),
+        }),
+      });
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -195,6 +308,8 @@ export default function GuidedCookPage({
     recordSkillCook,
     getNodeProgress,
     awardXP,
+    cuisine,
+    recordPreferenceSignal,
   ]);
 
   const handleToggleChip = useCallback(
@@ -246,6 +361,73 @@ export default function GuidedCookPage({
     }
   }, [currentPhase, currentStepIndex, handleBackToday, setPhase, data]);
 
+  // W21 — live cook-step-page integration of the voice-cook
+  // coordinator (Sprint-D top carry-forward). Voice cook is gated
+  // by the user's preference (toggled in profile settings); when
+  // off, the hook is a no-op. The onAction callback maps voice
+  // intents to the page's existing step navigation.
+  const voice = useVoiceCook({
+    onAction: (action) => {
+      if (currentPhase !== "cook") return;
+      switch (action.kind) {
+        case "next":
+        case "done":
+          handleNext();
+          break;
+        case "back":
+          handleBack();
+          break;
+        case "repeat":
+          if (currentCookStep) voice.speakStep(currentCookStep.instruction);
+          break;
+        case "timer-set": {
+          // W39 timer-voice wiring. Voice "set 5 minutes" creates
+          // a labelled "Voice timer" so the user can distinguish
+          // it from chip-spawned timers. Speak a short
+          // confirmation so the user knows it took.
+          startTimer(action.seconds, "Voice timer");
+          voice.speakStep(speakableTimerSet(action.seconds));
+          break;
+        }
+        case "timer-cancel": {
+          const hadActive =
+            findMostRecentActiveTimer(useCookStore.getState().timers) !== null;
+          stopTimer();
+          voice.speakStep(speakableTimerCancel(hadActive));
+          break;
+        }
+        case "timer-status": {
+          voice.speakStep(speakableTimerStatus(useCookStore.getState().timers));
+          break;
+        }
+        case "timer-add": {
+          const beforeActive = findMostRecentActiveTimer(
+            useCookStore.getState().timers,
+          );
+          extendTimer(action.seconds);
+          // `extendTimer` is a no-op when no active timer exists,
+          // so we can derive the applied flag from the snapshot
+          // we took before the call.
+          voice.speakStep(
+            speakableTimerAdd(action.seconds, beforeActive !== null),
+          );
+          break;
+        }
+        case "ignore":
+          break;
+      }
+    },
+  });
+
+  // Coach-voice trigger: speak the current step's instruction
+  // when the user lands on a new step (only while voice cook is on).
+  useEffect(() => {
+    if (!voice.enabled) return;
+    if (currentPhase !== "cook") return;
+    if (!currentCookStep) return;
+    voice.speakStep(currentCookStep.instruction);
+  }, [voice, currentPhase, currentStepIndex, currentCookStep]);
+
   const handleSelectSides = useCallback(() => {
     if (!data?.dish) return;
     reset();
@@ -281,6 +463,7 @@ export default function GuidedCookPage({
 
   const handleRate = useCallback(
     (stars: number) => {
+      setPodRating(stars);
       if (sessionIdRef.current) {
         updateSession(sessionIdRef.current, { rating: stars });
         awardXP("rate_dish", XP_AWARDS.RATE_DISH);
@@ -305,9 +488,98 @@ export default function GuidedCookPage({
     setWinMeta((prev) => ({ ...prev, saved: true }));
   }, [updateSession]);
 
+  // W46 pod-challenge slot composition. Active iff:
+  //   - the URL stamps a pod id + week that matches the local pod
+  //   - the pod's owner = "the user on this device" (V1
+  //     single-device assumption; auth-tied id when Y2 lands)
+  //   - the cook's recipe slug matches the dish slug (so a user
+  //     who navigated to a different recipe doesn't accidentally
+  //     submit to the wrong week)
+  const podSlotActive =
+    currentPod !== null &&
+    podIdParam === currentPod.id &&
+    weekKeyParam !== null &&
+    weekKeyParam.length > 0;
+  const existingPodSubmission = useMemo(() => {
+    if (!podSlotActive || !currentPod) return null;
+    for (const sub of Object.values(podSubmissions)) {
+      if (
+        sub.podId === currentPod.id &&
+        sub.weekKey === weekKeyParam &&
+        sub.memberId === currentPod.ownerId
+      ) {
+        return sub;
+      }
+    }
+    return null;
+  }, [podSlotActive, currentPod, podSubmissions, weekKeyParam]);
+  const podStepCompletion =
+    cookSteps.length > 0 ? Math.min(currentStepIndex / cookSteps.length, 1) : 0;
+  const podComputedScore = useMemo(
+    () =>
+      computeCookScore({
+        stepCompletion: podStepCompletion,
+        selfRating:
+          podRating > 0
+            ? normaliseStarRating(podRating)
+            : existingPodSubmission
+              ? normaliseStarRating(existingPodSubmission.selfRating)
+              : 0.6, // neutral preview before user rates
+        aesthetic: 0.5, // V1 placeholder per pod-score doc
+        captionLength: 0,
+        hasStepImage: false,
+      }),
+    [podStepCompletion, podRating, existingPodSubmission],
+  );
+
+  const handlePodSubmit = useCallback(() => {
+    if (!podSlotActive || !currentPod || !weekKeyParam) return;
+    const now = new Date();
+    const id =
+      existingPodSubmission?.id ??
+      `sub-${currentPod.id}-${weekKeyParam}-${currentPod.ownerId}-${now.getTime()}`;
+    upsertSubmission({
+      schemaVersion: POD_SCHEMA_VERSION,
+      id,
+      podId: currentPod.id,
+      weekKey: weekKeyParam,
+      memberId: currentPod.ownerId,
+      dayKey: dayKey(now),
+      submittedAt: now.toISOString(),
+      photoUri: `pod-photo-${now.getTime()}-placeholder`,
+      selfRating: podRating > 0 ? podRating : 4,
+      caption: null,
+      donateTags: [],
+      stepCompletion: podStepCompletion,
+      aestheticScore: 0.5,
+      hasStepImage: false,
+      computedScore: podComputedScore,
+    });
+    toast.push({
+      variant: "success",
+      title: existingPodSubmission
+        ? "Pod submission updated"
+        : "Submitted to pod",
+      body: `${Math.round(podComputedScore)}/100 toward this week.`,
+      dedupKey: "pod-submitted",
+    });
+  }, [
+    podSlotActive,
+    currentPod,
+    weekKeyParam,
+    existingPodSubmission,
+    upsertSubmission,
+    podRating,
+    podStepCompletion,
+    podComputedScore,
+  ]);
+
   // ── Loading / error states ────────────────────────
 
-  if (isLoading) {
+  // W31: hold the loading state until the user-drafts hook has
+  // hydrated. Otherwise a user-authored recipe briefly shows the
+  // "Cook steps coming soon" screen while localStorage resolves.
+  if (isLoading || (!tRPCData?.dish && !userDraftsMounted)) {
     return (
       <div className="min-h-full bg-[var(--nourish-cream)]">
         {/* Header skeleton */}
@@ -343,34 +615,20 @@ export default function GuidedCookPage({
 
   if (error || !data?.dish) {
     return (
-      <div className="min-h-full flex flex-col items-center justify-center gap-5 px-6 text-center bg-[var(--nourish-cream)]">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
-          <ChefHat
-            size={24}
-            className="text-[var(--nourish-green)]"
-            strokeWidth={1.8}
-          />
-        </div>
-        <div className="space-y-1.5">
-          <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-            {data?.dish === null
-              ? "Cook steps coming soon"
-              : "Couldn\u2019t load the recipe"}
-          </p>
-          <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
-            {data?.dish === null
-              ? "This dish doesn\u2019t have a guided cook flow yet. Try another from the Today page."
-              : "Something went wrong. Check your connection and try again."}
-          </p>
-        </div>
-        <button
-          onClick={handleBackToday}
-          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
-          type="button"
-        >
-          Back to Today
-        </button>
-      </div>
+      <DeadEndShell
+        title={
+          data?.dish === null
+            ? "Cook steps coming soon"
+            : "Couldn\u2019t load the recipe"
+        }
+        body={
+          data?.dish === null
+            ? "This dish doesn\u2019t have a guided cook flow yet. Try another from the Today page."
+            : "Something went wrong. Check your connection and try again."
+        }
+        Icon={ChefHat}
+        primary={{ label: "Back to Today", onClick: handleBackToday }}
+      />
     );
   }
 
@@ -382,9 +640,9 @@ export default function GuidedCookPage({
     <motion.div
       data-big-hands={bigHands ? "true" : undefined}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0, y: 8 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
       <header className="app-header px-4 py-3">
@@ -406,7 +664,17 @@ export default function GuidedCookPage({
             <ArrowLeft size={20} />
           </motion.button>
           <PhaseIndicator currentPhase={currentPhase} />
-          <div className="w-8" /> {/* Spacer */}
+          {/* W21 voice-cook listening indicator. Only renders when
+              the user has voice on AND the recogniser is actually
+              listening — keeps header clutter at zero for
+              non-voice users. */}
+          {voice.enabled && voice.listening ? (
+            <MetaPill variant="green" size="xs" aria-label="Voice listening">
+              <Mic size={10} aria-hidden /> Voice
+            </MetaPill>
+          ) : (
+            <div className="w-8" />
+          )}
         </div>
       </header>
 
@@ -495,6 +763,9 @@ export default function GuidedCookPage({
               cuisineFact={currentCookStep.cuisineFact}
               donenessCue={currentCookStep.donenessCue}
               imageUrl={currentCookStep.imageUrl}
+              heroImageUrl={dish.heroImageUrl}
+              visualMode={visualMode}
+              attentionPointers={currentCookStep.attentionPointers ?? null}
               expandedChip={expandedChip}
               onToggleChip={handleToggleChip}
               onStartTimer={handleStartTimer}
@@ -526,6 +797,16 @@ export default function GuidedCookPage({
               onSave={handleSave}
               onCookAgain={handleCookAgain}
               onBackToday={handleBackToday}
+              podChallenge={
+                podSlotActive && currentPod
+                  ? {
+                      podName: currentPod.name,
+                      computedScore: podComputedScore,
+                      alreadySubmitted: existingPodSubmission !== null,
+                      onSubmit: handlePodSubmit,
+                    }
+                  : null
+              }
             />
           )}
         </AnimatePresence>

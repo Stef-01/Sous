@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { motion, type HTMLMotionProps } from "framer-motion";
+import { motion, type HTMLMotionProps, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 
 /**
@@ -67,12 +67,13 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     },
     ref,
   ) {
+    const reducedMotion = useReducedMotion();
     return (
       <motion.button
         ref={ref}
         type={type}
         disabled={disabled}
-        whileTap={disabled ? undefined : { scale: 0.92 }}
+        whileTap={disabled || reducedMotion ? undefined : { scale: 0.92 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
         className={cn(
           "inline-flex shrink-0 items-center justify-center rounded-full",

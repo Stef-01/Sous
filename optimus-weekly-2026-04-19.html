@@ -1,837 +1,1848 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Optimus Weekly Run — Apr 13 → Apr 19, 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #06080f;
-    --bg-elev: #0c1222;
-    --bg-elev-2: #131a2d;
-    --border: #1f2a44;
-    --text: #e6ecf5;
-    --text-dim: #96a2bc;
-    --text-faint: #606c86;
-    --accent: #6aa9ff;
-    --accent-2: #c0d4ff;
-    --nourish: #2D6A4F;
-    --nourish-2: #52B788;
-    --tinker: #F59E0B;
-    --tinker-2: #FCD34D;
-    --danger: #ef4444;
-    --warn: #f59e0b;
-    --ok: #22c55e;
-    --purple: #a78bfa;
-    --pink: #ec4899;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, -apple-system, sans-serif; line-height: 1.55; }
-  body { padding: 48px 32px 120px; max-width: 1280px; margin: 0 auto; }
-  header { margin-bottom: 32px; }
-  .eyebrow { font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 10px; }
-  h1 { font-size: 40px; letter-spacing: -0.03em; font-weight: 800; margin-bottom: 10px; background: linear-gradient(120deg, #fff, #6aa9ff 80%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .sub { color: var(--text-dim); font-size: 16px; max-width: 780px; }
-  .meta { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 14px; color: var(--text-faint); font-size: 13px; }
-  .meta span strong { color: var(--text-dim); font-weight: 600; }
-  /* Tab bar */
-  .tabs { display: flex; gap: 4px; padding: 6px; background: var(--bg-elev); border: 1px solid var(--border); border-radius: 14px; margin: 32px 0 28px; position: sticky; top: 12px; z-index: 20; backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
-  .tab { flex: 1; padding: 11px 14px; border-radius: 9px; color: var(--text-dim); cursor: pointer; font-weight: 600; text-align: center; font-size: 14px; border: 1px solid transparent; transition: all 0.15s ease; user-select: none; }
-  .tab:hover { background: var(--bg-elev-2); color: var(--text); }
-  .tab.active { background: linear-gradient(180deg, var(--bg-elev-2), var(--bg-elev)); color: var(--text); border-color: var(--border); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
-  .tab[data-tab="nourish"].active { color: var(--nourish-2); border-color: rgba(82,183,136,0.4); }
-  .tab[data-tab="tinker"].active { color: var(--tinker-2); border-color: rgba(252,211,77,0.4); }
-  .tab[data-tab="life"].active { color: var(--purple); border-color: rgba(167,139,250,0.35); }
-  .tab[data-tab="bumblebee"].active { color: var(--pink); border-color: rgba(236,72,153,0.35); }
-  .tab .count { display: inline-block; background: var(--bg); border-radius: 6px; padding: 1px 7px; font-size: 11px; margin-left: 6px; color: var(--text-faint); font-weight: 500; }
-  .panel { display: none; }
-  .panel.active { display: block; animation: fade 0.25s ease; }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  /* Cards */
-  .grid { display: grid; gap: 18px; }
-  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
-  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
-  .card { background: linear-gradient(160deg, var(--bg-elev), rgba(12,18,34,0.4)); border: 1px solid var(--border); border-radius: 14px; padding: 22px 22px 20px; }
-  .card.flush { padding: 22px 24px 22px; }
-  .card.urgent { border-left: 3px solid var(--danger); }
-  .card.warn { border-left: 3px solid var(--warn); }
-  .card.nourish { border-left: 3px solid var(--nourish-2); }
-  .card.tinker { border-left: 3px solid var(--tinker-2); }
-  .card h2 { font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-faint); font-weight: 700; margin-bottom: 12px; }
-  .card h3 { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 10px; color: var(--text); }
-  .card p { color: var(--text-dim); font-size: 14px; margin-bottom: 10px; }
-  .card ul { list-style: none; padding: 0; }
-  .card ul li { position: relative; padding: 6px 0 6px 20px; color: var(--text-dim); font-size: 14px; line-height: 1.55; border-bottom: 1px dashed rgba(31,42,68,0.55); }
-  .card ul li:last-child { border-bottom: none; }
-  .card ul li::before { content: "›"; position: absolute; left: 0; top: 6px; color: var(--accent); font-weight: 700; }
-  .card.nourish ul li::before { color: var(--nourish-2); }
-  .card.tinker ul li::before { color: var(--tinker-2); }
-  .card ul li strong { color: var(--text); font-weight: 600; }
-  .card ul li em { font-style: normal; color: var(--accent-2); font-weight: 500; }
-  .kbd { font-family: 'JetBrains Mono', monospace; background: var(--bg-elev-2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 7px; font-size: 12px; color: var(--accent-2); white-space: nowrap; }
-  .pill { display: inline-block; padding: 2px 9px; border-radius: 9999px; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
-  .pill.danger { background: rgba(239,68,68,0.15); color: #fecaca; border: 1px solid rgba(239,68,68,0.3); }
-  .pill.warn { background: rgba(245,158,11,0.15); color: #fde68a; border: 1px solid rgba(245,158,11,0.3); }
-  .pill.ok { background: rgba(34,197,94,0.15); color: #bbf7d0; border: 1px solid rgba(34,197,94,0.3); }
-  .pill.info { background: rgba(106,169,255,0.15); color: #bfdbfe; border: 1px solid rgba(106,169,255,0.3); }
-  .pill.purple { background: rgba(167,139,250,0.15); color: #ddd6fe; border: 1px solid rgba(167,139,250,0.3); }
-  .pill.nourish { background: rgba(82,183,136,0.15); color: #a7f3d0; border: 1px solid rgba(82,183,136,0.35); }
-  .pill.tinker { background: rgba(245,158,11,0.17); color: #fde68a; border: 1px solid rgba(245,158,11,0.35); }
-  .callout { border-left: 3px solid var(--accent); padding: 14px 16px; background: rgba(106,169,255,0.06); border-radius: 6px; font-size: 14px; color: var(--text-dim); margin: 14px 0; }
-  .callout strong { color: var(--text); }
-  .callout.nourish { border-left-color: var(--nourish-2); background: rgba(82,183,136,0.07); }
-  .callout.tinker { border-left-color: var(--tinker-2); background: rgba(252,211,77,0.08); }
-  .callout.urgent { border-left-color: var(--danger); background: rgba(239,68,68,0.07); }
-  .section-heading { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; margin: 32px 0 14px; color: var(--text); display: flex; align-items: center; gap: 12px; }
-  .section-heading::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
-  .copy-block { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; color: var(--accent-2); white-space: pre-wrap; margin-top: 12px; max-height: 240px; overflow-y: auto; line-height: 1.55; }
-  .tinker-card { background: linear-gradient(155deg, rgba(245,158,11,0.07), rgba(12,18,34,0.5)); border: 1px solid rgba(245,158,11,0.2); border-radius: 14px; padding: 20px; transition: transform 0.2s ease, border 0.2s ease; }
-  .tinker-card:hover { transform: translateY(-2px); border-color: rgba(245,158,11,0.5); }
-  .tinker-card h3 { font-size: 20px; font-weight: 800; background: linear-gradient(120deg, var(--tinker-2), var(--tinker)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 8px; }
-  .tinker-card .name { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--tinker-2); opacity: 0.7; margin-bottom: 4px; letter-spacing: 0.04em; }
-  .tinker-card p { font-size: 13.5px; color: var(--text-dim); margin-bottom: 10px; }
-  .tinker-card .meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-  .grant-row { display: grid; grid-template-columns: 120px 1fr 88px 88px; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px dashed rgba(31,42,68,0.55); font-size: 13.5px; }
-  .grant-row:last-child { border-bottom: none; }
-  .grant-row .code { font-family: 'JetBrains Mono', monospace; color: var(--text-faint); font-size: 12px; }
-  .grant-row .name { color: var(--text); font-weight: 500; }
-  .grant-row .score { font-weight: 700; color: var(--accent-2); text-align: center; }
-  .grant-row .days { color: var(--text-dim); text-align: right; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
-  .grant-row.urgent .days { color: #fecaca; }
-  .grant-row.warn .days { color: #fde68a; }
-  footer { margin-top: 80px; padding-top: 22px; border-top: 1px solid var(--border); color: var(--text-faint); font-size: 12px; text-align: center; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  .two-col { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
-  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } body { padding: 24px 16px 100px; } h1 { font-size: 28px; } }
-</style>
-</head>
-<body>
-<header>
-  <div class="eyebrow">Optimus Weekly Run &middot; v3 Dashboard</div>
-  <h1>Week of April 13 → April 19, 2026</h1>
-  <p class="sub">Meta-AI director briefing. Pulls from Granola, Airtable, Notion, Omi, Slack, and the grant registry. Five tabs: strategic state, life admin, NOURISH pipeline, Bumblebee creative sparks, and Tinker weekend builds.</p>
-  <div class="meta">
-    <span><strong>Generated:</strong> 2026-04-19 &middot; Sunday</span>
-    <span><strong>Window:</strong> Mon Apr 13 → Sun Apr 19 (7 days)</span>
-    <span><strong>Sources:</strong> Granola &times;4 · Omi 70+ · Airtable 184 · Grants 70</span>
-    <span><strong>Stefan-Brain:</strong> commit live on main</span>
-  </div>
-</header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optimus Weekly Run — Apr 13 → Apr 19, 2026</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #06080f;
+        --bg-elev: #0c1222;
+        --bg-elev-2: #131a2d;
+        --border: #1f2a44;
+        --text: #e6ecf5;
+        --text-dim: #96a2bc;
+        --text-faint: #606c86;
+        --accent: #6aa9ff;
+        --accent-2: #c0d4ff;
+        --nourish: #2d6a4f;
+        --nourish-2: #52b788;
+        --tinker: #f59e0b;
+        --tinker-2: #fcd34d;
+        --danger: #ef4444;
+        --warn: #f59e0b;
+        --ok: #22c55e;
+        --purple: #a78bfa;
+        --pink: #ec4899;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.55;
+      }
+      body {
+        padding: 48px 32px 120px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      header {
+        margin-bottom: 32px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      h1 {
+        font-size: 40px;
+        letter-spacing: -0.03em;
+        font-weight: 800;
+        margin-bottom: 10px;
+        background: linear-gradient(120deg, #fff, #6aa9ff 80%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .sub {
+        color: var(--text-dim);
+        font-size: 16px;
+        max-width: 780px;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin-top: 14px;
+        color: var(--text-faint);
+        font-size: 13px;
+      }
+      .meta span strong {
+        color: var(--text-dim);
+        font-weight: 600;
+      }
+      /* Tab bar */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        background: var(--bg-elev);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin: 32px 0 28px;
+        position: sticky;
+        top: 12px;
+        z-index: 20;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+      .tab {
+        flex: 1;
+        padding: 11px 14px;
+        border-radius: 9px;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-weight: 600;
+        text-align: center;
+        font-size: 14px;
+        border: 1px solid transparent;
+        transition: all 0.15s ease;
+        user-select: none;
+      }
+      .tab:hover {
+        background: var(--bg-elev-2);
+        color: var(--text);
+      }
+      .tab.active {
+        background: linear-gradient(180deg, var(--bg-elev-2), var(--bg-elev));
+        color: var(--text);
+        border-color: var(--border);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .tab[data-tab="nourish"].active {
+        color: var(--nourish-2);
+        border-color: rgba(82, 183, 136, 0.4);
+      }
+      .tab[data-tab="tinker"].active {
+        color: var(--tinker-2);
+        border-color: rgba(252, 211, 77, 0.4);
+      }
+      .tab[data-tab="life"].active {
+        color: var(--purple);
+        border-color: rgba(167, 139, 250, 0.35);
+      }
+      .tab[data-tab="bumblebee"].active {
+        color: var(--pink);
+        border-color: rgba(236, 72, 153, 0.35);
+      }
+      .tab .count {
+        display: inline-block;
+        background: var(--bg);
+        border-radius: 6px;
+        padding: 1px 7px;
+        font-size: 11px;
+        margin-left: 6px;
+        color: var(--text-faint);
+        font-weight: 500;
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+        animation: fade 0.25s ease;
+      }
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      /* Cards */
+      .grid {
+        display: grid;
+        gap: 18px;
+      }
+      .grid-2 {
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      }
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+      .card {
+        background: linear-gradient(
+          160deg,
+          var(--bg-elev),
+          rgba(12, 18, 34, 0.4)
+        );
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px 22px 20px;
+      }
+      .card.flush {
+        padding: 22px 24px 22px;
+      }
+      .card.urgent {
+        border-left: 3px solid var(--danger);
+      }
+      .card.warn {
+        border-left: 3px solid var(--warn);
+      }
+      .card.nourish {
+        border-left: 3px solid var(--nourish-2);
+      }
+      .card.tinker {
+        border-left: 3px solid var(--tinker-2);
+      }
+      .card h2 {
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--text-faint);
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+      .card p {
+        color: var(--text-dim);
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+      .card ul {
+        list-style: none;
+        padding: 0;
+      }
+      .card ul li {
+        position: relative;
+        padding: 6px 0 6px 20px;
+        color: var(--text-dim);
+        font-size: 14px;
+        line-height: 1.55;
+        border-bottom: 1px dashed rgba(31, 42, 68, 0.55);
+      }
+      .card ul li:last-child {
+        border-bottom: none;
+      }
+      .card ul li::before {
+        content: "›";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .card.nourish ul li::before {
+        color: var(--nourish-2);
+      }
+      .card.tinker ul li::before {
+        color: var(--tinker-2);
+      }
+      .card ul li strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .card ul li em {
+        font-style: normal;
+        color: var(--accent-2);
+        font-weight: 500;
+      }
+      .kbd {
+        font-family: "JetBrains Mono", monospace;
+        background: var(--bg-elev-2);
+        border: 1px solid var(--border);
+        border-radius: 5px;
+        padding: 1px 7px;
+        font-size: 12px;
+        color: var(--accent-2);
+        white-space: nowrap;
+      }
+      .pill {
+        display: inline-block;
+        padding: 2px 9px;
+        border-radius: 9999px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .pill.danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fecaca;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+      .pill.warn {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fde68a;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+      }
+      .pill.ok {
+        background: rgba(34, 197, 94, 0.15);
+        color: #bbf7d0;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+      .pill.info {
+        background: rgba(106, 169, 255, 0.15);
+        color: #bfdbfe;
+        border: 1px solid rgba(106, 169, 255, 0.3);
+      }
+      .pill.purple {
+        background: rgba(167, 139, 250, 0.15);
+        color: #ddd6fe;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+      }
+      .pill.nourish {
+        background: rgba(82, 183, 136, 0.15);
+        color: #a7f3d0;
+        border: 1px solid rgba(82, 183, 136, 0.35);
+      }
+      .pill.tinker {
+        background: rgba(245, 158, 11, 0.17);
+        color: #fde68a;
+        border: 1px solid rgba(245, 158, 11, 0.35);
+      }
+      .callout {
+        border-left: 3px solid var(--accent);
+        padding: 14px 16px;
+        background: rgba(106, 169, 255, 0.06);
+        border-radius: 6px;
+        font-size: 14px;
+        color: var(--text-dim);
+        margin: 14px 0;
+      }
+      .callout strong {
+        color: var(--text);
+      }
+      .callout.nourish {
+        border-left-color: var(--nourish-2);
+        background: rgba(82, 183, 136, 0.07);
+      }
+      .callout.tinker {
+        border-left-color: var(--tinker-2);
+        background: rgba(252, 211, 77, 0.08);
+      }
+      .callout.urgent {
+        border-left-color: var(--danger);
+        background: rgba(239, 68, 68, 0.07);
+      }
+      .section-heading {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 32px 0 14px;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .section-heading::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--border), transparent);
+      }
+      .copy-block {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12.5px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px 16px;
+        color: var(--accent-2);
+        white-space: pre-wrap;
+        margin-top: 12px;
+        max-height: 240px;
+        overflow-y: auto;
+        line-height: 1.55;
+      }
+      .tinker-card {
+        background: linear-gradient(
+          155deg,
+          rgba(245, 158, 11, 0.07),
+          rgba(12, 18, 34, 0.5)
+        );
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        border-radius: 14px;
+        padding: 20px;
+        transition:
+          transform 0.2s ease,
+          border 0.2s ease;
+      }
+      .tinker-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(245, 158, 11, 0.5);
+      }
+      .tinker-card h3 {
+        font-size: 20px;
+        font-weight: 800;
+        background: linear-gradient(120deg, var(--tinker-2), var(--tinker));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 8px;
+      }
+      .tinker-card .name {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
+        color: var(--tinker-2);
+        opacity: 0.7;
+        margin-bottom: 4px;
+        letter-spacing: 0.04em;
+      }
+      .tinker-card p {
+        font-size: 13.5px;
+        color: var(--text-dim);
+        margin-bottom: 10px;
+      }
+      .tinker-card .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .grant-row {
+        display: grid;
+        grid-template-columns: 120px 1fr 88px 88px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px dashed rgba(31, 42, 68, 0.55);
+        font-size: 13.5px;
+      }
+      .grant-row:last-child {
+        border-bottom: none;
+      }
+      .grant-row .code {
+        font-family: "JetBrains Mono", monospace;
+        color: var(--text-faint);
+        font-size: 12px;
+      }
+      .grant-row .name {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .grant-row .score {
+        font-weight: 700;
+        color: var(--accent-2);
+        text-align: center;
+      }
+      .grant-row .days {
+        color: var(--text-dim);
+        text-align: right;
+        font-size: 12px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .grant-row.urgent .days {
+        color: #fecaca;
+      }
+      .grant-row.warn .days {
+        color: #fde68a;
+      }
+      footer {
+        margin-top: 80px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border);
+        color: var(--text-faint);
+        font-size: 12px;
+        text-align: center;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 20px;
+      }
+      @media (max-width: 900px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+        body {
+          padding: 24px 16px 100px;
+        }
+        h1 {
+          font-size: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">Optimus Weekly Run &middot; v3 Dashboard</div>
+      <h1>Week of April 13 → April 19, 2026</h1>
+      <p class="sub">
+        Meta-AI director briefing. Pulls from Granola, Airtable, Notion, Omi,
+        Slack, and the grant registry. Five tabs: strategic state, life admin,
+        NOURISH pipeline, Bumblebee creative sparks, and Tinker weekend builds.
+      </p>
+      <div class="meta">
+        <span><strong>Generated:</strong> 2026-04-19 &middot; Sunday</span>
+        <span><strong>Window:</strong> Mon Apr 13 → Sun Apr 19 (7 days)</span>
+        <span
+          ><strong>Sources:</strong> Granola &times;4 · Omi 70+ · Airtable 184 ·
+          Grants 70</span
+        >
+        <span><strong>Stefan-Brain:</strong> commit live on main</span>
+      </div>
+    </header>
 
-<div class="tabs">
-  <div class="tab active" data-tab="optimus">⚙️ Optimus <span class="count">Strategic</span></div>
-  <div class="tab" data-tab="life">🧾 Life Admin <span class="count">OMI</span></div>
-  <div class="tab" data-tab="nourish">🌱 NOURISH <span class="count">Grants</span></div>
-  <div class="tab" data-tab="bumblebee">💡 Bumblebee <span class="count">Ideas</span></div>
-  <div class="tab" data-tab="tinker">🛠️ Tinker <span class="count">12</span></div>
-</div>
-
-<!-- ================= OPTIMUS TAB ================= -->
-<section class="panel active" id="tab-optimus">
-  <div class="section-heading">Executive brief — Stefan's week at a glance</div>
-  <div class="callout">
-    <strong>Theme of the week:</strong> Funding-system design. Four meetings, all circling the same insight — Stefan's 2026 job is <em>securing 2-year operational runway for NOURISH before the grant window closes</em>. Technical demo (Equilibrium VR) moved from gap to credibility asset; Google.org AI-for-Science is now the #1 priority grant and requires a Stanford AI-faculty anchor (Malati Shreenya Batsami identified).
-  </div>
-
-  <div class="grid grid-2" style="margin-bottom: 24px;">
-    <div class="card flush urgent">
-      <h2>🔴 This week's P0 (pressure-tested)</h2>
-      <ul>
-        <li><strong>May 11 — Global &amp; CRIT grants</strong> response window; <em>scope-of-work must land by mid-May</em>. Website polish is gating grant conversion rate.</li>
-        <li><strong>Google.org AI for Science</strong> is the highest-leverage open grant. Needs a Stanford AI-faculty intro — <em>Malati Shreenya Batsami</em> (20+ yr Stanford, care Fellowship, business-minded) is the anchor candidate.</li>
-        <li><strong>Razer proposal reply window: ~2 weeks</strong> — deadline Sun May 3. Stefan to send revised deck + ask.</li>
-        <li><strong>USCIS biometrics Thu Apr 23</strong>, San Fernando CA. Update CA address before the appointment; biometrics is non-negotiable for I-765 EAD.</li>
-        <li><strong>Travel leg</strong>: Bhubaneswar → Hyderabad → SFO around Apr 24–28. All calendar holds within this window are provisional until flights booked.</li>
-        <li><strong>Fahim hire as external stats consultant</strong> for PBDI analysis (stalled 6 months internally). Scope it this week; unblocks the diabetes manuscript.</li>
-      </ul>
-    </div>
-
-    <div class="card flush nourish">
-      <h2>🌱 NOURISH operating decisions (Apr 19 meetings)</h2>
-      <ul>
-        <li><strong>2-year operational funding target</strong> + 2–3 months buffer. Core team = 5 people at <em>4–5 hrs/wk each</em> as baseline.</li>
-        <li><strong>Scope-of-work by mid-May</strong>, BEFORE May 11 Global/CRIT response. Deliberately sequenced after website polish.</li>
-        <li><strong>Website &gt; scope-of-work</strong> in priority: near-term grant conversion lift is more valuable than aspirational planning doc.</li>
-        <li><strong>Dahlia → downstream research-coordinator manager</strong> at 4 hrs/wk (becomes "well-oiled machine" layer below Stefan).</li>
-        <li><strong>Distinction sharpened:</strong> core <em>employees</em> (5 people, scoped) vs. <em>collaborators</em> (specific asks). Collaborators get pulled in by Dahlia, not Stefan.</li>
-        <li><strong>Demo (Equilibrium VR)</strong> flipped the tech-credibility deficit. It's the new tangible leave-behind for funder meetings — replaces "look at our publications" pitch.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section-heading">Pattern recognition — 6-lens read</div>
-  <div class="grid grid-3">
-    <div class="card">
-      <h2>🧬 First-principles</h2>
-      <ul>
-        <li>Stefan's single highest-leverage output is <strong>bringing in new funding</strong>. Everything downstream depends on runway.</li>
-        <li>The <em>marginal grant application</em> this month costs &lt;6 hrs; the <em>marginal hire</em> costs months. Bias action toward more grants, not more people.</li>
-        <li>A "well-oiled machine" is a tree, not a mesh: Stefan → Dahlia → coordinators → collaborators. Every direct-report above 4 creates coordination overhead.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🏛️ Historical</h2>
-      <ul>
-        <li>NORA win at HSIL last week proved the pitch+demo+deck arc works. Apply the same sequencing to Razer and Google.org.</li>
-        <li>Septris (2010s Stanford) is the tinker archetype — a weekend side project that outlived the careers that built it. Stefan's clinical-signs-game belongs in that lineage.</li>
-        <li>Previous grant cycle: $335K+ secured extramurally; PCORI track ($600K) still active with the 60-person pilot RCT.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🧭 Contrarian</h2>
-      <ul>
-        <li>Consensus: "Write a perfect scope-of-work, then apply." Stefan's read: <em>polish the website</em>, apply broadly, iterate SoW live.</li>
-        <li>Consensus: "Don't hire externals." Stefan's read: <em>hire Fahim as external stats consultant</em> — the 6-month internal stall is worse than the cost.</li>
-        <li>Consensus: "AI is a bubble." Stefan's stated op-principle this week: <em>"If you're not learning AI, you're becoming obsolete."</em> Route all new projects through an AI lens.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🔧 Technical</h2>
-      <ul>
-        <li>Canva MCP is broken because it's bound to the Stanford account — need to re-auth against the personal account. Self-solve on disk.</li>
-        <li>Equilibrium VR demo is working — that's the artifact that carries Stefan's credibility into Google.org / Razer conversations.</li>
-        <li>Grant registry now at <strong>GR-070 (70 grants)</strong> — 12 added in last scan, 4 priority, 2 same-day closes already missed. Scheduled scan needs path-caching fix.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>💰 Economic</h2>
-      <ul>
-        <li>Budget baseline: 5 people × 4–5 hrs/wk × 24 months = <strong>~5,200 labor hours</strong>. Attach reasonable rate → translates to ~$260K–$390K labor, plus ~$60–80K overhead + 10% buffer.</li>
-        <li>Google.org grant size (AI-for-Science) well-covers 2-year runway if secured. Single-grant strategy viable if anchored by credible AI-faculty intro.</li>
-        <li>External consultants (Fahim) convert stranded time → deliverables at bounded cost. Every month PBDI stays stalled is a manuscript risk.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h2>🌍 Geopolitical</h2>
-      <ul>
-        <li>OTL contact change: <em>Putia no longer involved</em> — need new OTL point of contact before any IP conversation.</li>
-        <li>Stanford AI faculty (Malati, et al.) are the political gate for Google.org credibility — introductions are the rate-limiting step, not proposal quality.</li>
-        <li>Care Fellowship → Care Scholars pipeline is a pro-bono student-resourcing channel; worth formalizing.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section-heading">Week's meetings — decisions ledger</div>
-  <div class="grid grid-2">
-    <div class="card">
-      <h3>Sun Apr 19 — Dr. Mahari · Funding strategy &amp; research coordinators</h3>
-      <p>5:41 AM PT · 1:1 · Granola ID <span class="kbd">f45667e0</span></p>
-      <ul>
-        <li>Define roles for Dahlia, research coordinators, Stefan — scope everyone before hiring anyone else.</li>
-        <li>2-year runway + 2–3 mo buffer as the funding floor target.</li>
-        <li>Website polish now; scope of work by May 11 response window.</li>
-        <li>"Every time we talk, we get closer to what we need" — tight feedback loop confirmed as effective.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Sun Apr 19 — Team leadership, AI, Google grant</h3>
-      <p>Granola ID <span class="kbd">ed6db713</span></p>
-      <ul>
-        <li>Proactivity gap: PBDI stats analysis stalled 6 months — hire Fahim externally.</li>
-        <li>Google.org is #1 priority grant. Needs AI-faculty anchor (Malati Shreenya Batsami identified).</li>
-        <li>Razer: 2-week response window — target May 3.</li>
-        <li>"AI is the future. If you're not learning AI, you're becoming obsolete." — routed as op-principle into NOURISH.</li>
-        <li>Friday meeting scheduled for grant progress check-in.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Fri Apr 17 — Patient-clinician trust research design</h3>
-      <p>Granola · Stanford</p>
-      <ul>
-        <li>Trust as a measurable construct; threshold questions around instrument validation.</li>
-        <li>Feeds CHPR symposium poster track — May 15 deadline.</li>
-        <li>Pilot planning: 60-person sample sufficient for trust-index validation signal.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Thu Apr 16 — SPRC symposium planning &amp; poster submission</h3>
-      <p>Granola · SPRC</p>
-      <ul>
-        <li>Poster scope: Stefan's role + co-presenters.</li>
-        <li>Isabela Moise + Adrian Moise co-presenting on VR nutrition work.</li>
-        <li>Deadline path → full SPRC symposium May 15.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section-heading">What Optimus recommends this week</div>
-  <div class="card">
-    <ul>
-      <li><strong>Mon Apr 20</strong> — 90-min block: website polish sprint (hero + demo embed + publications gallery + 2 testimonials + funder-facing CTA).</li>
-      <li><strong>Tue Apr 21</strong> — Send Malati a 2-paragraph intro ask re: Google.org AI-for-Science. Include Equilibrium VR demo link.</li>
-      <li><strong>Wed Apr 22</strong> — Finalize Razer revised deck; queue for May 3 send.</li>
-      <li><strong>Thu Apr 23</strong> — USCIS biometrics (San Fernando). Half day blocked; travel home same evening.</li>
-      <li><strong>Fri Apr 24</strong> — Grant-progress check-in (standing w/ Dr. Mahari). Ship Fahim stats consultant scope by EoD.</li>
-      <li><strong>Sat Apr 25</strong> — Travel Bhubaneswar → Hyderabad → SFO if flights book. Otherwise catch-up day.</li>
-      <li><strong>Sun Apr 26</strong> — Tinker weekend: pick 1 of the 12 ideas below, ship a playable prototype.</li>
-      <li><strong>Throughout</strong> — fix Canva MCP (personal account re-auth); resolve OTL contact-handoff; test scheduled-task path-caching fix for grant-discovery-scan.</li>
-    </ul>
-  </div>
-</section>
-
-<!-- ================= LIFE ADMIN TAB ================= -->
-<section class="panel" id="tab-life">
-  <div class="section-heading">🧾 Life Admin — personal stack derived from Omi + Airtable</div>
-  <div class="callout" style="border-left-color: var(--purple); background: rgba(167,139,250,0.07);">
-    <strong>The life-admin load is real.</strong> Stefan is simultaneously running NOURISH, Macquarie MD final year (Class 2026), an EAD application with USCIS, cross-Pacific travel, a tinker pipeline, and a research portfolio across Stanford. Every item below has a <em>single primary next action</em> — no open-ended ambiguity.
-  </div>
-
-  <div class="grid grid-2">
-    <div class="card urgent">
-      <h2>🛂 Immigration &amp; travel (next 14 days)</h2>
-      <ul>
-        <li><strong>Thu Apr 23 — USCIS biometrics</strong>, San Fernando CA. <span class="pill danger">Non-skippable</span></li>
-        <li>Update <strong>address to California</strong> on the I-765 (IOE9361516198) <em>before</em> the appointment.</li>
-        <li>Flight plan: Bhubaneswar (BBI) → Hyderabad (HYD) → San Francisco (SFO), Apr 24–28 window. Book by Tue Apr 21.</li>
-        <li>Check-in with Australian side: Macquarie MD rotation conflicts, clinical placement blocks.</li>
-        <li>Tax return — confirm filing status (US ↔ AU dual) before EAD interview follows up.</li>
-        <li>Confirm I-765 receipt notice is on record; bring hard copy + passport to biometrics.</li>
-      </ul>
-    </div>
-
-    <div class="card warn">
-      <h2>💻 Tooling repair</h2>
-      <ul>
-        <li><strong>Canva MCP broken</strong> — connected to Stanford account, Stefan editing on personal. Re-auth from personal Canva account. <span class="pill warn">Self-solve</span></li>
-        <li>Sanity-check Notion MCP auth (latest 2 hub pages fetched successfully — clear).</li>
-        <li>Airtable MCP filter syntax — prior 400 on `isWithin pastNumberOfDays`; fall back to client-side filtering for date windows.</li>
-        <li>Scheduled-task sandbox has no GitHub credential store — commits land but `push` blocks. Either (a) ship a credential helper into the scheduled sandbox, or (b) push from Windows host at day end.</li>
-        <li>Stefan-Brain concurrency: multiple sessions writing `.git/index.lock` simultaneously. Serialize scheduled tasks that touch the vault.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>💳 Finances &amp; admin</h2>
-      <ul>
-        <li>Confirm Dalia payroll ($16/hr × ~3 hrs/wk) and forward-plan the bump if Nepal grant lands.</li>
-        <li>Audit NOURISH research-coordinator baseline at 4–5 hrs/wk × 5 people for a 24-month budget.</li>
-        <li>Insurance + visa records — update California residency to keep EAD processing clean.</li>
-        <li>Macquarie fees / enrollment — confirm 2026 Class dates and any outstanding admin.</li>
-        <li>Stanford Research Tech paperwork renewal — check expiry before travel.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>🧠 Stefan-Brain housekeeping</h2>
-      <ul>
-        <li>Knowledge graph logger ran nightly: <em>Apr 18 vault restructure → 190 people pages, research/ collapsed to 4 subfolders</em> (commit <span class="kbd">e622231</span>).</li>
-        <li><strong>Apr 19 strategic enrichment landed:</strong> NOURISH strategy section, Malati tier-1 anchor page, 10 decisions captured from 2 meetings.</li>
-        <li>Unresolved names queue: Shea Ready, Zott Ward, Professor Attun — confirm spellings before any outbound.</li>
-        <li>Airtable Collaborators table at 53 records (up from 2). All high-confidence names populated; 22 borderlines deferred for Stefan decision.</li>
-        <li>Push origin master from Windows host tonight — scheduled sandbox commit is local-only.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>👥 Personal circle — mentions this week</h2>
-      <ul>
-        <li><strong>Dr. Mahari</strong> — funding strategist; standing Sun night + Fri grant check-in.</li>
-        <li><strong>Malati Shreenya Batsami</strong> — new tier-1 Stanford AI-faculty anchor, 20+ yrs, business-minded, South Indian. Highest-leverage intro of the month.</li>
-        <li><strong>Fahim Abassi</strong> — target external stats consultant; scope to send.</li>
-        <li><strong>Rich Wittman</strong> — coordinator broker, helps with research-assistant pipeline.</li>
-        <li><strong>Dahlia</strong> — about to become downstream manager at 4 hrs/wk.</li>
-        <li><strong>Isabela + Adrian Moise</strong> — VR nutrition co-presenters; SPRC symposium May 15.</li>
-        <li><strong>Razer sponsor contact</strong> — revised pitch reply deadline ≈ May 3.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>📅 Airtable Task Registry — overdue hot list</h2>
-      <ul>
-        <li>184 total tasks pulled. Focus on the ~20 overdue &gt; 7 days with a named owner.</li>
-        <li>PBDI stats analysis — stalled internally, route to Fahim this week.</li>
-        <li>PFEME grant materials handoff to Fahim &amp; Linda — check status.</li>
-        <li>CHPR symposium poster — slot for May 15; start outline.</li>
-        <li>NOURISH cookbook draft review — flagged as P2.</li>
-        <li>Audit the 22 "borderline" Airtable Collaborator cases — decide include / exclude before Friday.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section-heading">Copy-paste prompts (one-click ask Claude)</div>
-  <div class="grid grid-2">
-    <div class="card">
-      <h3>Ask Claude → Draft Malati intro email</h3>
-      <div class="copy-block">You are drafting a 180-word email from Stefan Thottunkal (Stanford Research Tech, NOURISH) to Dr. Malati Shreenya Batsami, care Fellowship faculty at Stanford.
-
-Goal: request a 20-min coffee/Zoom to share the Equilibrium VR demo and ask her view on Google.org AI-for-Science as a collaborator.
-
-Tone: warm, concise, confident, NOT a sales pitch. Lead with one sentence about NOURISH's $335K secured + PCORI track. Mention the 30,000+ participant reach as a scale proof. Single paragraph, one question, one specific time-offer.
-
-Sign as Stefan, include mobile (+1 650 213 7864). Skip the calendar link — she's 20+ yrs senior, invite her to choose a time.</div>
-    </div>
-    <div class="card">
-      <h3>Ask Claude → Scope Fahim's stats consulting</h3>
-      <div class="copy-block">Draft a 1-page external-consultant scope-of-work for Fahim Abassi covering PBDI diabetes analysis.
-
-Inputs: cleaned dataset already in Stanford REDCap (n ≈ 60 pilot + ~2,000 observational). Outputs: (1) descriptive stats table, (2) primary and secondary outcome regression, (3) manuscript-ready figures, (4) methods paragraph for submission.
-
-Timeline: 6 weeks. Estimated effort: 40 hrs total. Rate: Stefan to fill in. Deliverables tied to milestone payments (20% / 40% / 40%).
-
-Keep it Karpathy-simple: no boilerplate, no indemnity language, just clear scope + dates + deliverables.</div>
-    </div>
-    <div class="card">
-      <h3>Ask Claude → Website polish sprint plan</h3>
-      <div class="copy-block">Stefan's website is the #1 grant-conversion lever right now. Write a 90-minute sprint plan that gets the NOURISH landing page from "good enough" to "funder-ready."
-
-Sequence: (1) hero rewrite — 1 sentence, 1 stat, 1 CTA; (2) Equilibrium VR demo embed (priority); (3) publications gallery with 4 best citations + DOI links; (4) 2 pull-quote testimonials from Apollo / Stanford; (5) funder CTA block — "We're raising 2 years of operational runway for the NOURISH core team."
-
-Output should be a time-boxed checklist, not a design critique.</div>
-    </div>
-    <div class="card">
-      <h3>Ask Claude → Bhubaneswar → SFO flight briefing</h3>
-      <div class="copy-block">Stefan needs to be in San Fernando CA by Thu Apr 23 for USCIS biometrics. He's currently in Bhubaneswar, India.
-
-Check: typical BBI → HYD → SFO / LAX routings, arrival buffer needed for a 9 AM biometrics appointment, carry-on vs. checked luggage implications of 20+ hr transit.
-
-Output: (1) recommended departure window (latest safe day), (2) 2 alternative routings through different hubs (DEL, BOM), (3) checklist of documents to bring to biometrics (passport, I-797 receipt, appointment notice).
-
-No flight-booking — just the decision briefing.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= NOURISH TAB ================= -->
-<section class="panel" id="tab-nourish">
-  <div class="section-heading" style="color: var(--nourish-2);">🌱 NOURISH — grants pipeline &amp; operating plan</div>
-  <div class="callout nourish">
-    <strong>State of NOURISH:</strong> $335K+ extramural secured, $600K PCORI in flight, 60-person pilot RCT active, 30,000+ participants reached. Stefan's role has crystallised around <em>business development + grant acquisition + management oversight</em>. Dahlia is about to step up as downstream coordinator-manager. Google.org AI-for-Science is the highest-leverage open grant, anchored by the Equilibrium VR demo and the Malati Stanford-AI intro.
-  </div>
-
-  <div class="grid grid-2">
-    <div class="card nourish">
-      <h2>🎯 2-year runway math</h2>
-      <ul>
-        <li>Target: <strong>2 years operational + 2–3 months buffer</strong>. All grant strategy hangs off this number.</li>
-        <li>Core team: <strong>5 people</strong>, each at 4–5 hrs/wk baseline.</li>
-        <li>Labor hours: <strong>~5,200 over 24 months</strong> (5 × 4.5 × 52 × 2 × buffer 1.1).</li>
-        <li>Translate at reasonable blended rate → ~$260–390K labor; add $60–80K operational overhead + contingency.</li>
-        <li>Buffer of 2–3 months = ~8–13% cushion, enough to absorb a delayed renewal without going dark.</li>
-        <li><strong>Single large grant</strong> (Google.org, Gates, PCORI continuation) solves it; <em>bundled smaller grants</em> is the insurance strategy.</li>
-      </ul>
-    </div>
-
-    <div class="card nourish">
-      <h2>🔬 Demo as credibility flip</h2>
-      <ul>
-        <li>Equilibrium VR demo is the <strong>new funder leave-behind</strong>. Replaces "read our publications" with "try this for 90 seconds."</li>
-        <li>Directly addresses the historical gap: publications + curriculum without tangible tech = harder to fund in 2026.</li>
-        <li>Plug into <em>every</em> cold intro, Razer follow-up, and Google.org ask.</li>
-        <li>Stretch: record a 90-second walkthrough video for async intros (flights, time-zone gaps).</li>
-      </ul>
-    </div>
-
-    <div class="card nourish">
-      <h2>👥 Team architecture (the "well-oiled machine")</h2>
-      <ul>
-        <li><strong>Stefan</strong> → vision, funding, partnerships, management oversight. Not downstream execution.</li>
-        <li><strong>Dahlia</strong> → downstream coordinator-manager. 4 hrs/wk. Runs the research-coordinator layer below her.</li>
-        <li><strong>Research coordinators (3)</strong> → 4–5 hrs/wk each. Execution layer for studies, outreach, data.</li>
-        <li><strong>Collaborators (open)</strong> → pulled in for specific asks. No ongoing commitment; no payroll seat.</li>
-        <li>Scope-of-work per person by mid-May → clarity for every funder ask: "we need X hrs of Y for Z deliverable."</li>
-        <li>Apollo Hospitals remains the distribution channel ("Resources handed to diabetes patients at diagnosis").</li>
-      </ul>
-    </div>
-
-    <div class="card nourish">
-      <h2>🏛️ Key relationships this week</h2>
-      <ul>
-        <li><strong>Malati Shreenya Batsami</strong> — 20+ yr Stanford, care Fellowship, South Indian, business-minded. <em>Primary AI-faculty anchor for Google.org.</em></li>
-        <li><strong>Dr. Mahari</strong> — funding-strategy thought partner. Standing Sunday-night 1:1 + Friday grant check-in.</li>
-        <li><strong>Minal Moharir</strong> — most-mentioned collaborator (7+ threads). VR-nutrition + PCORI co-anchor.</li>
-        <li><strong>Christopher Gardner</strong> — lab PI, NOURISH genesis mentor. Keep a monthly touch.</li>
-        <li><strong>Rich Wittman</strong> — coordinator broker. Candidate sourcing for future coordinator hires.</li>
-        <li><strong>Andrew Mayne</strong> — Stanford R&amp;DE chef + teaching-kitchen co-author (merged entity after the 02:38 override).</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="section-heading" style="color: var(--nourish-2);">Grant pipeline — next 45 days</div>
-  <div class="card nourish">
-    <p style="color: var(--text-dim); margin-bottom: 14px;">From canonical registry (GR-001 through GR-070). Scores are Stefan-portfolio fit 0–100. Deadlines as of <strong>2026-04-19</strong>.</p>
-    <div class="grant-row" style="font-weight: 700; color: var(--text); border-bottom: 1px solid var(--border);">
-      <div class="code">Code</div>
-      <div class="name">Grant</div>
-      <div class="score">Score</div>
-      <div class="days">Days</div>
-    </div>
-    <div class="grant-row urgent">
-      <div class="code">GR-054</div>
-      <div class="name">Google.org AI for Science <span class="pill danger">PRIORITY</span></div>
-      <div class="score">88</div>
-      <div class="days">rolling</div>
-    </div>
-    <div class="grant-row urgent">
-      <div class="code">—</div>
-      <div class="name">Global Health grant — response window <span class="pill danger">URGENT</span></div>
-      <div class="score">—</div>
-      <div class="days">May 11</div>
-    </div>
-    <div class="grant-row urgent">
-      <div class="code">—</div>
-      <div class="name">CRIT grant — response window <span class="pill danger">URGENT</span></div>
-      <div class="score">—</div>
-      <div class="days">May 11</div>
-    </div>
-    <div class="grant-row warn">
-      <div class="code">GR-056</div>
-      <div class="name">HRSA Engaging NOURISH-aligned Services ($125M)</div>
-      <div class="score">85</div>
-      <div class="days">Jun 9</div>
-    </div>
-    <div class="grant-row warn">
-      <div class="code">GR-060</div>
-      <div class="name">NIDDK RC2 — Large Investment</div>
-      <div class="score">80</div>
-      <div class="days">Jun 3</div>
-    </div>
-    <div class="grant-row">
-      <div class="code">GR-055</div>
-      <div class="name">HRSA Telehealth Nutrition <span class="pill warn">missed same-day close</span></div>
-      <div class="score">87</div>
-      <div class="days">closed</div>
-    </div>
-    <div class="grant-row">
-      <div class="code">GR-057</div>
-      <div class="name">Ardmore Institute — Culinary Medicine</div>
-      <div class="score">78</div>
-      <div class="days">Jul 15</div>
-    </div>
-    <div class="grant-row">
-      <div class="code">GR-062</div>
-      <div class="name">NIDDK Small R01</div>
-      <div class="score">75</div>
-      <div class="days">Jul 5</div>
-    </div>
-    <div class="grant-row">
-      <div class="code">GR-063</div>
-      <div class="name">HRSA ACL NRC</div>
-      <div class="score">72</div>
-      <div class="days">Aug 1</div>
-    </div>
-    <div class="grant-row">
-      <div class="code">GR-068</div>
-      <div class="name">Gates Grand Challenges (bundled strategy)</div>
-      <div class="score">—</div>
-      <div class="days">closed LOI</div>
-    </div>
-  </div>
-
-  <div class="section-heading" style="color: var(--nourish-2);">Work streams — hygiene check</div>
-  <div class="grid grid-2">
-    <div class="card">
-      <h3>ws1 — Partnerships</h3>
-      <p>Apollo Hospitals distribution channel live. Razer in 2-week reply window. Malati intro = highest-leverage open action.</p>
-      <ul>
-        <li>Razer revised pitch deck → send by May 3.</li>
-        <li>Apollo: quarterly pulse on resource-distribution numbers.</li>
-        <li>Stanford R&amp;DE (Andrew Mayne) — standing collaborator for teaching-kitchen manuscript.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>ws2 — Education</h3>
-      <p>PFEME nutrition curriculum for Stanford family medicine residents; Dana leads.</p>
-      <ul>
-        <li>Materials handoff to Fahim &amp; Linda — confirm state.</li>
-        <li>Culturally tailored module bank — stretch to add a South-Asian specific track tied to Apollo distribution.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>ws3 — Research</h3>
-      <p>PBDI stats stalled 6 months; VR nutrition (Equilibrium) demo progressing; 60-person pilot RCT active.</p>
-      <ul>
-        <li>Fahim external scope this week.</li>
-        <li>CHPR symposium poster May 15 — Stefan + Isabela + Adrian.</li>
-        <li>Trust-index pilot (Apr 17 Granola) — instrument validation plan.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>ws4 — Website</h3>
-      <p>Now the #1 grant-conversion priority (per Apr 19 Mahari meeting).</p>
-      <ul>
-        <li>90-min sprint Mon Apr 20: hero, demo embed, publications gallery, 2 testimonials, funder CTA.</li>
-        <li>Decouple from the scope-of-work deliverable — ship early, iterate.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3>ws5 — Program Management</h3>
-      <p>Dahlia stepping up as downstream coordinator-manager. Scope-of-work by mid-May.</p>
-      <ul>
-        <li>Per-person scopes: Dahlia, Stefan, 3 research coordinators.</li>
-        <li>Distinguish employees (5) vs. collaborators (open) in Airtable Collaborators table.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ================= BUMBLEBEE TAB ================= -->
-<section class="panel" id="tab-bumblebee">
-  <div class="section-heading" style="color: var(--pink);">💡 Bumblebee — abstract creative sparks</div>
-  <div class="callout" style="border-left-color: var(--pink); background: rgba(236,72,153,0.07);">
-    Bumblebee is the <em>pre-Tinker</em> layer — abstract, half-formed ideas drawn from Stefan's voice stream, reading, and accidental conversations. No build obligation. Some will move to Tinker; most will compost into the Brain.
-  </div>
-
-  <div class="grid grid-2">
-    <div class="card">
-      <h3>🎨 Cultural Cuisine Topology Map</h3>
-      <p>Already on Vercel as a tinker fragment. What if it became a <em>public research object</em>? Community-fed taxonomy of flavor, region, cooking method. Side benefit: seeds Sous's pairing engine with user-labelled data.</p>
-      <ul>
-        <li>Vercel app exists — dust off and ship a v0 landing page.</li>
-        <li>Accept community submissions → moderator queue.</li>
-        <li>Output: regional flavor-profile heatmap = a novel <em>visualisation-as-publication</em>.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🧪 "Stefan-method" culturally tailored nutrition content engine</h3>
-      <p>Every time NOURISH makes a culturally tailored recipe, it's a one-off. What if the process was a <em>content engine</em>: input cultural cuisine, output recipe, nutrition fact sheet, resident teaching module, and patient-facing card?</p>
-      <ul>
-        <li>Closes the loop between recipe creation and curricular deployment.</li>
-        <li>Compounds PFEME and teaching-kitchen work.</li>
-        <li>AI-augmented: prompt chain as the engine; humans as the quality gate.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>📺 "What I do all day" documentary vignette</h3>
-      <p>Stefan's operating environment — Macquarie MD, Stanford research, NOURISH, Optimus, three continents — is itself a story. A 4-min vignette becomes durable recruiting + funder-relationship collateral.</p>
-      <ul>
-        <li>Script fits on 2 Airtable cards.</li>
-        <li>No professional gear needed — iPhone + 1 good microphone.</li>
-        <li>Bonus: accidental training data for a personal-assistant agent.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🧬 "Research-as-a-Game" talk</h3>
-      <p>From Septris → clinical-signs-game → Sous Games, there's a through-line: games are <em>data collection dressed up as delight</em>. A 15-min talk to Stanford biodesign crowd writes itself.</p>
-      <ul>
-        <li>Three case studies; one take-home.</li>
-        <li>Doubles as a recruitment vector for collaborators.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>✈️ Travel-compressed worklog</h3>
-      <p>Stefan's productivity spikes when cross-Pacific time-zones forbid sync meetings. What if travel weeks were <em>intentionally</em> scoped as "ship tinker projects and cold-email campaigns" weeks?</p>
-      <ul>
-        <li>Tag Apr 24–28 travel window as a <em>ship-week</em> in Airtable.</li>
-        <li>Queue 1 tinker + 10 intro emails for the flight.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🤝 "Stefan's 5 Laws" as a public one-pager</h3>
-      <p>The 5 Immutable Laws (boil the ocean · commit to main · Karpathy 4 · 6-lens RSG · always log) are Stefan's operating kernel. Published as a one-pager they become <em>recruiting filter</em>: people who read and agree self-select in.</p>
-      <ul>
-        <li>1 page, no branding, shareable URL.</li>
-        <li>Optional: attach to every cold intro after Apr 30.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🍛 Apollo × NOURISH "diagnosis day" kit</h3>
-      <p>Physical + digital kit handed to every Type-2 diabetes patient on diagnosis day at Apollo: 7-day meal cards, QR to NOURISH VR module, a pencil. Turns diagnosis into a <em>first day of training</em> rather than a sentence.</p>
-      <ul>
-        <li>Ties Apollo distribution to measurable outcomes (QR scan-through rate).</li>
-        <li>Publishable as a service-design case study.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🏗️ Autobiographical "AI for self" stack</h3>
-      <p>Stefan already has Optimus + Stefan-Brain + scheduled tasks + skills. The question is whether to <em>document the stack as a template</em> so a next-gen junior researcher can adopt it wholesale in a weekend.</p>
-      <ul>
-        <li>README + setup script + 5-min video = a hireability multiplier.</li>
-        <li>Potential talk: "What if every PhD student had a Brain?"</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🎙️ Weekly audio log ("what we tried")</h3>
-      <p>10-minute Sunday audio recap: what NOURISH tried, what worked, what broke. Private for 3 months, then public. Archives the weekly loop into something publishable as a compounded narrative.</p>
-      <ul>
-        <li>Feeds directly from Optimus Weekly Run → auto-drafted script.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>🧱 "Credibility objects" portfolio</h3>
-      <p>What are the 5 leave-behinds that flip a funder from skeptical to interested? Demo (VR), paper (one strongest), single testimonial, 60-sec video, live dashboard (this one). Treat these as a reusable pitch kit.</p>
-      <ul>
-        <li>Package once, reuse every cold intro.</li>
-        <li>Build this by May 11 response window.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ================= TINKER TAB ================= -->
-<section class="panel" id="tab-tinker">
-  <div class="section-heading" style="color: var(--tinker-2);">🛠️ Tinker — 12 Septris-archetype weekend builds</div>
-  <div class="callout tinker">
-    Each below follows the tinker rules: <em>ship in a weekend · one mechanic · cartoony · analytics layer day 1 · free on Vercel · no login · mobile-first · name matters.</em> Stefan picks one per weekend; 1 in 20 becomes real.
-  </div>
-
-  <div class="grid grid-3">
-
-    <div class="tinker-card">
-      <div class="name">idx/01 · medical</div>
-      <h3>Cliniclick</h3>
-      <p>Operation-board-game art style. Cartoon patient with visible clinical signs — spider nevi, oedema, clubbing, jaundice. Click each sign, categorise normal/abnormal, progress. <em>Analytics: what do future doctors consistently miss?</em></p>
-      <div class="meta-row">
-        <span class="pill tinker">flagship</span>
-        <span class="pill info">analytics</span>
-        <span class="pill ok">already in wiki</span>
+    <div class="tabs">
+      <div class="tab active" data-tab="optimus">
+        ⚙️ Optimus <span class="count">Strategic</span>
+      </div>
+      <div class="tab" data-tab="life">
+        🧾 Life Admin <span class="count">OMI</span>
+      </div>
+      <div class="tab" data-tab="nourish">
+        🌱 NOURISH <span class="count">Grants</span>
+      </div>
+      <div class="tab" data-tab="bumblebee">
+        💡 Bumblebee <span class="count">Ideas</span>
+      </div>
+      <div class="tab" data-tab="tinker">
+        🛠️ Tinker <span class="count">12</span>
       </div>
     </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/02 · cardiology</div>
-      <h3>CardioDash</h3>
-      <p>Rhythm strips swipe across the screen. Tap-to-label: NSR, AFib, VTach, VFib, STEMI. Difficulty scales by length + ambiguity. Research output: <em>first-year-resident arrhythmia-recognition latency distribution</em>.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill info">education</span>
+    <!-- ================= OPTIMUS TAB ================= -->
+    <section class="panel active" id="tab-optimus">
+      <div class="section-heading">
+        Executive brief — Stefan's week at a glance
       </div>
-    </div>
-
-    <div class="tinker-card">
-      <div class="name">idx/03 · triage</div>
-      <h3>TriagerRush</h3>
-      <p>ER waiting room simulator. Patients walk in with vitals + complaint; you have 10 seconds to assign ESI 1–5. Life depends on throughput. Daily leaderboard. Built-in teaching moment after every miss.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill purple">high-replay</span>
+      <div class="callout">
+        <strong>Theme of the week:</strong> Funding-system design. Four
+        meetings, all circling the same insight — Stefan's 2026 job is
+        <em
+          >securing 2-year operational runway for NOURISH before the grant
+          window closes</em
+        >. Technical demo (Equilibrium VR) moved from gap to credibility asset;
+        Google.org AI-for-Science is now the #1 priority grant and requires a
+        Stanford AI-faculty anchor (Malati Shreenya Batsami identified).
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/04 · pharmacology</div>
-      <h3>RxRave</h3>
-      <p>Rhythm game for drug mechanisms. Drug names drop from the top; tap the correct mechanism lane before they hit the bottom. Soundtrack licensed from open lofi. Accidentally trains USMLE Step 1 pharm.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill info">addictive</span>
+      <div class="grid grid-2" style="margin-bottom: 24px">
+        <div class="card flush urgent">
+          <h2>🔴 This week's P0 (pressure-tested)</h2>
+          <ul>
+            <li>
+              <strong>May 11 — Global &amp; CRIT grants</strong> response
+              window; <em>scope-of-work must land by mid-May</em>. Website
+              polish is gating grant conversion rate.
+            </li>
+            <li>
+              <strong>Google.org AI for Science</strong> is the highest-leverage
+              open grant. Needs a Stanford AI-faculty intro —
+              <em>Malati Shreenya Batsami</em> (20+ yr Stanford, care
+              Fellowship, business-minded) is the anchor candidate.
+            </li>
+            <li>
+              <strong>Razer proposal reply window: ~2 weeks</strong> — deadline
+              Sun May 3. Stefan to send revised deck + ask.
+            </li>
+            <li>
+              <strong>USCIS biometrics Thu Apr 23</strong>, San Fernando CA.
+              Update CA address before the appointment; biometrics is
+              non-negotiable for I-765 EAD.
+            </li>
+            <li>
+              <strong>Travel leg</strong>: Bhubaneswar → Hyderabad → SFO around
+              Apr 24–28. All calendar holds within this window are provisional
+              until flights booked.
+            </li>
+            <li>
+              <strong>Fahim hire as external stats consultant</strong> for PBDI
+              analysis (stalled 6 months internally). Scope it this week;
+              unblocks the diabetes manuscript.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card flush nourish">
+          <h2>🌱 NOURISH operating decisions (Apr 19 meetings)</h2>
+          <ul>
+            <li>
+              <strong>2-year operational funding target</strong> + 2–3 months
+              buffer. Core team = 5 people at <em>4–5 hrs/wk each</em> as
+              baseline.
+            </li>
+            <li>
+              <strong>Scope-of-work by mid-May</strong>, BEFORE May 11
+              Global/CRIT response. Deliberately sequenced after website polish.
+            </li>
+            <li>
+              <strong>Website &gt; scope-of-work</strong> in priority: near-term
+              grant conversion lift is more valuable than aspirational planning
+              doc.
+            </li>
+            <li>
+              <strong>Dahlia → downstream research-coordinator manager</strong>
+              at 4 hrs/wk (becomes "well-oiled machine" layer below Stefan).
+            </li>
+            <li>
+              <strong>Distinction sharpened:</strong> core <em>employees</em> (5
+              people, scoped) vs. <em>collaborators</em> (specific asks).
+              Collaborators get pulled in by Dahlia, not Stefan.
+            </li>
+            <li>
+              <strong>Demo (Equilibrium VR)</strong> flipped the
+              tech-credibility deficit. It's the new tangible leave-behind for
+              funder meetings — replaces "look at our publications" pitch.
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/05 · pharmacology</div>
-      <h3>Pillbug</h3>
-      <p>Drag pills onto patient icons — match allergies, interactions, contraindications. Cartoony pill sprites; gentle explanatory popups on error. Daily challenge mode = 5 unique patient cases.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill ok">low-risk</span>
+      <div class="section-heading">Pattern recognition — 6-lens read</div>
+      <div class="grid grid-3">
+        <div class="card">
+          <h2>🧬 First-principles</h2>
+          <ul>
+            <li>
+              Stefan's single highest-leverage output is
+              <strong>bringing in new funding</strong>. Everything downstream
+              depends on runway.
+            </li>
+            <li>
+              The <em>marginal grant application</em> this month costs &lt;6
+              hrs; the <em>marginal hire</em> costs months. Bias action toward
+              more grants, not more people.
+            </li>
+            <li>
+              A "well-oiled machine" is a tree, not a mesh: Stefan → Dahlia →
+              coordinators → collaborators. Every direct-report above 4 creates
+              coordination overhead.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>🏛️ Historical</h2>
+          <ul>
+            <li>
+              NORA win at HSIL last week proved the pitch+demo+deck arc works.
+              Apply the same sequencing to Razer and Google.org.
+            </li>
+            <li>
+              Septris (2010s Stanford) is the tinker archetype — a weekend side
+              project that outlived the careers that built it. Stefan's
+              clinical-signs-game belongs in that lineage.
+            </li>
+            <li>
+              Previous grant cycle: $335K+ secured extramurally; PCORI track
+              ($600K) still active with the 60-person pilot RCT.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>🧭 Contrarian</h2>
+          <ul>
+            <li>
+              Consensus: "Write a perfect scope-of-work, then apply." Stefan's
+              read: <em>polish the website</em>, apply broadly, iterate SoW
+              live.
+            </li>
+            <li>
+              Consensus: "Don't hire externals." Stefan's read:
+              <em>hire Fahim as external stats consultant</em> — the 6-month
+              internal stall is worse than the cost.
+            </li>
+            <li>
+              Consensus: "AI is a bubble." Stefan's stated op-principle this
+              week:
+              <em>"If you're not learning AI, you're becoming obsolete."</em>
+              Route all new projects through an AI lens.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>🔧 Technical</h2>
+          <ul>
+            <li>
+              Canva MCP is broken because it's bound to the Stanford account —
+              need to re-auth against the personal account. Self-solve on disk.
+            </li>
+            <li>
+              Equilibrium VR demo is working — that's the artifact that carries
+              Stefan's credibility into Google.org / Razer conversations.
+            </li>
+            <li>
+              Grant registry now at <strong>GR-070 (70 grants)</strong> — 12
+              added in last scan, 4 priority, 2 same-day closes already missed.
+              Scheduled scan needs path-caching fix.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>💰 Economic</h2>
+          <ul>
+            <li>
+              Budget baseline: 5 people × 4–5 hrs/wk × 24 months =
+              <strong>~5,200 labor hours</strong>. Attach reasonable rate →
+              translates to ~$260K–$390K labor, plus ~$60–80K overhead + 10%
+              buffer.
+            </li>
+            <li>
+              Google.org grant size (AI-for-Science) well-covers 2-year runway
+              if secured. Single-grant strategy viable if anchored by credible
+              AI-faculty intro.
+            </li>
+            <li>
+              External consultants (Fahim) convert stranded time → deliverables
+              at bounded cost. Every month PBDI stays stalled is a manuscript
+              risk.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>🌍 Geopolitical</h2>
+          <ul>
+            <li>
+              OTL contact change: <em>Putia no longer involved</em> — need new
+              OTL point of contact before any IP conversation.
+            </li>
+            <li>
+              Stanford AI faculty (Malati, et al.) are the political gate for
+              Google.org credibility — introductions are the rate-limiting step,
+              not proposal quality.
+            </li>
+            <li>
+              Care Fellowship → Care Scholars pipeline is a pro-bono
+              student-resourcing channel; worth formalizing.
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/06 · communication</div>
-      <h3>SPIKES Sim</h3>
-      <p>Bad-news-delivery choose-your-own-adventure. 6-step SPIKES framework, each branch a short dialogue. Output: score on clarity + empathy. Anonymous research gold for med-ed literature.</p>
-      <div class="meta-row">
-        <span class="pill tinker">2-weekend</span>
-        <span class="pill purple">publishable</span>
+      <div class="section-heading">Week's meetings — decisions ledger</div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>
+            Sun Apr 19 — Dr. Mahari · Funding strategy &amp; research
+            coordinators
+          </h3>
+          <p>5:41 AM PT · 1:1 · Granola ID <span class="kbd">f45667e0</span></p>
+          <ul>
+            <li>
+              Define roles for Dahlia, research coordinators, Stefan — scope
+              everyone before hiring anyone else.
+            </li>
+            <li>2-year runway + 2–3 mo buffer as the funding floor target.</li>
+            <li>
+              Website polish now; scope of work by May 11 response window.
+            </li>
+            <li>
+              "Every time we talk, we get closer to what we need" — tight
+              feedback loop confirmed as effective.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Sun Apr 19 — Team leadership, AI, Google grant</h3>
+          <p>Granola ID <span class="kbd">ed6db713</span></p>
+          <ul>
+            <li>
+              Proactivity gap: PBDI stats analysis stalled 6 months — hire Fahim
+              externally.
+            </li>
+            <li>
+              Google.org is #1 priority grant. Needs AI-faculty anchor (Malati
+              Shreenya Batsami identified).
+            </li>
+            <li>Razer: 2-week response window — target May 3.</li>
+            <li>
+              "AI is the future. If you're not learning AI, you're becoming
+              obsolete." — routed as op-principle into NOURISH.
+            </li>
+            <li>Friday meeting scheduled for grant progress check-in.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Fri Apr 17 — Patient-clinician trust research design</h3>
+          <p>Granola · Stanford</p>
+          <ul>
+            <li>
+              Trust as a measurable construct; threshold questions around
+              instrument validation.
+            </li>
+            <li>Feeds CHPR symposium poster track — May 15 deadline.</li>
+            <li>
+              Pilot planning: 60-person sample sufficient for trust-index
+              validation signal.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Thu Apr 16 — SPRC symposium planning &amp; poster submission</h3>
+          <p>Granola · SPRC</p>
+          <ul>
+            <li>Poster scope: Stefan's role + co-presenters.</li>
+            <li>
+              Isabela Moise + Adrian Moise co-presenting on VR nutrition work.
+            </li>
+            <li>Deadline path → full SPRC symposium May 15.</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/07 · nutrition</div>
-      <h3>CarbCrunch</h3>
-      <p>Plate appears. You have 3 seconds to guess carb grams. Real NHANES portion data. Compete against your own 7-day average. Slots into NOURISH patient-facing module road map.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill nourish">NOURISH-linked</span>
+      <div class="section-heading">What Optimus recommends this week</div>
+      <div class="card">
+        <ul>
+          <li>
+            <strong>Mon Apr 20</strong> — 90-min block: website polish sprint
+            (hero + demo embed + publications gallery + 2 testimonials +
+            funder-facing CTA).
+          </li>
+          <li>
+            <strong>Tue Apr 21</strong> — Send Malati a 2-paragraph intro ask
+            re: Google.org AI-for-Science. Include Equilibrium VR demo link.
+          </li>
+          <li>
+            <strong>Wed Apr 22</strong> — Finalize Razer revised deck; queue for
+            May 3 send.
+          </li>
+          <li>
+            <strong>Thu Apr 23</strong> — USCIS biometrics (San Fernando). Half
+            day blocked; travel home same evening.
+          </li>
+          <li>
+            <strong>Fri Apr 24</strong> — Grant-progress check-in (standing w/
+            Dr. Mahari). Ship Fahim stats consultant scope by EoD.
+          </li>
+          <li>
+            <strong>Sat Apr 25</strong> — Travel Bhubaneswar → Hyderabad → SFO
+            if flights book. Otherwise catch-up day.
+          </li>
+          <li>
+            <strong>Sun Apr 26</strong> — Tinker weekend: pick 1 of the 12 ideas
+            below, ship a playable prototype.
+          </li>
+          <li>
+            <strong>Throughout</strong> — fix Canva MCP (personal account
+            re-auth); resolve OTL contact-handoff; test scheduled-task
+            path-caching fix for grant-discovery-scan.
+          </li>
+        </ul>
       </div>
-    </div>
+    </section>
 
-    <div class="tinker-card">
-      <div class="name">idx/08 · culture</div>
-      <h3>FluencyForge</h3>
-      <p>Flashcard speed drill: South Asian ingredient ↔ English ↔ macro profile. Perfect for Apollo-distributed curriculum. Unique data: learning curves across patient literacy levels.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill nourish">research-adjacent</span>
+    <!-- ================= LIFE ADMIN TAB ================= -->
+    <section class="panel" id="tab-life">
+      <div class="section-heading">
+        🧾 Life Admin — personal stack derived from Omi + Airtable
       </div>
-    </div>
-
-    <div class="tinker-card">
-      <div class="name">idx/09 · dermatology</div>
-      <h3>MoleCheck</h3>
-      <p>Cartoony skin patches. Apply ABCDE: Asymmetry, Border, Colour, Diameter, Evolution. Benign vs. suspicious. Level up; add harder ambiguous cases from Derm net. Research: <em>heuristic-weight distribution in early learners</em>.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill info">education</span>
+      <div
+        class="callout"
+        style="
+          border-left-color: var(--purple);
+          background: rgba(167, 139, 250, 0.07);
+        "
+      >
+        <strong>The life-admin load is real.</strong> Stefan is simultaneously
+        running NOURISH, Macquarie MD final year (Class 2026), an EAD
+        application with USCIS, cross-Pacific travel, a tinker pipeline, and a
+        research portfolio across Stanford. Every item below has a
+        <em>single primary next action</em> — no open-ended ambiguity.
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/10 · anatomy</div>
-      <h3>HeartsUp!</h3>
-      <p>Cartoony organ stickers fly left-to-right across the screen. Tap-to-label before they exit. Speed ratchets. Leaderboards by year-of-school. Teaching aid that kids can beat adults at.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill purple">viral-potential</span>
+      <div class="grid grid-2">
+        <div class="card urgent">
+          <h2>🛂 Immigration &amp; travel (next 14 days)</h2>
+          <ul>
+            <li>
+              <strong>Thu Apr 23 — USCIS biometrics</strong>, San Fernando CA.
+              <span class="pill danger">Non-skippable</span>
+            </li>
+            <li>
+              Update <strong>address to California</strong> on the I-765
+              (IOE9361516198) <em>before</em> the appointment.
+            </li>
+            <li>
+              Flight plan: Bhubaneswar (BBI) → Hyderabad (HYD) → San Francisco
+              (SFO), Apr 24–28 window. Book by Tue Apr 21.
+            </li>
+            <li>
+              Check-in with Australian side: Macquarie MD rotation conflicts,
+              clinical placement blocks.
+            </li>
+            <li>
+              Tax return — confirm filing status (US ↔ AU dual) before EAD
+              interview follows up.
+            </li>
+            <li>
+              Confirm I-765 receipt notice is on record; bring hard copy +
+              passport to biometrics.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card warn">
+          <h2>💻 Tooling repair</h2>
+          <ul>
+            <li>
+              <strong>Canva MCP broken</strong> — connected to Stanford account,
+              Stefan editing on personal. Re-auth from personal Canva account.
+              <span class="pill warn">Self-solve</span>
+            </li>
+            <li>
+              Sanity-check Notion MCP auth (latest 2 hub pages fetched
+              successfully — clear).
+            </li>
+            <li>
+              Airtable MCP filter syntax — prior 400 on `isWithin
+              pastNumberOfDays`; fall back to client-side filtering for date
+              windows.
+            </li>
+            <li>
+              Scheduled-task sandbox has no GitHub credential store — commits
+              land but `push` blocks. Either (a) ship a credential helper into
+              the scheduled sandbox, or (b) push from Windows host at day end.
+            </li>
+            <li>
+              Stefan-Brain concurrency: multiple sessions writing
+              `.git/index.lock` simultaneously. Serialize scheduled tasks that
+              touch the vault.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>💳 Finances &amp; admin</h2>
+          <ul>
+            <li>
+              Confirm Dalia payroll ($16/hr × ~3 hrs/wk) and forward-plan the
+              bump if Nepal grant lands.
+            </li>
+            <li>
+              Audit NOURISH research-coordinator baseline at 4–5 hrs/wk × 5
+              people for a 24-month budget.
+            </li>
+            <li>
+              Insurance + visa records — update California residency to keep EAD
+              processing clean.
+            </li>
+            <li>
+              Macquarie fees / enrollment — confirm 2026 Class dates and any
+              outstanding admin.
+            </li>
+            <li>
+              Stanford Research Tech paperwork renewal — check expiry before
+              travel.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>🧠 Stefan-Brain housekeeping</h2>
+          <ul>
+            <li>
+              Knowledge graph logger ran nightly:
+              <em
+                >Apr 18 vault restructure → 190 people pages, research/
+                collapsed to 4 subfolders</em
+              >
+              (commit <span class="kbd">e622231</span>).
+            </li>
+            <li>
+              <strong>Apr 19 strategic enrichment landed:</strong> NOURISH
+              strategy section, Malati tier-1 anchor page, 10 decisions captured
+              from 2 meetings.
+            </li>
+            <li>
+              Unresolved names queue: Shea Ready, Zott Ward, Professor Attun —
+              confirm spellings before any outbound.
+            </li>
+            <li>
+              Airtable Collaborators table at 53 records (up from 2). All
+              high-confidence names populated; 22 borderlines deferred for
+              Stefan decision.
+            </li>
+            <li>
+              Push origin master from Windows host tonight — scheduled sandbox
+              commit is local-only.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>👥 Personal circle — mentions this week</h2>
+          <ul>
+            <li>
+              <strong>Dr. Mahari</strong> — funding strategist; standing Sun
+              night + Fri grant check-in.
+            </li>
+            <li>
+              <strong>Malati Shreenya Batsami</strong> — new tier-1 Stanford
+              AI-faculty anchor, 20+ yrs, business-minded, South Indian.
+              Highest-leverage intro of the month.
+            </li>
+            <li>
+              <strong>Fahim Abassi</strong> — target external stats consultant;
+              scope to send.
+            </li>
+            <li>
+              <strong>Rich Wittman</strong> — coordinator broker, helps with
+              research-assistant pipeline.
+            </li>
+            <li>
+              <strong>Dahlia</strong> — about to become downstream manager at 4
+              hrs/wk.
+            </li>
+            <li>
+              <strong>Isabela + Adrian Moise</strong> — VR nutrition
+              co-presenters; SPRC symposium May 15.
+            </li>
+            <li>
+              <strong>Razer sponsor contact</strong> — revised pitch reply
+              deadline ≈ May 3.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h2>📅 Airtable Task Registry — overdue hot list</h2>
+          <ul>
+            <li>
+              184 total tasks pulled. Focus on the ~20 overdue &gt; 7 days with
+              a named owner.
+            </li>
+            <li>
+              PBDI stats analysis — stalled internally, route to Fahim this
+              week.
+            </li>
+            <li>
+              PFEME grant materials handoff to Fahim &amp; Linda — check status.
+            </li>
+            <li>CHPR symposium poster — slot for May 15; start outline.</li>
+            <li>NOURISH cookbook draft review — flagged as P2.</li>
+            <li>
+              Audit the 22 "borderline" Airtable Collaborator cases — decide
+              include / exclude before Friday.
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div class="tinker-card">
-      <div class="name">idx/11 · cooking</div>
-      <h3>Matcha Mixer</h3>
-      <p>Spin two cuisine wheels — "Keralan + Oaxacan" — then you have 30 seconds to name a plausible fusion dish. AI judge scores on creativity + feasibility. Feeds Sous's flavor engine.</p>
-      <div class="meta-row">
-        <span class="pill tinker">weekend</span>
-        <span class="pill nourish">Sous-linked</span>
+      <div class="section-heading">
+        Copy-paste prompts (one-click ask Claude)
       </div>
-    </div>
-
-    <div class="tinker-card">
-      <div class="name">idx/12 · ethics</div>
-      <h3>ConsentConductor</h3>
-      <p>Simulated informed-consent conversation. Patient avatar asks 6 questions; learner picks from 3 answers per question. Graded on comprehension, compassion, and clarity. Output is research-ready qualitative data.</p>
-      <div class="meta-row">
-        <span class="pill tinker">2-weekend</span>
-        <span class="pill purple">publishable</span>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Ask Claude → Draft Malati intro email</h3>
+          <div class="copy-block">
+            You are drafting a 180-word email from Stefan Thottunkal (Stanford
+            Research Tech, NOURISH) to Dr. Malati Shreenya Batsami, care
+            Fellowship faculty at Stanford. Goal: request a 20-min coffee/Zoom
+            to share the Equilibrium VR demo and ask her view on Google.org
+            AI-for-Science as a collaborator. Tone: warm, concise, confident,
+            NOT a sales pitch. Lead with one sentence about NOURISH's $335K
+            secured + PCORI track. Mention the 30,000+ participant reach as a
+            scale proof. Single paragraph, one question, one specific
+            time-offer. Sign as Stefan, include mobile (+1 650 213 7864). Skip
+            the calendar link — she's 20+ yrs senior, invite her to choose a
+            time.
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ask Claude → Scope Fahim's stats consulting</h3>
+          <div class="copy-block">
+            Draft a 1-page external-consultant scope-of-work for Fahim Abassi
+            covering PBDI diabetes analysis. Inputs: cleaned dataset already in
+            Stanford REDCap (n ≈ 60 pilot + ~2,000 observational). Outputs: (1)
+            descriptive stats table, (2) primary and secondary outcome
+            regression, (3) manuscript-ready figures, (4) methods paragraph for
+            submission. Timeline: 6 weeks. Estimated effort: 40 hrs total. Rate:
+            Stefan to fill in. Deliverables tied to milestone payments (20% /
+            40% / 40%). Keep it Karpathy-simple: no boilerplate, no indemnity
+            language, just clear scope + dates + deliverables.
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ask Claude → Website polish sprint plan</h3>
+          <div class="copy-block">
+            Stefan's website is the #1 grant-conversion lever right now. Write a
+            90-minute sprint plan that gets the NOURISH landing page from "good
+            enough" to "funder-ready." Sequence: (1) hero rewrite — 1 sentence,
+            1 stat, 1 CTA; (2) Equilibrium VR demo embed (priority); (3)
+            publications gallery with 4 best citations + DOI links; (4) 2
+            pull-quote testimonials from Apollo / Stanford; (5) funder CTA block
+            — "We're raising 2 years of operational runway for the NOURISH core
+            team." Output should be a time-boxed checklist, not a design
+            critique.
+          </div>
+        </div>
+        <div class="card">
+          <h3>Ask Claude → Bhubaneswar → SFO flight briefing</h3>
+          <div class="copy-block">
+            Stefan needs to be in San Fernando CA by Thu Apr 23 for USCIS
+            biometrics. He's currently in Bhubaneswar, India. Check: typical BBI
+            → HYD → SFO / LAX routings, arrival buffer needed for a 9 AM
+            biometrics appointment, carry-on vs. checked luggage implications of
+            20+ hr transit. Output: (1) recommended departure window (latest
+            safe day), (2) 2 alternative routings through different hubs (DEL,
+            BOM), (3) checklist of documents to bring to biometrics (passport,
+            I-797 receipt, appointment notice). No flight-booking — just the
+            decision briefing.
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-  </div>
+    <!-- ================= NOURISH TAB ================= -->
+    <section class="panel" id="tab-nourish">
+      <div class="section-heading" style="color: var(--nourish-2)">
+        🌱 NOURISH — grants pipeline &amp; operating plan
+      </div>
+      <div class="callout nourish">
+        <strong>State of NOURISH:</strong> $335K+ extramural secured, $600K
+        PCORI in flight, 60-person pilot RCT active, 30,000+ participants
+        reached. Stefan's role has crystallised around
+        <em>business development + grant acquisition + management oversight</em
+        >. Dahlia is about to step up as downstream coordinator-manager.
+        Google.org AI-for-Science is the highest-leverage open grant, anchored
+        by the Equilibrium VR demo and the Malati Stanford-AI intro.
+      </div>
 
-  <div class="section-heading" style="color: var(--tinker-2);">Pick-one heuristic</div>
-  <div class="card tinker">
-    <ul>
-      <li><strong>Shortest path to ship:</strong> Pillbug (one screen, drag + drop, 8 drug-sprites, done).</li>
-      <li><strong>Highest analytics value:</strong> Cliniclick (already fleshed-out flagship in the wiki).</li>
-      <li><strong>Best NOURISH-linked:</strong> CarbCrunch or FluencyForge — both plug into existing curriculum.</li>
-      <li><strong>Most viral:</strong> HeartsUp! — tap-to-label is a universal kid-game mechanic.</li>
-      <li><strong>Most publishable:</strong> SPIKES Sim — med-ed journals love sim-based communication research.</li>
-      <li><strong>Choose by constraint:</strong> If 1 weekend, pick Pillbug. If a travel week, pick Cliniclick (richer analytics reward).</li>
-    </ul>
-  </div>
-</section>
+      <div class="grid grid-2">
+        <div class="card nourish">
+          <h2>🎯 2-year runway math</h2>
+          <ul>
+            <li>
+              Target: <strong>2 years operational + 2–3 months buffer</strong>.
+              All grant strategy hangs off this number.
+            </li>
+            <li>
+              Core team: <strong>5 people</strong>, each at 4–5 hrs/wk baseline.
+            </li>
+            <li>
+              Labor hours: <strong>~5,200 over 24 months</strong> (5 × 4.5 × 52
+              × 2 × buffer 1.1).
+            </li>
+            <li>
+              Translate at reasonable blended rate → ~$260–390K labor; add
+              $60–80K operational overhead + contingency.
+            </li>
+            <li>
+              Buffer of 2–3 months = ~8–13% cushion, enough to absorb a delayed
+              renewal without going dark.
+            </li>
+            <li>
+              <strong>Single large grant</strong> (Google.org, Gates, PCORI
+              continuation) solves it; <em>bundled smaller grants</em> is the
+              insurance strategy.
+            </li>
+          </ul>
+        </div>
 
-<footer>
-  Generated by Optimus Weekly Run · Stefan-Brain vault · 2026-04-19 · commit live on main<br>
-  Sources: Granola (4 meetings) · Omi transcripts (70+) · Airtable Task Registry (184) · Notion hubs (NOURISH Management, Life Admin, Bumblebee Ideas) · Grant registry (GR-001 → GR-070)<br>
-  Boil the ocean · Always commit to main · Karpathy 4 · 6-lens RSG · Always log.
-</footer>
+        <div class="card nourish">
+          <h2>🔬 Demo as credibility flip</h2>
+          <ul>
+            <li>
+              Equilibrium VR demo is the
+              <strong>new funder leave-behind</strong>. Replaces "read our
+              publications" with "try this for 90 seconds."
+            </li>
+            <li>
+              Directly addresses the historical gap: publications + curriculum
+              without tangible tech = harder to fund in 2026.
+            </li>
+            <li>
+              Plug into <em>every</em> cold intro, Razer follow-up, and
+              Google.org ask.
+            </li>
+            <li>
+              Stretch: record a 90-second walkthrough video for async intros
+              (flights, time-zone gaps).
+            </li>
+          </ul>
+        </div>
 
-<script>
-  const tabs = document.querySelectorAll('.tab');
-  const panels = document.querySelectorAll('.panel');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const id = 'tab-' + tab.getAttribute('data-tab');
-      document.getElementById(id).classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-</script>
-</body>
+        <div class="card nourish">
+          <h2>👥 Team architecture (the "well-oiled machine")</h2>
+          <ul>
+            <li>
+              <strong>Stefan</strong> → vision, funding, partnerships,
+              management oversight. Not downstream execution.
+            </li>
+            <li>
+              <strong>Dahlia</strong> → downstream coordinator-manager. 4
+              hrs/wk. Runs the research-coordinator layer below her.
+            </li>
+            <li>
+              <strong>Research coordinators (3)</strong> → 4–5 hrs/wk each.
+              Execution layer for studies, outreach, data.
+            </li>
+            <li>
+              <strong>Collaborators (open)</strong> → pulled in for specific
+              asks. No ongoing commitment; no payroll seat.
+            </li>
+            <li>
+              Scope-of-work per person by mid-May → clarity for every funder
+              ask: "we need X hrs of Y for Z deliverable."
+            </li>
+            <li>
+              Apollo Hospitals remains the distribution channel ("Resources
+              handed to diabetes patients at diagnosis").
+            </li>
+          </ul>
+        </div>
+
+        <div class="card nourish">
+          <h2>🏛️ Key relationships this week</h2>
+          <ul>
+            <li>
+              <strong>Malati Shreenya Batsami</strong> — 20+ yr Stanford, care
+              Fellowship, South Indian, business-minded.
+              <em>Primary AI-faculty anchor for Google.org.</em>
+            </li>
+            <li>
+              <strong>Dr. Mahari</strong> — funding-strategy thought partner.
+              Standing Sunday-night 1:1 + Friday grant check-in.
+            </li>
+            <li>
+              <strong>Minal Moharir</strong> — most-mentioned collaborator (7+
+              threads). VR-nutrition + PCORI co-anchor.
+            </li>
+            <li>
+              <strong>Christopher Gardner</strong> — lab PI, NOURISH genesis
+              mentor. Keep a monthly touch.
+            </li>
+            <li>
+              <strong>Rich Wittman</strong> — coordinator broker. Candidate
+              sourcing for future coordinator hires.
+            </li>
+            <li>
+              <strong>Andrew Mayne</strong> — Stanford R&amp;DE chef +
+              teaching-kitchen co-author (merged entity after the 02:38
+              override).
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-heading" style="color: var(--nourish-2)">
+        Grant pipeline — next 45 days
+      </div>
+      <div class="card nourish">
+        <p style="color: var(--text-dim); margin-bottom: 14px">
+          From canonical registry (GR-001 through GR-070). Scores are
+          Stefan-portfolio fit 0–100. Deadlines as of
+          <strong>2026-04-19</strong>.
+        </p>
+        <div
+          class="grant-row"
+          style="
+            font-weight: 700;
+            color: var(--text);
+            border-bottom: 1px solid var(--border);
+          "
+        >
+          <div class="code">Code</div>
+          <div class="name">Grant</div>
+          <div class="score">Score</div>
+          <div class="days">Days</div>
+        </div>
+        <div class="grant-row urgent">
+          <div class="code">GR-054</div>
+          <div class="name">
+            Google.org AI for Science <span class="pill danger">PRIORITY</span>
+          </div>
+          <div class="score">88</div>
+          <div class="days">rolling</div>
+        </div>
+        <div class="grant-row urgent">
+          <div class="code">—</div>
+          <div class="name">
+            Global Health grant — response window
+            <span class="pill danger">URGENT</span>
+          </div>
+          <div class="score">—</div>
+          <div class="days">May 11</div>
+        </div>
+        <div class="grant-row urgent">
+          <div class="code">—</div>
+          <div class="name">
+            CRIT grant — response window <span class="pill danger">URGENT</span>
+          </div>
+          <div class="score">—</div>
+          <div class="days">May 11</div>
+        </div>
+        <div class="grant-row warn">
+          <div class="code">GR-056</div>
+          <div class="name">HRSA Engaging NOURISH-aligned Services ($125M)</div>
+          <div class="score">85</div>
+          <div class="days">Jun 9</div>
+        </div>
+        <div class="grant-row warn">
+          <div class="code">GR-060</div>
+          <div class="name">NIDDK RC2 — Large Investment</div>
+          <div class="score">80</div>
+          <div class="days">Jun 3</div>
+        </div>
+        <div class="grant-row">
+          <div class="code">GR-055</div>
+          <div class="name">
+            HRSA Telehealth Nutrition
+            <span class="pill warn">missed same-day close</span>
+          </div>
+          <div class="score">87</div>
+          <div class="days">closed</div>
+        </div>
+        <div class="grant-row">
+          <div class="code">GR-057</div>
+          <div class="name">Ardmore Institute — Culinary Medicine</div>
+          <div class="score">78</div>
+          <div class="days">Jul 15</div>
+        </div>
+        <div class="grant-row">
+          <div class="code">GR-062</div>
+          <div class="name">NIDDK Small R01</div>
+          <div class="score">75</div>
+          <div class="days">Jul 5</div>
+        </div>
+        <div class="grant-row">
+          <div class="code">GR-063</div>
+          <div class="name">HRSA ACL NRC</div>
+          <div class="score">72</div>
+          <div class="days">Aug 1</div>
+        </div>
+        <div class="grant-row">
+          <div class="code">GR-068</div>
+          <div class="name">Gates Grand Challenges (bundled strategy)</div>
+          <div class="score">—</div>
+          <div class="days">closed LOI</div>
+        </div>
+      </div>
+
+      <div class="section-heading" style="color: var(--nourish-2)">
+        Work streams — hygiene check
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>ws1 — Partnerships</h3>
+          <p>
+            Apollo Hospitals distribution channel live. Razer in 2-week reply
+            window. Malati intro = highest-leverage open action.
+          </p>
+          <ul>
+            <li>Razer revised pitch deck → send by May 3.</li>
+            <li>Apollo: quarterly pulse on resource-distribution numbers.</li>
+            <li>
+              Stanford R&amp;DE (Andrew Mayne) — standing collaborator for
+              teaching-kitchen manuscript.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>ws2 — Education</h3>
+          <p>
+            PFEME nutrition curriculum for Stanford family medicine residents;
+            Dana leads.
+          </p>
+          <ul>
+            <li>Materials handoff to Fahim &amp; Linda — confirm state.</li>
+            <li>
+              Culturally tailored module bank — stretch to add a South-Asian
+              specific track tied to Apollo distribution.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>ws3 — Research</h3>
+          <p>
+            PBDI stats stalled 6 months; VR nutrition (Equilibrium) demo
+            progressing; 60-person pilot RCT active.
+          </p>
+          <ul>
+            <li>Fahim external scope this week.</li>
+            <li>CHPR symposium poster May 15 — Stefan + Isabela + Adrian.</li>
+            <li>
+              Trust-index pilot (Apr 17 Granola) — instrument validation plan.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>ws4 — Website</h3>
+          <p>
+            Now the #1 grant-conversion priority (per Apr 19 Mahari meeting).
+          </p>
+          <ul>
+            <li>
+              90-min sprint Mon Apr 20: hero, demo embed, publications gallery,
+              2 testimonials, funder CTA.
+            </li>
+            <li>
+              Decouple from the scope-of-work deliverable — ship early, iterate.
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>ws5 — Program Management</h3>
+          <p>
+            Dahlia stepping up as downstream coordinator-manager. Scope-of-work
+            by mid-May.
+          </p>
+          <ul>
+            <li>Per-person scopes: Dahlia, Stefan, 3 research coordinators.</li>
+            <li>
+              Distinguish employees (5) vs. collaborators (open) in Airtable
+              Collaborators table.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BUMBLEBEE TAB ================= -->
+    <section class="panel" id="tab-bumblebee">
+      <div class="section-heading" style="color: var(--pink)">
+        💡 Bumblebee — abstract creative sparks
+      </div>
+      <div
+        class="callout"
+        style="
+          border-left-color: var(--pink);
+          background: rgba(236, 72, 153, 0.07);
+        "
+      >
+        Bumblebee is the <em>pre-Tinker</em> layer — abstract, half-formed ideas
+        drawn from Stefan's voice stream, reading, and accidental conversations.
+        No build obligation. Some will move to Tinker; most will compost into
+        the Brain.
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>🎨 Cultural Cuisine Topology Map</h3>
+          <p>
+            Already on Vercel as a tinker fragment. What if it became a
+            <em>public research object</em>? Community-fed taxonomy of flavor,
+            region, cooking method. Side benefit: seeds Sous's pairing engine
+            with user-labelled data.
+          </p>
+          <ul>
+            <li>Vercel app exists — dust off and ship a v0 landing page.</li>
+            <li>Accept community submissions → moderator queue.</li>
+            <li>
+              Output: regional flavor-profile heatmap = a novel
+              <em>visualisation-as-publication</em>.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>
+            🧪 "Stefan-method" culturally tailored nutrition content engine
+          </h3>
+          <p>
+            Every time NOURISH makes a culturally tailored recipe, it's a
+            one-off. What if the process was a <em>content engine</em>: input
+            cultural cuisine, output recipe, nutrition fact sheet, resident
+            teaching module, and patient-facing card?
+          </p>
+          <ul>
+            <li>
+              Closes the loop between recipe creation and curricular deployment.
+            </li>
+            <li>Compounds PFEME and teaching-kitchen work.</li>
+            <li>
+              AI-augmented: prompt chain as the engine; humans as the quality
+              gate.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📺 "What I do all day" documentary vignette</h3>
+          <p>
+            Stefan's operating environment — Macquarie MD, Stanford research,
+            NOURISH, Optimus, three continents — is itself a story. A 4-min
+            vignette becomes durable recruiting + funder-relationship
+            collateral.
+          </p>
+          <ul>
+            <li>Script fits on 2 Airtable cards.</li>
+            <li>No professional gear needed — iPhone + 1 good microphone.</li>
+            <li>
+              Bonus: accidental training data for a personal-assistant agent.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🧬 "Research-as-a-Game" talk</h3>
+          <p>
+            From Septris → clinical-signs-game → Sous Games, there's a
+            through-line: games are
+            <em>data collection dressed up as delight</em>. A 15-min talk to
+            Stanford biodesign crowd writes itself.
+          </p>
+          <ul>
+            <li>Three case studies; one take-home.</li>
+            <li>Doubles as a recruitment vector for collaborators.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>✈️ Travel-compressed worklog</h3>
+          <p>
+            Stefan's productivity spikes when cross-Pacific time-zones forbid
+            sync meetings. What if travel weeks were
+            <em>intentionally</em> scoped as "ship tinker projects and
+            cold-email campaigns" weeks?
+          </p>
+          <ul>
+            <li>
+              Tag Apr 24–28 travel window as a <em>ship-week</em> in Airtable.
+            </li>
+            <li>Queue 1 tinker + 10 intro emails for the flight.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🤝 "Stefan's 5 Laws" as a public one-pager</h3>
+          <p>
+            The 5 Immutable Laws (boil the ocean · commit to main · Karpathy 4 ·
+            6-lens RSG · always log) are Stefan's operating kernel. Published as
+            a one-pager they become <em>recruiting filter</em>: people who read
+            and agree self-select in.
+          </p>
+          <ul>
+            <li>1 page, no branding, shareable URL.</li>
+            <li>Optional: attach to every cold intro after Apr 30.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🍛 Apollo × NOURISH "diagnosis day" kit</h3>
+          <p>
+            Physical + digital kit handed to every Type-2 diabetes patient on
+            diagnosis day at Apollo: 7-day meal cards, QR to NOURISH VR module,
+            a pencil. Turns diagnosis into a
+            <em>first day of training</em> rather than a sentence.
+          </p>
+          <ul>
+            <li>
+              Ties Apollo distribution to measurable outcomes (QR scan-through
+              rate).
+            </li>
+            <li>Publishable as a service-design case study.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🏗️ Autobiographical "AI for self" stack</h3>
+          <p>
+            Stefan already has Optimus + Stefan-Brain + scheduled tasks +
+            skills. The question is whether to
+            <em>document the stack as a template</em> so a next-gen junior
+            researcher can adopt it wholesale in a weekend.
+          </p>
+          <ul>
+            <li>
+              README + setup script + 5-min video = a hireability multiplier.
+            </li>
+            <li>Potential talk: "What if every PhD student had a Brain?"</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🎙️ Weekly audio log ("what we tried")</h3>
+          <p>
+            10-minute Sunday audio recap: what NOURISH tried, what worked, what
+            broke. Private for 3 months, then public. Archives the weekly loop
+            into something publishable as a compounded narrative.
+          </p>
+          <ul>
+            <li>
+              Feeds directly from Optimus Weekly Run → auto-drafted script.
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🧱 "Credibility objects" portfolio</h3>
+          <p>
+            What are the 5 leave-behinds that flip a funder from skeptical to
+            interested? Demo (VR), paper (one strongest), single testimonial,
+            60-sec video, live dashboard (this one). Treat these as a reusable
+            pitch kit.
+          </p>
+          <ul>
+            <li>Package once, reuse every cold intro.</li>
+            <li>Build this by May 11 response window.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TINKER TAB ================= -->
+    <section class="panel" id="tab-tinker">
+      <div class="section-heading" style="color: var(--tinker-2)">
+        🛠️ Tinker — 12 Septris-archetype weekend builds
+      </div>
+      <div class="callout tinker">
+        Each below follows the tinker rules:
+        <em
+          >ship in a weekend · one mechanic · cartoony · analytics layer day 1 ·
+          free on Vercel · no login · mobile-first · name matters.</em
+        >
+        Stefan picks one per weekend; 1 in 20 becomes real.
+      </div>
+
+      <div class="grid grid-3">
+        <div class="tinker-card">
+          <div class="name">idx/01 · medical</div>
+          <h3>Cliniclick</h3>
+          <p>
+            Operation-board-game art style. Cartoon patient with visible
+            clinical signs — spider nevi, oedema, clubbing, jaundice. Click each
+            sign, categorise normal/abnormal, progress.
+            <em>Analytics: what do future doctors consistently miss?</em>
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">flagship</span>
+            <span class="pill info">analytics</span>
+            <span class="pill ok">already in wiki</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/02 · cardiology</div>
+          <h3>CardioDash</h3>
+          <p>
+            Rhythm strips swipe across the screen. Tap-to-label: NSR, AFib,
+            VTach, VFib, STEMI. Difficulty scales by length + ambiguity.
+            Research output:
+            <em
+              >first-year-resident arrhythmia-recognition latency
+              distribution</em
+            >.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill info">education</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/03 · triage</div>
+          <h3>TriagerRush</h3>
+          <p>
+            ER waiting room simulator. Patients walk in with vitals + complaint;
+            you have 10 seconds to assign ESI 1–5. Life depends on throughput.
+            Daily leaderboard. Built-in teaching moment after every miss.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill purple">high-replay</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/04 · pharmacology</div>
+          <h3>RxRave</h3>
+          <p>
+            Rhythm game for drug mechanisms. Drug names drop from the top; tap
+            the correct mechanism lane before they hit the bottom. Soundtrack
+            licensed from open lofi. Accidentally trains USMLE Step 1 pharm.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill info">addictive</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/05 · pharmacology</div>
+          <h3>Pillbug</h3>
+          <p>
+            Drag pills onto patient icons — match allergies, interactions,
+            contraindications. Cartoony pill sprites; gentle explanatory popups
+            on error. Daily challenge mode = 5 unique patient cases.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill ok">low-risk</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/06 · communication</div>
+          <h3>SPIKES Sim</h3>
+          <p>
+            Bad-news-delivery choose-your-own-adventure. 6-step SPIKES
+            framework, each branch a short dialogue. Output: score on clarity +
+            empathy. Anonymous research gold for med-ed literature.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">2-weekend</span>
+            <span class="pill purple">publishable</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/07 · nutrition</div>
+          <h3>CarbCrunch</h3>
+          <p>
+            Plate appears. You have 3 seconds to guess carb grams. Real NHANES
+            portion data. Compete against your own 7-day average. Slots into
+            NOURISH patient-facing module road map.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill nourish">NOURISH-linked</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/08 · culture</div>
+          <h3>FluencyForge</h3>
+          <p>
+            Flashcard speed drill: South Asian ingredient ↔ English ↔ macro
+            profile. Perfect for Apollo-distributed curriculum. Unique data:
+            learning curves across patient literacy levels.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill nourish">research-adjacent</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/09 · dermatology</div>
+          <h3>MoleCheck</h3>
+          <p>
+            Cartoony skin patches. Apply ABCDE: Asymmetry, Border, Colour,
+            Diameter, Evolution. Benign vs. suspicious. Level up; add harder
+            ambiguous cases from Derm net. Research:
+            <em>heuristic-weight distribution in early learners</em>.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill info">education</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/10 · anatomy</div>
+          <h3>HeartsUp!</h3>
+          <p>
+            Cartoony organ stickers fly left-to-right across the screen.
+            Tap-to-label before they exit. Speed ratchets. Leaderboards by
+            year-of-school. Teaching aid that kids can beat adults at.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill purple">viral-potential</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/11 · cooking</div>
+          <h3>Matcha Mixer</h3>
+          <p>
+            Spin two cuisine wheels — "Keralan + Oaxacan" — then you have 30
+            seconds to name a plausible fusion dish. AI judge scores on
+            creativity + feasibility. Feeds Sous's flavor engine.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">weekend</span>
+            <span class="pill nourish">Sous-linked</span>
+          </div>
+        </div>
+
+        <div class="tinker-card">
+          <div class="name">idx/12 · ethics</div>
+          <h3>ConsentConductor</h3>
+          <p>
+            Simulated informed-consent conversation. Patient avatar asks 6
+            questions; learner picks from 3 answers per question. Graded on
+            comprehension, compassion, and clarity. Output is research-ready
+            qualitative data.
+          </p>
+          <div class="meta-row">
+            <span class="pill tinker">2-weekend</span>
+            <span class="pill purple">publishable</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-heading" style="color: var(--tinker-2)">
+        Pick-one heuristic
+      </div>
+      <div class="card tinker">
+        <ul>
+          <li>
+            <strong>Shortest path to ship:</strong> Pillbug (one screen, drag +
+            drop, 8 drug-sprites, done).
+          </li>
+          <li>
+            <strong>Highest analytics value:</strong> Cliniclick (already
+            fleshed-out flagship in the wiki).
+          </li>
+          <li>
+            <strong>Best NOURISH-linked:</strong> CarbCrunch or FluencyForge —
+            both plug into existing curriculum.
+          </li>
+          <li>
+            <strong>Most viral:</strong> HeartsUp! — tap-to-label is a universal
+            kid-game mechanic.
+          </li>
+          <li>
+            <strong>Most publishable:</strong> SPIKES Sim — med-ed journals love
+            sim-based communication research.
+          </li>
+          <li>
+            <strong>Choose by constraint:</strong> If 1 weekend, pick Pillbug.
+            If a travel week, pick Cliniclick (richer analytics reward).
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      Generated by Optimus Weekly Run · Stefan-Brain vault · 2026-04-19 · commit
+      live on main<br />
+      Sources: Granola (4 meetings) · Omi transcripts (70+) · Airtable Task
+      Registry (184) · Notion hubs (NOURISH Management, Life Admin, Bumblebee
+      Ideas) · Grant registry (GR-001 → GR-070)<br />
+      Boil the ocean · Always commit to main · Karpathy 4 · 6-lens RSG · Always
+      log.
+    </footer>
+
+    <script>
+      const tabs = document.querySelectorAll(".tab");
+      const panels = document.querySelectorAll(".panel");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          panels.forEach((p) => p.classList.remove("active"));
+          tab.classList.add("active");
+          const id = "tab-" + tab.getAttribute("data-tab");
+          document.getElementById(id).classList.add("active");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+    </script>
+  </body>
 </html>

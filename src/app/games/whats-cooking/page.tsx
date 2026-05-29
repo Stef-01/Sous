@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ChefHat, RotateCcw } from "lucide-react";
 import { dishClues, type DishClue } from "@/data/games/whats-cooking-clues";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
@@ -54,6 +54,7 @@ function levenshtein(a: string, b: string): number {
 
 export default function WhatsCookingGame() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { recordScore } = useGameScores();
   const { awardXP } = useXPSystem();
 
@@ -140,24 +141,27 @@ export default function WhatsCookingGame() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <motion.button
             onClick={() => router.push("/games")}
             whileTap={{ scale: 0.88 }}
-            className="flex items-center justify-center rounded-lg min-h-11 min-w-11 text-[var(--nourish-subtext)]"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--nourish-subtext)]"
             type="button"
             aria-label="Back to Arcade"
           >
             <ArrowLeft size={20} />
           </motion.button>
-          <div className="text-center">
-            <p className="text-xs font-medium text-[var(--nourish-subtext)]">
-              Round {currentDishIdx + 1}/{dishes.length}
+          <div className="flex flex-col items-center">
+            <p className="flex items-center gap-1.5 font-serif text-[15px] font-semibold text-[var(--nourish-dark)]">
+              <ChefHat size={14} aria-hidden /> What&rsquo;s cooking?
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--nourish-subtext)]">
+              Round {currentDishIdx + 1} of {dishes.length}
             </p>
           </div>
           <div className="flex flex-col items-end">
-            <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
+            <span className="tabular-nums text-sm font-bold text-[var(--nourish-dark)]">
               {totalScore}
             </span>
             {streak > 1 && (
@@ -166,6 +170,25 @@ export default function WhatsCookingGame() {
               </span>
             )}
           </div>
+        </div>
+        {/* Round-progress dots — quiet visual telemetry of game length. */}
+        <div
+          className="mx-auto mt-2 flex max-w-md items-center justify-center gap-1.5"
+          aria-hidden
+        >
+          {dishes.map((_, idx) => (
+            <span
+              key={idx}
+              className={cn(
+                "h-1.5 w-1.5 rounded-full transition-colors",
+                idx < currentDishIdx
+                  ? "bg-[var(--nourish-green)]"
+                  : idx === currentDishIdx
+                    ? "bg-[var(--nourish-green)]/60"
+                    : "bg-neutral-200",
+              )}
+            />
+          ))}
         </div>
       </header>
 
@@ -176,14 +199,22 @@ export default function WhatsCookingGame() {
             {visibleClues.map((clue, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, y: 12, rotateX: -10 }}
+                initial={
+                  reducedMotion
+                    ? { opacity: 0 }
+                    : { opacity: 0, y: 12, rotateX: -10 }
+                }
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 25,
-                  delay: idx === revealedClues - 1 ? 0.1 : 0,
-                }}
+                transition={
+                  reducedMotion
+                    ? { duration: 0.18 }
+                    : {
+                        type: "spring",
+                        stiffness: 260,
+                        damping: 25,
+                        delay: idx === revealedClues - 1 ? 0.1 : 0,
+                      }
+                }
                 className="rounded-xl border border-neutral-100 bg-white p-4 shadow-sm"
               >
                 <div className="flex items-start gap-3">
@@ -214,11 +245,14 @@ export default function WhatsCookingGame() {
           ))}
         </div>
 
-        {/* Points indicator */}
-        <div className="text-center">
-          <span className="text-xs text-[var(--nourish-subtext)]">
-            Guess now for{" "}
-            <span className="font-bold text-[var(--nourish-green)]">
+        {/* Points-on-the-line chip — promotes risk/reward visibility. */}
+        <div className="flex items-center justify-center">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[11px] shadow-sm ring-1 ring-neutral-200"
+            aria-live="polite"
+          >
+            <span className="text-[var(--nourish-subtext)]">Guess now for</span>
+            <span className="tabular-nums font-bold text-[var(--nourish-green)]">
               {POINTS_PER_CLUE[revealedClues - 1] ?? 100} pts
             </span>
           </span>

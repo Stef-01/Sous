@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { FRIEND_COOKS, type FriendCook } from "@/data/friend-cooks";
 import {
@@ -78,6 +78,8 @@ export function FriendsStrip({
    *  surface. */
   onDishSelect?: (dishName: string) => void;
 }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const router = useRouter();
   const { lastSeenAt } = useFriendsLastSeen();
   const entries = useMemo<EnrichedEntry[]>(() => {

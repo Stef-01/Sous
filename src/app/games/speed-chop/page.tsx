@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, RotateCcw, Heart } from "lucide-react";
 import { speedChopRounds } from "@/data/games/speed-chop-data";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
@@ -16,6 +16,7 @@ const ITEM_INTERVAL_MIN = 1200;
 
 export default function SpeedChopGame() {
   const router = useRouter();
+  const reducedMotion = useReducedMotion();
   const { recordScore } = useGameScores();
   const { awardXP } = useXPSystem();
 
@@ -234,29 +235,47 @@ export default function SpeedChopGame() {
   return (
     <motion.div
       className="min-h-dvh bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 backdrop-blur-sm px-4 py-3">
-        <div className="mx-auto flex max-w-md items-center justify-between">
-          <div className="flex gap-1">
-            {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
-              <Heart
-                key={i}
-                size={16}
-                className={cn(
-                  i < lives ? "text-red-500 fill-red-500" : "text-neutral-200",
-                )}
-              />
-            ))}
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+        <div className="mx-auto flex max-w-md items-center justify-between gap-2">
+          <motion.button
+            onClick={() => router.push("/games")}
+            whileTap={{ scale: 0.88 }}
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--nourish-subtext)]"
+            type="button"
+            aria-label="Back to Arcade"
+          >
+            <ArrowLeft size={20} />
+          </motion.button>
+          <div className="flex flex-col items-center">
+            <p className="font-serif text-[14px] font-semibold text-[var(--nourish-dark)]">
+              Speed Chop
+            </p>
+            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+              {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
+                <Heart
+                  key={i}
+                  size={11}
+                  className={cn(
+                    i < lives
+                      ? "fill-red-500 text-red-500"
+                      : "text-neutral-200",
+                  )}
+                  aria-hidden
+                />
+              ))}
+              <span className="sr-only">{lives} lives remaining</span>
+            </p>
           </div>
-          <p className="text-xs font-medium text-[var(--nourish-subtext)]">
-            {round.question}
-          </p>
-          <span className="text-sm font-bold text-[var(--nourish-dark)] tabular-nums">
+          <span className="tabular-nums text-sm font-bold text-[var(--nourish-dark)]">
             {score}
           </span>
         </div>
+        <p className="mx-auto mt-2 max-w-md text-center text-[12px] font-medium text-[var(--nourish-subtext)]">
+          {round.question}
+        </p>
       </header>
 
       <main className="mx-auto max-w-md px-4 py-8 flex flex-col items-center gap-6">

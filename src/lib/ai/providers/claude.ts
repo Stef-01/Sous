@@ -19,6 +19,8 @@ import type {
   AppraisalRewriteResult,
   PostCookReflectionInput,
   PostCookReflectionResult,
+  KidSwapsInput,
+  KidSwapsResult,
 } from "../contracts";
 import {
   explainPairingResultSchema,
@@ -27,6 +29,7 @@ import {
   winMessageResultSchema,
   appraisalRewriteResultSchema,
   postCookReflectionResultSchema,
+  kidSwapsResultSchema,
 } from "../contracts";
 import { MockAIProvider } from "./mock";
 
@@ -193,6 +196,43 @@ ${input.currentStreak ? `Current streak: ${input.currentStreak} days` : ""}`,
     } catch (e) {
       console.error("Claude generateReflection failed, using fallback:", e);
       return mock.generateReflection(input);
+    }
+  }
+
+  async suggestKidSwaps(input: KidSwapsInput): Promise<KidSwapsResult> {
+    try {
+      return await callClaude(
+        kidSwapsResultSchema,
+        `You are a calm parent-mode helper for the Sous cooking app.
+Given a recipe and its kid-friendliness signals, propose 2-3 short swaps
+the parent could make to land both an adult and a kid version of the dish.
+
+HARD RULES (do not violate):
+- Each chip label is <= 40 characters, sentence-case, imperative.
+- Each rationale is one sentence, <= 160 characters.
+- Never reference disease, treatment, prevention, or medication.
+- Never use "boost", "fight", "protect", "heal", "cure".
+- Never claim a swap will make the child eat more, less, or anything specific.
+- Speak in terms of "raises acceptance" and "kid plate vs adult plate" only.
+- Prefer concrete swaps (mild cheese, sauce on side, halve the chili) over
+  vague advice.`,
+        `Recipe: ${input.recipeName}
+Cuisine: ${input.cuisineFamily}
+Age band at the table: ${input.ageBand}
+
+Kid-friendliness signals (0-3 scalars unless noted):
+- bitterLoad: ${input.signals.bitterLoad}
+- smellIntensity: ${input.signals.smellIntensity}
+- textureRisk: ${input.signals.textureRisk}
+- visibleGreenFlecks: ${input.signals.visibleGreenFlecks}
+- deconstructable: ${input.signals.deconstructable}
+- heatLevel (0-4): ${input.signals.heatLevel}
+- familiarityAnchor (kid-default carrier present): ${input.signals.familiarityAnchor}
+- colorBrightness: ${input.signals.colorBrightness}`,
+      );
+    } catch (e) {
+      console.error("Claude suggestKidSwaps failed, using fallback:", e);
+      return mock.suggestKidSwaps(input);
     }
   }
 }

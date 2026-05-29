@@ -1,5 +1,5 @@
 /**
- * AI Router  -  5 bounded AI surfaces with graceful fallback.
+ * AI Router  -  bounded AI surfaces with graceful fallback.
  *
  * Every endpoint works with or without AI API keys.
  * Schema-validated inputs and outputs.
@@ -14,6 +14,7 @@ import {
   winMessageInputSchema,
   appraisalRewriteInputSchema,
   postCookReflectionInputSchema,
+  kidSwapsInputSchema,
 } from "@/lib/ai/contracts";
 
 export const aiRouter = router({
@@ -75,5 +76,17 @@ export const aiRouter = router({
     .query(async ({ input }) => {
       const provider = await getAIProvider();
       return provider.generateReflection(input);
+    }),
+
+  /**
+   * 7. Kid Swaps  -  Parent Mode "make it kid-friendly" suggestions.
+   * Mock provider mirrors the deterministic lookup so dev parity holds
+   * when no Anthropic key is set.
+   */
+  suggestKidSwaps: publicProcedure
+    .input(kidSwapsInputSchema)
+    .query(async ({ input }) => {
+      const provider = await getAIProvider();
+      return provider.suggestKidSwaps(input);
     }),
 });

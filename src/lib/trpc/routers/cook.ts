@@ -60,6 +60,9 @@ export const cookRouter = router({
                 cuisineFact: s.cuisineFact,
                 donenessCue: s.donenessCue,
                 imageUrl: s.imageUrl,
+                // W44 — seed catalog has no authored pointers
+                // yet; user recipes pass through their own.
+                attentionPointers: null,
               })),
               ingredients: ingredientList.map((i) => ({
                 id: i.id,
@@ -101,6 +104,9 @@ export const cookRouter = router({
         steps: staticData.steps.map((s, idx) => ({
           id: `${staticData.slug}-step-${idx + 1}`,
           ...s,
+          // W44: seed catalog has no authored pointers; user
+          // recipes carry their own via the adapter.
+          attentionPointers: null,
         })),
         ingredients: staticData.ingredients,
       };

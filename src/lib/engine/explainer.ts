@@ -33,6 +33,14 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "matches your taste",
     mid: "aligns with your preferences",
   },
+  seasonal: {
+    high: "perfect for the season",
+    mid: "suits the weather",
+  },
+  antiMonotony: {
+    high: "adds variety to your week",
+    mid: "something different",
+  },
 };
 
 /**

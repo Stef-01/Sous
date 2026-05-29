@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ChefHat, Leaf, Video } from "lucide-react";
 import {
   containerStagger,
@@ -53,6 +53,7 @@ function PathwaySteps() {
 }
 
 export function DietJourneyComparison({ stats }: { stats: CatalogStats }) {
+  const reducedMotion = useReducedMotion();
   return (
     <section
       id="truth"
@@ -60,7 +61,7 @@ export function DietJourneyComparison({ stats }: { stats: CatalogStats }) {
     >
       <div className="mx-auto max-w-[720px]">
         <motion.div
-          initial="hidden"
+          initial={reducedMotion ? "visible" : "hidden"}
           whileInView="visible"
           viewport={viewportOnce}
           variants={containerStagger}

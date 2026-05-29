@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
 
 /**
@@ -12,14 +12,18 @@ import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
  * carry the health credibility, sitting above the strip.
  */
 export function TrustStrip() {
+  const reducedMotion = useReducedMotion();
   return (
     <section className="px-6 py-24 md:px-10 md:py-28">
       <div className="mx-auto max-w-[880px] text-center">
         <motion.p
-          initial={{ opacity: 0, y: 10 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={viewportOnce}
-          transition={{ duration: 0.7, ease: easeOutExpo }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.7,
+            ease: easeOutExpo,
+          }}
           className="font-serif text-[22px] leading-[1.5] text-[#4b5563] md:text-[26px]"
         >
           Nutrition notes are reviewed with{" "}

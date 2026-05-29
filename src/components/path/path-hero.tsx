@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-
+import { motion, useReducedMotion } from "framer-motion";
 interface PathHeroProps {
   /** Current consecutive-day cook streak. */
   streak: number;
@@ -89,6 +88,8 @@ export function PathHero({
   totalCooks,
   lastCookedAt,
 }: PathHeroProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   // Resolve band + days-since on the client so the SSR/client branch cannot
   // mismatch. Intentional state-sets on mount  -  impure Date reads are
   // forbidden during render but are the whole point of these effects.

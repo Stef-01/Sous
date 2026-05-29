@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useImperativeHandle, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { AchievementsGrid } from "@/components/path/achievements-grid";
 import type { Achievement } from "@/data/achievements";
@@ -34,6 +34,8 @@ export function AchievementsLauncher({
   openRef,
   headless = true,
 }: AchievementsLauncherProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const [open, setOpen] = useState(false);
 
   const onKey = useCallback((e: KeyboardEvent) => {

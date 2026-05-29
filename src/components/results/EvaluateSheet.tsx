@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Check, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
@@ -30,6 +30,7 @@ export function EvaluateSheet({
   onClose,
   onFinishPlate,
 }: EvaluateSheetProps) {
+  const reducedMotion = useReducedMotion();
   // AI-enhanced appraisal  -  only fires when sheet is open
   const aiAppraisal = trpc.ai.rewriteAppraisal.useQuery(
     {
@@ -78,7 +79,7 @@ export function EvaluateSheet({
           <motion.div
             key="evaluate-backdrop"
             className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}

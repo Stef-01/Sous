@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useMemo } from "react";
 import type {
   CookSessionRecord,
@@ -114,6 +114,8 @@ export function ConfidenceDial({
   stats,
   completedSessions,
 }: ConfidenceDialProps) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const reading = useMemo(
     () => deriveConfidence(stats, completedSessions),
     [stats, completedSessions],

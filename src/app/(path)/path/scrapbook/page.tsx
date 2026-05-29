@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Sparkles, Camera } from "lucide-react";
 import { ScrapbookEntryCard } from "@/components/path/scrapbook-entry-card";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -13,18 +13,13 @@ import { stableEvaluatorScores } from "@/lib/utils/scrapbook-evaluator";
  * Dual use: sentimental archive and longitudinal plating / technique growth.
  */
 export default function ScrapbookPage() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { completedSessions, toggleFavorite } = useCookSessions();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard
   useEffect(() => setMounted(true), []);
-
-  const handleReplay = useCallback(
-    (slug: string) => {
-      router.push(`/cook/${slug}`);
-    },
-    [router],
-  );
 
   return (
     <div className="min-h-full bg-[linear-gradient(180deg,#fffdf8_0%,#faf7f2_45%,#f4efe8_100%)]">
@@ -94,7 +89,6 @@ export default function ScrapbookPage() {
               <ScrapbookEntryCard
                 key={session.sessionId}
                 session={session}
-                onReplay={handleReplay}
                 onToggleFavorite={toggleFavorite}
                 index={idx}
                 evaluatorScores={stableEvaluatorScores(

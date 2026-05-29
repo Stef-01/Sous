@@ -24,6 +24,22 @@ export interface CookSessionRecord {
   feedback?: string;
   favorite: boolean;
   scrapbookSaved?: boolean;
+  /** Y2 W6 V3 trainer dependency. Persists the engine's
+   *  ScoreBreakdown at the moment the user picks the side from
+   *  the result stack — NOT at cook completion. The V3 trainer
+   *  reads this to learn per-dimension preferences from
+   *  accepted vs. rejected pairs. Optional + nullable so legacy
+   *  sessions without breakdowns degrade to V2 metadata-only
+   *  trainer path. */
+  engineScoreBreakdown?: {
+    cuisineFit: number;
+    flavorContrast: number;
+    nutritionBalance: number;
+    prepBurden: number;
+    temperature: number;
+    preference: number;
+    totalScore: number;
+  } | null;
 }
 
 export interface CookStats {
@@ -255,7 +271,12 @@ export function useCookSessions() {
       updates: Partial<
         Pick<
           CookSessionRecord,
-          "note" | "photoUri" | "rating" | "favorite" | "feedback"
+          | "note"
+          | "photoUri"
+          | "rating"
+          | "favorite"
+          | "feedback"
+          | "engineScoreBreakdown"
         >
       >,
     ) => {

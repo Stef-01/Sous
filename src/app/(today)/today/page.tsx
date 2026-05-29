@@ -2,30 +2,76 @@
 
 import { Suspense, useState, useCallback, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
+import { CookAgainChip } from "@/components/today/cook-again-chip";
+import { DailyNoveltyChip } from "@/components/today/daily-novelty-chip";
+import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
 import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
+import { EcoProgressChip } from "@/components/today/eco-progress-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
-import { MoreOptionsSheet } from "@/components/today/more-options-sheet";
-import { FriendsStrip } from "@/components/today/friends-strip";
-import { SearchPopout } from "@/components/today/search-popout";
-import { TextPrompt } from "@/components/today/text-prompt";
-import { ResultStack } from "@/components/today/result-stack";
-import { CameraInput } from "@/components/today/camera-input";
-import { CorrectionChips } from "@/components/today/correction-chips";
-
+// W18 perf: both sheets are lazy-loaded behind next/dynamic so the
+// initial Today bundle does not pay their cost (~10KB combined). Both
+// only mount on user action (More-Options button / mascot tap).
 import dynamic from "next/dynamic";
+const MoreOptionsSheet = dynamic(
+  () =>
+    import("@/components/today/more-options-sheet").then(
+      (m) => m.MoreOptionsSheet,
+    ),
+  { ssr: false },
+);
+const ProfileSettingsSheet = dynamic(
+  () =>
+    import("@/components/shared/profile-settings-sheet").then(
+      (m) => m.ProfileSettingsSheet,
+    ),
+  { ssr: false },
+);
+import { FriendsStrip } from "@/components/today/friends-strip";
+import { TextPrompt } from "@/components/today/text-prompt";
+import { HeadroomHeader } from "@/components/shared/headroom-header";
+
+// W18 perf round 2: post-interaction surfaces are dynamic-imported.
+// SearchPopout opens on the search-bar tap, CameraInput on the
+// camera affordance, ResultStack only after a search returns, and
+// CorrectionChips only during the recognition-correction flow.
+// Paying their cost only when the trigger fires is correct minimalism
+// (POLISH-CHECKLIST §1.5.2 + CLAUDE.md rule 6).
+const SearchPopout = dynamic(
+  () => import("@/components/today/search-popout").then((m) => m.SearchPopout),
+  { ssr: false },
+);
+const ResultStack = dynamic(
+  () => import("@/components/today/result-stack").then((m) => m.ResultStack),
+  { ssr: false },
+);
+const CameraInput = dynamic(
+  () => import("@/components/today/camera-input").then((m) => m.CameraInput),
+  { ssr: false },
+);
+const CorrectionChips = dynamic(
+  () =>
+    import("@/components/today/correction-chips").then(
+      (m) => m.CorrectionChips,
+    ),
+  { ssr: false },
+);
 
 const CoachQuiz = dynamic(() =>
   import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
 );
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useUserWeights } from "@/lib/hooks/use-user-weights";
+import { WhosAtTable } from "@/components/today/whos-at-table";
+import { WeeklyRhythmWidget } from "@/components/today/weekly-rhythm-widget";
+import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -59,10 +105,16 @@ export default function TodayPage() {
 }
 
 function TodayPageContent() {
+  // W7 follow-up: useReducedMotion gate available for any motion sites
+  // in this file. Currently consumed by the empty-state pull-to-refresh
+  // hint below — preserves the bird-blink while suppressing the larger
+  // pulse for users with prefers-reduced-motion set.
+  const reducedMotion = useReducedMotion();
   const [view, setView] = useState<ViewState>({ type: "idle" });
   const [showSearch, setShowSearch] = useState(false);
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
@@ -80,6 +132,14 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats, completedSessions } = useCookSessions();
+  // W30 pairing-engine V2: trained weight vector from cook
+  // history. Cold-start (< 5 cooks) returns the same DEFAULT_WEIGHTS
+  // the engine already uses, so this is invisible to new users
+  // and starts personalising silently as history accumulates.
+  const { weights: userWeights } = useUserWeights();
+  // W37 household table aggregate — feeds the pairing engine the
+  // dietary union across the "who's at the table" selection.
+  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
   const tasteBlend = useTasteBlend();
   const effectivePreferences = blendPreferences(
     userPreferences,
@@ -175,6 +235,9 @@ function TodayPageContent() {
       inputMode: "text",
       _rerollSeed: rerollSeed || undefined,
       userPreferences: effectivePreferences,
+      userWeights,
+      householdDietaryFlags:
+        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
       effortTolerance,
     },
     {
@@ -188,7 +251,7 @@ function TodayPageContent() {
   // Transition from loading → results when query resolves for the CURRENT query.
   // If the query errors while still in loading, fall back to search so the
   // skeleton UI doesn't stack on top of the error block (AUDIT P1-5).
-  /* eslint-disable react-hooks/set-state-in-effect -- async query result drives view state machine */
+
   useEffect(() => {
     if (
       view.type === "loading" &&
@@ -206,6 +269,7 @@ function TodayPageContent() {
       pairingQuery.isError &&
       pendingQueryRef.current === mainDishQuery
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- legitimate: react to external pairingQuery error
       setView({ type: "idle" });
     }
   }, [
@@ -215,7 +279,6 @@ function TodayPageContent() {
     view,
     mainDishQuery,
   ]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   // ── Handlers ──────────────────────────────────────────
 
@@ -332,11 +395,14 @@ function TodayPageContent() {
     <motion.div
       ref={(el) => setPullRef(el as HTMLElement | null)}
       className="min-h-full bg-[var(--nourish-cream)]"
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.18 }}
+      transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
-      {/* Pull-to-refresh indicator */}
+      {/* Pull-to-refresh indicator — W22b animation #8: bird-mascot
+          eyelid blink replaces the bare chevron. Eyes close as the
+          pull approaches threshold; on trigger they open wide. The
+          owl is the same glyph as the header mascot — visual continuity. */}
       {pullState.pulling && (
         <div
           className="flex items-center justify-center overflow-hidden transition-all duration-150"
@@ -347,53 +413,103 @@ function TodayPageContent() {
             style={{ opacity: pullState.progress }}
           >
             <svg
-              className="text-[var(--nourish-green)]"
-              style={{
-                transform: `rotate(${pullState.triggered ? 180 : pullState.progress * 180}deg)`,
-                transition: "transform 0.15s ease",
-              }}
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              viewBox="0 0 64 44"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              aria-hidden
             >
-              <polyline points="6 9 12 15 18 9" />
+              {/* Head */}
+              <circle cx="32" cy="26" r="14" fill="var(--nourish-green)" />
+              {/* Eye whites */}
+              <circle cx="26" cy="24" r="3.5" fill="white" />
+              <circle cx="38" cy="24" r="3.5" fill="white" />
+              {/* Pupils — open when triggered, otherwise scale by progress */}
+              <circle
+                cx="27"
+                cy="23.5"
+                r={
+                  pullState.triggered
+                    ? 1.8
+                    : 1.8 * (1 - pullState.progress * 0.6)
+                }
+                fill="#0D0D0D"
+                style={{ transition: "r 0.12s ease" }}
+              />
+              <circle
+                cx="39"
+                cy="23.5"
+                r={
+                  pullState.triggered
+                    ? 1.8
+                    : 1.8 * (1 - pullState.progress * 0.6)
+                }
+                fill="#0D0D0D"
+                style={{ transition: "r 0.12s ease" }}
+              />
+              {/* Eyelids that drop down with the pull progress */}
+              <rect
+                x="22.5"
+                y={20.5 + pullState.progress * 4}
+                width="7"
+                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                rx="1"
+                fill="var(--nourish-green)"
+                style={{ transition: "height 0.12s ease" }}
+              />
+              <rect
+                x="34.5"
+                y={20.5 + pullState.progress * 4}
+                width="7"
+                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                rx="1"
+                fill="var(--nourish-green)"
+                style={{ transition: "height 0.12s ease" }}
+              />
+              {/* Beak */}
+              <path d="M30 29 L32 33 L34 29" fill="var(--nourish-gold)" />
+              {/* Chef hat */}
+              <ellipse cx="32" cy="14" rx="11" ry="4.5" fill="white" />
+              <rect x="25" y="9" width="14" height="7" rx="2" fill="white" />
+              <circle cx="32" cy="8" r="3.5" fill="white" />
             </svg>
             {pullState.triggered ? "Release to refresh" : "Pull to refresh"}
           </div>
         </div>
       )}
 
-      {/* Header  -  Sous + streak chip + bird */}
-      <header className="app-header px-4 py-2.5">
-        <div className="mx-auto flex max-w-md items-center justify-between">
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-                Sous
-              </h1>
-              <StreakCounter streak={stats.currentStreak} />
+      {/* Header  -  Sous + streak chip + bird.
+          Wrapped in HeadroomHeader so the brand bar hides on
+          scroll-down + reappears on scroll-up — matches Headspace
+          / Apple Music / NYT Cooking pattern. The bottom tab bar
+          stays sticky so navigation isn't lost when the top hides. */}
+      <HeadroomHeader>
+        <header className="border-b border-[var(--nourish-border-soft)] bg-white px-4 py-2.5 shadow-[var(--shadow-header)]">
+          <div className="mx-auto flex max-w-md items-center justify-between">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+                  Sous
+                </h1>
+                <StreakCounter streak={stats.currentStreak} />
+              </div>
+              {(() => {
+                const line = deriveWelcomeLine({
+                  streak: stats.currentStreak,
+                  lastCookIso: stats.lastCookDate,
+                });
+                return line ? (
+                  <span className="text-[10px] leading-tight text-[var(--nourish-subtext)]/80 italic">
+                    {line}
+                  </span>
+                ) : null;
+              })()}
             </div>
-            {(() => {
-              const line = deriveWelcomeLine({
-                streak: stats.currentStreak,
-                lastCookIso: stats.lastCookDate,
-              });
-              return line ? (
-                <span className="text-[10px] leading-tight text-[var(--nourish-subtext)]/80 italic">
-                  {line}
-                </span>
-              ) : null;
-            })()}
+            {/* Owl mascot  -  profile entry point. */}
+            <OwlAvatar onClick={() => setShowProfileSettings(true)} />
           </div>
-          {/* Owl mascot  -  profile position */}
-          <OwlAvatar onClick={handleOpenSearch} />
-        </div>
-      </header>
+        </header>
+      </HeadroomHeader>
 
       {/* Main content */}
       <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
@@ -411,6 +527,40 @@ function TodayPageContent() {
         {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
             and within 14 days. One tap → Mission for that dish. */}
         <RepeatCookChip sessions={completedSessions} />
+
+        {/* Y3 W24 today's planned meal — surfaces the meal-plan
+            slot for today's current meal-of-day window when one
+            exists. Renders nothing on cold-start or when no
+            slot is filled. Time-of-day routes the meal pick. */}
+        <TodayPlannedSlot />
+
+        {/* Y2 W13 cook-again chip — surfaces a 5★ recipe from
+            21-56 days ago (W6 tightened from 90), scored by
+            recency × seasonality × cuisine-rotation. Renders
+            nothing when no eligible candidate exists. */}
+        <CookAgainChip sessions={completedSessions} />
+
+        {/* Y3 W8 daily novelty chip — surfaces ONE pantry-feasible
+            combination per day above novelty threshold. Renders
+            nothing below threshold or during cool-down. Curiosity-
+            styled copy; never FOMO. */}
+        <DailyNoveltyChip />
+
+        {/* W35 "Who's at the table" picker — household-memory surface.
+            Renders nothing when no members exist (rule 6: simplicity-
+            first; the empty-CTA hint was distracting). Picker +
+            aggregate constraints render once members are populated
+            via /path/household. */}
+        <WhosAtTable />
+
+        {/* W36 weekly rhythm widget — quiet below 2 cooks-this-week so
+            cold-start users see the existing welcome line instead. */}
+        <WeeklyRhythmWidget sessions={completedSessions} />
+
+        {/* Y5 D Eco progress chip — quiet "X kg saved this month"
+            line gated by Eco Mode. Renders nothing when off / no
+            cooks in window / no positive savings. Tap → /path/eco. */}
+        <EcoProgressChip sessions={completedSessions} />
 
         {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
         <QuestCard
@@ -452,6 +602,14 @@ function TodayPageContent() {
         onRescueFridge={handleRescueFridge}
         onPlayGame={() => router.push("/games")}
         onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
+        onEatOut={() => router.push("/eat-out")}
+      />
+
+      {/* Profile & settings — opened by tapping the owl mascot. Holds the
+          Parent Mode toggle + age band picker. NOT a tab. */}
+      <ProfileSettingsSheet
+        open={showProfileSettings}
+        onClose={() => setShowProfileSettings(false)}
       />
 
       {/* Search popout  -  slides up from bottom */}

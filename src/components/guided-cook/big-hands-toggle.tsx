@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Hand } from "lucide-react";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
 
@@ -10,6 +10,8 @@ import { useBigHands } from "@/lib/hooks/use-big-hands";
  * no permanent preference. One tap on, one tap off.
  */
 export function BigHandsToggle() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { enabled, toggle, mounted } = useBigHands();
   if (!mounted) return null;
 

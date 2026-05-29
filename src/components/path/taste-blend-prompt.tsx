@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Users } from "lucide-react";
 import { useTasteBlend } from "@/lib/hooks/use-taste-blend";
 
@@ -9,6 +9,8 @@ import { useTasteBlend } from "@/lib/hooks/use-taste-blend";
  *  and let the user fine-tune via the "Cook for two" chip on Today. No
  *  second account, no second profile, no settings. */
 export function TasteBlendPrompt() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { mounted, shouldPrompt, setDuo, dismissPrompt } = useTasteBlend();
   if (!mounted) return null;
 

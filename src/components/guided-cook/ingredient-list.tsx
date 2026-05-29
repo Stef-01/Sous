@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Check,
   Circle,
@@ -22,6 +22,8 @@ import {
   type PrepListGroup,
 } from "@/lib/engine/prep-list";
 import type { StaticDishData } from "@/data/guided-cook-steps";
+import { InstacartHint } from "./instacart-hint";
+import { IngredientPantryDot } from "@/components/shared/ingredient-pantry-dot";
 
 interface Ingredient {
   id: string;
@@ -72,6 +74,7 @@ export function IngredientList({
   onReady,
   onSelectSides,
 }: IngredientListProps) {
+  const reducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
@@ -210,7 +213,7 @@ export function IngredientList({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col"
       style={{ minHeight: "calc(100dvh - 180px)" }}
@@ -442,6 +445,11 @@ export function IngredientList({
           </motion.button>
         )}
 
+        {/* Instacart placeholder hint — single line below the shopping
+            CTA. Encourages "keep going" instead of "give up" when an
+            ingredient is missing. No screen, no modal. */}
+        <InstacartHint missingCount={missingCount} />
+
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (
           <motion.button
@@ -549,6 +557,14 @@ function IngredientRow({
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
           <div className="flex items-baseline gap-2">
+            {/* Y3 W4 polish: pantry-status dot — feature 1.3 from
+                the pantry-novelty plan. Subtle visual signal that
+                'I can start this now' without taps. */}
+            <IngredientPantryDot
+              status={inPantry ? "have" : "missing"}
+              optional={item.isOptional ?? false}
+              className="self-center"
+            />
             <span
               className={cn(
                 "text-sm font-medium",

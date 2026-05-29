@@ -44,6 +44,52 @@
   --sous-text-caption: 12px;
   --sous-text-cook: 17px;
   --sous-leading-cook: 1.55;
+
+  /* Y3 W3 — semantic surface tokens. These let callers express
+     INTENT ("elevated surface") rather than the literal colour,
+     so dark-mode swap goes through one selector. Light values
+     mirror existing tokens; dark values defined below. */
+  --surface-elevated: #ffffff;
+  --surface-pressed: rgba(13, 13, 13, 0.04);
+  --surface-inverted: #0d0d0d;
+}
+
+/* Y3 W3 — dark-mode token overrides. Designed but not enabled
+   by default. Apply via `<html data-theme="dark">` or a
+   client-side hook once the W3 follow-up lands. */
+[data-theme="dark"] {
+  --background: #0d0d0d;
+  --foreground: #fafaf8;
+  --nourish-green: #4a8c5c;
+  --nourish-dark-green: #6ba87b;
+  --nourish-light-green: #2d5a3d;
+  --nourish-gold: #e6c578;
+  --nourish-warm: #e89968;
+  --nourish-cream: #1a1a1a;
+  --nourish-dark: #fafaf8;
+  --nourish-input-bg: #2a2826;
+  --nourish-subtext: #9d9d9d;
+  --nourish-button: #4a8c5c;
+  --nourish-button-hover: #6ba87b;
+  --nourish-evaluate: #c44d4d;
+  --nourish-evaluate-hover: #d96868;
+
+  --nourish-border-soft: rgba(255, 255, 255, 0.05);
+  --nourish-border: rgba(255, 255, 255, 0.08);
+  --nourish-border-strong: rgba(255, 255, 255, 0.14);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-raised:
+    0 4px 12px -2px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-cta:
+    0 2px 8px -1px rgba(74, 140, 92, 0.35), 0 1px 2px rgba(74, 140, 92, 0.22);
+  --shadow-cta-hover:
+    0 4px 14px -2px rgba(74, 140, 92, 0.45), 0 2px 4px rgba(74, 140, 92, 0.22);
+  --shadow-header: 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  --surface-elevated: #1f1d1c;
+  --surface-pressed: rgba(255, 255, 255, 0.06);
+  --surface-inverted: #fafaf8;
 }
 
 /* Cook-prose utility — applied to the main instruction on /cook/[slug]

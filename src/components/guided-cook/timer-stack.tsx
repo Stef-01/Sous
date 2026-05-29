@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { cn } from "@/lib/utils/cn";
@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils/cn";
  * Driven entirely by `useCookStore.timers`. Renders nothing when empty.
  */
 export function TimerStack() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const timers = useCookStore((s) => s.timers);
   const stopTimer = useCookStore((s) => s.stopTimer);
 

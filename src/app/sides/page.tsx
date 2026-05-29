@@ -3,7 +3,7 @@
 import { Suspense, useState, useCallback, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
@@ -45,6 +45,8 @@ export default function SidesPage() {
 }
 
 function SidesPageContent() {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const router = useRouter();
   const searchParams = useSearchParams();
   const mainDish = searchParams.get("main") ?? "";
@@ -161,10 +163,7 @@ function SidesPageContent() {
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-subtext)]">
-              Pick sides for
-            </p>
-            <h1 className="truncate font-serif text-base font-semibold text-[var(--nourish-dark)]">
+            <h1 className="truncate font-serif text-xl font-semibold text-[var(--nourish-dark)]">
               {mainDish}
             </h1>
           </div>
