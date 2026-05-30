@@ -1,7 +1,7 @@
 # Sous — Prototype Roadmap
 
-> **Updated:** 2026-04-17
-> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `CLAUDE.md` (conventions), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
+> **Updated:** 2026-05-01
+> **Related docs:** `planning.md` (phase-by-phase detail), `documentation.md` (built system inventory), `STRATEGY.md` (moats + decision log), `CLAUDE.md` (conventions), `docs/STAGE-2-PLAN.md` (lean audit + Content tab plan), `docs/NEXT-20-PHASES.md` (intuition + beauty build plan), `docs/NEXT-20B-PHASES.md` (decluttering + semantic craving + landing polish), `docs/NEXT-20C-PHASES.md` (memory, relationships, performance), `docs/NEXT-20D-PHASES.md` (habit, trust, polish), `docs/PATH-OVERLAP-RCA.md` (Path modal overlap RCA + remediation)
 
 ---
 
@@ -357,7 +357,53 @@ These are intentionally out of scope for Stage 1:
 
 ---
 
-## STAGE 2: PRODUCTION LAUNCH
+## STAGE 2: LEAN VIBE-CODED SYSTEM + CONTENT TAB — PLANNED
+
+> **Entered after Stage 1.** Detailed phase breakdown in `docs/STAGE-2-PLAN.md`.
+
+Stage 1 proved the cook loop end-to-end on `localStorage` + static JSON + AI-with-mock-fallback. Stage 3 is production hardening (auth, DB, infra). Stage 2 sits between them and delivers two parallel things that need to ship together:
+
+### Part A — Lean Vibe-Coded System (audit + lock)
+
+Freeze the architecture that's safe to vibe-code on, with an explicit "real vs placeholder" inventory and templates for common extensions. Goal: feature work for the next 3–6 months ships without dragging in DB / auth / cloud-storage debt.
+
+- Audit every Today / Path surface as real or placeholder, with one-line evidence; output `docs/STAGE-2-AUDIT.md`.
+- Codify the 10 vibe-codeable patterns (static JSON, component drop-in, localStorage hook, tRPC stub, AI surface, route group, guided-cook step, mini-game, daily-content markdown, Framer Motion section).
+- Codify the 9 anti-patterns to defer to Stage 3 (Drizzle migrations, auth-gated features, image generation, real-time, cross-device persistence, server-side image upload, new external services, breaking localStorage schema changes, removing intentional features from CLAUDE.md rule 11).
+- Add `src/data/PLACEHOLDERS.md` + `pnpm audit:placeholders` script.
+- Update `CLAUDE.md` rule 11 (Content tab always-visible) and `claude.md` operational guardrails (defer infra to Stage 3).
+
+### Part B — Content Tab
+
+Add a third primary tab — `(Today, Path, Content)` — modeled on Flo's content surface but tightened by Sous's `STRATEGY.md` (cooking is the content; tab must serve the cook loop, not replace it; KPI is *secondary cook starts*, not reads).
+
+Six surfaces on `/content`:
+
+1. **Today's Read (hero)** — single daily-rotating card tied to the user's last cook via the new `ai.suggestContent` surface (with mock fallback).
+2. **Reels rail** — TikTok-polish horizontal-snap thumbnails → vertical full-screen player (60fps swipe, autoplay-on-view, persistent mute, double-tap heart, captions on by default).
+3. **Myths Dispelled** — short article cards from health professionals, struck-through old wisdom + green-check new evidence, byline + source citation.
+4. **Research Dissemination** — research-lab summaries translated for laypeople, link to source paper.
+5. **Clinician POV** — long-form blog (800–1500 words) with reader-mode detail page and reading-progress bar.
+6. **Cooking Forum** — thread list + detail with 2-level reply nesting; new-thread compose sheet; V1 uses the mock user identity (no Clerk pull-forward).
+
+Architecture: `(content)` route group, Zod-discriminated `ContentItem` schema, JSON-first content under `src/data/content/`, `useBookmarks` / `useContentReadState` / `useReelPrefs` localStorage hooks, 12 articles + 15 reels + 8 forum threads as seed (no Lorem ipsum). One new AI surface (`ai.suggestContent`) following the existing 6-surface template.
+
+### Top-level acceptance
+
+- Audit doc shipped; `pnpm audit:placeholders` green.
+- Content tab live with all six surfaces seeded and functional.
+- Tab bar shows three tabs unconditionally from day one (no progressive gate on Content).
+- Cook loop unchanged: existing E2E specs for Today, search, full cook loop, Path unlock all pass.
+- 240+ vitest tests green; lint + production build clean.
+- 60fps reel swipe verified on iOS Safari + Android Chrome.
+- Forum threads + bookmarks round-trip through localStorage on a single device.
+- No new env-var dependencies, no new external services, no Drizzle migrations, no Clerk enable.
+
+15-phase implementation plan (P1–P15), risk register, and Stage 3 hand-off list in `docs/STAGE-2-PLAN.md`.
+
+---
+
+## STAGE 3: PRODUCTION LAUNCH
 
 These are the concerns that must be resolved before Sous goes live for real users. None of these are needed for a demo or prototype.
 
@@ -378,6 +424,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - Run `pnpm db:seed` to seed the side dish and meal catalog.
 - Fill in the 6 stubbed tRPC endpoints: `journey.recent`, `journey.stats`, `coach.quiz`, `coach.vibePrompt`, `content.getSideDish`, `content.search`.
 - Replace localStorage-only session hooks with server-backed equivalents (localStorage can remain as optimistic cache).
+- Add `forum_threads` / `forum_replies` tables for Stage 2 content tab to persist cross-device.
 
 ### Performance
 
@@ -390,7 +437,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 ### Caching and Rate Limiting (Upstash Redis)
 
-- Add Upstash Redis for rate limiting on AI endpoints (`recognition.identify`, `pairing.suggest`).
+- Add Upstash Redis for rate limiting on AI endpoints (`recognition.identify`, `pairing.suggest`, `ai.suggestContent`).
 - Cache pairing results per main dish slug to reduce AI API costs on repeat queries.
 - Cache food recognition results by image hash to avoid re-querying Vision API for the same photo.
 
@@ -399,6 +446,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - Stand up a Cloudflare R2 bucket for food images.
 - Replace Unsplash URLs with R2-hosted, culturally reviewed photography.
 - Build an image upload pipeline for Win screen photos (currently `photoUri` in cook sessions is a local blob URL that doesn't persist across devices).
+- Add reel video upload pipeline for user-submitted cooking reels (Stage 2 content tab ships with creator-permission reels only).
 
 ### Error Monitoring (Sentry)
 
@@ -410,13 +458,14 @@ These are the concerns that must be resolved before Sous goes live for real user
 
 - Expand Vercel Analytics stub (`src/lib/analytics.ts`) with real event tracking: search submitted, pairing viewed, cook started, cook completed, evaluate opened, plate shared.
 - Set up a funnel view: search → results → cook → win.
-- Track feature discovery rates (how many users find Evaluate, Path, scrapbook).
+- Track feature discovery rates (how many users find Evaluate, Path, scrapbook, Content tab surfaces).
+- Content tab specific: track Content → cook start conversion rate (the Stage 2 KPI).
 
 ### SEO
 
 - Add `og:image` and `twitter:card` meta tags to the Today page (shareable plate preview image).
 - Add structured data (Schema.org Recipe) for guided cook pages.
-- Generate a sitemap for `/cook/[slug]` routes.
+- Generate a sitemap for `/cook/[slug]` routes and `/content/article/[slug]` routes.
 - Ensure all pages have unique, descriptive `<title>` and `<meta description>` tags.
 
 ### Security
@@ -424,6 +473,7 @@ These are the concerns that must be resolved before Sous goes live for real user
 - Enforce Clerk auth on all mutation tRPC endpoints in production (`publicProcedure` → `protectedProcedure` where appropriate).
 - Add input sanitization and output validation on all AI endpoints (Zod schemas are defined — enforce them at the route boundary).
 - Rate limit camera/recognition endpoint per user to prevent Vision API abuse.
+- Forum content moderation: abuse reporting, ban states, admin tools.
 - Review and restrict CORS policy on the tRPC API route.
 - Add Content-Security-Policy headers.
 - Rotate any API keys currently in `.env.local` and store in Vercel Environment Variables.
@@ -433,13 +483,13 @@ These are the concerns that must be resolved before Sous goes live for real user
 - Set up GitHub Actions: lint + test on every PR.
 - Block merges to `main` if `pnpm lint` or `pnpm test` fail.
 - Add Playwright E2E smoke tests to CI (requires running Vercel preview URL).
-- Add automated Lighthouse CI check on PRs touching Today page or Guided Cook.
+- Add automated Lighthouse CI check on PRs touching Today page, Guided Cook, or Content surfaces.
 - Configure preview deployments on Vercel for all PRs.
 
 ### Accessibility
 
-- Full WCAG 2.1 AA audit on core flows (search, results, guided cook, evaluate).
-- Keyboard navigation for the quest card stack and search popout.
+- Full WCAG 2.1 AA audit on core flows (search, results, guided cook, evaluate, content).
+- Keyboard navigation for the quest card stack, search popout, and reel player.
 - Screen reader labels on all icon-only buttons.
 - Verify `prefers-reduced-motion` is respected everywhere (hook exists in `src/hooks/useReducedMotion.ts`).
 - Color contrast audit — the cream/stone palette needs verification at small text sizes.
@@ -447,24 +497,29 @@ These are the concerns that must be resolved before Sous goes live for real user
 ### Additional Production Concerns
 
 - **PWA / installability** — Add a web app manifest, service worker, and offline fallback for the core Today page.
+- **Push notifications** — Daily "Today's Read" notification + Stage 2 cook reminders, gated behind opt-in.
 - **Multi-language** — Spanish, Hindi, Tagalog are the highest-priority candidates per the PRD (Stanford patient demographics).
 - **Legal disclaimers** — "Not medical advice" notice, Privacy Policy, Terms of Service pages.
-- **Data retention policy** — Define and implement a policy for cook session data (user deletion, data export).
+- **Data retention policy** — Define and implement a policy for cook session and forum post data (user deletion, data export).
 - **Clinical partner flow** (from PRD) — Clinician referral links, curated starter packs per cuisine, anonymous patient exploration tracking (opt-in).
+- **Content CMS** — Replace Stage 2's JSON-edit-and-PR authoring loop with a real admin UI for non-engineer content authoring.
 
 ---
 
 ## Summary
 
-|                  | Stage 1 (Prototype)                                       | Stage 2 (Production)               |
-| ---------------- | --------------------------------------------------------- | ---------------------------------- |
-| **Auth**         | None (anonymous)                                          | Clerk, enforced                    |
-| **Data**         | localStorage + static JSON                                | Neon Postgres, seeded              |
-| **AI**           | Working (mock fallback)                                   | Rate-limited, cached, monitored    |
-| **Images**       | Unsplash URLs                                             | Cloudflare R2                      |
-| **Testing**      | 102 unit tests + 14 E2E tests (core loop, games, path)    | Full CI pipeline, Playwright suite |
-| **Errors**       | Console.warn fallbacks                                    | Sentry, alert rules                |
-| **Analytics**    | Vercel Analytics (basic)                                  | Full funnel tracking               |
-| **Deploy**       | Vercel (already live)                                     | Vercel + hardened config           |
-| **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games | Leaderboards, social sharing       |
-| **Recipes**      | 126 guided cook flows, overlay system, personal notes     | Full 203 coverage, cloud sync      |
+|                  | Stage 1 (Prototype)                                       | Stage 2 (Lean + Content)                                                       | Stage 3 (Production)               |
+| ---------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
+| **Auth**         | None (anonymous)                                          | None (anonymous, locked in)                                                    | Clerk, enforced                    |
+| **Data**         | localStorage + static JSON                                | localStorage + static JSON + content JSON                                      | Neon Postgres, seeded              |
+| **AI**           | Working (mock fallback)                                   | Working (mock fallback) + `ai.suggestContent` added                            | Rate-limited, cached, monitored    |
+| **Images**       | Unsplash URLs + gradient/emoji fallback                   | Unchanged                                                                      | Cloudflare R2                      |
+| **Testing**      | 102 unit tests + 14 E2E (core loop, games, path)          | 240+ unit tests + new content tab E2E                                          | Full CI pipeline, Playwright suite |
+| **Errors**       | Console.warn fallbacks                                    | Unchanged                                                                      | Sentry, alert rules                |
+| **Analytics**    | Vercel Analytics (basic stub)                             | Unchanged                                                                      | Full funnel tracking + Content KPI |
+| **Deploy**       | Vercel (already live)                                     | Vercel                                                                         | Vercel + hardened config           |
+| **Gamification** | XP, levels, achievements, weekly challenges, 4 mini-games | Unchanged                                                                      | Leaderboards, social sharing       |
+| **Recipes**      | 126 guided cook flows, overlay system, personal notes     | Unchanged                                                                      | Full 203 coverage, cloud sync      |
+| **Tabs**         | Today, Path                                               | Today, Path, Content                                                           | Unchanged (Community on 30d gate)  |
+| **Content tab**  | —                                                         | 6 surfaces (Today's Read, Reels, Myths, Research, Clinician POV, Forum)         | Cross-device, push, CMS, moderation |
+| **Architecture** | Working but informal                                      | Audited + locked: "real vs placeholder" inventory + vibe-code templates frozen | Hardened for production            |
