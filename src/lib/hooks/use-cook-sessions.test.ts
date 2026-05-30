@@ -134,19 +134,19 @@ describe("unlock status logic", () => {
   it("pathUnlocked is always true in prototype", () => {
     const status = {
       pathUnlocked: true,
-      communityUnlocked: false,
+      communityUnlocked: true,
       completedCooks: 0,
     };
     expect(status.pathUnlocked).toBe(true);
   });
 
-  it("communityUnlocked is always false in prototype", () => {
+  it("communityUnlocked is always true in prototype", () => {
     const status = {
       pathUnlocked: true,
-      communityUnlocked: false,
+      communityUnlocked: true,
       completedCooks: 10,
     };
-    expect(status.communityUnlocked).toBe(false);
+    expect(status.communityUnlocked).toBe(true);
   });
 
   it("completedCooks defaults to 0 when no stats", () => {

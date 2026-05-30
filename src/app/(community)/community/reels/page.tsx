@@ -15,6 +15,7 @@
  */
 
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { REELS } from "@/data/content";
 import { ReelsFeed } from "@/components/content/reels-feed";
 
@@ -33,11 +34,13 @@ export default function ReelsFeedPage() {
 }
 
 function ReelsFeedRoute() {
+  const searchParams = useSearchParams();
   // Hash-based deep-link initial position (e.g. /community/reels#reel-tadka-101)
   const initialReelId =
-    typeof window !== "undefined" && window.location.hash.startsWith("#")
+    searchParams.get("start") ??
+    (typeof window !== "undefined" && window.location.hash.startsWith("#")
       ? window.location.hash.slice(1)
-      : null;
+      : null);
 
   return <ReelsFeed reels={REELS} initialReelId={initialReelId} />;
 }

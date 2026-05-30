@@ -158,7 +158,7 @@ export function FriendsStrip({
     <section ref={ref} className="space-y-2" aria-label="Friends' recent cooks">
       <div className="flex items-baseline justify-between px-1">
         <h2 className="text-[11px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase">
-          Friends cooked this week
+          Community this week
         </h2>
         <span className="text-[10px] text-[var(--nourish-subtext)]/70">
           Swipe &raquo;

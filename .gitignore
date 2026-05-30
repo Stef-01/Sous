@@ -49,3 +49,11 @@ next-env.d.ts
 .claude/skills/
 .claude/launch.json
 .claude/settings.local.json
+
+# cowork session artifacts (daily briefs, temp scripts, write tests)
+daily-brief-*.md
+daily-feature-ideas/
+canva-asset-sync-*.md
+.write-test
+*.ps1
+!scripts/*.ps1

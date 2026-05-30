@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import {
   motion,
   useMotionValue,
-  useMotionValueEvent,
   useTransform,
   useReducedMotion,
   AnimatePresence,
@@ -14,7 +13,6 @@ import {
 import Image from "next/image";
 import {
   Clock,
-  ShoppingBag,
   X,
   Heart,
   UtensilsCrossed,
@@ -22,7 +20,10 @@ import {
   Fish,
   Leaf,
   CookingPot,
-  Sparkles,
+  Maximize2,
+  RotateCcw,
+  Check,
+  ChefHat,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -40,17 +41,13 @@ import {
   type FilterOption,
 } from "@/components/shared/filter-dropdown";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
-import { buildPairingRationale } from "@/lib/engine/pairing-rationale";
-import { KidFriendlyHint } from "@/components/today/kid-friendly-hint";
-import { KidSwapChip } from "@/components/today/kid-swap-chip";
-import { NutrientSpotlight } from "@/components/shared/nutrient-spotlight";
-import { useParentMode } from "@/lib/hooks/use-parent-mode";
-import { matchIngredientReuse } from "@/lib/engine/ingredient-reuse";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
-import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
-import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
+import {
+  useDifficultyProgression,
+  scoreDifficultyAlignment,
+} from "@/lib/hooks/use-difficulty-progression";
 
-interface QuestDish {
+export interface QuestDish {
   dishName: string;
   slug: string;
   heroImageUrl: string | null;
@@ -158,6 +155,13 @@ export function buildQuestDishes(
   userPreferences?: Record<string, number>,
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
   pantryNames?: string[],
+  difficultyProgression?: {
+    easy: number;
+    medium: number;
+    hard: number;
+    recommendedLevel: "easy" | "medium" | "hard";
+    difficultyBoost: number;
+  },
 ): QuestDish[] {
   const guidedSlugs = new Set(getAvailableCookSlugs());
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
@@ -226,6 +230,47 @@ export function buildQuestDishes(
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
+  // ── Time-of-day scoring ─────────────────────────────────────────────────
+  // Morning (5-11): boost quick/light. Lunch (11-14): balanced. Evening (17+):
+  // boost hearty/comfort. Quiet during off-hours so it never hurts, only helps.
+  const timeOfDayBoost = (dish: QuestDish): number => {
+    const hour = now.getHours();
+    const cookTime = dish.cookTimeMinutes;
+    const tags = dish.tags.map((t) => t.toLowerCase());
+    const desc = dish.description.toLowerCase();
+
+    if (hour >= 5 && hour < 11) {
+      // Morning: boost quick dishes (≤ 20 min) and light tags
+      let bonus = 0;
+      if (cookTime <= 20) bonus += 3;
+      if (tags.some((t) => ["fresh", "light", "steamed"].includes(t)))
+        bonus += 2;
+      return bonus;
+    }
+    if (hour >= 17 || hour < 2) {
+      // Evening/dinner: boost hearty, comfort, rich, longer cooks
+      let bonus = 0;
+      if (cookTime >= 30) bonus += 2;
+      if (
+        tags.some((t) =>
+          [
+            "rich",
+            "savory",
+            "braised",
+            "roasted",
+            "grilled",
+            "creamy",
+          ].includes(t),
+        ) ||
+        desc.includes("comfort") ||
+        desc.includes("hearty")
+      )
+        bonus += 3;
+      return bonus;
+    }
+    return 0; // Midday — neutral
+  };
+
   // Progressive difficulty: after 10+ cooks, boost cuisines the user hasn't tried
   const noveltyBonus =
     cookHistory && cookHistory.completedCooks >= 10
@@ -243,6 +288,12 @@ export function buildQuestDishes(
   const pantryBoost = (dish: QuestDish) =>
     dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD ? PANTRY_FIT_BOOST_WEIGHT : 0;
 
+  // Difficulty alignment: nudges feed toward dishes that match the user's
+  // current skill level. Returns 0-4 bonus. Silent when no progression data.
+  const difficultyBoost = difficultyProgression
+    ? (slug: string) => scoreDifficultyAlignment(slug, difficultyProgression)
+    : () => 0;
+
   // Score and sort meals: prefer meals with images, then verified, then preference match
   const scoredMeals = mealDishes
     .map((m) => ({
@@ -253,7 +304,9 @@ export function buildQuestDishes(
         (m.hasGuidedCook ? 5 : 0) +
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
         noveltyBonus(m.cuisineFamily) +
-        pantryBoost(m),
+        pantryBoost(m) +
+        timeOfDayBoost(m) +
+        difficultyBoost(m.slug),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -268,7 +321,9 @@ export function buildQuestDishes(
         (s.heroImageUrl ? 10 : 0) +
         (hasPrefs ? scoreDishForPreferences(s, userPreferences!) : 0) +
         noveltyBonus(s.cuisineFamily) +
-        pantryBoost(s),
+        pantryBoost(s) +
+        timeOfDayBoost(s) +
+        difficultyBoost(s.slug),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -316,42 +371,12 @@ export function buildQuestDishes(
   return result;
 }
 
-// Tinder-grade swipe physics. Researched against the canonical
-// `react-tinder-card` library and Framer Motion's PanInfo conventions.
-//
-// Position threshold (100px) and velocity threshold (600 px/s) were
-// tightened from the Tinder upgrade's first iteration after a real
-// user reported (a) accidental commits while peeking and (b) the
-// occasional "swiped left but committed right" misregister.
-//
-// RCA on the directional misregister: at the moment a finger lifts,
-// the captured velocity can briefly kick in the OPPOSITE direction
-// of the drag — a natural finger-lift artifact. The previous
-// algorithm trusted velocity when |velocity| > threshold, which
-// would mis-commit a left-drag as a right-swipe whenever the lift
-// happened to kick right. Fix below: offset is the single source of
-// truth for DIRECTION (it's where the card visibly is); velocity is
-// only a commit-permission gate. If the two disagree in sign, the
-// user reversed mid-gesture — snap back, don't commit.
+const FULLSCREEN_SWIPE_THRESHOLD = 110;
 const SWIPE_THRESHOLD = 100;
 const SWIPE_VELOCITY_THRESHOLD = 600;
+const QUEUE_EXIT_MS = 240;
+const QUEUE_SIZE = 18;
 
-/**
- * Tinder-grade swipe-commit decision. Pure function so it can be
- * unit-tested without a DOM or pointer events.
- *
- * Direction is always taken from `offsetX` (where the card visibly
- * is at release). `velocityX` only acts as a "permission to commit"
- * gate — a fast flick across a small distance still commits, but
- * only if the flick direction agrees with the offset direction.
- *
- * Returns `null` when:
- * - Neither offset nor velocity passes its threshold (the user
- *   barely moved — snap back).
- * - Velocity passes but its sign disagrees with the offset's sign
- *   (release-finger kick — the user didn't actually mean that
- *   direction; snap back).
- */
 export function decideSwipe(
   offsetX: number,
   velocityX: number,
@@ -360,32 +385,15 @@ export function decideSwipe(
   const velocityCommit = Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD;
   if (!offsetCommit && !velocityCommit) return null;
 
-  // Velocity-only path: the user flicked across a small distance.
-  // We only honour it if the flick direction agrees with where the
-  // card is (or if the card is exactly at center). Otherwise it's
-  // release-noise from the finger lift.
   if (velocityCommit && !offsetCommit) {
     if (offsetX === 0) return velocityX > 0 ? "right" : "left";
     if (Math.sign(velocityX) !== Math.sign(offsetX)) return null;
     return velocityX > 0 ? "right" : "left";
   }
 
-  // Offset path (with or without velocity agreeing): the card is
-  // far enough out that the user clearly intended this direction.
-  // If velocity disagrees in sign, that's the finger-lift artifact —
-  // ignore it; trust the offset.
   return offsetX > 0 ? "right" : "left";
 }
 
-/**
- * Compute the velocity-preserving exit distance for a committed
- * swipe. Pure function for unit testing.
- *
- * Base distance is ±320px (just past the visible card). A flick
- * adds up to 200px of momentum boost based on velocity * 0.18,
- * capped so a wild over-flick can't fling the card halfway across
- * the screen (perceptual upper bound: 520px from center).
- */
 export function exitDistanceFor(
   direction: "left" | "right" | null,
   velocityX: number,
@@ -436,16 +444,13 @@ const CUISINE_ICON_MAP: Record<string, LucideIcon> = {
 function CuisineFallbackIcon({ cuisine }: { cuisine: string }) {
   const Icon = CUISINE_ICON_MAP[cuisine.toLowerCase()] ?? UtensilsCrossed;
   return (
-    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-      <Icon size={32} className="text-white drop-shadow-sm" strokeWidth={1.5} />
+    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
+      <Icon size={32} className="text-white" strokeWidth={1.5} />
     </div>
   );
 }
 
 /** Extract descriptive tags for a meal from its description. */
-/** Pure: split a tags list into the inline Popular badge + the
- *  separate flavor-tags row. Lifted out of the JSX so the
- *  partition logic is tested via the no-tsx pure-helper rule. */
 export function partitionMetaTags(tags: ReadonlyArray<string>): {
   popularInline: boolean;
   flavorTags: ReadonlyArray<string>;
@@ -461,13 +466,7 @@ function buildMealTags(
   description: string,
   poolSize: number,
 ): string[] {
-  // Cuisine is already shown as the image-overlay pill — do NOT duplicate
-  // it here as a tag chip (W12 minimalism audit fix; CLAUDE.md rule 6).
-  // `cuisine` is intentionally referenced via the eslint-disable below
-  // to keep the function signature stable for buildSideTags + callers.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- signature stable; cuisine surfaced via image-overlay pill instead
-  const _cuisineSurface = cuisine;
-  const tags: string[] = [];
+  const tags = [cuisine];
   const desc = description.toLowerCase();
   const flavorWords: [string, string][] = [
     ["spicy", "Spicy"],
@@ -510,15 +509,19 @@ export function QuestCard({
    *  rationale. Silent when empty or below the 5-cook threshold. */
   cookSessions?: CookSessionRecord[];
 }) {
+  const reducedMotion = useReducedMotion();
+  void reducedMotion;
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
+  const progression = useDifficultyProgression(cookSessions ?? []);
   const baseDishes = useMemo(
     () =>
       buildQuestDishes(
         userPreferences,
         cookHistory,
         pantryMounted ? pantryItems : undefined,
+        progression,
       ),
-    [userPreferences, cookHistory, pantryItems, pantryMounted],
+    [userPreferences, cookHistory, pantryItems, pantryMounted, progression],
   );
   // Quest filters: cook-time cap + cuisine. Both session-scoped so they
   // never become permanent settings  -  they reset at app close.
@@ -564,23 +567,12 @@ export function QuestCard({
     // the base feed so the user never hits an empty state because of filters.
     return filtered.length > 0 ? filtered : baseDishes;
   }, [baseDishes, filters.cookTime, filters.cuisine]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
-    null,
-  );
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [queueOpen, setQueueOpen] = useState(false);
   const { saveDish, isDishSaved } = useSavedDishes();
-  // Parent Mode profile is consulted at the QuestCard level so we can
-  // pass `parentModeOn` down to SwipeCard. When PM is on, we suppress
-  // the rationale + ingredient-reuse lines on the top card so PM hints
-  // (kid hint / kid swap / nutrient spotlight) don't stack into a wall
-  // of supplementary lines (W12 minimalism audit fix, POLISH §1.5.2).
-  const { profile: parentProfile } = useParentMode();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
   const haptic = useHaptic();
-  // Y5 D, audit P0 #6 — emit preference signals on every swipe /
-  // save so the editable profile substrate fills in automatically.
-  const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   // Clean up all pending timeouts on unmount
@@ -599,138 +591,46 @@ export function QuestCard({
     return id;
   }, []);
 
-  const handleSwipe = useCallback(
-    (direction: "left" | "right") => {
-      if (questDishes.length === 0) return;
-      haptic();
+  const previewDish = questDishes.length
+    ? questDishes[previewIndex % questDishes.length]
+    : null;
 
-      // Emit a preference signal for whichever direction the user
-      // committed to. The dish facets are best-effort — the helper
-      // returns empty arrays for axes we don't carry. (Y5 D #6.)
-      const swipedDish = questDishes[currentIndex % questDishes.length];
-      recordSignal({
-        kind: direction === "right" ? "swipe-right" : "swipe-left",
-        facets: dishToFacets({
-          cuisineFamily: swipedDish.cuisineFamily,
-          tags: swipedDish.tags,
-          ingredients: swipedDish.ingredientNames,
-        }),
-      });
+  const queueDishes = useMemo(() => {
+    if (questDishes.length === 0) return [];
+    const start = previewIndex % questDishes.length;
+    return [...questDishes.slice(start), ...questDishes.slice(0, start)].slice(
+      0,
+      QUEUE_SIZE,
+    );
+  }, [previewIndex, questDishes]);
 
-      if (direction === "right") {
-        const dish = questDishes[currentIndex % questDishes.length];
-        if (dish.isMeal) {
-          setExitDirection("right");
-          scheduleTimeout(() => {
-            const params = new URLSearchParams({ main: dish.dishName });
-            if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
-            router.push(`/sides?${params.toString()}`);
-          }, 300);
-        } else if (dish.hasGuidedCook && !dish.isMeal) {
-          // Side dish with guided cook: go straight to cook flow
-          setExitDirection("right");
-          scheduleTimeout(() => {
-            router.push(`/cook/${dish.slug}`);
-          }, 300);
-        } else {
-          setExitDirection("right");
-          scheduleTimeout(() => {
-            const params = new URLSearchParams({ main: dish.dishName });
-            if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
-            router.push(`/sides?${params.toString()}`);
-          }, 300);
-        }
-      } else {
-        setExitDirection("left");
-        scheduleTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % questDishes.length);
-          setExitDirection(null);
-        }, 250);
+  const routeDish = useCallback(
+    (dish: QuestDish) => {
+      setQueueOpen(false);
+
+      if (dish.hasGuidedCook && !dish.isMeal) {
+        router.push(`/cook/${dish.slug}`);
+        return;
       }
+
+      const params = new URLSearchParams({ main: dish.dishName });
+      if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
+      router.push(`/sides?${params.toString()}`);
     },
-    [currentIndex, questDishes, router, scheduleTimeout, haptic, recordSignal],
+    [router],
   );
 
-  const handleStart = useCallback(() => {
-    handleSwipe("right");
-  }, [handleSwipe]);
-
-  const handleSkip = useCallback(() => {
-    handleSwipe("left");
-  }, [handleSwipe]);
-
-  const handleSave = useCallback(() => {
-    if (questDishes.length === 0) return;
-    const dish = questDishes[currentIndex % questDishes.length];
-    const wasNew = saveDish(dish.slug, dish.dishName);
-    if (wasNew) {
-      // Y5 D #6 — saved is a strong implicit preference signal.
-      recordSignal({
-        kind: "saved",
-        facets: dishToFacets({
-          cuisineFamily: dish.cuisineFamily,
-          tags: dish.tags,
-          ingredients: dish.ingredientNames,
-        }),
-      });
-      setSavedToastSlug(dish.slug);
-      scheduleTimeout(() => setSavedToastSlug(null), 1500);
-    }
-  }, [currentIndex, questDishes, saveDish, scheduleTimeout, recordSignal]);
-
-  // Show up to 3 stacked cards. Memoised so downstream memos don't flap.
-  const visibleCards = useMemo(() => {
-    const out: Array<(typeof questDishes)[number] & { stackIndex: number }> =
-      [];
-    for (let i = 0; i < Math.min(3, questDishes.length); i++) {
-      const idx = (currentIndex + i) % questDishes.length;
-      out.push({ ...questDishes[idx], stackIndex: i });
-    }
-    return out;
-  }, [currentIndex, questDishes]);
-
-  // One-line "Because you cooked X" rationale for the top card  -  silent
-  // until the user has ≥5 completed cooks and the pick shares ≥2 taxonomy
-  // axes with something they cooked in the last 21 days.
-  const topSlug = visibleCards[0]?.slug;
-  const topDishName = visibleCards[0]?.dishName;
-  const topRationale = useMemo(() => {
-    if (!topSlug || !cookSessions || cookSessions.length === 0) return null;
-    return buildPairingRationale({
-      currentDishSlug: topSlug,
-      currentDishName: topDishName,
-      cookHistory: cookSessions,
-    });
-  }, [topSlug, topDishName, cookSessions]);
-
-  // One-line "reuses cilantro from Friday's tacos" ingredient-reuse hint.
-  // We look up each recent session's ingredients from the static cook data
-  // so no new fields need to be persisted in localStorage.
-  const topIngredientReuse = useMemo(() => {
-    const topIngredients = visibleCards[0]?.ingredientNames ?? [];
-    if (!topSlug || topIngredients.length === 0) return null;
-    if (!cookSessions || cookSessions.length === 0) return null;
-    const pastEntries = cookSessions
-      .filter((s) => !!s.completedAt && s.recipeSlug !== topSlug)
-      .map((s) => {
-        const cook =
-          getStaticCookData(s.recipeSlug) ??
-          getStaticMealCookData(s.recipeSlug);
-        if (!cook) return null;
-        const names = cook.ingredients.map((i) => i.name.toLowerCase());
-        return {
-          slug: s.recipeSlug,
-          dishName: s.dishName,
-          completedAt: new Date(s.completedAt!).getTime(),
-          ingredients: new Set(names),
-        };
-      })
-      .filter((e): e is NonNullable<typeof e> => e !== null);
-    return matchIngredientReuse({
-      currentIngredientNames: topIngredients,
-      pastSessions: pastEntries,
-    });
-  }, [topSlug, visibleCards, cookSessions]);
+  const handleSaveDish = useCallback(
+    (dish: QuestDish) => {
+      haptic();
+      const wasNew = saveDish(dish.slug, dish.dishName);
+      if (wasNew) {
+        setSavedToastSlug(dish.slug);
+        scheduleTimeout(() => setSavedToastSlug(null), 1500);
+      }
+    },
+    [haptic, saveDish, scheduleTimeout],
+  );
 
   if (questDishes.length === 0) {
     return (
@@ -767,12 +667,12 @@ export function QuestCard({
   }
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-3">
       {/* Section header + filter pills  -  two clickable dropdowns replace the
           old binary "Under 20 min" toggle. Both reset at tab close. */}
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="shrink-0 text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-          Today&apos;s Quest
+          Meal queue
         </h2>
         <div className="flex items-center gap-1.5">
           <FilterDropdown
@@ -781,7 +681,7 @@ export function QuestCard({
             defaultValue="any"
             onChange={(v) => {
               filters.setCookTime(v);
-              setCurrentIndex(0);
+              setPreviewIndex(0);
             }}
             leadingIcon={<Clock size={11} strokeWidth={2.2} />}
             align="end"
@@ -800,7 +700,7 @@ export function QuestCard({
             defaultValue="any"
             onChange={(v) => {
               filters.setCuisine(v);
-              setCurrentIndex(0);
+              setPreviewIndex(0);
             }}
             align="end"
             options={cuisineOptions}
@@ -809,513 +709,486 @@ export function QuestCard({
       </div>
 
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
-      <div className="relative" style={{ minHeight: 460 }}>
-        <AnimatePresence mode="popLayout">
-          {visibleCards
-            .slice()
-            .reverse()
-            .map((dish) => (
-              <SwipeCard
-                key={`${dish.slug}-${currentIndex}-${dish.stackIndex}`}
+      {previewDish && (
+        <MealQueuePreview
+          dish={previewDish}
+          onOpen={() => setQueueOpen(true)}
+        />
+      )}
+
+      <AnimatePresence>
+        {savedToastSlug && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="mx-auto w-fit rounded-full bg-[var(--nourish-dark)] px-4 py-2"
+          >
+            <span className="flex items-center gap-1.5 text-xs font-medium text-white">
+              <Heart size={12} className="fill-current" />
+              Saved for later
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {queueOpen && (
+          <MealSwipeQueueOverlay
+            dishes={queueDishes}
+            isDishSaved={isDishSaved}
+            onClose={() => setQueueOpen(false)}
+            onSaveDish={handleSaveDish}
+            onCookDish={routeDish}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function MealQueuePreview({
+  dish,
+  onOpen,
+}: {
+  dish: QuestDish;
+  onOpen: () => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+      className="space-y-3"
+    >
+      <motion.button
+        type="button"
+        onClick={onOpen}
+        whileTap={{ scale: 0.985 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+        className="group w-full text-left"
+        aria-label={`Open meal queue starting with ${dish.dishName}`}
+      >
+        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
+          <DishImage dish={dish} priority fit="contain" />
+          <div className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white/92 text-neutral-900 transition-colors group-hover:bg-white">
+            <Maximize2 size={17} strokeWidth={1.9} />
+          </div>
+        </div>
+
+        <div className="mt-3 space-y-2 px-1">
+          <div className="space-y-1">
+            <p className="text-[11px] font-semibold uppercase text-[var(--nourish-subtext)] tracking-wide">
+              {dish.isMeal ? "Dinner idea" : "Side idea"}
+            </p>
+            <h3 className="font-serif text-[30px] leading-none text-[var(--nourish-dark)]">
+              {dish.dishName}
+            </h3>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-[var(--nourish-subtext)]">
+            <span>{dish.cuisineFamily}</span>
+            <span aria-hidden="true">/</span>
+            <span>{dish.cookTimeMinutes} min</span>
+            <span aria-hidden="true">/</span>
+            <span>{dish.ingredientCount} ingredients</span>
+          </div>
+        </div>
+      </motion.button>
+
+      <button
+        type="button"
+        onClick={onOpen}
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white px-5 text-sm font-semibold text-[var(--nourish-dark)] transition-colors hover:border-neutral-500"
+      >
+        <Maximize2 size={16} strokeWidth={2} />
+        Open queue
+      </button>
+    </motion.div>
+  );
+}
+
+function MealSwipeQueueOverlay({
+  dishes,
+  isDishSaved,
+  onClose,
+  onSaveDish,
+  onCookDish,
+}: {
+  dishes: QuestDish[];
+  isDishSaved: (slug: string) => boolean;
+  onClose: () => void;
+  onSaveDish: (dish: QuestDish) => void;
+  onCookDish: (dish: QuestDish) => void;
+}) {
+  const [unswiped, setUnswiped] = useState<QuestDish[]>(() => dishes);
+  const [dismissed, setDismissed] = useState<QuestDish[]>([]);
+  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
+    null,
+  );
+  const [initialTotal, setInitialTotal] = useState(() => dishes.length);
+  const haptic = useHaptic();
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const resetDeck = useCallback(() => {
+    setUnswiped(dishes);
+    setDismissed([]);
+    setExitDirection(null);
+    setInitialTotal(dishes.length);
+  }, [dishes]);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const timers = timersRef.current;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      timers.forEach(clearTimeout);
+    };
+  }, []);
+
+  const activeDish = unswiped[0] ?? null;
+  const seenCount = dismissed.length;
+  const progress = initialTotal
+    ? Math.min(1, (seenCount + (activeDish ? 1 : 0)) / initialTotal)
+    : 1;
+
+  const swipeTop = useCallback(
+    (direction: "left" | "right") => {
+      if (!activeDish || exitDirection) return;
+      haptic();
+      setExitDirection(direction);
+
+      const dishToMove = activeDish;
+      const id = setTimeout(() => {
+        setUnswiped((prev) =>
+          prev[0]?.slug === dishToMove.slug ? prev.slice(1) : prev,
+        );
+        if (direction === "right") {
+          onCookDish(dishToMove);
+        } else {
+          setDismissed((prev) => [dishToMove, ...prev]);
+          setExitDirection(null);
+        }
+      }, QUEUE_EXIT_MS);
+      timersRef.current.push(id);
+    },
+    [activeDish, exitDirection, haptic, onCookDish],
+  );
+
+  const saveActive = useCallback(() => {
+    if (!activeDish) return;
+    onSaveDish(activeDish);
+  }, [activeDish, onSaveDish]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        swipeTop("left");
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        swipeTop("right");
+      }
+      if ((event.key === "Enter" || event.key === " ") && activeDish) {
+        event.preventDefault();
+        swipeTop("right");
+      }
+      if (event.key.toLowerCase() === "s") {
+        event.preventDefault();
+        saveActive();
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [activeDish, onClose, saveActive, swipeTop]);
+
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Meal swipe queue"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+      className="fixed inset-0 z-[180] flex h-full flex-col overflow-hidden bg-[#080907] text-white"
+    >
+      <div className="safe-area-top absolute inset-x-0 top-0 z-40 px-4 pt-3">
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/14 bg-transparent text-white transition-colors hover:bg-white/10"
+            aria-label="Close meal queue"
+          >
+            <X size={20} strokeWidth={2} />
+          </button>
+          <div className="min-w-0 flex-1">
+            <div className="h-1 overflow-hidden rounded-full bg-white/18">
+              <motion.div
+                className="h-full rounded-full bg-white"
+                initial={false}
+                animate={{ width: `${progress * 100}%` }}
+                transition={{ duration: 0.2 }}
+              />
+            </div>
+            <p className="mt-2 text-center text-[11px] font-medium text-white/62">
+              {activeDish ? seenCount + 1 : initialTotal} / {initialTotal}
+            </p>
+          </div>
+          <div className="h-11 w-11" aria-hidden="true" />
+        </div>
+      </div>
+
+      <div className="relative min-h-0 flex-1">
+        {activeDish ? (
+          <AnimatePresence mode="popLayout">
+            {unswiped.slice(0, 3).map((dish, index) => (
+              <FullscreenSwipeCard
+                key={`${dish.slug}-${index}`}
                 dish={dish}
-                stackIndex={dish.stackIndex}
-                isTop={dish.stackIndex === 0}
-                isSaved={isDishSaved(dish.slug)}
-                onSwipe={handleSwipe}
-                onStart={handleStart}
-                onSkip={handleSkip}
-                onSave={handleSave}
-                exitDirection={dish.stackIndex === 0 ? exitDirection : null}
-                rationale={
-                  dish.stackIndex === 0 ? (topRationale?.text ?? null) : null
-                }
-                ingredientReuse={
-                  dish.stackIndex === 0
-                    ? (topIngredientReuse?.text ?? null)
-                    : null
-                }
-                parentModeOn={parentProfile.enabled}
+                stackIndex={index}
+                isTop={index === 0}
+                exitDirection={index === 0 ? exitDirection : null}
+                onSwipe={swipeTop}
               />
             ))}
-        </AnimatePresence>
+          </AnimatePresence>
+        ) : (
+          <QueueComplete
+            dismissed={dismissed}
+            onReset={resetDeck}
+            onClose={onClose}
+          />
+        )}
+      </div>
 
-        {/* Saved for later toast */}
-        <AnimatePresence>
-          {savedToastSlug && (
-            <motion.div
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 rounded-full bg-[var(--nourish-dark)] px-4 py-2 shadow-lg"
+      {activeDish && (
+        <div className="safe-area-bottom absolute inset-x-0 bottom-0 z-40 bg-[#080907] px-5 pb-4 pt-3">
+          <div className="mx-auto mb-3 max-w-[430px] space-y-1.5">
+            <h3 className="font-serif text-[28px] leading-none text-white">
+              {activeDish.dishName}
+            </h3>
+            <div className="flex flex-wrap items-center gap-2 text-[12px] font-medium text-white/56">
+              <span>{activeDish.cuisineFamily}</span>
+              <span aria-hidden="true">/</span>
+              <span>{activeDish.cookTimeMinutes} min</span>
+              <span aria-hidden="true">/</span>
+              <span>{activeDish.ingredientCount} ingredients</span>
+            </div>
+            <p className="line-clamp-1 text-sm leading-relaxed text-white/68">
+              {activeDish.description}
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-[430px] grid-cols-[54px_1fr_1.15fr] items-center gap-3">
+            <button
+              type="button"
+              onClick={() => swipeTop("left")}
+              className="flex h-[54px] w-[54px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10"
+              aria-label={`Pass on ${activeDish.dishName}`}
             >
-              <span className="text-xs font-medium text-white flex items-center gap-1.5">
-                <Heart size={12} className="fill-current" />
-                Saved for later
-              </span>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <X size={21} strokeWidth={2.2} />
+            </button>
+            <button
+              type="button"
+              onClick={saveActive}
+              className={cn(
+                "flex h-[54px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
+                isDishSaved(activeDish.slug)
+                  ? "border-pink-200 bg-pink-50 text-pink-500"
+                  : "border-white/16 bg-transparent text-white hover:bg-white/10",
+              )}
+              aria-label={
+                isDishSaved(activeDish.slug)
+                  ? "Already saved"
+                  : `Save ${activeDish.dishName}`
+              }
+            >
+              <Heart
+                size={18}
+                className={isDishSaved(activeDish.slug) ? "fill-current" : ""}
+              />
+              <span>{isDishSaved(activeDish.slug) ? "Saved" : "Save"}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => swipeTop("right")}
+              className="flex h-[54px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88"
+              aria-label={`Cook ${activeDish.dishName}`}
+            >
+              <ChefHat size={18} strokeWidth={2.2} />
+              <span>Cook</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+function FullscreenSwipeCard({
+  dish,
+  stackIndex,
+  isTop,
+  exitDirection,
+  onSwipe,
+}: {
+  dish: QuestDish;
+  stackIndex: number;
+  isTop: boolean;
+  exitDirection: "left" | "right" | null;
+  onSwipe: (direction: "left" | "right") => void;
+}) {
+  const x = useMotionValue(0);
+  const rotate = useTransform(x, [-240, 240], [-13, 13]);
+
+  const handleDragEnd = (_: unknown, info: PanInfo) => {
+    const strongVelocity = Math.abs(info.velocity.x) > 650;
+    const farEnough = Math.abs(info.offset.x) > FULLSCREEN_SWIPE_THRESHOLD;
+    if (farEnough || (strongVelocity && Math.abs(info.offset.x) > 42)) {
+      onSwipe(info.offset.x > 0 ? "right" : "left");
+    }
+  };
+
+  const scale = 1 - stackIndex * 0.045;
+  const y = stackIndex * 14;
+  const peekRotate = stackIndex === 1 ? 2.2 : stackIndex === 2 ? -1.6 : 0;
+
+  return (
+    <motion.div
+      className="absolute inset-0 px-3 pb-[168px] pt-[74px]"
+      style={{
+        x: isTop ? x : 0,
+        rotate: isTop ? rotate : peekRotate,
+        zIndex: 20 - stackIndex,
+      }}
+      initial={{
+        opacity: stackIndex === 0 ? 0 : 1,
+        scale: scale - 0.02,
+        y: y + 10,
+      }}
+      animate={{ opacity: 1, scale, y }}
+      exit={{
+        x:
+          exitDirection === "right" ? 420 : exitDirection === "left" ? -420 : 0,
+        rotate:
+          exitDirection === "right" ? 18 : exitDirection === "left" ? -18 : 0,
+        opacity: 0,
+        transition: { duration: QUEUE_EXIT_MS / 1000, ease: "easeIn" },
+      }}
+      transition={{ type: "spring", stiffness: 320, damping: 32 }}
+      drag={isTop ? "x" : false}
+      dragConstraints={{ left: 0, right: 0 }}
+      dragElastic={0.62}
+      onDragEnd={isTop ? handleDragEnd : undefined}
+    >
+      <article
+        className={cn(
+          "relative h-full overflow-hidden rounded-[30px] border border-white/10 bg-white",
+          isTop && "cursor-grab active:cursor-grabbing",
+        )}
+        aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}
+      >
+        <DishImage dish={dish} priority={isTop} fit="contain" />
+      </article>
+    </motion.div>
+  );
+}
+
+function QueueComplete({
+  dismissed,
+  onReset,
+  onClose,
+}: {
+  dismissed: QuestDish[];
+  onReset: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center px-7 text-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/12 text-white">
+        <Check size={28} strokeWidth={2.2} />
+      </div>
+      <h3 className="mt-6 font-serif text-[40px] leading-none tracking-tight">
+        Queue complete
+      </h3>
+      <p className="mt-4 max-w-[28ch] text-sm leading-relaxed text-white/64">
+        You passed {dismissed.length} ideas. Reset the queue for another pass or
+        head back to Today.
+      </p>
+      <div className="mt-8 flex w-full max-w-sm flex-col gap-3">
+        <button
+          type="button"
+          onClick={onReset}
+          className="flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/12 bg-white/10 px-5 text-sm font-semibold text-white"
+        >
+          <RotateCcw size={16} />
+          Reset queue
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="h-12 text-sm font-medium text-white/62"
+        >
+          Back to Today
+        </button>
       </div>
     </div>
   );
 }
 
-/**
- * Individual swipe card with drag interaction and stack positioning.
- */
-function SwipeCard({
+function DishImage({
   dish,
-  stackIndex,
-  isTop,
-  isSaved,
-  onSwipe,
-  onStart,
-  onSkip,
-  onSave,
-  exitDirection,
-  rationale,
-  ingredientReuse,
-  parentModeOn,
+  priority = false,
+  fit = "cover",
 }: {
-  dish: QuestDish & { stackIndex: number };
-  stackIndex: number;
-  isTop: boolean;
-  isSaved: boolean;
-  onSwipe: (direction: "left" | "right") => void;
-  onStart: () => void;
-  onSkip: () => void;
-  onSave: () => void;
-  exitDirection: "left" | "right" | null;
-  /** Optional ambient rationale rendered below the flavor tags. Only the
-   *  top card receives one  -  silent on deeper cards and for new users. */
-  rationale: string | null;
-  /** Optional "reuses cilantro from yesterday's tacos" hint. Only the top
-   *  card receives one. Silent when no recent ingredient overlap exists. */
-  ingredientReuse: string | null;
-  /** When true, suppresses rationale + ingredient-reuse on the top card
-   *  so PM hints don't stack into a wall of supplementary lines. */
-  parentModeOn: boolean;
+  dish: QuestDish;
+  priority?: boolean;
+  fit?: "cover" | "contain";
 }) {
   const [imgError, setImgError] = useState(false);
-  const reducedMotion = useReducedMotion();
-  const haptic = useHaptic();
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-12, 12]);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
-  // Swipe indicator overlays
-  const likeOpacity = useTransform(x, [0, 80], [0, 1]);
-  const nopeOpacity = useTransform(x, [-80, 0], [1, 0]);
-  // Scale labels as drag approaches threshold
-  const likeScale = useTransform(x, [0, 80], [0.8, 1.1]);
-  const nopeScale = useTransform(x, [-80, 0], [1.1, 0.8]);
-
-  // Tinder-grade detail #1: a single quiet haptic the moment the
-  // user crosses the swipe-commit threshold in either direction.
-  // Mirrors the iOS pattern where the device taps once when the
-  // drag has gone "far enough" — the user knows they can release.
-  // Tracked via ref so the threshold-cross only fires once per drag,
-  // not on every motion frame.
-  const hapticArmedRef = useRef<"left" | "right" | null>(null);
-  useMotionValueEvent(x, "change", (latest) => {
-    if (!isTop) return;
-    if (Math.abs(latest) > SWIPE_THRESHOLD) {
-      const dir = latest > 0 ? "right" : "left";
-      if (hapticArmedRef.current !== dir) {
-        haptic();
-        hapticArmedRef.current = dir;
-      }
-    } else {
-      hapticArmedRef.current = null;
-    }
-  });
-
-  // W22b animation: snap-feedback as the card crosses the like/discard
-  // threshold. Card scales ~2% and a green/rose glow shadow blooms in
-  // so the swipe "commits" feel earned rather than mute. Pure motion
-  // transforms — no state, no re-render.
-  // Reduced motion: collapse the scale envelope to a no-op (constant 1)
-  // and keep the shadow flat. Drag still works; the celebratory bloom
-  // is what we suppress.
-  const cardScale = useTransform(
-    x,
-    [-160, -80, 0, 80, 160],
-    reducedMotion ? [1, 1, 1, 1, 1] : [1.02, 1.005, 1, 1.005, 1.02],
-  );
-  const cardShadow = useTransform(
-    x,
-    [-160, -80, 0, 80, 160],
-    reducedMotion
-      ? [
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-        ]
-      : [
-          "0 16px 32px -10px rgba(244,63,94,0.45)",
-          "0 8px 16px -8px rgba(244,63,94,0.20)",
-          "0 4px 12px -4px rgba(13,13,13,0.10)",
-          "0 8px 16px -8px rgba(45,90,61,0.20)",
-          "0 16px 32px -10px rgba(45,90,61,0.45)",
-        ],
-  );
-
-  // Tinder-grade detail #2: capture the flick velocity at the
-  // moment the user lets go, so the exit animation can feel
-  // continuous with the gesture rather than ramping into a fresh
-  // animation on its own clock. State (not ref) because Framer reads
-  // the exit prop during render — react-hooks/refs strict rule.
-  const [exitVelocity, setExitVelocity] = useState(0);
-
-  const handleDragEnd = (_: unknown, info: PanInfo) => {
-    const direction = decideSwipe(info.offset.x, info.velocity.x);
-    if (direction) {
-      setExitVelocity(info.velocity.x);
-      onSwipe(direction);
-    }
-    // No commit → Framer auto-snaps back via dragConstraints + the
-    // spring transition on the wrapper, no manual reset needed.
-  };
-
-  const exitX = exitDistanceFor(exitDirection, exitVelocity);
-
-  // Stack positioning: scale down, shift back, and rotate for peek effect
-  const scale = 1 - stackIndex * 0.04;
-  const translateY = stackIndex * 14;
-  // Sprint 1 W2.3: trim peek-card rotation 2°/-1.5° → 1.5°/-1° so the
-  // hidden cards register as "stacked" without yelling for attention.
-  const peekRotation = stackIndex === 1 ? 1.5 : stackIndex === 2 ? -1 : 0;
+  if (!dish.heroImageUrl || imgError) {
+    return (
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center gap-4"
+        style={{ background: getCuisineGradient(dish.cuisineFamily) }}
+      >
+        <CuisineFallbackIcon cuisine={dish.cuisineFamily} />
+        <span className="max-w-[18rem] px-8 text-center text-lg font-semibold text-white/90">
+          {dish.dishName}
+        </span>
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-      className="absolute inset-x-0 top-0"
-      style={{
-        x: isTop ? x : 0,
-        rotate: isTop ? rotate : peekRotation,
-        zIndex: 10 - stackIndex,
-      }}
-      initial={{
-        scale: scale - 0.02,
-        y: translateY + 8,
-        opacity: stackIndex === 0 ? 0 : 1,
-      }}
-      animate={{
-        scale,
-        y: translateY,
-        opacity: 1,
-      }}
-      exit={{
-        // Tinder-grade detail #4: exit honours the captured flick
-        // velocity, so the exit feels like a continuation of the
-        // user's gesture rather than a fresh animation. Reduced-
-        // motion users get an opacity-only fade that doesn't fly
-        // anywhere — preserves the same "card is gone" signal
-        // without any vestibular cost.
-        x: reducedMotion ? 0 : exitX,
-        rotate: reducedMotion
-          ? 0
-          : exitDirection === "right"
-            ? 20
-            : exitDirection === "left"
-              ? -20
-              : 0,
-        opacity: 0,
-        transition: reducedMotion
-          ? { duration: 0.18 }
-          : {
-              // Spring with `velocity` injected from the captured flick
-              // so the spring already knows how fast the card is
-              // moving when it takes over from the drag. This is the
-              // single most "Tinder-feeling" detail in the upgrade.
-              type: "spring",
-              velocity: exitVelocity,
-              stiffness: 220,
-              damping: 28,
-              restDelta: 0.5,
-            },
-      }}
-      // Snap-back spring: the wrapper's transition is what runs when
-      // the user releases below the swipe threshold. SHEET-like
-      // tuning (stiffness 320 / damping 28) gives the card a
-      // physical "grab" feeling when it returns to center, vs the
-      // earlier squishier 300/30.
-      transition={{ type: "spring", stiffness: 320, damping: 28, mass: 0.7 }}
-      drag={isTop ? "x" : false}
-      dragConstraints={{ left: 0, right: 0 }}
-      // Lower elastic = tighter, more controlled drag. The previous
-      // 0.7 felt rubbery and let the card travel ~70% past the
-      // visible threshold while held — which is what the user
-      // experienced as "accidentally goes in screen". 0.55 keeps
-      // the card meaningfully responsive while making the commit
-      // threshold feel intentional.
-      dragElastic={0.55}
-      onDragEnd={isTop ? handleDragEnd : undefined}
-    >
-      <motion.div
+    <>
+      {!imgLoaded && <div className="absolute inset-0 shimmer" />}
+      <Image
+        src={dish.heroImageUrl}
+        alt={dish.dishName}
+        fill
+        sizes="(max-width: 768px) 100vw, 430px"
         className={cn(
-          "overflow-hidden rounded-2xl border border-neutral-200/70 bg-white shadow-sm",
-          isTop && "cursor-grab active:cursor-grabbing shadow-md",
+          "transition-opacity duration-300",
+          fit === "contain" ? "object-contain" : "object-cover",
+          imgLoaded ? "opacity-100" : "opacity-0",
         )}
-        // W22b: drag-driven scale + shadow snap-feedback. Top card only;
-        // inactive cards keep static rendering.
-        style={isTop ? { scale: cardScale, boxShadow: cardShadow } : undefined}
-        role="article"
-        aria-label={`${dish.dishName}  -  ${dish.cuisineFamily}${dish.isVerified ? ", Nourish Verified" : ""}`}
-      >
-        {/* Swipe feedback overlays  -  only on top card */}
-        {isTop && (
-          <>
-            <motion.div
-              className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-[var(--nourish-green)]/8"
-              style={{ opacity: likeOpacity }}
-            >
-              <motion.span
-                className="rounded-xl border-2 border-[var(--nourish-green)] bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-[var(--nourish-green)] -rotate-12 tracking-wide shadow-sm"
-                style={{ scale: likeScale }}
-              >
-                COOK!
-              </motion.span>
-            </motion.div>
-            <motion.div
-              className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-red-500/8"
-              style={{ opacity: nopeOpacity }}
-            >
-              <motion.span
-                className="rounded-xl border-2 border-red-400 bg-white/80 backdrop-blur-sm px-5 py-2 text-lg font-bold text-red-500 rotate-12 tracking-wide shadow-sm"
-                style={{ scale: nopeScale }}
-              >
-                SKIP
-              </motion.span>
-            </motion.div>
-          </>
-        )}
-
-        {/* Hero food image */}
-        <div className="relative aspect-[3/2] bg-[var(--nourish-cream)]">
-          {dish.heroImageUrl && !imgError ? (
-            <Image
-              src={dish.heroImageUrl}
-              alt={dish.dishName}
-              fill
-              sizes="(max-width: 768px) 100vw, 448px"
-              className="object-cover"
-              draggable={false}
-              loading={stackIndex === 0 ? "eager" : "lazy"}
-              priority={stackIndex === 0}
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div
-              className="absolute inset-0 flex flex-col items-center justify-center gap-3"
-              style={{
-                background: getCuisineGradient(dish.cuisineFamily),
-              }}
-            >
-              <CuisineFallbackIcon cuisine={dish.cuisineFamily} />
-              <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
-                {dish.dishName}
-              </span>
-            </div>
-          )}
-          {/* Skip (X) button  -  top right, min 44px touch target.
-              The cuisine badge + bottom-gradient overlay used to
-              live here but were dropped — they obscured the dish
-              photo and the cuisine is already shown in the meta
-              row below the hero. */}
-          {isTop && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSkip();
-              }}
-              className="absolute top-1 right-1 flex h-11 w-11 items-center justify-center active:scale-90"
-              type="button"
-              aria-label="Skip dish"
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black/25 backdrop-blur-sm text-white/90 transition-all hover:bg-black/40">
-                <X size={14} />
-              </span>
-            </button>
-          )}
-        </div>
-
-        {/* Dish info */}
-        <div className="px-4 pt-2.5 pb-1.5 space-y-1">
-          <h3 className="font-serif text-base font-bold text-[var(--nourish-dark)] flex items-center gap-1.5">
-            {dish.dishName}
-            {dish.isVerified && (
-              <span
-                className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-[var(--nourish-green)] shrink-0"
-                title="Nourish Verified"
-              >
-                <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M4 8.5L7 11.5L12 5"
-                    stroke="white"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            )}
-          </h3>
-          {dish.isMeal && dish.description && (
-            <p className="text-[11px] text-[var(--nourish-subtext)] line-clamp-1 leading-relaxed">
-              {dish.description}
-            </p>
-          )}
-          {/* Meta row + inline "Popular" badge consolidated onto
-              one line so the card doesn't bloat with extra rows.
-              The "Popular" pill used to live in its own tags row
-              underneath; pulling it inline keeps the card compact. */}
-          {(() => {
-            const { popularInline, flavorTags } = partitionMetaTags(dish.tags);
-            return (
-              <>
-                <div className="flex items-center gap-3 text-[11px] text-[var(--nourish-subtext)]">
-                  <span className="flex items-center gap-1">
-                    <Clock size={13} className="text-[var(--nourish-green)]" />
-                    {dish.cookTimeMinutes} min
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <ShoppingBag
-                      size={13}
-                      className="text-[var(--nourish-green)]"
-                    />
-                    {dish.ingredientCount} ingredients
-                  </span>
-                  {popularInline && (
-                    <span className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
-                      Popular
-                    </span>
-                  )}
-                </div>
-                {/* Pantry-fit signal — surfaces only when most
-                    ingredients are already on hand. */}
-                {dish.pantryFit >= PANTRY_FIT_BOOST_THRESHOLD && (
-                  <div className="flex items-center gap-1 pt-0.5">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
-                      <Sparkles size={11} strokeWidth={2.2} />
-                      You already have most of this
-                    </span>
-                  </div>
-                )}
-                {/* Flavor-tags row — hides entirely when empty.
-                    'Popular' is now rendered inline above, so this
-                    row only shows actual flavor descriptors. */}
-                {flavorTags.length > 0 && (
-                  <div className="flex items-center gap-1.5 pt-0.5">
-                    {flavorTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </>
-            );
-          })()}
-          {/* Supplementary lines below the description are capped at 2
-              total under Parent Mode (W12 audit fix): when PM is on,
-              the kid hint / kid swap / nutrient spotlight take priority,
-              so we suppress rationale + ingredient-reuse on the top
-              card. Non-PM cards render rationale + ingredient-reuse as
-              before (also <= 2 lines). */}
-          {!parentModeOn && rationale && (
-            <p className="pt-1 text-[11px] italic leading-snug text-[var(--nourish-subtext)]">
-              {rationale}.
-            </p>
-          )}
-          {!parentModeOn && ingredientReuse && (
-            <p className="text-[11px] leading-snug text-[var(--nourish-green)]/80">
-              {ingredientReuse}.
-            </p>
-          )}
-          {/* Parent-mode kid-friendly hint  -  silent unless PM is on AND
-              the dish has a hand-curated label that scores >= 0.65. Top
-              card only (Stage-2 W9). */}
-          {isTop && <KidFriendlyHint dishSlug={dish.slug} />}
-          {/* Parent-mode kid-swap chip  -  surfaces only on borderline
-              middle-of-the-road dishes (0.30 <= score < 0.65). Sheet
-              writes the chosen swap to the recipe-overlay system so it
-              re-appears at next cook. (Stage-2 W11) */}
-          {isTop && (
-            <div className="pt-1">
-              <KidSwapChip
-                dishSlug={dish.slug}
-                cuisineFamily={dish.cuisineFamily}
-                recipeName={dish.dishName}
-              />
-            </div>
-          )}
-          {/* Parent-mode nutrient spotlight  -  one ambient line, only
-              when (a) PM is on (b) per-recipe nutrition data exists
-              and (c) at least one nutrient passes the FDA threshold.
-              Otherwise renders null. (Stage-2 W12) */}
-          {isTop && <NutrientSpotlight recipeSlug={dish.slug} />}
-        </div>
-
-        {/* Action row  -  heart save + Start cooking */}
-        <div className="flex items-center gap-3 px-4 pb-4 pt-1.5">
-          {/* Save for later  -  heart button */}
-          <div className="group relative">
-            <motion.button
-              onClick={(e) => {
-                e.stopPropagation();
-                onSave();
-              }}
-              whileTap={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className={cn(
-                "flex h-[42px] w-[42px] items-center justify-center rounded-xl",
-                "transition-colors duration-200",
-                isSaved
-                  ? "border border-pink-200 bg-pink-50 text-pink-500"
-                  : "border border-neutral-200 bg-neutral-50/80 text-neutral-400 hover:border-pink-200 hover:text-pink-500 hover:bg-pink-50",
-              )}
-              type="button"
-              aria-label={isSaved ? "Already saved" : "Save for later"}
-            >
-              <Heart size={18} className={isSaved ? "fill-current" : ""} />
-            </motion.button>
-            {/* Hover tooltip */}
-            <div className="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-              <div className="whitespace-nowrap rounded-md bg-[var(--nourish-dark)] px-2 py-0.5 text-[9px] font-medium text-white shadow-lg">
-                {isSaved ? "Saved" : "Save for later"}
-              </div>
-              <div className="mx-auto h-1.5 w-1.5 -mt-0.5 rotate-45 bg-[var(--nourish-dark)]" />
-            </div>
-          </div>
-
-          {/* Primary CTA  -  cook if guided, find sides otherwise */}
-          <motion.button
-            onClick={(e) => {
-              e.stopPropagation();
-              onStart();
-            }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className={cn(
-              "flex-1 rounded-xl h-[42px] text-[13px] font-semibold text-white tracking-wide",
-              "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-              "cta-glow transition-colors duration-200",
-            )}
-            type="button"
-            aria-label={`${dish.isMeal ? "Find sides for" : dish.hasGuidedCook ? "Start cooking" : "Find sides for"} ${dish.dishName}`}
-          >
-            {dish.isMeal
-              ? "Find sides →"
-              : dish.hasGuidedCook
-                ? "Start cooking"
-                : "Find sides"}
-          </motion.button>
-        </div>
-      </motion.div>
-    </motion.div>
+        draggable={false}
+        loading={priority ? "eager" : "lazy"}
+        priority={priority}
+        onLoad={() => setImgLoaded(true)}
+        onError={() => setImgError(true)}
+      />
+    </>
   );
 }

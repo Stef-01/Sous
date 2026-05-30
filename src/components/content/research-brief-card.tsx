@@ -26,7 +26,7 @@ export function ResearchBriefCard({ brief }: Props) {
   return (
     <Link
       href={`/community/research/${brief.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
     >
       <div className="relative aspect-[16/9] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image

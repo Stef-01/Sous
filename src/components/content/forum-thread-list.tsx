@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
 import type { ForumThread } from "@/types/content";
-import { SectionKicker } from "@/components/shared/section-kicker";
 
 interface Props {
   threads: ForumThread[];
@@ -31,8 +30,8 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
   if (visible.length === 0) return null;
   return (
     <section aria-label="Forum threads" className="space-y-2">
-      <div className="px-1">
-        <SectionKicker>Forum talk</SectionKicker>
+      <div className="flex items-center justify-between px-1">
+        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">Ask</h2>
       </div>
 
       {/* W19b bonus: forum threads now use a subtle inset shadow + a
@@ -44,7 +43,7 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
           <li key={thread.id}>
             <Link
               href={`/community/forum/${thread.id}`}
-              className="group flex items-start gap-3 rounded-2xl bg-[var(--nourish-cream)] p-3 ring-1 ring-inset ring-[var(--nourish-green)]/15 transition-shadow hover:ring-[var(--nourish-green)]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group flex items-start gap-3 rounded-2xl border border-neutral-100/80 bg-white p-3 transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             >
               <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]">
                 <MessageSquare size={16} />

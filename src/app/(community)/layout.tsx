@@ -3,6 +3,7 @@
 import { TabBar } from "@/components/shared/tab-bar";
 import { PageTransition } from "@/components/shared/page-transition";
 import { useUnlockStatus } from "@/lib/hooks/use-unlock-status";
+import { usePathname } from "next/navigation";
 
 /**
  * Content route group layout — mirrors the (today) and (path) layouts so
@@ -17,11 +18,13 @@ export default function CommunityLayout({
   children: React.ReactNode;
 }) {
   const { pathUnlocked, communityUnlocked } = useUnlockStatus();
+  const pathname = usePathname();
+  const immersiveReels = pathname === "/community/reels";
 
   return (
     <>
       <PageTransition>{children}</PageTransition>
-      <TabBar user={{ pathUnlocked, communityUnlocked }} />
+      {!immersiveReels && <TabBar user={{ pathUnlocked, communityUnlocked }} />}
     </>
   );
 }

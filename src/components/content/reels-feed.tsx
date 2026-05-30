@@ -9,7 +9,7 @@
  * over [data-reel-id] children).
  */
 
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useActiveReel } from "@/lib/hooks/use-active-reel";
 import {
@@ -29,6 +29,8 @@ export function ReelsFeed({ reels, initialReelId }: Props) {
   const router = useRouter();
   const activeId = useActiveReel();
   const containerRef = useRef<HTMLDivElement>(null);
+  const didAutoAdvanceRef = useRef(false);
+  const [autoPaused, setAutoPaused] = useState(false);
 
   const ordered = useMemo(
     () => buildInfiniteReelsFeed(reels, todaySeed()),
@@ -46,6 +48,45 @@ export function ReelsFeed({ reels, initialReelId }: Props) {
     if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
   }, [initialReelId]);
 
+  const advanceToNextReel = useCallback(() => {
+    const nodes = Array.from(
+      containerRef.current?.querySelectorAll<HTMLElement>("[data-reel-id]") ??
+        [],
+    );
+    if (nodes.length < 2) return;
+    const currentIndex = nodes
+      .map((node, index) => ({
+        index,
+        id: node.dataset.reelId,
+        top: Math.abs(node.getBoundingClientRect().top),
+      }))
+      .filter((item) => !activeId || item.id === activeId)
+      .sort((a, b) => a.top - b.top)[0]?.index;
+    const index = currentIndex ?? 0;
+    nodes[Math.min(index + 1, nodes.length - 1)]?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }, [activeId]);
+
+  useEffect(() => {
+    if (autoPaused || ordered.length < 2) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
+    const delay = didAutoAdvanceRef.current ? 6200 : 1600;
+    const timer = window.setTimeout(() => {
+      didAutoAdvanceRef.current = true;
+      advanceToNextReel();
+    }, delay);
+
+    return () => window.clearTimeout(timer);
+  }, [activeId, advanceToNextReel, autoPaused, ordered.length]);
+
   const handleClose = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
       router.back();
@@ -57,6 +98,10 @@ export function ReelsFeed({ reels, initialReelId }: Props) {
   return (
     <div
       ref={containerRef}
+      tabIndex={0}
+      onPointerDown={() => setAutoPaused(true)}
+      onWheel={() => setAutoPaused(true)}
+      onKeyDown={() => setAutoPaused(true)}
       className="fixed inset-0 z-[70] h-[100dvh] w-full snap-y snap-mandatory overflow-y-auto overflow-x-hidden bg-black"
       style={{
         scrollSnapStop: "always",

@@ -17,26 +17,26 @@ function readStatus(): UnlockStatus {
       const stats = JSON.parse(raw) as { completedCooks?: number };
       return {
         pathUnlocked: true,
-        communityUnlocked: false,
+        communityUnlocked: true,
         completedCooks: stats.completedCooks ?? 0,
       };
     }
   } catch {
     // localStorage unavailable
   }
-  return { pathUnlocked: true, communityUnlocked: false, completedCooks: 0 };
+  return { pathUnlocked: true, communityUnlocked: true, completedCooks: 0 };
 }
 
 /**
  * Read-only hook: cook stats from localStorage for tab visibility.
- * Path is always visible. Community is deferred (always false).
+ * Path and Community are always visible.
  */
 export function useUnlockStatus(): UnlockStatus {
   const [status, setStatus] = useState<UnlockStatus>(() => {
     if (typeof window === "undefined")
       return {
         pathUnlocked: true,
-        communityUnlocked: false,
+        communityUnlocked: true,
         completedCooks: 0,
       };
     return readStatus();

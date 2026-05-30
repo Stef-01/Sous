@@ -23,7 +23,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
     return (
       <Link
         href={`/community/article/${article.slug}`}
-        className="group flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-2.5 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="group flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-2.5 transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--nourish-cream)]">
           <Image
@@ -53,7 +53,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
   return (
     <Link
       href={`/community/article/${article.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
     >
       <div className="relative aspect-[1/1] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image

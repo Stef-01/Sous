@@ -149,7 +149,6 @@ function SidesPageContent() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
     >
-      {/* Header with main dish thumbnail */}
       <header className="app-header px-4 py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
@@ -163,30 +162,24 @@ function SidesPageContent() {
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0 flex-1">
-            <h1 className="truncate font-serif text-xl font-semibold text-[var(--nourish-dark)]">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-subtext)]">
+              Side pairings
+            </p>
+            <h1 className="truncate font-serif text-base font-semibold text-[var(--nourish-dark)]">
               {mainDish}
             </h1>
           </div>
-          {mainImg && !imgError ? (
-            <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-xl">
-              <Image
-                src={mainImg}
-                alt={mainDish}
-                fill
-                sizes="36px"
-                className="object-cover"
-                onError={() => setImgError(true)}
-              />
-            </div>
-          ) : (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
-              <ChefHat size={18} className="text-[var(--nourish-green)]" />
-            </div>
-          )}
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-4 px-4 pt-4">
+        <ChosenMainHero
+          mainDish={mainDish}
+          mainImg={mainImg}
+          imgError={imgError}
+          onImgError={() => setImgError(true)}
+        />
+
         {/* Loading state */}
         {isLoading && (
           <motion.div
@@ -305,5 +298,53 @@ function SidesPageContent() {
         )}
       </main>
     </motion.div>
+  );
+}
+
+function ChosenMainHero({
+  mainDish,
+  mainImg,
+  imgError,
+  onImgError,
+}: {
+  mainDish: string;
+  mainImg: string | null;
+  imgError: boolean;
+  onImgError: () => void;
+}) {
+  return (
+    <section className="space-y-3" aria-label={`Selected main: ${mainDish}`}>
+      <div className="relative aspect-[16/10] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
+        {mainImg && !imgError ? (
+          <Image
+            src={mainImg}
+            alt={mainDish}
+            fill
+            sizes="(max-width: 768px) 100vw, 430px"
+            priority
+            className="object-contain"
+            onError={onImgError}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-white">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+              <ChefHat size={28} className="text-[var(--nourish-green)]" />
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="space-y-1 px-1">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
+          Build this plate
+        </p>
+        <h2 className="font-serif text-[30px] leading-none text-[var(--nourish-dark)]">
+          {mainDish}
+        </h2>
+        <p className="text-sm leading-relaxed text-[var(--nourish-subtext)]">
+          Choose a side or cook the preselected plate. Matches are ranked for
+          flavor contrast, balance, and prep timing.
+        </p>
+      </div>
+    </section>
   );
 }
