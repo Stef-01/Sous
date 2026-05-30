@@ -331,7 +331,7 @@ export const STANFORD_ARTICLES: Article[] = [
     title: "Sweet strategies for a healthy Halloween",
     excerpt:
       "Stanford's Cindy Zedeck on treating Halloween as a teaching moment about moderation rather than a candy crisis.",
-    coverImageUrl: "/food_images/sweet_potato.png",
+    coverImageUrl: "/food_images/sweet_potato_fries.png",
     body: [
       "Cindy Zedeck, who directs the Pediatric Weight Control Program at Stanford Medicine Children's Health, frames Halloween as something most parents get wrong by accident: treating it as a single night to survive rather than a teaching moment to use.",
       "The program's first practical move is to buy candy at the last possible moment, in flavors no one in the household particularly loves. The lower the household's pre-Halloween consumption, the easier the actual night becomes.",
@@ -596,7 +596,7 @@ export const STANFORD_ARTICLES: Article[] = [
     title: "A healthy Halloween, without the lecture",
     excerpt:
       "Stanford psychologist Shiri Sadeh-Sharvit on planning Halloween with kids — and why parental flexibility matters more than the candy itself.",
-    coverImageUrl: "/food_images/sweet_potato.png",
+    coverImageUrl: "/food_images/sweet_potato_fries.png",
     body: [
       "Shiri Sadeh-Sharvit, PhD, who works in Stanford's Eating Disorders Research Program, has a quietly different take on the Halloween-and-candy question than the standard 'limit it' advice: the long-term cost of a rigid restriction approach is bigger than the short-term cost of a few extra Snickers.",
       "Her practical tactics start before trick-or-treating. Have a brief, calm conversation with the child about the plan for the night. Set an age-appropriate candy count or window, but explicitly invite the child to suggest their own approach — collaborative problem-solving lands far better than parental edict, and the strategy the child helped design is the strategy that gets followed.",
@@ -713,7 +713,7 @@ export const STANFORD_ARTICLES: Article[] = [
     title: "Inside Stanford's Pediatric Weight Control Program",
     excerpt:
       "How Stanford's family-based, behaviour-first program has worked for over 25 years — and what the food traffic-light model actually looks like at home.",
-    coverImageUrl: "/food_images/sweet_potato.png",
+    coverImageUrl: "/food_images/sweet_potato_fries.png",
     body: [
       "Stanford's Pediatric Weight Control Program — directed by Cindy Zedeck, MA, and coordinated by Nadia Al-Lami — has been running since 1999 with a remarkably stable approach: family-based, behaviour-first, no calorie counting.",
       "The model the program is best known for is the food traffic light. Red foods are high-calorie items that earn an honest, named spot in the diet but stay occasional. Yellow foods are starches and sugars that work in modest portions inside structured meals. Green foods — vegetables and most low-calorie produce — fill out the plate. Children learn the categories and start choosing for themselves.",
@@ -742,7 +742,7 @@ export const STANFORD_ARTICLES: Article[] = [
     title: "A safer Halloween: the non-candy half of the night",
     excerpt:
       "Stanford-affiliated pediatricians on the trick-or-treating safety basics that the candy conversation tends to crowd out.",
-    coverImageUrl: "/food_images/sweet_potato.png",
+    coverImageUrl: "/food_images/sweet_potato_fries.png",
     body: [
       "Halloween coverage almost always centres on candy — the sugar load, the moderation tactics, the parental anxiety about the haul. The Stanford Medicine Children's Health pediatric teams in Bayside, Livermore, Pleasanton, and San Ramon make a quieter point worth holding next to all of that: most of what makes Halloween safer or unsafer for a child has nothing to do with food.",
       "Supervision is the first lever. Young children need an adult walking with them. Older children in independent groups should agree on a route in advance, carry phones, and check in at fixed intervals. The route plan is what makes the night work; improvising on the sidewalk at 8 p.m. is what creates problems.",

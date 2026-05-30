@@ -167,13 +167,13 @@ Create `src/lib/hooks/use-speech-recognition.ts`. Wraps the browser
 - **Command parsing:** Raw transcript → lowercase → trim → match against the
   5-entry command map:
 
-  | Transcript match | Command | Action |
-  |---|---|---|
-  | "next", "next step" | `NEXT` | `onNext()` |
-  | "back", "go back", "previous" | `BACK` | `onPrev()` |
+  | Transcript match              | Command  | Action                          |
+  | ----------------------------- | -------- | ------------------------------- |
+  | "next", "next step"           | `NEXT`   | `onNext()`                      |
+  | "back", "go back", "previous" | `BACK`   | `onPrev()`                      |
   | "repeat", "say again", "read" | `REPEAT` | re-trigger TTS for current step |
-  | "start timer", "timer" | `TIMER` | `onStartTimer(seconds)` |
-  | "how long", "time left" | `STATUS` | TTS speaks remaining timer |
+  | "start timer", "timer"        | `TIMER`  | `onStartTimer(seconds)`         |
+  | "how long", "time left"       | `STATUS` | TTS speaks remaining timer      |
 
 - **Confidence threshold:** Ignore results with `confidence < 0.6`.
 - **No-match handling:** Unrecognized commands are silently ignored (no error
@@ -182,7 +182,7 @@ Create `src/lib/hooks/use-speech-recognition.ts`. Wraps the browser
 - **Auto-restart:** If recognition stops unexpectedly (browser timeout), restart
   after 500ms unless explicitly stopped.
 - **Return shape:** `{ isSupported, isListening, startListening, stopListening,
-  lastCommand, lastCommandTime }`
+lastCommand, lastCommandTime }`
 
 **Files:** `src/lib/hooks/use-speech-recognition.ts`
 **Tests:** `src/lib/hooks/use-speech-recognition.test.ts` — mock
@@ -245,12 +245,12 @@ In the cook page (`src/app/cook/[slug]/page.tsx` and
 `src/app/cook/combined/page.tsx`), wire `useSpeechRecognition` commands to
 existing StepCard callbacks:
 
-| Command | Wiring |
-|---|---|
-| `NEXT` | Call `handleNext()` — same as right arrow tap |
-| `BACK` | Call `handlePrev()` — same as left arrow tap |
-| `REPEAT` | Call `speak(currentStep.instruction)` via existing TTS |
-| `TIMER` | Call `handleStartTimer(currentStep.timerSeconds)` if step has timer |
+| Command  | Wiring                                                                             |
+| -------- | ---------------------------------------------------------------------------------- |
+| `NEXT`   | Call `handleNext()` — same as right arrow tap                                      |
+| `BACK`   | Call `handlePrev()` — same as left arrow tap                                       |
+| `REPEAT` | Call `speak(currentStep.instruction)` via existing TTS                             |
+| `TIMER`  | Call `handleStartTimer(currentStep.timerSeconds)` if step has timer                |
 | `STATUS` | Call `speak(\`${minutes} minutes ${seconds} seconds remaining\`)` from timer store |
 
 **Key constraint:** Voice commands only fire during the Cook phase (not Mission,
@@ -373,6 +373,7 @@ Manual walkthrough at 390×844 viewport. Screenshot verification.
 ## Success Criteria
 
 ### Feature A (Inline Substitute)
+
 - Long-press on any ingredient row surfaces a substitute within 3s
 - Cached substitutes render instantly on revisit (0 AI calls)
 - No modal, no sheet, no overlay — inline only
@@ -380,6 +381,7 @@ Manual walkthrough at 390×844 viewport. Screenshot verification.
 - All existing IngredientList tests still pass
 
 ### Feature B (Voice Cook Pilot)
+
 - 5 commands recognized with >90% accuracy in quiet conditions
 - Zero false-positive actions (confidence threshold enforced)
 - Mic button only appears when feature flag is on AND browser supports it

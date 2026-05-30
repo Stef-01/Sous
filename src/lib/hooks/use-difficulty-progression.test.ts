@@ -1,5 +1,4 @@
 import { describe, it, expect, vi } from "vitest";
-import type { CookSessionRecord } from "./use-cook-sessions";
 
 // Mock the guided-cook-steps module
 vi.mock("@/data/guided-cook-steps", () => ({
@@ -47,20 +46,7 @@ vi.mock("@/data/guided-cook-steps", () => ({
   getStaticMealCookData: vi.fn(() => null),
 }));
 
-// Import after mocks
 import { scoreDifficultyAlignment } from "./use-difficulty-progression";
-
-function mockSession(slug: string, cuisine = "Italian"): CookSessionRecord {
-  return {
-    sessionId: `cs-${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    recipeSlug: slug,
-    dishName: slug,
-    cuisineFamily: cuisine,
-    startedAt: new Date().toISOString(),
-    completedAt: new Date().toISOString(),
-    favorite: false,
-  };
-}
 
 describe("scoreDifficultyAlignment", () => {
   it("gives highest boost for exact difficulty match", () => {

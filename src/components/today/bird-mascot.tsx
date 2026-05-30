@@ -26,7 +26,7 @@ export function OwlAvatar({
       onClick={onClick}
       whileTap={{ scale: 0.85 }}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
-      className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 border border-[var(--nourish-green)]/15 ambient-float"
+      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--nourish-green)]/15 bg-[var(--nourish-green)]/10"
       type="button"
       aria-label={ariaLabel}
     >
@@ -77,9 +77,8 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        className="flex w-full items-center gap-3 rounded-2xl border border-[var(--nourish-green)]/30 bg-white px-4 py-3.5 shadow-sm
-                   hover:shadow-md hover:border-[var(--nourish-green)]/50 active:scale-[0.99]
-                   transition-all duration-200 text-left group"
+        className="group flex w-full items-center gap-3 rounded-2xl border border-[var(--nourish-border-strong)] bg-white px-4 py-3.5 text-left transition-colors duration-200
+                   hover:border-[var(--nourish-green)]/45 active:scale-[0.99]"
         type="button"
       >
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">

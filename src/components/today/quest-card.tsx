@@ -795,15 +795,6 @@ function MealQueuePreview({
           </div>
         </div>
       </motion.button>
-
-      <button
-        type="button"
-        onClick={onOpen}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white px-5 text-sm font-semibold text-[var(--nourish-dark)] transition-colors hover:border-neutral-500"
-      >
-        <Maximize2 size={16} strokeWidth={2} />
-        Open queue
-      </button>
     </motion.div>
   );
 }
@@ -919,7 +910,12 @@ function MealSwipeQueueOverlay({
       transition={{ duration: 0.18 }}
       className="fixed inset-0 z-[180] flex h-full flex-col overflow-hidden bg-[#080907] text-white"
     >
-      <div className="safe-area-top absolute inset-x-0 top-0 z-40 px-4 pt-3">
+      <div
+        className="absolute inset-x-0 top-0 z-40 px-4"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 2.75rem)",
+        }}
+      >
         <div className="flex items-center justify-between gap-3">
           <button
             type="button"
@@ -970,28 +966,30 @@ function MealSwipeQueueOverlay({
       </div>
 
       {activeDish && (
-        <div className="safe-area-bottom absolute inset-x-0 bottom-0 z-40 bg-[#080907] px-5 pb-4 pt-3">
-          <div className="mx-auto mb-3 max-w-[430px] space-y-1.5">
-            <h3 className="font-serif text-[28px] leading-none text-white">
+        <div
+          className="absolute inset-x-0 bottom-0 z-40 bg-[#080907] px-5 pt-2"
+          style={{
+            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.875rem)",
+          }}
+        >
+          <div className="mx-auto mb-2 max-w-[430px] space-y-1">
+            <h3 className="line-clamp-1 font-serif text-[25px] leading-none text-white">
               {activeDish.dishName}
             </h3>
-            <div className="flex flex-wrap items-center gap-2 text-[12px] font-medium text-white/56">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-white/56">
               <span>{activeDish.cuisineFamily}</span>
               <span aria-hidden="true">/</span>
               <span>{activeDish.cookTimeMinutes} min</span>
               <span aria-hidden="true">/</span>
               <span>{activeDish.ingredientCount} ingredients</span>
             </div>
-            <p className="line-clamp-1 text-sm leading-relaxed text-white/68">
-              {activeDish.description}
-            </p>
           </div>
 
-          <div className="mx-auto grid max-w-[430px] grid-cols-[54px_1fr_1.15fr] items-center gap-3">
+          <div className="mx-auto grid max-w-[430px] grid-cols-[52px_0.9fr_1.2fr] items-center gap-3">
             <button
               type="button"
               onClick={() => swipeTop("left")}
-              className="flex h-[54px] w-[54px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10"
+              className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10"
               aria-label={`Pass on ${activeDish.dishName}`}
             >
               <X size={21} strokeWidth={2.2} />
@@ -1000,7 +998,7 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={saveActive}
               className={cn(
-                "flex h-[54px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
+                "flex h-[52px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
                 isDishSaved(activeDish.slug)
                   ? "border-pink-200 bg-pink-50 text-pink-500"
                   : "border-white/16 bg-transparent text-white hover:bg-white/10",
@@ -1020,7 +1018,7 @@ function MealSwipeQueueOverlay({
             <button
               type="button"
               onClick={() => swipeTop("right")}
-              className="flex h-[54px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88"
+              className="flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88"
               aria-label={`Cook ${activeDish.dishName}`}
             >
               <ChefHat size={18} strokeWidth={2.2} />
@@ -1063,7 +1061,7 @@ function FullscreenSwipeCard({
 
   return (
     <motion.div
-      className="absolute inset-0 px-3 pb-[168px] pt-[74px]"
+      className="absolute inset-0 px-3 pb-[126px] pt-[104px]"
       style={{
         x: isTop ? x : 0,
         rotate: isTop ? rotate : peekRotate,

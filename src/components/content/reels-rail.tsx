@@ -65,7 +65,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
                 <span className="absolute inset-0 flex items-center justify-center">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/85 text-[var(--nourish-dark)] backdrop-blur-sm transition-transform duration-300 group-hover:scale-105">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-dark)] transition-transform duration-300 group-hover:scale-105">
                     <Play size={20} className="ml-0.5" />
                   </span>
                 </span>
@@ -78,7 +78,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
                   variant="overlay"
                 />
               </div>
-              <div className="absolute left-2 top-2 inline-flex items-center rounded-full bg-black/40 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+              <div className="absolute left-2 top-2 inline-flex items-center rounded-full bg-black/40 px-2 py-0.5 text-[10px] font-semibold text-white">
                 {formatDuration(reel.durationSeconds)}
               </div>
             </div>

@@ -409,14 +409,14 @@ export function IngredientList({
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-            "shadow-sm transition-all duration-200",
+            "transition-colors duration-200",
             allChecked
-              ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)] shadow-[var(--nourish-green)]/20"
+              ? "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]"
               : "bg-[var(--nourish-green)]/80 hover:bg-[var(--nourish-green)]",
           )}
           type="button"
         >
-          {allChecked ? "Let\u2019s cook! 🍳" : "I have everything"}
+          {allChecked ? "Start cooking" : "I have everything"}
         </motion.button>
 
         {/* Add missing ingredients to shopping list */}

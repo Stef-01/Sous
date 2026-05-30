@@ -31,33 +31,43 @@ test.describe("Phase 20 — new-feature smokes", () => {
     // Advance from Mission → Grab → Cook. The UI's primary CTAs vary in
     // exact copy, so use role+name with flexible regex rather than text().
     const missionStart = page
-      .getByRole("button", { name: /start|let'?s? go|begin/i })
+      .getByRole("button", {
+        name: /start|let.s (gather|cook|go)|begin/i,
+      })
       .first();
-    if (await missionStart.isVisible().catch(() => false)) {
-      await missionStart.click();
-    }
+    await expect(missionStart).toBeVisible({ timeout: 10000 });
+    await missionStart.click();
 
     const grabContinue = page
-      .getByRole("button", { name: /got it|i have|continue|next/i })
+      .getByRole("button", {
+        name: /got it|i have everything|i have|continue|next/i,
+      })
       .first();
-    if (await grabContinue.isVisible().catch(() => false)) {
-      await grabContinue.click();
-    }
+    await expect(grabContinue).toBeVisible({ timeout: 10000 });
+    await grabContinue.click();
 
-    // Once on a cook step, the read-aloud toggle must render. It may be
-    // labelled "Read aloud" (enabled) or a disabled fallback variant; either
-    // way it exposes a matching accessible name.
-    const readAloud = page.getByRole("button", {
-      name: /read aloud|read out loud|listen/i,
-    });
-    await expect(readAloud.first()).toBeVisible({ timeout: 8000 });
+    // Once on a cook step, render the compact read-aloud icon only when the
+    // browser actually exposes speech synthesis.
+    const speechSupported = await page.evaluate(() => !!window.speechSynthesis);
+    if (speechSupported) {
+      await expect(
+        page.getByRole("button", {
+          name: /read step aloud|stop reading aloud/i,
+        }),
+      ).toBeVisible({ timeout: 8000 });
+    } else {
+      await expect(page.getByText(/Step 1 of/i)).toBeVisible({
+        timeout: 8000,
+      });
+    }
   });
 
   test("Tonight's commitment persists across reloads", async ({ page }) => {
     await page.goto("/today");
 
+    await page.getByRole("button", { name: /More options/i }).click();
     const tonightChip = page.getByRole("button", {
-      name: /tonight|commit|plan tonight/i,
+      name: /commit to tonight|tonight/i,
     });
 
     // The chip lives below the search bar; it may take a tick to render.
@@ -66,8 +76,7 @@ test.describe("Phase 20 — new-feature smokes", () => {
 
     // A textarea/input appears — fill with a commitment and submit.
     const commitInput = page
-      .locator('input[type="text"], textarea')
-      .filter({ hasText: "" })
+      .getByRole("textbox", { name: /Tonight.s cook/i })
       .first();
 
     // If the chip opens an inline input, the simplest contract is: the

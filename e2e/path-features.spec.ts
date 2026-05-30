@@ -19,9 +19,7 @@ test.describe("Path Tab Features", () => {
     await expect(page.getByText("Your journey")).toBeVisible({
       timeout: 30000,
     });
-    await expect(
-      page.getByRole("button", { name: /View badges and achievements/i }),
-    ).toBeVisible({
+    await expect(page.getByText("Knife Skills & Cuts").first()).toBeVisible({
       timeout: 15000,
     });
     await expect(page.locator("text=Scrapbook")).toBeVisible();

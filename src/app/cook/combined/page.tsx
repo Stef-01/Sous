@@ -20,7 +20,7 @@ import {
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
-import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
+import { CombinedCookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { ParallelHintBanner } from "@/components/guided-cook/parallel-hint-banner";
 import { DishProgressStrip } from "@/components/guided-cook/dish-progress-strip";
@@ -632,18 +632,16 @@ function CombinedCookContent() {
             />
           )}
 
-          {/* GRAB  -  Per-dish watchlist stack + segmented ingredient list.
-              Each watchlist is per-dish scoped so MistakeChip suppression
-              from prior cooks respects per-dish boundaries. */}
+          {/* GRAB  -  One combined watchlist + segmented ingredient list. */}
           {currentPhase === "grab" && (
             <div className="space-y-2">
-              {orderedDishes.map((d) => (
-                <CookWatchlist
-                  key={`watchlist-${d.dish.slug}`}
-                  dishSlug={d.dish.slug}
-                  steps={d.steps}
-                />
-              ))}
+              <CombinedCookWatchlist
+                groups={orderedDishes.map((d) => ({
+                  dishName: d.dish.name,
+                  dishSlug: d.dish.slug,
+                  steps: d.steps,
+                }))}
+              />
               <IngredientList
                 key="grab"
                 ingredients={allIngredients}
@@ -859,7 +857,7 @@ function CombinedMissionScreen({
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 25 }}
-        className="relative aspect-[4/3] overflow-hidden rounded-2xl"
+        className="relative aspect-[4/3] overflow-hidden rounded-xl"
       >
         {mainDishHeroImage ? (
           <Image
@@ -877,14 +875,14 @@ function CombinedMissionScreen({
                 "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
             }}
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white/20">
               <UtensilsCrossed
                 size={32}
-                className="text-white drop-shadow-sm"
+                className="text-white"
                 strokeWidth={1.5}
               />
             </div>
-            <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight drop-shadow-sm">
+            <span className="text-sm font-semibold text-white/90 text-center px-6 leading-tight">
               {mainDishName}
             </span>
           </div>
@@ -992,6 +990,23 @@ function CombinedMissionScreen({
         {mainDishDescription}
       </motion.p>
 
+      {/* Primary action stays ahead of optional controls on short phones. */}
+      <motion.button
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
+        whileTap={{ scale: 0.96 }}
+        onClick={onStart}
+        className={cn(
+          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
+          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+          "transition-colors duration-200",
+        )}
+        type="button"
+      >
+        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+      </motion.button>
+
       {/* Plan-my-cook  -  uses sequencer-adjusted time when available so the
           computed start reflects parallelization savings. */}
       <motion.div
@@ -1015,23 +1030,6 @@ function CombinedMissionScreen({
       >
         <BigHandsToggle />
       </motion.div>
-
-      {/* CTA  -  mt-auto pins to bottom for no-scroll compliance at 375×667 */}
-      <motion.button
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
-        whileTap={{ scale: 0.96 }}
-        onClick={onStart}
-        className={cn(
-          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200",
-        )}
-        type="button"
-      >
-        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
-      </motion.button>
     </motion.div>
   );
 }

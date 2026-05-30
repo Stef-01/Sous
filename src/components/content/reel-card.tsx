@@ -20,7 +20,6 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ChevronDown, X } from "lucide-react";
 import { useReelEngagement } from "@/lib/hooks/use-reel-engagement";
@@ -29,16 +28,15 @@ import type { Reel } from "@/types/content";
 
 interface Props {
   reel: Reel;
+  reelInstanceId: string;
   isActive: boolean;
   onClose: () => void;
 }
 
-export function ReelCard({ reel, isActive, onClose }: Props) {
-  const router = useRouter();
+export function ReelCard({ reel, reelInstanceId, isActive, onClose }: Props) {
   const reducedMotion = useReducedMotion();
   const { markOpened } = useReelEngagement();
   const [paused, setPaused] = useState(false);
-  const [captionExpanded, setCaptionExpanded] = useState(false);
   const [endHintVisible, setEndHintVisible] = useState(false);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const endHintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -60,7 +58,6 @@ export function ReelCard({ reel, isActive, onClose }: Props) {
   useEffect(() => {
     if (!isActive) {
       setPaused(false);
-      setCaptionExpanded(false);
       setEndHintVisible(false);
     }
   }, [isActive]);
@@ -111,7 +108,8 @@ export function ReelCard({ reel, isActive, onClose }: Props) {
 
   return (
     <section
-      data-reel-id={reel.id}
+      data-reel-id={reelInstanceId}
+      data-reel-source-id={reel.id}
       className="relative h-[100dvh] w-full snap-start overflow-hidden bg-black"
       aria-label={`Reel: ${reel.title}`}
       onPointerDown={handlePointerDown}
@@ -135,17 +133,20 @@ export function ReelCard({ reel, isActive, onClose }: Props) {
           alt={reel.title}
           fill
           sizes="(max-width: 480px) 100vw, 420px"
-          className="object-cover opacity-90"
+          className="object-cover"
           priority={isActive}
         />
       </motion.div>
 
       {/* Gradients top + bottom for legibility */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/55 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/35 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
 
       {/* Top progress bar — 1px, fills over durationSeconds while active */}
-      <div className="absolute inset-x-3 top-3 h-[2px] overflow-hidden rounded-full bg-white/15">
+      <div
+        className="absolute inset-x-3 h-[2px] overflow-hidden rounded-full bg-white/15"
+        style={{ top: "calc(env(safe-area-inset-top, 0px) + 2.5rem)" }}
+      >
         <motion.div
           key={`${reel.id}-${isActive ? "on" : "off"}-${paused ? "p" : "r"}`}
           initial={{ width: "0%" }}
@@ -164,68 +165,55 @@ export function ReelCard({ reel, isActive, onClose }: Props) {
         />
       </div>
 
-      {/* Close (×) — top-left, subtle */}
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label="Close reels"
-        className="absolute left-3 top-7 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-      >
-        <X size={18} />
-      </button>
+      {/* Close (×) — only on the active reel so accessibility focus stays quiet. */}
+      {isActive && (
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close reels"
+          className="absolute left-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/14 transition-colors hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          style={{ top: "calc(env(safe-area-inset-top, 0px) + 3.25rem)" }}
+        >
+          <X size={18} />
+        </button>
+      )}
 
       {/* Right-rail actions */}
       {isActive && <ReelActionRail reel={reel} />}
 
       {/* Bottom-left creator + caption + (optional) cook CTA */}
-      <motion.div
-        initial={reducedMotion ? false : { opacity: 0, y: 10 }}
-        animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0.85, y: 0 }}
-        transition={{ duration: 0.25, delay: 0.05 }}
-        className="absolute inset-x-0 bottom-0 z-10 space-y-2 px-4 pb-10 text-white"
-      >
-        <p className="text-[14px] font-bold leading-tight drop-shadow-sm">
-          {reel.creatorHandle}
-        </p>
-        <p
-          className={
-            captionExpanded
-              ? "text-[13px] leading-snug text-white/95"
-              : "text-[13px] leading-snug text-white/95 line-clamp-2"
-          }
+      {isActive && (
+        <motion.div
+          initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.05 }}
+          className="absolute inset-x-0 bottom-0 z-10 space-y-2 px-4 pr-24 text-white"
+          style={{
+            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4rem)",
+          }}
         >
-          {reel.caption}
-        </p>
-        {!captionExpanded && reel.caption.length > 90 && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setCaptionExpanded(true);
-            }}
-            className="text-[12px] font-semibold text-white/80 hover:text-white"
-          >
-            more
-          </button>
-        )}
-        {reel.dishSlug && (
-          <Link
-            href={`/cook/${reel.dishSlug}`}
-            onClick={(e) => e.stopPropagation()}
-            className="mt-2 inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1.5 text-[12px] font-semibold text-white backdrop-blur-sm hover:bg-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-          >
-            Cook this →
-          </Link>
-        )}
-        <p className="pt-1 text-[10px] text-white/55">
-          Sample reel · simulated playback for prototype
-        </p>
-      </motion.div>
+          <p className="text-[14px] font-bold leading-tight">
+            {reel.creatorHandle}
+          </p>
+          <p className="line-clamp-2 text-[13px] leading-snug text-white/95">
+            {reel.caption}
+          </p>
+          {reel.dishSlug && (
+            <Link
+              href={`/cook/${reel.dishSlug}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-neutral-950 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            >
+              Cook this →
+            </Link>
+          )}
+        </motion.div>
+      )}
 
       {/* Pause overlay (small, centered, only while held) */}
       {paused && isActive && (
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="rounded-full bg-black/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+          <div className="rounded-full bg-black/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
             Paused
           </div>
         </div>
@@ -252,19 +240,16 @@ export function ReelCard({ reel, isActive, onClose }: Props) {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15"
             >
               <ChevronDown size={18} />
             </motion.div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] drop-shadow-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em]">
               Swipe up for next
             </p>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Suppress unused router warning when no dishSlug present */}
-      <span className="sr-only">{router ? "" : ""}</span>
     </section>
   );
 }

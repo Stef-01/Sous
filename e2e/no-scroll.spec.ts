@@ -116,26 +116,16 @@ test.describe("No-Scroll CTA — 375×667 viewport", () => {
 });
 
 test.describe("Meal-First Quest Experience", () => {
-  test("Home page quest card shows a meal with 'Find sides' CTA", async ({
-    page,
-  }) => {
+  test("Home page meal queue opens from the food card", async ({ page }) => {
     await page.goto("/today");
     await page.waitForLoadState("networkidle");
 
-    // Wait for quest card to appear
-    const findSidesBtn = page.locator('button:has-text("Find sides")').first();
-    const startCookingBtn = page
-      .locator('button:has-text("Start cooking")')
-      .first();
-
-    // At least one of these should be visible (meal shows "Find sides", side shows "Start cooking")
-    const mealVisible = await findSidesBtn.isVisible().catch(() => false);
-    const sideVisible = await startCookingBtn.isVisible().catch(() => false);
-
-    expect(
-      mealVisible || sideVisible,
-      "Quest card should show either 'Find sides' or 'Start cooking' CTA",
-    ).toBeTruthy();
+    await expect(page.getByText("Meal queue")).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(
+      page.getByRole("button", { name: /Open meal queue/i }).first(),
+    ).toBeVisible({ timeout: 10000 });
   });
 
   test("Search bar shows meal-centric copy", async ({ page }) => {
@@ -146,12 +136,16 @@ test.describe("Meal-First Quest Experience", () => {
     await expect(searchBar).toBeVisible({ timeout: 10000 });
   });
 
-  test("Quest card shows cuisine badge", async ({ page }) => {
+  test("Meal queue shows cuisine badge", async ({ page }) => {
     await page.goto("/today");
     await page.waitForLoadState("networkidle");
 
     // Give the quest card time to render
     await page.waitForTimeout(1000);
+
+    await expect(
+      page.getByText(/Indian|Italian|Thai|Korean/i).first(),
+    ).toBeVisible({ timeout: 10000 });
 
     // The quest card should show a cuisine family badge
     const card = page.locator("[class*='quest']").first();

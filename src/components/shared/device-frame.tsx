@@ -266,11 +266,37 @@ function DeviceToggle({
   mode: DeviceMode;
   onToggle: () => void;
 }) {
+  const [bodyScrollLocked, setBodyScrollLocked] = useState(false);
+
+  useEffect(() => {
+    const sync = () => {
+      setBodyScrollLocked(
+        document.body.style.overflow === "hidden" ||
+          document.documentElement.style.overflow === "hidden",
+      );
+    };
+
+    sync();
+    const observer = new MutationObserver(sync);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  if (bodyScrollLocked) return null;
+
   return (
     <button
       onClick={onToggle}
       className={cn(
-        "fixed z-[200] flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105",
+        "fixed z-[50] flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2.5 transition-colors duration-200 hover:bg-neutral-50",
         mode === "phone" ? "bottom-6 right-6" : "bottom-4 right-4",
       )}
       type="button"

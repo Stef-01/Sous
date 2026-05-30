@@ -38,7 +38,8 @@ export function ReelActionRail({ reel }: Props) {
 
   return (
     <aside
-      className="absolute bottom-28 right-3 z-10 flex flex-col items-center gap-5"
+      className="absolute right-3 z-10 flex flex-col items-center gap-5"
+      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 7.25rem)" }}
       aria-label="Reel actions"
     >
       <ActionButton
@@ -113,7 +114,7 @@ function ActionButton({
         {children}
       </span>
       {typeof count === "number" && count > 0 && (
-        <span className="text-[11px] font-semibold text-white drop-shadow-sm">
+        <span className="text-[11px] font-semibold text-white">
           {compact(count)}
         </span>
       )}

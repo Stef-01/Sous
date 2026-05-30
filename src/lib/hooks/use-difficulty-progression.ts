@@ -7,8 +7,6 @@ import {
   getStaticMealCookData,
 } from "@/data/guided-cook-steps";
 
-const STORAGE_KEY = "sous-difficulty-progression";
-
 export type SkillLevel = "easy" | "medium" | "hard";
 
 export interface DifficultyProgression {

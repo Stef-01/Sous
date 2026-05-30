@@ -252,7 +252,7 @@ export function StepCard({
               whileTap={{ scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
-                "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition-all",
+                "flex h-10 w-10 items-center justify-center rounded-lg text-xs font-medium transition-colors",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 isSpeaking
                   ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
@@ -263,20 +263,8 @@ export function StepCard({
               title="Hands-free: tap once to play, again to stop, a third tap to replay"
             >
               {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
-              {isSpeaking ? "Stop" : "Read aloud"}
             </motion.button>
-          ) : (
-            // Quiet fallback  -  no button, one muted line so users with older
-            // browsers understand why the hands-free affordance is missing.
-            <span
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[var(--nourish-subtext)]/80"
-              role="note"
-              aria-live="polite"
-            >
-              <VolumeX size={14} strokeWidth={1.8} />
-              Read-aloud isn&apos;t available on this browser.
-            </span>
-          )}
+          ) : null}
         </div>
         <div className="h-1 w-full rounded-full bg-neutral-100 overflow-hidden">
           <motion.div
@@ -327,7 +315,7 @@ export function StepCard({
             {visualImage.isFallback && (
               <span
                 data-testid="visual-mode-fallback-badge"
-                className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur"
+                className="absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white"
               >
                 Dish photo
               </span>
@@ -586,7 +574,7 @@ export function StepCard({
           className={cn(
             "flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3.5 text-sm font-semibold",
             "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-            "shadow-sm shadow-[var(--nourish-green)]/20 transition-colors duration-200",
+            "transition-colors duration-200",
           )}
           type="button"
           aria-label={

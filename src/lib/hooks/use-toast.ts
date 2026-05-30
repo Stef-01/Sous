@@ -30,6 +30,7 @@ type Listener = () => void;
 
 const listeners = new Set<Listener>();
 let queue: Toast[] = [];
+const EMPTY_TOASTS: Toast[] = [];
 
 function emit() {
   for (const l of listeners) l();
@@ -53,7 +54,7 @@ function getSnapshot() {
 }
 
 function getServerSnapshot(): Toast[] {
-  return [];
+  return EMPTY_TOASTS;
 }
 
 export const toast = {

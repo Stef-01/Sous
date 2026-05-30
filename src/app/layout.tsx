@@ -20,6 +20,8 @@ const dmSerif = DM_Serif_Display({
   subsets: ["latin"],
 });
 
+const shouldLoadVercelTelemetry = process.env.VERCEL === "1";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -79,8 +81,12 @@ export default function RootLayout({
             </ErrorBoundary>
             <ToastHost />
           </Providers>
-          <Analytics />
-          <SpeedInsights />
+          {shouldLoadVercelTelemetry && (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          )}
         </body>
       </html>
     </AuthProvider>

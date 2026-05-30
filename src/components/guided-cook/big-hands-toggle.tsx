@@ -20,10 +20,10 @@ export function BigHandsToggle() {
       type="button"
       onClick={toggle}
       aria-pressed={enabled}
-      className="flex w-full items-center gap-3 rounded-xl border border-[var(--nourish-border-strong)] bg-white/70 px-3.5 py-3 text-left transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      className="flex w-full items-center gap-3 rounded-xl border border-[var(--nourish-border-strong)] bg-white/70 px-3.5 py-2.5 text-left transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
     >
       <span
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
           enabled
             ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
             : "bg-neutral-100 text-[var(--nourish-subtext)]"
@@ -33,12 +33,10 @@ export function BigHandsToggle() {
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[13px] font-semibold text-[var(--nourish-dark)]">
-          Make everything bigger during this cook
+          Bigger controls
         </span>
         <span className="block text-[12px] text-[var(--nourish-subtext)]">
-          {enabled
-            ? "On  -  bigger text and buttons until the session ends."
-            : "Larger text and easier-to-tap buttons. Just for this cook."}
+          {enabled ? "On for this cook." : "Larger text and buttons."}
         </span>
       </span>
       <motion.span

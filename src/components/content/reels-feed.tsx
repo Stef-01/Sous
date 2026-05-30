@@ -37,13 +37,24 @@ export function ReelsFeed({ reels, initialReelId }: Props) {
     [reels],
   );
 
+  useEffect(() => {
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousHtmlOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousHtmlOverflow;
+    };
+  }, []);
+
   // Initial-position scroll: when an initialReelId is provided (deep
   // link from the Content-home rail), jump to it before the snap
   // observer kicks in.
   useEffect(() => {
     if (!initialReelId) return;
     const el = containerRef.current?.querySelector<HTMLElement>(
-      `[data-reel-id="${CSS.escape(initialReelId)}"]`,
+      `[data-reel-source-id="${CSS.escape(initialReelId)}"]`,
     );
     if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
   }, [initialReelId]);
@@ -108,14 +119,18 @@ export function ReelsFeed({ reels, initialReelId }: Props) {
         WebkitOverflowScrolling: "touch",
       }}
     >
-      {ordered.map((reel, idx) => (
-        <ReelCard
-          key={`${reel.id}-${idx}`}
-          reel={reel}
-          isActive={activeId === reel.id}
-          onClose={handleClose}
-        />
-      ))}
+      {ordered.map((reel, idx) => {
+        const reelInstanceId = `${reel.id}-${idx}`;
+        return (
+          <ReelCard
+            key={reelInstanceId}
+            reel={reel}
+            reelInstanceId={reelInstanceId}
+            isActive={activeId === reelInstanceId}
+            onClose={handleClose}
+          />
+        );
+      })}
     </div>
   );
 }

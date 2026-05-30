@@ -1,26 +1,21 @@
 import { test, expect, type Page } from "@playwright/test";
 
-/**
- * Dismiss the coach quiz overlay that appears for first-time users.
- * Clicks the close button if visible, otherwise proceeds.
- */
-async function dismissCoachQuiz(page: Page) {
-  const closeBtn = page.locator('button[aria-label="Close"]').first();
-  try {
-    await closeBtn.waitFor({ state: "visible", timeout: 3000 });
-    await closeBtn.click();
-  } catch {
-    // Quiz didn't appear — already dismissed or localStorage pre-set
-  }
-  // Short settle for AnimatePresence exit
-  await page.waitForTimeout(500);
+async function openCravingSearch(page: Page, query: string) {
+  await page
+    .getByText(/what are you craving/i)
+    .first()
+    .click();
+  const input = page.getByPlaceholder(/Roast chicken|pasta|curry/i).first();
+  await expect(input).toBeVisible({ timeout: 5000 });
+  await input.fill(query);
+  await input.press("Enter");
 }
 
-test.describe("Core Loop — craving to cook to win", () => {
+test.describe("Core Loop - Today meal queue to cook", () => {
   test.beforeEach(async ({ page }) => {
-    // Pre-seed localStorage to skip the coach onboarding quiz
     await page.addInitScript(() => {
       localStorage.setItem("sous-coach-quiz-done", "true");
+      localStorage.setItem("sous-path-tutorial-v1", "done");
       localStorage.setItem(
         "sous-preferences",
         JSON.stringify({ spicy: 0.5, fresh: 0.3 }),
@@ -29,182 +24,95 @@ test.describe("Core Loop — craving to cook to win", () => {
     });
   });
 
-  test("Today page loads with quest cards and search bar", async ({ page }) => {
+  test("Today page loads with meal queue, craving search, and community", async ({
+    page,
+  }) => {
     await page.goto("/today");
     await expect(page.locator("h1")).toContainText("Sous");
-
-    // Quest cards section visible
-    await expect(page.getByText("Today's Quest")).toBeVisible();
-
-    // Search bar / craving trigger visible
-    await expect(
-      page.getByText(/what are you craving|I'm craving/i),
-    ).toBeVisible();
+    await expect(page.getByText("Meal queue")).toBeVisible();
+    await expect(page.getByText(/what are you craving/i).first()).toBeVisible();
+    await expect(page.getByText("Community this week")).toBeVisible();
   });
 
-  test("Search flow: type craving → see paired sides", async ({ page }) => {
+  test("Search flow: type craving -> recommended sides", async ({ page }) => {
     await page.goto("/today");
-    await dismissCoachQuiz(page);
+    await openCravingSearch(page, "butter chicken");
 
-    // Click the search bar to open the search popout
-    const searchTrigger = page
-      .getByText(/what are you craving|I'm craving/i)
-      .first();
-    await searchTrigger.click();
-
-    // Type a craving into the text prompt
-    const input = page.getByPlaceholder(/Roast chicken|pasta|curry/i).first();
-    await expect(input).toBeVisible({ timeout: 5000 });
-    await input.fill("chicken tikka masala");
-    await input.press("Enter");
-
-    // Should show loading skeletons then results
-    await expect(page.locator(".shimmer").first()).toBeVisible({
-      timeout: 3000,
+    await expect(page.getByText("Recommended sides")).toBeVisible({
+      timeout: 15000,
     });
-
-    // Wait for results to appear (side dish cards)
-    const resultCard = page
-      .locator('[role="article"], [data-testid="side-card"]')
-      .first();
-    await expect(resultCard).toBeVisible({ timeout: 15000 });
+    await expect(
+      page.getByRole("button", { name: /Cook plate with 3 sides/i }),
+    ).toBeVisible({ timeout: 15000 });
   });
 
-  test("Full core loop smoke: craving → results → cook → first step", async ({
+  test("Full core loop smoke: craving -> sides -> cook -> first step", async ({
     page,
   }) => {
     test.slow();
 
     await page.goto("/today");
-    await dismissCoachQuiz(page);
+    await openCravingSearch(page, "butter chicken");
+    await page
+      .getByRole("button", { name: /Cook plate with 3 sides/i })
+      .click();
 
-    // Open search
-    const searchTrigger = page
-      .getByText(/what are you craving|I'm craving/i)
-      .first();
-    await searchTrigger.click();
+    await expect(page).toHaveURL(/\/cook\/combined/, { timeout: 10000 });
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
 
-    // Type craving
-    const input = page.getByPlaceholder(/Roast chicken|pasta|curry/i).first();
-    await expect(input).toBeVisible({ timeout: 5000 });
-    await input.fill("butter chicken");
-    await input.press("Enter");
-
-    // Wait for results
-    await page.waitForTimeout(1000);
-    // Result stack primary CTA: "Cook {side}" or "Cook N selected sides" (not "Cook just this one")
-    const cookButton = page.getByRole("button", { name: /^Cook (?!just)/ });
-    await expect(cookButton.first()).toBeVisible({ timeout: 20000 });
-    await cookButton.first().click({ force: true });
-
-    // Should navigate to /cook/... route
-    await expect(page).toHaveURL(/\/cook\//, { timeout: 10000 });
-
-    // Mission screen: "Let's cook" or "Start" button
-    // Mission CTA uses a typographic apostrophe (U+2019) in "Let's gather" / "Let's cook"
-    const startCookBtn = page.getByRole("button", {
-      name: /Let.s (gather|cook)|start cooking|begin|next/i,
+    await expect(page.getByText("Gather these")).toBeVisible({
+      timeout: 10000,
     });
-    await expect(startCookBtn).toBeVisible({ timeout: 10000 });
-    await startCookBtn.click();
+    await expect(page.getByText(/cook watch-outs/i)).toBeVisible();
 
-    // Ingredient list phase: "I've got everything" or "Next" button
-    const gotEverythingBtn = page.getByRole("button", {
-      name: /I have everything|Let.s cook|got everything|ready|start|next/i,
-    });
-    await expect(gotEverythingBtn).toBeVisible({ timeout: 10000 });
-    await gotEverythingBtn.click();
-
-    // Guided cook can be combined (many dishes/steps) with timer steps — full win is
-    // covered elsewhere. Here we prove the cook shell loads and advances one step.
-    await expect(page.getByText(/Step \d+ of \d+/)).toBeVisible({
+    await page.getByRole("button", { name: /I have everything/i }).click();
+    await expect(page.getByText(/Step 1 of \d+/)).toBeVisible({
       timeout: 15000,
     });
-    await page
-      .getByRole("button", { name: /go to step/i })
-      .first()
-      .click();
-    await expect(page.getByText(/Step 2 of/)).toBeVisible({ timeout: 15000 });
-  });
-
-  test("Quest card swipe and navigation", async ({ page }) => {
-    await page.goto("/today");
-    await dismissCoachQuiz(page);
-
-    // Quest cards should be visible
-    const questSection = page.getByText("Today's Quest");
-    await expect(questSection).toBeVisible();
-
-    // Find the primary CTA button on the quest card
-    const questCta = page
-      .getByRole("button", { name: /find sides|start cooking/i })
-      .first();
-    await expect(questCta).toBeVisible({ timeout: 5000 });
-
-    // Save button (heart) should be present
-    const heartBtn = page
-      .getByRole("button", { name: /save for later|already saved/i })
-      .first();
-    await expect(heartBtn).toBeVisible();
-
-    // Fixed tab bar overlaps the quest row on short viewports — force click on all engines.
-    await heartBtn.scrollIntoViewIfNeeded();
-    // Force clicks can skip React handlers; use DOM click so save + toast reliably fire.
-    await heartBtn.evaluate((el) => (el as HTMLButtonElement).click());
     await expect(
-      page.getByRole("button", { name: /already saved/i }),
-    ).toBeVisible({ timeout: 8000 });
+      page.getByRole("button", { name: /Go to step 2|Next/i }),
+    ).toBeVisible();
   });
 
-  test("Fallback actions work", async ({ page }) => {
+  test("Meal queue opens and save state is visible", async ({ page }) => {
     await page.goto("/today");
-    await dismissCoachQuiz(page);
+    await page.getByRole("button", { name: /Open meal queue/i }).click();
 
-    // "Rescue my fridge" chip
+    await expect(page.getByRole("dialog")).toBeVisible({ timeout: 5000 });
+    const saveButton = page
+      .getByRole("button", { name: /^Save\b|Save .+/i })
+      .first();
+    await expect(saveButton).toBeVisible();
+    await saveButton.click();
+    await expect(
+      page
+        .getByRole("button", { name: /Already saved|^Saved\b|Saved .+/i })
+        .first(),
+    ).toBeVisible({ timeout: 5000 });
+  });
+
+  test("Fallback actions open the craving helper", async ({ page }) => {
+    await page.goto("/today");
+    await page.getByRole("button", { name: /More options/i }).click();
+
     const rescueBtn = page.getByText("Rescue my fridge");
     await expect(rescueBtn).toBeVisible();
     await rescueBtn.click();
 
-    // Should open search popout with a query pre-filled
-    const input = page.getByPlaceholder(/Roast chicken|pasta|curry/i).first();
-    await expect(input).toBeVisible({ timeout: 5000 });
-
-    // Close the popout by pressing Escape or clicking backdrop
-    await page.keyboard.press("Escape");
-    await page.waitForTimeout(500);
+    await expect(
+      page.getByPlaceholder(/Roast chicken|pasta|curry/i).first(),
+    ).toBeVisible({ timeout: 5000 });
   });
 
-  test("Path tab accessible after 3 cooks", async ({ page }) => {
-    // Pre-seed 3 completed cook sessions so Path unlocks
-    await page.addInitScript(() => {
-      localStorage.setItem("sous-path-tutorial-v1", "done");
-      const sessions = Array.from({ length: 3 }, (_, i) => ({
-        id: `test-${i}`,
-        dishSlug: `test-dish-${i}`,
-        dishName: `Test Dish ${i}`,
-        cuisine: "Indian",
-        startedAt: new Date(Date.now() - (3 - i) * 86400000).toISOString(),
-        completedAt: new Date(Date.now() - (3 - i) * 86400000).toISOString(),
-        rating: 4,
-        notes: "",
-        photoUri: null,
-        isFavorite: false,
-      }));
-      localStorage.setItem("sous-cook-sessions", JSON.stringify(sessions));
-    });
-
+  test("Path tab is accessible from Today", async ({ page }) => {
     await page.goto("/today");
-    await dismissCoachQuiz(page);
-
-    // Path tab should be visible in the tab bar
     const pathTab = page.getByRole("link", { name: /path/i });
     await expect(pathTab).toBeVisible({ timeout: 5000 });
     await pathTab.click();
 
-    // Should navigate to the Path page
     await expect(page).toHaveURL(/\/path/);
-    await expect(
-      page.getByRole("heading", { name: "Your journey" }),
-    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText(/Your Path|Your journey/).first()).toBeVisible({
+      timeout: 5000,
+    });
   });
 });

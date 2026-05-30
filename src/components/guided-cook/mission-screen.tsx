@@ -52,7 +52,7 @@ export function MissionScreen({
       animate={{ opacity: 1 }}
       className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
     >
-      {/* Hero image — Y3 W9: locked 16:10 aspect ratio (pattern #1
+      {/* Hero image — food-first 4:3 aspect ratio (pattern #1
           standardisation across recipe surfaces). Falls back to a
           gradient + name overlay when no hero image is available. */}
       <motion.div
@@ -63,8 +63,8 @@ export function MissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25 }
         }
-        className="relative overflow-hidden rounded-2xl"
-        style={{ aspectRatio: "16 / 10" }}
+        className="relative overflow-hidden rounded-xl"
+        style={{ aspectRatio: "4 / 3" }}
       >
         {heroImageUrl && !imgError ? (
           <Image
@@ -84,14 +84,14 @@ export function MissionScreen({
                 "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 40%, #a8d8b9 100%)",
             }}
           >
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+            <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20">
               <UtensilsCrossed
                 size={28}
-                className="text-white drop-shadow-sm"
+                className="text-white"
                 strokeWidth={1.5}
               />
             </div>
-            <span className="text-lg font-serif font-bold text-white/95 drop-shadow-sm">
+            <span className="text-lg font-serif font-bold text-white/95">
               {dishName}
             </span>
           </div>
@@ -168,6 +168,28 @@ export function MissionScreen({
         {description}
       </motion.p>
 
+      {/* Primary action stays ahead of optional controls on short phones. */}
+      <motion.button
+        initial={false}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 25,
+          delay: 0.25,
+        }}
+        whileTap={{ scale: 0.96 }}
+        onClick={onStart}
+        className={cn(
+          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
+          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+          "transition-colors duration-200",
+        )}
+        type="button"
+      >
+        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+      </motion.button>
+
       {/* Plan-my-cook  -  optional eat-time → start-time assist */}
       <motion.div
         initial={{ opacity: 0, y: 6 }}
@@ -195,28 +217,6 @@ export function MissionScreen({
       >
         <BigHandsToggle />
       </motion.div>
-
-      {/* CTA  -  mt-auto pins to bottom of the flex container */}
-      <motion.button
-        initial={false}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 25,
-          delay: 0.25,
-        }}
-        whileTap={{ scale: 0.96 }}
-        onClick={onStart}
-        className={cn(
-          "mt-auto w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "cta-shadow transition-colors duration-200",
-        )}
-        type="button"
-      >
-        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
-      </motion.button>
     </motion.div>
   );
 }

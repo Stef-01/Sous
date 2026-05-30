@@ -16,7 +16,7 @@ interface Props {
 
 /**
  * BookmarkButton — toggleable save icon for any saveable content item.
- * "ghost" sits inline; "overlay" sits over imagery (white tint, drop shadow).
+ * "ghost" sits inline; "overlay" sits over imagery as a plain save control.
  *
  * W19b delta #9: instead of a single-frame icon swap, the icon now
  * cross-fades + spring-pops on every state change. The inactive state
@@ -51,7 +51,7 @@ export function BookmarkButton({
         variant === "ghost" &&
           "bg-white/0 text-[var(--nourish-subtext)] hover:bg-neutral-100",
         variant === "overlay" &&
-          "bg-black/35 text-white backdrop-blur-sm hover:bg-black/55",
+          "bg-white/90 text-neutral-950 ring-1 ring-black/10 hover:bg-white",
         saved && variant === "ghost" && "text-[var(--nourish-green)]",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
         className,

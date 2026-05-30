@@ -484,7 +484,7 @@ function TodayPageContent() {
           / Apple Music / NYT Cooking pattern. The bottom tab bar
           stays sticky so navigation isn't lost when the top hides. */}
       <HeadroomHeader>
-        <header className="border-b border-[var(--nourish-border-soft)] bg-white px-4 py-2.5 shadow-[var(--shadow-header)]">
+        <header className="border-b border-[var(--nourish-border-soft)] bg-white px-4 py-2.5">
           <div className="mx-auto flex max-w-md items-center justify-between">
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">

@@ -33,7 +33,7 @@ const ROUTES: Route[] = [
   // Today + cook
   { path: "/today", landmark: "Sous" },
   { path: "/cook/butter-chicken", landmark: /butter|cook/i },
-  { path: "/cook/combined", landmark: /cook/i },
+  { path: "/cook/combined", landmark: /Missing side dishes|cook/i },
 
   // Path home + 4 details
   { path: "/path", landmark: /Path|skill|cook/i },
@@ -55,7 +55,7 @@ const ROUTES: Route[] = [
 
   // Content tab + sub-routes
   { path: "/community", landmark: "Content" },
-  { path: "/community/reels", landmark: /reel/i },
+  { path: "/community/reels", landmark: /@cookwithpriya|Cook this/i },
   { path: "/community/saved", landmark: "Saved" },
   {
     path: "/community/article/stanford-healthy-eating-habits",
@@ -79,10 +79,13 @@ const ROUTES: Route[] = [
   { path: "/games/cuisine-compass", landmark: "Cuisine Compass" },
   { path: "/games/flavor-pairs", landmark: "Flavor Pairs" },
   { path: "/games/speed-chop", landmark: "Speed Chop" },
-  { path: "/games/whats-cooking", landmark: /What's cooking/i },
+  { path: "/games/whats-cooking", landmark: /What.s cooking/i },
 
   // Power-user fallback
-  { path: "/sides", landmark: /sides|browse/i },
+  {
+    path: "/sides?main=Butter%20Chicken&img=%2Ffood_images%2Fbutter_chicken.png",
+    landmark: /Build this plate|Cook plate/i,
+  },
 ];
 
 test.describe("All routes smoke test", () => {

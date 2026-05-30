@@ -181,7 +181,7 @@ export function FriendsStrip({
               variants={cardVariants}
               whileTap={{ scale: 0.97 }}
               onClick={() => handleTap(entry)}
-              className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl bg-white text-left shadow-sm border border-neutral-100/80 transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white text-left transition-colors hover:border-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
               style={{ width: 168 }}
               aria-label={
                 entry.isSelf
@@ -214,10 +214,10 @@ export function FriendsStrip({
                   >
                     {entry.initial || initialFor(entry.friend)}
                   </div>
-                  <span className="truncate text-[11px] font-semibold drop-shadow-sm">
+                  <span className="truncate text-[11px] font-semibold">
                     {entry.friend}
                   </span>
-                  <span className="ml-auto shrink-0 text-[9px] font-medium text-white/80 drop-shadow-sm">
+                  <span className="ml-auto shrink-0 text-[9px] font-medium text-white/80">
                     {entry.postedAgo}
                   </span>
                 </div>

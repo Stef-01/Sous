@@ -7,14 +7,14 @@ test.describe("Startup landing → demo", () => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("heading", {
-        name: /Healthy cooking made easy with AI/i,
+        name: /You don.t need more recipes/i,
       }),
     ).toBeVisible({ timeout: 30000 });
 
-    await expect(page.getByText(/Meet Sous/i)).toBeVisible();
+    await expect(page.getByText(/One main, three pairings/i)).toBeVisible();
 
     await page
-      .getByRole("link", { name: /Try Sous demo/i })
+      .getByRole("link", { name: /Try it tonight/i })
       .first()
       .click();
     await expect(page).toHaveURL(/\/today$/);
@@ -23,30 +23,29 @@ test.describe("Startup landing → demo", () => {
 
   test("header Try demo navigates to Today", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.getByRole("link", { name: /^Try demo$/i }).click();
+    await page
+      .getByRole("link", { name: /^Open the demo$/i })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/today$/);
   });
 
-  test("secondary CTA scrolls to platform section", async ({ page }) => {
+  test("secondary CTA scrolls to product section", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    await page.getByRole("link", { name: /Why this is different/i }).click();
-    await expect(page.locator("#systems")).toBeInViewport();
+    await page.getByRole("link", { name: /Why Sous/i }).click();
+    await expect(page.locator("#idea")).toBeInViewport();
     await expect(
       page.getByRole("heading", {
-        name: /Not a chatbot wrapper/i,
+        name: /Saved six/i,
       }),
     ).toBeVisible();
   });
 
-  test("partnership CTA opens GitHub issue composer", async ({ page }) => {
+  test("practice path CTA opens Path", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
-    const link = page.getByRole("link", {
-      name: /Start partnership thread/i,
-    });
+    const link = page.getByRole("link", { name: /See the practice path/i });
     await expect(link).toBeVisible();
-    await expect(link).toHaveAttribute(
-      "href",
-      /github\.com\/Stef-01\/Sous\/issues\/new/,
-    );
+    await link.click();
+    await expect(page).toHaveURL(/\/path$/);
   });
 });

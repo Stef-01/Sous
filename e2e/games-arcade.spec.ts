@@ -43,10 +43,7 @@ test.describe("Games Arcade", () => {
 
   test("Cuisine Compass game shows dishes and regions", async ({ page }) => {
     await page.goto("/games/cuisine-compass");
-    await expect(
-      page.locator("text=Where does this dish come from?"),
-    ).toBeVisible();
-    await expect(page.locator("text=Europe")).toBeVisible();
-    await expect(page.locator("text=Asia")).toBeVisible();
+    await expect(page.getByText(/Where was .* first cooked/i)).toBeVisible();
+    await expect(page.getByText(/Tap the map/i).first()).toBeVisible();
   });
 });
