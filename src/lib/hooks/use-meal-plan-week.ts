@@ -23,6 +23,11 @@ import {
   type MealPlanWeek,
   type SlotKey,
 } from "@/types/meal-plan";
+import {
+  persistMealPlanSlot,
+  persistClearMealPlanSlot,
+  persistClearMealPlanWeek,
+} from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY_PREFIX = "sous-meal-plan-";
 
@@ -129,8 +134,9 @@ export function useMealPlanWeek(
         persist(next);
         return next;
       });
+      persistMealPlanSlot({ weekKey, slot, recipeSlug, source });
     },
-    [persist],
+    [persist, weekKey],
   );
 
   const clearSlot = useCallback(
@@ -144,8 +150,9 @@ export function useMealPlanWeek(
         persist(next);
         return next;
       });
+      persistClearMealPlanSlot({ weekKey, slot });
     },
-    [persist],
+    [persist, weekKey],
   );
 
   const clearAll = useCallback(() => {
@@ -158,7 +165,8 @@ export function useMealPlanWeek(
       persist(next);
       return next;
     });
-  }, [persist]);
+    persistClearMealPlanWeek({ weekKey });
+  }, [persist, weekKey]);
 
   const slotMap: Record<string, string> = {};
   for (const s of week.scheduled) {

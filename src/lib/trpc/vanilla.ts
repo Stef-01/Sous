@@ -160,3 +160,47 @@ export function persistStepNote(input: {
     /* localStorage already has it */
   }
 }
+
+/** Best-effort write-through for a meal-plan slot schedule. */
+export function persistMealPlanSlot(input: {
+  weekKey: string;
+  slot: string;
+  recipeSlug: string;
+  source: string;
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .plan.scheduleSlot.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for clearing a meal-plan slot. */
+export function persistClearMealPlanSlot(input: {
+  weekKey: string;
+  slot: string;
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .plan.clearSlot.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for wiping a meal-plan week. */
+export function persistClearMealPlanWeek(input: { weekKey: string }): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .plan.clearWeek.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
