@@ -18,7 +18,8 @@
       "Bash(curl -s 'http://localhost:3000/community?xx=2')",
       "Bash(qmd --help)",
       "WebSearch",
-      "mcp__Claude_in_Chrome__tabs_context_mcp"
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }
