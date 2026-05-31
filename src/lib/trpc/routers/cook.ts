@@ -8,13 +8,14 @@ import {
   buildSequencerDish,
   sequenceDishes,
 } from "@/lib/engine/cook-sequencer";
+import { hasDatabaseUrl } from "@/lib/db/connection";
 
 export const cookRouter = router({
   getSteps: publicProcedure
     .input(z.object({ sideDishSlug: z.string() }))
     .query(async ({ input, ctx }) => {
       // Try database first if available
-      if (ctx.db && process.env.DATABASE_URL) {
+      if (ctx.db && hasDatabaseUrl()) {
         try {
           const { eq } = await import("drizzle-orm");
           const { sideDishes, cookSteps, ingredients } =

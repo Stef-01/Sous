@@ -67,10 +67,14 @@ export function selectDataSource(
 
 /** Pure: detect from current environment. SSR-safe. */
 export function detectRuntimeSelection(): DataSourceSelection {
-  const hasDatabaseUrl =
-    typeof process !== "undefined" &&
-    typeof process.env?.DATABASE_URL === "string" &&
-    process.env.DATABASE_URL.length > 0;
+  const connectionString =
+    typeof process !== "undefined"
+      ? process.env?.DATABASE_URL ||
+        process.env?.POSTGRES_URL ||
+        process.env?.POSTGRES_PRISMA_URL ||
+        ""
+      : "";
+  const hasDatabaseUrl = connectionString.length > 0;
   const isBrowser = typeof window !== "undefined";
   return selectDataSource({ hasDatabaseUrl, isBrowser });
 }

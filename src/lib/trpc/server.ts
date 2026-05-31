@@ -6,7 +6,9 @@ import { MOCK_USER_ID, isAuthEnabled } from "@/lib/auth/auth-flag";
 let _db: unknown = null;
 function getDbSafe() {
   if (_db) return _db;
-  if (!process.env.DATABASE_URL) return null;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { hasDatabaseUrl } = require("@/lib/db/connection");
+  if (!hasDatabaseUrl()) return null;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const dbModule = require("@/lib/db");

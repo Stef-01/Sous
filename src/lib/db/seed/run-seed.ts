@@ -43,14 +43,18 @@ const sideRows = buildSideDishRows(sides, meals);
 const mealRows = buildMealRows(meals);
 
 async function seed() {
-  if (!process.env.DATABASE_URL) {
+  const url =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL;
+  if (!url) {
     console.log(
-      `No DATABASE_URL set — count-only mode.\nWould seed: side_dishes=${sideRows.length} meals=${mealRows.length}\nSee docs/SUPABASE-SETUP.md to wire up the connection string.`,
+      `No DATABASE_URL/POSTGRES_URL set — count-only mode.\nWould seed: side_dishes=${sideRows.length} meals=${mealRows.length}\nSee docs/SUPABASE-SETUP.md to wire up the connection string.`,
     );
     return;
   }
 
-  const client = postgres(process.env.DATABASE_URL, { prepare: false });
+  const client = postgres(url, { prepare: false });
   const db = drizzle(client, {
     schema: { sideDishes, meals: mealsTable, cookSteps, ingredients },
   });
