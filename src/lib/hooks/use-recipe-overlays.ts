@@ -16,6 +16,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { persistStepNote } from "@/lib/trpc/vanilla";
 
 export const RECIPE_OVERLAYS_STORAGE_KEY = "sous-recipe-overlays-v1";
 export const RECIPE_OVERLAYS_MAX_ENTRIES = 200;
@@ -114,6 +115,7 @@ export function useRecipeOverlays() {
         }
         return merged;
       });
+      persistStepNote({ recipeSlug, stepIndex, note });
     },
     [],
   );

@@ -9,6 +9,7 @@ import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import type { AppRouter } from "./routers";
 import type { UserRecipe } from "@/types/user-recipe";
+import type { ParentProfile } from "@/types/parent-mode";
 import { getDeviceId } from "@/lib/hooks/use-device-id";
 
 let _client: ReturnType<typeof createTRPCClient<AppRouter>> | null = null;
@@ -104,6 +105,56 @@ export function persistRecipeRemove(id: string): void {
   try {
     void client()
       .recipes.remove.mutate({ id })
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a Parent Mode profile change. */
+export function persistParentProfile(p: ParentProfile): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .prefs.setParentProfile.mutate({
+        enabled: p.enabled,
+        ageBand: p.ageBand,
+        spiceTolerance: p.spiceTolerance,
+        flaggedAllergens: p.flaggedAllergens,
+        enabledAt: p.enabledAt || null,
+      })
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a kids-ate-it verdict. */
+export function persistKidsAteIt(input: {
+  cookSessionId: string;
+  recipeSlug: string;
+  verdict: "yes" | "some" | "no";
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .prefs.logKidsAteIt.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a recipe step note. */
+export function persistStepNote(input: {
+  recipeSlug: string;
+  stepIndex: number;
+  note: string;
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .prefs.saveStepNote.mutate(input)
       .catch(() => {});
   } catch {
     /* localStorage already has it */

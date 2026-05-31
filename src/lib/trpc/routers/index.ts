@@ -5,6 +5,7 @@ import { cookRouter } from "./cook";
 import { cookSessionRouter } from "./session";
 import { savedRouter } from "./saved";
 import { recipesRouter } from "./recipes";
+import { prefsRouter } from "./prefs";
 import { aiRouter } from "./ai";
 import { recipeAutogenRouter } from "./recipe-autogen";
 
@@ -15,6 +16,7 @@ export const appRouter = router({
   cookSession: cookSessionRouter,
   saved: savedRouter,
   recipes: recipesRouter,
+  prefs: prefsRouter,
   ai: aiRouter,
   recipeAutogen: recipeAutogenRouter,
 });

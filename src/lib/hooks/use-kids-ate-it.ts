@@ -12,6 +12,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
+import { persistKidsAteIt } from "@/lib/trpc/vanilla";
 
 export const KIDS_ATE_IT_STORAGE_KEY = "sous-kids-ate-it-v1";
 export const KIDS_ATE_IT_MAX_ENTRIES = 200;
@@ -101,6 +102,11 @@ export function useKidsAteIt() {
         // ignore quota
       }
       return merged;
+    });
+    persistKidsAteIt({
+      cookSessionId: next.cookSessionId,
+      recipeSlug: next.recipeSlug,
+      verdict: next.verdict,
     });
   }, []);
 

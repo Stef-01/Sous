@@ -22,6 +22,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { AgeBand } from "@/types/nutrition";
 import type { ParentProfile } from "@/types/parent-mode";
+import { persistParentProfile } from "@/lib/trpc/vanilla";
 
 export const PARENT_MODE_STORAGE_KEY = "sous-parent-mode-v1";
 
@@ -105,6 +106,7 @@ export function useParentMode() {
     };
     persist(next);
     setProfile(next);
+    persistParentProfile(next);
   }, []);
 
   const disable = useCallback(() => {
@@ -114,6 +116,7 @@ export function useParentMode() {
     };
     persist(next);
     setProfile(next);
+    persistParentProfile(next);
   }, []);
 
   const toggle = useCallback(() => {
@@ -137,6 +140,7 @@ export function useParentMode() {
     const next: ParentProfile = { ...load(), ageBand };
     persist(next);
     setProfile(next);
+    persistParentProfile(next);
   }, []);
 
   return { profile, enable, disable, toggle, setAgeBand };
