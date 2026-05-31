@@ -4,6 +4,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@/lib/trpc/client";
+import { getDeviceId } from "@/lib/hooks/use-device-id";
 import superjson from "superjson";
 
 function getBaseUrl() {
@@ -30,6 +31,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           transformer: superjson,
+          headers: () => {
+            const id = getDeviceId();
+            return id ? { "x-sous-device-id": id } : {};
+          },
         }),
       ],
     }),

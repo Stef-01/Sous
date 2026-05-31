@@ -24,12 +24,16 @@ export type TRPCContext = {
   userId: string | null;
 };
 
-export async function createTRPCContext(): Promise<TRPCContext> {
+export async function createTRPCContext(opts?: {
+  req?: Request;
+}): Promise<TRPCContext> {
   let userId: string | null = null;
   // Y2 Sprint A W1: auth-flag substrate. isAuthEnabled() reads
   // CLERK_SECRET_KEY + SOUS_AUTH_ENABLED override. When the
-  // flag is on we attempt the real Clerk auth; when off we stub
-  // a stable mock user so protectedProcedures work without keys.
+  // flag is on we attempt the real Clerk auth; when off we use the
+  // device-scoped anonymous id (MVP identity — see
+  // docs/MVP-FEATURE-PLAN.md Stage A) so per-device data has an owner
+  // without login, falling back to the stable mock user.
   if (isAuthEnabled()) {
     try {
       const { auth } = await import("@clerk/nextjs/server");
@@ -40,7 +44,9 @@ export async function createTRPCContext(): Promise<TRPCContext> {
       // requests don't 500 in transient configurations.
     }
   } else {
-    userId = MOCK_USER_ID;
+    const deviceId = opts?.req?.headers.get("x-sous-device-id")?.trim();
+    userId =
+      deviceId && deviceId.length > 0 ? deviceId.slice(0, 100) : MOCK_USER_ID;
   }
   return { db: getDbSafe(), userId };
 }

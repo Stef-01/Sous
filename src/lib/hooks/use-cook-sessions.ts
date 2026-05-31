@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { computeStreakWithRest, loadRestDays } from "./use-rest-days";
+import { persistCookCompletion } from "@/lib/trpc/vanilla";
 
 const SESSIONS_KEY = "sous-cook-sessions";
 const STATS_KEY = "sous-cook-stats";
@@ -255,6 +256,16 @@ export function useCookSessions() {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("sous-stats-updated"));
       }
+
+      // Write-through to Supabase (best-effort; localStorage stays the
+      // source of truth, so this never blocks or fails the win).
+      persistCookCompletion({
+        sideDishSlug: existing[idx].recipeSlug,
+        mainDishInput: existing[idx].mainDishInput ?? null,
+        rating: payload.rating ?? null,
+        personalNote: payload.note ?? null,
+        completionPhotoUrl: payload.photoUri ?? null,
+      });
 
       const pathJustUnlocked = currentStats.completedCooks === 2; // was 2, now becomes 3
       return { pathJustUnlocked, newStreak };
