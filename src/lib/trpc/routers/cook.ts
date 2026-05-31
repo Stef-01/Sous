@@ -35,43 +35,48 @@ export const cookRouter = router({
               where: eq(ingredients.sideDishId, dish.id),
             });
 
-            return {
-              dish: {
-                id: dish.id,
-                name: dish.name,
-                slug: dish.slug,
-                description: dish.description,
-                cuisineFamily: dish.cuisineFamily,
-                prepTimeMinutes: dish.prepTimeMinutes,
-                cookTimeMinutes: dish.cookTimeMinutes,
-                skillLevel: dish.skillLevel,
-                heroImageUrl: dish.heroImageUrl,
-                flavorProfile: dish.flavorProfile,
-                temperature: dish.temperature,
-              },
-              steps: steps.map((s) => ({
-                id: s.id,
-                phase: s.phase,
-                stepNumber: s.stepNumber,
-                instruction: s.instruction,
-                timerSeconds: s.timerSeconds,
-                mistakeWarning: s.mistakeWarning,
-                quickHack: s.quickHack,
-                cuisineFact: s.cuisineFact,
-                donenessCue: s.donenessCue,
-                imageUrl: s.imageUrl,
-                // W44 — seed catalog has no authored pointers
-                // yet; user recipes pass through their own.
-                attentionPointers: null,
-              })),
-              ingredients: ingredientList.map((i) => ({
-                id: i.id,
-                name: i.name,
-                quantity: i.quantity,
-                isOptional: i.isOptional,
-                substitution: i.substitution,
-              })),
-            };
+            // Treat the DB as authoritative only when it actually has
+            // authored steps; otherwise fall through to the static
+            // guided-cook data (preserves behaviour for catalog dishes
+            // that have no seeded cook_steps).
+            if (steps.length > 0)
+              return {
+                dish: {
+                  id: dish.id,
+                  name: dish.name,
+                  slug: dish.slug,
+                  description: dish.description,
+                  cuisineFamily: dish.cuisineFamily,
+                  prepTimeMinutes: dish.prepTimeMinutes,
+                  cookTimeMinutes: dish.cookTimeMinutes,
+                  skillLevel: dish.skillLevel,
+                  heroImageUrl: dish.heroImageUrl,
+                  flavorProfile: dish.flavorProfile,
+                  temperature: dish.temperature,
+                },
+                steps: steps.map((s) => ({
+                  id: s.id,
+                  phase: s.phase,
+                  stepNumber: s.stepNumber,
+                  instruction: s.instruction,
+                  timerSeconds: s.timerSeconds,
+                  mistakeWarning: s.mistakeWarning,
+                  quickHack: s.quickHack,
+                  cuisineFact: s.cuisineFact,
+                  donenessCue: s.donenessCue,
+                  imageUrl: s.imageUrl,
+                  // W44 — seed catalog has no authored pointers
+                  // yet; user recipes pass through their own.
+                  attentionPointers: null,
+                })),
+                ingredients: ingredientList.map((i) => ({
+                  id: i.id,
+                  name: i.name,
+                  quantity: i.quantity,
+                  isOptional: i.isOptional,
+                  substitution: i.substitution,
+                })),
+              };
           }
         } catch (err) {
           console.warn("DB query failed, falling back to static data:", err);

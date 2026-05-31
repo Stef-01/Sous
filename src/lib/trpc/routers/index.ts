@@ -2,6 +2,7 @@ import { router } from "@/lib/trpc/server";
 import { pairingRouter } from "./pairing";
 import { recognitionRouter } from "./recognition";
 import { cookRouter } from "./cook";
+import { cookSessionRouter } from "./session";
 import { aiRouter } from "./ai";
 import { recipeAutogenRouter } from "./recipe-autogen";
 
@@ -9,6 +10,7 @@ export const appRouter = router({
   pairing: pairingRouter,
   recognition: recognitionRouter,
   cook: cookRouter,
+  cookSession: cookSessionRouter,
   ai: aiRouter,
   recipeAutogen: recipeAutogenRouter,
 });

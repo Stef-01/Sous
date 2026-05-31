@@ -64,11 +64,32 @@ export const ingredients = pgTable("ingredients", {
   substitution: text("substitution"),
 });
 
+// ── Meals (V1 internal content — main dishes) ──────────
+// Mirrors src/data/meals.json. The cook flow reads sides from
+// `side_dishes`; this table is the catalog of main dishes a side
+// pairs with. `sidePool` lists candidate side slugs.
+export const meals = pgTable("meals", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  aliases: jsonb("aliases").$type<string[]>().notNull().default([]),
+  heroImageUrl: text("hero_image_url"),
+  sidePool: jsonb("side_pool").$type<string[]>().notNull().default([]),
+  cuisine: text("cuisine").notNull(),
+  description: text("description").notNull(),
+  nourishVerified: boolean("nourish_verified").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // ── Users ──────────────────────────────────────────────
 export const users = pgTable("users", {
   id: text("id").primaryKey(), // Clerk user ID
   displayName: text("display_name"),
   avatarUrl: text("avatar_url"),
+  // `avatar` + `lastSyncedAt` carried from the Y2 users mirror so a
+  // single `users` table satisfies both the Y0/Y1 reader (here) and
+  // the Y2 Clerk-sync columns. See db/y2-tables.ts.
+  avatar: text("avatar"),
   preferenceVector: jsonb("preference_vector")
     .$type<Record<string, number>>()
     .default({}),
@@ -79,6 +100,7 @@ export const users = pgTable("users", {
   communityUnlocked: boolean("community_unlocked").default(false),
   coachTone: text("coach_tone").default("gentle"), // gentle, hype, no-nonsense
   createdAt: timestamp("created_at").defaultNow(),
+  lastSyncedAt: timestamp("last_synced_at").defaultNow(),
 });
 
 // ── Cook sessions (journey log) ────────────────────────

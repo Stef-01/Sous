@@ -3,3 +3,7 @@ out
 build
 node_modules
 .claude
+
+# tool-managed lockfiles
+pnpm-lock.yaml
+package-lock.json
