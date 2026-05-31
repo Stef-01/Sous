@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { persistSavedDishToggle } from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY = "sous-saved-dishes";
 const MAX_SAVED = 50;
@@ -48,6 +49,7 @@ export function useSavedDishes() {
 
     persist(updated);
     setSaved(updated);
+    persistSavedDishToggle({ sideDishSlug: slug, saved: true });
     return true;
   }, []);
 
@@ -56,6 +58,7 @@ export function useSavedDishes() {
     const updated = existing.filter((d) => d.slug !== slug);
     persist(updated);
     setSaved(updated);
+    persistSavedDishToggle({ sideDishSlug: slug, saved: false });
   }, []);
 
   const isDishSaved = useCallback(

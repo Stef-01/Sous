@@ -3,6 +3,7 @@ import { pairingRouter } from "./pairing";
 import { recognitionRouter } from "./recognition";
 import { cookRouter } from "./cook";
 import { cookSessionRouter } from "./session";
+import { savedRouter } from "./saved";
 import { aiRouter } from "./ai";
 import { recipeAutogenRouter } from "./recipe-autogen";
 
@@ -11,6 +12,7 @@ export const appRouter = router({
   recognition: recognitionRouter,
   cook: cookRouter,
   cookSession: cookSessionRouter,
+  saved: savedRouter,
   ai: aiRouter,
   recipeAutogen: recipeAutogenRouter,
 });

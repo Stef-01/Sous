@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { bookmarkKey, type SaveableKind } from "@/types/content";
+import { persistBookmarkToggle } from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY = "sous-content-bookmarks-v1";
 const MAX_BOOKMARKS = 100;
@@ -66,6 +67,7 @@ export function useContentBookmarks() {
     }
     persist(next);
     setBookmarks(next);
+    persistBookmarkToggle({ kind, itemId: id, saved: !exists });
     return !exists;
   }, []);
 
@@ -74,6 +76,7 @@ export function useContentBookmarks() {
     const next = load().filter((b) => b.key !== key);
     persist(next);
     setBookmarks(next);
+    persistBookmarkToggle({ kind, itemId: id, saved: false });
   }, []);
 
   return { bookmarks, isBookmarked, toggle, remove };

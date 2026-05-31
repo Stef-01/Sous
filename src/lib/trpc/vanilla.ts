@@ -53,3 +53,34 @@ export function persistCookCompletion(input: {
     /* never throw from the win path */
   }
 }
+
+/** Best-effort write-through for a saved-dish toggle. */
+export function persistSavedDishToggle(input: {
+  sideDishSlug: string;
+  saved: boolean;
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .saved.toggleDish.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a content-bookmark toggle. */
+export function persistBookmarkToggle(input: {
+  kind: string;
+  itemId: string;
+  saved: boolean;
+}): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .saved.toggleBookmark.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}

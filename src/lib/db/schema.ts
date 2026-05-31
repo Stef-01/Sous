@@ -134,6 +134,19 @@ export const savedRecipes = pgTable("saved_recipes", {
   savedAt: timestamp("saved_at").defaultNow(),
 });
 
+// ── Content bookmarks (polymorphic Content-tab saves) ───
+// One row per saved content item (article / reel / research / expert /
+// forum). Content lives in static JSON, so `itemId` is plain text.
+export const contentBookmarks = pgTable("content_bookmarks", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: text("user_id")
+    .references(() => users.id)
+    .notNull(),
+  kind: text("kind").notNull(),
+  itemId: text("item_id").notNull(),
+  savedAt: timestamp("saved_at").defaultNow(),
+});
+
 // ── Coach quiz responses ───────────────────────────────
 export const quizResponses = pgTable("quiz_responses", {
   id: uuid("id").primaryKey().defaultRandom(),
