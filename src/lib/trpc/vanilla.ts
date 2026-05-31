@@ -8,6 +8,7 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 import type { AppRouter } from "./routers";
+import type { UserRecipe } from "@/types/user-recipe";
 import { getDeviceId } from "@/lib/hooks/use-device-id";
 
 let _client: ReturnType<typeof createTRPCClient<AppRouter>> | null = null;
@@ -79,6 +80,30 @@ export function persistBookmarkToggle(input: {
   try {
     void client()
       .saved.toggleBookmark.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a user-recipe save/edit. */
+export function persistRecipeUpsert(recipe: UserRecipe): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .recipes.upsert.mutate(recipe)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a user-recipe deletion. */
+export function persistRecipeRemove(id: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .recipes.remove.mutate({ id })
       .catch(() => {});
   } catch {
     /* localStorage already has it */

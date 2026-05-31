@@ -24,6 +24,7 @@ import {
   userRecipeSchema,
   type UserRecipe,
 } from "@/types/user-recipe";
+import { persistRecipeUpsert, persistRecipeRemove } from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY = "sous-recipe-drafts-v1";
 
@@ -120,6 +121,9 @@ export function useRecipeDrafts() {
       persist(next);
       return next;
     });
+    // Write-through to Supabase (best-effort; localStorage is the
+    // optimistic source of truth).
+    persistRecipeUpsert(recipe);
   }, []);
 
   const remove = useCallback((id: string) => {
@@ -128,6 +132,7 @@ export function useRecipeDrafts() {
       persist(next);
       return next;
     });
+    persistRecipeRemove(id);
   }, []);
 
   const clear = useCallback(() => {
