@@ -10,6 +10,11 @@ import superjson from "superjson";
 import type { AppRouter } from "./routers";
 import type { UserRecipe } from "@/types/user-recipe";
 import type { ParentProfile } from "@/types/parent-mode";
+import type {
+  ChallengePod,
+  PodChallengeWeek,
+  PodSubmission,
+} from "@/types/challenge-pod";
 import { getDeviceId } from "@/lib/hooks/use-device-id";
 
 let _client: ReturnType<typeof createTRPCClient<AppRouter>> | null = null;
@@ -199,6 +204,67 @@ export function persistClearMealPlanWeek(input: { weekKey: string }): void {
   try {
     void client()
       .plan.clearWeek.mutate(input)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+// ── Cooking pods (Stage G) ──────────────────────────────────────
+/** Best-effort write-through for saving a pod (+ its members). */
+export function persistPodSave(pod: ChallengePod): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .pod.savePod.mutate(pod)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a pod challenge week. */
+export function persistPodWeek(week: PodChallengeWeek): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .pod.upsertWeek.mutate(week)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for a pod submission. */
+export function persistPodSubmission(submission: PodSubmission): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .pod.upsertSubmission.mutate(submission)
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for removing a pod submission. */
+export function persistPodRemoveSubmission(id: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .pod.removeSubmission.mutate({ id })
+      .catch(() => {});
+  } catch {
+    /* localStorage already has it */
+  }
+}
+
+/** Best-effort write-through for clearing a pod (cascade). */
+export function persistPodClear(podId: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    void client()
+      .pod.clearPod.mutate({ podId })
       .catch(() => {});
   } catch {
     /* localStorage already has it */

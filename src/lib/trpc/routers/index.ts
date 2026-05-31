@@ -7,6 +7,7 @@ import { savedRouter } from "./saved";
 import { recipesRouter } from "./recipes";
 import { prefsRouter } from "./prefs";
 import { planRouter } from "./plan";
+import { podRouter } from "./pod";
 import { aiRouter } from "./ai";
 import { recipeAutogenRouter } from "./recipe-autogen";
 
@@ -19,6 +20,7 @@ export const appRouter = router({
   recipes: recipesRouter,
   prefs: prefsRouter,
   plan: planRouter,
+  pod: podRouter,
   ai: aiRouter,
   recipeAutogen: recipeAutogenRouter,
 });

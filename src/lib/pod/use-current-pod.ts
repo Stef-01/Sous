@@ -31,6 +31,13 @@ import {
   type PodState,
   type PodSubmission,
 } from "@/types/challenge-pod";
+import {
+  persistPodSave,
+  persistPodWeek,
+  persistPodSubmission,
+  persistPodRemoveSubmission,
+  persistPodClear,
+} from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY = "sous-pod-state-v1";
 
@@ -140,6 +147,7 @@ export function useCurrentPod() {
     if (pod !== null) {
       const result = challengePodSchema.safeParse(pod);
       if (!result.success) return;
+      persistPodSave(result.data);
     }
     setState((prev) => {
       const next: PodState = { ...prev, pod };
@@ -160,6 +168,7 @@ export function useCurrentPod() {
       persist(next);
       return next;
     });
+    persistPodWeek(result.data);
   }, []);
 
   /** Append or update a submission (idempotent on id). */
@@ -174,6 +183,7 @@ export function useCurrentPod() {
       persist(next);
       return next;
     });
+    persistPodSubmission(result.data);
   }, []);
 
   /** Delete a submission by id. Idempotent on missing ids. */
@@ -186,14 +196,17 @@ export function useCurrentPod() {
       persist(next);
       return next;
     });
+    persistPodRemoveSubmission(id);
   }, []);
 
   /** Wipe the entire pod state — admin "leave + delete" flow. */
   const clear = useCallback(() => {
+    const podId = state.pod?.id;
+    if (podId) persistPodClear(podId);
     const next = freshDefault();
     persist(next);
     setState(next);
-  }, []);
+  }, [state.pod?.id]);
 
   return {
     state,
