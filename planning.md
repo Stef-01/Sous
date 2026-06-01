@@ -1127,3 +1127,210 @@ These are locked decisions made after deliberate product review. Do not change a
 
 - All hero image URLs are `null` — gradient + emoji fallback is the intentional visual style
 - Do not add external image URLs or attempt to load remote images
+---
+
+# Design Polish Overhaul — Reference-Driven (Cal AI + Mob)
+
+> **Filed:** 2026-06-01. **Method:** critical appraisal of two best-in-class
+> references (Cal AI nutrition app; Mob recipe app) against the live Sous build,
+> cross-checked with the **UI/UX Pro Max** corpus and live Claude-Preview
+> screenshots (390×844, real data). Supersedes nothing; this is the _visual
+> system_ layer the feature plan above never codified.
+> **Sibling docs:** `docs/DESIGN-SYSTEM.md` (current tokens), `docs/DESIGN-OPTIMIZATION-SPRINT.md` (the 10-loop polish already shipped).
+
+## A. What the references actually do (the DNA to copy)
+
+Both apps read as "expensive" for the **same five reasons**. None of them are
+about color or illustration — they are about **discipline in spacing, edges,
+and restraint**.
+
+### A1. One global page gutter — nothing ever touches an edge
+
+- Cal AI and Mob both inset _all_ content by a **single constant** (~20px /
+  `px-5`). Section headers, cards, list rows, the date strip, the input bar —
+  every one starts and ends at the same left/right rail.
+- Full-bleed photos are never page-bleed: they live **inside a card** that is
+  itself inset. The image fills the _card_, the card respects the gutter.
+- Floating elements (Cal AI's scan FAB, Mob's "meal plan" pill, the sticky
+  "Add to Food Log" CTA) keep a **clear margin from both the screen edge and
+  the bottom nav** — they never kiss an edge. (corpus: `safe-area-awareness`,
+  `fixed-element-offset`)
+
+### A2. An 8-pt rhythm, applied generously
+
+- Vertical spacing steps in a visible cadence: ~8px inside a row, ~16px card
+  padding, ~24–32px between sections. The eye gets clean "groups."
+- Whitespace is treated as a **feature**, not leftover. Cal AI's dashboard
+  breathes; the calorie ring has air around it. (corpus: `whitespace-balance`,
+  `spacing-scale`)
+
+### A3. Consistent, large corner radii
+
+- Cards ~20px, thumbnails ~12–14px, pills fully round. The radius _scale_ is
+  consistent within each role, so cards feel like one family.
+
+### A4. Image-forward cards with inset overlay controls
+
+- Mob's recipe cards are mostly photo; the save/like control is a circular
+  overlay inset ~12px from the card corner — never flush. Cal AI's food rows
+  lead with a rounded thumbnail of fixed size.
+- Carousels **peek** the next card (a sliver visible) to signal "scroll me."
+
+### A5. Ruthless restraint — one accent, quiet metadata
+
+- A single brand accent (Cal AI green; Mob orange). Data-viz uses a _tiny fixed
+  palette_ (Cal AI macros: red/gold/blue) and nothing else is colored.
+- Big confident numbers/headlines; **all** secondary text is one quiet gray at
+  one size. No badges, no decoration, no second accent competing. (corpus:
+  `primary-action`, `color-semantic`, `weight-hierarchy`)
+
+**The bar, in one line:** _a single gutter, an 8-pt rhythm, one radius family,
+one accent, and floating things that never touch edges._
+
+## B. Where Sous stands today (gap analysis)
+
+The 10-loop sprint (see `DESIGN-OPTIMIZATION-SPRINT.md`) fixed the worst
+composition bugs (letterbox hero, sticky-CTA bleed-through, toast/nav overlap,
+sub-44 touch targets, eyebrow inconsistency). What remains is **systemic**, not
+per-screen:
+
+| #   | Gap                                                                                                                                                                                                             | Evidence                   | Reference principle violated |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ---------------------------- |
+| B1  | **No spacing scale.** Page gutter drifts `px-4`(Today/Path/Sides/Cook) vs `px-2`+`px-4`(Content) vs `px-6`(a Cook block). Section gaps drift `space-y-2/3/4/5/8`.                                               | gutter audit, this session | A1, A2                       |
+| B2  | **No radius scale.** Cards use `rounded-2xl`, `rounded-[22px]`, `rounded-[26px]`, `1rem` interchangeably.                                                                                                       | grep of components         | A3                           |
+| B3  | **No layout primitive.** Every screen re-declares `mx-auto max-w-md px-4 …`; nothing enforces the gutter, so drift is inevitable.                                                                               | every `page.tsx`           | A1                           |
+| B4  | **Edge proximity on floating UI.** The sprint had to hand-fix the sticky CTA and the toast offset; there is no shared "floating layer" contract, so the next floating element will re-introduce the bug.        | sprint loops 3, 5          | A1                           |
+| B5  | **Carousels don't signal scroll.** Content rails don't consistently peek the next item.                                                                                                                         | Content tab                | A4                           |
+| B6  | **Metadata not unified.** Secondary text still appears at `text-xs`, `text-[11px]`, `text-[10px]`, `text-[12px]` with different grays in places (eyebrows now unified via `.sous-label`; body metadata is not). | grep                       | A5                           |
+| B7  | **Data-viz palette not tokenized.** Macro/score colors are inline (`amber`, `red`, `blue`) rather than a named 3-color data ramp like Cal AI's.                                                                 | result-stack, journey      | A5                           |
+
+The good news: Sous already has the _hard_ parts — restrained brand color, serif
+display type, image-forward Today hero (post-sprint), real WCAG/motion tokens.
+This overhaul is **plumbing the spacing/edge discipline the references live by**,
+then sweeping every screen onto it.
+
+## C. The missing layer — spacing, radius & layout system
+
+### C1. Spacing tokens (8-pt grid) → `globals.css` + `tokens.ts`
+
+```
+--space-1: 4px    --space-2: 8px    --space-3: 12px   --space-4: 16px
+--space-5: 20px   --space-6: 24px   --space-8: 32px   --space-10: 40px
+/* semantic intent (what components reference) */
+--gutter: var(--space-5);          /* THE page rail — 20px, matches references */
+--section-gap: var(--space-8);     /* between major sections — 32px */
+--card-pad: var(--space-4);        /* inside a card — 16px */
+--row-gap: var(--space-3);         /* between list rows — 12px */
+--float-inset: var(--space-4);     /* floating UI ↔ edge/nav — 16px min */
+```
+
+Rationale: references sit at a 20px gutter; Sous is at 16px (`px-4`). **Adopt
+20px** to match the "expensive" feel and give cards more air. (corpus:
+`spacing-scale` 4/8 system; `container-width`.)
+
+### C2. Radius scale → tokens
+
+```
+--radius-sm: 12px   /* thumbnails, small chips' container */
+--radius-md: 16px   /* standard cards, inputs */
+--radius-lg: 22px   /* hero / feature cards, sheets' inner */
+--radius-pill: 999px
+```
+
+Collapse all `rounded-[22px]/[26px]/2xl/xl` onto these four. One family.
+
+### C3. Layout primitives → `src/components/shared/layout/`
+
+- **`<Screen>`** — owns the page: `min-h-dvh`, brand surface, **safe-area
+  insets top+bottom**, and the gutter (`mx-auto max-w-md px-[var(--gutter)]`).
+  Every page renders `<Screen>` instead of re-declaring the wrapper. Kills B1/B3
+  at the root.
+- **`<Section gap="section">`** — vertical rhythm wrapper (maps to
+  `--section-gap` / `--space-*`), so spacing is chosen from the scale, not typed.
+- **`<FloatingLayer>`** — the single contract for sticky CTAs, FABs, toasts,
+  meal-plan pills: applies `--float-inset` + `bottom: calc(nav + inset + safe)`.
+  Kills B4 permanently — no floating element can touch an edge again.
+- **`<Card>`** / **`<MediaCard>`** — `--radius-*`, `--card-pad`, `--shadow-card`,
+  and (MediaCard) the image-forward layout with overlay controls auto-inset by
+  `--space-3`. Mirrors Mob's recipe card + Cal AI's food row.
+
+### C4. Metadata + data-viz tokens
+
+- **`.sous-meta`** utility: one size (`13px`), one gray (`--nourish-subtext`),
+  `1.4` line-height — every caption/secondary line uses it (fixes B6).
+- **Data ramp**: `--data-carb`, `--data-fat`, `--data-protein` (and a neutral
+  `--data-muted`) — the _only_ colors allowed in rings/bars (fixes B7). Mirrors
+  Cal AI's fixed macro palette.
+
+## D. Component overhaul spec (target = reference parity)
+
+| Component                              | Today                    | Target (ref-driven)                                                                                                      |
+| -------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| **Screen frame**                       | per-page `px-4`, drift   | `<Screen>` 20px gutter + safe-area, everywhere                                                                           |
+| **Today header**                       | clean (post-sprint)      | keep; move to `<Screen>` rail; avatar inset to gutter                                                                    |
+| **Calorie/quest hero**                 | square cover image ✓     | add the Cal-AI **ring-as-hero** option for progress surfaces; consistent `--radius-lg`                                   |
+| **Macro / score rings**                | inline `amber/red/blue`  | tokenized data ramp; 3-up row, equal gaps, value below ring                                                              |
+| **List rows** (Recently Logged, meals) | varies                   | fixed: `--radius-sm` thumbnail + title + `.sous-meta` + right value; `--row-gap` between; 56px min row                   |
+| **Recipe / side cards**                | improved ✓               | `<MediaCard>`: photo fills card, save/like overlay inset `--space-3`, title + one meta + time pill                       |
+| **Category grid** (Content)            | 2-col ✓                  | equalize to Mob's: square thumb + label, `--space-3` gaps, consistent tile height                                        |
+| **Carousels**                          | no peek                  | peek next card ~16px (signals scroll)                                                                                    |
+| **Chips / suggestions**                | ok                       | pill, `--space-2` gap, wrap, 44px hit area (done)                                                                        |
+| **Bottom nav**                         | 3 tabs ✓                 | float with `--float-inset`; active state weight+color only                                                               |
+| **Sticky CTA**                         | cream-fade (post-sprint) | promote to `<FloatingLayer>`; black/green pill, safe bottom                                                              |
+| **Bottom sheet** (food/dish detail)    | exists                   | hero image to top edge, drag handle, gutter-inset body, sticky CTA via `<FloatingLayer>` — Cal AI "Health Intake" parity |
+| **Input bar** (Ask AI / search)        | ok                       | pill, mic + send, `--float-inset` from bottom                                                                            |
+
+## E. Minimalism pass (subtraction list)
+
+Mob/Cal AI win by **removing**. Audit every screen for and delete/quiet:
+
+- any second accent color competing with brand green (route through the data ramp or neutralize);
+- decorative badges/labels that don't drive the next action (rule 6);
+- duplicate metadata (the sprint already removed the side-card echo — repeat the pass app-wide);
+- any element flush to an edge (route through `<Screen>`/`<FloatingLayer>`);
+- inconsistent one-off radii/paddings (route through tokens).
+
+## F. Staged execution plan
+
+Per **CLAUDE.md rule 12**, each item is classified. _Everything here is
+AUTO-BUILD_ — no external accounts, no founder assets, pure repo + design work.
+There are **no founder-gated dependencies** in this overhaul (the imagery rule 7
+constraint is honored: zero new images are generated).
+
+| Phase                     | Scope                                                                                                                     | Type | Verify                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---- | ---------------------------------------------------------- |
+| **P1 — Tokens**           | Add `--space-*`, `--radius-*`, `--gutter`, data-ramp + `.sous-meta` to `globals.css` + `tokens.ts`. No visual change yet. | AUTO | `pnpm build`; tokens resolve                               |
+| **P2 — Primitives**       | Build `<Screen>`, `<Section>`, `<FloatingLayer>`, `<Card>`, `<MediaCard>`. Unit-snapshot each.                            | AUTO | RTL render tests                                           |
+| **P3 — Screen sweep**     | Migrate Today → Path → Content → Pairing → Cook → Win onto `<Screen>` (20px gutter, safe-area). One screen per commit.    | AUTO | Preview @390×844 + @375×667 (rule 10); gutter == 20 on all |
+| **P4 — Cards & rows**     | Replace ad-hoc cards/rows with `<Card>`/`<MediaCard>`; tokenize radii; inset overlay controls.                            | AUTO | Visual diff vs reference DNA                               |
+| **P5 — Data-viz**         | Move rings/bars/scores onto the data ramp; standardize the 3-up macro row.                                                | AUTO | Contrast check on ramp                                     |
+| **P6 — Floating layer**   | Route sticky CTA, bottom nav, toasts, FAB, meal-plan pill through `<FloatingLayer>`.                                      | AUTO | No element within `--float-inset` of an edge               |
+| **P7 — Minimalism sweep** | Execute section E subtraction list per screen.                                                                            | AUTO | Element-count drop; one-accent check                       |
+| **P8 — Regression**       | Full a11y re-measure (44px/focus), reduced-motion, `pnpm test` + `build` + Playwright capture of every screen.            | AUTO | All green; screenshots archived                            |
+
+Sequence is dependency-ordered: P1→P2 unblock everything; P3 before P4 (frame
+before contents); P6 after P3 (needs the safe-area frame). Each phase leaves the
+app shippable (rule: every phase coherent). Commit per screen/phase to `main`.
+
+## G. Definition of done (acceptance criteria)
+
+1. **One gutter:** every screen's content rail == `--gutter` (20px) at 390 and 375 widths; nothing within 12px of a side edge except intentional full-bleed _inside_ a card.
+2. **Rhythm:** all vertical spacing resolves to a `--space-*` step; no raw `space-y-5`/odd values remain on main screens.
+3. **Radius family:** zero `rounded-[Npx]` literals on main screens; all map to `--radius-*`.
+4. **Floating safety:** every sticky/fab/toast clears edges + nav by ≥`--float-inset`; verified by automated bounding-box check.
+5. **One accent:** no non-brand, non-data-ramp color on any main screen.
+6. **Metadata unity:** all secondary text uses `.sous-meta`.
+7. **Touch/focus/motion:** 44px + focus rings + reduced-motion hold (regression of the sprint gains).
+8. **No new images** (rule 7) and **no founder dependency** introduced.
+
+## H. Risks & guardrails
+
+- **Scope creep into IA:** this is _visual system_ work — do **not** rename tabs,
+  move features, or alter copy (e.g. the "Community"→"Content" label stays a
+  separate founder call).
+- **Regression of sprint gains:** P3/P4 must preserve the letterbox/CTA/toast
+  fixes; P8 re-measures them.
+- **Token churn:** adopting a 20px gutter touches every screen — do it via
+  `<Screen>` once, not 200 find-replaces.
+- **Verification tooling:** use Claude Preview (reliable) + a small Playwright
+  bounding-box script for the edge/gutter assertions in G1/G4.
