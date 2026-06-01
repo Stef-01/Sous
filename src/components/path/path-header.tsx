@@ -1,12 +1,12 @@
 "use client";
 // v2
 import { motion, useReducedMotion } from "framer-motion";
-import { Star, Trophy, CircleHelp, Award } from "lucide-react";
+import { Trophy, CircleHelp, Award } from "lucide-react";
+import { LevelRing } from "./level-ring";
 
 interface PathHeaderProps {
   totalXP: number;
   level: number;
-  levelProgress: number;
   skillsCompleted: number;
   /** Re-open the Path orientation tutorial (2-minute click-through). */
   onReplayTutorial?: () => void;
@@ -28,7 +28,6 @@ const XP_PER_LEVEL = 100;
 export function PathHeader({
   totalXP,
   level,
-  levelProgress,
   skillsCompleted,
   onReplayTutorial,
   badgesUnlocked,
@@ -90,7 +89,7 @@ export function PathHeader({
             {showBadges && (
               <motion.button
                 type="button"
-                whileTap={{ scale: 0.94 }}
+                whileTap={reducedMotion ? undefined : { scale: 0.94 }}
                 onClick={onOpenBadges}
                 className="flex items-center gap-1 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-2 py-0.5 leading-none text-amber-950 shadow-sm ring-1 ring-amber-100/60 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                 aria-label={`View badges (${badgesUnlocked} of ${badgesTotal} unlocked)`}
@@ -111,83 +110,19 @@ export function PathHeader({
           </div>
         </div>
 
-        {/* Row 2  -  level badge + single-line XP bar. Previous layout stacked
-            three tiny caption rows; now the bar carries one caption only so
-            the level/XP block matches the 36px badge height cleanly. */}
-        <div className="flex items-center gap-2.5">
-          <motion.div
-            initial={reducedMotion ? false : { scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 18,
-              delay: 0.1,
-            }}
-            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-dark-green) 100%)",
-              boxShadow: "var(--shadow-cta)",
-            }}
-          >
-            <span className="text-[13px] font-bold leading-none text-white">
-              {level}
+        {/* Row 2  -  bespoke level ring (custom SVG) + XP label. The ring's arc
+            carries the XP progress, so the old flat bar + separate badge
+            collapse into one crafted element. */}
+        <div className="flex items-center gap-3">
+          <LevelRing level={level} progress={xpInCurrentLevel / xpNeeded} />
+          <div className="flex flex-col gap-0.5">
+            <span className="sous-label text-[var(--nourish-green)]">
+              Level {level}
             </span>
-            <Star
-              size={8}
-              className="absolute -top-0.5 -right-0.5 text-[var(--nourish-gold)] fill-[var(--nourish-gold)]"
-            />
-          </motion.div>
-
-          <div className="flex flex-1 flex-col justify-center gap-1">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
-                Level {level}
-              </span>
-              <span className="text-[10px] text-[var(--nourish-subtext)] tabular-nums">
-                {xpInCurrentLevel}
-                <span className="text-[var(--nourish-subtext)]/60">
-                  {" "}
-                  / {xpNeeded}{" "}
-                </span>
-                XP
-              </span>
-            </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
-              <motion.div
-                className="relative h-full overflow-hidden rounded-full"
-                style={{
-                  background:
-                    "linear-gradient(90deg, var(--nourish-dark-green) 0%, var(--nourish-green) 55%, var(--nourish-light-green) 100%)",
-                }}
-                initial={{ width: 0 }}
-                animate={{
-                  width: `${Math.max(Math.min((xpInCurrentLevel / xpNeeded) * 100, 100), levelProgress > 0 ? 4 : 0)}%`,
-                }}
-                transition={{
-                  duration: 1,
-                  delay: 0.3,
-                  ease: [0.34, 1.56, 0.64, 1],
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
-                  }}
-                  animate={{ x: ["-100%", "200%"] }}
-                  transition={{
-                    duration: 1.8,
-                    delay: 1.1,
-                    ease: "linear",
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
-                />
-              </motion.div>
-            </div>
+            <span className="text-[12px] text-[var(--nourish-subtext)] tabular-nums">
+              {xpInCurrentLevel}
+              <span className="opacity-60"> / {xpNeeded} XP</span>
+            </span>
           </div>
         </div>
       </div>

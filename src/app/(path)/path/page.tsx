@@ -52,7 +52,6 @@ export default function PathPage() {
     getNodeProgress,
     totalXP,
     level,
-    levelProgress,
     skillsCompleted,
   } = useSkillProgress();
 
@@ -260,7 +259,6 @@ export default function PathPage() {
         <PathHeader
           totalXP={totalXP}
           level={level}
-          levelProgress={levelProgress}
           skillsCompleted={skillsCompleted}
           onReplayTutorial={replayPathTutorial}
           badgesUnlocked={unlockedAchievements.length}
