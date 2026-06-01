@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import { UtensilsCrossed } from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { FRIEND_COOKS, type FriendCook } from "@/data/friend-cooks";
 import {
@@ -55,6 +56,45 @@ function initialFor(name: string): string {
   const trimmed = name.trim();
   if (!trimmed) return "·";
   return trimmed[0]!.toUpperCase();
+}
+
+/**
+ * Cook tile image with a graceful fallback. The user's own cooks point at a
+ * constructed `/food_images/<slug>.png` path that may not exist (combined
+ * plates, dishes without art); without an onError guard those rendered as a
+ * broken <img> with the alt text spilling outside the card. On missing src OR
+ * load failure we drop to a soft gradient + glyph instead.
+ */
+function FriendCookImage({ src, alt }: { src?: string; alt: string }) {
+  const [errored, setErrored] = useState(false);
+  if (!src || errored) {
+    return (
+      <div
+        className="flex h-full w-full items-center justify-center"
+        style={{
+          background:
+            "linear-gradient(135deg, var(--nourish-input-bg), var(--nourish-cream))",
+        }}
+        aria-hidden
+      >
+        <UtensilsCrossed
+          size={26}
+          className="text-[var(--nourish-subtext)]/55"
+          strokeWidth={1.75}
+        />
+      </div>
+    );
+  }
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes="168px"
+      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+      onError={() => setErrored(true)}
+    />
+  );
 }
 
 /**
@@ -157,15 +197,13 @@ export function FriendsStrip({
   return (
     <section ref={ref} className="space-y-2" aria-label="Friends' recent cooks">
       <div className="flex items-baseline justify-between px-1">
-        <h2 className="text-[11px] font-bold tracking-[0.12em] text-[var(--nourish-subtext)] uppercase">
-          Community this week
-        </h2>
+        <h2 className="sous-label">Community this week</h2>
         <span className="text-[10px] text-[var(--nourish-subtext)]/70">
           Swipe &raquo;
         </span>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto pb-3 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
+      <div className="flex gap-3 overflow-x-auto pb-3 -mx-[var(--gutter)] px-[var(--gutter)] scrollbar-hide snap-x snap-mandatory">
         {entries.map((entry, idx) => {
           // Only friend tiles can be "new since last visit"  -  the user's
           // own cooks are never surprising to them. Pre-computed in `newFlags`
@@ -190,19 +228,7 @@ export function FriendsStrip({
               }
             >
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--nourish-cream)]">
-                {entry.imageUrl ? (
-                  <Image
-                    src={entry.imageUrl}
-                    alt={entry.dish}
-                    fill
-                    sizes="168px"
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-3xl">
-                    🍽️
-                  </div>
-                )}
+                <FriendCookImage src={entry.imageUrl} alt={entry.dish} />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
 
                 {/* Friend avatar + name overlay */}
