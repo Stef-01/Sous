@@ -2,7 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, Joystick } from "lucide-react";
+import {
+  ArrowLeft,
+  Joystick,
+  Lightbulb,
+  Puzzle,
+  Timer,
+  Compass,
+  type LucideIcon,
+} from "lucide-react";
 import { useGameScores } from "@/lib/hooks/use-game-scores";
 import { MetaPill } from "@/components/shared/meta-pill";
 
@@ -10,9 +18,10 @@ interface GameCard {
   id: string;
   name: string;
   description: string;
-  emoji: string;
+  Icon: LucideIcon;
   route: string;
-  color: string;
+  /** Tint drawn from the app's own palette (no off-system pastels). */
+  tint: string;
 }
 
 const games: GameCard[] = [
@@ -20,33 +29,33 @@ const games: GameCard[] = [
     id: "whats-cooking",
     name: "What's Cooking?",
     description: "Guess the dish from cryptic clues",
-    emoji: "🔮",
+    Icon: Lightbulb,
     route: "/games/whats-cooking",
-    color: "from-purple-100 to-indigo-100",
+    tint: "--nourish-gold",
   },
   {
     id: "flavor-pairs",
     name: "Flavor Pairs",
     description: "Match ingredients that pair well",
-    emoji: "🧩",
+    Icon: Puzzle,
     route: "/games/flavor-pairs",
-    color: "from-amber-100 to-orange-100",
+    tint: "--nourish-green",
   },
   {
     id: "speed-chop",
     name: "Speed Chop",
     description: "Sort ingredients into categories",
-    emoji: "🔪",
+    Icon: Timer,
     route: "/games/speed-chop",
-    color: "from-red-100 to-pink-100",
+    tint: "--nourish-warm",
   },
   {
     id: "cuisine-compass",
     name: "Cuisine Compass",
     description: "Pin dishes to their homeland",
-    emoji: "🗺️",
+    Icon: Compass,
     route: "/games/cuisine-compass",
-    color: "from-emerald-100 to-teal-100",
+    tint: "--nourish-light-green",
   },
 ];
 
@@ -118,9 +127,13 @@ export default function GamesArcadePage() {
                   </MetaPill>
                 )}
                 <div
-                  className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${game.color}`}
+                  className="flex h-16 w-16 items-center justify-center rounded-2xl"
+                  style={{
+                    backgroundColor: `color-mix(in srgb, var(${game.tint}) 14%, transparent)`,
+                    color: `var(${game.tint})`,
+                  }}
                 >
-                  <span className="text-3xl">{game.emoji}</span>
+                  <game.Icon size={28} strokeWidth={1.8} aria-hidden />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-[var(--nourish-dark)]">
