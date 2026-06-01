@@ -58,3 +58,4 @@ canva-asset-sync-*.md
 .write-test
 *.ps1
 !scripts/*.ps1
+.gstack/
