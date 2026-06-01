@@ -8,10 +8,11 @@ type Tab = {
 };
 
 /**
- * Tab navigation  -  Today, Path, Community are always visible.
- * Community is the social-first surface (pods + challenges +
- * friend activity) with editorial content as a quiet shelf
- * below. The route id `community` matches the label.
+ * Tab navigation  -  Today, Path, Content are always visible.
+ * The third tab is a Flo-style content magazine (reels, articles,
+ * research, expert voices), NOT a social graph — so the label is
+ * "Content" (CLAUDE.md rule 5/11). The route id stays `community`
+ * for URL/back-compat; only the user-facing label is "Content".
  *
  * The `pathUnlocked` / `communityUnlocked` props are retained
  * for call-site backwards compatibility but no longer gate
@@ -30,7 +31,7 @@ export function useNavigation(
       { id: "path", label: "Path", href: "/path", visible: true },
       {
         id: "community",
-        label: "Community",
+        label: "Content",
         href: "/community",
         visible: true,
       },
