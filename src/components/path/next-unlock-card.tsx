@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Lock, Zap, ChevronRight, Trophy, Flame } from "lucide-react";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { SkillIcon } from "@/components/shared/skill-icon";
+import { ProgressRing } from "@/components/path/progress-ring";
 
 interface NextUnlockCardProps {
   /** The next skill node that is available or in-progress */
@@ -70,7 +71,6 @@ export function NextUnlockCard({
     const { node, status, cooksCompleted } = nextNode;
     const progress = Math.min(cooksCompleted / node.cooksRequired, 1);
     const remaining = node.cooksRequired - cooksCompleted;
-    const progressPct = Math.max(progress * 100, cooksCompleted > 0 ? 6 : 0);
 
     return (
       <motion.div
@@ -126,21 +126,24 @@ export function NextUnlockCard({
           </motion.div>
         </div>
 
-        {/* Skill info */}
+        {/* Skill info  -  the icon is framed by a cooks-to-unlock progress ring
+            (custom SVG), so the old flat bar below is no longer needed. */}
         <div className="flex items-center gap-3">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(45,90,61,0.1), rgba(74,140,92,0.08))",
-            }}
-          >
-            <SkillIcon
-              skillId={node.id}
-              size={24}
-              className="text-[var(--nourish-green)]"
-            />
-          </div>
+          <ProgressRing progress={progress} size={56} stroke={4} delay={0.4}>
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-xl"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(45,90,61,0.1), rgba(74,140,92,0.08))",
+              }}
+            >
+              <SkillIcon
+                skillId={node.id}
+                size={22}
+                className="text-[var(--nourish-green)]"
+              />
+            </div>
+          </ProgressRing>
           <div>
             <p className="text-sm font-semibold text-[var(--nourish-dark)]">
               {node.name}
@@ -162,40 +165,6 @@ export function NextUnlockCard({
             <span className="text-xs font-semibold text-[var(--nourish-dark)] tabular-nums">
               {cooksCompleted}/{node.cooksRequired}
             </span>
-          </div>
-
-          {/* Gradient progress bar */}
-          <div className="h-3 w-full rounded-full bg-neutral-100 overflow-hidden">
-            <motion.div
-              className="h-full rounded-full relative overflow-hidden"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--nourish-green) 0%, var(--nourish-light-green) 100%)",
-              }}
-              initial={{ width: 0 }}
-              animate={{ width: `${progressPct}%` }}
-              transition={{
-                duration: 0.7,
-                delay: 0.4,
-                ease: [0.34, 1.56, 0.64, 1],
-              }}
-            >
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
-                }}
-                animate={{ x: ["-100%", "200%"] }}
-                transition={{
-                  duration: 2,
-                  delay: 1,
-                  ease: "linear",
-                  repeat: Infinity,
-                  repeatDelay: 2,
-                }}
-              />
-            </motion.div>
           </div>
         </div>
 
