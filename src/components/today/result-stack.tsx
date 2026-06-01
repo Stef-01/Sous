@@ -300,7 +300,7 @@ export function ResultStack({
           A cream gradient backdrop fades the cards out beneath the pill instead
           of letting them bleed through its rounded corners. (corpus:
           fixed-element-offset, whitespace-balance) */}
-      <div className="sticky bottom-0 z-20 -mx-4 bg-gradient-to-t from-[var(--nourish-cream)] from-60% to-transparent px-4 pb-4 pt-5">
+      <div className="sticky bottom-0 z-20 -mx-[var(--gutter)] bg-gradient-to-t from-[var(--nourish-cream)] from-60% to-transparent px-[var(--gutter)] pb-4 pt-5">
         <motion.button
           onClick={handleCookSelected}
           disabled={selectedSides.length === 0}
