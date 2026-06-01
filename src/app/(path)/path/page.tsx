@@ -3,11 +3,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
 import {
-  BookOpen,
+  motion,
+  AnimatePresence,
+  LayoutGroup,
+  useReducedMotion,
+} from "framer-motion";
+import {
   Bookmark,
   ChefHat,
+  ChevronDown,
   Heart,
   Leaf,
   ShoppingCart,
@@ -81,6 +86,9 @@ export default function PathPage() {
   const router = useRouter();
 
   const [pathTutorialOpen, setPathTutorialOpen] = useState(false);
+  // "Your kitchen" toolset is collapsed by default — keeps Path's default view
+  // condensed; the tools are one tap away.
+  const [kitchenOpen, setKitchenOpen] = useState(false);
 
   useEffect(() => {
     if (!mounted) return;
@@ -343,65 +351,90 @@ export default function PathPage() {
             the same uppercase tracking pattern as the rest of Path
             home and the Content tab — visual rhythm consistency. */}
         <div className="mx-auto max-w-md page-x pb-24 pt-4">
-          <SectionKicker className="mb-2 px-1">Your kitchen</SectionKicker>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              {
-                href: "/path/scrapbook",
-                icon: BookOpen,
-                label: "Scrapbook",
-              },
-              {
-                href: "/path/pantry",
-                icon: Bookmark,
-                label: "Pantry",
-              },
-              {
-                href: "/path/shopping-list",
-                icon: ShoppingCart,
-                label: "Shopping list",
-              },
-              {
-                href: "/path/favorites",
-                icon: Heart,
-                label: "Favorites",
-              },
-              {
-                href: "/path/recipes",
-                icon: ChefHat,
-                label: "My recipes",
-              },
-              {
-                href: "/path/household",
-                icon: Users,
-                label: "Household",
-              },
-              {
-                href: "/path/eco",
-                icon: Leaf,
-                label: "Eco Mode",
-              },
-              {
-                href: "/path/recap",
-                icon: Sparkles,
-                label: "Recap",
-              },
-            ].map(({ href, icon: Icon, label }) => (
+          <button
+            type="button"
+            onClick={() => setKitchenOpen((o) => !o)}
+            aria-expanded={kitchenOpen}
+            className="flex min-h-[44px] w-full items-center justify-between rounded-xl px-1 text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          >
+            <SectionKicker>Your kitchen</SectionKicker>
+            <motion.span
+              animate={{ rotate: kitchenOpen ? 180 : 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[var(--nourish-subtext)]"
+            >
+              <ChevronDown size={18} />
+            </motion.span>
+          </button>
+          <AnimatePresence initial={false}>
+            {kitchenOpen && (
               <motion.div
-                key={href}
-                whileTap={{ scale: 0.96 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="overflow-hidden"
               >
-                <Link
-                  href={href}
-                  className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-                >
-                  <Icon size={14} />
-                  {label}
-                </Link>
+                <div className="grid grid-cols-3 gap-2 pt-2">
+                  {[
+                    {
+                      href: "/path/pantry",
+                      icon: Bookmark,
+                      label: "Pantry",
+                    },
+                    {
+                      href: "/path/shopping-list",
+                      icon: ShoppingCart,
+                      label: "Shopping list",
+                    },
+                    {
+                      href: "/path/favorites",
+                      icon: Heart,
+                      label: "Favorites",
+                    },
+                    {
+                      href: "/path/recipes",
+                      icon: ChefHat,
+                      label: "My recipes",
+                    },
+                    {
+                      href: "/path/household",
+                      icon: Users,
+                      label: "Household",
+                    },
+                    {
+                      href: "/path/eco",
+                      icon: Leaf,
+                      label: "Eco Mode",
+                    },
+                    {
+                      href: "/path/recap",
+                      icon: Sparkles,
+                      label: "Recap",
+                    },
+                  ].map(({ href, icon: Icon, label }) => (
+                    <motion.div
+                      key={href}
+                      whileTap={{ scale: 0.96 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 15,
+                      }}
+                    >
+                      <Link
+                        href={href}
+                        className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                      >
+                        <Icon size={14} />
+                        {label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
-            ))}
-          </div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Detail sheet */}
