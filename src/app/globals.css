@@ -14,7 +14,10 @@
   --nourish-cream: #fafaf8;
   --nourish-dark: #0d0d0d;
   --nourish-input-bg: #f0ede8;
-  --nourish-subtext: #6b6b6b;
+  /* Secondary text. Darkened from #6b6b6b (≈4.5:1, borderline on #fff) to
+     clear WCAG AA comfortably on both paper and white.
+     Corpus: ux-guidelines.csv · Typography · Contrast Readability (High). */
+  --nourish-subtext: #595959;
   --nourish-button: #2d5a3d;
   --nourish-button-hover: #1a3d25;
   --nourish-evaluate: #8c1515;
@@ -44,6 +47,28 @@
   --sous-text-caption: 12px;
   --sous-text-cook: 17px;
   --sous-leading-cook: 1.55;
+
+  /* Type scale — formal heading ramp (was hand-tuned per component, which
+     left the hierarchy inverted: an 18px H1 above a 30px H3). Corpus-cited
+     scale from typography.csv (Calistoga/Inter "warm editorial" pairing):
+     Display 36–42 / H2 28–32 / Body 16–18 / Label 12. Apply via the
+     .sous-display / .sous-title / .sous-h2 / .sous-label utilities so the
+     largest visual element is always the highest heading level. */
+  --text-display: clamp(2rem, 8vw, 2.5rem); /* dish-name hero */
+  --text-display-lh: 1.08;
+  --text-title: clamp(1.625rem, 6vw, 1.875rem); /* page/section serif */
+  --text-title-lh: 1.15;
+  --text-h2: 1.25rem;
+  --text-label: 0.6875rem;
+
+  /* Motion — durations + easings (corpus: ux-guidelines.csv · Animation,
+     150–300ms, ease-out for entrances). Tokenized so components stop
+     hand-rolling transition timings. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 300ms;
 
   /* Y3 W3 — semantic surface tokens. These let callers express
      INTENT ("elevated surface") rather than the literal colour,
@@ -97,6 +122,36 @@
 .cook-prose {
   font-size: var(--sous-text-cook);
   line-height: var(--sous-leading-cook);
+}
+
+/* Type-scale utilities — semantic heading roles on the formal ramp.
+   Use these instead of ad-hoc text-* sizes so hierarchy stays systematic
+   and the largest element is the highest heading level. */
+.sous-display {
+  font-family: var(--font-serif);
+  font-size: var(--text-display);
+  line-height: var(--text-display-lh);
+  font-weight: 400;
+  text-wrap: balance;
+}
+.sous-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-title);
+  line-height: var(--text-title-lh);
+  font-weight: 400;
+  text-wrap: balance;
+}
+.sous-h2 {
+  font-size: var(--text-h2);
+  line-height: 1.25;
+  font-weight: 600;
+}
+.sous-label {
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--nourish-subtext);
 }
 
 /* Big-hands mode — session-scoped toggle on the cook pages. Bumps the

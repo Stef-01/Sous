@@ -778,10 +778,10 @@ function MealQueuePreview({
 
         <div className="mt-3 space-y-2 px-1">
           <div className="space-y-1">
-            <p className="text-[11px] font-semibold uppercase text-[var(--nourish-subtext)] tracking-wide">
+            <p className="sous-label">
               {dish.isMeal ? "Dinner idea" : "Side idea"}
             </p>
-            <h3 className="font-serif text-[30px] leading-none text-[var(--nourish-dark)]">
+            <h3 className="sous-display text-[var(--nourish-dark)]">
               {dish.dishName}
             </h3>
           </div>

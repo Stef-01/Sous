@@ -86,7 +86,7 @@ export function FilterDropdown<T extends string>({
         onClick={() => setOpen((o) => !o)}
         whileTap={{ scale: 0.96 }}
         className={cn(
-          "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+          "inline-flex min-h-[44px] items-center gap-1 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           isActive
             ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
             : "border-[var(--nourish-border-strong)] bg-white/80 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40 hover:text-[var(--nourish-green)]",
