@@ -40,7 +40,16 @@ function StatBlock({
           damping: 18,
           delay: delay + 0.1,
         }}
-        className={`flex items-center justify-center gap-1 text-2xl font-bold tabular-nums ${highlight ? "text-[var(--nourish-green)]" : "text-[var(--nourish-dark)]"}`}
+        className={`flex items-center justify-center gap-1 text-2xl font-bold tabular-nums ${
+          value === 0 && !highlight
+            ? // Mute a still-zero stat so it recedes behind live numbers rather
+              // than reading as failure on a new account. (corpus: empty-states,
+              // visual-hierarchy)
+              "text-[var(--nourish-dark)]/30"
+            : highlight
+              ? "text-[var(--nourish-green)]"
+              : "text-[var(--nourish-dark)]"
+        }`}
       >
         {value}
         {icon}

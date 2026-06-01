@@ -92,16 +92,21 @@ export function PathHeader({
               </span>
             </motion.div>
 
-            <div className="flex items-center gap-1 leading-none">
-              <Trophy
-                size={13}
-                className="text-[var(--nourish-gold)]"
-                strokeWidth={2.4}
-              />
-              <span className="text-[13px] font-bold text-[var(--nourish-dark)] tabular-nums">
-                {skillsCompleted}
-              </span>
-            </div>
+            {/* Trophy count only appears once at least one skill is earned —
+                a bare "0" reads as failure on a brand-new account.
+                (corpus: content-priority, whitespace-balance, empty-states) */}
+            {skillsCompleted > 0 && (
+              <div className="flex items-center gap-1 leading-none">
+                <Trophy
+                  size={13}
+                  className="text-[var(--nourish-gold)]"
+                  strokeWidth={2.4}
+                />
+                <span className="text-[13px] font-bold text-[var(--nourish-dark)] tabular-nums">
+                  {skillsCompleted}
+                </span>
+              </div>
+            )}
 
             {showBadges && (
               <motion.button

@@ -14,8 +14,11 @@ const VARIANT_STYLES: Record<
   { bg: string; shadow: string; label: string }
 > = {
   achievement: {
-    bg: "bg-gradient-to-br from-amber-500 to-orange-600",
-    shadow: "shadow-amber-500/20",
+    // Corpus terracotta pair (#C2410C secondary → #9A3412 primary): on-brand
+    // warm celebration AND white text clears AA at every gradient stop, which
+    // the old amber-500→orange-600 (a known token drift) did not.
+    bg: "bg-gradient-to-br from-[#c2410c] to-[#9a3412]",
+    shadow: "shadow-[#9a3412]/25",
     label: "Achievement Unlocked",
   },
   "level-up": {
@@ -57,7 +60,7 @@ export function ToastHost() {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className="pointer-events-none fixed inset-x-0 bottom-20 z-[70] mx-auto flex max-w-sm px-4"
+      className="pointer-events-none fixed inset-x-0 bottom-24 z-[70] mx-auto flex max-w-sm px-4"
     >
       <AnimatePresence mode="wait">
         {active && (
