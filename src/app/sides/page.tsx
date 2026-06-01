@@ -156,15 +156,13 @@ function SidesPageContent() {
             onClick={() => router.back()}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             aria-label="Go back"
           >
             <ArrowLeft size={18} />
           </motion.button>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-subtext)]">
-              Side pairings
-            </p>
+            <p className="sous-label">Side pairings</p>
             <h1 className="truncate font-serif text-base font-semibold text-[var(--nourish-dark)]">
               {mainDish}
             </h1>
@@ -344,9 +342,7 @@ function ChosenMainHero({
         </div>
       )}
       <div className="space-y-1 px-1">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
-          Build this plate
-        </p>
+        <p className="sous-label">Build this plate</p>
         <h2 className="font-serif text-[30px] leading-none text-[var(--nourish-dark)]">
           {mainDish}
         </h2>

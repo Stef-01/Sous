@@ -82,7 +82,7 @@ export function NextUnlockCard({
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
+            <span className="sous-label">
               {status === "in_progress" ? "In progress" : "Up next"}
             </span>
             {status === "in_progress" && (
@@ -221,9 +221,7 @@ export function NextUnlockCard({
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-3"
     >
       <div className="flex items-center justify-between">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-[var(--nourish-subtext)]">
-          Coming up
-        </span>
+        <span className="sous-label">Coming up</span>
         <Lock size={13} className="text-neutral-300" />
       </div>
 

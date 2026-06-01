@@ -255,9 +255,7 @@ export function ResultStack({
     >
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
-            Recommended sides
-          </h2>
+          <h2 className="sous-label">Recommended sides</h2>
           <p className="truncate text-sm text-[var(--nourish-subtext)]">
             {selectedSides.length} selected for{" "}
             <span className="font-medium text-[var(--nourish-dark)]">
@@ -269,9 +267,10 @@ export function ResultStack({
           onClick={onReroll}
           disabled={isRerolling}
           className={cn(
-            "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
+            "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
             "border border-neutral-200 text-[var(--nourish-subtext)]",
             "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
             "disabled:opacity-50 transition-all duration-200",
           )}
           type="button"
@@ -332,10 +331,11 @@ export function ResultStack({
           transition={{ delay: 0.4 }}
           onClick={() => setShowEvaluate(true)}
           className={cn(
-            "flex w-full items-center justify-center gap-2 rounded-xl",
+            "flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl",
             "border border-neutral-200 bg-white py-2.5 text-xs font-medium",
             "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40",
             "hover:text-[var(--nourish-green)] transition-all duration-200",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           )}
           type="button"
         >
@@ -555,7 +555,7 @@ function ResultCard({
           >
             <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
               {/* "Why this pairs well" header */}
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
+              <p className="sous-label text-[var(--nourish-green)]">
                 Why this pairs well
               </p>
 

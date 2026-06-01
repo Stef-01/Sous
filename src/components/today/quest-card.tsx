@@ -669,9 +669,7 @@ export function QuestCard({
       {/* Section header + filter pills  -  two clickable dropdowns replace the
           old binary "Under 20 min" toggle. Both reset at tab close. */}
       <div className="flex items-center justify-between gap-2 px-1">
-        <h2 className="shrink-0 text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-          Meal queue
-        </h2>
+        <h2 className="shrink-0 sous-label">Meal queue</h2>
         <div className="flex items-center gap-1.5">
           <FilterDropdown
             label="Cook time"
