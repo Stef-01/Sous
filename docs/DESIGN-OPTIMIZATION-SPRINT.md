@@ -85,3 +85,33 @@ density (`whitespace-balance`); a celebration moment so some richness is fine.
 
 Each loop: edit source → `pnpm build` + `pnpm lint` pass → `git commit && push` →
 re-screenshot to confirm.
+
+## Execution log (all shipped to main, build+lint green)
+
+| Loop | Fix                                                                                                                 | Commit    |
+| ---- | ------------------------------------------------------------------------------------------------------------------- | --------- |
+| 1    | Pairing: compact warm no-image band (killed ~400px void)                                                            | `954820f` |
+| 2    | Pairing: side names wrap instead of truncating                                                                      | `954820f` |
+| 3    | Pairing: sticky CTA cream-fade backdrop (no card bleed-through)                                                     | `954820f` |
+| 4    | Path: hide trophy stat at zero                                                                                      | `5d3a791` |
+| 5    | Path: achievement toast → corpus terracotta + lifted clear of nav                                                   | `5d3a791` |
+| 6    | Path: mute still-zero journey stats (recede behind live streak)                                                     | `5d3a791` |
+| 7    | Cohesion: unify section eyebrows onto `.sous-label` token                                                           | `f472161` |
+| 8    | A11y: lift sub-44 pairing controls + focus rings                                                                    | `f472161` |
+| 9    | A11y sweep: 44px touch + focus across Today/Path/Content (shared BookmarkButton ×~40, quick-links ×8, nav, prompts) | `2360b2a` |
+| 10   | Pairing: declutter side cards via progressive disclosure                                                            | `7c2bd24` |
+
+**Verified live** (Claude Preview, 390×844, real data): Today, Path, Content, Pairing.
+**Code-verified** (build + structure): Cook Mission (already strong), Win (feature-rich),
+achievement-toast re-tone (trivial static class swap; 4.2s auto-dismiss closed before
+each screenshot landed). `useReducedMotion()` is honored across the animated components.
+
+### Intentionally NOT changed (flagged, not guessed)
+
+- **Today streak pill** (39×25): its background sits on the same element as the chip,
+  so a 44px hit area would enlarge the visible chip and unbalance the just-refined
+  header. Secondary affordance; primary actions all meet 44px. Left as-is.
+- **Content "Community" label** vs CLAUDE.md rule 5/11 ("Content"): an IA/editorial
+  decision, not visual polish — surfaced for a founder call, not silently renamed.
+- **Hero studio-white photo backgrounds** (#F3F5F4): inherent to the source images;
+  rule 7 forbids generating/altering imagery.
