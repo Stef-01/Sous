@@ -63,7 +63,7 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
-      <header className="space-y-4 px-4 pt-6">
+      <header className="space-y-4 page-x pt-6">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-0.5">
             <h1 className="sous-title text-[var(--nourish-dark)]">Community</h1>
@@ -83,7 +83,7 @@ export default function CommunityPage() {
         <CommunitySectionNav />
       </header>
 
-      <main className="space-y-8 px-4 pt-5">
+      <main className="space-y-8 page-x pt-5">
         <ReelsRail
           reels={sortedReels}
           onSelect={(reel) => router.push(`/community/reels?start=${reel.id}`)}

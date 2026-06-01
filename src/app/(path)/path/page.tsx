@@ -226,7 +226,7 @@ export default function PathPage() {
     return (
       <div className="min-h-dvh bg-[var(--nourish-cream)]">
         {/* Header skeleton */}
-        <header className="app-header px-4 py-3">
+        <header className="app-header page-x py-3">
           <div className="mx-auto max-w-md flex items-center justify-between">
             <div className="h-5 w-20 rounded shimmer" />
             <div className="flex gap-3">
@@ -236,12 +236,12 @@ export default function PathPage() {
           </div>
         </header>
         {/* Stats cards skeleton */}
-        <div className="mx-auto max-w-md px-4 pt-4 space-y-3">
+        <div className="mx-auto max-w-md page-x pt-4 space-y-3">
           <div className="h-16 rounded-2xl shimmer" />
           <div className="h-16 rounded-2xl shimmer" />
         </div>
         {/* Skill tree nodes skeleton  -  alternating offsets to mimic real layout */}
-        <div className="mx-auto max-w-md px-4 pt-8 pb-8">
+        <div className="mx-auto max-w-md page-x pt-8 pb-8">
           {["mx-auto", "ml-auto mr-12", "mx-auto", "ml-12", "mx-auto"].map(
             (cls, i) => (
               <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
@@ -307,7 +307,7 @@ export default function PathPage() {
 
         {/* Journey summary + next unlock + weekly goal  -  reveal as you scroll into view */}
         <motion.div
-          className="mx-auto max-w-md space-y-2 px-4 pt-3"
+          className="mx-auto max-w-md space-y-2 page-x pt-3"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.25, margin: "0px 0px -40px 0px" }}
@@ -400,7 +400,7 @@ export default function PathPage() {
         {/* Quick links at bottom (above tab bar). Section kicker uses
             the same uppercase tracking pattern as the rest of Path
             home and the Content tab — visual rhythm consistency. */}
-        <div className="mx-auto max-w-md px-4 pb-24 pt-4">
+        <div className="mx-auto max-w-md page-x pb-24 pt-4">
           <SectionKicker className="mb-2 px-1">Your kitchen</SectionKicker>
           <div className="grid grid-cols-3 gap-2">
             {[

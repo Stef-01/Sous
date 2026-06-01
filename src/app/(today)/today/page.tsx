@@ -484,7 +484,7 @@ function TodayPageContent() {
           / Apple Music / NYT Cooking pattern. The bottom tab bar
           stays sticky so navigation isn't lost when the top hides. */}
       <HeadroomHeader>
-        <header className="border-b border-[var(--nourish-border-soft)] bg-white px-4 py-2.5">
+        <header className="page-x border-b border-[var(--nourish-border-soft)] bg-white py-2.5">
           <div className="mx-auto flex max-w-md items-center justify-between">
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
@@ -512,7 +512,7 @@ function TodayPageContent() {
       </HeadroomHeader>
 
       {/* Main content */}
-      <main className="mx-auto max-w-md px-4 pt-4 pb-24 space-y-5">
+      <main className="page-x mx-auto max-w-md pt-4 pb-24 space-y-5">
         {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
 

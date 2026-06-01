@@ -13,7 +13,7 @@ export default function SidesPage() {
     <Suspense
       fallback={
         <div className="min-h-dvh bg-[var(--nourish-cream)]">
-          <header className="app-header px-4 py-3">
+          <header className="app-header page-x py-3">
             <div className="mx-auto flex max-w-md items-center gap-3">
               <div className="h-9 w-9 rounded-xl shimmer" />
               <div className="flex-1 space-y-1.5">
@@ -22,7 +22,7 @@ export default function SidesPage() {
               </div>
             </div>
           </header>
-          <main className="mx-auto max-w-md px-4 pt-4 space-y-3">
+          <main className="mx-auto max-w-md page-x pt-4 space-y-3">
             {[0, 1, 2].map((i) => (
               <div
                 key={i}
@@ -149,7 +149,7 @@ function SidesPageContent() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: "spring", stiffness: 280, damping: 28 }}
     >
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             type="button"
@@ -170,7 +170,7 @@ function SidesPageContent() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         <ChosenMainHero
           mainDish={mainDish}
           mainImg={mainImg}

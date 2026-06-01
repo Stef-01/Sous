@@ -586,7 +586,7 @@ export default function GuidedCookPage({
     return (
       <div className="min-h-full bg-[var(--nourish-cream)]">
         {/* Header skeleton */}
-        <div className="app-header px-4 py-3">
+        <div className="app-header page-x py-3">
           <div className="mx-auto flex max-w-md items-center justify-between animate-pulse">
             <div className="h-8 w-8 rounded-lg bg-neutral-200" />
             <div className="flex gap-2">
@@ -598,7 +598,7 @@ export default function GuidedCookPage({
           </div>
         </div>
         {/* Content skeleton */}
-        <div className="mx-auto max-w-md px-4 py-6 space-y-4 animate-pulse">
+        <div className="mx-auto max-w-md page-x py-6 space-y-4 animate-pulse">
           <div className="h-48 w-full rounded-2xl bg-neutral-200" />
           <div className="space-y-2">
             <div className="h-7 w-48 rounded bg-neutral-200" />
@@ -648,7 +648,7 @@ export default function GuidedCookPage({
       transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <motion.button
             onClick={currentPhase === "win" ? undefined : handleBack}
@@ -682,7 +682,7 @@ export default function GuidedCookPage({
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-md px-4 py-6">
+      <main className="mx-auto max-w-md page-x py-6">
         <AnimatePresence mode="popLayout">
           {currentPhase === "mission" && (
             <MissionScreen

@@ -581,7 +581,7 @@ function CombinedCookContent() {
       transition={{ duration: reducedMotion ? 0 : 0.2, ease: "easeOut" }}
     >
       {/* Header with back button + phase indicator */}
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <motion.button
             onClick={currentPhase === "win" ? undefined : handleBack}
@@ -614,7 +614,7 @@ function CombinedCookContent() {
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-md px-4 py-6">
+      <main className="mx-auto max-w-md page-x py-6">
         <AnimatePresence mode="popLayout">
           {/* MISSION  -  Combined overview */}
           {currentPhase === "mission" && mainDish && (
