@@ -186,14 +186,14 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
                 <button
                   type="button"
                   onClick={skip}
-                  className="text-xs font-semibold text-white/60 underline-offset-4 hover:text-white hover:underline"
+                  className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-white/85 underline underline-offset-4 transition hover:text-white"
                 >
                   Skip intro
                 </button>
                 <button
                   type="button"
                   onClick={next}
-                  className="rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-[#123129] shadow-lg transition hover:bg-white/95"
+                  className="inline-flex min-h-[44px] items-center rounded-xl bg-white px-5 py-2.5 text-sm font-semibold text-[#123129] shadow-lg transition hover:bg-white/95"
                 >
                   {step >= STEPS.length - 1 ? "Enter Path" : "Next"}
                 </button>
