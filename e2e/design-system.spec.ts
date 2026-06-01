@@ -33,6 +33,24 @@ const MAIN_ROUTES = [
   { path: "/cook/garlic-bread", name: "Cook (Mission)" },
 ];
 
+// Secondary routes — the whole app is on the 20px rail, not just the 6 hubs.
+const SECONDARY_ROUTES = [
+  { path: "/path/scrapbook", name: "Scrapbook" },
+  { path: "/path/favorites", name: "Favorites" },
+  { path: "/path/pantry", name: "Pantry" },
+  { path: "/path/shopping-list", name: "Shopping list" },
+  { path: "/path/recipes", name: "My recipes" },
+  { path: "/path/household", name: "Household" },
+  { path: "/path/eco", name: "Eco" },
+  { path: "/path/recap", name: "Recap" },
+  { path: "/path/cuisines", name: "Cuisines" },
+  { path: "/eat-out", name: "Eat out" },
+  { path: "/games", name: "Games" },
+  { path: "/community/saved", name: "Saved content" },
+  // NB: /community/reels is intentionally a full-bleed immersive feed (no rail)
+  // and so is deliberately excluded from the gutter guard.
+];
+
 test.beforeEach(async ({ page }) => {
   // Dismiss first-run modals so the real screen composition is under test.
   await page.addInitScript(() => {
@@ -50,7 +68,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("Gutter — every content rail is 20px", () => {
-  for (const route of MAIN_ROUTES) {
+  for (const route of [...MAIN_ROUTES, ...SECONDARY_ROUTES]) {
     test(`${route.name} uses the --gutter rail`, async ({ page }) => {
       await page.goto(route.path);
       await page.waitForLoadState("networkidle");

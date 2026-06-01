@@ -141,7 +141,7 @@ export default function WhatsCookingGame() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 page-x py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md items-center justify-between">
           <motion.button
             onClick={() => router.push("/games")}
@@ -192,7 +192,7 @@ export default function WhatsCookingGame() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-6 space-y-4">
+      <main className="mx-auto max-w-md page-x py-6 space-y-4">
         {/* Clue cards */}
         <div className="space-y-2">
           <AnimatePresence>

@@ -144,7 +144,7 @@ export default function SpeedChopGame() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <header className="border-b border-neutral-100 bg-white/95 px-4 py-3">
+        <header className="border-b border-neutral-100 bg-white/95 page-x py-3">
           <div className="mx-auto flex max-w-md items-center gap-3">
             <motion.button
               onClick={() => router.push("/games")}
@@ -238,7 +238,7 @@ export default function SpeedChopGame() {
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 page-x py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/games")}
@@ -278,7 +278,7 @@ export default function SpeedChopGame() {
         </p>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-8 flex flex-col items-center gap-6">
+      <main className="mx-auto max-w-md page-x py-8 flex flex-col items-center gap-6">
         {/* Category labels */}
         <div className="flex w-full justify-between px-4">
           <span className="text-sm font-bold text-[var(--nourish-green)]">

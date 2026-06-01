@@ -168,7 +168,7 @@ export default function FlavorPairsGame() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
-        <header className="border-b border-neutral-100 bg-white/95 px-4 py-3">
+        <header className="border-b border-neutral-100 bg-white/95 page-x py-3">
           <div className="mx-auto flex max-w-md items-center gap-3">
             <motion.button
               onClick={() => router.push("/games")}
@@ -262,7 +262,7 @@ export default function FlavorPairsGame() {
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 page-x py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/games")}
@@ -287,7 +287,7 @@ export default function FlavorPairsGame() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-6">
+      <main className="mx-auto max-w-md page-x py-6">
         {/* Match hint */}
         <AnimatePresence>
           {lastMatchWhy && (

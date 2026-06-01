@@ -59,11 +59,11 @@ export default function SavedContentPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
-      <div className="px-4 pt-5">
+      <div className="page-x pt-5">
         <BackLink />
       </div>
 
-      <header className="space-y-1 px-4 pt-3">
+      <header className="space-y-1 page-x pt-3">
         <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
           Saved
         </h1>
@@ -74,7 +74,7 @@ export default function SavedContentPage() {
         </p>
       </header>
 
-      <main className="space-y-7 px-4 pt-5">
+      <main className="space-y-7 page-x pt-5">
         {totalSaved === 0 && (
           <EmptyStateCTA
             icon={Bookmark}

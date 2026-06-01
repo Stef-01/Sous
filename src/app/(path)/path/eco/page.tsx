@@ -77,7 +77,7 @@ export default function EcoDashboardPage() {
 
   return (
     <div className="min-h-full bg-[linear-gradient(180deg,#fffdf8_0%,#faf7f2_45%,#f4efe8_100%)] pb-28">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             type="button"
@@ -100,7 +100,7 @@ export default function EcoDashboardPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pt-4 space-y-4">
+      <main className="mx-auto max-w-md page-x pt-4 space-y-4">
         {/* Off-state: friendly nudge to flip the toggle, never
             shaming. The button below toggles via the same hook
             the Profile sheet uses. */}

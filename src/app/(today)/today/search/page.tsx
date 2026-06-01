@@ -92,7 +92,7 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
-      <header className="app-header sticky top-0 z-10 px-4 py-3">
+      <header className="app-header sticky top-0 z-10 page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/today"
@@ -107,7 +107,7 @@ export default function SearchPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-3">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {/* Search input */}
         <label className="relative flex items-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-3 py-2.5 shadow-sm focus-within:border-[var(--nourish-green)] focus-within:ring-2 focus-within:ring-[var(--nourish-green)]/30">
           <Search

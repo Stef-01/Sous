@@ -78,7 +78,7 @@ export default function EatOutPage() {
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)] pb-28">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/today"
@@ -98,7 +98,7 @@ export default function EatOutPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         {/* Cuisine filter chips */}
         <div
           role="radiogroup"

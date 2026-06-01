@@ -553,7 +553,7 @@ function CombinedCookContent() {
 
   if (error || !data || orderedDishes.length === 0) {
     return (
-      <div className="min-h-full flex flex-col items-center justify-center gap-4 px-4 text-center">
+      <div className="min-h-full flex flex-col items-center justify-center gap-4 page-x text-center">
         <p className="text-[var(--nourish-subtext)]">
           {sideSlugs.length === 0
             ? "Missing side dishes in URL."

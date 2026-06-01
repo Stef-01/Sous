@@ -70,7 +70,7 @@ export default function EditRecipePage({
       animate={{ opacity: 1 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <button
             type="button"
@@ -87,7 +87,7 @@ export default function EditRecipePage({
       </header>
 
       {!mounted ? (
-        <div className="mx-auto max-w-md space-y-4 px-4 pt-4">
+        <div className="mx-auto max-w-md space-y-4 page-x pt-4">
           <div className="h-44 animate-pulse rounded-2xl bg-white/70" />
           <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
           <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
@@ -99,7 +99,7 @@ export default function EditRecipePage({
             mode="edit"
           />
           {recipe.source === "user" && (
-            <div className="mx-auto mt-2 max-w-md px-4">
+            <div className="mx-auto mt-2 max-w-md page-x">
               <button
                 type="button"
                 onClick={() => handleSubmitForReview(recipe)}
@@ -114,12 +114,12 @@ export default function EditRecipePage({
             </div>
           )}
           {recipe.source === "community" && (
-            <p className="mx-auto mt-2 max-w-md px-4 text-[11px] text-[var(--nourish-subtext)]">
+            <p className="mx-auto mt-2 max-w-md page-x text-[11px] text-[var(--nourish-subtext)]">
               This recipe is awaiting admin review for the Nourish ✓ tag.
             </p>
           )}
           {recipe.source === "nourish-verified" && (
-            <p className="mx-auto mt-2 max-w-md px-4 text-[11px] text-[var(--nourish-green)]">
+            <p className="mx-auto mt-2 max-w-md page-x text-[11px] text-[var(--nourish-green)]">
               ✓ Verified by Nourish on {recipe.nourishApprovedAt?.slice(0, 10)}.
             </p>
           )}

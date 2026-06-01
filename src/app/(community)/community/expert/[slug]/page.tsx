@@ -27,7 +27,7 @@ export default function ExpertProfilePage({
         <BackLink />
       </div>
 
-      <header className="mt-4 flex items-center gap-4 px-4">
+      <header className="mt-4 flex items-center gap-4 page-x">
         <div className="relative h-20 w-20 overflow-hidden rounded-full ring-2 ring-[var(--nourish-green)]/30 ring-offset-2 ring-offset-[var(--nourish-cream)]">
           <Image
             src={expert.avatarUrl}

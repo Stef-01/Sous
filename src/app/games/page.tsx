@@ -70,7 +70,7 @@ export default function GamesArcadePage() {
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 px-4 py-3 backdrop-blur-sm">
+      <header className="sticky top-0 z-40 border-b border-neutral-100 bg-white/95 page-x py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/today")}
@@ -95,7 +95,7 @@ export default function GamesArcadePage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 py-6">
+      <main className="mx-auto max-w-md page-x py-6">
         <div className="grid grid-cols-2 gap-3">
           {games.map((game, idx) => {
             const score = mounted ? getScore(game.id) : null;

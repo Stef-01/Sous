@@ -60,7 +60,7 @@ export default function MyRecipesPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <button
             type="button"
@@ -91,7 +91,7 @@ export default function MyRecipesPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-6 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-6 page-x pt-4">
         {/* W47 source-filter chip row — pivots both the templates
             row (Nourish-verified) and the user-drafts list. */}
         <RecipeFilterChips className="px-1" />

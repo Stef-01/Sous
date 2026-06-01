@@ -46,7 +46,7 @@ export default function ShoppingListPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             onClick={() => router.push("/path")}
@@ -69,7 +69,7 @@ export default function ShoppingListPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pt-2 pb-28">
+      <main className="mx-auto max-w-md page-x pt-2 pb-28">
         <p className="mb-1 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
           Missing ingredients from your recent cooks show up here. Tap to mark
           bought - then one tap sends them into your pantry.

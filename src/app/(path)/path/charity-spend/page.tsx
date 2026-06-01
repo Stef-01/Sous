@@ -24,7 +24,7 @@ export default function CharitySpendPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
-      <header className="app-header sticky top-0 z-10 px-4 py-3">
+      <header className="app-header sticky top-0 z-10 page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/path"
@@ -44,7 +44,7 @@ export default function CharitySpendPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-3">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {!mounted ? (
           <div
             className="h-64 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white"

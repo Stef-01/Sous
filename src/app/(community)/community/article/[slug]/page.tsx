@@ -34,7 +34,7 @@ export default function ArticleDetailPage({
         <BackLink />
       </div>
 
-      <header className="mt-3 space-y-3 px-4">
+      <header className="mt-3 space-y-3 page-x">
         <div className="flex items-start justify-between gap-3">
           <span className="inline-flex items-center rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--nourish-green)]">
             {article.kicker}

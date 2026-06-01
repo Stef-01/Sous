@@ -77,7 +77,7 @@ export default function AdminPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/community"
@@ -97,7 +97,7 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         {!adminMounted || !draftsMounted ? (
           <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
         ) : !isAdmin ? (

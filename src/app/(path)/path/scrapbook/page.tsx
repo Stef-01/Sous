@@ -23,7 +23,7 @@ export default function ScrapbookPage() {
 
   return (
     <div className="min-h-full bg-[linear-gradient(180deg,#fffdf8_0%,#faf7f2_45%,#f4efe8_100%)]">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             onClick={() => router.push("/path")}
@@ -46,7 +46,7 @@ export default function ScrapbookPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pb-28 pt-4">
+      <main className="mx-auto max-w-md page-x pb-28 pt-4">
         <section className="mb-6 overflow-hidden rounded-2xl border border-[#e5dfd4] bg-white/80 p-4 shadow-sm ring-1 ring-white/60">
           <div className="flex items-start gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 shadow-inner ring-1 ring-amber-100">

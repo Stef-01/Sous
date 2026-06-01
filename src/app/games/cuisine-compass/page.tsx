@@ -65,7 +65,7 @@ export default function CuisineCompassPage() {
 function CompassSkeleton() {
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <span className="h-9 w-9 rounded-xl bg-white/60" />
           <div className="space-y-1">
@@ -193,7 +193,7 @@ function CuisineCompassInner() {
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)] pb-28">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <Link
             href="/games"
@@ -219,7 +219,7 @@ function CuisineCompassInner() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         {/* Hero card with the dish prompt. */}
         <motion.section
           key={dish.slug}

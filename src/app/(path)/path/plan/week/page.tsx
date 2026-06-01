@@ -40,7 +40,7 @@ export default function WeekPlanPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
-      <header className="app-header sticky top-0 z-10 px-4 py-3">
+      <header className="app-header sticky top-0 z-10 page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/path"
@@ -55,7 +55,7 @@ export default function WeekPlanPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 px-4 pt-3">
+      <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {/* Status strip */}
         <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white px-4 py-3">
           <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">

@@ -23,7 +23,7 @@ export default function FavoritesPage() {
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
       {/* Header */}
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             onClick={() => router.push("/path")}
@@ -42,7 +42,7 @@ export default function FavoritesPage() {
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-md px-4 pt-4 pb-28 space-y-2">
+      <main className="mx-auto max-w-md page-x pt-4 pb-28 space-y-2">
         {!mounted ? (
           <div className="space-y-2 animate-pulse">
             <div className="rounded-xl bg-neutral-100 h-20" />

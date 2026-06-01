@@ -22,7 +22,7 @@ export default function PantryPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <motion.button
             onClick={() => router.push("/path")}
@@ -45,7 +45,7 @@ export default function PantryPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md px-4 pt-2 pb-28">
+      <main className="mx-auto max-w-md page-x pt-2 pb-28">
         <p className="mb-4 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
           Ingredients you&apos;ve stashed are auto-checked on the Grab screen
           next time a recipe needs them. The more you cook, the less ticking off

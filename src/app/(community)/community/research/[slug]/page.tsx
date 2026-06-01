@@ -25,7 +25,7 @@ export default function ResearchBriefPage({
         <BackLink />
       </div>
 
-      <header className="mt-3 space-y-3 px-4">
+      <header className="mt-3 space-y-3 page-x">
         <div className="flex items-start justify-between gap-3">
           <p className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--nourish-green)]">
             <Microscope size={12} aria-hidden /> {brief.labName}

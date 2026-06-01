@@ -46,7 +46,7 @@ export default function CuisinesPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
-      <header className="app-header px-4 py-3">
+      <header className="app-header page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/path"
@@ -61,7 +61,7 @@ export default function CuisinesPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-6 px-4 pt-4">
+      <main className="mx-auto max-w-md space-y-6 page-x pt-4">
         {/* Identity strip — pattern #4 (identity reinforcement) */}
         <div className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white/70 px-4 py-3">
           <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
