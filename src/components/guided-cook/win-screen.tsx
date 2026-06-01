@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type ChangeEvent,
+} from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useDeviceId } from "@/lib/hooks/use-device-id";
+import { uploadCookPhoto } from "@/lib/storage/upload-cook-photo";
 import {
   Star,
   Camera,
@@ -53,7 +61,7 @@ interface WinScreenProps {
   onRate: (rating: number) => void;
   /** Persists a low-star feedback chip (1–2 ★) into the session record. */
   onFeedback?: (feedback: string) => void;
-  onAddPhoto: () => void;
+  onAddPhoto: (photoUrl?: string) => void;
   onAddNote: (note: string) => void;
   onSave: () => void;
   onCookAgain: () => void;
@@ -376,6 +384,22 @@ export function WinScreen({
   const prefersReducedMotion = useReducedMotion();
   const [showConfetti, setShowConfetti] = useState(!prefersReducedMotion);
   const [photoAdded, setPhotoAdded] = useState(false);
+  const deviceId = useDeviceId();
+  const photoInputRef = useRef<HTMLInputElement | null>(null);
+  // Real cook photo: capture a file, upload to Supabase Storage, and
+  // hand the public URL up via onAddPhoto. Falls back to the local
+  // placeholder when upload is unavailable (onAddPhoto(undefined)).
+  const handlePhotoFile = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      e.target.value = "";
+      if (!file) return;
+      setPhotoAdded(true);
+      const url = await uploadCookPhoto(file, deviceId);
+      onAddPhoto(url ?? undefined);
+    },
+    [deviceId, onAddPhoto],
+  );
   const [giftSent, setGiftSent] = useState(false);
   const [inviteFriendName, setInviteFriendName] = useState("");
   const invitePrompts = useInvitePrompts();
@@ -864,11 +888,16 @@ export function WinScreen({
           transition={{ delay: 0.6 }}
           className="flex items-center justify-center gap-3"
         >
+          <input
+            ref={photoInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handlePhotoFile}
+          />
           <motion.button
-            onClick={() => {
-              onAddPhoto();
-              setPhotoAdded(true);
-            }}
+            onClick={() => photoInputRef.current?.click()}
             disabled={photoAdded}
             whileTap={photoAdded ? undefined : { scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}

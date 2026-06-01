@@ -452,14 +452,17 @@ export default function GuidedCookPage({
     [updateSession, awardXP],
   );
 
-  const handleAddPhoto = useCallback(() => {
-    if (sessionIdRef.current) {
-      updateSession(sessionIdRef.current, {
-        photoUri: `photo-${Date.now()}-placeholder`,
-      });
-      awardXP("add_photo", XP_AWARDS.ADD_PHOTO);
-    }
-  }, [updateSession, awardXP]);
+  const handleAddPhoto = useCallback(
+    (photoUrl?: string) => {
+      if (sessionIdRef.current) {
+        updateSession(sessionIdRef.current, {
+          photoUri: photoUrl ?? `photo-${Date.now()}-placeholder`,
+        });
+        awardXP("add_photo", XP_AWARDS.ADD_PHOTO);
+      }
+    },
+    [updateSession, awardXP],
+  );
 
   const handleRate = useCallback(
     (stars: number) => {
