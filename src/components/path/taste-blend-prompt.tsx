@@ -42,14 +42,14 @@ export function TasteBlendPrompt() {
                 <button
                   type="button"
                   onClick={() => setDuo(true)}
-                  className="flex-1 rounded-lg bg-[var(--nourish-green)] px-3 py-2 text-xs font-semibold text-white hover:bg-[var(--nourish-dark-green)]"
+                  className="min-h-[44px] flex-1 rounded-lg bg-[var(--nourish-green)] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   Yes, blend it
                 </button>
                 <button
                   type="button"
                   onClick={dismissPrompt}
-                  className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-xs text-[var(--nourish-subtext)] hover:border-neutral-300"
+                  className="min-h-[44px] flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-xs text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   Not now
                 </button>

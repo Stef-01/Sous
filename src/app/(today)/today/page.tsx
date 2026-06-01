@@ -578,7 +578,7 @@ function TodayPageContent() {
             type="button"
             onClick={() => setShowMoreOptions(true)}
             whileTap={{ scale: 0.96 }}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)] transition-colors"
+            className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             aria-label="Open more options"
           >
             <MoreHorizontal size={13} strokeWidth={2} />

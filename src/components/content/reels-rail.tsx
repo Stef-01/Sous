@@ -35,7 +35,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
           <button
             type="button"
             onClick={onSeeAll}
-            className="text-[12px] font-medium text-[var(--nourish-green)] hover:underline"
+            className="inline-flex min-h-[44px] items-center rounded-lg px-1 text-[12px] font-medium text-[var(--nourish-green)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             See all
           </button>

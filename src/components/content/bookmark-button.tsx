@@ -47,7 +47,7 @@ export function BookmarkButton({
       aria-pressed={saved}
       aria-label={saved ? `Remove ${label} from saved` : `Save ${label}`}
       className={cn(
-        "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors",
+        "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors",
         variant === "ghost" &&
           "bg-white/0 text-[var(--nourish-subtext)] hover:bg-neutral-100",
         variant === "overlay" &&

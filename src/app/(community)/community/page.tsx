@@ -74,7 +74,7 @@ export default function CommunityPage() {
           <Link
             href="/community/saved"
             aria-label="Saved content"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <Bookmark size={18} />
           </Link>
@@ -140,28 +140,28 @@ function CommunitySectionNav() {
     >
       <Link
         href="/community/reels"
-        className="rounded-full px-2.5 py-1.5 text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         Watch
       </Link>
       <button
         type="button"
         onClick={() => scrollTo("learn")}
-        className="rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         Learn
       </button>
       <button
         type="button"
         onClick={() => scrollTo("experts")}
-        className="rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         Experts
       </button>
       <button
         type="button"
         onClick={() => scrollTo("questions")}
-        className="rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         Ask
       </button>
