@@ -72,7 +72,6 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
   }, [challenge.goal, weekSessions]);
 
   const isComplete = progress.current >= progress.target;
-  const remaining = Math.max(progress.target - progress.current, 0);
 
   const dots = Array.from({ length: progress.target }, (_, i) => ({
     filled: i < progress.current,
@@ -84,7 +83,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.3, delay: 0.1 }}
-      className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
+      className="rounded-2xl border border-neutral-100 bg-white p-4 space-y-3"
     >
       <div className="flex items-center justify-between">
         <div>
@@ -163,13 +162,14 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
         ))}
       </div>
 
-      <p className="text-[11px] text-[var(--nourish-subtext)]">
-        {isComplete
-          ? `Challenge complete! +${challenge.bonusXP} XP earned`
-          : progress.current > 0
-            ? `${remaining} more to go  -  ${daysRemaining} days left!`
-            : "A new challenge awaits  -  start cooking!"}
-      </p>
+      {/* Only the completion celebration earns a line here — the in-progress
+          "X more to go / Y days left" just restated the count + days already
+          shown top-right. (rule 13: one source per signal.) */}
+      {isComplete && (
+        <p className="text-[11px] font-medium text-[var(--nourish-green)]">
+          Challenge complete! +{challenge.bonusXP} XP earned
+        </p>
+      )}
     </motion.div>
   );
 });
