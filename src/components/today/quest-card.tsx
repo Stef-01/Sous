@@ -1092,7 +1092,7 @@ function FullscreenSwipeCard({
         )}
         aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}
       >
-        <DishImage dish={dish} priority={isTop} fit="contain" />
+        <DishImage dish={dish} priority={isTop} fit="cover" />
       </article>
     </motion.div>
   );

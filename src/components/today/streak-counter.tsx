@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Flame, MoreHorizontal } from "lucide-react";
+import { Flame } from "lucide-react";
 import { useRestDays } from "@/lib/hooks/use-rest-days";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
 import { cn } from "@/lib/utils/cn";
@@ -57,12 +57,23 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
 
   return (
     <div ref={wrapperRef} className="relative flex items-center">
-      <motion.div
+      <motion.button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (showMenuButton) {
+            setOpen((v) => !v);
+            setConfirming(false);
+          }
+        }}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={`Streak: ${streak} day${streak === 1 ? "" : "s"}. Streak options.`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
-          "flex items-center gap-0.5 rounded-full bg-[var(--nourish-warm)]/10 px-1.5 py-0.5",
+          "flex items-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-1 transition-colors hover:bg-[var(--nourish-warm)]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           // Dotted ring when today is a rest day  -  signals the streak is
           // being intentionally held open.
           todayIsRestDay &&
@@ -98,26 +109,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         <span className="text-[11px] font-bold text-[var(--nourish-warm)]">
           {streak}
         </span>
-      </motion.div>
-
-      {showMenuButton && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpen((v) => !v);
-            setConfirming(false);
-          }}
-          aria-label="Streak options"
-          aria-haspopup="menu"
-          aria-expanded={open}
-          className={cn(
-            "ml-0.5 flex h-5 w-5 items-center justify-center rounded-full text-[var(--nourish-subtext)]/70 transition-colors hover:bg-black/5 hover:text-[var(--nourish-subtext)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-          )}
-        >
-          <MoreHorizontal size={13} strokeWidth={2} />
-        </button>
-      )}
+      </motion.button>
 
       <AnimatePresence>
         {open && (

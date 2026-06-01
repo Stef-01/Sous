@@ -314,7 +314,7 @@ function ChosenMainHero({
 }) {
   return (
     <section className="space-y-3" aria-label={`Selected main: ${mainDish}`}>
-      <div className="relative aspect-[16/10] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
         {mainImg && !imgError ? (
           <Image
             src={mainImg}
@@ -322,7 +322,7 @@ function ChosenMainHero({
             fill
             sizes="(max-width: 768px) 100vw, 430px"
             priority
-            className="object-contain"
+            className="object-cover"
             onError={onImgError}
           />
         ) : (
