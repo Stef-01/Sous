@@ -70,6 +70,38 @@
   --dur-base: 220ms;
   --dur-slow: 300ms;
 
+  /* ── Spacing scale (8-pt grid) — the layer the build plan never codified.
+     Reference apps (Cal AI, Mob) sit at a single 20px page rail with an 8-pt
+     vertical rhythm. Components reference the SEMANTIC tokens, not raw px, so
+     the gutter can never drift again. See planning.md "Design Polish Overhaul". */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  /* semantic intent */
+  --gutter: var(--space-5); /* THE page rail — 20px, matches references */
+  --section-gap: var(--space-8); /* between major sections — 32px */
+  --card-pad: var(--space-4); /* inside a card — 16px */
+  --row-gap: var(--space-3); /* between list rows — 12px */
+  --float-inset: var(--space-4); /* floating UI ↔ edge/nav — 16px min */
+
+  /* ── Radius family — collapse ad-hoc rounded-[22px]/[26px]/2xl/xl onto four. */
+  --radius-sm: 12px; /* thumbnails, chip containers */
+  --radius-md: 16px; /* standard cards, inputs */
+  --radius-lg: 22px; /* hero / feature cards, sheet inner */
+  --radius-pill: 999px;
+
+  /* ── Data-viz ramp — the ONLY colours allowed in rings/bars/scores, mirroring
+     Cal AI's fixed macro palette. Keeps the brand to one accent everywhere else. */
+  --data-carb: #c2410c; /* terracotta */
+  --data-fat: var(--nourish-gold);
+  --data-protein: #2563eb; /* blue */
+  --data-muted: var(--nourish-border-strong);
+
   /* Y3 W3 — semantic surface tokens. These let callers express
      INTENT ("elevated surface") rather than the literal colour,
      so dark-mode swap goes through one selector. Light values
@@ -152,6 +184,24 @@
   text-transform: uppercase;
   font-weight: 600;
   color: var(--nourish-subtext);
+}
+/* One role for ALL secondary/caption text — one size, one gray, one leading.
+   Replaces the text-xs / text-[11px] / text-[10px] / text-[12px] drift. */
+.sous-meta {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--nourish-subtext);
+}
+
+/* Page rail — the single source of the 20px horizontal gutter + the centered
+   mobile column. Pages compose `app-shell page-x`; floating bars use page-x to
+   align to the same rail. Nothing should hand-roll `mx-auto max-w-md px-4`. */
+.app-shell {
+  margin-inline: auto;
+  max-width: 28rem; /* = max-w-md */
+}
+.page-x {
+  padding-inline: var(--gutter);
 }
 
 /* Big-hands mode — session-scoped toggle on the cook pages. Bumps the

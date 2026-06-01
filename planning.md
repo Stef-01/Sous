@@ -1127,6 +1127,7 @@ These are locked decisions made after deliberate product review. Do not change a
 
 - All hero image URLs are `null` — gradient + emoji fallback is the intentional visual style
 - Do not add external image URLs or attempt to load remote images
+
 ---
 
 # Design Polish Overhaul — Reference-Driven (Cal AI + Mob)

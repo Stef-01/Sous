@@ -113,6 +113,49 @@ export const SURFACE_TOKENS = {
 
 export type SurfaceToken = keyof typeof SURFACE_TOKENS;
 
+/** ── Spacing tokens (8-pt grid) ──────────────────────────── */
+
+export const SPACING_TOKENS = {
+  s1: "--space-1",
+  s2: "--space-2",
+  s3: "--space-3",
+  s4: "--space-4",
+  s5: "--space-5",
+  s6: "--space-6",
+  s8: "--space-8",
+  s10: "--space-10",
+  /** Semantic intent — components prefer these. */
+  gutter: "--gutter",
+  sectionGap: "--section-gap",
+  cardPad: "--card-pad",
+  rowGap: "--row-gap",
+  floatInset: "--float-inset",
+} as const;
+
+export type SpacingToken = keyof typeof SPACING_TOKENS;
+
+/** ── Radius tokens — one family ──────────────────────────── */
+
+export const RADIUS_TOKENS = {
+  sm: "--radius-sm",
+  md: "--radius-md",
+  lg: "--radius-lg",
+  pill: "--radius-pill",
+} as const;
+
+export type RadiusToken = keyof typeof RADIUS_TOKENS;
+
+/** ── Data-viz ramp — only colours allowed in rings/bars ──── */
+
+export const DATA_TOKENS = {
+  carb: "--data-carb",
+  fat: "--data-fat",
+  protein: "--data-protein",
+  muted: "--data-muted",
+} as const;
+
+export type DataToken = keyof typeof DATA_TOKENS;
+
 /** ── Helpers ─────────────────────────────────────────────── */
 
 /** Pure: return the CSS `var(--name)` expression for a token.
@@ -143,6 +186,18 @@ export function surface(token: SurfaceToken): string {
   return cssVar(SURFACE_TOKENS[token]);
 }
 
+export function space(token: SpacingToken): string {
+  return cssVar(SPACING_TOKENS[token]);
+}
+
+export function radius(token: RadiusToken): string {
+  return cssVar(RADIUS_TOKENS[token]);
+}
+
+export function data(token: DataToken): string {
+  return cssVar(DATA_TOKENS[token]);
+}
+
 /** Pure: union of every token name across all groups. Used by
  *  the W3 audit + by future "find unused tokens" tooling. */
 export const ALL_TOKEN_NAMES: ReadonlyArray<string> = [
@@ -151,4 +206,7 @@ export const ALL_TOKEN_NAMES: ReadonlyArray<string> = [
   ...Object.values(SHADOW_TOKENS),
   ...Object.values(TYPOGRAPHY_TOKENS),
   ...Object.values(SURFACE_TOKENS),
+  ...Object.values(SPACING_TOKENS),
+  ...Object.values(RADIUS_TOKENS),
+  ...Object.values(DATA_TOKENS),
 ];
