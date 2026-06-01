@@ -413,7 +413,7 @@ function ResultCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.08, duration: 0.3 }}
       className={cn(
-        "overflow-hidden rounded-[22px] border bg-white transition-colors duration-200",
+        "overflow-hidden rounded-[var(--radius-lg)] border bg-white transition-colors duration-200",
         selected ? "border-[var(--nourish-green)]/45" : "border-neutral-200/80",
       )}
     >

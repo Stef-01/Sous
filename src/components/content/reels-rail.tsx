@@ -50,7 +50,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
             transition={{ type: "spring", stiffness: 360, damping: 24 }}
             className="w-[158px] shrink-0 snap-start"
           >
-            <div className="relative aspect-[9/13] overflow-hidden rounded-[22px] bg-neutral-100">
+            <div className="relative aspect-[9/13] overflow-hidden rounded-[var(--radius-lg)] bg-neutral-100">
               <button
                 type="button"
                 onClick={() => onSelect(reel)}

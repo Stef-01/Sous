@@ -313,7 +313,7 @@ function ChosenMainHero({
   return (
     <section className="space-y-3" aria-label={`Selected main: ${mainDish}`}>
       {mainImg && !imgError ? (
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)] border border-neutral-200 bg-white">
           <Image
             src={mainImg}
             alt={mainDish}
@@ -330,7 +330,7 @@ function ChosenMainHero({
         // brand surface rather than a dead zone. (corpus: empty-states,
         // whitespace-balance)
         <div
-          className="relative flex h-32 items-center justify-center overflow-hidden rounded-[26px] border border-[var(--nourish-border)]"
+          className="relative flex h-32 items-center justify-center overflow-hidden rounded-[var(--radius-lg)] border border-[var(--nourish-border)]"
           style={{
             background:
               "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-dark-green) 100%)",
