@@ -171,7 +171,110 @@ Lock:         9 (surface pass) → 10 (QA loop)
 
 ---
 
-_Screenshots and the raw design-system extract are archived under
-`~/.gstack/projects/Stef-01-Sous/designs/design-audit-20260531/`. This is an
-audit-and-plan deliverable; no source was changed. The `design-review` skill's
-fix loop can execute Stages 1–2 and 5–6 on approval._
+## Part 3 — Corpus-backed design system (UI/UX Pro Max)
+
+> The Stages above were diagnosed live (gstack `design-review`). This part
+> replaces the general-HIG prescriptions with values pulled from the
+> **UI/UX Pro Max** corpus (the Python query engine over its 15 CSVs:
+> `products`, `styles`, `colors`, `typography`, `ux-guidelines`, …). Every
+> token and rule below cites the CSV row it came from. Queries were run
+> against Sous's real product type, not a generic synthesis.
+
+### 3.1 Product type → the corpus's own recommendation
+
+Query `--domain product "recipe cooking food meal app"` → **"Recipe & Cooking
+App"** (`products.csv`):
+
+- **Color focus:** _"Warm food tones (terracotta / sage / cream) + appetizing
+  imagery."_ Sous already uses sage + warm paper. The corpus says the same;
+  the missing note is **terracotta as an appetite accent**.
+- **Corpus default style: Claymorphism + Vibrant.** Sous deliberately went
+  editorial-minimal instead. **Keep that.** Claymorphism is the corpus's
+  playful default (it tags it "best for children/teen apps"); Sous's restraint
+  is the more premium position and is the right call for "Apple-level." This
+  is the one place we knowingly diverge from the corpus default.
+
+### 3.2 Style for "Apple-level" (cited)
+
+Query `--domain style "minimalism editorial warm clean content-first"`
+(`styles.csv`):
+
+- **Bento Grids** — the corpus literally tags it _"Apple-style, modular, clean,
+  hierarchy."_ Tokens it ships: `--page-bg #F5F5F7`, `--card-bg #FFFFFF`,
+  `--card-radius 24px`, `--grid-gap 20px`, soft shadow. Use for Path/journey,
+  Profile, recipe lists.
+- **Exaggerated Minimalism** — `--type-giant: clamp(3rem,10vw,12rem)`, extreme
+  negative space, single accent. Use for the **dish-name hero** (lean into the
+  big DM Serif names; let the food photo + name _be_ the screen).
+- **Editorial Grid / Magazine** — asymmetric grid, pull quotes, drop caps. Use
+  for the Content tab + recipe detail.
+
+### 3.3 Color tokens (cited: `colors.csv` warm-food palette)
+
+Corpus reference palette (`colors.csv`, warm food): `primary #EA580C`,
+`bg #FFF7ED`, `fg #0F172A`, `card #FFFFFF`, `muted #FDF4F0`,
+`muted-fg #64748B`, `border #FCEAE1`, `destructive #DC2626`.
+
+**Sous-reconciled token set** (keep the sage "nourish" identity, formalize the
+rest in the corpus's semantic-token structure, add the appetite accent, and
+darken muted-fg to clear AA — Finding #6):
+
+```css
+:root {
+  --color-bg: #fafaf8; /* warm paper (keep) ≈ corpus cream */
+  --color-fg: #0d0d0d;
+  --color-card: #ffffff;
+  --color-brand: #2d5a3d; /* sage "nourish" green — keep, it's identity */
+  --color-on-brand: #ffffff;
+  --color-appetite: #c2410c; /* terracotta accent (corpus) for hunger cues, badges */
+  --color-muted: #f3f1ec;
+  --color-muted-fg: #4b5563; /* was ~#6B6B6B (≈4.3:1) → now clears 4.5:1 AA */
+  --color-border: #ece7e1;
+  --color-destructive: #dc2626;
+  --color-ring: #2d5a3d;
+}
+```
+
+### 3.4 Typography system (cited: `typography.csv`)
+
+Sous uses **DM Serif Display + Inter** — valid, same editorial-serif family the
+corpus rewards. The corpus's culinary-specific pairing is \*\*Playfair Display SC
+
+- Karla** ("restaurant, culinary, foodie") and its warm-editorial pairing is
+  **Calistoga + Inter** ("warm, editorial, premium, human warmth"). **Keep DM
+  Serif + Inter; adopt Calistoga's documented scale\*\* to fix the inverted/
+  unsystematic scale (Finding #2):
+
+| Role                | Font                                           | Size  | Line-height |
+| ------------------- | ---------------------------------------------- | ----- | ----------- |
+| Display (dish name) | DM Serif Display                               | 36–42 | 1.1         |
+| Section / H2        | DM Serif Display                               | 28–32 | 1.15        |
+| Body                | Inter 400–600                                  | 16–18 | 1.5         |
+| Label / badge       | **JetBrains Mono 12, uppercase, tracking 1.5** | 12    | —           |
+
+Rule: **largest visual element = highest heading level** on every screen (today
+the 30px dish name is an H3 under an 18px H1). The mono on labels upgrades the
+existing "DINNER IDEA / MEAL QUEUE / 13 MIN" badges. Kill the Geist leak.
+
+### 3.5 CRITICAL UX rules → exact fixes (cited: `ux-guidelines.csv`)
+
+Priority model: Accessibility + Touch are **CRITICAL** in this corpus.
+
+| Finding             | Corpus rule (`ux-guidelines.csv`) | Severity | Fix (corpus code)                                                                                                 |
+| ------------------- | --------------------------------- | :------: | ----------------------------------------------------------------------------------------------------------------- |
+| #5 chips 27px       | Touch · Touch Target Size         |   High   | `min-h-[44px] min-w-[44px]` (bad: `w-6 h-6`)                                                                      |
+| #6 low contrast     | Typography · Contrast Readability |   High   | `text-gray-900` on white; never `text-gray-400 on gray-100` (→ `--color-muted-fg`)                                |
+| #1 Path 8-step tour | Onboarding · User Freedom         |  Medium  | Provide **Skip + Back**; never "force linear unskippable tour" / "locked overlay until finished" → go progressive |
+| polish              | Animation · Duration              |  Medium  | 150–300ms, motion conveys meaning, respect `prefers-reduced-motion`                                               |
+| polish              | Accessibility · Focus states      | Critical | visible 2–4px focus ring, never remove without replacement                                                        |
+
+These map 1:1 onto Stages 2, 3, 5, 7, 8 above — now with cited, exact values
+instead of general knowledge.
+
+---
+
+_Screenshots + the live design-system extract: `~/.gstack/projects/Stef-01-Sous/designs/design-audit-20260531/`.
+Corpus: UI/UX Pro Max (`github.com/nextlevelbuilder/ui-ux-pro-max-skill`),
+queried via its Python engine over `products / styles / colors / typography /
+ux-guidelines`. Audit-and-plan deliverable; no app source changed. The fix loop
+can execute Stages 1–2 and 5–6 on approval._
