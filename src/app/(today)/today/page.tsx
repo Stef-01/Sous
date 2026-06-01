@@ -11,10 +11,7 @@ import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
 import { CookAgainChip } from "@/components/today/cook-again-chip";
 import { DailyNoveltyChip } from "@/components/today/daily-novelty-chip";
 import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
-import { CookRhythmLine } from "@/components/today/cook-rhythm-line";
-import { EcoProgressChip } from "@/components/today/eco-progress-chip";
 import { QuestCard } from "@/components/today/quest-card";
-import { deriveWelcomeLine } from "@/lib/engine/welcome-line";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
 // initial Today bundle does not pay their cost (~10KB combined). Both
 // only mount on user action (More-Options button / mascot tap).
@@ -70,7 +67,6 @@ import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { WhosAtTable } from "@/components/today/whos-at-table";
-import { WeeklyRhythmWidget } from "@/components/today/weekly-rhythm-widget";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
@@ -486,24 +482,14 @@ function TodayPageContent() {
       <HeadroomHeader>
         <header className="page-x border-b border-[var(--nourish-border-soft)] bg-white py-2.5">
           <div className="mx-auto flex max-w-md items-center justify-between">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-                  Sous
-                </h1>
-                <StreakCounter streak={stats.currentStreak} />
-              </div>
-              {(() => {
-                const line = deriveWelcomeLine({
-                  streak: stats.currentStreak,
-                  lastCookIso: stats.lastCookDate,
-                });
-                return line ? (
-                  <span className="text-[10px] leading-tight text-[var(--nourish-subtext)]/80 italic">
-                    {line}
-                  </span>
-                ) : null;
-              })()}
+            {/* Brand + the ONE cadence signal: the streak flame. The old
+                "Day 4 of cooking" welcome line was a second copy of the same
+                number — removed. (see planning.md "Today Simplicity Budget") */}
+            <div className="flex items-center gap-1.5">
+              <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+                Sous
+              </h1>
+              <StreakCounter streak={stats.currentStreak} />
             </div>
             {/* Owl mascot  -  profile entry point. */}
             <OwlAvatar onClick={() => setShowProfileSettings(true)} />
@@ -516,59 +502,27 @@ function TodayPageContent() {
         {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
 
-        {/* Cook rhythm  -  a single italic line about when the user usually
-            cooks. Silent below three completed cooks. */}
-        <CookRhythmLine sessions={completedSessions} />
-
-        {/* Tonight's commitment  -  persistent banner only (the commit flow now
-            lives in the More options drawer; surface stays calm). */}
-        <TonightChip mode="banner-only" />
-
-        {/* Repeat-cook shortcut  -  hidden unless the last cook was ≥4 stars
-            and within 14 days. One tap → Mission for that dish. */}
-        <RepeatCookChip sessions={completedSessions} />
-
-        {/* Y3 W24 today's planned meal — surfaces the meal-plan
-            slot for today's current meal-of-day window when one
-            exists. Renders nothing on cold-start or when no
-            slot is filled. Time-of-day routes the meal pick. */}
-        <TodayPlannedSlot />
-
-        {/* Y2 W13 cook-again chip — surfaces a 5★ recipe from
-            21-56 days ago (W6 tightened from 90), scored by
-            recency × seasonality × cuisine-rotation. Renders
-            nothing when no eligible candidate exists. */}
-        <CookAgainChip sessions={completedSessions} />
-
-        {/* Y3 W8 daily novelty chip — surfaces ONE pantry-feasible
-            combination per day above novelty threshold. Renders
-            nothing below threshold or during cool-down. Curiosity-
-            styled copy; never FOMO. */}
-        <DailyNoveltyChip />
-
-        {/* W35 "Who's at the table" picker — household-memory surface.
-            Renders nothing when no members exist (rule 6: simplicity-
-            first; the empty-CTA hint was distracting). Picker +
-            aggregate constraints render once members are populated
-            via /path/household. */}
-        <WhosAtTable />
-
-        {/* W36 weekly rhythm widget — quiet below 2 cooks-this-week so
-            cold-start users see the existing welcome line instead. */}
-        <WeeklyRhythmWidget sessions={completedSessions} />
-
-        {/* Y5 D Eco progress chip — quiet "X kg saved this month"
-            line gated by Eco Mode. Renders nothing when off / no
-            cooks in window / no positive savings. Tap → /path/eco. */}
-        <EcoProgressChip sessions={completedSessions} />
-
-        {/* Today's Quest  -  swipeable card stack (the hero of this surface) */}
+        {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
+            under the search, so the one thing the user opened the app for is
+            never buried under engagement nudges. (Sous Test + meal-first; see
+            planning.md "Today Simplicity Budget".) */}
         <QuestCard
           key={questKey}
           userPreferences={effectivePreferences}
           cookHistory={stats}
           cookSessions={completedSessions}
         />
+
+        {/* Contextual nudges  -  ALL secondary, ALL below the hero, each
+            self-gating so they stay quiet. REMOVED as redundant: the welcome
+            line + cook-rhythm + weekly-rhythm widgets (the streak flame already
+            conveys cadence) and the eco stat chip (stats live on Path/Eco). */}
+        <TonightChip mode="banner-only" />
+        <RepeatCookChip sessions={completedSessions} />
+        <TodayPlannedSlot />
+        <CookAgainChip sessions={completedSessions} />
+        <DailyNoveltyChip />
+        <WhosAtTable />
 
         {/* Tiny, deliberately unassuming "more options" entry point.
             Everything secondary (tonight commit, cook-for-two, rescue fridge,
