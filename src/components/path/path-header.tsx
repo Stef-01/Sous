@@ -61,7 +61,7 @@ export function PathHeader({
               <button
                 type="button"
                 onClick={onReplayTutorial}
-                className="shrink-0 rounded-full p-1 text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-green)]"
+                className="-my-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 aria-label="Replay Path intro"
               >
                 <CircleHelp size={16} strokeWidth={2} />
