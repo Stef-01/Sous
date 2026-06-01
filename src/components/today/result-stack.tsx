@@ -499,9 +499,10 @@ function ResultCard({
                 </span>
               )}
             </div>
-            <p className="line-clamp-2 text-xs leading-relaxed text-[var(--nourish-subtext)]">
-              {side.explanation}
-            </p>
+            {/* Collapsed card stays scannable: name + signal + tags. The
+                pairing rationale (which often echoes the dish name here) moves
+                to the expand-only "Why this pairs well" panel. (rule 6;
+                corpus: progressive-disclosure, whitespace-balance) */}
             <div className="flex flex-wrap gap-1">
               {side.tags.slice(0, 2).map((tag) => (
                 <span
