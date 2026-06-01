@@ -1335,3 +1335,26 @@ app shippable (rule: every phase coherent). Commit per screen/phase to `main`.
   `<Screen>` once, not 200 find-replaces.
 - **Verification tooling:** use Claude Preview (reliable) + a small Playwright
   bounding-box script for the edge/gutter assertions in G1/G4.
+
+## I. Execution status (shipped to main 2026-06-01)
+
+| Phase                        | Status | Commit    | Notes                                                                                                                                                                                                                                                            |
+| ---------------------------- | ------ | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1 Tokens                    | ✅     | `e9bdd0c` | `--space-*`, `--gutter`(20px), `--radius-*`, data ramp, `.sous-meta`, `.page-x` in globals.css + tokens.ts                                                                                                                                                       |
+| P2 Primitives                | ✅     | `12509dc` | `Screen`/`PageContainer`/`Section`/`FloatingLayer`/`Card`; tokens.test.ts → 22 green                                                                                                                                                                             |
+| P3 Gutter sweep              | ✅     | `b401191` | Today/Path/Content/Pairing/Cook/Combined onto `.page-x`; verified @390 + rule-10 @375 (docH==winH)                                                                                                                                                               |
+| P4 Radius family             | ✅     | `6f0a9a9` | all `rounded-[22/26/30px]` → `--radius-lg`                                                                                                                                                                                                                       |
+| P5 Data ramp                 | ◑      | `e9bdd0c` | tokens defined + ready; **not force-applied** — Sous's bars are quality indicators (green=good), not macros, so recoloring would be wrong-semantics. Applies when a macro/nutrition surface is built.                                                            |
+| P6 Floating safety           | ✅     | `431674d` | nav already `safe-area-bottom`; sticky CTA backdrop token-aligned to `--gutter`; bounding-box check: CTA symmetric + edge-clear; `FloatingLayer` ready for new floating UI                                                                                       |
+| P7 Minimalism / `.sous-meta` | ◑      | —         | eyebrows already unified (`.sous-label`, prior sprint) + side-card declutter done; the **app-wide secondary-text `.sous-meta` sweep is deferred** (dozens of components, high churn, low visible gain) — `.sous-meta` token is in place for incremental adoption |
+| P8 Regression                | ✅     | —         | `pnpm build` + `lint` clean; **3036 unit tests pass**; a11y re-measure 0 controls <44px; reduced-motion intact; screens re-screenshotted                                                                                                                         |
+
+**DoD result:** G1 ✓ (20px rail @390+375), G2 ◑ (rails tokenized; full `space-y` audit
+ongoing), G3 ✓ (no radius literals on main screens), G4 ✓ (floating clears edges),
+G5 ✓ (one accent held; data ramp reserved), G6 ◑ (`.sous-meta` ready, sweep
+incremental), G7 ✓ (44px/focus/motion preserved), G8 ✓ (no new images, no founder dep).
+
+Remaining (incremental, non-blocking): the `space-y-*` → `--space-*` audit (G2),
+the app-wide `.sous-meta` adoption (G6), and migrating screens from `.page-x` onto
+the `<Screen>`/`<PageContainer>` components (currently the utility class does the
+job; the component migration is the belt-and-suspenders that prevents future drift).
