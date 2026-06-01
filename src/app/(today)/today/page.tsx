@@ -7,9 +7,6 @@ import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
-import { RepeatCookChip } from "@/components/today/repeat-cook-chip";
-import { CookAgainChip } from "@/components/today/cook-again-chip";
-import { DailyNoveltyChip } from "@/components/today/daily-novelty-chip";
 import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
 import { QuestCard } from "@/components/today/quest-card";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
@@ -513,15 +510,18 @@ function TodayPageContent() {
           cookSessions={completedSessions}
         />
 
-        {/* Contextual nudges  -  ALL secondary, ALL below the hero, each
-            self-gating so they stay quiet. REMOVED as redundant: the welcome
-            line + cook-rhythm + weekly-rhythm widgets (the streak flame already
-            conveys cadence) and the eco stat chip (stats live on Path/Eco). */}
+        {/* Contextual surfaces below the hero — kept ONLY where each expresses
+            a DISTINCT intent the hero can't: a commitment you made (Tonight),
+            your scheduled plan (TodayPlannedSlot), and who's eating
+            (WhosAtTable). Each is conditional and stays quiet by default.
+
+            REMOVED as redundant (rule 13 — the QuestCard hero, with its own
+            swipe-stack, IS the meal-suggestion surface; don't keep copies):
+            RepeatCook / CookAgain / DailyNovelty were three more "here's a meal
+            to cook" entry points. Earlier removed: welcome line + cook-rhythm +
+            weekly-rhythm (cadence = the streak) and the eco stat chip. */}
         <TonightChip mode="banner-only" />
-        <RepeatCookChip sessions={completedSessions} />
         <TodayPlannedSlot />
-        <CookAgainChip sessions={completedSessions} />
-        <DailyNoveltyChip />
         <WhosAtTable />
 
         {/* Tiny, deliberately unassuming "more options" entry point.

@@ -21,16 +21,24 @@ const TODAY_PAGE = join(__dirname, "page.tsx");
 const src = readFileSync(TODAY_PAGE, "utf8");
 
 describe("Today Simplicity Budget", () => {
-  // The streak flame is the ONE cadence signal; stats live on Path. These
-  // widgets each restated cadence/stats already shown elsewhere.
+  // Two redundancy classes, both banned from Today:
+  //  (a) cadence/stat restatements — the streak flame / Path already show these
+  //  (b) hero-duplicate meal-suggestion chips — the QuestCard swipe-stack IS the
+  //      suggestion surface (rule 13); extra "here's a meal to cook" chips are
+  //      just more copies of it.
   const BANNED = [
+    // (a)
     "WeeklyRhythmWidget", // "3 cooks this week" — duplicates the streak
     "CookRhythmLine", // "You usually cook Monday mornings" — cadence again
     "deriveWelcomeLine", // "Day 4 of cooking" — a second copy of the streak
     "EcoProgressChip", // a STAT on Today; belongs on Path/Eco
+    // (b)
+    "RepeatCookChip", // "cook X again" — the hero already suggests meals
+    "CookAgainChip", // "revisit X" — same
+    "DailyNoveltyChip", // "try this combo" — same
   ];
 
-  it("does not re-introduce the redundant cadence/stat widgets", () => {
+  it("does not re-introduce redundant cadence/stat/suggestion widgets", () => {
     const offenders = BANNED.filter((name) =>
       new RegExp(`\\b${name}\\b`).test(src),
     );
@@ -46,14 +54,7 @@ describe("Today Simplicity Budget", () => {
 
     // Any chip that suggests/nudges sits BELOW the meal. If one is hoisted above
     // the hero, the meal is buried — that's the regression this catches.
-    const NUDGE_CHIPS = [
-      "<TonightChip",
-      "<RepeatCookChip",
-      "<TodayPlannedSlot",
-      "<CookAgainChip",
-      "<DailyNoveltyChip",
-      "<WhosAtTable",
-    ];
+    const NUDGE_CHIPS = ["<TonightChip", "<TodayPlannedSlot", "<WhosAtTable"];
     for (const chip of NUDGE_CHIPS) {
       const idx = src.indexOf(chip);
       if (idx === -1) continue; // chip may be removed entirely — that's fine
