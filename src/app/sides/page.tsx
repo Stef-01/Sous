@@ -314,8 +314,8 @@ function ChosenMainHero({
 }) {
   return (
     <section className="space-y-3" aria-label={`Selected main: ${mainDish}`}>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
-        {mainImg && !imgError ? (
+      {mainImg && !imgError ? (
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
           <Image
             src={mainImg}
             alt={mainDish}
@@ -325,14 +325,24 @@ function ChosenMainHero({
             className="object-cover"
             onError={onImgError}
           />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-white">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
-              <ChefHat size={28} className="text-[var(--nourish-green)]" />
-            </div>
+        </div>
+      ) : (
+        // No-image fallback: a compact warm band, not a 4:3 void. The dish name
+        // already reads large in the block below, so the band stays a quiet
+        // brand surface rather than a dead zone. (corpus: empty-states,
+        // whitespace-balance)
+        <div
+          className="relative flex h-32 items-center justify-center overflow-hidden rounded-[26px] border border-[var(--nourish-border)]"
+          style={{
+            background:
+              "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-dark-green) 100%)",
+          }}
+        >
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm">
+            <ChefHat size={26} className="text-white" />
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="space-y-1 px-1">
         <p className="text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
           Build this plate

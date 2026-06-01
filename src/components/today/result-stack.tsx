@@ -297,8 +297,11 @@ export function ResultStack({
         ))}
       </div>
 
-      {/* Cook selected - primary CTA stays reachable while reviewing options. */}
-      <div className="sticky bottom-4 z-20">
+      {/* Cook selected - primary CTA stays reachable while reviewing options.
+          A cream gradient backdrop fades the cards out beneath the pill instead
+          of letting them bleed through its rounded corners. (corpus:
+          fixed-element-offset, whitespace-balance) */}
+      <div className="sticky bottom-0 z-20 -mx-4 bg-gradient-to-t from-[var(--nourish-cream)] from-60% to-transparent px-4 pb-4 pt-5">
         <motion.button
           onClick={handleCookSelected}
           disabled={selectedSides.length === 0}
@@ -483,7 +486,7 @@ function ResultCard({
 
           {/* Side dish info */}
           <div className="min-w-0 flex-1 space-y-1">
-            <h3 className="truncate font-semibold text-[var(--nourish-dark)]">
+            <h3 className="line-clamp-2 font-semibold leading-snug text-[var(--nourish-dark)]">
               {side.name}
             </h3>
             <div className="flex flex-wrap items-center gap-1.5">
