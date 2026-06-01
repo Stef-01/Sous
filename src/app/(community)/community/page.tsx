@@ -66,9 +66,7 @@ export default function CommunityPage() {
       <header className="space-y-4 px-4 pt-6">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-0.5">
-            <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
-              Community
-            </h1>
+            <h1 className="sous-title text-[var(--nourish-dark)]">Community</h1>
             <p className="text-[12px] text-[var(--nourish-subtext)]">
               Watch, learn, and ask better cooking questions.
             </p>

@@ -636,9 +636,7 @@ export function QuestCard({
     return (
       <div className="space-y-1.5">
         <div className="px-1">
-          <h2 className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide">
-            Today&apos;s Quest
-          </h2>
+          <h2 className="sous-label">Today&apos;s Quest</h2>
         </div>
         <motion.div
           initial={{ opacity: 0, y: 8 }}
