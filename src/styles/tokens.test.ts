@@ -5,13 +5,19 @@ import {
   ALL_TOKEN_NAMES,
   BORDER_TOKENS,
   COLOR_TOKENS,
+  DATA_TOKENS,
+  RADIUS_TOKENS,
   SHADOW_TOKENS,
+  SPACING_TOKENS,
   SURFACE_TOKENS,
   TYPOGRAPHY_TOKENS,
   border,
   color,
   cssVar,
+  data,
+  radius,
   shadow,
+  space,
   surface,
   typography,
 } from "./tokens";
@@ -47,6 +53,18 @@ describe("cssVar", () => {
   it("surface() helper resolves typed surface token", () => {
     expect(surface("elevated")).toBe("var(--surface-elevated)");
   });
+
+  it("space() helper resolves typed spacing token", () => {
+    expect(space("gutter")).toBe("var(--gutter)");
+  });
+
+  it("radius() helper resolves typed radius token", () => {
+    expect(radius("lg")).toBe("var(--radius-lg)");
+  });
+
+  it("data() helper resolves typed data token", () => {
+    expect(data("carb")).toBe("var(--data-carb)");
+  });
 });
 
 // ── ALL_TOKEN_NAMES ──────────────────────────────────────
@@ -58,7 +76,10 @@ describe("ALL_TOKEN_NAMES", () => {
         Object.keys(BORDER_TOKENS).length +
         Object.keys(SHADOW_TOKENS).length +
         Object.keys(TYPOGRAPHY_TOKENS).length +
-        Object.keys(SURFACE_TOKENS).length,
+        Object.keys(SURFACE_TOKENS).length +
+        Object.keys(SPACING_TOKENS).length +
+        Object.keys(RADIUS_TOKENS).length +
+        Object.keys(DATA_TOKENS).length,
     );
   });
 
@@ -108,6 +129,24 @@ describe("globals.css token parity", () => {
 
   it("every SURFACE_TOKEN exists", () => {
     for (const cssName of Object.values(SURFACE_TOKENS)) {
+      expect(globalsCss).toContain(cssName);
+    }
+  });
+
+  it("every SPACING_TOKEN exists", () => {
+    for (const cssName of Object.values(SPACING_TOKENS)) {
+      expect(globalsCss).toContain(cssName);
+    }
+  });
+
+  it("every RADIUS_TOKEN exists", () => {
+    for (const cssName of Object.values(RADIUS_TOKENS)) {
+      expect(globalsCss).toContain(cssName);
+    }
+  });
+
+  it("every DATA_TOKEN exists", () => {
+    for (const cssName of Object.values(DATA_TOKENS)) {
       expect(globalsCss).toContain(cssName);
     }
   });
