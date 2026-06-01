@@ -15,12 +15,6 @@ import {
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
-import { PathHero } from "@/components/path/path-hero";
-import { CuisineConstellation } from "@/components/path/cuisine-constellation";
-import { ConfidenceDial } from "@/components/path/confidence-dial";
-import { PreferenceStrip } from "@/components/path/preference-strip";
-import { CooksSharedLine } from "@/components/path/cooks-shared-line";
-import { TasteBlendPrompt } from "@/components/path/taste-blend-prompt";
 import { JourneyMontage } from "@/components/path/journey-montage";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
@@ -274,29 +268,6 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Ambient hero  -  time-of-day tint + one warm line */}
-        <PathHero
-          streak={stats.currentStreak}
-          cooksThisWeek={
-            completedSessions.filter((s) => {
-              if (!s.completedAt) return false;
-              const completed = new Date(s.completedAt);
-              const now = new Date();
-              const weekStart = new Date(now);
-              // Week starts Monday (locale-stable) at 00:00.
-              const day = (now.getDay() + 6) % 7;
-              weekStart.setDate(now.getDate() - day);
-              weekStart.setHours(0, 0, 0, 0);
-              return completed >= weekStart;
-            }).length
-          }
-          totalCooks={stats.completedCooks}
-          lastCookedAt={
-            completedSessions.find((s) => s.completedAt)?.completedAt ??
-            undefined
-          }
-        />
-
         {/* Journey montage  -  recent cooks as a polaroid ribbon */}
         {completedSessions.length > 0 && (
           <div className="px-4 pt-3">
@@ -366,32 +337,6 @@ export default function PathPage() {
             openRef={achievementsRef}
           />
         )}
-
-        {/* Cuisine constellation  -  quiet celebration of culinary reach */}
-        <div className="px-4 pt-4">
-          <CuisineConstellation completedSessions={completedSessions} />
-        </div>
-
-        {/* Kitchen confidence dial  -  derived gauge, no number, just a tier */}
-        <div className="px-4">
-          <ConfidenceDial stats={stats} completedSessions={completedSessions} />
-        </div>
-
-        {/* What Sous has learned  -  warm, plain-language observations */}
-        <div className="px-4 pt-2">
-          <PreferenceStrip sessions={completedSessions} />
-        </div>
-
-        {/* Cooks-shared tally  -  silent until the user has shared at least
-            one meal via the Win-screen gift flow. */}
-        <div className="px-4 pt-2">
-          <CooksSharedLine />
-        </div>
-
-        {/* One-time household taste blend prompt */}
-        <div className="px-4">
-          <TasteBlendPrompt />
-        </div>
 
         {/* Skill tree */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
