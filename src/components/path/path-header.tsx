@@ -45,7 +45,7 @@ export function PathHeader({
   const xpNeeded = XP_PER_LEVEL;
 
   return (
-    <header className="app-header px-4 pt-3 pb-2.5">
+    <header className="app-header page-x pt-3 pb-2.5">
       <div className="mx-auto max-w-md space-y-2">
         {/* Row 1  -  title + compact stats. Stats cluster is a single pill-row
             with equal baseline so the two numbers line up even when one is
