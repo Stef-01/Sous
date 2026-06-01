@@ -264,7 +264,6 @@ export default function PathPage() {
       >
         {/* Header with stats */}
         <PathHeader
-          streak={stats.currentStreak}
           totalXP={totalXP}
           level={level}
           levelProgress={levelProgress}

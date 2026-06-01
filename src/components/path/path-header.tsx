@@ -1,10 +1,9 @@
 "use client";
 // v2
 import { motion, useReducedMotion } from "framer-motion";
-import { Star, Trophy, CircleHelp, Flame, Award } from "lucide-react";
+import { Star, Trophy, CircleHelp, Award } from "lucide-react";
 
 interface PathHeaderProps {
-  streak: number;
   totalXP: number;
   level: number;
   levelProgress: number;
@@ -27,7 +26,6 @@ const XP_PER_LEVEL = 100;
  * Duolingo-inspired: big level badge, animated gradient XP bar, streak flame.
  */
 export function PathHeader({
-  streak,
   totalXP,
   level,
   levelProgress,
@@ -70,27 +68,8 @@ export function PathHeader({
           </div>
 
           <div className="flex shrink-0 items-center gap-2.5">
-            <motion.div
-              className="flex items-center gap-1 leading-none"
-              whileTap={reducedMotion ? undefined : { scale: 0.92 }}
-            >
-              <motion.span
-                animate={
-                  streak > 0 && !reducedMotion ? { scale: [1, 1.15, 1] } : {}
-                }
-                transition={{ duration: 0.4, delay: 0.6 }}
-                className="leading-none"
-              >
-                <Flame
-                  size={14}
-                  className="text-[var(--nourish-warm)]"
-                  strokeWidth={2.4}
-                />
-              </motion.span>
-              <span className="text-[13px] font-bold text-[var(--nourish-dark)] tabular-nums">
-                {streak}
-              </span>
-            </motion.div>
+            {/* Streak is NOT echoed here — it lives once, in the "Your journey"
+                card below. (rule 13: one source per signal.) */}
 
             {/* Trophy count only appears once at least one skill is earned —
                 a bare "0" reads as failure on a brand-new account.
@@ -137,7 +116,7 @@ export function PathHeader({
             the level/XP block matches the 36px badge height cleanly. */}
         <div className="flex items-center gap-2.5">
           <motion.div
-            initial={{ scale: 0, opacity: 0 }}
+            initial={reducedMotion ? false : { scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
               type: "spring",
