@@ -767,8 +767,8 @@ function MealQueuePreview({
         className="group w-full text-left"
         aria-label={`Open meal queue starting with ${dish.dishName}`}
       >
-        <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
-          <DishImage dish={dish} priority fit="contain" />
+        <div className="relative aspect-square w-full overflow-hidden rounded-[26px] border border-neutral-200 bg-white">
+          <DishImage dish={dish} priority fit="cover" />
           <div className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white/92 text-neutral-900 transition-colors group-hover:bg-white">
             <Maximize2 size={17} strokeWidth={1.9} />
           </div>
