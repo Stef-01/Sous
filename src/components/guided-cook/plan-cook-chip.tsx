@@ -124,7 +124,7 @@ export function PlanCookChip({ totalMinutes }: PlanCookChipProps) {
             type="time"
             value={eatTime}
             onChange={(e) => setEatTime(e.target.value)}
-            className="flex-1 bg-transparent text-[13px] font-medium text-[var(--nourish-dark)] outline-none"
+            className="flex-1 rounded bg-transparent text-[13px] font-medium text-[var(--nourish-dark)] outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/40"
           />
           <button
             type="button"

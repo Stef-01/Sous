@@ -137,7 +137,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
             }}
             placeholder="What's for dinner?"
             aria-label="Tonight's cook"
-            className="min-w-0 flex-1 bg-transparent text-[15px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]/70 focus:outline-none"
+            className="min-w-0 flex-1 rounded bg-transparent text-[15px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/40"
           />
           <button
             type="submit"

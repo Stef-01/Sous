@@ -156,8 +156,12 @@ export function CameraInput({
               onClick={() => fileInputRef.current?.click()}
               className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg hover:scale-105 transition-transform"
               type="button"
+              aria-label="Take photo"
             >
-              <div className="h-14 w-14 rounded-full border-2 border-neutral-300" />
+              <div
+                aria-hidden
+                className="h-14 w-14 rounded-full border-2 border-neutral-300"
+              />
             </button>
             <div className="w-16" /> {/* Spacer */}
           </>
