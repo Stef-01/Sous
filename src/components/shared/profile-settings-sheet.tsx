@@ -16,10 +16,26 @@
  *   - About       - version, links, disclaimer
  */
 
+import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Drawer } from "vaul";
-import { Check, Eye, Heart, Mic, RotateCcw, UserRound, X } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  Eye,
+  Heart,
+  HeartPulse,
+  Mic,
+  RotateCcw,
+  UserRound,
+  X,
+} from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { useCareProfile } from "@/lib/hooks/use-care-profile";
+import { CONDITIONS, CONDITION_IDS } from "@/data/therapeutics";
+import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
+import type { DietaryFlag } from "@/lib/engine/dietary-inferer";
+import type { FodmapPhase } from "@/types/care-profile";
 import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { cn } from "@/lib/utils/cn";
@@ -233,6 +249,12 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
               </AnimatePresence>
             </section>
 
+            {/* Health focus (Culinary Therapeutics CT-2). Optional,
+                collapsed by default. The one place we ask the user about a
+                condition — captured here per rule 3, surfaced food-first and
+                non-medical. */}
+            <CareFocusSection />
+
             {/* Eco Mode (Y4 W7 substrate · Y5 D UI wire-up). Calm,
                 never-shame copy. Toggle is the same shape as Parent
                 Mode for visual consistency. */}
@@ -399,5 +421,179 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
+  );
+}
+
+const AVOIDS: { flag: DietaryFlag; label: string }[] = [
+  { flag: "nut-allergy", label: "Nuts" },
+  { flag: "shellfish-allergy", label: "Shellfish" },
+  { flag: "dairy-free", label: "Dairy" },
+];
+
+const FODMAP_PHASES: { id: FodmapPhase; label: string }[] = [
+  { id: "elimination", label: "Elimination" },
+  { id: "reintroduction", label: "Reintroduction" },
+  { id: "personalized", label: "Personalized" },
+];
+
+const chipClass = (active: boolean, tone: "green" | "warm") =>
+  cn(
+    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors",
+    active
+      ? tone === "green"
+        ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)] ring-1 ring-[var(--nourish-green)]/40"
+        : "bg-[var(--nourish-warm)]/12 text-[var(--nourish-warm)] ring-1 ring-[var(--nourish-warm)]/40"
+      : "bg-neutral-50 text-[var(--nourish-subtext)] hover:bg-neutral-100",
+  );
+
+/**
+ * CareFocusSection — optional, collapsed-by-default capture of a health focus.
+ * The single place the app asks about a condition (a condition genuinely
+ * cannot be inferred from cooking behavior). Food-first framing, never a
+ * medical claim; saved to this device only. Wiring into the engine lands in
+ * CT-3, so this is honestly labeled an educational preview today.
+ */
+function CareFocusSection() {
+  const { profile, hasFocus, toggleCondition, toggleAvoid, setFodmapPhase } =
+    useCareProfile();
+  const haptic = useHaptic();
+  const reducedMotion = useReducedMotion();
+  const [open, setOpen] = useState(false);
+
+  const summary = hasFocus
+    ? profile.conditions.map((id) => CONDITIONS[id].displayName).join(", ") ||
+      "Avoidances set"
+    : "Optional — none selected";
+
+  return (
+    <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+      <button
+        type="button"
+        onClick={() => {
+          haptic();
+          setOpen((o) => !o);
+        }}
+        aria-expanded={open}
+        className="flex w-full items-start justify-between gap-3 text-left"
+      >
+        <div className="flex items-start gap-3">
+          <span
+            aria-hidden
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+          >
+            <HeartPulse size={16} />
+          </span>
+          <div className="space-y-1">
+            <SectionKicker as="p" size="10px">
+              Health focus
+            </SectionKicker>
+            <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+              Lean suggestions toward food-first ideas for a condition.{" "}
+              <span className="text-[var(--nourish-subtext)]">{summary}.</span>
+            </p>
+          </div>
+        </div>
+        <ChevronDown
+          size={16}
+          className={cn(
+            "mt-1 shrink-0 text-[var(--nourish-subtext)] transition-transform",
+            open && "rotate-180",
+          )}
+        />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            animate={
+              reducedMotion ? { opacity: 1 } : { opacity: 1, height: "auto" }
+            }
+            exit={reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+            transition={{ duration: reducedMotion ? 0.12 : 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-3 flex flex-wrap gap-2">
+              {CONDITION_IDS.map((id) => {
+                const active = profile.conditions.includes(id);
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => {
+                      haptic();
+                      toggleCondition(id);
+                    }}
+                    aria-pressed={active}
+                    className={chipClass(active, "green")}
+                  >
+                    {CONDITIONS[id].displayName}
+                  </button>
+                );
+              })}
+            </div>
+
+            {profile.conditions.includes("ibs") && (
+              <>
+                <SectionKicker as="p" size="10px" className="mt-4">
+                  Low-FODMAP phase
+                </SectionKicker>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {FODMAP_PHASES.map((p) => {
+                    const active = profile.fodmapPhase === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => {
+                          haptic();
+                          setFodmapPhase(active ? null : p.id);
+                        }}
+                        aria-pressed={active}
+                        className={chipClass(active, "green")}
+                      >
+                        {p.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+                  Low-FODMAP is a short, time-limited phase, then reintroduction
+                  — not a permanent diet.
+                </p>
+              </>
+            )}
+
+            <SectionKicker as="p" size="10px" className="mt-4">
+              Avoid
+            </SectionKicker>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {AVOIDS.map((a) => {
+                const active = profile.avoid.includes(a.flag);
+                return (
+                  <button
+                    key={a.flag}
+                    type="button"
+                    onClick={() => {
+                      haptic();
+                      toggleAvoid(a.flag);
+                    }}
+                    aria-pressed={active}
+                    className={chipClass(active, "warm")}
+                  >
+                    {a.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="mt-4 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+              Educational preview — {FOOD_FIRST_HEDGE} Saved on this device
+              only.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
   );
 }
