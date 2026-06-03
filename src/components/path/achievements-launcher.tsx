@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useImperativeHandle, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { AchievementsGrid } from "@/components/path/achievements-grid";
-import { useBodyScrollLock } from "@/lib/hooks/use-overlay-a11y";
+import { useBodyScrollLock, useFocusTrap } from "@/lib/hooks/use-overlay-a11y";
 import type { Achievement } from "@/data/achievements";
 
 interface AchievementsLauncherProps {
@@ -38,7 +44,9 @@ export function AchievementsLauncher({
   const reducedMotion = useReducedMotion();
   void reducedMotion;
   const [open, setOpen] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(open);
+  useFocusTrap(open, sheetRef);
 
   const onKey = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setOpen(false);
@@ -95,6 +103,8 @@ export function AchievementsLauncher({
               onClick={() => setOpen(false)}
             />
             <motion.div
+              ref={sheetRef}
+              tabIndex={-1}
               role="dialog"
               aria-modal="true"
               aria-labelledby="achievements-sheet-title"

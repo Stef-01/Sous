@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useBodyScrollLock } from "@/lib/hooks/use-overlay-a11y";
+import { useBodyScrollLock, useFocusTrap } from "@/lib/hooks/use-overlay-a11y";
 import {
   X,
   Moon,
@@ -43,7 +43,9 @@ export function MoreOptionsSheet({
   onEatOut,
 }: MoreOptionsSheetProps) {
   const reducedMotion = useReducedMotion();
+  const sheetRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(open);
+  useFocusTrap(open, sheetRef);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -70,6 +72,8 @@ export function MoreOptionsSheet({
             className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
           />
           <motion.div
+            ref={sheetRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-label="More options"

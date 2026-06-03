@@ -18,7 +18,7 @@
  * (V1 ships always-on for the prototype demo).
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
 import {
@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils/cn";
 import {
   useBodyScrollLock,
   useDismissOnEscape,
+  useFocusTrap,
 } from "@/lib/hooks/use-overlay-a11y";
 
 const STORAGE_KEY = "sous-pod-state-v1";
@@ -42,8 +43,10 @@ interface Props {
 
 export function DemoChallengePicker({ open, onClose }: Props) {
   const reducedMotion = useReducedMotion();
+  const sheetRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(open);
   useDismissOnEscape(open, onClose);
+  useFocusTrap(open, sheetRef);
   const [seeding, setSeeding] = useState<string | null>(null);
 
   const seedAndReload = (challenge: SeedChallengeOption) => {
@@ -82,6 +85,8 @@ export function DemoChallengePicker({ open, onClose }: Props) {
             className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
           />
           <motion.div
+            ref={sheetRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-label="Pick a challenge"
