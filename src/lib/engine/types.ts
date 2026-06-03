@@ -46,6 +46,9 @@ export interface ScoreBreakdown {
   seasonal?: number;
   /** Round 4 addition. Optional so b4393c7 callers compile. */
   antiMonotony?: number;
+  /** Culinary Therapeutics (CT-3). Only set when a clinician-approved care
+   *  profile is active; absent on the default path. */
+  therapeuticFit?: number;
 }
 
 export interface ScoredCandidate {
@@ -64,7 +67,20 @@ export interface Scorer {
   ): number;
 }
 
-export const DEFAULT_WEIGHTS: Record<keyof ScoreBreakdown, number> = {
+/** The 8 base weight dimensions, all required. */
+export type BaseWeights = Record<
+  Exclude<keyof ScoreBreakdown, "therapeuticFit">,
+  number
+>;
+
+/**
+ * Ranker weight vector. The 8 base dimensions are required; `therapeuticFit`
+ * is optional (off by default, only present when a clinician-approved care
+ * profile is active — Culinary Therapeutics CT-3).
+ */
+export type EngineWeights = BaseWeights & { therapeuticFit?: number };
+
+export const DEFAULT_WEIGHTS: BaseWeights = {
   cuisineFit: 0.22,
   flavorContrast: 0.22,
   nutritionBalance: 0.13,

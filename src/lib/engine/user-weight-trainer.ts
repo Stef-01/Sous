@@ -35,9 +35,9 @@
  */
 
 import { DEFAULT_WEIGHTS } from "./types";
-import type { ScoreBreakdown } from "./types";
+import type { BaseWeights } from "./types";
 
-export type UserWeights = Record<keyof ScoreBreakdown, number>;
+export type UserWeights = BaseWeights;
 
 /** Minimum number of completed cooks before the trainer departs
  *  from `DEFAULT_WEIGHTS`. Below this we have too little signal
@@ -136,7 +136,7 @@ function renormalise(weights: UserWeights): UserWeights {
   const sum = Object.values(weights).reduce((s, v) => s + v, 0);
   if (sum === 0) return { ...DEFAULT_WEIGHTS };
   const result = {} as UserWeights;
-  for (const key of Object.keys(weights) as Array<keyof ScoreBreakdown>) {
+  for (const key of Object.keys(weights) as Array<keyof UserWeights>) {
     result[key] = weights[key] / sum;
   }
   return result;
@@ -163,9 +163,9 @@ export function trainUserWeights(
   }
 
   const w: UserWeights = { ...DEFAULT_WEIGHTS };
-  const allKeys = Object.keys(DEFAULT_WEIGHTS) as Array<keyof ScoreBreakdown>;
+  const allKeys = Object.keys(DEFAULT_WEIGHTS) as Array<keyof UserWeights>;
 
-  function bump(dim: keyof ScoreBreakdown) {
+  function bump(dim: keyof UserWeights) {
     const offset = MAX_DELTA / (allKeys.length - 1);
     w[dim] += MAX_DELTA;
     for (const key of allKeys) {

@@ -41,6 +41,12 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "adds variety to your week",
     mid: "something different",
   },
+  // Culinary Therapeutics (CT-3). Claim-safe by construction — "supports", not
+  // "treats". Only ever reached when a clinician-approved care profile is active.
+  therapeuticFit: {
+    high: "supports your health focus",
+    mid: "fits your health focus",
+  },
 };
 
 /**

@@ -4,6 +4,7 @@ import type {
   ScoredCandidate,
   ScoreBreakdown,
   Scorer,
+  EngineWeights,
 } from "./types";
 
 /**
@@ -20,7 +21,7 @@ export function rankCandidates(
   main: MainDishIntent,
   candidates: SideDishCandidate[],
   scorers: Scorer[],
-  weights: Record<keyof ScoreBreakdown, number>,
+  weights: EngineWeights,
   userPreferences?: Record<string, number>,
 ): ScoredCandidate[] {
   const scored: ScoredCandidate[] = candidates.map((side) => {
