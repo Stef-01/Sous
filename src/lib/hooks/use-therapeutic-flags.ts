@@ -17,12 +17,14 @@
 import { useMemo } from "react";
 import { useCareProfile } from "./use-care-profile";
 import { requiredFlagsForCare } from "@/lib/engine/therapeutic-exclusions";
-import { registryIsClinicianApproved } from "@/data/therapeutics";
+import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
 
 export function useTherapeuticDietaryFlags(): string[] {
   const { profile } = useCareProfile();
   return useMemo(() => {
-    if (!registryIsClinicianApproved()) return [];
+    // Tiny flag check — keeps the evidence registry OUT of the Today bundle
+    // while dormant. requiredFlagsForCare derives flags from the profile alone.
+    if (!therapeuticsActive()) return [];
     return requiredFlagsForCare(profile);
   }, [profile]);
 }

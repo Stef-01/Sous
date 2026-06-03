@@ -19,7 +19,7 @@ import { addExplanations } from "./explainer";
 import { scoreTherapeuticFit } from "./therapeutic-fit";
 import { THERAPEUTIC_WEIGHT } from "./therapeutic-weights";
 import { filterByCareExclusions } from "./therapeutic-exclusions";
-import { registryIsClinicianApproved } from "@/data/therapeutics";
+import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
 import type { CareProfile } from "@/types/care-profile";
 
 /**
@@ -52,8 +52,8 @@ export type SuggestSidesResult =
 /**
  * Optional therapeutic context (Culinary Therapeutics CT-3). When omitted —
  * or when `active` resolves false — `suggestSides` behaves exactly as before.
- * `active` defaults to `registryIsClinicianApproved()`, which is false until
- * founder gate G1, so therapeutic re-ranking is DORMANT in the live app today.
+ * `active` defaults to `therapeuticsActive()`, which is false until founder
+ * gate G1, so therapeutic re-ranking is DORMANT in the live app today.
  */
 export interface TherapeuticContext {
   care: CareProfile;
@@ -64,7 +64,7 @@ function resolveActive(ctx?: TherapeuticContext): boolean {
   if (!ctx) return false;
   const hasFocus = ctx.care.conditions.length > 0 || ctx.care.avoid.length > 0;
   if (!hasFocus) return false;
-  return ctx.active ?? registryIsClinicianApproved();
+  return ctx.active ?? therapeuticsActive();
 }
 
 /**

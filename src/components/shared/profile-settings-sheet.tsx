@@ -32,7 +32,10 @@ import {
 } from "lucide-react";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
-import { CONDITIONS, CONDITION_IDS } from "@/data/therapeutics";
+// Import directly from the conditions module (not the barrel) so the owl sheet
+// pulls only the ~5KB condition list, not the full evidence registry — the
+// barrel's REGISTRY_STATS would otherwise force interventions + interactions in.
+import { CONDITIONS, CONDITION_IDS } from "@/data/therapeutics/conditions";
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
 import type { DietaryFlag } from "@/lib/engine/dietary-inferer";
 import type { FodmapPhase } from "@/types/care-profile";
