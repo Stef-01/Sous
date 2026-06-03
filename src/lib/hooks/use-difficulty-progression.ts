@@ -2,10 +2,7 @@
 
 import { useMemo } from "react";
 import type { CookSessionRecord } from "./use-cook-sessions";
-import {
-  getStaticCookData,
-  getStaticMealCookData,
-} from "@/data/guided-cook-steps";
+import { getCookSummary, getMealCookSummary } from "@/data/guided-cook-summary";
 
 export type SkillLevel = "easy" | "medium" | "hard";
 
@@ -25,14 +22,14 @@ export interface DifficultyProgression {
  * Uses cook time + ingredient count as proxy.
  */
 function classifyDifficulty(slug: string): SkillLevel {
-  const sideData = getStaticCookData(slug);
-  const mealData = getStaticMealCookData(slug);
+  const sideData = getCookSummary(slug);
+  const mealData = getMealCookSummary(slug);
   const data = sideData ?? mealData;
 
   if (!data) return "medium"; // default if no cook data
 
   const totalTime = data.prepTimeMinutes + data.cookTimeMinutes;
-  const ingredientCount = data.ingredients.length;
+  const ingredientCount = data.ingredientNames.length;
 
   // Easy: ≤20 min total, ≤6 ingredients
   if (totalTime <= 20 && ingredientCount <= 6) return "easy";

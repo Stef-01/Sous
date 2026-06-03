@@ -1,49 +1,46 @@
 import { describe, it, expect, vi } from "vitest";
 
-// Mock the guided-cook-steps module
-vi.mock("@/data/guided-cook-steps", () => ({
-  getStaticCookData: vi.fn((slug: string) => {
+// Mock the guided-cook-summary module (the lightweight source the hook reads).
+vi.mock("@/data/guided-cook-summary", () => ({
+  getCookSummary: vi.fn((slug: string) => {
     const data: Record<
       string,
       {
         prepTimeMinutes: number;
         cookTimeMinutes: number;
-        ingredients: { name: string }[];
+        ingredientNames: string[];
       }
     > = {
       "easy-salad": {
         prepTimeMinutes: 5,
         cookTimeMinutes: 5,
-        ingredients: [
-          { name: "lettuce" },
-          { name: "tomato" },
-          { name: "dressing" },
-        ],
+        ingredientNames: ["lettuce", "tomato", "dressing"],
       },
       "medium-stir-fry": {
         prepTimeMinutes: 10,
         cookTimeMinutes: 15,
-        ingredients: [
-          { name: "chicken" },
-          { name: "peppers" },
-          { name: "soy sauce" },
-          { name: "rice" },
-          { name: "oil" },
-          { name: "garlic" },
-          { name: "ginger" },
+        ingredientNames: [
+          "chicken",
+          "peppers",
+          "soy sauce",
+          "rice",
+          "oil",
+          "garlic",
+          "ginger",
         ],
       },
       "hard-biryani": {
         prepTimeMinutes: 20,
         cookTimeMinutes: 30,
-        ingredients: Array.from({ length: 12 }, (_, i) => ({
-          name: `ingredient-${i}`,
-        })),
+        ingredientNames: Array.from(
+          { length: 12 },
+          (_, i) => `ingredient-${i}`,
+        ),
       },
     };
     return data[slug] ?? null;
   }),
-  getStaticMealCookData: vi.fn(() => null),
+  getMealCookSummary: vi.fn(() => null),
 }));
 
 import { scoreDifficultyAlignment } from "./use-difficulty-progression";
