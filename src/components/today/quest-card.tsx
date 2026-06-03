@@ -29,9 +29,9 @@ import {
 import { cn } from "@/lib/utils/cn";
 import {
   getAvailableCookSlugs,
-  getStaticCookData,
-  getStaticMealCookData,
-} from "@/data/guided-cook-steps";
+  getCookSummary,
+  getMealCookSummary,
+} from "@/data/guided-cook-summary";
 import { sides, meals } from "@/data";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -173,10 +173,10 @@ export function buildQuestDishes(
 
   // Build meal quest dishes
   const mealDishes: QuestDish[] = meals.map((meal) => {
-    const mealCookData = getStaticMealCookData(meal.id);
+    const mealCookData = getMealCookSummary(meal.id);
     const hasCook = !!mealCookData || guidedSlugs.has(meal.id);
     const ingredientNames =
-      mealCookData?.ingredients.map((i) => normalizePantryName(i.name)) ?? [];
+      mealCookData?.ingredientNames.map(normalizePantryName) ?? [];
     return {
       dishName: meal.name,
       slug: meal.id,
@@ -187,7 +187,7 @@ export function buildQuestDishes(
       cuisineFamily: meal.cuisine,
       description: meal.description,
       tags: buildMealTags(meal.cuisine, meal.description, meal.sidePool.length),
-      ingredientCount: mealCookData ? mealCookData.ingredients.length : 8,
+      ingredientCount: mealCookData ? mealCookData.ingredientNames.length : 8,
       ingredientNames,
       hasGuidedCook: hasCook,
       isMeal: true,
@@ -199,13 +199,13 @@ export function buildQuestDishes(
   // Build side quest dishes
   const sideDishes: QuestDish[] = sides.map((side) => {
     const staticData = guidedSlugs.has(side.id)
-      ? getStaticCookData(side.id)
+      ? getCookSummary(side.id)
       : null;
     const tags = side.tags
       .slice(0, 3)
       .map((t) => t.charAt(0).toUpperCase() + t.slice(1));
     const ingredientNames =
-      staticData?.ingredients.map((i) => normalizePantryName(i.name)) ?? [];
+      staticData?.ingredientNames.map(normalizePantryName) ?? [];
     return {
       dishName: side.name,
       slug: side.id,
@@ -219,7 +219,7 @@ export function buildQuestDishes(
       ).replace(/^\w/, (c) => c.toUpperCase()),
       description: side.description,
       tags,
-      ingredientCount: staticData ? staticData.ingredients.length : 5,
+      ingredientCount: staticData ? staticData.ingredientNames.length : 5,
       ingredientNames,
       hasGuidedCook: guidedSlugs.has(side.id),
       isMeal: false,

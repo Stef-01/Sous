@@ -14,10 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { sides, meals } from "@/data";
-import {
-  getStaticCookData,
-  getStaticMealCookData,
-} from "@/data/guided-cook-steps";
+import { getCookSummary, getMealCookSummary } from "@/data/guided-cook-summary";
 import { findClosestDishes } from "@/lib/engine/find-closest-dishes";
 import { useCravingHistory } from "@/lib/hooks/use-craving-history";
 import {
@@ -46,7 +43,7 @@ interface LocalResult {
 }
 
 function getTotalMinutes(id: string, isMeal: boolean): number | null {
-  const d = isMeal ? getStaticMealCookData(id) : getStaticCookData(id);
+  const d = isMeal ? getMealCookSummary(id) : getCookSummary(id);
   if (!d) return null;
   return d.prepTimeMinutes + d.cookTimeMinutes;
 }

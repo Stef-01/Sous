@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { Shuffle } from "lucide-react";
 import { sides, meals } from "@/data";
-import { getAvailableCookSlugs } from "@/data/guided-cook-steps";
+import { getAvailableCookSlugs } from "@/data/guided-cook-summary";
 import type { CookStats } from "@/lib/hooks/use-cook-sessions";
 
 interface SurpriseMeButtonProps {
