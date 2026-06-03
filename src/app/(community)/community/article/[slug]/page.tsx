@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { getArticleBySlug, getExpertById, ARTICLES } from "@/data/content";
 import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
+import { ExpertAvatar } from "@/components/content/expert-avatar";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { SourceAttribution } from "@/components/shared/source-attribution";
 
@@ -53,15 +54,10 @@ export default function ArticleDetailPage({
             href={`/community/expert/${author.slug}`}
             className="inline-flex items-center gap-2 text-[12px] text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
           >
-            <span className="relative h-7 w-7 overflow-hidden rounded-full bg-[var(--nourish-cream)]">
-              <Image
-                src={author.avatarUrl}
-                alt={author.name}
-                fill
-                sizes="28px"
-                className="object-cover"
-              />
-            </span>
+            <ExpertAvatar
+              name={author.name}
+              className="h-7 w-7 shrink-0 text-[10px]"
+            />
             <span>
               <span className="font-semibold text-[var(--nourish-dark)]">
                 {author.name}

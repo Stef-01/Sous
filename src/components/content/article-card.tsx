@@ -35,7 +35,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
           />
         </div>
         <div className="min-w-0 flex-1 space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
+          <p className="truncate text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--nourish-green)]">
             {article.kicker}
           </p>
           <p className="line-clamp-2 text-sm font-semibold leading-tight text-[var(--nourish-dark)]">

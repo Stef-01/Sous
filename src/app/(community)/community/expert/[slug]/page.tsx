@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { use } from "react";
 import { notFound } from "next/navigation";
 import { ARTICLES, getExpertBySlug } from "@/data/content";
 import { ArticleCard } from "@/components/content/article-card";
+import { ExpertAvatar } from "@/components/content/expert-avatar";
 import { BackLink } from "@/components/content/back-link";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { SectionKicker } from "@/components/shared/section-kicker";
@@ -28,15 +28,10 @@ export default function ExpertProfilePage({
       </div>
 
       <header className="mt-4 flex items-center gap-4 page-x">
-        <div className="relative h-20 w-20 overflow-hidden rounded-full ring-2 ring-[var(--nourish-green)]/30 ring-offset-2 ring-offset-[var(--nourish-cream)]">
-          <Image
-            src={expert.avatarUrl}
-            alt={expert.name}
-            fill
-            sizes="80px"
-            className="object-cover"
-          />
-        </div>
+        <ExpertAvatar
+          name={expert.name}
+          className="h-20 w-20 shrink-0 text-2xl ring-2 ring-[var(--nourish-green)]/30 ring-offset-2 ring-offset-[var(--nourish-cream)]"
+        />
         <div className="space-y-0.5">
           <h1 className="font-serif text-xl text-[var(--nourish-dark)]">
             {expert.name}

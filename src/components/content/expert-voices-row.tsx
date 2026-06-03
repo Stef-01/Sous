@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import type { ExpertVoice } from "@/types/content";
+import { ExpertAvatar } from "./expert-avatar";
 
 interface Props {
   experts: ExpertVoice[];
@@ -31,15 +31,10 @@ export function ExpertVoicesRow({ experts }: Props) {
               href={`/community/expert/${expert.slug}`}
               className="group flex w-[88px] flex-col items-center text-center focus-visible:outline-none"
             >
-              <div className="relative h-[68px] w-[68px] overflow-hidden rounded-full ring-2 ring-[var(--nourish-green)]/30 ring-offset-2 ring-offset-[var(--nourish-cream)] transition-transform duration-200 group-hover:scale-105">
-                <Image
-                  src={expert.avatarUrl}
-                  alt={expert.name}
-                  fill
-                  sizes="68px"
-                  className="object-cover"
-                />
-              </div>
+              <ExpertAvatar
+                name={expert.name}
+                className="h-[68px] w-[68px] text-lg ring-2 ring-[var(--nourish-green)]/30 ring-offset-2 ring-offset-[var(--nourish-cream)] transition-transform duration-200 group-hover:scale-105"
+              />
               <p className="mt-1.5 text-[12px] font-semibold leading-tight text-[var(--nourish-dark)] line-clamp-1">
                 {expert.name}
               </p>
