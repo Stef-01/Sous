@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 const STORAGE_KEY = "sous-forum-drafts-v1";
+/** Cap total drafts across all threads so the key can't grow unbounded and
+ *  start throwing QuotaExceededError on other hooks' writes. */
+const MAX_DRAFTS = 100;
 
 export interface ForumDraftReply {
   id: string;
@@ -19,7 +22,9 @@ function load(): ForumDraftReply[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as ForumDraftReply[]) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as ForumDraftReply[]) : [];
   } catch {
     return [];
   }
@@ -58,7 +63,7 @@ export function useForumDrafts(threadId: string) {
         createdAt: new Date().toISOString(),
         inReplyToId,
       };
-      const next = [...all, reply];
+      const next = [...all, reply].slice(-MAX_DRAFTS);
       persist(next);
       setReplies(next.filter((r) => r.threadId === threadId));
       return reply;

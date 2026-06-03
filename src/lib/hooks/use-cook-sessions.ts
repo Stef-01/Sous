@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { computeStreakWithRest, loadRestDays } from "./use-rest-days";
 import { persistCookCompletion } from "@/lib/trpc/vanilla";
 
@@ -60,7 +60,18 @@ function loadSessions(): CookSessionRecord[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = localStorage.getItem(SESSIONS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    // Guard the app's most important dataset: a non-array or malformed entries
+    // would crash the many .filter/.map consumers at render time.
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(
+      (s): s is CookSessionRecord =>
+        !!s &&
+        typeof s.sessionId === "string" &&
+        typeof s.recipeSlug === "string" &&
+        typeof s.startedAt === "string",
+    );
   } catch {
     return [];
   }
@@ -149,14 +160,20 @@ const DEFAULT_STATS: CookStats = {
 };
 
 export function useCookSessions() {
-  const [sessions, setSessions] = useState<CookSessionRecord[]>(() => {
-    if (typeof window === "undefined") return [];
-    return loadSessions();
-  });
-  const [stats, setStats] = useState<CookStats>(() => {
-    if (typeof window === "undefined") return DEFAULT_STATS;
-    return loadStats();
-  });
+  // Initialize to SSR defaults and hydrate from localStorage AFTER mount, so the
+  // server render and the first client render agree (the lazy-initializer read
+  // caused a hydration mismatch on the Today header streak pill — it renders
+  // null at streak 0 on the server but the persisted streak on first client
+  // render). This matches the effect-hydration pattern used by the other hooks.
+  const [sessions, setSessions] = useState<CookSessionRecord[]>([]);
+  const [stats, setStats] = useState<CookStats>(DEFAULT_STATS);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate on mount
+    setSessions(loadSessions());
+
+    setStats(loadStats());
+  }, []);
 
   /**
    * Start a new cook session. Returns the session ID.
