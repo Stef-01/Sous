@@ -37,11 +37,21 @@ export function CookTimer() {
   const vibratedForRef = useRef<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
-  // Global 1 Hz ticker  -  runs only while any timer is in flight.
+  // Global 1 Hz ticker  -  runs only while any timer is in flight. The 1 Hz
+  // beat is just a repaint trigger; tickTimers derives `remaining` from the
+  // wall clock, so an immediate tick on tab re-show corrects the display the
+  // instant the user returns (the interval may have been suspended while hidden).
   useEffect(() => {
     if (timers.length === 0) return;
     const interval = setInterval(() => tickTimers(), 1000);
-    return () => clearInterval(interval);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") tickTimers();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, [timers.length, tickTimers]);
 
   // Vibrate once per timer when it first hits zero.

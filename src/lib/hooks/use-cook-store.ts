@@ -163,21 +163,24 @@ export const useCookStore = create<CookStore>((set, get) => ({
       const now = Date.now();
       const next: TimerEntry[] = [];
       for (const t of state.timers) {
-        // Prune finished timers whose linger window has elapsed.
-        if (
-          t.completedAt !== null &&
-          now - t.completedAt >= COMPLETED_TIMER_LINGER_MS
-        ) {
-          continue;
-        }
         if (t.completedAt !== null) {
+          // Prune finished timers whose linger window has elapsed.
+          if (now - t.completedAt >= COMPLETED_TIMER_LINGER_MS) continue;
           next.push(t); // still in flash window
           continue;
         }
-        if (t.remaining <= 1) {
+        // Derive `remaining` from wall-clock elapsed rather than counting
+        // interval fires. Browsers throttle/suspend setInterval in a hidden
+        // tab (mobile Safari pauses it entirely), so a tick-count countdown
+        // silently runs slow when the screen is off — the food is done but the
+        // timer says it isn't. The deadline is startedAt + totalSeconds;
+        // extendTimer grows totalSeconds, pushing the deadline out.
+        const deadline = t.startedAt + t.totalSeconds * 1000;
+        const remaining = Math.max(0, Math.ceil((deadline - now) / 1000));
+        if (remaining <= 0) {
           next.push({ ...t, remaining: 0, completedAt: now });
         } else {
-          next.push({ ...t, remaining: t.remaining - 1 });
+          next.push({ ...t, remaining });
         }
       }
       return { timers: next };
