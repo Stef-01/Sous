@@ -48,6 +48,11 @@ async function callClaude<T>(
     schema,
     system,
     prompt,
+    // Bound the call so a stalled provider (TCP hang, slow model) throws here
+    // instead of hanging the request — the throw lands in each method's catch
+    // and falls back to the deterministic mock. The most likely real-world
+    // failure mode is latency, not an error.
+    abortSignal: AbortSignal.timeout(8000),
   });
 
   return result.object;
