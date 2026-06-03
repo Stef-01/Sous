@@ -774,9 +774,11 @@ export function WinScreen({
             stiffness: 260,
             damping: 25,
           }}
-          className="w-full space-y-2"
+          className="w-full"
         >
-          {/* Back to Today  -  dominant green, always first */}
+          {/* Back to Today  -  the ONE dominant full-width CTA. Save / Send /
+              Photo / Note / Again all live in the subordinate chip row below,
+              so nothing competes with the primary action. (rule 2) */}
           <motion.button
             onClick={onBackToday}
             whileTap={{ scale: 0.96 }}
@@ -787,53 +789,6 @@ export function WinScreen({
             <Home size={14} />
             Back to Today
           </motion.button>
-
-          {/* Save to scrapbook  -  visually subordinate text link */}
-          <motion.button
-            onClick={onSave}
-            disabled={saved}
-            whileTap={saved ? undefined : { scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm transition-colors",
-              saved
-                ? "text-[var(--nourish-green)]/60 cursor-default"
-                : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]",
-            )}
-            type="button"
-            aria-label={
-              saved
-                ? "Already saved to scrapbook"
-                : "Save this cook to your scrapbook"
-            }
-          >
-            <BookmarkPlus size={14} />
-            {saved ? "Saved ✓" : "Save to scrapbook"}
-          </motion.button>
-
-          {/* Send to a friend  -  secondary text link; only rendered once we
-              have a slug to share. Deliberately quiet so it doesn't compete
-              with Back to Today. */}
-          {dishSlug && (
-            <motion.button
-              onClick={handleSendGift}
-              whileTap={{ scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className={cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm transition-colors",
-                giftSent
-                  ? "text-[var(--nourish-green)]/70 cursor-default"
-                  : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]",
-              )}
-              type="button"
-              aria-label={
-                giftSent ? "Gift link copied" : `Send ${dishName} to a friend`
-              }
-            >
-              <Send size={14} />
-              {giftSent ? "Link copied ✓" : "Send to a friend"}
-            </motion.button>
-          )}
         </motion.div>
 
         {/* ── Cook-with-a-friend invite  -  one-time per dish, only at ≥4★ ── */}
@@ -881,12 +836,13 @@ export function WinScreen({
           )}
         </AnimatePresence>
 
-        {/* ── Secondary actions (photo + note) ── */}
+        {/* ── Secondary actions  -  one subordinate, wrapping chip row:
+             Save · Photo · Note · Again · Send ── */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="flex items-center justify-center gap-3"
+          className="flex flex-wrap items-center justify-center gap-2"
         >
           <input
             ref={photoInputRef}
@@ -896,6 +852,27 @@ export function WinScreen({
             className="hidden"
             onChange={handlePhotoFile}
           />
+          <motion.button
+            onClick={onSave}
+            disabled={saved}
+            whileTap={saved ? undefined : { scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+              saved
+                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+            )}
+            type="button"
+            aria-label={
+              saved
+                ? "Already saved to scrapbook"
+                : "Save this cook to your scrapbook"
+            }
+          >
+            <BookmarkPlus size={14} />
+            {saved ? "Saved" : "Save"}
+          </motion.button>
           <motion.button
             onClick={() => photoInputRef.current?.click()}
             disabled={photoAdded}
@@ -939,6 +916,26 @@ export function WinScreen({
             <RotateCcw size={14} />
             Again
           </motion.button>
+          {dishSlug && (
+            <motion.button
+              onClick={handleSendGift}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className={cn(
+                "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                giftSent
+                  ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                  : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+              )}
+              type="button"
+              aria-label={
+                giftSent ? "Gift link copied" : `Send ${dishName} to a friend`
+              }
+            >
+              <Send size={14} />
+              {giftSent ? "Sent" : "Send"}
+            </motion.button>
+          )}
         </motion.div>
 
         {/* ── W46 pod-challenge submit slot ───────────────────
