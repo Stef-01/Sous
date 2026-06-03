@@ -293,9 +293,11 @@ export default function PathPage() {
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
         {/* Looking back: lifetime stats + this week's goal. Demoted below the
-            hero so the dashboard never crowds the top of the page. */}
+            hero so the dashboard never crowds the top, and merged into ONE
+            grouped card (iOS-style, hairline divider between rows) so the
+            section reads as a single surface instead of two floating cards. */}
         <motion.div
-          className="mx-auto max-w-md space-y-2 page-x pt-4"
+          className="mx-auto max-w-md page-x pt-4"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2, margin: "0px 0px -40px 0px" }}
@@ -304,30 +306,38 @@ export default function PathPage() {
             visible: { transition: { staggerChildren: 0.08 } },
           }}
         >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 14 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { type: "spring", stiffness: 320, damping: 28 },
-              },
-            }}
-          >
-            <JourneySummary stats={stats} recentSessions={completedSessions} />
-          </motion.div>
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 14 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { type: "spring", stiffness: 320, damping: 28 },
-              },
-            }}
-          >
-            <WeeklyGoalCard completedSessions={completedSessions} />
-          </motion.div>
+          <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-100 bg-white">
+            <motion.div
+              className="p-5"
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { type: "spring", stiffness: 320, damping: 28 },
+                },
+              }}
+            >
+              <JourneySummary
+                bare
+                stats={stats}
+                recentSessions={completedSessions}
+              />
+            </motion.div>
+            <motion.div
+              className="p-4"
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { type: "spring", stiffness: 320, damping: 28 },
+                },
+              }}
+            >
+              <WeeklyGoalCard bare completedSessions={completedSessions} />
+            </motion.div>
+          </div>
         </motion.div>
 
         {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (

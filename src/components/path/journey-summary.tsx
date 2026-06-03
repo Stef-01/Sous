@@ -15,6 +15,10 @@ interface JourneySummaryProps {
   stats: CookStats;
   /** Recent cooks, folded in as a compact thumbnail strip (was its own card). */
   recentSessions?: CookSessionRecord[];
+  /** When true, drop the card chrome (border/bg/radius/padding) so this can be
+   *  composed as one row inside a shared grouped card. The parent supplies the
+   *  border, background, and padding; we keep only the internal spacing. */
+  bare?: boolean;
 }
 
 interface StatBlockProps {
@@ -85,6 +89,7 @@ function hashToHue(input: string): number {
 export const JourneySummary = memo(function JourneySummary({
   stats,
   recentSessions = [],
+  bare = false,
 }: JourneySummaryProps) {
   const reducedMotion = useReducedMotion();
   const recent = recentSessions.filter((s) => !!s.completedAt).slice(0, 8);
@@ -94,7 +99,11 @@ export const JourneySummary = memo(function JourneySummary({
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.3 }}
-      className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
+      className={
+        bare
+          ? "space-y-4"
+          : "rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
+      }
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">

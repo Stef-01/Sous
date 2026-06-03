@@ -21,10 +21,14 @@ import {
 
 interface WeeklyGoalCardProps {
   completedSessions: CookSessionRecord[];
+  /** When true, drop the card chrome so this composes as one row inside a
+   *  shared grouped card (the parent owns the border/bg/padding). */
+  bare?: boolean;
 }
 
 export const WeeklyGoalCard = memo(function WeeklyGoalCard({
   completedSessions,
+  bare = false,
 }: WeeklyGoalCardProps) {
   const reducedMotion = useReducedMotion();
   const challenge = getCurrentChallenge();
@@ -83,7 +87,11 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
       initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.3, delay: 0.1 }}
-      className="rounded-2xl border border-neutral-100 bg-white p-4 space-y-3"
+      className={
+        bare
+          ? "space-y-3"
+          : "rounded-2xl border border-neutral-100 bg-white p-4 space-y-3"
+      }
     >
       <div className="flex items-center justify-between">
         <div>
