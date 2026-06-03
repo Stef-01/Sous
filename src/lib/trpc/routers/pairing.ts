@@ -180,6 +180,19 @@ export const pairingRouter = router({
               ),
             )
           : allCandidates;
+
+      // Dietary-specific empty state: if the "who's at the table" restrictions
+      // exclude every side, say so instead of the generic engine error — the
+      // user can act on it (loosen the table).
+      if (householdRequired.length > 0 && candidates.length === 0) {
+        return {
+          success: false as const,
+          error:
+            "No sides match everyone at the table — try removing a restriction.",
+          sides: [],
+        };
+      }
+
       const result = suggestSides(
         intent,
         candidates,
