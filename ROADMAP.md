@@ -15,6 +15,53 @@
 
 ---
 
+## STAGE 2 (PARTIAL): AUTONOMOUS PRODUCTION HARDENING — SHIPPED 2026-06
+
+> The **AUTO-BUILD** slices of Stage 2 — everything achievable without an
+> external account or human counsel (rule 12) — shipped this session. The
+> founder-gated remainder is listed at the end so it isn't re-scoped as
+> autonomous work.
+
+### Shipped (autonomous, verified: typecheck + lint + ~3130 tests + build green)
+
+- **SEO / structured data** — `src/lib/seo/recipe.ts` builds full Schema.org
+  `Recipe` JSON-LD (ingredients, ordered `HowToStep`, ISO-8601 times, image,
+  cuisine) injected via a server `cook/[slug]/layout.tsx`; per-dish
+  `generateMetadata` (title/OG/Twitter/canonical) on cook + gift routes;
+  `app/sitemap.ts` (131 URLs) + `app/robots.ts`. Verified live. 16 unit tests.
+- **Security headers** — production CSP + `X-Frame-Options`, `nosniff`,
+  `Referrer-Policy`, HSTS, `Permissions-Policy` in `next.config.ts` (prod-only
+  so dev/preview is untouched). Verified on a local prod server.
+- **PWA** — dependency-free, Turbopack-safe `public/sw.js` (network-first nav +
+  offline fallback + stale-while-revalidate statics), branded
+  `public/offline.html`, prod-only `ServiceWorkerRegister`. (Manifest already
+  existed.)
+- **Accessibility (WCAG AA pass over the whole app)** — focus-visible rings on
+  unlabeled controls; tap-target fixes; placeholder colour-contrast (12 inputs
+  → AA, computed ratios); `prefers-reduced-motion` gates on looping animations;
+  semantic fixes (Games `<h1>`, input labels); and a complete overlay
+  keyboard/focus contract — reusable `useBodyScrollLock` / `useDismissOnEscape`
+  / `useFocusTrap` hooks applied to all 5 hand-rolled modals (focus-in,
+  Tab-trap, Escape-restore — verified live), guarded by
+  `use-overlay-a11y.test.ts`.
+- **Path declutter** — hero-first hierarchy + grouped stats card, guarded by
+  `path-hierarchy.test.ts`.
+
+### Still founder-gated (needs credentials / a human — NOT autonomous)
+
+- **Auth (Clerk)** — needs keys; provider + middleware already wired.
+- **Real DB** — Supabase is already provisioned + seeded (see SUPABASE-SETUP);
+  the Neon references below are superseded.
+- **Image pipeline (Cloudflare R2)**, **Caching/rate-limit (Upstash Redis)**,
+  **Error monitoring (Sentry)** — each needs an account + secret; the
+  abstraction/env-var contract is the only autonomous prep and is in place.
+- **Real Content-tab editorial** (clinician names + lab affiliations) — a
+  Stage-2 editorial workstream protected by rule 11; sample content stays
+  flagged `isPlaceholder`.
+- **i18n, legal pages, clinical-partner flow** — content/decision work.
+
+---
+
 ## STAGE 3: LEAN VIBE-CODED + CONTENT TAB — COMPLETE
 
 > Pushed before Stage 2 (production hardening). Per Stefan's directive, grow user-facing surface as far as the lean prototype credibly can before paying the production-tax of Clerk + Neon + R2 + Sentry + Redis. Full spec in `docs/STAGE-3-LEAN-CONTENT.md`.
