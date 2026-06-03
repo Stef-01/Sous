@@ -8,6 +8,19 @@
 
 ---
 
+## ✅ BUILD STATUS — all four AUTO-BUILD sprints shipped (2026-06-03)
+
+The full AUTO-BUILD foundation is in `main`, dormant behind the five founder gates. The live app is byte-identical (a golden non-regression test enforces it). One config flip — clinician sign-off (G1) flipping `reviewStatus`/`isEducational` — activates it.
+
+- **CT-1 ✓ Evidence registry** — `src/types/therapeutics.ts`, `src/lib/therapeutics/claim-contract.ts` (`assertNoMedicalClaim` CI guard), `src/data/therapeutics/` (10 conditions · 23 interventions · 6 interaction rules, all `unreviewed`/`isEducational`), registry guard test, `pnpm therapeutics:gaps` (75% coverage + G2 work-list).
+- **CT-2 ✓ Capture + safety** — `CareProfile` type + `use-care-profile` hook, the "Health focus" section in the owl Profile sheet (verified live), `therapeutic-exclusions.ts` (celiac → gluten-free; allergens), tested.
+- **CT-3 ✓ Scorer + engine** — `therapeutic-fit.ts` (evidence-weight ladder, recipe-native/fortified only), `therapeutic-weights.ts` (0.18, sums to 1.0), `suggestSides` optional therapeutic context (exclusion screen + post-rank blend). Golden byte-identical invariant proven; activation gated on `registryIsClinicianApproved()` (false).
+- **CT-4 ✓ Surfaces + hand-off** — `therapeutic-escalation.ts` (food-first + "leaky gut" education), `evidence-card.ts` + `EvidenceProvenanceStrip` (tested builder, dormant UI), `pnpm therapeutics:review` (the G1 clinician-review package).
+
+**Remaining for G1 activation (one focused integration, intentionally not done pre-review):** thread the client `CareProfile` through the live `pairing.ts` tRPC call and render `EvidenceProvenanceStrip` on the result card when active. Kept undone so the live app stays unchanged until clinician + legal review clear.
+
+---
+
 ## ⚠️ FOUNDER-GATED DEPENDENCIES (read first — rule 12)
 
 Everything in this plan is **AUTO-BUILD** (ships behind an `isEducational` / `isPlaceholder` flag, exactly like the Content tab) **except** these five gates. They block _general-availability personalization_, not the build. AUTO-BUILD work ships first and dormant; each gate is a one-config flip when the founder provides the input:

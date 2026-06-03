@@ -8,6 +8,7 @@
     "validate:data": "tsx src/lib/db/validate-guided-cook.ts",
     "gen:cook-summary": "tsx scripts/gen-cook-summary.ts",
     "therapeutics:gaps": "tsx scripts/therapeutics-gap-report.ts",
+    "therapeutics:review": "tsx scripts/therapeutics-review-export.ts",
     "start": "next start",
     "lint": "eslint . && prettier --check .",
     "lint:fix": "eslint . --fix && prettier --write .",
