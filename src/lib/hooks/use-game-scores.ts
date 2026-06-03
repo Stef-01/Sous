@@ -19,7 +19,34 @@ function loadState(): GameScoresState {
   if (typeof window === "undefined") return { scores: {} };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { scores: {} };
+    if (!raw) return { scores: {} };
+    const parsed = JSON.parse(raw);
+    if (
+      !parsed ||
+      typeof parsed !== "object" ||
+      typeof parsed.scores !== "object" ||
+      parsed.scores === null
+    ) {
+      return { scores: {} };
+    }
+    // Coerce each record so a corrupt/old blob (e.g. a string bestScore) can't
+    // poison Math.max or render as NaN on the arcade card.
+    const scores: Record<string, GameScore> = {};
+    for (const [id, v] of Object.entries(
+      parsed.scores as Record<string, unknown>,
+    )) {
+      if (!v || typeof v !== "object") continue;
+      const g = v as Partial<GameScore>;
+      scores[id] = {
+        gameId: typeof g.gameId === "string" ? g.gameId : id,
+        bestScore: Number.isFinite(g.bestScore) ? (g.bestScore as number) : 0,
+        totalPlays: Number.isFinite(g.totalPlays)
+          ? (g.totalPlays as number)
+          : 0,
+        lastPlayed: typeof g.lastPlayed === "string" ? g.lastPlayed : "",
+      };
+    }
+    return { scores };
   } catch {
     return { scores: {} };
   }

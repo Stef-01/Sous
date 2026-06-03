@@ -69,6 +69,9 @@ export default function WhatsCookingGame() {
   >(null);
   const [gameOver, setGameOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Synchronous re-entry guard: a state flag would miss a same-frame double
+  // submit (Enter + click), which would score the round twice.
+  const answeredRef = useRef(false);
 
   const currentDish: DishClue | undefined = dishes[currentDishIdx];
   const visibleClues = currentDish?.clues.slice(0, revealedClues) ?? [];
@@ -80,20 +83,26 @@ export default function WhatsCookingGame() {
   }, [roundResult, currentDishIdx]);
 
   const handleGuess = useCallback(() => {
-    if (!currentDish || !guess.trim()) return;
+    if (answeredRef.current || !currentDish || !guess.trim()) return;
 
     if (fuzzyMatch(guess, currentDish.acceptedAnswers)) {
+      answeredRef.current = true; // unlocked when the next round loads
       const points = POINTS_PER_CLUE[revealedClues - 1] ?? 100;
       setTotalScore((prev) => prev + points);
       setStreak((prev) => prev + 1);
       setRoundResult("correct");
     } else {
       if (revealedClues < 5) {
+        answeredRef.current = true;
         setRevealedClues((prev) => prev + 1);
         setRoundResult("wrong");
-        setTimeout(() => setRoundResult(null), 800);
+        setTimeout(() => {
+          setRoundResult(null);
+          answeredRef.current = false; // allow another guess on this dish
+        }, 800);
         setGuess("");
       } else {
+        answeredRef.current = true;
         setStreak(0);
         setRoundResult("revealed");
       }
@@ -112,6 +121,7 @@ export default function WhatsCookingGame() {
       setRevealedClues(1);
       setGuess("");
       setRoundResult(null);
+      answeredRef.current = false;
     }
   }, [currentDishIdx, dishes.length, totalScore, recordScore, awardXP]);
 
@@ -123,6 +133,7 @@ export default function WhatsCookingGame() {
     setStreak(0);
     setRoundResult(null);
     setGameOver(false);
+    answeredRef.current = false;
   }, []);
 
   if (gameOver) {

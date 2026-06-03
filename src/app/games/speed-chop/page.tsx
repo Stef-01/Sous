@@ -31,6 +31,9 @@ export default function SpeedChopGame() {
     "menu",
   );
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Synchronous re-entry guard so a same-frame double-tap can't score one item
+  // twice (or drop a life after it was already answered correctly).
+  const resolvingRef = useRef(false);
   const scoreRef = useRef(score);
   const recordScoreRef = useRef(recordScore);
   const awardXPRef = useRef(awardXP);
@@ -92,7 +95,9 @@ export default function SpeedChopGame() {
 
   const handleSwipe = useCallback(
     (side: "left" | "right") => {
-      if (gameState !== "playing" || !currentItem) return;
+      if (gameState !== "playing" || !currentItem || resolvingRef.current)
+        return;
+      resolvingRef.current = true;
       clearTimeout(timerRef.current);
 
       if (currentItem.correctSide === side) {
@@ -123,6 +128,7 @@ export default function SpeedChopGame() {
         if (lives > 1 || currentItem.correctSide === side) {
           advanceItem();
         }
+        resolvingRef.current = false;
       }, 400);
     },
     [
