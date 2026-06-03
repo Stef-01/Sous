@@ -148,7 +148,7 @@ export function NextUnlockCard({
             <p className="text-sm font-semibold text-[var(--nourish-dark)]">
               {node.name}
             </p>
-            <p className="text-xs text-[var(--nourish-subtext)] leading-relaxed mt-0.5">
+            <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-[var(--nourish-subtext)]">
               {node.description}
             </p>
           </div>

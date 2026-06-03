@@ -273,37 +273,37 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Up next + journey stats + weekly goal. Action-first: the "what to
-            learn next" hero leads (Today's meal-first principle, on Path);
-            looking-back surfaces (the cooks ribbon) sit below. */}
+        {/* Hero action: the single "what to cook next to progress" leads the
+            page, so the most useful, most frictionless thing is first. */}
         <motion.div
-          className="mx-auto max-w-md space-y-2 page-x pt-3"
+          className="mx-auto max-w-md page-x pt-3"
+          initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 320, damping: 28 }}
+        >
+          <NextUnlockCard
+            nextNode={nextUnlockData.nextNode}
+            lockedPreview={nextUnlockData.lockedPreview}
+            skillsCompleted={skillsCompleted}
+          />
+        </motion.div>
+
+        {/* Skill tree — the page's signature journey map, surfaced right after
+            the next action instead of buried beneath the stats dashboard. */}
+        <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
+
+        {/* Looking back: lifetime stats + this week's goal. Demoted below the
+            hero so the dashboard never crowds the top of the page. */}
+        <motion.div
+          className="mx-auto max-w-md space-y-2 page-x pt-4"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.25, margin: "0px 0px -40px 0px" }}
+          viewport={{ once: true, amount: 0.2, margin: "0px 0px -40px 0px" }}
           variants={{
             hidden: {},
-            visible: {
-              transition: { staggerChildren: 0.08, delayChildren: 0.04 },
-            },
+            visible: { transition: { staggerChildren: 0.08 } },
           }}
         >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 14 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { type: "spring", stiffness: 320, damping: 28 },
-              },
-            }}
-          >
-            <NextUnlockCard
-              nextNode={nextUnlockData.nextNode}
-              lockedPreview={nextUnlockData.lockedPreview}
-              skillsCompleted={skillsCompleted}
-            />
-          </motion.div>
           <motion.div
             variants={{
               hidden: { opacity: 0, y: 14 },
@@ -337,9 +337,6 @@ export default function PathPage() {
             openRef={achievementsRef}
           />
         )}
-
-        {/* Skill tree */}
-        <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
         {/* Quick links at bottom (above tab bar). Section kicker uses
             the same uppercase tracking pattern as the rest of Path
