@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Clock, Star, ChefHat } from "lucide-react";
@@ -40,6 +41,43 @@ function safeFirstName(raw: string | undefined): string {
   // and clamp length so nobody can jam rendering with a novel.
   const cleaned = raw.replace(/[^\p{L}\p{N}\s'\-]/gu, "").trim();
   return cleaned.slice(0, 24) || "A friend";
+}
+
+/** Shareable preview metadata: when a friend pastes the gift link into
+ *  iMessage / Slack / a social post, it unfurls with the dish + sender. Kept
+ *  out of search indexes (the query string carries a personal name + rating;
+ *  the canonical recipe lives at /cook/[slug]). */
+export async function generateMetadata({
+  params,
+  searchParams,
+}: GiftPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const { from } = await searchParams;
+  const dish = lookupDish(slug);
+  if (!dish) return { title: "Recipe gift  -  Sous", robots: { index: false } };
+
+  const sender = safeFirstName(from);
+  const title = `${sender} sent you ${dish.name}  -  Sous`;
+  const description = dish.description;
+  const image = dish.heroImageUrl ?? "/og-image.png";
+
+  return {
+    title,
+    description,
+    robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      images: [{ url: image, alt: dish.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
 }
 
 export default async function GiftPage({
