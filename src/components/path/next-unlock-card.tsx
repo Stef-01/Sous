@@ -87,8 +87,12 @@ export function NextUnlockCard({
             </span>
             {status === "in_progress" && (
               <motion.span
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                animate={reducedMotion ? undefined : { scale: [1, 1.1, 1] }}
+                transition={
+                  reducedMotion
+                    ? undefined
+                    : { duration: 1.5, repeat: Infinity }
+                }
               >
                 <Flame
                   size={12}

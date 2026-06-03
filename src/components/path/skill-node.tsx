@@ -178,23 +178,26 @@ export function SkillNodeComponent({
             >
               {cooksCompleted}/{cooksRequired}
             </div>
-            {/* Pulsing glow ring */}
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              style={{
-                border: "2px solid var(--nourish-green)",
-                boxShadow: "0 0 0 0 rgba(34,197,94,0.5)",
-              }}
-              animate={{
-                scale: [1, 1.18, 1],
-                opacity: [0.7, 0, 0.7],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
+            {/* Pulsing glow ring — looping motion, so skip it entirely under
+                reduced-motion (the count badge already signals in-progress). */}
+            {!reducedMotion && (
+              <motion.div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: "2px solid var(--nourish-green)",
+                  boxShadow: "0 0 0 0 rgba(34,197,94,0.5)",
+                }}
+                animate={{
+                  scale: [1, 1.18, 1],
+                  opacity: [0.7, 0, 0.7],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
           </>
         ) : status === "available" ? (
           <>
@@ -203,23 +206,32 @@ export function SkillNodeComponent({
               size={26}
               className="text-[var(--nourish-dark)]"
             />
-            {/* Breathing glow to signal interactivity */}
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/20"
-              animate={{
-                borderColor: [
-                  "rgba(34,197,94,0.15)",
-                  "rgba(34,197,94,0.35)",
-                  "rgba(34,197,94,0.15)",
-                ],
-                boxShadow: [
-                  "0 0 0 0 rgba(34,197,94,0)",
-                  "0 0 8px 2px rgba(34,197,94,0.08)",
-                  "0 0 0 0 rgba(34,197,94,0)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
+            {/* Breathing glow to signal interactivity — looping, so render a
+                static ring under reduced-motion instead of the pulse. */}
+            {reducedMotion ? (
+              <div className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/25" />
+            ) : (
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-[var(--nourish-green)]/20"
+                animate={{
+                  borderColor: [
+                    "rgba(34,197,94,0.15)",
+                    "rgba(34,197,94,0.35)",
+                    "rgba(34,197,94,0.15)",
+                  ],
+                  boxShadow: [
+                    "0 0 0 0 rgba(34,197,94,0)",
+                    "0 0 8px 2px rgba(34,197,94,0.08)",
+                    "0 0 0 0 rgba(34,197,94,0)",
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
           </>
         ) : (
           /* Locked state */

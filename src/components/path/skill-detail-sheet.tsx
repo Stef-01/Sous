@@ -285,21 +285,23 @@ export function SkillDetailSheet({
                         ease: [0.34, 1.56, 0.64, 1],
                       }}
                     >
-                      <motion.div
-                        className="pointer-events-none absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-                        }}
-                        animate={{ x: ["-100%", "200%"] }}
-                        transition={{
-                          duration: 2,
-                          delay: 0.8,
-                          ease: "linear",
-                          repeat: Infinity,
-                          repeatDelay: 2,
-                        }}
-                      />
+                      {!reducedMotion && (
+                        <motion.div
+                          className="pointer-events-none absolute inset-0"
+                          style={{
+                            background:
+                              "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                          }}
+                          animate={{ x: ["-100%", "200%"] }}
+                          transition={{
+                            duration: 2,
+                            delay: 0.8,
+                            ease: "linear",
+                            repeat: Infinity,
+                            repeatDelay: 2,
+                          }}
+                        />
+                      )}
                     </motion.div>
                   </div>
                 </motion.div>
