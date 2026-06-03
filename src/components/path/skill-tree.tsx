@@ -3,10 +3,12 @@
 import { useRef, useEffect, useMemo, useCallback, useState, memo } from "react";
 import {
   motion,
+  AnimatePresence,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { SkillNodeComponent } from "./skill-node";
 import { SkillIcon } from "@/components/shared/skill-icon";
 import { SkillConnector } from "./skill-connector";
@@ -164,6 +166,9 @@ export const SkillTree = memo(function SkillTree({
 
   // Measure actual container width so we can scale the tree to fit any screen
   const [treeWidth, setTreeWidth] = useState(MAX_TREE_WIDTH);
+  // Cuisine-mastery lanes are collapsed by default — for a new cook they're all
+  // locked, so six big tiles up front is just scroll. One tap to peek.
+  const [masteryOpen, setMasteryOpen] = useState(false);
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -366,46 +371,54 @@ export const SkillTree = memo(function SkillTree({
         })}
       </div>
 
-      {/* ── Cuisine Mastery grid ───────────────────────────── */}
+      {/* ── Cuisine Mastery lanes (collapsible) ──────────────── */}
       {masteryNodes.length > 0 && (
         <div className="px-4 pb-8 pt-2">
-          <motion.div
-            className="mb-4 text-center"
-            initial={scrollRm ? false : { opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          <button
+            type="button"
+            onClick={() => setMasteryOpen((o) => !o)}
+            aria-expanded={masteryOpen}
+            className="mx-auto flex min-h-[44px] w-full max-w-md items-center justify-center gap-2 rounded-xl transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
               Cuisine mastery - pick a lane
             </span>
-          </motion.div>
-          <motion.div
-            className="grid grid-cols-2 gap-3 overflow-visible pb-10"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.06 } },
-            }}
-          >
-            {masteryNodes.map((node) => (
+            <motion.span
+              animate={{ rotate: masteryOpen ? 180 : 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="text-[var(--nourish-subtext)]"
+            >
+              <ChevronDown size={16} />
+            </motion.span>
+          </button>
+          <AnimatePresence initial={false}>
+            {masteryOpen && (
               <motion.div
-                key={node.id}
-                variants={{
-                  hidden: { opacity: 0, y: 12 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    transition: { type: "spring", stiffness: 320, damping: 26 },
-                  },
-                }}
+                initial={scrollRm ? false : { height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={scrollRm ? { opacity: 0 } : { height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="overflow-hidden"
               >
-                <MasteryCuisineCard node={node} onTap={handleNodeTap} />
+                <div className="grid grid-cols-2 gap-3 overflow-visible pb-10 pt-4">
+                  {masteryNodes.map((node) => (
+                    <motion.div
+                      key={node.id}
+                      initial={scrollRm ? false : { opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 320,
+                        damping: 26,
+                      }}
+                    >
+                      <MasteryCuisineCard node={node} onTap={handleNodeTap} />
+                    </motion.div>
+                  ))}
+                </div>
               </motion.div>
-            ))}
-          </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       )}
     </div>
