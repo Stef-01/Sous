@@ -556,14 +556,16 @@ function IngredientRow({
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-center gap-2">
             {/* Y3 W4 polish: pantry-status dot — feature 1.3 from
                 the pantry-novelty plan. Subtle visual signal that
-                'I can start this now' without taps. */}
+                'I can start this now' without taps. (Pantry membership
+                is also carried by the bookmark fill, so no separate
+                'in pantry' text label — that was a third copy.) */}
             <IngredientPantryDot
               status={inPantry ? "have" : "missing"}
               optional={item.isOptional ?? false}
-              className="self-center"
+              className="shrink-0"
             />
             <span
               className={cn(
@@ -575,20 +577,24 @@ function IngredientRow({
             >
               {item.name}
             </span>
-            <span className="text-xs text-[var(--nourish-subtext)]">
-              {item.quantity}
-            </span>
-            {inPantry && (
-              <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--nourish-green)]">
-                in pantry
-              </span>
-            )}
             {item.isOptional && (
               <span className="text-[11px] text-[var(--nourish-subtext)] italic">
                 optional
               </span>
             )}
           </div>
+          {/* Quantity on its own line so a long amount never crushes the
+              name into a multi-line wrap (the old inline layout did). */}
+          <p
+            className={cn(
+              "mt-0.5 text-xs",
+              checked
+                ? "text-[var(--nourish-subtext)]/70"
+                : "text-[var(--nourish-subtext)]",
+            )}
+          >
+            {item.quantity}
+          </p>
           {item.substitution && !showingSub && !rememberedSub && (
             <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
               sub: {item.substitution}
