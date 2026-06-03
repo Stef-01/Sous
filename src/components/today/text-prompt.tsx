@@ -335,7 +335,7 @@ export function TextPrompt({
               "rounded-lg p-2 transition-all duration-200",
               text.trim() && !isLoading
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
-                : "text-[var(--nourish-subtext)]/40 cursor-not-allowed",
+                : "text-[var(--nourish-subtext-faint)] cursor-not-allowed",
             )}
             aria-label="Search"
             type="button"
@@ -356,7 +356,7 @@ export function TextPrompt({
             transition={{ duration: reducedMotion ? 0 : 0.15 }}
             className="space-y-1.5"
           >
-            <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext)]/80">
+            <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
               Recent
             </p>
             <div className="flex flex-wrap gap-2">
@@ -482,7 +482,7 @@ export function TextPrompt({
 
                     {semanticHits.length > 0 && (
                       <div className="space-y-1.5">
-                        <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext)]/80">
+                        <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
                           Closest to what you&apos;re craving
                         </p>
                         <div className="rounded-xl border border-dashed border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.03] overflow-hidden divide-y divide-[var(--nourish-green)]/10">
@@ -515,7 +515,7 @@ export function TextPrompt({
                 <p className="text-sm text-[var(--nourish-subtext)]">
                   No dishes match &ldquo;{text.trim()}&rdquo;
                 </p>
-                <p className="text-xs text-[var(--nourish-subtext)]/70">
+                <p className="text-xs text-[var(--nourish-subtext-faint)]">
                   Hit search to find sides for any dish
                 </p>
               </div>
@@ -598,7 +598,7 @@ function ResultRow({
             <ul className="px-3 pb-2.5 space-y-0.5 text-[11px] text-[var(--nourish-subtext)]">
               {result.axes.map((axis) => (
                 <li key={axis.label} className="flex items-baseline gap-1.5">
-                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext)]/70">
+                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
                     {axis.label}
                   </span>
                   <span className="font-medium text-[var(--nourish-dark)]">

@@ -79,7 +79,7 @@ function FriendCookImage({ src, alt }: { src?: string; alt: string }) {
       >
         <UtensilsCrossed
           size={26}
-          className="text-[var(--nourish-subtext)]/55"
+          className="text-[var(--nourish-subtext-faint)]"
           strokeWidth={1.75}
         />
       </div>
@@ -198,7 +198,7 @@ export function FriendsStrip({
     <section ref={ref} className="space-y-2" aria-label="Friends' recent cooks">
       <div className="flex items-baseline justify-between px-1">
         <h2 className="sous-label">Community this week</h2>
-        <span className="text-[10px] text-[var(--nourish-subtext)]/70">
+        <span className="text-[10px] text-[var(--nourish-subtext-faint)]">
           Swipe &raquo;
         </span>
       </div>

@@ -155,7 +155,7 @@ export function DeadEndShell({
         <Link
           href="/today"
           prefetch
-          className="text-xs text-[var(--nourish-subtext)]/80 underline underline-offset-4 hover:text-[var(--nourish-green)]"
+          className="text-xs text-[var(--nourish-subtext-faint)] underline underline-offset-4 hover:text-[var(--nourish-green)]"
         >
           Or jump to Today
         </Link>

@@ -61,7 +61,7 @@ export function DishProgressStrip({
             >
               {entry.name}
             </span>
-            <span className="text-[var(--nourish-subtext)]/70 tabular-nums">
+            <span className="text-[var(--nourish-subtext-faint)] tabular-nums">
               {entry.completedSteps}/{entry.totalSteps}
             </span>
           </div>

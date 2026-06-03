@@ -229,7 +229,7 @@ export default function EcoDashboardPage() {
             </li>
             <li>EPA 2023 — household carbon footprint shares</li>
           </ul>
-          <p className="mt-2 text-[10px] text-[var(--nourish-subtext)]/70">
+          <p className="mt-2 text-[10px] text-[var(--nourish-subtext-faint)]">
             All numbers are conservative midpoints, rounded so we never
             overstate. Real-world variance is high.
           </p>

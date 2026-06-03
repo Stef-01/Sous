@@ -202,7 +202,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-sm text-[var(--nourish-subtext)]/70 mb-8 max-w-xs leading-relaxed"
+            className="text-sm text-[var(--nourish-subtext-faint)] mb-8 max-w-xs leading-relaxed"
           >
             Answer 5 quick questions so we can personalise every suggestion to
             your taste.

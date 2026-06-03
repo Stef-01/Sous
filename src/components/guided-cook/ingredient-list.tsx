@@ -589,14 +589,14 @@ function IngredientRow({
             className={cn(
               "mt-0.5 text-xs",
               checked
-                ? "text-[var(--nourish-subtext)]/70"
+                ? "text-[var(--nourish-subtext-faint)]"
                 : "text-[var(--nourish-subtext)]",
             )}
           >
             {item.quantity}
           </p>
           {item.substitution && !showingSub && !rememberedSub && (
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext)]/70">
+            <p className="mt-0.5 text-xs text-[var(--nourish-subtext-faint)]">
               sub: {item.substitution}
             </p>
           )}

@@ -61,7 +61,7 @@ export function WhosAtTable() {
           At the table tonight
         </p>
         {aggregate.count > 0 && (
-          <span className="text-[10px] font-medium text-[var(--nourish-subtext)]/70">
+          <span className="text-[10px] font-medium text-[var(--nourish-subtext-faint)]">
             {aggregate.count} of {members.length}
           </span>
         )}
@@ -101,7 +101,7 @@ export function WhosAtTable() {
       </div>
 
       {aggregate.count > 0 && (
-        <p className="pt-1 text-[10px] text-[var(--nourish-subtext)]/80">
+        <p className="pt-1 text-[10px] text-[var(--nourish-subtext-faint)]">
           {aggregate.dietaryFlags.length > 0 && (
             <>
               <span className="font-semibold">filters:</span>{" "}

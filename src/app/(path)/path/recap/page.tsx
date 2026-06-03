@@ -232,7 +232,7 @@ export default function RecapPage() {
                           aria-hidden
                         />
                       </div>
-                      <span className="text-[8px] uppercase tracking-[0.05em] text-[var(--nourish-subtext)]/70">
+                      <span className="text-[8px] uppercase tracking-[0.05em] text-[var(--nourish-subtext-faint)]">
                         {m.monthLabel.slice(0, 1)}
                       </span>
                     </li>

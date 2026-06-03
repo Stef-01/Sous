@@ -18,6 +18,12 @@
      clear WCAG AA comfortably on both paper and white.
      Corpus: ux-guidelines.csv · Typography · Contrast Readability (High). */
   --nourish-subtext: #595959;
+  /* Faint subtext for de-emphasised metadata. The lightest gray that still
+     clears WCAG AA (~4.6:1) on the #fafaf8 cream / white-card backgrounds —
+     replaces the old `text-subtext/55-80` opacity classes, which rendered
+     ~3-3.5:1 and failed AA on small text. Still notably lighter than the solid
+     subtext, so the airy feel is preserved. */
+  --nourish-subtext-faint: #737373;
   --nourish-button: #2d5a3d;
   --nourish-button-hover: #1a3d25;
   --nourish-evaluate: #8c1515;
@@ -126,6 +132,9 @@
   --nourish-dark: #fafaf8;
   --nourish-input-bg: #2a2826;
   --nourish-subtext: #9d9d9d;
+  /* Dark-theme faint subtext — lighter than the solid subtext and comfortably
+     AA on the #1a1a1a background. */
+  --nourish-subtext-faint: #b0b0b0;
   --nourish-button: #4a8c5c;
   --nourish-button-hover: #6ba87b;
   --nourish-evaluate: #c44d4d;

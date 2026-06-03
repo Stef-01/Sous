@@ -242,7 +242,7 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                         );
                       })}
                     </div>
-                    <p className="mt-3 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+                    <p className="mt-3 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
                       Used to frame nutrition info. Daily Values are based on
                       kids 4 and older. Not medical advice — always consult your
                       pediatrician.
@@ -410,7 +410,7 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 Stanford-attributed content carries the source URL on each
                 article; sample placeholder content is clearly labeled.
               </p>
-              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-[var(--nourish-subtext)]/70">
+              <p className="mt-3 flex items-center gap-1.5 text-[10px] text-[var(--nourish-subtext-faint)]">
                 <Heart
                   size={10}
                   fill="currentColor"
@@ -560,7 +560,7 @@ function CareFocusSection() {
                     );
                   })}
                 </div>
-                <p className="mt-2 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+                <p className="mt-2 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
                   Low-FODMAP is a short, time-limited phase, then reintroduction
                   — not a permanent diet.
                 </p>
@@ -590,7 +590,7 @@ function CareFocusSection() {
               })}
             </div>
 
-            <p className="mt-4 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+            <p className="mt-4 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
               Educational preview — {FOOD_FIRST_HEDGE} Saved on this device
               only.
             </p>

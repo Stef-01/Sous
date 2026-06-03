@@ -188,7 +188,7 @@ function MemberCard({
           <h2 className="font-serif text-base font-semibold text-[var(--nourish-dark)]">
             {member.name}
           </h2>
-          <p className="text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
+          <p className="text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
             {member.ageBand} · spice {member.spiceTolerance}/5
           </p>
           {member.dietaryFlags.length > 0 && (

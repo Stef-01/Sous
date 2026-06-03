@@ -225,7 +225,7 @@ export default function ForumThreadPage({
           >
             <MessageCircle
               size={22}
-              className="text-[var(--nourish-subtext)]/70"
+              className="text-[var(--nourish-subtext-faint)]"
               aria-hidden
             />
             <p className="text-[13px] text-[var(--nourish-subtext)]">
@@ -315,7 +315,7 @@ export default function ForumThreadPage({
           </button>
         </form>
       </div>
-      <p className="mx-4 mt-1.5 text-[10px] text-[var(--nourish-subtext)]/70">
+      <p className="mx-4 mt-1.5 text-[10px] text-[var(--nourish-subtext-faint)]">
         Replies stay on this device for now.
       </p>
 

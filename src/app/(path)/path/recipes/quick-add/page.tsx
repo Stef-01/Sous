@@ -140,7 +140,7 @@ export default function QuickAddPage() {
               "resize-none",
             )}
           />
-          <p className="text-[10px] text-[var(--nourish-subtext)]/70">
+          <p className="text-[10px] text-[var(--nourish-subtext-faint)]">
             {description.length}/4000
           </p>
         </section>
@@ -154,7 +154,7 @@ export default function QuickAddPage() {
           {draftMutation.isPending ? "Drafting…" : "Generate first draft"}
         </button>
 
-        <p className="px-1 text-center text-[11px] text-[var(--nourish-subtext)]/80">
+        <p className="px-1 text-center text-[11px] text-[var(--nourish-subtext-faint)]">
           Stays a draft until you save in the form. The autogen never publishes
           on your behalf.
         </p>

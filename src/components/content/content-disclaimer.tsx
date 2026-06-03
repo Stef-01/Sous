@@ -14,8 +14,8 @@ export function ContentDisclaimer({
     <p
       className={
         variant === "page"
-          ? "px-1 pt-2 pb-1 text-[10px] leading-snug text-[var(--nourish-subtext)]/80"
-          : "mt-3 text-[10px] leading-snug text-[var(--nourish-subtext)]/80"
+          ? "px-1 pt-2 pb-1 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]"
+          : "mt-3 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]"
       }
     >
       Sample editorial content for prototype. Authors and affiliations are

@@ -133,7 +133,7 @@ export default function MyRecipesPage() {
                 <p className="mt-1 line-clamp-2 text-sm text-[var(--nourish-subtext)]">
                   {recipe.description}
                 </p>
-                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
+                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>

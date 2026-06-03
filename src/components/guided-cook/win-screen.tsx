@@ -755,7 +755,7 @@ export function WinScreen({
                   ))}
                 </div>
                 {feedback && (
-                  <p className="mt-1.5 text-[10px] text-[var(--nourish-subtext)]/70 italic">
+                  <p className="mt-1.5 text-[10px] text-[var(--nourish-subtext-faint)] italic">
                     Thanks - Sous will adjust next time.
                   </p>
                 )}
@@ -827,7 +827,7 @@ export function WinScreen({
                 <button
                   onClick={() => dishSlug && invitePrompts.dismiss(dishSlug)}
                   type="button"
-                  className="text-[10px] text-[var(--nourish-subtext)]/70 hover:text-[var(--nourish-subtext)] underline underline-offset-2"
+                  className="text-[10px] text-[var(--nourish-subtext-faint)] hover:text-[var(--nourish-subtext)] underline underline-offset-2"
                 >
                   Not this time
                 </button>

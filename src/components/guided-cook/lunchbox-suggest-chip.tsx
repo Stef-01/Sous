@@ -137,7 +137,7 @@ function LunchboxSheet({
             <p className="mt-3 text-[14px] leading-snug text-[var(--nourish-dark)]/90">
               {tip}
             </p>
-            <p className="mt-3 text-[10px] text-[var(--nourish-subtext)]/80">
+            <p className="mt-3 text-[10px] text-[var(--nourish-subtext-faint)]">
               General lunchbox guidance. Refrigerate by morning, pack with an
               ice block. Not medical advice.
             </p>

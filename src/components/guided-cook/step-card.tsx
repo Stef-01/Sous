@@ -291,7 +291,7 @@ export function StepCard({
           >
             <ImageIcon
               size={32}
-              className="text-[var(--nourish-subtext)]/60"
+              className="text-[var(--nourish-subtext-faint)]"
               aria-hidden
             />
             <p className="text-xs font-medium text-[var(--nourish-subtext)]">

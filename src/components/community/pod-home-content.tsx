@@ -170,7 +170,7 @@ function MidWeekState({
             />
           ))}
         </ul>
-        <p className="text-[10px] text-[var(--nourish-subtext)]/70">
+        <p className="text-[10px] text-[var(--nourish-subtext-faint)]">
           Photos drop Sunday {pod.revealAtHour}:00 pod-local. Until then,
           everyone&apos;s progress is just a checkmark.
         </p>
@@ -365,7 +365,7 @@ function PodHeader({
           <h2 className="font-serif text-base font-semibold text-[var(--nourish-dark)]">
             {pod.name}
           </h2>
-          <p className="text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
+          <p className="text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
             {pod.members.length} members
             {week ? ` · ${week.weekKey}` : ""}
             {pod.dietaryFlags.length > 0
@@ -437,7 +437,7 @@ function GalleryCard({
     <li className="overflow-hidden rounded-2xl border border-neutral-100/80 bg-white shadow-sm">
       <div className="relative aspect-[4/5] bg-neutral-100">
         {isPlaceholder ? (
-          <div className="flex h-full w-full items-center justify-center text-[var(--nourish-subtext)]/60">
+          <div className="flex h-full w-full items-center justify-center text-[var(--nourish-subtext-faint)]">
             <Camera size={24} aria-hidden />
           </div>
         ) : (

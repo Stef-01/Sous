@@ -156,7 +156,7 @@ export function DemoChallengePicker({ open, onClose }: Props) {
               ))}
             </ul>
 
-            <p className="mt-4 text-[10px] text-[var(--nourish-subtext)]/80">
+            <p className="mt-4 text-[10px] text-[var(--nourish-subtext-faint)]">
               Demo mode replaces any existing pod state. Use the reset in
               Profile &amp; settings to undo.
             </p>

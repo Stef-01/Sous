@@ -96,7 +96,7 @@ export function TimerStack() {
                   type="button"
                   onClick={() => stopTimer(t.id)}
                   aria-label={`Stop ${t.label}`}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--nourish-subtext)]/70 transition-colors hover:bg-black/5 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--nourish-subtext-faint)] transition-colors hover:bg-black/5 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   <X size={13} strokeWidth={2.2} />
                 </button>

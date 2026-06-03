@@ -192,7 +192,7 @@ export default function CreatePodPage() {
               )}
             </div>
           </div>
-          <p className="text-[11px] text-[var(--nourish-subtext)]/70">
+          <p className="text-[11px] text-[var(--nourish-subtext-faint)]">
             You&apos;re the first member by default — that makes you the pod
             owner + admin. You can promote others to admin from the pod home.
           </p>

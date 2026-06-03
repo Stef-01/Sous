@@ -95,7 +95,7 @@ function ChipsBlock({
       </p>
       <div className="flex flex-wrap gap-1.5">
         {chips.length === 0 && !adding && (
-          <p className="text-[11px] italic text-[var(--nourish-subtext)]/70">
+          <p className="text-[11px] italic text-[var(--nourish-subtext-faint)]">
             {emptyHint}
           </p>
         )}
@@ -247,7 +247,7 @@ export function PreferencesSection() {
                   </span>
                   <span>
                     {tags.length === 0 ? (
-                      <span className="italic text-[var(--nourish-subtext)]/70">
+                      <span className="italic text-[var(--nourish-subtext-faint)]">
                         Learning…
                       </span>
                     ) : (

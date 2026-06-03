@@ -84,7 +84,7 @@ export function EvidenceProvenanceStrip({ conditionId, className }: Props) {
         ))}
       </ul>
 
-      <p className="mt-4 text-[10px] leading-snug text-[var(--nourish-subtext)]/80">
+      <p className="mt-4 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
         {card.hedge}
       </p>
     </section>

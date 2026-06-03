@@ -123,7 +123,7 @@ export default function AdminPage() {
                 <p className="mt-1 line-clamp-3 text-sm text-[var(--nourish-subtext)]">
                   {recipe.description}
                 </p>
-                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext)]/70">
+                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>
@@ -163,7 +163,7 @@ function NotAdminState() {
     <div className="rounded-2xl border border-dashed border-neutral-200 bg-white/40 p-6 text-center">
       <ShieldCheck
         size={28}
-        className="mx-auto text-[var(--nourish-subtext)]/60"
+        className="mx-auto text-[var(--nourish-subtext-faint)]"
         aria-hidden
       />
       <p className="mt-2 text-sm font-semibold text-[var(--nourish-dark)]">

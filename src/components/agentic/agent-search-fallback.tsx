@@ -107,7 +107,7 @@ export function AgentSearchFallback({ query }: AgentSearchFallbackProps) {
           {errorMessage} · Tap Send agent to retry.
         </p>
       )}
-      <p className="text-[10px] text-[var(--nourish-subtext)]/70">
+      <p className="text-[10px] text-[var(--nourish-subtext-faint)]">
         Drafts are unverified — review before you cook.
       </p>
     </div>

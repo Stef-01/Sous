@@ -158,7 +158,7 @@ export default function GamesArcadePage() {
                     </span>
                   </div>
                 ) : (
-                  <span className="text-[10px] italic text-[var(--nourish-subtext)]/70">
+                  <span className="text-[10px] italic text-[var(--nourish-subtext-faint)]">
                     Tap to try
                   </span>
                 )}
