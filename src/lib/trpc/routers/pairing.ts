@@ -125,17 +125,17 @@ export const pairingRouter = router({
   suggest: publicProcedure
     .input(
       z.object({
-        mainDish: z.string(),
+        mainDish: z.string().max(200),
         inputMode: z.enum(["text", "camera"]),
         cuisineHint: z.string().optional(),
         /** Busts TanStack Query cache when the client rerolls; ignored on the server. */
         _rerollSeed: z.number().optional(),
-        userPreferences: z.record(z.number()).optional(),
+        userPreferences: z.record(z.number().finite()).optional(),
         /** W30 pairing-engine V2 — per-user weight vector trained
          *  client-side from cook history. Validated as positive
          *  numbers; the engine itself defaults to DEFAULT_WEIGHTS
          *  when this field is absent. */
-        userWeights: z.record(z.number().nonnegative()).optional(),
+        userWeights: z.record(z.number().nonnegative().finite()).optional(),
         /** W37 household dietary constraints — union of dietary
          *  flags across the "who's at the table" selection on
          *  /today. Engine hard-filters candidates whose
@@ -236,11 +236,11 @@ export const pairingRouter = router({
   rerollSide: publicProcedure
     .input(
       z.object({
-        mainDish: z.string(),
+        mainDish: z.string().max(200),
         excludeIds: z.array(z.string()),
         cuisineHint: z.string().optional(),
-        userPreferences: z.record(z.number()).optional(),
-        userWeights: z.record(z.number().nonnegative()).optional(),
+        userPreferences: z.record(z.number().finite()).optional(),
+        userWeights: z.record(z.number().nonnegative().finite()).optional(),
         householdDietaryFlags: z.array(z.string()).max(20).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
       }),

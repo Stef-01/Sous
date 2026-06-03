@@ -4,7 +4,9 @@ import { recognizeDish } from "@/lib/ai/food-recognition";
 
 export const recognitionRouter = router({
   identify: publicProcedure
-    .input(z.object({ imageBase64: z.string() }))
+    // Cap the base64 payload (~6 MB image) so this paid-vision, unauthenticated
+    // endpoint can't be used as a cost/bandwidth DoS vector.
+    .input(z.object({ imageBase64: z.string().min(1).max(8_000_000) }))
     .mutation(async ({ input }) => {
       const result = await recognizeDish(input.imageBase64);
 

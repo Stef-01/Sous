@@ -51,11 +51,27 @@ function inferMainFlavors(main: MainDishIntent): string[] {
   return [...new Set(flavors)];
 }
 
+/**
+ * Per-main memo: inferMainFlavors depends only on `main`, but score() runs once
+ * per candidate (~205×/request). Caching by the stable `main` object identity
+ * does the ~9-includes + Set inference once per request instead of per side.
+ * Output is identical; entries are GC'd when the request's `main` is collected.
+ */
+const mainFlavorCache = new WeakMap<MainDishIntent, string[]>();
+
+function getMainFlavors(main: MainDishIntent): string[] {
+  const cached = mainFlavorCache.get(main);
+  if (cached) return cached;
+  const flavors = inferMainFlavors(main);
+  mainFlavorCache.set(main, flavors);
+  return flavors;
+}
+
 export const flavorContrastScorer: Scorer = {
   name: "flavorContrast",
 
   score(main: MainDishIntent, side: SideDishCandidate): number {
-    const mainFlavors = inferMainFlavors(main);
+    const mainFlavors = getMainFlavors(main);
     const sideFlavors = side.flavorProfile;
 
     if (mainFlavors.length === 0 || sideFlavors.length === 0) return 0.5;
