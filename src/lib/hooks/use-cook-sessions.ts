@@ -226,7 +226,23 @@ export function useCookSessions() {
       const existing = loadSessions();
       const idx = existing.findIndex((s) => s.sessionId === sessionId);
       if (idx === -1) {
-        return { pathJustUnlocked: false, newStreak: 0 };
+        // Unknown session (e.g. storage evicted mid-cook): don't fabricate a
+        // streak of 0 that the win screen would render as a real value.
+        return {
+          pathJustUnlocked: false,
+          newStreak: loadStats().currentStreak,
+        };
+      }
+
+      // Idempotency: a rapid double-tap or a voice "done" + button tap can call
+      // this twice for the same session. Without this guard the second call
+      // re-increments completedCooks/streak, re-adds the cuisine, and fires a
+      // duplicate Supabase write — inflating the app's core progression metrics.
+      if (existing[idx].completedAt) {
+        return {
+          pathJustUnlocked: false,
+          newStreak: loadStats().currentStreak,
+        };
       }
 
       // Update the session record
