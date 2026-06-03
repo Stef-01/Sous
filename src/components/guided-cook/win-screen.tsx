@@ -827,7 +827,7 @@ export function WinScreen({
                 <button
                   onClick={() => dishSlug && invitePrompts.dismiss(dishSlug)}
                   type="button"
-                  className="text-[10px] text-[var(--nourish-subtext-faint)] hover:text-[var(--nourish-subtext)] underline underline-offset-2"
+                  className="inline-flex min-h-[44px] items-center px-2 text-[10px] text-[var(--nourish-subtext-faint)] underline underline-offset-2 hover:text-[var(--nourish-subtext)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   Not this time
                 </button>

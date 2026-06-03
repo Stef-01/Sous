@@ -55,7 +55,7 @@ export function NutrientSpotlight({ recipeSlug, variant = "compact" }: Props) {
           }}
           aria-label="How this nutrient call-out is calculated"
           aria-expanded={methodologyOpen}
-          className="inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+          className="-my-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         >
           <Info size={11} />
         </button>

@@ -18,7 +18,6 @@ export const AchievementsGrid = memo(function AchievementsGrid({
   showHeading = true,
 }: AchievementsGridProps) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const total = unlocked.length + locked.length;
 
   return (
@@ -38,7 +37,7 @@ export const AchievementsGrid = memo(function AchievementsGrid({
         {unlocked.map((a, idx) => (
           <motion.div
             key={a.id}
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
               type: "spring",
@@ -60,7 +59,7 @@ export const AchievementsGrid = memo(function AchievementsGrid({
         {locked.slice(0, Math.max(0, 10 - unlocked.length)).map((a, idx) => (
           <motion.div
             key={a.id}
-            initial={{ opacity: 0 }}
+            initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: (unlocked.length + idx) * 0.03 }}
             className="flex flex-col items-center gap-1 opacity-40"
@@ -75,6 +74,12 @@ export const AchievementsGrid = memo(function AchievementsGrid({
           </motion.div>
         ))}
       </div>
+
+      {unlocked.length === 0 && (
+        <p className="mt-3 text-center text-xs text-[var(--nourish-subtext)]">
+          Cook, build streaks, and explore cuisines to start earning these.
+        </p>
+      )}
     </div>
   );
 });
