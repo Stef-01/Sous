@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { router, publicProcedure } from "@/lib/trpc/server";
+import { router, rateLimitedProcedure } from "@/lib/trpc/server";
 import { recognizeDish } from "@/lib/ai/food-recognition";
 
 export const recognitionRouter = router({
-  identify: publicProcedure
+  // Paid Vision API + unauthenticated → the tightest budget (per device/min).
+  identify: rateLimitedProcedure({
+    bucket: "recognition",
+    limit: 15,
+    windowMs: 60_000,
+  })
     // Cap the base64 payload (~6 MB image) so this paid-vision, unauthenticated
     // endpoint can't be used as a cost/bandwidth DoS vector.
     .input(z.object({ imageBase64: z.string().min(1).max(8_000_000) }))

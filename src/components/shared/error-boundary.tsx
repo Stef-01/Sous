@@ -1,6 +1,7 @@
 "use client";
 
 import { Component, type ReactNode } from "react";
+import { reportError } from "@/lib/monitoring/report-error";
 
 interface Props {
   children: ReactNode;
@@ -28,8 +29,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
-    // Log to console in dev; in production this would go to an error reporter
-    console.error("[Sous ErrorBoundary]", error, info.componentStack);
+    // Single error funnel — logs in dev, no-ops in prod until a sink (Sentry)
+    // is installed. See src/lib/monitoring/report-error.ts.
+    reportError(error, {
+      source: "ErrorBoundary",
+      componentStack: info.componentStack,
+    });
   }
 
   handleReset = () => {

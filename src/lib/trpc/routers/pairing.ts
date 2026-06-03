@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "@/lib/trpc/server";
+import { router, rateLimitedProcedure } from "@/lib/trpc/server";
 import { parseCraving } from "@/lib/ai/craving-parser";
 import { suggestSides } from "@/lib/engine/pairing-engine";
 import {
@@ -122,7 +122,13 @@ function getCandidates(): SideDishCandidate[] {
 }
 
 export const pairingRouter = router({
-  suggest: publicProcedure
+  // Craving parse calls Claude — bucket suggest + rerollSide together so a
+  // single device can't burn the AI budget. Generous for real use, caps abuse.
+  suggest: rateLimitedProcedure({
+    bucket: "pairing",
+    limit: 30,
+    windowMs: 60_000,
+  })
     .input(
       z.object({
         mainDish: z.string().max(200),
@@ -246,7 +252,11 @@ export const pairingRouter = router({
   /**
    * Reroll a single side  -  returns 1 replacement excluding specified IDs.
    */
-  rerollSide: publicProcedure
+  rerollSide: rateLimitedProcedure({
+    bucket: "pairing",
+    limit: 30,
+    windowMs: 60_000,
+  })
     .input(
       z.object({
         mainDish: z.string().max(200),

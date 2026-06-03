@@ -15,6 +15,7 @@
 import { router, publicProcedure } from "@/lib/trpc/server";
 import { getAIProvider } from "@/lib/ai/provider";
 import { MockAIProvider } from "@/lib/ai/providers/mock";
+import { reportError } from "@/lib/monitoring/report-error";
 import {
   explainPairingInputSchema,
   cookQuestionInputSchema,
@@ -31,10 +32,15 @@ const mock = new MockAIProvider();
 async function safeAI<T>(
   primary: () => Promise<T>,
   fallback: () => T | Promise<T>,
+  label?: string,
 ): Promise<T> {
   try {
     return await primary();
-  } catch {
+  } catch (error) {
+    // The user still gets a deterministic answer (fallback), but surface the
+    // provider failure so it's visible once a monitoring sink is wired —
+    // silent AI degradation is exactly what we'd want alerts on.
+    reportError(error, { source: "safeAI", surface: label });
     return await fallback();
   }
 }

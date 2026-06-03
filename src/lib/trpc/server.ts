@@ -1,6 +1,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { MOCK_USER_ID, isAuthEnabled } from "@/lib/auth/auth-flag";
+import { reportError } from "@/lib/monitoring/report-error";
+import { checkRateLimit } from "@/lib/rate-limit/rate-limit";
 
 // Lazy imports  -  only load when credentials are available
 let _db: unknown = null;
@@ -53,6 +55,18 @@ export async function createTRPCContext(opts?: {
 
 const t = initTRPC.context<TRPCContext>().create({
   transformer: superjson,
+  errorFormatter({ shape, error }) {
+    // Funnel only UNEXPECTED server errors to the reporter — not the expected
+    // BAD_REQUEST (Zod) / NOT_FOUND / UNAUTHORIZED / TOO_MANY_REQUESTS paths,
+    // which are normal control flow, not incidents.
+    if (error.code === "INTERNAL_SERVER_ERROR") {
+      reportError(error.cause ?? error, {
+        source: "trpc",
+        path: shape.data?.path,
+      });
+    }
+    return shape;
+  },
 });
 
 export const router = t.router;
@@ -64,3 +78,33 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
   }
   return next({ ctx: { ...ctx, userId: ctx.userId } });
 });
+
+/**
+ * Rate-limited procedure factory (founder-gated scale: Upstash). Keys by the
+ * per-device ctx.userId so anonymous callers are still bucketed, throttling
+ * cost-sensitive endpoints (Vision / Claude). Fail-open: the limiter itself
+ * never 500s a request. In-memory by default (per-instance burst protection);
+ * one env drop (UPSTASH_REDIS_REST_URL/TOKEN) makes it global — see
+ * src/lib/rate-limit/rate-limit.ts.
+ */
+export function rateLimitedProcedure(opts: {
+  bucket: string;
+  limit: number;
+  windowMs: number;
+}) {
+  return t.procedure.use(async ({ ctx, next }) => {
+    const key = `${opts.bucket}:${ctx.userId ?? "anon"}`;
+    const result = await checkRateLimit({
+      key,
+      limit: opts.limit,
+      windowMs: opts.windowMs,
+    });
+    if (!result.allowed) {
+      throw new TRPCError({
+        code: "TOO_MANY_REQUESTS",
+        message: "You're going a little fast — give it a few seconds.",
+      });
+    }
+    return next();
+  });
+}
