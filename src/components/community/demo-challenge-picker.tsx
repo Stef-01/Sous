@@ -27,6 +27,10 @@ import {
   type SeedChallengeOption,
 } from "@/lib/demo/seed-pod-challenge";
 import { cn } from "@/lib/utils/cn";
+import {
+  useBodyScrollLock,
+  useDismissOnEscape,
+} from "@/lib/hooks/use-overlay-a11y";
 
 const STORAGE_KEY = "sous-pod-state-v1";
 
@@ -38,6 +42,8 @@ interface Props {
 
 export function DemoChallengePicker({ open, onClose }: Props) {
   const reducedMotion = useReducedMotion();
+  useBodyScrollLock(open);
+  useDismissOnEscape(open, onClose);
   const [seeding, setSeeding] = useState<string | null>(null);
 
   const seedAndReload = (challenge: SeedChallengeOption) => {

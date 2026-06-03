@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useBodyScrollLock } from "@/lib/hooks/use-overlay-a11y";
 import {
   X,
   Moon,
@@ -42,6 +43,7 @@ export function MoreOptionsSheet({
   onEatOut,
 }: MoreOptionsSheetProps) {
   const reducedMotion = useReducedMotion();
+  useBodyScrollLock(open);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {

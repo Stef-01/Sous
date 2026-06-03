@@ -3,6 +3,10 @@
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Check, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import {
+  useBodyScrollLock,
+  useDismissOnEscape,
+} from "@/lib/hooks/use-overlay-a11y";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { trpc } from "@/lib/trpc/client";
 
@@ -31,6 +35,8 @@ export function EvaluateSheet({
   onFinishPlate,
 }: EvaluateSheetProps) {
   const reducedMotion = useReducedMotion();
+  useBodyScrollLock(open);
+  useDismissOnEscape(open, onClose);
   // AI-enhanced appraisal  -  only fires when sheet is open
   const aiAppraisal = trpc.ai.rewriteAppraisal.useQuery(
     {
@@ -92,6 +98,9 @@ export function EvaluateSheet({
         {open && (
           <motion.div
             key="evaluate-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Plate evaluation"
             className="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[85vh] rounded-t-2xl bg-white shadow-2xl"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}

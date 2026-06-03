@@ -5,6 +5,10 @@ import { X, Lock, Check, ArrowRight, ChefHat } from "lucide-react";
 import { SkillIcon } from "@/components/shared/skill-icon";
 import { IconButton } from "@/components/ui/icon-button";
 import { cn } from "@/lib/utils/cn";
+import {
+  useBodyScrollLock,
+  useDismissOnEscape,
+} from "@/lib/hooks/use-overlay-a11y";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
 import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
@@ -47,6 +51,8 @@ export function SkillDetailSheet({
   onPracticeDish,
 }: SkillDetailSheetProps) {
   const reducedMotion = useReducedMotion();
+  useBodyScrollLock(open);
+  useDismissOnEscape(open, onClose);
   // Note: do NOT return null when node is null  -  AnimatePresence needs to render
   // to fire the exit animation. The `open` prop and `node` will both be falsy
   // at the same time (both derived from selectedNodeId), so gating on `open`
@@ -89,6 +95,9 @@ export function SkillDetailSheet({
         {open && (
           <motion.div
             key="skill-detail-sheet"
+            role="dialog"
+            aria-modal="true"
+            aria-label={node ? `${node.name} details` : "Skill details"}
             className="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[80vh] rounded-t-3xl bg-white shadow-2xl safe-area-bottom"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}

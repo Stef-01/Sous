@@ -4,6 +4,7 @@ import { useCallback, useEffect, useImperativeHandle, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 import { AchievementsGrid } from "@/components/path/achievements-grid";
+import { useBodyScrollLock } from "@/lib/hooks/use-overlay-a11y";
 import type { Achievement } from "@/data/achievements";
 
 interface AchievementsLauncherProps {
@@ -37,6 +38,7 @@ export function AchievementsLauncher({
   const reducedMotion = useReducedMotion();
   void reducedMotion;
   const [open, setOpen] = useState(false);
+  useBodyScrollLock(open);
 
   const onKey = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") setOpen(false);
