@@ -309,7 +309,7 @@ export function TextPrompt({
           autoFocus
           className={cn(
             "w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-4 py-3.5 pr-24 text-base",
-            "placeholder:text-[var(--nourish-subtext)]/60",
+            "placeholder:text-[var(--nourish-subtext)]",
             "focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/30 focus:border-[var(--nourish-green)]",
             "disabled:opacity-50",
             "transition-all duration-200",

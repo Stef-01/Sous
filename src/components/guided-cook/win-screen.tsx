@@ -813,7 +813,7 @@ export function WinScreen({
                       setInviteFriendName(e.target.value.slice(0, 24))
                     }
                     placeholder="Friend's name (optional)"
-                    className="flex-1 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs placeholder:text-[var(--nourish-subtext)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
+                    className="flex-1 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
                     aria-label="Friend's first name for the invite message"
                   />
                   <button
@@ -1022,7 +1022,7 @@ export function WinScreen({
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="How did it taste? Anything you'd change?"
                   rows={3}
-                  className="w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2.5 text-sm placeholder:text-[var(--nourish-subtext)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20 resize-none"
+                  className="w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2.5 text-sm placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20 resize-none"
                 />
                 {note.trim() && (
                   <motion.button

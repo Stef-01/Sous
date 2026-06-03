@@ -302,7 +302,7 @@ export default function ForumThreadPage({
                 : "Reply to this thread…"
             }
             rows={2}
-            className="flex-1 resize-none rounded-xl bg-transparent px-2 py-1.5 text-[13px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]/70 focus:outline-none"
+            className="flex-1 resize-none rounded-xl bg-transparent px-2 py-1.5 text-[13px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
             aria-label="Reply"
           />
           <button

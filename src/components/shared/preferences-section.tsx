@@ -148,7 +148,7 @@ function ChipsBlock({
               placeholder={
                 axis === "likes" ? "e.g. thai · spicy" : "e.g. beef · cilantro"
               }
-              className="w-32 bg-transparent text-[11px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]/60 focus:outline-none"
+              className="w-32 bg-transparent text-[11px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
             />
           </div>
         ) : (

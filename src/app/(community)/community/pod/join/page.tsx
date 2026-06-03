@@ -60,7 +60,7 @@ export default function JoinPodPage() {
             }
             placeholder="ABCD23"
             maxLength={6}
-            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-3 text-center font-mono text-[18px] tracking-[0.4em] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]/70 focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
+            className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-3 text-center font-mono text-[18px] tracking-[0.4em] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
           />
         </section>
 

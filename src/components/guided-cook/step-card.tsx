@@ -481,7 +481,7 @@ export function StepCard({
                   onChange={(e) => setQuestion(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAsk()}
                   placeholder="e.g., How do I know when it's done?"
-                  className="flex-1 rounded-lg border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2 text-sm placeholder:text-[var(--nourish-subtext)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
+                  className="flex-1 rounded-lg border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2 text-sm placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
                 />
                 <motion.button
                   onClick={handleAsk}
