@@ -27,7 +27,6 @@ import { easeOutExpo, viewportOnce } from "./startup-landing-variants";
  */
 export function AppPreviewSection() {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   return (
     <section
       aria-label="What Sous looks like"
@@ -40,7 +39,9 @@ export function AppPreviewSection() {
               What you&rsquo;ll actually see
             </p>
             <motion.h2
-              initial={{ opacity: 0, y: 14 }}
+              initial={
+                reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }
+              }
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportOnce}
               transition={{ duration: 0.7, ease: easeOutExpo }}
@@ -53,7 +54,9 @@ export function AppPreviewSection() {
               </span>
             </motion.h2>
             <motion.p
-              initial={{ opacity: 0, y: 14 }}
+              initial={
+                reducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }
+              }
               whileInView={{ opacity: 1, y: 0 }}
               viewport={viewportOnce}
               transition={{ duration: 0.7, ease: easeOutExpo, delay: 0.1 }}
@@ -104,9 +107,14 @@ function PhoneFrame({
   scale?: number;
   elevated?: boolean;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24, rotate }}
+      initial={
+        reducedMotion
+          ? { opacity: 1, y: 0, rotate }
+          : { opacity: 0, y: 24, rotate }
+      }
       whileInView={{ opacity: 1, y: 0, rotate }}
       viewport={viewportOnce}
       transition={{ duration: 0.8, ease: easeOutExpo, delay }}

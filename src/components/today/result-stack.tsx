@@ -314,12 +314,14 @@ export function ResultStack({
           )}
           type="button"
         >
-          <ChefHat size={16} />
-          {selectedSides.length === 0
-            ? "Select sides to cook"
-            : selectedSides.length === 1
-              ? `Cook ${selectedSides[0].name}`
-              : `Cook plate with ${selectedSides.length} sides`}
+          <ChefHat size={16} className="shrink-0" />
+          <span className="truncate">
+            {selectedSides.length === 0
+              ? "Select sides to cook"
+              : selectedSides.length === 1
+                ? `Cook ${selectedSides[0].name}`
+                : `Cook plate with ${selectedSides.length} sides`}
+          </span>
         </motion.button>
       </div>
 

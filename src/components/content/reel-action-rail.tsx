@@ -108,7 +108,7 @@ function ActionButton({
       whileTap={{ scale: 0.85 }}
       transition={{ type: "spring", stiffness: 400, damping: 16 }}
       aria-label={label}
-      className="flex flex-col items-center gap-0.5"
+      className="flex flex-col items-center gap-0.5 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
     >
       <span className="flex h-12 w-12 items-center justify-center">
         {children}

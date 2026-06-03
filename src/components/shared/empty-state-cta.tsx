@@ -84,7 +84,7 @@ function CtaPill({
   onClick?: () => void;
 }) {
   const className =
-    "inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97]";
+    "inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-xs font-semibold text-white transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 focus-visible:ring-offset-2";
   if (href) {
     return (
       <Link href={href} className={className}>
