@@ -145,34 +145,21 @@ function scoreDishForPreferences(
 }
 
 /**
- * Build quest dish list: 80% main meals, 20% sides.
- * Users want to cook main dishes first, then find sides.
- * Meals with images float to the top. Guided-cook items prioritized.
- * Uses deterministic daily shuffle so the feed feels fresh each day.
- * After 10+ cooks, silently biases toward cuisines the user hasn't explored.
+ * Pantry-independent base records, built once at module load. Everything on a
+ * QuestDish except `pantryFit` is a pure function of the static catalog +
+ * guided-cook summary, so there's no reason to rebuild all ~281 of them (with
+ * their summary lookups + tag construction) on every quest re-score. The cache
+ * is always valid — the catalog is imported static data that never mutates.
  */
-export function buildQuestDishes(
-  userPreferences?: Record<string, number>,
-  cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
-  pantryNames?: string[],
-  difficultyProgression?: {
-    easy: number;
-    medium: number;
-    hard: number;
-    recommendedLevel: "easy" | "medium" | "hard";
-    difficultyBoost: number;
-  },
-): QuestDish[] {
+type BaseQuestDish = Omit<QuestDish, "pantryFit">;
+
+let _baseMealDishes: BaseQuestDish[] | null = null;
+let _baseSideDishes: BaseQuestDish[] | null = null;
+
+function getBaseMealDishes(): BaseQuestDish[] {
+  if (_baseMealDishes) return _baseMealDishes;
   const guidedSlugs = new Set(getAvailableCookSlugs());
-  const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
-
-  const now = new Date();
-  const dayOfYear = Math.floor(
-    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
-  );
-
-  // Build meal quest dishes
-  const mealDishes: QuestDish[] = meals.map((meal) => {
+  _baseMealDishes = meals.map((meal) => {
     const mealCookData = getMealCookSummary(meal.id);
     const hasCook = !!mealCookData || guidedSlugs.has(meal.id);
     const ingredientNames =
@@ -192,12 +179,15 @@ export function buildQuestDishes(
       hasGuidedCook: hasCook,
       isMeal: true,
       isVerified: !!meal.nourishVerified,
-      pantryFit: computePantryFit(ingredientNames, pantrySet),
     };
   });
+  return _baseMealDishes;
+}
 
-  // Build side quest dishes
-  const sideDishes: QuestDish[] = sides.map((side) => {
+function getBaseSideDishes(): BaseQuestDish[] {
+  if (_baseSideDishes) return _baseSideDishes;
+  const guidedSlugs = new Set(getAvailableCookSlugs());
+  _baseSideDishes = sides.map((side) => {
     const staticData = guidedSlugs.has(side.id)
       ? getCookSummary(side.id)
       : null;
@@ -224,9 +214,50 @@ export function buildQuestDishes(
       hasGuidedCook: guidedSlugs.has(side.id),
       isMeal: false,
       isVerified: false,
-      pantryFit: computePantryFit(ingredientNames, pantrySet),
     };
   });
+  return _baseSideDishes;
+}
+
+/**
+ * Build quest dish list: 80% main meals, 20% sides.
+ * Users want to cook main dishes first, then find sides.
+ * Meals with images float to the top. Guided-cook items prioritized.
+ * Uses deterministic daily shuffle so the feed feels fresh each day.
+ * After 10+ cooks, silently biases toward cuisines the user hasn't explored.
+ */
+export function buildQuestDishes(
+  userPreferences?: Record<string, number>,
+  cookHistory?: { cuisinesCovered: string[]; completedCooks: number },
+  pantryNames?: string[],
+  difficultyProgression?: {
+    easy: number;
+    medium: number;
+    hard: number;
+    recommendedLevel: "easy" | "medium" | "hard";
+    difficultyBoost: number;
+  },
+): QuestDish[] {
+  const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
+
+  const now = new Date();
+  const dayOfYear = Math.floor(
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
+  );
+
+  // Attach per-call pantry fit to the cached, pantry-independent base records.
+  // The ~281 catalog summary lookups + tag construction are built once at
+  // module load and never change at runtime; only computePantryFit depends on
+  // the current pantry, so the per-render cost drops from ~281 lookups to a set
+  // of cheap membership checks. Output is byte-identical to the inline build.
+  const mealDishes: QuestDish[] = getBaseMealDishes().map((base) => ({
+    ...base,
+    pantryFit: computePantryFit(base.ingredientNames, pantrySet),
+  }));
+  const sideDishes: QuestDish[] = getBaseSideDishes().map((base) => ({
+    ...base,
+    pantryFit: computePantryFit(base.ingredientNames, pantrySet),
+  }));
 
   const hasPrefs = userPreferences && Object.keys(userPreferences).length > 0;
 
