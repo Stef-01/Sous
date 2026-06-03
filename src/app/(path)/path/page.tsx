@@ -20,7 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
-import { JourneyMontage } from "@/components/path/journey-montage";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { NextUnlockCard } from "@/components/path/next-unlock-card";
@@ -315,7 +314,7 @@ export default function PathPage() {
               },
             }}
           >
-            <JourneySummary stats={stats} />
+            <JourneySummary stats={stats} recentSessions={completedSessions} />
           </motion.div>
           <motion.div
             variants={{
@@ -330,14 +329,6 @@ export default function PathPage() {
             <WeeklyGoalCard completedSessions={completedSessions} />
           </motion.div>
         </motion.div>
-
-        {/* Journey montage  -  recent cooks as a polaroid ribbon. A look-back
-            surface, so it sits below the forward-looking action cards. */}
-        {completedSessions.length > 0 && (
-          <div className="px-4 pt-3">
-            <JourneyMontage completedSessions={completedSessions} />
-          </div>
-        )}
 
         {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
           <AchievementsLauncher

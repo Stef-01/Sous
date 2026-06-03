@@ -1,12 +1,20 @@
 "use client";
 
 import { memo } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { Star, Flame } from "lucide-react";
-import type { CookStats } from "@/lib/hooks/use-cook-sessions";
+import type {
+  CookStats,
+  CookSessionRecord,
+} from "@/lib/hooks/use-cook-sessions";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
 
 interface JourneySummaryProps {
   stats: CookStats;
+  /** Recent cooks, folded in as a compact thumbnail strip (was its own card). */
+  recentSessions?: CookSessionRecord[];
 }
 
 interface StatBlockProps {
@@ -61,14 +69,26 @@ function StatBlock({
   );
 }
 
+/** Deterministic warm gradient per session, for the no-photo fallback. */
+function hashToHue(input: string): number {
+  let h = 0;
+  for (let i = 0; i < input.length; i++) h = (h * 31 + input.charCodeAt(i)) | 0;
+  return Math.abs(h) % 360;
+}
+
 /**
- * Journey summary  -  stats card with animated number reveals.
- * Journey tone, not performance pressure.
+ * Journey summary  -  one card for "how far you've come": the stats row plus a
+ * compact ribbon of recent cooks (merged from the old standalone montage, so
+ * Path carries one look-back surface, not two). Tapping a cook opens the
+ * scrapbook.
  */
 export const JourneySummary = memo(function JourneySummary({
   stats,
+  recentSessions = [],
 }: JourneySummaryProps) {
   const reducedMotion = useReducedMotion();
+  const recent = recentSessions.filter((s) => !!s.completedAt).slice(0, 8);
+
   return (
     <motion.div
       initial={false}
@@ -77,26 +97,35 @@ export const JourneySummary = memo(function JourneySummary({
       className="rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
     >
       <div className="flex items-center justify-between">
-        <h2 className="font-serif text-base text-[var(--nourish-dark)]">
-          Your journey
-        </h2>
-        {stats.completedCooks >= 10 && (
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 12,
-              delay: 0.5,
-            }}
-            className="text-sm"
+        <div className="flex items-center gap-1.5">
+          <h2 className="font-serif text-base text-[var(--nourish-dark)]">
+            Your journey
+          </h2>
+          {stats.completedCooks >= 10 && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 12,
+                delay: 0.5,
+              }}
+            >
+              <Star
+                size={15}
+                className="text-[var(--nourish-gold)] fill-[var(--nourish-gold)]"
+              />
+            </motion.span>
+          )}
+        </div>
+        {recent.length > 0 && (
+          <Link
+            href="/path/scrapbook"
+            className="text-[12px] font-medium text-[var(--nourish-subtext)] underline-offset-2 hover:text-[var(--nourish-dark)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
-            <Star
-              size={16}
-              className="text-[var(--nourish-gold)] fill-[var(--nourish-gold)]"
-            />
-          </motion.span>
+            See scrapbook
+          </Link>
         )}
       </div>
 
@@ -133,38 +162,44 @@ export const JourneySummary = memo(function JourneySummary({
         />
       </div>
 
-      {/* Cuisine tags  -  deduplicate by normalized name */}
-      {(stats.cuisinesCovered ?? []).length > 0 && (
-        <div className="flex flex-wrap gap-1.5 pt-0.5">
-          {[
-            ...new Set(
-              (stats.cuisinesCovered ?? []).map(
-                (c) => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase(),
-              ),
-            ),
-          ]
-            .slice(0, 5)
-            .map((cuisine, idx) => (
-              <motion.span
-                key={cuisine}
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 18,
-                  delay: 0.3 + idx * 0.06,
-                }}
-                className="rounded-full bg-[var(--nourish-green)]/8 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)] capitalize"
+      {/* Recent cooks  -  compact thumbnail strip (no names/dates; those live
+          in the scrapbook). Photo, or a deterministic warm gradient + emoji. */}
+      {recent.length > 0 && (
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 scrollbar-hide">
+          {recent.map((session) => {
+            const emoji = getDishEmoji([], session.cuisineFamily ?? "");
+            const hue = hashToHue(session.sessionId);
+            return (
+              <Link
+                key={session.sessionId}
+                href="/path/scrapbook"
+                aria-label={session.dishName}
+                className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 rounded-lg"
               >
-                {cuisine}
-              </motion.span>
-            ))}
-          {(stats.cuisinesCovered ?? []).length > 5 && (
-            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]">
-              +{(stats.cuisinesCovered ?? []).length - 5} more
-            </span>
-          )}
+                <div className="relative h-12 w-12 overflow-hidden rounded-lg border border-[var(--nourish-border)]">
+                  {session.photoUri ? (
+                    <Image
+                      src={session.photoUri}
+                      alt={session.dishName}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-full w-full items-center justify-center text-lg"
+                      style={{
+                        background: `linear-gradient(135deg, hsl(${hue} 45% 92%) 0%, hsl(${(hue + 30) % 360} 40% 86%) 100%)`,
+                      }}
+                      aria-hidden
+                    >
+                      {emoji}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </motion.div>
