@@ -7,6 +7,7 @@ import { AuthProvider } from "@/components/auth-provider";
 import { DeviceFrame } from "@/components/shared/device-frame";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
 import { ToastHost } from "@/components/shared/toast-host";
+import { ServiceWorkerRegister } from "@/components/shared/service-worker-register";
 import "./globals.css";
 
 const inter = Inter({
@@ -81,6 +82,7 @@ export default function RootLayout({
             </ErrorBoundary>
             <ToastHost />
           </Providers>
+          <ServiceWorkerRegister />
           {shouldLoadVercelTelemetry && (
             <>
               <Analytics />

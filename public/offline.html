@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>You're offline — Sous</title>
+    <meta name="theme-color" content="#2D6A4F" />
+    <style>
+      :root {
+        --cream: #fafaf8;
+        --green: #2d6a4f;
+        --dark: #1a1a1a;
+        --subtext: #595959;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        background: var(--cream);
+        color: var(--dark);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: env(safe-area-inset-top, 0) 24px env(safe-area-inset-bottom, 0);
+        text-align: center;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 22rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .glyph {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        background: rgba(45, 106, 79, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+      }
+      h1 {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      p {
+        font-size: 15px;
+        line-height: 1.5;
+        color: var(--subtext);
+      }
+      button {
+        margin-top: 8px;
+        min-height: 48px;
+        padding: 0 28px;
+        border: none;
+        border-radius: 14px;
+        background: var(--green);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.15s ease;
+      }
+      button:active {
+        opacity: 0.85;
+      }
+      .brand {
+        margin-top: 4px;
+        font-size: 13px;
+        color: #8a8a8a;
+        letter-spacing: 0.02em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="glyph" aria-hidden="true">🍳</div>
+      <h1>You're offline</h1>
+      <p>
+        Sous needs a connection to plan tonight's cook. Your streak and saved
+        recipes are safe — they'll be right here when you're back.
+      </p>
+      <button type="button" onclick="location.reload()">Try again</button>
+      <div class="brand">Sous</div>
+    </div>
+  </body>
+</html>
