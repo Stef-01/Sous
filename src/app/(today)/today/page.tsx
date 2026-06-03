@@ -65,6 +65,8 @@ import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { WhosAtTable } from "@/components/today/whos-at-table";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
+import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
+import { TherapeuticEvidence } from "@/components/today/therapeutic-evidence";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -133,6 +135,14 @@ function TodayPageContent() {
   // W37 household table aggregate — feeds the pairing engine the
   // dietary union across the "who's at the table" selection.
   const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
+  // Culinary Therapeutics activation wiring (dormant until founder gate G1):
+  // derived care exclusions (e.g. gluten-free) merge into the dietary union.
+  // Returns [] while dormant, so the request below stays byte-identical.
+  const careDietaryFlags = useTherapeuticDietaryFlags();
+  const effectiveDietaryFlags =
+    careDietaryFlags.length > 0
+      ? [...new Set([...householdDietaryFlags, ...careDietaryFlags])]
+      : householdDietaryFlags;
   const tasteBlend = useTasteBlend();
   const effectivePreferences = blendPreferences(
     userPreferences,
@@ -230,7 +240,7 @@ function TodayPageContent() {
       userPreferences: effectivePreferences,
       userWeights,
       householdDietaryFlags:
-        householdDietaryFlags.length > 0 ? householdDietaryFlags : undefined,
+        effectiveDietaryFlags.length > 0 ? effectiveDietaryFlags : undefined,
       effortTolerance,
     },
     {
@@ -722,6 +732,14 @@ function TodayPageContent() {
                   onReroll={handleReroll}
                   isRerolling={pairingQuery.isFetching}
                 />
+              )}
+
+            {/* Culinary Therapeutics evidence strips — below the results,
+                renders null until founder gate G1 (byte-identical today). */}
+            {view.type === "results" &&
+              pairingQuery.data?.success &&
+              pairingQuery.data.sides.length > 0 && (
+                <TherapeuticEvidence className="mt-4" />
               )}
 
             {/* Engine returned success: false (e.g. unparseable craving) */}

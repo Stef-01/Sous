@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
+import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
 
 export default function SidesPage() {
   return (
@@ -57,6 +58,8 @@ function SidesPageContent() {
     "minimal" | "moderate" | "willing" | undefined
   >();
   const [imgError, setImgError] = useState(false);
+  // Culinary Therapeutics activation wiring (dormant until G1; [] today).
+  const careDietaryFlags = useTherapeuticDietaryFlags();
 
   useEffect(() => {
     const id = setTimeout(() => {
@@ -83,6 +86,8 @@ function SidesPageContent() {
       inputMode: "text",
       _rerollSeed: rerollSeed || undefined,
       userPreferences: preferences,
+      householdDietaryFlags:
+        careDietaryFlags.length > 0 ? careDietaryFlags : undefined,
       effortTolerance,
     },
     { enabled: !!mainDish },

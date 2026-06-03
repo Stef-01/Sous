@@ -17,7 +17,9 @@ The full AUTO-BUILD foundation is in `main`, dormant behind the five founder gat
 - **CT-3 ✓ Scorer + engine** — `therapeutic-fit.ts` (evidence-weight ladder, recipe-native/fortified only), `therapeutic-weights.ts` (0.18, sums to 1.0), `suggestSides` optional therapeutic context (exclusion screen + post-rank blend). Golden byte-identical invariant proven; activation gated on `registryIsClinicianApproved()` (false).
 - **CT-4 ✓ Surfaces + hand-off** — `therapeutic-escalation.ts` (food-first + "leaky gut" education), `evidence-card.ts` + `EvidenceProvenanceStrip` (tested builder, dormant UI), `pnpm therapeutics:review` (the G1 clinician-review package).
 
-**Remaining for G1 activation (one focused integration, intentionally not done pre-review):** thread the client `CareProfile` through the live `pairing.ts` tRPC call and render `EvidenceProvenanceStrip` on the result card when active. Kept undone so the live app stays unchanged until clinician + legal review clear.
+**Activation wiring (done, dormant):** the client now threads the care profile's _derived dietary flags_ (e.g. `gluten-free`) into the live `pairing.suggest` request (merged into `householdDietaryFlags`), and the results surface renders `<TherapeuticEvidence>` (the Evidence strips) — both gated on `registryIsClinicianApproved()` (false today), so the request is byte-identical and the strip renders `null`. Raw conditions never thread through the GET query (privacy). `useTherapeuticDietaryFlags` + `TherapeuticEvidence` carry the gate.
+
+**Remaining for G1 (one transport decision):** the server-side therapeutic _scoring_ blend (CT-3) needs the user's _conditions_ server-side, which must NOT ride the `pairing.suggest` GET URL. Activating the re-ranking therefore requires moving that input to a POST transport (query→mutation or a POST link) at sign-off. The exclusion + evidence-card activation above need no further code — just the G1 registry flip.
 
 ---
 
