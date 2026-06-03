@@ -274,14 +274,9 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Journey montage  -  recent cooks as a polaroid ribbon */}
-        {completedSessions.length > 0 && (
-          <div className="px-4 pt-3">
-            <JourneyMontage completedSessions={completedSessions} />
-          </div>
-        )}
-
-        {/* Journey summary + next unlock + weekly goal  -  reveal as you scroll into view */}
+        {/* Up next + journey stats + weekly goal. Action-first: the "what to
+            learn next" hero leads (Today's meal-first principle, on Path);
+            looking-back surfaces (the cooks ribbon) sit below. */}
         <motion.div
           className="mx-auto max-w-md space-y-2 page-x pt-3"
           initial="hidden"
@@ -294,18 +289,6 @@ export default function PathPage() {
             },
           }}
         >
-          <motion.div
-            variants={{
-              hidden: { opacity: 0, y: 14 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                transition: { type: "spring", stiffness: 320, damping: 28 },
-              },
-            }}
-          >
-            <JourneySummary stats={stats} />
-          </motion.div>
           <motion.div
             variants={{
               hidden: { opacity: 0, y: 14 },
@@ -332,9 +315,29 @@ export default function PathPage() {
               },
             }}
           >
+            <JourneySummary stats={stats} />
+          </motion.div>
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 14 },
+              visible: {
+                opacity: 1,
+                y: 0,
+                transition: { type: "spring", stiffness: 320, damping: 28 },
+              },
+            }}
+          >
             <WeeklyGoalCard completedSessions={completedSessions} />
           </motion.div>
         </motion.div>
+
+        {/* Journey montage  -  recent cooks as a polaroid ribbon. A look-back
+            surface, so it sits below the forward-looking action cards. */}
+        {completedSessions.length > 0 && (
+          <div className="px-4 pt-3">
+            <JourneyMontage completedSessions={completedSessions} />
+          </div>
+        )}
 
         {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
           <AchievementsLauncher
