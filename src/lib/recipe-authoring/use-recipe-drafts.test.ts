@@ -97,6 +97,19 @@ describe("upsertRecipe", () => {
     upsertRecipe(list, validRecipe({ id: "rec-2", slug: "rec-2" }));
     expect(list).toHaveLength(1);
   });
+
+  it("gives a new recipe a unique slug when its slug collides", () => {
+    const a = validRecipe({ id: "rec-1", slug: "pasta", title: "Pasta" });
+    const b = validRecipe({ id: "rec-2", slug: "pasta", title: "Pasta" });
+    const result = upsertRecipe([a], b);
+    expect(result.map((r) => r.slug)).toEqual(["pasta", "pasta-2"]);
+  });
+
+  it("preserves slug when updating an existing recipe", () => {
+    const a = validRecipe({ id: "rec-1", slug: "pasta" });
+    const edited = validRecipe({ id: "rec-1", slug: "pasta", title: "Edited" });
+    expect(upsertRecipe([a], edited)[0].slug).toBe("pasta");
+  });
 });
 
 describe("removeRecipeById", () => {

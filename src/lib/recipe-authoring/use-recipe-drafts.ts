@@ -66,7 +66,20 @@ export function upsertRecipe(
   recipe: UserRecipe,
 ): UserRecipe[] {
   const idx = list.findIndex((r) => r.id === recipe.id);
-  if (idx === -1) return [...list, recipe];
+  if (idx === -1) {
+    // New recipe: ensure its slug is unique. The cook page resolves user
+    // recipes by SLUG, so two recipes with the same title (same slugified slug)
+    // would otherwise both map to whichever was stored first — tapping Cook on
+    // the second silently opens the first. Suffix a counter on collision.
+    const taken = new Set(list.map((r) => r.slug));
+    let slug = recipe.slug;
+    if (taken.has(slug)) {
+      let n = 2;
+      while (taken.has(`${slug}-${n}`)) n += 1;
+      slug = `${slug}-${n}`;
+    }
+    return [...list, slug === recipe.slug ? recipe : { ...recipe, slug }];
+  }
   const next = [...list];
   next[idx] = recipe;
   return next;

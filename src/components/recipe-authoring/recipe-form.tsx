@@ -138,7 +138,9 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
             <input
               type="number"
               min={0}
-              {...form.register("prepTimeMinutes", { valueAsNumber: true })}
+              {...form.register("prepTimeMinutes", {
+                setValueAs: (v) => (v === "" || v === null ? 0 : Number(v)),
+              })}
               className={inputClass}
             />
           </FormField>
@@ -146,7 +148,9 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
             <input
               type="number"
               min={0}
-              {...form.register("cookTimeMinutes", { valueAsNumber: true })}
+              {...form.register("cookTimeMinutes", {
+                setValueAs: (v) => (v === "" || v === null ? 0 : Number(v)),
+              })}
               className={inputClass}
             />
           </FormField>
@@ -154,7 +158,9 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
             <input
               type="number"
               min={1}
-              {...form.register("serves", { valueAsNumber: true })}
+              {...form.register("serves", {
+                setValueAs: (v) => (v === "" || v === null ? 2 : Number(v)),
+              })}
               className={inputClass}
             />
           </FormField>
