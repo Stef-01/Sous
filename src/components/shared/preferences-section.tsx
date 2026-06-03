@@ -132,6 +132,9 @@ function ChipsBlock({
             <input
               autoFocus
               type="text"
+              aria-label={
+                axis === "likes" ? "Add a food you like" : "Add a food to avoid"
+              }
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => {

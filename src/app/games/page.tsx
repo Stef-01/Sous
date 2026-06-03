@@ -82,9 +82,9 @@ export default function GamesArcadePage() {
             <ArrowLeft size={20} />
           </motion.button>
           <div className="flex flex-col items-center">
-            <p className="flex items-center gap-1.5 font-serif text-[15px] font-semibold text-[var(--nourish-dark)]">
+            <h1 className="flex items-center gap-1.5 font-serif text-[15px] font-semibold text-[var(--nourish-dark)]">
               <Joystick size={14} aria-hidden /> Kitchen Arcade
-            </p>
+            </h1>
             <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--nourish-subtext)]">
               Learn food, have fun
             </p>
