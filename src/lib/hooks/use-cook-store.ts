@@ -113,7 +113,7 @@ export const useCookStore = create<CookStore>((set, get) => ({
   },
 
   nextDish: () => {
-    const { currentDishIndex, dishes } = get();
+    const { currentDishIndex, dishes, timers } = get();
     if (currentDishIndex < dishes.length - 1) {
       const nextIdx = currentDishIndex + 1;
       set({
@@ -121,9 +121,11 @@ export const useCookStore = create<CookStore>((set, get) => ({
         currentStepIndex: 0,
         totalSteps: dishes[nextIdx].totalSteps,
         expandedChip: null,
-        // Dish boundaries are a natural reset  -  any stragglers from the
-        // previous dish should not bleed into the next.
-        timers: [],
+        // Keep timers that are still counting down: a roast/simmer the user was
+        // told to start can legitimately outlive the dish boundary (that's the
+        // whole point of the parallel-cook hint). Only drop finished ones so a
+        // stale "Done!" flash doesn't bleed into the next dish.
+        timers: timers.filter((t) => t.completedAt === null),
       });
       return true;
     }

@@ -118,13 +118,25 @@ describe("useCookStore timers", () => {
     expect(useCookStore.getState().timers).toEqual([]);
   });
 
-  it("nextDish clears timers so they don't bleed into the next dish", () => {
-    useCookStore.getState().startCombinedSession([
-      { slug: "a", name: "A", totalSteps: 2 },
-      { slug: "b", name: "B", totalSteps: 2 },
-    ]);
-    useCookStore.getState().startTimer(60, "A timer");
-    useCookStore.getState().nextDish();
-    expect(useCookStore.getState().timers).toEqual([]);
+  it("nextDish keeps a still-running timer but drops a finished one", () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date("2025-01-01T00:00:00Z"));
+      useCookStore.getState().startCombinedSession([
+        { slug: "a", name: "A", totalSteps: 2 },
+        { slug: "b", name: "B", totalSteps: 2 },
+      ]);
+      useCookStore.getState().startTimer(600, "Roast"); // still cooking
+      useCookStore.getState().startTimer(1, "Quick"); // about to finish
+      vi.setSystemTime(new Date(Date.now() + 1000));
+      useCookStore.getState().tickTimers(); // Quick completes
+      useCookStore.getState().nextDish();
+      // The long-running roast survives the dish boundary; the finished one is pruned.
+      expect(useCookStore.getState().timers.map((t) => t.label)).toEqual([
+        "Roast",
+      ]);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
