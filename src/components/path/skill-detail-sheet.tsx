@@ -8,6 +8,18 @@ import { cn } from "@/lib/utils/cn";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
 import { getSkillTrainingHover } from "@/data/skill-node-training-hovers";
+import {
+  getAvailableCookSlugs,
+  getAvailableMealCookSlugs,
+} from "@/data/guided-cook-summary";
+
+/** Slugs that resolve to a real guided cook flow — many `associatedDishes`
+ *  are aspirational names with no cook data. Built once from the lightweight
+ *  summary (not the 599KB steps module). */
+const COOKABLE_SLUGS = new Set([
+  ...getAvailableCookSlugs(),
+  ...getAvailableMealCookSlugs(),
+]);
 
 interface SkillDetailSheetProps {
   node: SkillNode | null;
@@ -49,7 +61,11 @@ export function SkillDetailSheet({
     if (!node) return;
     const dishes = node.associatedDishes;
     if (dishes.length === 0) return;
-    onStartCook(dishes[0]);
+    // Prefer a dish that actually has a guided cook flow so "Practice again"
+    // never lands on a "coming soon" dead-end; fall back to the first if the
+    // node has no cookable dish yet.
+    const cookable = dishes.find((s) => COOKABLE_SLUGS.has(s));
+    onStartCook(cookable ?? dishes[0]);
   };
 
   return (
