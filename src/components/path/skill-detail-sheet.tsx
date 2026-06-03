@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Lock, Check, ArrowRight, ChefHat } from "lucide-react";
 import { SkillIcon } from "@/components/shared/skill-icon";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils/cn";
 import {
   useBodyScrollLock,
   useDismissOnEscape,
+  useFocusTrap,
 } from "@/lib/hooks/use-overlay-a11y";
 import type { SkillNode, SkillNodeStatus } from "@/data/skill-tree";
 import { getSkillNode } from "@/data/skill-tree";
@@ -51,8 +53,10 @@ export function SkillDetailSheet({
   onPracticeDish,
 }: SkillDetailSheetProps) {
   const reducedMotion = useReducedMotion();
+  const sheetRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(open);
   useDismissOnEscape(open, onClose);
+  useFocusTrap(open, sheetRef);
   // Note: do NOT return null when node is null  -  AnimatePresence needs to render
   // to fire the exit animation. The `open` prop and `node` will both be falsy
   // at the same time (both derived from selectedNodeId), so gating on `open`
@@ -95,6 +99,8 @@ export function SkillDetailSheet({
         {open && (
           <motion.div
             key="skill-detail-sheet"
+            ref={sheetRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-label={node ? `${node.name} details` : "Skill details"}
