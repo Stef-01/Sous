@@ -13,7 +13,10 @@ import { prepBurdenScorer } from "./scorers/prep-burden";
 import { temperatureScorer } from "./scorers/temperature";
 import { preferenceScorer } from "./scorers/preference";
 import { seasonalScorer } from "./scorers/seasonal";
-import { antiMonotonyScorer } from "./scorers/anti-monotony";
+import {
+  createAntiMonotonyScorer,
+  buildRecencyMap,
+} from "./scorers/anti-monotony";
 import { rankCandidates, topK } from "./ranker";
 import { addExplanations } from "./explainer";
 import { scoreTherapeuticFit } from "./therapeutic-fit";
@@ -23,9 +26,11 @@ import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
 import type { CareProfile } from "@/types/care-profile";
 
 /**
- * All scorers used by the engine.
+ * Static scorers (no per-request state). The anti-monotony scorer is added
+ * per-call via `createAntiMonotonyScorer(buildRecencyMap())` so the served-log
+ * localStorage read happens ONCE per request instead of once per candidate.
  */
-const ALL_SCORERS: Scorer[] = [
+const BASE_SCORERS: Scorer[] = [
   cuisineFitScorer,
   flavorContrastScorer,
   nutritionBalanceScorer,
@@ -33,7 +38,6 @@ const ALL_SCORERS: Scorer[] = [
   temperatureScorer,
   preferenceScorer,
   seasonalScorer,
-  antiMonotonyScorer,
 ];
 
 export type SuggestSidesResult =
@@ -138,11 +142,18 @@ export function suggestSides(
 
   const mergedWeights = { ...DEFAULT_WEIGHTS, ...weights };
 
+  // Build the recency map once per request (single localStorage read) rather
+  // than once per candidate, then assemble the full scorer list.
+  const scorers: Scorer[] = [
+    ...BASE_SCORERS,
+    createAntiMonotonyScorer(buildRecencyMap()),
+  ];
+
   // Score and rank all candidates
   const ranked = rankCandidates(
     main,
     feasible,
-    ALL_SCORERS,
+    scorers,
     mergedWeights,
     userPreferences,
   );

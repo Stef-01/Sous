@@ -110,20 +110,3 @@ export function createAntiMonotonyScorer(
     },
   };
 }
-
-/** Static instance for use in the engine (reads localStorage at import). */
-export const antiMonotonyScorer: Scorer = {
-  name: "antiMonotony",
-  score(main: MainDishIntent, side: SideDishCandidate): number {
-    // Lazy: build map on each call in static mode. In practice the engine
-    // should use createAntiMonotonyScorer() for batch efficiency.
-    const map = buildRecencyMap();
-    const daysSince = map.get(side.id) ?? map.get(side.slug);
-    if (daysSince === undefined) return 0.9;
-    if (daysSince < 1) return 0.1;
-    if (daysSince < 3) return 0.3;
-    if (daysSince < 5) return 0.5;
-    if (daysSince < 7) return 0.7;
-    return 0.9;
-  },
-};
