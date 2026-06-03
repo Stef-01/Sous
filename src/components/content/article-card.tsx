@@ -55,7 +55,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
       href={`/community/article/${article.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
     >
-      <div className="relative aspect-[1/1] w-full overflow-hidden bg-[var(--nourish-cream)]">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image
           src={article.coverImageUrl}
           alt={article.title}
@@ -71,18 +71,15 @@ export function ArticleCard({ article, variant = "default" }: Props) {
             variant="overlay"
           />
         </div>
-        <span className="absolute left-2 top-2 inline-flex items-center rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-dark)]">
-          {article.kicker}
-        </span>
       </div>
-      <div className="flex flex-1 flex-col gap-1.5 p-3">
+      <div className="flex flex-1 flex-col gap-1 p-3">
+        <p className="truncate text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--nourish-green)]">
+          {article.kicker}
+        </p>
         <h3 className="font-serif text-base leading-tight text-[var(--nourish-dark)] line-clamp-2">
           {article.title}
         </h3>
-        <p className="line-clamp-2 text-[12px] leading-snug text-[var(--nourish-subtext)]">
-          {article.excerpt}
-        </p>
-        <p className="mt-auto pt-1 text-[11px] text-[var(--nourish-subtext)]">
+        <p className="mt-auto pt-1.5 text-[11px] text-[var(--nourish-subtext)]">
           {author?.name ?? "Sous editorial"} · {article.readMinutes} min read
         </p>
       </div>
