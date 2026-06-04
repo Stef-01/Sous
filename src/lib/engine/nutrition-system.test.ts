@@ -58,4 +58,32 @@ describe("nutrition system — integration invariants", () => {
     // Round 3 baseline was 48; never let the bridge silently go dark.
     expect(lit).toBeGreaterThanOrEqual(40);
   });
+
+  it("is deterministic + well-formed across the entire catalog", () => {
+    for (const slug of Object.keys(RECIPE_LINKS)) {
+      // Run the full pipeline twice — pure functions must agree byte-for-byte.
+      const a = {
+        profile: getDishTherapeuticProfile(slug),
+        nutrition: getDishNutrition(slug),
+      };
+      const b = {
+        profile: getDishTherapeuticProfile(slug),
+        nutrition: getDishNutrition(slug),
+      };
+      expect(JSON.stringify(a), slug).toBe(JSON.stringify(b));
+
+      // Composed nutrition, where present, is finite + non-negative.
+      if (a.nutrition.perServing) {
+        for (const v of Object.values(a.nutrition.perServing)) {
+          if (typeof v === "number") {
+            expect(Number.isFinite(v), slug).toBe(true);
+            expect(v, slug).toBeGreaterThanOrEqual(0);
+          }
+        }
+      }
+      // Coverage is a valid fraction.
+      expect(a.nutrition.massedCoverage, slug).toBeGreaterThanOrEqual(0);
+      expect(a.nutrition.massedCoverage, slug).toBeLessThanOrEqual(1);
+    }
+  });
 });
