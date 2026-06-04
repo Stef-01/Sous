@@ -52,3 +52,29 @@ export function therapeuticsActive(): boolean {
 export function registryIsClinicianApproved(): boolean {
   return process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED === "1";
 }
+
+/**
+ * CLINICIAN REVIEW MODE — the prototype-evaluation switch.
+ *
+ * Distinct from `registryIsClinicianApproved` (G1): review mode surfaces the
+ * FULL system — the per-dish personalization behavior AND the `/clinician`
+ * review surface — so clinicians can see end-to-end how it works and advise,
+ * WITHOUT ever claiming the evidence is approved. Records stay
+ * `reviewStatus:"unreviewed"`; every surface is badged "Clinician review ·
+ * unreviewed", never "Reviewed". It is an evaluation build, not a go-live.
+ *
+ *  - NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_REVIEW="1" → on
+ *  - "0" → off
+ *  - default → on in development/preview (clinicians test the preview now),
+ *    OFF in test (keeps dormancy golden tests byte-identical) and production.
+ *
+ * Why not just flip `registryIsClinicianApproved`? Because that asserts the
+ * evidence cleared review (rule 11) — a lie until a clinician actually signs
+ * off. Review mode shows the behavior while telling the truth about its status.
+ */
+export function clinicianReviewMode(): boolean {
+  const env = process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_REVIEW;
+  if (env === "1") return true;
+  if (env === "0") return false;
+  return process.env.NODE_ENV === "development";
+}

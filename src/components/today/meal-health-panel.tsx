@@ -37,6 +37,9 @@ export interface MealHealthPanelProps {
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
   reviewed: boolean;
+  /** clinicianReviewMode() — shows personalization for clinician evaluation,
+   *  badged "Clinician review" (unreviewed), never "Reviewed". */
+  clinicianReview?: boolean;
   className?: string;
 }
 
@@ -47,6 +50,7 @@ export function MealHealthPanel({
   description,
   conditions,
   reviewed,
+  clinicianReview = false,
   className,
 }: MealHealthPanelProps) {
   // Scope to the user's conditions when set (relevant view); otherwise surface
@@ -68,7 +72,13 @@ export function MealHealthPanel({
     },
     scope,
   );
-  const personalized = reviewed && conditions.length > 0;
+  // Personalization shows when approved (G1) OR in clinician-review mode.
+  const personalized = (reviewed || clinicianReview) && conditions.length > 0;
+  const statusLabel = reviewed
+    ? "Reviewed"
+    : clinicianReview
+      ? "Clinician review"
+      : "Educational";
 
   return (
     <section
@@ -84,10 +94,12 @@ export function MealHealthPanel({
             "rounded-full px-2 py-0.5 text-[10px] font-medium",
             reviewed
               ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
-              : "bg-neutral-100 text-[var(--nourish-subtext)]",
+              : clinicianReview
+                ? "bg-amber-100 text-amber-800"
+                : "bg-neutral-100 text-[var(--nourish-subtext)]",
           )}
         >
-          {reviewed ? "Reviewed" : "Educational"}
+          {statusLabel}
         </span>
       </div>
 

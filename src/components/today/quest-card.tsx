@@ -32,7 +32,10 @@ import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
 import { buildQuestDishes } from "./quest-pool";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
-import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
+import {
+  therapeuticsActive,
+  clinicianReviewMode,
+} from "@/lib/therapeutics/feature-flag";
 import { registryIsClinicianApproved } from "@/data/therapeutics";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -581,6 +584,7 @@ function MealSwipeQueueOverlay({
             description={activeDish.description}
             conditions={careProfile.conditions}
             reviewed={registryIsClinicianApproved()}
+            clinicianReview={clinicianReviewMode()}
           />
         )}
       </div>

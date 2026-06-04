@@ -13,7 +13,7 @@ Stage 1 proved the cook loop end-to-end on `localStorage` + static JSON + AI-wit
 Stage 2 sits between, and exists to deliver two things at once:
 
 1. **A frozen, audited lean architecture** that's safe to vibe-code on top of for the next 3–6 months without dragging in DB / auth / cloud-storage debt. The architecture exists today — Stage 2 codifies it as the load-bearing pattern, with an explicit "real vs placeholder" inventory and a set of templates for common extensions.
-2. **The one major surface the prototype is missing** — a place users come back to when they're *not* actively cooking. Flo proved this works for behavioral apps. Done right, the Content tab strengthens the existing moats (behavioral, content, network) without competing with the cook loop. Done wrong, it turns Sous into a content product, which `STRATEGY.md` explicitly warns against.
+2. **The one major surface the prototype is missing** — a place users come back to when they're _not_ actively cooking. Flo proved this works for behavioral apps. Done right, the Content tab strengthens the existing moats (behavioral, content, network) without competing with the cook loop. Done wrong, it turns Sous into a content product, which `STRATEGY.md` explicitly warns against.
 
 This doc is the detailed plan referenced from `ROADMAP.md` Stage 2.
 
@@ -25,17 +25,17 @@ This doc is the detailed plan referenced from `ROADMAP.md` Stage 2.
 
 The Content tab must therefore obey two hard rules:
 
-- **It does not measure success in reads or watch-time.** The Content tab's KPI is *secondary cook starts* — cooks initiated from a Content card (Today's Read → "cook this dish," Reel → "try this technique," Clinician POV → "see the lower-GI version of your usual rice"). If a session ends inside Content with no cook started, that's a failure mode to monitor, not an engagement win.
+- **It does not measure success in reads or watch-time.** The Content tab's KPI is _secondary cook starts_ — cooks initiated from a Content card (Today's Read → "cook this dish," Reel → "try this technique," Clinician POV → "see the lower-GI version of your usual rice"). If a session ends inside Content with no cook started, that's a failure mode to monitor, not an engagement win.
 - **No infinite scroll, no algorithmic feed, no notifications baiting return.** Content surfaces are short, daily-rotating, and finite per visit. The user gets the day's update and leaves. Same daily-finite pattern as Flo's Insights, Headspace's Daily Meditation, Duolingo's lesson cap.
 
 With those guardrails, the Content tab compounds three of the four moats from `STRATEGY.md §2`:
 
-| Moat | How Content tab strengthens it |
-| --- | --- |
-| Behavioral (habit) | A second daily return reason on rest days. Streak-adjacent without being streak-breaking. |
-| Content (guided cook quality) | Editorial scaffolding around the cook flow: myths debunked, technique reels, clinician context. Hard to replicate without a domain team. |
-| Network (cook together) | Forums + reel sharing create user-to-user surface area without becoming a social network. Per `STRATEGY.md §3`, every social feature must be additive — Content respects that. |
-| Engine (deterministic intelligence) | Unaffected. Content is human-authored. |
+| Moat                                | How Content tab strengthens it                                                                                                                                                 |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Behavioral (habit)                  | A second daily return reason on rest days. Streak-adjacent without being streak-breaking.                                                                                      |
+| Content (guided cook quality)       | Editorial scaffolding around the cook flow: myths debunked, technique reels, clinician context. Hard to replicate without a domain team.                                       |
+| Network (cook together)             | Forums + reel sharing create user-to-user surface area without becoming a social network. Per `STRATEGY.md §3`, every social feature must be additive — Content respects that. |
+| Engine (deterministic intelligence) | Unaffected. Content is human-authored.                                                                                                                                         |
 
 ---
 
@@ -56,50 +56,50 @@ When all five conditions hold, a feature can ship via a single Claude Code task 
 
 ### A2. Inventory — Real (works end-to-end, vibe-safe to extend)
 
-| Surface | Backing |
-| --- | --- |
-| Today page state machine (idle → loading → results \| camera → recognition → correction) | `src/app/(today)/page.tsx`, `useTodayStore` Zustand |
-| Quest card stack + swipe + save | `quest-card.tsx`, `useSavedDishes` localStorage (max 50) |
-| Pairing engine (6 scorers, deterministic, unit-tested) | `src/lib/engine/`, 14 Indian mains pre-scored in `pairings.json`, TS-engine fallback for the other 62 mains |
-| Guided cook flow Mission → Grab → Cook → Win | `src/components/guided-cook/`, 126 of 203 sides have full step data |
-| Combined cook (multi-dish) with sequencer | `/cook/combined`, `cook-sequencer.ts` (9 tests) |
-| Cook session persistence | `useCookSessions` localStorage |
-| Path tab — skill tree, scrapbook, favorites | `src/app/(path)/`, `useSkillProgress`, `useAchievements` |
-| XP / levels / weekly challenges / streak multipliers | `useXPSystem`, `weekly-challenges.ts`, `achievements.ts` |
-| 4 mini-games (What's Cooking, Flavor Pairs, Speed Chop, Cuisine Compass) | `src/app/games/`, `useGameScores` |
-| Plate evaluation (ADA visualization, confidence-first appraisal) | `plateAppraisal.ts`, `EvaluateSheet.tsx` |
-| Fuzzy search across 93 mains | `fuzzySearch.ts` (Fuse.js) |
-| Coach quiz (this-or-that, updates preference vector) | `coach-quiz.tsx`, persisted to localStorage |
-| Save pairings + PNG plate export + native share | `useSavedPairings`, `html-to-image` |
-| Heatmap (35+ mains × 148+ sides matrix) | `HeatmapModal.tsx` |
-| All 6 AI surfaces with mock fallback | `src/lib/ai/contracts.ts`, `providers/mock.ts`, `providers/claude.ts` |
-| Tonight chip, repeat-cook chip, rest-day grace, big-hands mode | Stage 0.5 / NEXT-20 |
-| Cuisine constellation, journey montage, weekly goal card | Stage 0.5 |
-| Substitution memory, mistake suppression, cook rhythm hints | Stage 0.8 / 0.9 (NEXT-20C/D) |
-| Read-aloud step player + double-tap re-read | Stage 0.5 / 0.9 |
-| Recipe gift link (`/gift/[slug]`) | Stage 0.5 |
-| Friends Strip rendering user's own completed cooks | Real cook session data |
-| Tab bar with progressive visibility | `tab-bar.tsx`, `useNavigation`, `useUnlockStatus` |
-| 222 vitest tests + 14 Playwright E2E specs | `pnpm test`, `pnpm test:e2e` |
+| Surface                                                                                  | Backing                                                                                                     |
+| ---------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| Today page state machine (idle → loading → results \| camera → recognition → correction) | `src/app/(today)/page.tsx`, `useTodayStore` Zustand                                                         |
+| Quest card stack + swipe + save                                                          | `quest-card.tsx`, `useSavedDishes` localStorage (max 50)                                                    |
+| Pairing engine (6 scorers, deterministic, unit-tested)                                   | `src/lib/engine/`, 14 Indian mains pre-scored in `pairings.json`, TS-engine fallback for the other 62 mains |
+| Guided cook flow Mission → Grab → Cook → Win                                             | `src/components/guided-cook/`, 126 of 203 sides have full step data                                         |
+| Combined cook (multi-dish) with sequencer                                                | `/cook/combined`, `cook-sequencer.ts` (9 tests)                                                             |
+| Cook session persistence                                                                 | `useCookSessions` localStorage                                                                              |
+| Path tab — skill tree, scrapbook, favorites                                              | `src/app/(path)/`, `useSkillProgress`, `useAchievements`                                                    |
+| XP / levels / weekly challenges / streak multipliers                                     | `useXPSystem`, `weekly-challenges.ts`, `achievements.ts`                                                    |
+| 4 mini-games (What's Cooking, Flavor Pairs, Speed Chop, Cuisine Compass)                 | `src/app/games/`, `useGameScores`                                                                           |
+| Plate evaluation (ADA visualization, confidence-first appraisal)                         | `plateAppraisal.ts`, `EvaluateSheet.tsx`                                                                    |
+| Fuzzy search across 93 mains                                                             | `fuzzySearch.ts` (Fuse.js)                                                                                  |
+| Coach quiz (this-or-that, updates preference vector)                                     | `coach-quiz.tsx`, persisted to localStorage                                                                 |
+| Save pairings + PNG plate export + native share                                          | `useSavedPairings`, `html-to-image`                                                                         |
+| Heatmap (35+ mains × 148+ sides matrix)                                                  | `HeatmapModal.tsx`                                                                                          |
+| All 6 AI surfaces with mock fallback                                                     | `src/lib/ai/contracts.ts`, `providers/mock.ts`, `providers/claude.ts`                                       |
+| Tonight chip, repeat-cook chip, rest-day grace, big-hands mode                           | Stage 0.5 / NEXT-20                                                                                         |
+| Cuisine constellation, journey montage, weekly goal card                                 | Stage 0.5                                                                                                   |
+| Substitution memory, mistake suppression, cook rhythm hints                              | Stage 0.8 / 0.9 (NEXT-20C/D)                                                                                |
+| Read-aloud step player + double-tap re-read                                              | Stage 0.5 / 0.9                                                                                             |
+| Recipe gift link (`/gift/[slug]`)                                                        | Stage 0.5                                                                                                   |
+| Friends Strip rendering user's own completed cooks                                       | Real cook session data                                                                                      |
+| Tab bar with progressive visibility                                                      | `tab-bar.tsx`, `useNavigation`, `useUnlockStatus`                                                           |
+| 222 vitest tests + 14 Playwright E2E specs                                               | `pnpm test`, `pnpm test:e2e`                                                                                |
 
 ### A3. Inventory — Placeholder (looks real, isn't — handle with care)
 
-| Surface | What's faked | Risk if vibe-coded against |
-| --- | --- | --- |
-| Friends Strip "friend cooks" | Mock entries in `friend-cooks.ts` | Building social features assuming real friends exist will silently work in dev and break in prod |
-| Cook session userId | `"local-${Date.now()}"` (no Clerk) | Any feature keyed on userId is single-device only |
-| `cook.start` / `cook.complete` DB writes | No-op without `DATABASE_URL` | A new analytics surface reading from DB will return empty |
-| `journey.recent` / `journey.stats` tRPC | Accepts localStorage sessions client-side | Server-side cron / digest features are not possible without DB |
-| `coach.quiz` / `coach.vibePrompt` | Mock data | Quiz history is per-device only |
-| `content.getSideDish` / `content.search` | Stubs returning JSON | Real DB-backed search needs Stage 3 work |
-| Vercel Analytics events | Stubs (`src/lib/analytics.ts`) | Funnel data is not actually being collected |
-| Instacart button on Grab screen | "Coming soon" toast | Cannot rely on order-tracking signals |
-| Image URLs on meals / sides | All `null` (gradient + emoji fallback, intentional per `CLAUDE.md` rule 11) | Do NOT generate images in-repo; separate AI pipeline owns this |
-| `photoUri` on cook sessions | Local blob URL | Photos do not survive cache clear or device switch |
-| Clerk auth | Bypassed via mock user object | `protectedProcedure` / route guards are inert today |
-| 14 of 76 mains have engine-scored pairings | TS engine fallback for the other 62 | Quality is lower for fallback mains; do not benchmark engine quality against the full catalog yet |
-| Sentry / Upstash Redis / Cloudflare R2 | None present | No error monitoring, no rate limiting, no image hosting |
-| CI/CD | None configured | Tests run locally, not on PRs |
+| Surface                                    | What's faked                                                                | Risk if vibe-coded against                                                                        |
+| ------------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Friends Strip "friend cooks"               | Mock entries in `friend-cooks.ts`                                           | Building social features assuming real friends exist will silently work in dev and break in prod  |
+| Cook session userId                        | `"local-${Date.now()}"` (no Clerk)                                          | Any feature keyed on userId is single-device only                                                 |
+| `cook.start` / `cook.complete` DB writes   | No-op without `DATABASE_URL`                                                | A new analytics surface reading from DB will return empty                                         |
+| `journey.recent` / `journey.stats` tRPC    | Accepts localStorage sessions client-side                                   | Server-side cron / digest features are not possible without DB                                    |
+| `coach.quiz` / `coach.vibePrompt`          | Mock data                                                                   | Quiz history is per-device only                                                                   |
+| `content.getSideDish` / `content.search`   | Stubs returning JSON                                                        | Real DB-backed search needs Stage 3 work                                                          |
+| Vercel Analytics events                    | Stubs (`src/lib/analytics.ts`)                                              | Funnel data is not actually being collected                                                       |
+| Instacart button on Grab screen            | "Coming soon" toast                                                         | Cannot rely on order-tracking signals                                                             |
+| Image URLs on meals / sides                | All `null` (gradient + emoji fallback, intentional per `CLAUDE.md` rule 11) | Do NOT generate images in-repo; separate AI pipeline owns this                                    |
+| `photoUri` on cook sessions                | Local blob URL                                                              | Photos do not survive cache clear or device switch                                                |
+| Clerk auth                                 | Bypassed via mock user object                                               | `protectedProcedure` / route guards are inert today                                               |
+| 14 of 76 mains have engine-scored pairings | TS engine fallback for the other 62                                         | Quality is lower for fallback mains; do not benchmark engine quality against the full catalog yet |
+| Sentry / Upstash Redis / Cloudflare R2     | None present                                                                | No error monitoring, no rate limiting, no image hosting                                           |
+| CI/CD                                      | None configured                                                             | Tests run locally, not on PRs                                                                     |
 
 ### A4. Vibe-codeable patterns (use these templates)
 
@@ -178,7 +178,7 @@ const Article = z.object({
   slug: z.string(),
   title: z.string(),
   dek: z.string(),
-  body: z.string(),        // markdown
+  body: z.string(), // markdown
   author: z.string(),
   authorRole: z.string(), // "Endocrinologist, Stanford Medicine"
   authorAvatarUrl: z.string().nullable(),
@@ -223,7 +223,11 @@ const ForumThread = z.object({
   replies: z.array(ForumReply),
 });
 
-export const ContentItem = z.discriminatedUnion("type", [Article, Reel, ForumThread]);
+export const ContentItem = z.discriminatedUnion("type", [
+  Article,
+  Reel,
+  ForumThread,
+]);
 ```
 
 ### B5. Components
@@ -289,23 +293,23 @@ Add one AI surface following the existing 6-surface template:
 
 ### B9. Phase plan (P1–P15)
 
-| Phase | Deliverable | Acceptance |
-| --- | --- | --- |
-| P1 | Tab bar adds Content icon + label; `useNavigation` returns Today/Path/Content unconditionally; existing Today + Path tests still pass | `pnpm test` green; manual 375×667 viewport check |
-| P2 | `(content)` route group + `content/page.tsx` skeleton; `(content)/layout.tsx` mounts existing tab bar | Route renders, no console errors |
-| P3 | Zod schemas + `src/data/content/*.json` seed files (12 articles + 15 reels + 8 threads + authors); validator script `pnpm validate:content` runs in `prebuild` | `pnpm validate:content` exits 0 |
-| P4 | `useBookmarks`, `useContentReadState`, `useReelPrefs` hooks with unit tests | New hook tests pass; existing 222 tests still green |
-| P5 | `TodaysReadCard` hero + `use-todays-read.ts` selection logic + `ai.suggestContent` mock surface | Hero renders for the 3 main cases: first visit / has-history / no-AI-key |
-| P6 | `ContentRail` horizontal-snap primitive | Snap works on mobile + desktop; respects reduced motion |
-| P7 | Reels rail rendering on `/content`; tiles tap-route to `/content/reels/[slug]` | First-paint render budget < 250ms on 3G |
-| P8 | `ReelPlayer` full-screen vertical with swipe-between + mute persist + double-tap heart + captions on | 60fps swipe verified on iOS Safari + Android Chrome; mute survives across reels |
-| P9 | Article grid sections (Myths, Research, Clinician POV) + section header chrome | All 12 article cards render, links work |
-| P10 | Article detail page with reader-mode layout + read-progress bar + bookmark button | Reads cleanly at 16/24/32px font scale; bookmark survives reload |
-| P11 | Forum thread list page | All 8 seeded threads render with metadata |
-| P12 | Forum thread detail with 2-level reply nesting | Compose sheet works; reply persists in localStorage; deep-link works |
-| P13 | "Cook this" CTA on every Article + Reel that has `relatedDishSlug(s)` — routes to `/cook/[slug]` | Cook starts open the Mission screen in 1 tap |
-| P14 | A11y + reduced-motion sweep across all content surfaces; bare-icon-button `aria-label`s; reel captions on by default for screen-reader baseline | axe-core run via Playwright reports 0 critical |
-| P15 | Lint + production build + ROADMAP/CLAUDE.md updates marking Stage 2 complete | `pnpm lint && pnpm build && pnpm test` all green; 240+ tests |
+| Phase | Deliverable                                                                                                                                                    | Acceptance                                                                      |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| P1    | Tab bar adds Content icon + label; `useNavigation` returns Today/Path/Content unconditionally; existing Today + Path tests still pass                          | `pnpm test` green; manual 375×667 viewport check                                |
+| P2    | `(content)` route group + `content/page.tsx` skeleton; `(content)/layout.tsx` mounts existing tab bar                                                          | Route renders, no console errors                                                |
+| P3    | Zod schemas + `src/data/content/*.json` seed files (12 articles + 15 reels + 8 threads + authors); validator script `pnpm validate:content` runs in `prebuild` | `pnpm validate:content` exits 0                                                 |
+| P4    | `useBookmarks`, `useContentReadState`, `useReelPrefs` hooks with unit tests                                                                                    | New hook tests pass; existing 222 tests still green                             |
+| P5    | `TodaysReadCard` hero + `use-todays-read.ts` selection logic + `ai.suggestContent` mock surface                                                                | Hero renders for the 3 main cases: first visit / has-history / no-AI-key        |
+| P6    | `ContentRail` horizontal-snap primitive                                                                                                                        | Snap works on mobile + desktop; respects reduced motion                         |
+| P7    | Reels rail rendering on `/content`; tiles tap-route to `/content/reels/[slug]`                                                                                 | First-paint render budget < 250ms on 3G                                         |
+| P8    | `ReelPlayer` full-screen vertical with swipe-between + mute persist + double-tap heart + captions on                                                           | 60fps swipe verified on iOS Safari + Android Chrome; mute survives across reels |
+| P9    | Article grid sections (Myths, Research, Clinician POV) + section header chrome                                                                                 | All 12 article cards render, links work                                         |
+| P10   | Article detail page with reader-mode layout + read-progress bar + bookmark button                                                                              | Reads cleanly at 16/24/32px font scale; bookmark survives reload                |
+| P11   | Forum thread list page                                                                                                                                         | All 8 seeded threads render with metadata                                       |
+| P12   | Forum thread detail with 2-level reply nesting                                                                                                                 | Compose sheet works; reply persists in localStorage; deep-link works            |
+| P13   | "Cook this" CTA on every Article + Reel that has `relatedDishSlug(s)` — routes to `/cook/[slug]`                                                               | Cook starts open the Mission screen in 1 tap                                    |
+| P14   | A11y + reduced-motion sweep across all content surfaces; bare-icon-button `aria-label`s; reel captions on by default for screen-reader baseline                | axe-core run via Playwright reports 0 critical                                  |
+| P15   | Lint + production build + ROADMAP/CLAUDE.md updates marking Stage 2 complete                                                                                   | `pnpm lint && pnpm build && pnpm test` all green; 240+ tests                    |
 
 ### B10. Acceptance criteria for Stage 2 (top-level)
 
@@ -341,14 +345,14 @@ These items naturally fall to Stage 3 (Production Launch) and SHOULD NOT be atte
 
 ## Risk register
 
-| Risk | Likelihood | Mitigation |
-| --- | --- | --- |
-| Content tab becomes the product, cook loop atrophies | Medium | KPI is *secondary cook starts*, not reads or watch time. Monitor on a per-session basis. If a deploy drops cooks/week, roll back the Content surfaces in priority order: forum → research → myths → reels → today's read. |
-| Reels can't hit TikTok-polish on the web | Medium | Build P8 against a measured 60fps target on a 2-year-old Android. If we miss, the fallback is a poster-image-first design with tap-to-play (still useful, just not TikTok-grade). |
-| Authoring throughput stalls without a CMS | Medium | Stage 2 ships with 12+15+8 seed items. Beyond that, JSON-edit + PR loop sustains 5–10 items/week with one author. Real CMS is a Stage 3 concern. |
-| Forum invites toxicity / moderation overhead | Low-Medium | V1 uses mock identity, no DMs, no anonymous handles, no upvotes (only replies). Threading capped at 2 levels. Compose sheet is friction enough to discourage drive-by posts. |
-| Content tab confuses positioning vs Path tab | Medium | Path = *your* cooking journey (skill tree, scrapbook, streak). Content = *the world's* cooking knowledge (articles, reels, forum). Path is mirror; Content is window. Copy must reinforce this — every Content surface header uses third-person plural or specialist voice. |
-| Vibe-coding the wrong layer | High pre-Stage-2 audit; Low after | Part A audit + anti-patterns list directly addresses this. Action items A1–A5 lock the guardrails. |
+| Risk                                                 | Likelihood                        | Mitigation                                                                                                                                                                                                                                                                  |
+| ---------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Content tab becomes the product, cook loop atrophies | Medium                            | KPI is _secondary cook starts_, not reads or watch time. Monitor on a per-session basis. If a deploy drops cooks/week, roll back the Content surfaces in priority order: forum → research → myths → reels → today's read.                                                   |
+| Reels can't hit TikTok-polish on the web             | Medium                            | Build P8 against a measured 60fps target on a 2-year-old Android. If we miss, the fallback is a poster-image-first design with tap-to-play (still useful, just not TikTok-grade).                                                                                           |
+| Authoring throughput stalls without a CMS            | Medium                            | Stage 2 ships with 12+15+8 seed items. Beyond that, JSON-edit + PR loop sustains 5–10 items/week with one author. Real CMS is a Stage 3 concern.                                                                                                                            |
+| Forum invites toxicity / moderation overhead         | Low-Medium                        | V1 uses mock identity, no DMs, no anonymous handles, no upvotes (only replies). Threading capped at 2 levels. Compose sheet is friction enough to discourage drive-by posts.                                                                                                |
+| Content tab confuses positioning vs Path tab         | Medium                            | Path = _your_ cooking journey (skill tree, scrapbook, streak). Content = _the world's_ cooking knowledge (articles, reels, forum). Path is mirror; Content is window. Copy must reinforce this — every Content surface header uses third-person plural or specialist voice. |
+| Vibe-coding the wrong layer                          | High pre-Stage-2 audit; Low after | Part A audit + anti-patterns list directly addresses this. Action items A1–A5 lock the guardrails.                                                                                                                                                                          |
 
 ---
 

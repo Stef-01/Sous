@@ -42,6 +42,8 @@ interface Props {
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
   reviewed: boolean;
+  /** clinicianReviewMode() — personalization visible, badged for evaluation. */
+  clinicianReview?: boolean;
 }
 
 export function MealHealthSheet({
@@ -51,6 +53,7 @@ export function MealHealthSheet({
   description,
   conditions,
   reviewed,
+  clinicianReview,
 }: Props) {
   const reducedMotion = useReducedMotion();
   const { isOpen, open, close, onDragEnd } = useMealHealthPanel();
@@ -130,6 +133,7 @@ export function MealHealthSheet({
                   description={description}
                   conditions={conditions}
                   reviewed={reviewed}
+                  clinicianReview={clinicianReview}
                 />
               </div>
             </motion.div>
