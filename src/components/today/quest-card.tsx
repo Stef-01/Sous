@@ -29,7 +29,11 @@ import {
   type FilterOption,
 } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
+import { MealHealthSheet } from "./meal-health-sheet";
 import { buildQuestDishes } from "./quest-pool";
+import { useCareProfile } from "@/lib/hooks/use-care-profile";
+import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
+import { registryIsClinicianApproved } from "@/data/therapeutics";
 import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { useDifficultyProgression } from "@/lib/hooks/use-difficulty-progression";
@@ -417,6 +421,7 @@ function MealSwipeQueueOverlay({
 }) {
   const [unswiped, setUnswiped] = useState<QuestDish[]>(() => dishes);
   const [dismissed, setDismissed] = useState<QuestDish[]>([]);
+  const { profile: careProfile } = useCareProfile();
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
   );
@@ -564,6 +569,16 @@ function MealSwipeQueueOverlay({
             dismissed={dismissed}
             onReset={resetDeck}
             onClose={onClose}
+          />
+        )}
+
+        {activeDish && therapeuticsActive() && (
+          <MealHealthSheet
+            key={activeDish.slug}
+            dishName={activeDish.dishName}
+            tags={activeDish.tags}
+            conditions={careProfile.conditions}
+            reviewed={registryIsClinicianApproved()}
           />
         )}
       </div>
