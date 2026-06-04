@@ -19,17 +19,27 @@
  * display over the pure helpers.
  */
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat, Plus, TicketCheck, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  ChefHat,
+  Plus,
+  Sparkles,
+  TicketCheck,
+  Users,
+} from "lucide-react";
 import { useCurrentPod } from "@/lib/pod/use-current-pod";
 import { PodHomeContent } from "@/components/community/pod-home-content";
+import { DemoChallengePicker } from "@/components/community/demo-challenge-picker";
 
 export default function PodPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { pod, weeks, submissions, mounted } = useCurrentPod();
+  const [showDemo, setShowDemo] = useState(false);
 
   return (
     <motion.div
@@ -58,16 +68,18 @@ export default function PodPage() {
         {!mounted ? (
           <div className="h-44 animate-pulse rounded-2xl bg-white/70" />
         ) : pod === null ? (
-          <NoPodState />
+          <NoPodState onTryDemo={() => setShowDemo(true)} />
         ) : (
           <PodHomeContent pod={pod} weeks={weeks} submissions={submissions} />
         )}
       </main>
+
+      <DemoChallengePicker open={showDemo} onClose={() => setShowDemo(false)} />
     </motion.div>
   );
 }
 
-function NoPodState() {
+function NoPodState({ onTryDemo }: { onTryDemo: () => void }) {
   return (
     <section className="space-y-4 rounded-2xl border border-dashed border-neutral-200 bg-white/40 p-6 text-center">
       <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
@@ -127,6 +139,15 @@ function NoPodState() {
           <TicketCheck size={14} aria-hidden /> Join with code
         </Link>
       </div>
+
+      {/* Prototype: jump straight into a seeded challenge with AI teammates. */}
+      <button
+        type="button"
+        onClick={onTryDemo}
+        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-2.5 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/10"
+      >
+        <Sparkles size={14} aria-hidden /> Try a sample challenge
+      </button>
     </section>
   );
 }

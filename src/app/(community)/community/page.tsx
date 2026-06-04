@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bookmark } from "lucide-react";
+import { Bookmark, Users, ChevronRight } from "lucide-react";
 import {
   ARTICLES,
   EXPERT_VOICES,
@@ -84,6 +84,33 @@ export default function CommunityPage() {
       </header>
 
       <main className="space-y-8 page-x pt-5">
+        {/* Group cook challenge — the social cooking pod entry point. */}
+        <Link
+          href="/community/pod"
+          className="flex items-center gap-3 rounded-2xl border border-[var(--nourish-green)]/20 bg-white p-4 transition hover:border-[var(--nourish-green)]/40"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
+            <Users
+              size={20}
+              className="text-[var(--nourish-green)]"
+              strokeWidth={1.9}
+            />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold text-[var(--nourish-dark)]">
+              Group cook challenge
+            </span>
+            <span className="block text-[12px] leading-snug text-[var(--nourish-subtext)]">
+              Form a pod, cook the weekly recipe together, climb the
+              leaderboard.
+            </span>
+          </span>
+          <ChevronRight
+            size={18}
+            className="shrink-0 text-[var(--nourish-subtext)]"
+          />
+        </Link>
+
         <ReelsRail
           reels={sortedReels}
           onSelect={(reel) => router.push(`/community/reels?start=${reel.id}`)}
