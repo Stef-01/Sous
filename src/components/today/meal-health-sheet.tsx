@@ -35,6 +35,8 @@ const GRABBER_BOTTOM_PX = 134;
 interface Props {
   dishName: string;
   tags: string[];
+  /** Dish slug — resolves the ingredient profile for food-identity matching. */
+  slug?: string;
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
   reviewed: boolean;
@@ -43,6 +45,7 @@ interface Props {
 export function MealHealthSheet({
   dishName,
   tags,
+  slug,
   conditions,
   reviewed,
 }: Props) {
@@ -120,6 +123,7 @@ export function MealHealthSheet({
                 <MealHealthPanel
                   dishName={dishName}
                   tags={tags}
+                  slug={slug}
                   conditions={conditions}
                   reviewed={reviewed}
                 />

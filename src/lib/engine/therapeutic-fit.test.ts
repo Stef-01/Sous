@@ -12,6 +12,56 @@ function care(conditions: CareProfile["conditions"]): CareProfile {
 
 const dish = (name: string, tags: string[]) => ({ name, tags });
 
+describe("structural bridge (food identity beats spelling)", () => {
+  // A name with no signal words, but resolved ingredients ARE legumes.
+  const noSignalName = "Grandma's Tuesday Bowl";
+
+  it("matches a legume intervention via resolved food group, not the name", () => {
+    const withProfile = matchInterventionsForDish(
+      { name: noSignalName, tags: [], resolvedGroups: ["legume"] },
+      ["masld"],
+    );
+    expect(withProfile.length).toBeGreaterThan(0);
+
+    // Same dish WITHOUT the resolved profile → substring finds nothing.
+    const withoutProfile = matchInterventionsForDish(
+      { name: noSignalName, tags: [] },
+      ["masld"],
+    );
+    expect(withoutProfile.length).toBe(0);
+  });
+
+  it("matches oily-fish evidence via resolved class", () => {
+    const matches = matchInterventionsForDish(
+      { name: noSignalName, tags: [], resolvedClasses: ["oily-fish"] },
+      ["masld"],
+    );
+    expect(matches.some((m) => /omega|fish/i.test(m.record.label))).toBe(true);
+  });
+
+  it("lifts the fit score through the bridge", () => {
+    const plain = scoreTherapeuticFit(care(["masld"]), {
+      name: noSignalName,
+      tags: [],
+    });
+    const bridged = scoreTherapeuticFit(care(["masld"]), {
+      name: noSignalName,
+      tags: [],
+      resolvedGroups: ["legume"],
+    });
+    expect(plain).toBe(0.5);
+    expect(bridged).toBeGreaterThan(0.5);
+  });
+
+  it("never matches an unmapped class (no false positives)", () => {
+    const matches = matchInterventionsForDish(
+      { name: noSignalName, tags: [], resolvedClasses: ["fermented"] },
+      ["masld"],
+    );
+    expect(matches.length).toBe(0);
+  });
+});
+
 describe("scoreTherapeuticFit", () => {
   it("is neutral (0.5) with no conditions", () => {
     expect(scoreTherapeuticFit(care([]), dish("Oat Pilaf", ["oats"]))).toBe(

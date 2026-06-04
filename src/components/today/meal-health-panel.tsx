@@ -20,6 +20,7 @@ import {
   type EvidenceRow,
 } from "@/lib/therapeutics/evidence-card";
 import { matchInterventionsForDish } from "@/lib/engine/therapeutic-fit";
+import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile";
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
 import { CONDITIONS } from "@/data/therapeutics";
 import { cn } from "@/lib/utils/cn";
@@ -27,6 +28,8 @@ import { cn } from "@/lib/utils/cn";
 export interface MealHealthPanelProps {
   dishName: string;
   tags: string[];
+  /** Dish slug — resolves the ingredient profile for food-identity matching. */
+  slug?: string;
   /** The user's active health focus (care profile). Empty = generic view. */
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
@@ -37,6 +40,7 @@ export interface MealHealthPanelProps {
 export function MealHealthPanel({
   dishName,
   tags,
+  slug,
   conditions,
   reviewed,
   className,
@@ -44,7 +48,18 @@ export function MealHealthPanel({
   // Scope to the user's conditions when set (relevant view); otherwise surface
   // what the dish brings across every condition (generic discovery view).
   const scope = conditions.length > 0 ? conditions : undefined;
-  const matches = matchInterventionsForDish({ name: dishName, tags }, scope);
+  // Bridge: resolved ingredient classes/groups let matching reason over food
+  // identity, not spelling. Empty profile → matcher falls back to substring.
+  const profile = getDishTherapeuticProfile(slug);
+  const matches = matchInterventionsForDish(
+    {
+      name: dishName,
+      tags,
+      resolvedClasses: profile.therapeuticClasses,
+      resolvedGroups: profile.foodGroups,
+    },
+    scope,
+  );
   const personalized = reviewed && conditions.length > 0;
 
   return (

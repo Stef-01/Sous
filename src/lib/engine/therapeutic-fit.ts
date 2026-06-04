@@ -35,6 +35,14 @@ export interface TherapeuticDish {
   name: string;
   tags: string[];
   flavorProfile?: string[];
+  /**
+   * Canonical food classes the dish's resolved ingredients realize (the
+   * ingredient-registry bridge). When present, matching reasons over food
+   * identity — "Masoor Dal" → red-lentils → legume — not spelling.
+   */
+  resolvedClasses?: ReadonlyArray<string>;
+  /** Canonical food groups the dish's resolved ingredients belong to. */
+  resolvedGroups?: ReadonlyArray<string>;
 }
 
 export interface MatchedIntervention {
@@ -49,18 +57,77 @@ function dishHaystack(dish: TherapeuticDish): string {
 }
 
 /**
+ * Maps an intervention's free-text recipeSignal → the structured food
+ * classes/groups that realize it. This is the bridge that lets the engine match
+ * on what a dish IS (its resolved ingredients' identity) rather than how a
+ * string is spelled. Claim-neutral — it only translates food identity.
+ */
+const SIGNAL_STRUCTURE: Record<
+  string,
+  { classes?: string[]; groups?: string[] }
+> = {
+  oats: { classes: ["soluble-fiber", "whole-grain"] },
+  oatmeal: { classes: ["soluble-fiber", "whole-grain"] },
+  barley: { classes: ["whole-grain", "soluble-fiber"] },
+  "whole grains": { classes: ["whole-grain"] },
+  "whole grain": { classes: ["whole-grain"] },
+  "soluble fiber": { classes: ["soluble-fiber"] },
+  legumes: { groups: ["legume"] },
+  legume: { groups: ["legume"] },
+  beans: { groups: ["legume"] },
+  lentils: { groups: ["legume"] },
+  salmon: { classes: ["oily-fish"] },
+  mackerel: { classes: ["oily-fish"] },
+  sardine: { classes: ["oily-fish"] },
+  trout: { classes: ["oily-fish"] },
+  "fatty fish": { classes: ["oily-fish"] },
+  "oily fish": { classes: ["oily-fish"] },
+  fish: { groups: ["seafood"] },
+  "olive oil": { classes: ["olive-oil"] },
+  nuts: { classes: ["nuts"] },
+  coffee: { classes: ["coffee"] },
+  // NB: "vegetables" is deliberately NOT bridged structurally — a single
+  // aromatic (garlic/onion) would otherwise trigger broad "pattern" evidence
+  // on nearly every dish. It still matches by substring on dish text/tags.
+};
+
+function structuralMatch(sig: string, dish: TherapeuticDish): boolean {
+  const map = SIGNAL_STRUCTURE[sig.toLowerCase()];
+  if (!map) return false;
+  const { resolvedClasses, resolvedGroups } = dish;
+  if (
+    map.classes &&
+    resolvedClasses &&
+    map.classes.some((c) => resolvedClasses.includes(c))
+  ) {
+    return true;
+  }
+  if (
+    map.groups &&
+    resolvedGroups &&
+    map.groups.some((g) => resolvedGroups.includes(g))
+  ) {
+    return true;
+  }
+  return false;
+}
+
+/**
  * THE shared matching predicate — the scorer (below) and the per-dish health
  * panel (matchInterventionsForDish) both go through here, so they can never
- * disagree about whether a dish realizes an intervention. Returns the matching
- * signals (empty = no match, incl. non-positive directions which never count).
+ * disagree about whether a dish realizes an intervention. A signal matches by
+ * food identity (resolved ingredient classes/groups) OR by substring on the
+ * dish text. Returns the matching signals (empty = no match, incl. non-positive
+ * directions which never count — the claim-safety spine is unchanged).
  */
 function matchedSignalsFor(
-  haystack: string,
+  dish: TherapeuticDish,
   rec: InterventionRecord,
 ): string[] {
   if (!POSITIVE_DIRECTIONS.has(rec.direction)) return [];
-  return rec.recipeSignals.filter((sig) =>
-    haystack.includes(sig.toLowerCase()),
+  const haystack = dishHaystack(dish);
+  return rec.recipeSignals.filter(
+    (sig) => haystack.includes(sig.toLowerCase()) || structuralMatch(sig, dish),
   );
 }
 
@@ -75,12 +142,10 @@ export function scoreTherapeuticFit(
 ): number {
   if (care.conditions.length === 0) return 0.5;
 
-  const haystack = dishHaystack(dish);
-
   let matchedWeight = 0;
   for (const condition of care.conditions) {
     for (const rec of scorableInterventions(condition)) {
-      if (matchedSignalsFor(haystack, rec).length > 0) {
+      if (matchedSignalsFor(dish, rec).length > 0) {
         matchedWeight += EVIDENCE_WEIGHT[rec.grade];
       }
     }
@@ -103,7 +168,6 @@ export function matchInterventionsForDish(
   dish: TherapeuticDish,
   conditions?: ReadonlyArray<ConditionId>,
 ): MatchedIntervention[] {
-  const haystack = dishHaystack(dish);
   const scope =
     conditions && conditions.length > 0 ? conditions : CONDITION_IDS;
 
@@ -112,7 +176,7 @@ export function matchInterventionsForDish(
   for (const condition of scope) {
     for (const rec of scorableInterventions(condition)) {
       if (seen.has(rec.id)) continue;
-      const matchedSignals = matchedSignalsFor(haystack, rec);
+      const matchedSignals = matchedSignalsFor(dish, rec);
       if (matchedSignals.length === 0) continue;
       seen.add(rec.id);
       out.push({ record: rec, matchedSignals });

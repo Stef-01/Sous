@@ -577,6 +577,7 @@ function MealSwipeQueueOverlay({
             key={activeDish.slug}
             dishName={activeDish.dishName}
             tags={activeDish.tags}
+            slug={activeDish.slug}
             conditions={careProfile.conditions}
             reviewed={registryIsClinicianApproved()}
           />
