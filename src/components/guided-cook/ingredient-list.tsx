@@ -265,120 +265,124 @@ export function IngredientList({
         </div>
 
         {viewMode === "station" && hasCoalescedView ? (
-          <div className="space-y-4">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             {prepGroups.map((group) => (
-              <div key={group.station} className="space-y-1">
-                <h3 className="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
+              <div key={group.station}>
+                <h3 className="border-b border-neutral-100 bg-neutral-50/60 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--nourish-subtext)]">
                   {group.label}
                 </h3>
-                {group.items.map((item) => {
-                  const ids =
-                    prepSourceIds.get(normalizePrepName(item.name)) ?? [];
-                  const isChecked =
-                    ids.length > 0 && ids.every((id) => checked.has(id));
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => toggleCoalesced(item.name)}
-                      className={cn(
-                        "flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors",
-                        isChecked
-                          ? "bg-[var(--nourish-green)]/5"
-                          : "hover:bg-neutral-50",
-                      )}
-                    >
-                      <span
+                <div className="divide-y divide-neutral-100">
+                  {group.items.map((item) => {
+                    const ids =
+                      prepSourceIds.get(normalizePrepName(item.name)) ?? [];
+                    const isChecked =
+                      ids.length > 0 && ids.every((id) => checked.has(id));
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => toggleCoalesced(item.name)}
                         className={cn(
-                          "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
+                          "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors",
                           isChecked
-                            ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-                            : "border-neutral-300",
+                            ? "bg-[var(--nourish-green)]/5"
+                            : "hover:bg-neutral-50",
                         )}
                       >
-                        {isChecked ? (
-                          <Check
-                            size={12}
-                            className="text-white"
-                            strokeWidth={3}
-                          />
-                        ) : (
-                          <Circle size={6} className="text-transparent" />
-                        )}
-                      </span>
-                      <span className="flex-1">
                         <span
                           className={cn(
-                            "block text-sm font-medium",
+                            "mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
                             isChecked
-                              ? "text-[var(--nourish-subtext)] line-through"
-                              : "text-[var(--nourish-dark)]",
+                              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
+                              : "border-neutral-300",
                           )}
                         >
-                          {item.name}
+                          {isChecked ? (
+                            <Check
+                              size={12}
+                              className="text-white"
+                              strokeWidth={3}
+                            />
+                          ) : (
+                            <Circle size={6} className="text-transparent" />
+                          )}
                         </span>
-                        <span className="block text-[11px] text-[var(--nourish-subtext)]">
-                          {item.quantity}
-                          {item.sources.length > 1
-                            ? ` · ${item.sources.join(" & ")}`
-                            : ""}
+                        <span className="flex-1">
+                          <span
+                            className={cn(
+                              "block text-sm font-medium",
+                              isChecked
+                                ? "text-[var(--nourish-subtext)] line-through"
+                                : "text-[var(--nourish-dark)]",
+                            )}
+                          >
+                            {item.name}
+                          </span>
+                          <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
+                            {item.quantity}
+                            {item.sources.length > 1
+                              ? ` · ${item.sources.join(" & ")}`
+                              : ""}
+                          </span>
                         </span>
-                      </span>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             ))}
           </div>
         ) : (
-          effectiveSections.map((section, sectionIdx) => {
-            const sectionStartIdx = sectionStartIndices[sectionIdx];
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+            {effectiveSections.map((section, sectionIdx) => {
+              const sectionStartIdx = sectionStartIndices[sectionIdx];
 
-            return (
-              <div
-                key={section.label || `section-${sectionIdx}`}
-                className="space-y-1"
-              >
-                {/* Section header  -  only shown in segmented mode */}
-                {isSegmented && section.label && (
-                  <motion.h3
-                    initial={{ opacity: 0, x: -4 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: sectionStartIdx * 0.04 }}
-                    className="text-xs font-semibold text-[var(--nourish-subtext)] uppercase tracking-wide px-3 pt-3 pb-1"
-                  >
-                    {section.label}
-                  </motion.h3>
-                )}
+              return (
+                <div key={section.label || `section-${sectionIdx}`}>
+                  {/* Section header  -  only shown in segmented mode; an in-card
+                      sub-label so the whole list reads as one unified surface. */}
+                  {isSegmented && section.label && (
+                    <motion.h3
+                      initial={{ opacity: 0, x: -4 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: sectionStartIdx * 0.04 }}
+                      className="border-b border-neutral-100 bg-neutral-50/60 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--nourish-subtext)]"
+                    >
+                      {section.label}
+                    </motion.h3>
+                  )}
 
-                {section.ingredients.map((item, idx) => (
-                  <IngredientRow
-                    key={item.id}
-                    item={item}
-                    idx={sectionStartIdx + idx}
-                    checked={checked.has(item.id)}
-                    showingSub={askingSub === item.id}
-                    recipeName={recipeName}
-                    cuisineFamily={cuisineFamily}
-                    inPantry={pantryMounted && pantryHas(item.name)}
-                    rememberedSub={
-                      dishSlug && subMemMounted
-                        ? getRememberedSub(dishSlug, item.id)
-                        : null
-                    }
-                    onRememberSub={(sub) => {
-                      if (dishSlug) rememberSub(dishSlug, item.id, sub);
-                    }}
-                    onToggle={() => toggleItem(item.id)}
-                    onAskSub={() =>
-                      setAskingSub(askingSub === item.id ? null : item.id)
-                    }
-                    onTogglePantry={() => togglePantry(item.name)}
-                  />
-                ))}
-              </div>
-            );
-          })
+                  <div className="divide-y divide-neutral-100">
+                    {section.ingredients.map((item, idx) => (
+                      <IngredientRow
+                        key={item.id}
+                        item={item}
+                        idx={sectionStartIdx + idx}
+                        checked={checked.has(item.id)}
+                        showingSub={askingSub === item.id}
+                        recipeName={recipeName}
+                        cuisineFamily={cuisineFamily}
+                        inPantry={pantryMounted && pantryHas(item.name)}
+                        rememberedSub={
+                          dishSlug && subMemMounted
+                            ? getRememberedSub(dishSlug, item.id)
+                            : null
+                        }
+                        onRememberSub={(sub) => {
+                          if (dishSlug) rememberSub(dishSlug, item.id, sub);
+                        }}
+                        onToggle={() => toggleItem(item.id)}
+                        onAskSub={() =>
+                          setAskingSub(askingSub === item.id ? null : item.id)
+                        }
+                        onTogglePantry={() => togglePantry(item.name)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
 
         {/* "Got everything?" message when all checked */}
@@ -523,15 +527,17 @@ function IngredientRow({
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: idx * 0.04 }}
         className={cn(
-          "flex w-full items-start gap-3 rounded-lg px-3 py-2.5",
+          "flex w-full items-start gap-3 px-4 py-3",
           "transition-colors duration-100",
-          checked && "opacity-60",
+          checked && "opacity-50",
         )}
       >
-        {/* Checkbox  -  44px touch target wraps 20px visual circle */}
+        {/* Checkbox  -  20px visual circle, 44px touch target via before-inset.
+            Left-aligned at the row's padding edge so the name sits a tight
+            gap-3 away — no stranded gap between the circle and the label. */}
         <button
           onClick={onToggle}
-          className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center active:scale-90 transition-transform"
+          className="relative mt-px flex h-5 w-5 shrink-0 items-center justify-center transition-transform active:scale-90 before:absolute before:-inset-3 before:content-['']"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
@@ -557,16 +563,19 @@ function IngredientRow({
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
           <div className="flex items-center gap-2">
-            {/* Y3 W4 polish: pantry-status dot — feature 1.3 from
-                the pantry-novelty plan. Subtle visual signal that
-                'I can start this now' without taps. (Pantry membership
-                is also carried by the bookmark fill, so no separate
-                'in pantry' text label — that was a third copy.) */}
-            <IngredientPantryDot
-              status={inPantry ? "have" : "missing"}
-              optional={item.isOptional ?? false}
-              className="shrink-0"
-            />
+            {/* Pantry-status dot — only rendered when the item IS in the
+                pantry (a calm green confirmation). For the common
+                not-in-pantry case we show nothing rather than a faint
+                outline on every row: an empty "missing" dot restates the
+                absence of a bookmark-fill and just adds a second circle
+                next to the checkbox (rule 13 — no redundant restatement). */}
+            {inPantry && (
+              <IngredientPantryDot
+                status="have"
+                optional={item.isOptional ?? false}
+                className="shrink-0"
+              />
+            )}
             <span
               className={cn(
                 "text-sm font-medium",
@@ -611,10 +620,10 @@ function IngredientRow({
         <button
           onClick={onTogglePantry}
           className={cn(
-            "flex h-11 w-9 shrink-0 -m-1 items-center justify-center rounded-md transition-colors",
+            "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
             inPantry
               ? "text-[var(--nourish-green)]"
-              : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
+              : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
           )}
           type="button"
           aria-label={
@@ -632,10 +641,10 @@ function IngredientRow({
           <button
             onClick={onAskSub}
             className={cn(
-              "flex h-11 w-9 shrink-0 -m-1 items-center justify-center rounded-md transition-colors",
+              "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
               showingSub
                 ? "text-[var(--nourish-green)] bg-[var(--nourish-green)]/10"
-                : "text-neutral-300 hover:text-[var(--nourish-subtext)]",
+                : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
             )}
             type="button"
             aria-label={`Find substitute for ${item.name}`}
@@ -656,7 +665,7 @@ function IngredientRow({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="ml-9 mr-3 mb-2 rounded-lg border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-2.5">
+            <div className="mb-3 ml-12 mr-4 rounded-lg border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-2.5">
               {subQuery.isLoading ? (
                 <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
                   Finding a swap...
