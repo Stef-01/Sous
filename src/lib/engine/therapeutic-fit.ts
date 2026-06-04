@@ -74,7 +74,12 @@ const SIGNAL_STRUCTURE: Record<
   barley: { classes: ["beta-glucan"] },
   "whole grains": { classes: ["whole-grain"] },
   "whole grain": { classes: ["whole-grain"] },
-  "soluble fiber": { classes: ["soluble-fiber"] },
+  // NB: "soluble fiber" is deliberately NOT bridged structurally. Interventions
+  // that cite it mean a SPECIFIC viscous fiber (psyllium for IBS, β-glucan for
+  // LDL), so mapping it to the generic soluble-fiber class made every lentil
+  // dish falsely match the IBS psyllium record — clinically wrong, since
+  // legumes are high-FODMAP and often restricted in IBS. It still matches by
+  // substring where a dish text actually says "soluble fiber"/"psyllium".
   legumes: { groups: ["legume"] },
   legume: { groups: ["legume"] },
   beans: { groups: ["legume"] },

@@ -60,6 +60,22 @@ describe("structural bridge (food identity beats spelling)", () => {
     );
     expect(matches.length).toBe(0);
   });
+
+  it("a legume's soluble fiber does NOT falsely match IBS psyllium", () => {
+    // Legumes are high-FODMAP, often restricted in IBS — a lentil dish must not
+    // structurally match the IBS soluble-fiber (psyllium) record.
+    const legume = {
+      name: noSignalName,
+      tags: [],
+      resolvedClasses: ["soluble-fiber", "plant-protein"],
+      resolvedGroups: ["legume"],
+    };
+    expect(matchInterventionsForDish(legume, ["ibs"]).length).toBe(0);
+    // ...but it still matches LDL (legumes → Portfolio pattern).
+    expect(
+      matchInterventionsForDish(legume, ["high-ldl"]).length,
+    ).toBeGreaterThan(0);
+  });
 });
 
 describe("scoreTherapeuticFit", () => {
