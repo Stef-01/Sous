@@ -130,12 +130,16 @@ function Rule() {
  * ==================================================================== */
 
 function Tally() {
-  const reduceMotion = useReducedMotion();
   const saved = 7;
   const cooked = 2;
   return (
+    // `initial` is SSR-rendered; keep it stable ("hidden") rather than
+    // branching on reduceMotion (null on the server, real on the client's
+    // first render), which would hydrate the revealed state against the
+    // server's hidden state and mismatch. The reveal is a gentle opacity fade,
+    // which stays within prefers-reduced-motion bounds.
     <motion.div
-      initial={reduceMotion ? false : "hidden"}
+      initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}
       variants={containerStagger}
@@ -479,10 +483,21 @@ export function StartupLanding({
               scroll.
             </motion.p>
 
+            {/*
+              `initial` is SSR-rendered, so it must not branch on reduceMotion
+              (null on the server, real on the client's first render) or a
+              reduced-motion client hydrates the animated end-state against the
+              server's start-state and mismatches. Keep `initial` stable; let
+              reduceMotion zero out only the post-hydration `transition`.
+            */}
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+              initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.55, ease: easeOutExpo }}
+              transition={{
+                delay: reduceMotion ? 0 : 0.2,
+                duration: reduceMotion ? 0 : 0.55,
+                ease: easeOutExpo,
+              }}
               className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3"
             >
               <Link

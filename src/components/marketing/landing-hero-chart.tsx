@@ -195,6 +195,16 @@ export function LandingHeroChart({ className }: { className?: string }) {
                   strokeWidth="1"
                 />
 
+                {/*
+                  `initial` must NOT branch on reduceMotion: it is rendered into
+                  the SSR markup (as stroke-dasharray), but useReducedMotion()
+                  is null on the server and the real value on the client's first
+                  render — so a reduced-motion client would hydrate pathLength 1
+                  against a server-rendered pathLength 0 and mismatch. Keep
+                  `initial` stable and let reduceMotion drive only `transition`
+                  (duration 0 = instant draw), which is applied post-hydration
+                  and never reaches the SSR markup.
+                */}
                 <motion.path
                   d={RED_PATH}
                   fill="none"
@@ -202,7 +212,7 @@ export function LandingHeroChart({ className }: { className?: string }) {
                   strokeWidth="2.2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  initial={{ pathLength: reduceMotion ? 1 : 0 }}
+                  initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                   transition={{
                     duration: reduceMotion ? 0 : 1.35,
@@ -216,7 +226,7 @@ export function LandingHeroChart({ className }: { className?: string }) {
                   strokeWidth="2.1"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  initial={{ pathLength: reduceMotion ? 1 : 0 }}
+                  initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
                   transition={{
                     duration: reduceMotion ? 0 : 1.45,
