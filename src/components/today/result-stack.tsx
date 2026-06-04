@@ -126,6 +126,15 @@ export function ResultStack({
     });
   }, []);
 
+  // Quick side-count control: pick the top-N ranked sides (default is all 3).
+  // Per-card checkboxes still allow swapping which specific sides are chosen.
+  const setSideCount = useCallback(
+    (n: number) => {
+      setSelectedIds(new Set(sides.slice(0, n).map((s) => s.id)));
+    },
+    [sides],
+  );
+
   // Per-side reroll via tRPC
   const rerollQuery = trpc.pairing.rerollSide.useQuery(
     {
@@ -279,6 +288,32 @@ export function ResultStack({
           Reroll all
         </button>
       </div>
+
+      {sides.length >= 2 && (
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs font-medium text-[var(--nourish-subtext)]">
+            How many sides?
+          </span>
+          <div className="flex items-center gap-1 rounded-full bg-neutral-100 p-1">
+            {Array.from({ length: sides.length }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                type="button"
+                onClick={() => setSideCount(n)}
+                aria-pressed={selectedSides.length === n}
+                className={cn(
+                  "flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-sm font-semibold transition-colors",
+                  selectedSides.length === n
+                    ? "bg-white text-[var(--nourish-dark)] shadow-sm"
+                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                )}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         {sides.map((side, idx) => (

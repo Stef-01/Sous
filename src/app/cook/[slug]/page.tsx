@@ -27,6 +27,8 @@ import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
+import { ServingSlider } from "@/components/guided-cook/serving-slider";
+import { scaleQuantity } from "@/lib/cook/scale-quantity";
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import type { StaticCookStep } from "@/data/guided-cook-steps";
 import { StepCard } from "@/components/guided-cook/step-card";
@@ -56,6 +58,9 @@ import { POD_SCHEMA_VERSION } from "@/types/challenge-pod";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
 import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { DeadEndShell } from "@/components/shared/dead-end-shell";
+
+/** Servings the recipe quantities are written for; the slider scales from here. */
+const BASE_SERVINGS = 2;
 
 export default function GuidedCookPage({
   params,
@@ -120,6 +125,9 @@ export default function GuidedCookPage({
     upsertSubmission,
   } = useCurrentPod();
   const [podRating, setPodRating] = useState(0);
+  // Serving-size control: the recipe is written for BASE_SERVINGS; the slider
+  // scales every ingredient quantity by servings / BASE_SERVINGS.
+  const [servings, setServings] = useState(BASE_SERVINGS);
   // W22 visual-mode preference + W27 page-side adoption — when on,
   // StepCard promotes the step image and shrinks the instruction.
   const { enabled: visualMode } = useVisualModePref();
@@ -641,6 +649,12 @@ export default function GuidedCookPage({
   }
 
   const { dish, ingredients } = data;
+  // Scale every quantity by the chosen serving size (cheap; ~10 ingredients).
+  const servingMultiplier = servings / BASE_SERVINGS;
+  const scaledIngredients = ingredients.map((i) => ({
+    ...i,
+    quantity: scaleQuantity(i.quantity, servingMultiplier),
+  }));
 
   // ── Render ────────────────────────────────────────
 
@@ -710,8 +724,13 @@ export default function GuidedCookPage({
                 dishSlug={dish.slug}
                 steps={cookSteps.map((s: unknown) => s as StaticCookStep)}
               />
+              <ServingSlider
+                servings={servings}
+                baseServings={BASE_SERVINGS}
+                onChange={setServings}
+              />
               <IngredientList
-                ingredients={ingredients}
+                ingredients={scaledIngredients}
                 recipeName={dish.name}
                 cuisineFamily={cuisine}
                 dishSlug={dish.slug}
