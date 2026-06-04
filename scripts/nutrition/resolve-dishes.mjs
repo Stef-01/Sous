@@ -16,56 +16,38 @@ import path from "node:path";
 
 const base = new URL("../../", import.meta.url);
 const guided = await import(new URL("src/data/guided-cook-steps.ts", base));
-const registry = await import(new URL("src/data/ingredients/index.ts", base));
-const qty = await import(
-  new URL("src/lib/nutrition/quantity-to-grams.ts", base)
+const resolver = await import(
+  new URL("src/lib/nutrition/resolve-dish-lines.ts", base)
 );
 
 const { guidedCookData } = guided;
-const { resolveIngredientByName, getIngredient } = registry;
-const { quantityToGrams } = qty;
+const { resolveDishLines } = resolver;
 
 const DEFAULT_SERVINGS = 4;
 
 const slugs = Object.keys(guidedCookData);
 const links = {};
 const unresolvedNames = new Map();
-const unmassed = new Map();
 let totalLines = 0;
 let resolvedLines = 0;
 let massedLines = 0;
 
 for (const slug of slugs) {
   const dish = guidedCookData[slug];
-  const lines = [];
-  for (const ing of dish.ingredients ?? []) {
-    totalLines++;
-    const id = resolveIngredientByName(ing.name);
-    if (!id) {
-      unresolvedNames.set(ing.name, (unresolvedNames.get(ing.name) ?? 0) + 1);
-      continue;
-    }
-    resolvedLines++;
-    const ingredient = getIngredient(id);
-    const grams = quantityToGrams(ing.quantity ?? "", ingredient);
-    if (grams === null) {
-      unmassed.set(
-        `${ing.name} :: ${ing.quantity}`,
-        (unmassed.get(`${ing.name} :: ${ing.quantity}`) ?? 0) + 1,
-      );
-    } else {
-      massedLines++;
-    }
-    lines.push({
-      ingredientId: id,
-      grams: grams ?? 0,
-      isOptional: Boolean(ing.isOptional),
-    });
+  // Same pure resolver the drift guard checks against — script just orchestrates.
+  const { lines, originalLineCount, unresolved } = resolveDishLines(
+    dish.ingredients ?? [],
+  );
+  totalLines += originalLineCount;
+  resolvedLines += lines.length;
+  massedLines += lines.filter((l) => l.grams > 0).length;
+  for (const name of unresolved) {
+    unresolvedNames.set(name, (unresolvedNames.get(name) ?? 0) + 1);
   }
   links[slug] = {
     recipeSlug: slug,
     servingsPerRecipe: DEFAULT_SERVINGS,
-    originalLineCount: (dish.ingredients ?? []).length,
+    originalLineCount,
     lines,
   };
 }
