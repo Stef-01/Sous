@@ -270,3 +270,37 @@ complete and grows by adding spec rows, not by changing code.
 **Data hygiene:** the multi-hundred-MB USDA source is downloaded at ingest time
 and never committed — only the small generated registry is vendored. Re-run the
 ingest per the script header to refresh.
+
+---
+
+## 12. Full integration — 5 recursive rounds (2026-06-04)
+
+Phases 3–5 built + integrated end-to-end, each round evaluating the last and
+fixing the weakest link.
+
+| Round | Built                                                                                         | Evaluation → improvement                                                                                                                 | Commit    |
+| ----- | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------- |
+| 1     | resolve 119 guided-cook dishes → links + coverage report                                      | baseline 29.9% lines resolved → registry is the bottleneck                                                                               | `78fec78` |
+| 2     | extracted the ingest spec to its own module; grew registry 22→88 (all real USDA)              | resolution 29.9%→**84.0%**, fully-resolved dishes 0→25                                                                                   | `a8085aa` |
+| 3     | therapeutics bridge — `SIGNAL_STRUCTURE` + resolved classes/groups; matching by food identity | initial pass over-matched 'Mediterranean' off one aromatic → dropped broad `vegetables` structural map; 103→**48 meaningful** dishes lit | `abf3c92` |
+| 4     | `getDishNutrition` (compose capability) + 'Built on' whole-food line                          | karaage composed to ~1920 kcal (frying oil) → raw macros NOT displayed; surface the mass/serving-independent food-group signal instead   | `3cb1fe7` |
+| 5     | meal name→registry fallback; `beta-glucan` precision class; integration guard                 | live test: meals had 0 links → fallback fixes them; lentils falsely matched oat beta-glucan → specific class fixes it                    | `d1b509d` |
+
+**Live-verified:** the Masoor Dal **meal** card surfaces "Built on: legumes" +
+Mediterranean-pattern evidence (effect sizes, matched signals), scoped to MASLD,
+zero console errors — the full pipeline (name/links → registry → food identity →
+structured evidence → display) working on a real dish.
+
+### Remaining workstream (the honest gaps)
+
+1. **Meal ingredient lists** — the biggest lever. 0/76 meals have structured
+   ingredients (only the 119 sides do); meals lean on the name/tags fallback.
+   Authoring real meal ingredient lists (rule 7) unlocks full composition +
+   precise matching for the primary swipe content.
+2. **Display-grade macros** — needs cooked-weight + oil-absorption + per-dish
+   servings before absolute per-serving numbers are trustworthy.
+3. **Registry breadth** — 88 ingredients cover 84% of lines; the tail (curry
+   leaves, garam masala, regional items) grows by adding spec rows.
+
+The system is built to scale by adding **data** (spec rows, meal ingredient
+lists), not by changing code — every layer is pure, tested, and drift-guarded.
