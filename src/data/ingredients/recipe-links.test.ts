@@ -21,8 +21,15 @@ describe("recipe ingredient links", () => {
   });
 
   // Coverage ratchet — raise the floor as the registry grows; never let it
-  // regress. Baseline at 22 ingredients was ~290 resolved lines.
+  // regress. 22 ingredients → ~290 lines; 88 ingredients → ~810 lines.
   it("meets the resolved-line coverage floor", () => {
-    expect(allLines.length).toBeGreaterThanOrEqual(280);
+    expect(allLines.length).toBeGreaterThanOrEqual(780);
+  });
+
+  it("fully resolves a meaningful share of dishes", () => {
+    const full = Object.values(RECIPE_LINKS).filter(
+      (l) => l.lines.length > 0 && l.lines.every((x) => x.grams > 0),
+    );
+    expect(full.length).toBeGreaterThanOrEqual(20);
   });
 });
