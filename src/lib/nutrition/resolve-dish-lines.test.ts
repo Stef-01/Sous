@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { resolveDishLines } from "./resolve-dish-lines";
 import { guidedCookData } from "@/data/guided-cook-steps";
+import { MEAL_INGREDIENTS } from "@/data/meal-ingredients";
 import { RECIPE_LINKS } from "@/data/ingredients/recipe-links";
 
 describe("resolveDishLines", () => {
@@ -43,12 +44,23 @@ describe("recipe-links drift guard", () => {
   // The committed link table must equal a fresh resolve of the source data.
   // Edit the registry aliases / guided-cook data / quantity logic without
   // re-running scripts/nutrition/resolve-dishes.mjs → this fails loudly.
-  it("committed links match a fresh resolve of every dish", () => {
+  it("committed links match a fresh resolve of every guided-cook dish", () => {
     for (const slug of Object.keys(guidedCookData)) {
       const fresh = resolveDishLines(guidedCookData[slug].ingredients ?? []);
       const committed = RECIPE_LINKS[slug];
       expect(committed, slug).toBeDefined();
       expect(committed.originalLineCount, slug).toBe(fresh.originalLineCount);
+      expect(committed.lines, slug).toEqual(fresh.lines);
+    }
+  });
+
+  it("committed links match a fresh resolve of every meal exemplar", () => {
+    for (const slug of Object.keys(MEAL_INGREDIENTS)) {
+      const meal = MEAL_INGREDIENTS[slug];
+      const fresh = resolveDishLines(meal.ingredients);
+      const committed = RECIPE_LINKS[slug];
+      expect(committed, slug).toBeDefined();
+      expect(committed.servingsPerRecipe, slug).toBe(meal.servings);
       expect(committed.lines, slug).toEqual(fresh.lines);
     }
   });

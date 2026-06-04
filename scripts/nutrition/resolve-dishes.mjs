@@ -16,11 +16,13 @@ import path from "node:path";
 
 const base = new URL("../../", import.meta.url);
 const guided = await import(new URL("src/data/guided-cook-steps.ts", base));
+const meals = await import(new URL("src/data/meal-ingredients.ts", base));
 const resolver = await import(
   new URL("src/lib/nutrition/resolve-dish-lines.ts", base)
 );
 
 const { guidedCookData } = guided;
+const { MEAL_INGREDIENTS } = meals;
 const { resolveDishLines } = resolver;
 
 const DEFAULT_SERVINGS = 4;
@@ -52,6 +54,27 @@ for (const slug of slugs) {
   };
 }
 
+// Meals — quantified exemplar lists (Gap 1), keyed by meal slug + own servings.
+const mealSlugs = Object.keys(MEAL_INGREDIENTS);
+for (const slug of mealSlugs) {
+  const meal = MEAL_INGREDIENTS[slug];
+  const { lines, originalLineCount, unresolved } = resolveDishLines(
+    meal.ingredients,
+  );
+  totalLines += originalLineCount;
+  resolvedLines += lines.length;
+  massedLines += lines.filter((l) => l.grams > 0).length;
+  for (const name of unresolved) {
+    unresolvedNames.set(name, (unresolvedNames.get(name) ?? 0) + 1);
+  }
+  links[slug] = {
+    recipeSlug: slug,
+    servingsPerRecipe: meal.servings,
+    originalLineCount,
+    lines,
+  };
+}
+
 // ---- coverage report ----
 const pct = (n, d) => (d ? ((100 * n) / d).toFixed(1) : "0.0");
 console.log(`\n=== dish resolution coverage ===`);
@@ -78,8 +101,9 @@ for (const [name, c] of top(unresolvedNames, 30)) {
 
 if (process.argv.includes("--report")) process.exit(0);
 
-// ---- emit vendored links ----
-const body = slugs
+// ---- emit vendored links (sides + meals) ----
+const allSlugs = Object.keys(links);
+const body = allSlugs
   .map((slug) => {
     const l = links[slug];
     const lines = l.lines
@@ -119,4 +143,6 @@ const outPath = path.join(
   "src/data/ingredients/recipe-links.generated.ts",
 );
 fs.writeFileSync(outPath, out);
-console.log(`\nwrote ${slugs.length} dish links → ${outPath}`);
+console.log(
+  `\nwrote ${allSlugs.length} dish links (${slugs.length} sides + ${mealSlugs.length} meals) → ${outPath}`,
+);

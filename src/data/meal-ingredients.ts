@@ -1,0 +1,148 @@
+/**
+ * Meal ingredient lists (Gap 1 — meal nutrition composition).
+ *
+ * Meals (unlike the guided-cook sides) carry no structured ingredient lines, so
+ * they could only ever resolve food IDENTITY from their description. This file
+ * adds quantified ingredient lists for meals so the composition engine can
+ * derive real per-serving nutrition for them too.
+ *
+ * IMPORTANT (rule 7): these are NOT new recipes. The dishes already exist in
+ * meals.json. Each entry is a *representative* ingredient list with standard
+ * quantities for a typical preparation — for nutrition ESTIMATION, not an
+ * authoritative recipe. Composition flags the result as an estimate. This is a
+ * curated exemplar set; the remaining meals grow by adding rows here (the same
+ * add-data-not-code pattern as the ingredient registry).
+ */
+
+import type { RawIngredientLine } from "@/lib/nutrition/resolve-dish-lines";
+
+export interface MealIngredients {
+  /** Representative servings for the quantities below. */
+  servings: number;
+  ingredients: RawIngredientLine[];
+}
+
+export const MEAL_INGREDIENTS: Record<string, MealIngredients> = {
+  "grilled-salmon": {
+    servings: 2,
+    ingredients: [
+      { name: "Salmon", quantity: "2 fillets" },
+      { name: "Olive oil", quantity: "1 tbsp" },
+      { name: "Lemon", quantity: "1" },
+      { name: "Garlic", quantity: "2 cloves" },
+      { name: "Salt", quantity: "to taste" },
+      { name: "Black pepper", quantity: "to taste" },
+    ],
+  },
+  "teriyaki-salmon": {
+    servings: 2,
+    ingredients: [
+      { name: "Salmon", quantity: "2 fillets" },
+      { name: "Soy sauce", quantity: "3 tbsp" },
+      { name: "Mirin", quantity: "2 tbsp" },
+      { name: "Sugar", quantity: "1 tbsp" },
+      { name: "Ginger", quantity: "1 tbsp" },
+      { name: "Garlic", quantity: "2 cloves" },
+      { name: "Sesame oil", quantity: "1 tsp" },
+    ],
+  },
+  "pad-thai": {
+    servings: 2,
+    ingredients: [
+      { name: "Rice noodles", quantity: "200 g" },
+      { name: "Shrimp", quantity: "150 g" },
+      { name: "Tofu", quantity: "100 g" },
+      { name: "Egg", quantity: "2" },
+      { name: "Bean sprouts", quantity: "1 cup" },
+      { name: "Roasted peanuts", quantity: "1/4 cup" },
+      { name: "Fish sauce", quantity: "2 tbsp" },
+      { name: "Sugar", quantity: "1 tbsp" },
+      { name: "Lime", quantity: "1" },
+      { name: "Vegetable oil", quantity: "2 tbsp" },
+      { name: "Garlic", quantity: "2 cloves" },
+      { name: "Scallion", quantity: "2" },
+    ],
+  },
+  "masoor-dal": {
+    servings: 4,
+    ingredients: [
+      { name: "Red lentils", quantity: "1 cup" },
+      { name: "Onion", quantity: "1" },
+      { name: "Tomato", quantity: "2" },
+      { name: "Garlic", quantity: "3 cloves" },
+      { name: "Ginger", quantity: "1 tbsp" },
+      { name: "Turmeric", quantity: "1 tsp" },
+      { name: "Cumin", quantity: "1 tsp" },
+      { name: "Vegetable oil", quantity: "2 tbsp" },
+      { name: "Salt", quantity: "to taste" },
+      { name: "Cilantro", quantity: "1/4 cup" },
+    ],
+  },
+  "butter-chicken": {
+    servings: 4,
+    ingredients: [
+      { name: "Chicken breast", quantity: "500 g" },
+      { name: "Butter", quantity: "3 tbsp" },
+      { name: "Heavy cream", quantity: "1/2 cup" },
+      { name: "Tomato paste", quantity: "2 tbsp" },
+      { name: "Onion", quantity: "1" },
+      { name: "Garlic", quantity: "4 cloves" },
+      { name: "Ginger", quantity: "1 tbsp" },
+      { name: "Turmeric", quantity: "1 tsp" },
+      { name: "Salt", quantity: "to taste" },
+    ],
+  },
+  "chicken-tikka-masala": {
+    servings: 4,
+    ingredients: [
+      { name: "Chicken breast", quantity: "500 g" },
+      { name: "Greek yogurt", quantity: "1/2 cup" },
+      { name: "Tomato paste", quantity: "2 tbsp" },
+      { name: "Heavy cream", quantity: "1/2 cup" },
+      { name: "Onion", quantity: "1" },
+      { name: "Garlic", quantity: "4 cloves" },
+      { name: "Ginger", quantity: "1 tbsp" },
+      { name: "Turmeric", quantity: "1 tsp" },
+      { name: "Cumin", quantity: "1 tsp" },
+      { name: "Vegetable oil", quantity: "2 tbsp" },
+    ],
+  },
+  "fish-tacos": {
+    servings: 3,
+    ingredients: [
+      { name: "Cod", quantity: "400 g" },
+      { name: "Green cabbage", quantity: "2 cups" },
+      { name: "Lime", quantity: "2" },
+      { name: "Cilantro", quantity: "1/4 cup" },
+      { name: "Mayonnaise", quantity: "1/4 cup" },
+      { name: "Vegetable oil", quantity: "2 tbsp" },
+      { name: "Garlic", quantity: "1 clove" },
+      { name: "Cumin", quantity: "1 tsp" },
+    ],
+  },
+  "falafel-wrap": {
+    servings: 2,
+    ingredients: [
+      { name: "Chickpeas", quantity: "1 cup" },
+      { name: "Garlic", quantity: "3 cloves" },
+      { name: "Cilantro", quantity: "1/2 cup" },
+      { name: "Cumin", quantity: "1 tsp" },
+      { name: "Coriander seeds", quantity: "1 tsp" },
+      { name: "Tahini", quantity: "2 tbsp" },
+      { name: "Lemon", quantity: "1" },
+      { name: "Vegetable oil for frying", quantity: "2 cups" },
+      { name: "Bread", quantity: "2" },
+    ],
+  },
+  "pizza-margherita": {
+    servings: 2,
+    ingredients: [
+      { name: "All-purpose flour", quantity: "2 cups" },
+      { name: "Mozzarella", quantity: "150 g" },
+      { name: "Tomato", quantity: "3" },
+      { name: "Basil", quantity: "1/4 cup" },
+      { name: "Olive oil", quantity: "2 tbsp" },
+      { name: "Salt", quantity: "1 tsp" },
+    ],
+  },
+};
