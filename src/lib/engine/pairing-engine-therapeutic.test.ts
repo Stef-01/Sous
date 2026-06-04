@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, afterEach } from "vitest";
 import { suggestSides } from "./pairing-engine";
 import type { MainDishIntent, SideDishCandidate } from "./types";
 import type { CareProfile } from "@/types/care-profile";
@@ -130,5 +130,61 @@ describe("suggestSides — therapeutic integration (CT-3)", () => {
     expect(ids).toContain("gf-rice");
     expect(ids).not.toContain("wheat-bread");
     expect(res.data.totalCandidates).toBe(1);
+  });
+});
+
+// Safety split (educational vs clinician). The PERSONALIZED re-ranking is
+// strictly clinician-gated; educational mode runs the dietary exclusions but
+// must never reorder a real user's plate using the registry's effect sizes.
+describe("suggestSides — educational vs clinician-approved gate split", () => {
+  const origActive = process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE;
+  const origApproved = process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED;
+  afterEach(() => {
+    if (origActive === undefined)
+      delete process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE;
+    else process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE = origActive;
+    if (origApproved === undefined)
+      delete process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED;
+    else process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED = origApproved;
+  });
+
+  it("EDUCATIONAL (active, NOT clinician-approved): no re-rank, no therapeuticFit", () => {
+    process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE = "1"; // feature on (educational)
+    delete process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED; // G1 not cleared
+    const baseline = suggestSides(main, candidates);
+    // No explicit active → exclusions resolve via therapeuticsActive (on),
+    // personalization via registryIsClinicianApproved (off).
+    const educational = suggestSides(
+      main,
+      candidates,
+      undefined,
+      undefined,
+      4,
+      { care: ldlCare },
+    );
+    // Educational mode may run dietary exclusions (so it can differ from the
+    // no-care baseline), but it must NOT personalize — only the clinician-gated
+    // re-rank writes a therapeuticFit score, so its absence proves no re-rank.
+    expect(educational.success).toBe(true);
+    expect(baseline.success).toBe(true);
+    if (educational.success) {
+      for (const s of educational.data.sides) {
+        expect("therapeuticFit" in s.scores).toBe(false);
+      }
+    }
+  });
+
+  it("CLINICIAN-APPROVED (both env on): personalizes — therapeuticFit appears", () => {
+    process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE = "1";
+    process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED = "1";
+    const res = suggestSides(main, candidates, undefined, undefined, 4, {
+      care: ldlCare,
+    });
+    expect(res.success).toBe(true);
+    if (res.success) {
+      expect(res.data.sides.some((s) => "therapeuticFit" in s.scores)).toBe(
+        true,
+      );
+    }
   });
 });

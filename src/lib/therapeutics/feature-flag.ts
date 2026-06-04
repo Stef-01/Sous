@@ -34,3 +34,21 @@ export function therapeuticsActive(): boolean {
   if (env === "0") return false;
   return process.env.NODE_ENV === "development";
 }
+
+/**
+ * STRICTER gate (founder gate G1, clinical): true only once a clinician has
+ * reviewed + approved the registry and the founder has flipped this on. Gates
+ * the one thing educational mode must NEVER do — PERSONALIZE the plate by
+ * re-ranking on the registry's effect sizes. Educational mode (therapeuticsActive)
+ * still shows evidence cards + runs dietary exclusions; it just never reorders a
+ * real user's suggestions using unreviewed clinical data.
+ *
+ * Env-gated, default OFF everywhere (including development) — never true in code
+ * by default. The founder sets NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED=1
+ * only after the G1 review clears and the records' reviewStatus is flipped to
+ * "clinician-approved". Deliberately separate from therapeuticsActive so turning
+ * the feature on for preview can't accidentally turn on personalization.
+ */
+export function registryIsClinicianApproved(): boolean {
+  return process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_APPROVED === "1";
+}

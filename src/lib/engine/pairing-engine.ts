@@ -22,7 +22,10 @@ import { addExplanations } from "./explainer";
 import { scoreTherapeuticFit } from "./therapeutic-fit";
 import { THERAPEUTIC_WEIGHT } from "./therapeutic-weights";
 import { filterByCareExclusions } from "./therapeutic-exclusions";
-import { therapeuticsActive } from "@/lib/therapeutics/feature-flag";
+import {
+  therapeuticsActive,
+  registryIsClinicianApproved,
+} from "@/lib/therapeutics/feature-flag";
 import type { CareProfile } from "@/types/care-profile";
 
 /**
@@ -69,6 +72,19 @@ function resolveActive(ctx?: TherapeuticContext): boolean {
   const hasFocus = ctx.care.conditions.length > 0 || ctx.care.avoid.length > 0;
   if (!hasFocus) return false;
   return ctx.active ?? therapeuticsActive();
+}
+
+/**
+ * Whether to PERSONALIZE — re-rank the plate by therapeutic fit. Strictly
+ * gated: educational mode (resolveActive true) shows evidence + runs dietary
+ * exclusions, but re-ranking a real user's suggestions on the registry's effect
+ * sizes is clinician-only (G1). When a caller passes `active` explicitly (tests
+ * simulating the approved state) that wins; otherwise it defaults to the
+ * clinician-approval gate, NOT the educational flag.
+ */
+function resolvePersonalize(ctx?: TherapeuticContext): boolean {
+  if (!resolveActive(ctx)) return false;
+  return ctx!.active ?? registryIsClinicianApproved();
 }
 
 /**
@@ -158,8 +174,10 @@ export function suggestSides(
     userPreferences,
   );
 
-  // Therapeutic re-blend (dormant until founder gate G1). Default path untouched.
-  const finalRanked = active
+  // Therapeutic re-blend = PERSONALIZATION → clinician-only (G1), stricter than
+  // the educational `active` gate above. Educational mode runs the exclusions
+  // but leaves the ranking untouched.
+  const finalRanked = resolvePersonalize(therapeutic)
     ? reblendTherapeutic(ranked, therapeutic!.care)
     : ranked;
 
