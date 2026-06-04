@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {
-  computePantryFit,
-  decideSwipe,
-  exitDistanceFor,
-  partitionMetaTags,
-} from "./quest-card";
+import { decideSwipe, exitDistanceFor, partitionMetaTags } from "./quest-card";
+import { computePantryFit } from "./quest-pool";
 import { normalizePantryName } from "@/lib/hooks/use-pantry";
 
 describe("computePantryFit", () => {
