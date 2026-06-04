@@ -26,7 +26,16 @@ describe("parseLeadingAmount", () => {
     expect(parseLeadingAmount("2 to 4 tbsp").amount).toBe(3);
   });
   it("returns null when there is no leading number", () => {
-    expect(parseLeadingAmount("a pinch").amount).toBeNull();
+    // "a pinch" is a non-quantity (caught upstream); bare "pinch" here too.
+    expect(parseLeadingAmount("pinch of salt").amount).toBeNull();
+  });
+
+  it("parses word-quantities", () => {
+    expect(parseLeadingAmount("a clove").amount).toBe(1);
+    expect(parseLeadingAmount("an onion").amount).toBe(1);
+    expect(parseLeadingAmount("half a cup").amount).toBe(0.5);
+    expect(parseLeadingAmount("half a cup").rest).toBe("cup");
+    expect(parseLeadingAmount("quarter cup").amount).toBe(0.25);
   });
 });
 

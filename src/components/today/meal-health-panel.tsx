@@ -284,6 +284,11 @@ function EvidenceRowItem({
           {row.effectText}
         </p>
       )}
+      {row.doseSignal && (
+        <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
+          Typically needs: {row.doseSignal}
+        </p>
+      )}
       <p className="mt-1 text-[12px] leading-snug text-[var(--nourish-subtext)]">
         {row.note}
       </p>

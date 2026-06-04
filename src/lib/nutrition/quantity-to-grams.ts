@@ -113,6 +113,21 @@ export function parseLeadingAmount(input: string): {
   // still match (e.g. "1½ cups" → "1 0.5 cups", "½ tsp" → "0.5 tsp").
   s = s.replace(/\s+/g, " ").trim();
 
+  // Leading word-quantities common in recipes: "a clove", "an onion", "half a
+  // cup", "quarter cup". (A bare "pinch"/"dash"/"handful" is caught earlier as a
+  // non-quantity.)
+  const word = s.match(/^(a|an|half|quarter)\b/i);
+  if (word) {
+    const w = word[1].toLowerCase();
+    const amount = w === "half" ? 0.5 : w === "quarter" ? 0.25 : 1;
+    // Drop a following "a"/"of" connector, e.g. "half a cup" → "cup".
+    const rest = s
+      .slice(word[0].length)
+      .replace(/^\s+(a|an|of)\b/i, "")
+      .trim();
+    return { amount, rest };
+  }
+
   // Range "1-2" / "1 to 2" → average of the two ends.
   const range = s.match(/^(\d+(?:\.\d+)?)\s*(?:-|to)\s*(\d+(?:\.\d+)?)\b/);
   if (range) {
