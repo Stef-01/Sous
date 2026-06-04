@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, Mic } from "lucide-react";
 import { useVoiceCook } from "@/lib/voice/use-voice-cook";
+import { track } from "@/lib/analytics";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import {
   findMostRecentActiveTimer,
@@ -64,6 +65,10 @@ export default function GuidedCookPage({
   const { slug } = use(params);
   const router = useRouter();
   const searchParams = useSearchParams();
+  // Funnel: cook started (once per dish mount).
+  useEffect(() => {
+    track("cook_started", { slug });
+  }, [slug]);
   // W7 follow-up: useReducedMotion gate available across this file's
   // motion sites. Currently consumed by the page-shell entrance below.
   const reducedMotion = useReducedMotion();

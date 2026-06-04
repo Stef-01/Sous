@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { track } from "@/lib/analytics";
 
 /** localStorage key for the share log. v1 so we can migrate later without
  *  breaking old data. */
@@ -69,6 +70,8 @@ export function logShare(entry: Omit<ShareLogEntry, "sharedAt">) {
     ...existing,
   ].slice(0, MAX_ENTRIES);
   persist(next);
+  // Funnel: plate shared (dish slug only — never the recipient).
+  track("plate_shared", { dishSlug: entry.dishSlug });
 }
 
 /** React hook that exposes the current share log and re-reads on storage

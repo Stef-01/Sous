@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { X, Check, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
@@ -11,6 +11,7 @@ import {
 } from "@/lib/hooks/use-overlay-a11y";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { trpc } from "@/lib/trpc/client";
+import { track } from "@/lib/analytics";
 
 interface EvaluateSheetProps {
   evaluation: PlateEvaluation;
@@ -41,6 +42,9 @@ export function EvaluateSheet({
   useBodyScrollLock(open);
   useDismissOnEscape(open, onClose);
   useFocusTrap(open, sheetRef);
+  useEffect(() => {
+    if (open) track("evaluate_opened", { status: evaluation.status });
+  }, [open, evaluation.status]);
   // AI-enhanced appraisal  -  only fires when sheet is open
   const aiAppraisal = trpc.ai.rewriteAppraisal.useQuery(
     {

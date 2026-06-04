@@ -67,6 +67,7 @@ import { WhosAtTable } from "@/components/today/whos-at-table";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
 import { TherapeuticEvidence } from "@/components/today/therapeutic-evidence";
+import { track } from "@/lib/analytics";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
 import type { CoachQuizResult } from "@/data/coach-quiz";
@@ -252,6 +253,21 @@ function TodayPageContent() {
   const recognitionMutation = trpc.recognition.identify.useMutation();
 
   // Transition from loading → results when query resolves for the CURRENT query.
+  // Funnel: fire search_submitted / results_viewed once per view transition
+  // (the ref dedupes the effect's re-runs on data changes).
+  const trackedViewRef = useRef<string>("");
+  useEffect(() => {
+    if (view.type === trackedViewRef.current) return;
+    trackedViewRef.current = view.type;
+    if (view.type === "loading") {
+      track("search_submitted");
+    } else if (view.type === "results") {
+      track("results_viewed", {
+        sides: pairingQuery.data?.success ? pairingQuery.data.sides.length : 0,
+      });
+    }
+  }, [view.type, pairingQuery.data]);
+
   // If the query errors while still in loading, fall back to search so the
   // skeleton UI doesn't stack on top of the error block (AUDIT P1-5).
 

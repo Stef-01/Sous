@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { computeStreakWithRest, loadRestDays } from "./use-rest-days";
 import { persistCookCompletion } from "@/lib/trpc/vanilla";
+import { track } from "@/lib/analytics";
 
 const SESSIONS_KEY = "sous-cook-sessions";
 const STATS_KEY = "sous-cook-stats";
@@ -253,6 +254,15 @@ export function useCookSessions() {
         note: payload.note,
         photoUri: payload.photoUri,
       };
+
+      // Funnel terminus: cook completed. Past the idempotency guard, so this
+      // fires exactly once per real completion. Non-PII only.
+      track("cook_completed", {
+        rating: payload.rating ?? null,
+        hasPhoto: !!payload.photoUri,
+        hasNote: !!payload.note,
+        cuisine: existing[idx].cuisineFamily ?? null,
+      });
 
       persistSessions(existing);
       setSessions(existing);
