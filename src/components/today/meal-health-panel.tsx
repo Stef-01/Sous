@@ -31,6 +31,8 @@ export interface MealHealthPanelProps {
   tags: string[];
   /** Dish slug — resolves the ingredient profile for food-identity matching. */
   slug?: string;
+  /** Dish description — richer fallback identity for meals without links. */
+  description?: string;
   /** The user's active health focus (care profile). Empty = generic view. */
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
@@ -42,6 +44,7 @@ export function MealHealthPanel({
   dishName,
   tags,
   slug,
+  description,
   conditions,
   reviewed,
   className,
@@ -51,10 +54,10 @@ export function MealHealthPanel({
   const scope = conditions.length > 0 ? conditions : undefined;
   // Bridge: resolved ingredient classes/groups let matching reason over food
   // identity, not spelling. Linked dishes use their ingredient list; meals
-  // (no links) fall back to identity named in their title + tags.
+  // (no links) fall back to identity named in their title, tags + description.
   const profile = getDishTherapeuticProfile(
     slug,
-    `${dishName} ${tags.join(" ")}`,
+    `${dishName} ${tags.join(" ")} ${description ?? ""}`,
   );
   const matches = matchInterventionsForDish(
     {

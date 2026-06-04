@@ -37,6 +37,8 @@ interface Props {
   tags: string[];
   /** Dish slug — resolves the ingredient profile for food-identity matching. */
   slug?: string;
+  /** Dish description — richer fallback identity for meals without links. */
+  description?: string;
   conditions: readonly ConditionId[];
   /** registryIsClinicianApproved() — gates personalized framing (gate G1). */
   reviewed: boolean;
@@ -46,6 +48,7 @@ export function MealHealthSheet({
   dishName,
   tags,
   slug,
+  description,
   conditions,
   reviewed,
 }: Props) {
@@ -124,6 +127,7 @@ export function MealHealthSheet({
                   dishName={dishName}
                   tags={tags}
                   slug={slug}
+                  description={description}
                   conditions={conditions}
                   reviewed={reviewed}
                 />

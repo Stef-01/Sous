@@ -23,6 +23,15 @@ describe("getDishTherapeuticProfile", () => {
     expect(salmon.therapeuticClasses).toContain("oily-fish");
   });
 
+  it("extracts richer identity from a meal description (no links)", () => {
+    // A meal's description names real ingredients the title alone misses.
+    const p = getDishTherapeuticProfile(
+      undefined,
+      "Falafel Wrap — crispy chickpea fritters with tahini sauce",
+    );
+    expect(p.foodGroups).toContain("legume"); // chickpeas
+  });
+
   it("is empty for an undefined or unknown slug (safe fallback)", () => {
     expect(getDishTherapeuticProfile(undefined)).toEqual({
       foodGroups: [],
