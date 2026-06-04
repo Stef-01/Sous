@@ -291,16 +291,30 @@ Mediterranean-pattern evidence (effect sizes, matched signals), scoped to MASLD,
 zero console errors — the full pipeline (name/links → registry → food identity →
 structured evidence → display) working on a real dish.
 
+### Post-round-5 improvements (2026-06-04)
+
+- **Meals gap closed (identity)** — meals carry no ingredient links, but their
+  real `description` names real ingredients. Threaded into the profile fallback
+  (`name + tags + description`): meals with a food profile **50→74/76**, meals
+  surfacing evidence **22→31**. Precision held by the conservative
+  `SIGNAL_STRUCTURE` map. Live-verified: Pad Thai went empty-state → full panel
+  ("Built on: legumes · fruit · nuts & seeds · seafood · grains" + Mediterranean
+  evidence). `7790338`.
+- **Drift guard** — `resolveDishLines` extracted to a pure, tested function; a
+  guard recomputes every dish's links from source and asserts equality with the
+  committed table, so the generated data can never silently go stale. `d8d4618`.
+
 ### Remaining workstream (the honest gaps)
 
-1. **Meal ingredient lists** — the biggest lever. 0/76 meals have structured
-   ingredients (only the 119 sides do); meals lean on the name/tags fallback.
-   Authoring real meal ingredient lists (rule 7) unlocks full composition +
-   precise matching for the primary swipe content.
+1. **Meal ingredient lists with quantities** — meals now resolve food _identity_
+   from their description, but lack per-line _quantities_, so meal nutrition
+   composition (macros) needs authored ingredient lists (rule 7).
 2. **Display-grade macros** — needs cooked-weight + oil-absorption + per-dish
-   servings before absolute per-serving numbers are trustworthy.
-3. **Registry breadth** — 88 ingredients cover 84% of lines; the tail (curry
-   leaves, garam masala, regional items) grows by adding spec rows.
+   servings before absolute per-serving numbers are trustworthy (karaage's
+   frying oil composes to ~1900 kcal today).
+3. **Registry breadth** — 88 ingredients cover 84% of lines; the tail is genuine
+   long-tail (spice blends like garam masala aren't even in SR Legacy) and grows
+   by adding spec rows.
 
 The system is built to scale by adding **data** (spec rows, meal ingredient
 lists), not by changing code — every layer is pure, tested, and drift-guarded.
