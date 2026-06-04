@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -22,7 +22,6 @@ import {
 import { PathHeader } from "@/components/path/path-header";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
-import { NextUnlockCard } from "@/components/path/next-unlock-card";
 import { SkillTree } from "@/components/path/skill-tree";
 import { SkillDetailSheet } from "@/components/path/skill-detail-sheet";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
@@ -35,7 +34,7 @@ import {
   type AchievementsLauncherHandle,
 } from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
-import { getSkillNode, skillTreeNodes } from "@/data/skill-tree";
+import { getSkillNode } from "@/data/skill-tree";
 import { SectionKicker } from "@/components/shared/section-kicker";
 
 /**
@@ -139,53 +138,6 @@ export default function PathPage() {
     checkAchievements,
   ]);
 
-  // Compute the next skill to unlock for NextUnlockCard
-  const nextUnlockData = useMemo(() => {
-    if (!mounted) return { nextNode: null, lockedPreview: null };
-
-    // First: any in_progress node
-    const inProgress = nodesWithStatus.find((n) => n.status === "in_progress");
-    if (inProgress) {
-      return {
-        nextNode: {
-          node: inProgress,
-          status: inProgress.status,
-          cooksCompleted: inProgress.progress.cooksCompleted,
-        },
-        lockedPreview: null,
-      };
-    }
-
-    // Second: first available node
-    const available = nodesWithStatus.find((n) => n.status === "available");
-    if (available) {
-      return {
-        nextNode: {
-          node: available,
-          status: available.status,
-          cooksCompleted: available.progress.cooksCompleted,
-        },
-        lockedPreview: null,
-      };
-    }
-
-    // Third: first locked node as a teaser
-    const firstLocked = skillTreeNodes.find(
-      (n) => getNodeStatus(n.id) === "locked",
-    );
-    if (firstLocked) {
-      return {
-        nextNode: null,
-        lockedPreview: {
-          node: firstLocked,
-          cooksNeeded: firstLocked.cooksRequired,
-        },
-      };
-    }
-
-    return { nextNode: null, lockedPreview: null };
-  }, [mounted, nodesWithStatus, getNodeStatus]);
-
   // Detail sheet state
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const selectedNode = selectedNodeId
@@ -273,23 +225,9 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Hero action: the single "what to cook next to progress" leads the
-            page, so the most useful, most frictionless thing is first. */}
-        <motion.div
-          className="mx-auto max-w-md page-x pt-3"
-          initial={reducedMotion ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 320, damping: 28 }}
-        >
-          <NextUnlockCard
-            nextNode={nextUnlockData.nextNode}
-            lockedPreview={nextUnlockData.lockedPreview}
-            skillsCompleted={skillsCompleted}
-          />
-        </motion.div>
-
-        {/* Skill tree — the page's signature journey map, surfaced right after
-            the next action instead of buried beneath the stats dashboard. */}
+        {/* Skill tree is the single hero — the signature journey map leads the
+            page. The active node IS "what's next" (tap it for the detail +
+            cook CTA), so there's no separate Up-Next card duplicating it. */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
         {/* Looking back: lifetime stats + this week's goal. Demoted below the

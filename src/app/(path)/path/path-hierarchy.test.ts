@@ -11,10 +11,15 @@ import { join } from "node:path";
  * entirely below the fold. The 2026-06 declutter re-established a hero-first
  * order and merged the two look-back cards into one grouped surface.
  *
+ * A later pass (2026-06) went further: the separate "Up Next" card duplicated
+ * the skill tree's active node (same name + icon, stacked directly above it),
+ * so it was removed — the tree is now the single hero and its active node IS
+ * "what's next".
+ *
  * This static guard (reads source, no render — so it's part of the fast
  * `pnpm test` gate) keeps that hierarchy from silently regressing:
- *   1. The single forward action (NextUnlockCard) leads.
- *   2. The skill tree is surfaced ABOVE the look-back dashboard, not beneath it.
+ *   1. The skill tree (single hero) leads, ABOVE the look-back dashboard.
+ *   2. No separate Up-Next card re-introduces the active-skill duplication.
  *   3. The lifetime-stats + weekly-goal cards stay merged into ONE grouped
  *      card (the `bare` composition), not two floating cards again.
  */
@@ -32,26 +37,26 @@ function idx(marker: string): number {
 }
 
 describe("Path Hierarchy", () => {
-  it("leads with the forward action, then the tree, then the dashboard", () => {
-    const upNext = idx("<NextUnlockCard");
+  it("leads with the skill tree (single hero), above the dashboard", () => {
     const tree = idx("<SkillTree");
     const journey = idx("<JourneySummary");
     const weekly = idx("<WeeklyGoalCard");
 
-    // Up Next (the single "what to cook next" action) leads the page.
-    expect(
-      upNext,
-      "NextUnlockCard (the forward action) must lead, before the skill tree",
-    ).toBeLessThan(tree);
-
-    // The skill tree — the signature visual — is surfaced ABOVE the look-back
-    // dashboard. This is the exact regression the declutter fixed: stats first,
-    // tree buried.
+    // The skill tree — the signature journey visual — leads, surfaced ABOVE the
+    // look-back dashboard (the exact regression the declutter fixed: stats
+    // first, tree buried).
     expect(
       tree,
       "SkillTree must render ABOVE the Journey/Weekly dashboard, not below it",
     ).toBeLessThan(journey);
     expect(tree).toBeLessThan(weekly);
+  });
+
+  it("does not duplicate the active skill in a separate Up-Next card", () => {
+    // The tree's active node IS 'what's next'. A separate NextUnlockCard
+    // restated the same skill (name + icon) directly above the tree — the
+    // redundancy the declutter removed. Keep it off.
+    expect(src.includes("<NextUnlockCard")).toBe(false);
   });
 
   it("keeps the look-back stats merged into one grouped card", () => {
