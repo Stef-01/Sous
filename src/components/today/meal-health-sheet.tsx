@@ -21,7 +21,7 @@ import {
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, HeartPulse } from "lucide-react";
 import type { ConditionId } from "@/types/therapeutics";
 import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
 import { MealHealthPanel } from "./meal-health-panel";
@@ -74,8 +74,14 @@ export function MealHealthSheet({
             className="absolute inset-x-0 z-30 mx-auto flex w-fit cursor-grab touch-none items-center gap-1.5 rounded-full bg-black/55 px-4 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md active:cursor-grabbing"
             aria-label={`Show health information for ${dishName}`}
           >
-            <ChevronUp size={14} strokeWidth={2.4} />
+            <HeartPulse size={14} strokeWidth={2.2} />
             Health
+            <ChevronUp
+              size={13}
+              strokeWidth={2.4}
+              className="opacity-75"
+              aria-hidden="true"
+            />
           </motion.button>
         )}
       </AnimatePresence>

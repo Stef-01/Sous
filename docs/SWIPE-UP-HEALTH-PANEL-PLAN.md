@@ -207,16 +207,18 @@ per-record guard.
 | Bundle weight on Today                               | the registry is already lazy-loaded; the panel + match logic load only inside the (lazy) overlay, never the Today shell |
 | Reduced-motion vestibular load (coupled photo scale) | full `useReducedMotion` gate → cross-fade, no scale/translate                                                           |
 
-## 8. Open decisions for Stefan
+## 8. Open decisions for Stefan — RESOLVED 2026-06-04
 
-1. **One snap or two?** v1 proposes one (`peek`, half-image). Add a `full` snap
-   later if users want more detail without leaving the card.
-2. **Home surface:** immersive card only (v1), or also a tap-affordance on the
-   Today preview card?
-3. **Affordance copy:** grabber + `Health`, or an icon only (heart-pulse), or a
-   first-run coachmark that teaches the gesture once then never again?
-4. **Nutrition source** (founder gate): USDA per ADR-0001, or defer the macro row
-   entirely and ship therapeutics-only in v1?
+> Context: this is **private refinement, not a public release** — the feature
+> stays `therapeuticsActive()`-gated and educational while we iterate.
+
+1. **One snap or two?** → **One** (`peek`, half-image). A `full` snap can come
+   later if detail demands it.
+2. **Home surface:** → **Immersive card only** (no Today-preview tap-affordance).
+3. **Affordance:** → **Grabber + icon** — `HeartPulse` icon + `Health` label +
+   a subtle up-chevron gesture hint.
+4. **Nutrition source:** → **Ship now**, therapeutics-only; macro row deferred
+   (see §9 decision — rules 7 + 13).
 
 ---
 
