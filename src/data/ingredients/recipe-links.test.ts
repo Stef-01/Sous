@@ -21,15 +21,15 @@ describe("recipe ingredient links", () => {
   });
 
   // Coverage ratchet — raise the floor as the registry grows; never let it
-  // regress. 22 ingredients → ~290 lines; 88 ingredients → ~810 lines.
+  // regress. 22 ingredients → ~290 lines; 106 ingredients → ~844 lines.
   it("meets the resolved-line coverage floor", () => {
-    expect(allLines.length).toBeGreaterThanOrEqual(780);
+    expect(allLines.length).toBeGreaterThanOrEqual(840);
   });
 
-  it("fully resolves a meaningful share of dishes", () => {
+  it("fully resolves (every line massed) a meaningful share of dishes", () => {
     const full = Object.values(RECIPE_LINKS).filter(
       (l) => l.lines.length > 0 && l.lines.every((x) => x.grams > 0),
     );
-    expect(full.length).toBeGreaterThanOrEqual(20);
+    expect(full.length).toBeGreaterThanOrEqual(28);
   });
 });
