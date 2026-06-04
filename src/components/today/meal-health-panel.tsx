@@ -159,9 +159,7 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
 
   return (
     <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--nourish-subtext-faint)]">
-        Estimated nutrition · per serving
-      </p>
+      <p className="sous-label">Estimated nutrition · per serving</p>
       <dl className="mt-3 grid grid-cols-4 gap-3">
         {macros.map((it) => (
           <div key={it.label}>
@@ -238,9 +236,7 @@ function WholeFoodComposition({
   if (shown.length === 0) return null;
   return (
     <div>
-      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--nourish-subtext-faint)]">
-        Built on
-      </p>
+      <p className="sous-label mb-2">Built on</p>
       <div className="flex flex-wrap gap-1.5">
         {shown.map((g) => (
           <span

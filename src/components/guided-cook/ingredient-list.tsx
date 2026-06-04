@@ -268,7 +268,7 @@ export function IngredientList({
           <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             {prepGroups.map((group) => (
               <div key={group.station}>
-                <h3 className="border-b border-neutral-100 bg-neutral-50/60 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--nourish-subtext)]">
+                <h3 className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2">
                   {group.label}
                 </h3>
                 <div className="divide-y divide-neutral-100">
@@ -346,7 +346,7 @@ export function IngredientList({
                       initial={{ opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: sectionStartIdx * 0.04 }}
-                      className="border-b border-neutral-100 bg-neutral-50/60 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.06em] text-[var(--nourish-subtext)]"
+                      className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2"
                     >
                       {section.label}
                     </motion.h3>

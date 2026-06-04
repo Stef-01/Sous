@@ -37,9 +37,7 @@ export function ServingSlider({
   return (
     <div className={cn("p-4", className)}>
       <div className="flex items-baseline justify-between">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext-faint)]">
-          Servings
-        </span>
+        <span className="sous-label">Servings</span>
         <span className="font-serif text-xl leading-none text-[var(--nourish-green)]">
           {servings}
           {Math.abs(multiplier - 1) > 0.01 && (

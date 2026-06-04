@@ -23,9 +23,7 @@ export function CookNutritionReadout({
 
   return (
     <div className="p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext-faint)]">
-        Estimated nutrition
-      </p>
+      <p className="sous-label">Estimated nutrition</p>
       <div className="mt-2 flex items-baseline gap-1.5">
         <span className="font-serif text-2xl leading-none text-[var(--nourish-dark)]">
           {round(perServing.calories)}
