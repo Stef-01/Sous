@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { scoreTherapeuticFit, EVIDENCE_WEIGHT } from "./therapeutic-fit";
+import {
+  scoreTherapeuticFit,
+  matchInterventionsForDish,
+  EVIDENCE_WEIGHT,
+} from "./therapeutic-fit";
 import type { CareProfile } from "@/types/care-profile";
 
 function care(conditions: CareProfile["conditions"]): CareProfile {
@@ -67,5 +71,61 @@ describe("scoreTherapeuticFit", () => {
     expect(EVIDENCE_WEIGHT.high).toBeGreaterThan(EVIDENCE_WEIGHT.moderate);
     expect(EVIDENCE_WEIGHT.moderate).toBeGreaterThan(EVIDENCE_WEIGHT.low);
     expect(EVIDENCE_WEIGHT.low).toBeGreaterThan(EVIDENCE_WEIGHT["very-low"]);
+  });
+});
+
+describe("matchInterventionsForDish (swipe-up health panel data)", () => {
+  it("returns the interventions a dish realizes, with the matched signals", () => {
+    const matches = matchInterventionsForDish(
+      dish("Oat & Barley Pilaf", ["oats", "barley"]),
+    );
+    expect(matches.length).toBeGreaterThan(0);
+    for (const m of matches) {
+      expect(m.matchedSignals.length).toBeGreaterThan(0);
+      // every matched signal really appears in the dish text
+      const hay = `${"Oat & Barley Pilaf"} oats barley`.toLowerCase();
+      for (const sig of m.matchedSignals) {
+        expect(hay.includes(sig.toLowerCase())).toBe(true);
+      }
+    }
+  });
+
+  it("returns nothing for a dish that realizes no intervention", () => {
+    expect(
+      matchInterventionsForDish(dish("Plain White Rice", ["white rice"])),
+    ).toEqual([]);
+  });
+
+  it("scopes to the given conditions when personalizing", () => {
+    const ldl = matchInterventionsForDish(dish("Oat Porridge", ["oats"]), [
+      "high-ldl",
+    ]);
+    expect(ldl.length).toBeGreaterThan(0);
+    expect(ldl.every((m) => m.record.conditionId === "high-ldl")).toBe(true);
+  });
+
+  it("orders strongest evidence first", () => {
+    const matches = matchInterventionsForDish(
+      dish("Oat, Nut & Bean Bowl", ["oats", "nuts", "legumes"]),
+      ["high-ldl"],
+    );
+    for (let i = 1; i < matches.length; i++) {
+      expect(
+        EVIDENCE_WEIGHT[matches[i - 1].record.grade],
+      ).toBeGreaterThanOrEqual(EVIDENCE_WEIGHT[matches[i].record.grade]);
+    }
+  });
+
+  it("agrees with scoreTherapeuticFit by construction (shared predicate)", () => {
+    const samples: Array<{ name: string; tags: string[] }> = [
+      dish("Oat Porridge", ["oats"]),
+      dish("Plain White Rice", ["white rice"]),
+      dish("Greek Veg Bowl", ["olive oil", "vegetables"]),
+    ];
+    for (const d of samples) {
+      const matched = matchInterventionsForDish(d, ["high-ldl"]).length > 0;
+      const scored = scoreTherapeuticFit(care(["high-ldl"]), d) > 0.5;
+      expect(matched).toBe(scored);
+    }
   });
 });
