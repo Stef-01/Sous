@@ -19,6 +19,9 @@ import type { PerServingNutrition } from "@/types/nutrition";
 
 const NUTRIENT_KEYS: ReadonlyArray<keyof NutrientVector> = [
   "calories",
+  "protein_g",
+  "totalFat_g",
+  "totalCarbs_g",
   "calcium_mg",
   "iron_mg",
   "vitaminD_mcg",
@@ -42,6 +45,9 @@ export type ComposeResult =
 function zeroVector(): NutrientVector {
   return {
     calories: 0,
+    protein_g: 0,
+    totalFat_g: 0,
+    totalCarbs_g: 0,
     calcium_mg: 0,
     iron_mg: 0,
     vitaminD_mcg: 0,

@@ -21,6 +21,9 @@ import path from "node:path";
 
 // nutrient.number → our NutrientVector key (first present wins).
 const NUMBER_TO_KEY = {
+  protein_g: ["203"],
+  totalFat_g: ["204"],
+  totalCarbs_g: ["205"],
   calcium_mg: ["301"],
   iron_mg: ["303"],
   vitaminD_mcg: ["328"],
@@ -105,6 +108,9 @@ function main() {
 
   const KEYS = [
     "calories",
+    "protein_g",
+    "totalFat_g",
+    "totalCarbs_g",
     "calcium_mg",
     "iron_mg",
     "vitaminD_mcg",

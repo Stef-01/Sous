@@ -28,7 +28,10 @@ import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import { ServingSlider } from "@/components/guided-cook/serving-slider";
+import { CookNutritionReadout } from "@/components/guided-cook/cook-nutrition-readout";
 import { scaleQuantity } from "@/lib/cook/scale-quantity";
+import { getDishNutrition } from "@/lib/engine/dish-nutrition";
+import { getRecipeLink } from "@/data/ingredients/recipe-links";
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import type { StaticCookStep } from "@/data/guided-cook-steps";
 import { StepCard } from "@/components/guided-cook/step-card";
@@ -59,8 +62,10 @@ import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
 import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { DeadEndShell } from "@/components/shared/dead-end-shell";
 
-/** Servings the recipe quantities are written for; the slider scales from here. */
-const BASE_SERVINGS = 2;
+/** Fallback base servings for dishes with no resolved ingredient link. The real
+ *  base is the recipe link's servingsPerRecipe — one source of truth shared by
+ *  the slider, the ingredient scaling, AND the nutrition composition. */
+const FALLBACK_SERVINGS = 2;
 
 export default function GuidedCookPage({
   params,
@@ -125,9 +130,10 @@ export default function GuidedCookPage({
     upsertSubmission,
   } = useCurrentPod();
   const [podRating, setPodRating] = useState(0);
-  // Serving-size control: the recipe is written for BASE_SERVINGS; the slider
-  // scales every ingredient quantity by servings / BASE_SERVINGS.
-  const [servings, setServings] = useState(BASE_SERVINGS);
+  // Serving-size control. null = use the recipe's own base; a number = the
+  // user's chosen serving count. Drives BOTH the ingredient scaling and the
+  // composed nutrition below — one number, one source of truth.
+  const [servingsOverride, setServingsOverride] = useState<number | null>(null);
   // W22 visual-mode preference + W27 page-side adoption — when on,
   // StepCard promotes the step image and shrinks the instruction.
   const { enabled: visualMode } = useVisualModePref();
@@ -649,12 +655,19 @@ export default function GuidedCookPage({
   }
 
   const { dish, ingredients } = data;
-  // Scale every quantity by the chosen serving size (cheap; ~10 ingredients).
-  const servingMultiplier = servings / BASE_SERVINGS;
+  // The recipe link's servingsPerRecipe is the SINGLE base used everywhere:
+  // the slider, the ingredient scaling, and the nutrition composition.
+  const recipeLink = getRecipeLink(dish.slug);
+  const baseServings = recipeLink?.servingsPerRecipe ?? FALLBACK_SERVINGS;
+  const servings = servingsOverride ?? baseServings;
+  const servingMultiplier = servings / baseServings;
   const scaledIngredients = ingredients.map((i) => ({
     ...i,
     quantity: scaleQuantity(i.quantity, servingMultiplier),
   }));
+  // Per-serving nutrition is invariant (a serving is a serving); the batch total
+  // = per-serving × the chosen servings, so the slider drives the calories.
+  const dishNutrition = getDishNutrition(dish.slug);
 
   // ── Render ────────────────────────────────────────
 
@@ -726,9 +739,16 @@ export default function GuidedCookPage({
               />
               <ServingSlider
                 servings={servings}
-                baseServings={BASE_SERVINGS}
-                onChange={setServings}
+                baseServings={baseServings}
+                onChange={setServingsOverride}
               />
+              {dishNutrition.perServing &&
+                dishNutrition.massedCoverage >= 0.7 && (
+                  <CookNutritionReadout
+                    perServing={dishNutrition.perServing}
+                    servings={servings}
+                  />
+                )}
               <IngredientList
                 ingredients={scaledIngredients}
                 recipeName={dish.name}

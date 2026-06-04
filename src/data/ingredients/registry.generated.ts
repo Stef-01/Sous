@@ -31,6 +31,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lentils, raw
     per100g: {
       calories: 352,
+      protein_g: 24.6,
+      totalFat_g: 1.06,
+      totalCarbs_g: 63.4,
       calcium_mg: 35,
       iron_mg: 6.51,
       vitaminD_mcg: 0,
@@ -68,6 +71,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Chickpeas (garbanzo beans, bengal gram), mature seeds, raw
     per100g: {
       calories: 378,
+      protein_g: 20.5,
+      totalFat_g: 6.04,
+      totalCarbs_g: 63,
       calcium_mg: 57,
       iron_mg: 4.31,
       vitaminD_mcg: 0,
@@ -99,6 +105,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Beans, black, mature seeds, raw
     per100g: {
       calories: 341,
+      protein_g: 21.6,
+      totalFat_g: 1.42,
+      totalCarbs_g: 62.4,
       calcium_mg: 123,
       iron_mg: 5.02,
       vitaminD_mcg: 0,
@@ -130,6 +139,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Tofu, firm, prepared with calcium sulfate and magnesium chloride (nigari)
     per100g: {
       calories: 78,
+      protein_g: 9.04,
+      totalFat_g: 4.17,
+      totalCarbs_g: 2.85,
       calcium_mg: 201,
       iron_mg: 1.61,
       vitaminD_mcg: 0,
@@ -161,6 +173,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Oats (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 389,
+      protein_g: 16.9,
+      totalFat_g: 6.9,
+      totalCarbs_g: 66.3,
       calcium_mg: 54,
       iron_mg: 4.72,
       vitaminD_mcg: 0,
@@ -192,6 +207,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Barley, hulled
     per100g: {
       calories: 354,
+      protein_g: 12.5,
+      totalFat_g: 2.3,
+      totalCarbs_g: 73.5,
       calcium_mg: 33,
       iron_mg: 3.6,
       vitaminD_mcg: 0,
@@ -223,6 +241,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Rice, brown, long-grain, raw (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 367,
+      protein_g: 7.54,
+      totalFat_g: 3.2,
+      totalCarbs_g: 76.2,
       calcium_mg: 9,
       iron_mg: 1.29,
       vitaminD_mcg: 0,
@@ -262,6 +283,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Rice, white, long-grain, regular, raw, unenriched
     per100g: {
       calories: 365,
+      protein_g: 7.13,
+      totalFat_g: 0.66,
+      totalCarbs_g: 80,
       calcium_mg: 28,
       iron_mg: 0.8,
       vitaminD_mcg: 0,
@@ -298,6 +322,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Rice noodles, dry
     per100g: {
       calories: 364,
+      protein_g: 5.95,
+      totalFat_g: 0.56,
+      totalCarbs_g: 80.2,
       calcium_mg: 18,
       iron_mg: 0.7,
       vitaminD_mcg: 0,
@@ -329,6 +356,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Wheat flour, white, all-purpose, enriched, bleached
     per100g: {
       calories: 364,
+      protein_g: 10.3,
+      totalFat_g: 0.98,
+      totalCarbs_g: 76.3,
       calcium_mg: 15,
       iron_mg: 4.64,
       vitaminD_mcg: 0,
@@ -360,6 +390,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cornstarch
     per100g: {
       calories: 381,
+      protein_g: 0.26,
+      totalFat_g: 0.05,
+      totalCarbs_g: 91.3,
       calcium_mg: 2,
       iron_mg: 0.47,
       vitaminD_mcg: 0,
@@ -397,6 +430,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Bread, white, commercially prepared (includes soft bread crumbs)
     per100g: {
       calories: 266,
+      protein_g: 8.85,
+      totalFat_g: 3.33,
+      totalCarbs_g: 49.4,
       calcium_mg: 144,
       iron_mg: 3.61,
       vitaminD_mcg: 0,
@@ -428,6 +464,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Nuts, almonds
     per100g: {
       calories: 579,
+      protein_g: 21.2,
+      totalFat_g: 49.9,
+      totalCarbs_g: 21.6,
       calcium_mg: 269,
       iron_mg: 3.71,
       vitaminD_mcg: 0,
@@ -459,6 +498,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Nuts, walnuts, english
     per100g: {
       calories: 654,
+      protein_g: 15.2,
+      totalFat_g: 65.2,
+      totalCarbs_g: 13.7,
       calcium_mg: 98,
       iron_mg: 2.91,
       vitaminD_mcg: 0,
@@ -490,6 +532,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Peanuts, all types, dry-roasted, without salt
     per100g: {
       calories: 587,
+      protein_g: 24.4,
+      totalFat_g: 49.7,
+      totalCarbs_g: 21.3,
       calcium_mg: 58,
       iron_mg: 1.58,
       vitaminD_mcg: 0,
@@ -521,6 +566,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Peanuts, all types, raw
     per100g: {
       calories: 567,
+      protein_g: 25.8,
+      totalFat_g: 49.2,
+      totalCarbs_g: 16.1,
       calcium_mg: 92,
       iron_mg: 4.58,
       vitaminD_mcg: 0,
@@ -552,6 +600,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Seeds, sesame seeds, whole, dried
     per100g: {
       calories: 573,
+      protein_g: 17.7,
+      totalFat_g: 49.7,
+      totalCarbs_g: 23.4,
       calcium_mg: 975,
       iron_mg: 14.6,
       vitaminD_mcg: 0,
@@ -583,6 +634,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Seeds, sesame butter, tahini, type of kernels unspecified
     per100g: {
       calories: 592,
+      protein_g: 17.4,
+      totalFat_g: 53,
+      totalCarbs_g: 21.5,
       calcium_mg: 141,
       iron_mg: 4.42,
       vitaminD_mcg: 0,
@@ -614,6 +668,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Nuts, coconut meat, dried (desiccated), creamed
     per100g: {
       calories: 684,
+      protein_g: 5.3,
+      totalFat_g: 69.1,
+      totalCarbs_g: 21.5,
       calcium_mg: 26,
       iron_mg: 3.36,
       vitaminD_mcg: 0,
@@ -645,6 +702,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Fish, salmon, Atlantic, wild, raw
     per100g: {
       calories: 142,
+      protein_g: 19.8,
+      totalFat_g: 6.34,
+      totalCarbs_g: 0,
       calcium_mg: 12,
       iron_mg: 0.8,
       vitaminD_mcg: 0,
@@ -676,6 +736,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Fish, sardine, Atlantic, canned in oil, drained solids with bone
     per100g: {
       calories: 208,
+      protein_g: 24.6,
+      totalFat_g: 11.4,
+      totalCarbs_g: 0,
       calcium_mg: 382,
       iron_mg: 2.92,
       vitaminD_mcg: 4.8,
@@ -707,6 +770,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Crustaceans, shrimp, raw
     per100g: {
       calories: 85,
+      protein_g: 20.1,
+      totalFat_g: 0.51,
+      totalCarbs_g: 0,
       calcium_mg: 64,
       iron_mg: 0.52,
       vitaminD_mcg: 0,
@@ -738,6 +804,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Chicken, broiler or fryers, breast, skinless, boneless, meat only, raw
     per100g: {
       calories: 120,
+      protein_g: 22.5,
+      totalFat_g: 2.62,
+      totalCarbs_g: 0,
       calcium_mg: 5,
       iron_mg: 0.37,
       vitaminD_mcg: 0,
@@ -769,6 +838,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Pork, ground, 84% lean / 16% fat, raw
     per100g: {
       calories: 218,
+      protein_g: 18,
+      totalFat_g: 16,
+      totalCarbs_g: 0.44,
       calcium_mg: 15,
       iron_mg: 0.88,
       vitaminD_mcg: 0.4,
@@ -800,6 +872,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Beef, ground, 80% lean meat / 20% fat, raw
     per100g: {
       calories: 254,
+      protein_g: 17.2,
+      totalFat_g: 20,
+      totalCarbs_g: 0,
       calcium_mg: 18,
       iron_mg: 1.94,
       vitaminD_mcg: 0.1,
@@ -831,6 +906,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Egg, whole, raw, fresh
     per100g: {
       calories: 143,
+      protein_g: 12.6,
+      totalFat_g: 9.51,
+      totalCarbs_g: 0.72,
       calcium_mg: 56,
       iron_mg: 1.75,
       vitaminD_mcg: 2,
@@ -862,6 +940,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Kale, raw
     per100g: {
       calories: 35,
+      protein_g: 2.92,
+      totalFat_g: 1.49,
+      totalCarbs_g: 4.42,
       calcium_mg: 254,
       iron_mg: 1.6,
       vitaminD_mcg: 0,
@@ -893,6 +974,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spinach, raw
     per100g: {
       calories: 23,
+      protein_g: 2.86,
+      totalFat_g: 0.39,
+      totalCarbs_g: 3.63,
       calcium_mg: 99,
       iron_mg: 2.71,
       vitaminD_mcg: 0,
@@ -924,6 +1008,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lettuce, cos or romaine, raw
     per100g: {
       calories: 17,
+      protein_g: 1.23,
+      totalFat_g: 0.3,
+      totalCarbs_g: 3.29,
       calcium_mg: 33,
       iron_mg: 0.97,
       vitaminD_mcg: 0,
@@ -955,6 +1042,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Broccoli, raw
     per100g: {
       calories: 34,
+      protein_g: 2.82,
+      totalFat_g: 0.37,
+      totalCarbs_g: 6.64,
       calcium_mg: 47,
       iron_mg: 0.73,
       vitaminD_mcg: 0,
@@ -986,6 +1076,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cabbage, chinese (pe-tsai), raw
     per100g: {
       calories: 16,
+      protein_g: 1.2,
+      totalFat_g: 0.2,
+      totalCarbs_g: 3.23,
       calcium_mg: 77,
       iron_mg: 0.31,
       vitaminD_mcg: 0,
@@ -1017,6 +1110,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cabbage, raw
     per100g: {
       calories: 25,
+      protein_g: 1.28,
+      totalFat_g: 0.1,
+      totalCarbs_g: 5.8,
       calcium_mg: 40,
       iron_mg: 0.47,
       vitaminD_mcg: 0,
@@ -1048,6 +1144,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Garlic, raw
     per100g: {
       calories: 149,
+      protein_g: 6.36,
+      totalFat_g: 0.5,
+      totalCarbs_g: 33.1,
       calcium_mg: 181,
       iron_mg: 1.7,
       vitaminD_mcg: 0,
@@ -1079,6 +1178,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Onions, raw
     per100g: {
       calories: 40,
+      protein_g: 1.1,
+      totalFat_g: 0.1,
+      totalCarbs_g: 9.34,
       calcium_mg: 23,
       iron_mg: 0.21,
       vitaminD_mcg: 0,
@@ -1116,6 +1218,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Onions, spring or scallions (includes tops and bulb), raw
     per100g: {
       calories: 32,
+      protein_g: 1.83,
+      totalFat_g: 0.19,
+      totalCarbs_g: 7.34,
       calcium_mg: 72,
       iron_mg: 1.48,
       vitaminD_mcg: 0,
@@ -1147,6 +1252,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Shallots, raw
     per100g: {
       calories: 72,
+      protein_g: 2.5,
+      totalFat_g: 0.1,
+      totalCarbs_g: 16.8,
       calcium_mg: 37,
       iron_mg: 1.2,
       vitaminD_mcg: 0,
@@ -1178,6 +1286,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Tomatoes, red, ripe, raw, year round average
     per100g: {
       calories: 18,
+      protein_g: 0.88,
+      totalFat_g: 0.2,
+      totalCarbs_g: 3.89,
       calcium_mg: 10,
       iron_mg: 0.27,
       vitaminD_mcg: 0,
@@ -1209,6 +1320,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Tomato products, canned, paste, without salt added (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 82,
+      protein_g: 4.32,
+      totalFat_g: 0.47,
+      totalCarbs_g: 18.9,
       calcium_mg: 36,
       iron_mg: 2.98,
       vitaminD_mcg: 0,
@@ -1240,6 +1354,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Carrots, raw
     per100g: {
       calories: 41,
+      protein_g: 0.93,
+      totalFat_g: 0.24,
+      totalCarbs_g: 9.58,
       calcium_mg: 33,
       iron_mg: 0.3,
       vitaminD_mcg: 0,
@@ -1271,6 +1388,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Celery, raw
     per100g: {
       calories: 14,
+      protein_g: 0.69,
+      totalFat_g: 0.17,
+      totalCarbs_g: 2.97,
       calcium_mg: 40,
       iron_mg: 0.2,
       vitaminD_mcg: 0,
@@ -1302,6 +1422,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cucumber, with peel, raw
     per100g: {
       calories: 15,
+      protein_g: 0.65,
+      totalFat_g: 0.11,
+      totalCarbs_g: 3.63,
       calcium_mg: 16,
       iron_mg: 0.28,
       vitaminD_mcg: 0,
@@ -1342,6 +1465,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Peppers, jalapeno, raw
     per100g: {
       calories: 29,
+      protein_g: 0.91,
+      totalFat_g: 0.37,
+      totalCarbs_g: 6.5,
       calcium_mg: 12,
       iron_mg: 0.25,
       vitaminD_mcg: 0,
@@ -1373,6 +1499,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Peppers, sweet, red, raw
     per100g: {
       calories: 26,
+      protein_g: 0.99,
+      totalFat_g: 0.3,
+      totalCarbs_g: 6.03,
       calcium_mg: 7,
       iron_mg: 0.43,
       vitaminD_mcg: 0,
@@ -1404,6 +1533,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Potatoes, flesh and skin, raw
     per100g: {
       calories: 77,
+      protein_g: 2.05,
+      totalFat_g: 0.09,
+      totalCarbs_g: 17.5,
       calcium_mg: 12,
       iron_mg: 0.81,
       vitaminD_mcg: 0,
@@ -1435,6 +1567,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Eggplant, raw
     per100g: {
       calories: 25,
+      protein_g: 0.98,
+      totalFat_g: 0.18,
+      totalCarbs_g: 5.88,
       calcium_mg: 9,
       iron_mg: 0.23,
       vitaminD_mcg: 0,
@@ -1466,6 +1601,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Beans, snap, green, raw
     per100g: {
       calories: 31,
+      protein_g: 1.83,
+      totalFat_g: 0.22,
+      totalCarbs_g: 6.97,
       calcium_mg: 37,
       iron_mg: 1.03,
       vitaminD_mcg: 0,
@@ -1497,6 +1635,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Mushrooms, white, raw
     per100g: {
       calories: 22,
+      protein_g: 3.09,
+      totalFat_g: 0.34,
+      totalCarbs_g: 3.26,
       calcium_mg: 3,
       iron_mg: 0.5,
       vitaminD_mcg: 0.2,
@@ -1528,6 +1669,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Mushrooms, shiitake, raw
     per100g: {
       calories: 34,
+      protein_g: 2.24,
+      totalFat_g: 0.49,
+      totalCarbs_g: 6.79,
       calcium_mg: 2,
       iron_mg: 0.41,
       vitaminD_mcg: 0.4,
@@ -1559,6 +1703,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Corn, sweet, yellow, raw
     per100g: {
       calories: 86,
+      protein_g: 3.27,
+      totalFat_g: 1.35,
+      totalCarbs_g: 18.7,
       calcium_mg: 2,
       iron_mg: 0.52,
       vitaminD_mcg: 0,
@@ -1596,6 +1743,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Coriander (cilantro) leaves, raw
     per100g: {
       calories: 23,
+      protein_g: 2.13,
+      totalFat_g: 0.52,
+      totalCarbs_g: 3.67,
       calcium_mg: 67,
       iron_mg: 1.77,
       vitaminD_mcg: 0,
@@ -1627,6 +1777,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Parsley, fresh
     per100g: {
       calories: 36,
+      protein_g: 2.97,
+      totalFat_g: 0.79,
+      totalCarbs_g: 6.33,
       calcium_mg: 138,
       iron_mg: 6.2,
       vitaminD_mcg: 0,
@@ -1658,6 +1811,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Basil, fresh
     per100g: {
       calories: 23,
+      protein_g: 3.15,
+      totalFat_g: 0.64,
+      totalCarbs_g: 2.65,
       calcium_mg: 177,
       iron_mg: 3.17,
       vitaminD_mcg: 0,
@@ -1689,6 +1845,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Peppermint, fresh
     per100g: {
       calories: 70,
+      protein_g: 3.75,
+      totalFat_g: 0.94,
+      totalCarbs_g: 14.9,
       calcium_mg: 243,
       iron_mg: 5.08,
       vitaminD_mcg: 0,
@@ -1720,6 +1879,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Dill weed, fresh
     per100g: {
       calories: 43,
+      protein_g: 3.46,
+      totalFat_g: 1.12,
+      totalCarbs_g: 7.02,
       calcium_mg: 208,
       iron_mg: 6.59,
       vitaminD_mcg: 0,
@@ -1757,6 +1919,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Ginger root, raw
     per100g: {
       calories: 80,
+      protein_g: 1.82,
+      totalFat_g: 0.75,
+      totalCarbs_g: 17.8,
       calcium_mg: 16,
       iron_mg: 0.6,
       vitaminD_mcg: 0,
@@ -1788,6 +1953,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, turmeric, ground
     per100g: {
       calories: 312,
+      protein_g: 9.68,
+      totalFat_g: 3.25,
+      totalCarbs_g: 67.1,
       calcium_mg: 168,
       iron_mg: 55,
       vitaminD_mcg: 0,
@@ -1824,6 +1992,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, pepper, black
     per100g: {
       calories: 251,
+      protein_g: 10.4,
+      totalFat_g: 3.26,
+      totalCarbs_g: 64,
       calcium_mg: 443,
       iron_mg: 9.71,
       vitaminD_mcg: 0,
@@ -1855,6 +2026,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, cumin seed
     per100g: {
       calories: 375,
+      protein_g: 17.8,
+      totalFat_g: 22.3,
+      totalCarbs_g: 44.2,
       calcium_mg: 931,
       iron_mg: 66.4,
       vitaminD_mcg: 0,
@@ -1891,6 +2065,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, coriander seed
     per100g: {
       calories: 298,
+      protein_g: 12.4,
+      totalFat_g: 17.8,
+      totalCarbs_g: 55,
       calcium_mg: 709,
       iron_mg: 16.3,
       vitaminD_mcg: 0,
@@ -1922,6 +2099,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, mustard seed, ground
     per100g: {
       calories: 508,
+      protein_g: 26.1,
+      totalFat_g: 36.2,
+      totalCarbs_g: 28.1,
       calcium_mg: 266,
       iron_mg: 9.21,
       vitaminD_mcg: 0,
@@ -1953,6 +2133,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, paprika
     per100g: {
       calories: 282,
+      protein_g: 14.1,
+      totalFat_g: 12.9,
+      totalCarbs_g: 54,
       calcium_mg: 229,
       iron_mg: 21.1,
       vitaminD_mcg: 0,
@@ -1996,6 +2179,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Spices, pepper, red or cayenne
     per100g: {
       calories: 318,
+      protein_g: 12,
+      totalFat_g: 17.3,
+      totalCarbs_g: 56.6,
       calcium_mg: 148,
       iron_mg: 7.8,
       vitaminD_mcg: 0,
@@ -2027,6 +2213,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Oil, olive, salad or cooking
     per100g: {
       calories: 884,
+      protein_g: 0,
+      totalFat_g: 100,
+      totalCarbs_g: 0,
       calcium_mg: 1,
       iron_mg: 0.56,
       vitaminD_mcg: 0,
@@ -2066,6 +2255,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Oil, canola
     per100g: {
       calories: 884,
+      protein_g: 0,
+      totalFat_g: 100,
+      totalCarbs_g: 0,
       calcium_mg: 0,
       iron_mg: 0,
       vitaminD_mcg: 0,
@@ -2097,6 +2289,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Oil, sesame, salad or cooking
     per100g: {
       calories: 884,
+      protein_g: 0,
+      totalFat_g: 100,
+      totalCarbs_g: 0,
       calcium_mg: 0,
       iron_mg: 0,
       vitaminD_mcg: 0,
@@ -2128,6 +2323,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Oil, coconut
     per100g: {
       calories: 892,
+      protein_g: 0,
+      totalFat_g: 99.1,
+      totalCarbs_g: 0,
       calcium_mg: 1,
       iron_mg: 0.05,
       vitaminD_mcg: 0,
@@ -2164,6 +2362,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Butter, salted
     per100g: {
       calories: 717,
+      protein_g: 0.85,
+      totalFat_g: 81.1,
+      totalCarbs_g: 0.06,
       calcium_mg: 24,
       iron_mg: 0.02,
       vitaminD_mcg: 0,
@@ -2195,6 +2396,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Butter oil, anhydrous
     per100g: {
       calories: 876,
+      protein_g: 0.28,
+      totalFat_g: 99.5,
+      totalCarbs_g: 0,
       calcium_mg: 4,
       iron_mg: 0,
       vitaminD_mcg: 0,
@@ -2226,6 +2430,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Yogurt, Greek, plain, nonfat (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 59,
+      protein_g: 10.2,
+      totalFat_g: 0.39,
+      totalCarbs_g: 3.6,
       calcium_mg: 110,
       iron_mg: 0.07,
       vitaminD_mcg: 0,
@@ -2257,6 +2464,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Milk, whole, 3.25% milkfat, with added vitamin D
     per100g: {
       calories: 61,
+      protein_g: 3.15,
+      totalFat_g: 3.25,
+      totalCarbs_g: 4.8,
       calcium_mg: 113,
       iron_mg: 0.03,
       vitaminD_mcg: 1.3,
@@ -2288,6 +2498,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cream, fluid, heavy whipping
     per100g: {
       calories: 340,
+      protein_g: 2.84,
+      totalFat_g: 36.1,
+      totalCarbs_g: 2.84,
       calcium_mg: 66,
       iron_mg: 0.1,
       vitaminD_mcg: 1.6,
@@ -2319,6 +2532,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cheese, parmesan, grated
     per100g: {
       calories: 420,
+      protein_g: 28.4,
+      totalFat_g: 27.8,
+      totalCarbs_g: 13.9,
       calcium_mg: 853,
       iron_mg: 0.49,
       vitaminD_mcg: 0.5,
@@ -2350,6 +2566,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Nuts, coconut milk, canned (liquid expressed from grated meat and water)
     per100g: {
       calories: 197,
+      protein_g: 2.02,
+      totalFat_g: 21.3,
+      totalCarbs_g: 2.81,
       calcium_mg: 18,
       iron_mg: 3.3,
       vitaminD_mcg: 0,
@@ -2381,6 +2600,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Soy sauce made from soy and wheat (shoyu)
     per100g: {
       calories: 53,
+      protein_g: 8.14,
+      totalFat_g: 0.57,
+      totalCarbs_g: 4.93,
       calcium_mg: 33,
       iron_mg: 1.45,
       vitaminD_mcg: 0,
@@ -2412,6 +2634,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sauce, fish, ready-to-serve
     per100g: {
       calories: 35,
+      protein_g: 5.06,
+      totalFat_g: 0.01,
+      totalCarbs_g: 3.64,
       calcium_mg: 43,
       iron_mg: 0.78,
       vitaminD_mcg: 0,
@@ -2443,6 +2668,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Salt, table
     per100g: {
       calories: 0,
+      protein_g: 0,
+      totalFat_g: 0,
+      totalCarbs_g: 0,
       calcium_mg: 24,
       iron_mg: 0.33,
       vitaminD_mcg: 0,
@@ -2474,6 +2702,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Salad dressing, mayonnaise, regular
     per100g: {
       calories: 680,
+      protein_g: 0.96,
+      totalFat_g: 74.8,
+      totalCarbs_g: 0.57,
       calcium_mg: 8,
       iron_mg: 0.21,
       vitaminD_mcg: 0.2,
@@ -2510,6 +2741,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Mustard, prepared, yellow
     per100g: {
       calories: 60,
+      protein_g: 3.74,
+      totalFat_g: 3.34,
+      totalCarbs_g: 5.83,
       calcium_mg: 63,
       iron_mg: 1.61,
       vitaminD_mcg: 0,
@@ -2547,6 +2781,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Vinegar, cider
     per100g: {
       calories: 21,
+      protein_g: 0,
+      totalFat_g: 0,
+      totalCarbs_g: 0.93,
       calcium_mg: 7,
       iron_mg: 0.2,
       vitaminD_mcg: 0,
@@ -2578,6 +2815,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Alcoholic beverage, wine, cooking
     per100g: {
       calories: 50,
+      protein_g: 0.5,
+      totalFat_g: 0,
+      totalCarbs_g: 6.3,
       calcium_mg: 9,
       iron_mg: 0.4,
       vitaminD_mcg: 0,
@@ -2609,6 +2849,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Alcoholic beverage, wine, table, white
     per100g: {
       calories: 82,
+      protein_g: 0.07,
+      totalFat_g: 0,
+      totalCarbs_g: 2.6,
       calcium_mg: 9,
       iron_mg: 0.27,
       vitaminD_mcg: 0,
@@ -2645,6 +2888,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sugars, granulated
     per100g: {
       calories: 387,
+      protein_g: 0,
+      totalFat_g: 0,
+      totalCarbs_g: 100,
       calcium_mg: 1,
       iron_mg: 0.05,
       vitaminD_mcg: 0,
@@ -2676,6 +2922,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sugars, brown
     per100g: {
       calories: 380,
+      protein_g: 0.12,
+      totalFat_g: 0,
+      totalCarbs_g: 98.1,
       calcium_mg: 83,
       iron_mg: 0.71,
       vitaminD_mcg: 0,
@@ -2707,6 +2956,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Honey
     per100g: {
       calories: 304,
+      protein_g: 0.3,
+      totalFat_g: 0,
+      totalCarbs_g: 82.4,
       calcium_mg: 6,
       iron_mg: 0.42,
       vitaminD_mcg: 0,
@@ -2738,6 +2990,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lemons, raw, without peel
     per100g: {
       calories: 29,
+      protein_g: 1.1,
+      totalFat_g: 0.3,
+      totalCarbs_g: 9.32,
       calcium_mg: 26,
       iron_mg: 0.6,
       vitaminD_mcg: 0,
@@ -2769,6 +3024,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Limes, raw
     per100g: {
       calories: 30,
+      protein_g: 0.7,
+      totalFat_g: 0.2,
+      totalCarbs_g: 10.5,
       calcium_mg: 33,
       iron_mg: 0.6,
       vitaminD_mcg: 0,
@@ -2800,6 +3058,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lemon juice, raw
     per100g: {
       calories: 22,
+      protein_g: 0.35,
+      totalFat_g: 0.24,
+      totalCarbs_g: 6.9,
       calcium_mg: 6,
       iron_mg: 0.08,
       vitaminD_mcg: 0,
@@ -2831,6 +3092,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lime juice, raw
     per100g: {
       calories: 25,
+      protein_g: 0.42,
+      totalFat_g: 0.07,
+      totalCarbs_g: 8.42,
       calcium_mg: 14,
       iron_mg: 0.09,
       vitaminD_mcg: 0,
@@ -2862,6 +3126,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sauce, oyster, ready-to-serve
     per100g: {
       calories: 51,
+      protein_g: 1.35,
+      totalFat_g: 0.25,
+      totalCarbs_g: 10.9,
       calcium_mg: 32,
       iron_mg: 0.18,
       vitaminD_mcg: 0,
@@ -2893,6 +3160,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sauce, hoisin, ready-to-serve
     per100g: {
       calories: 220,
+      protein_g: 3.31,
+      totalFat_g: 3.39,
+      totalCarbs_g: 44.1,
       calcium_mg: 32,
       iron_mg: 1.01,
       vitaminD_mcg: 0,
@@ -2924,6 +3194,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Vinegar, balsamic
     per100g: {
       calories: 88,
+      protein_g: 0.49,
+      totalFat_g: 0,
+      totalCarbs_g: 17,
       calcium_mg: 27,
       iron_mg: 0.72,
       vitaminD_mcg: 0,
@@ -2955,6 +3228,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Radishes, oriental, raw
     per100g: {
       calories: 18,
+      protein_g: 0.6,
+      totalFat_g: 0.1,
+      totalCarbs_g: 4.1,
       calcium_mg: 27,
       iron_mg: 0.4,
       vitaminD_mcg: 0,
@@ -2986,6 +3262,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Avocados, raw, all commercial varieties
     per100g: {
       calories: 160,
+      protein_g: 2,
+      totalFat_g: 14.7,
+      totalCarbs_g: 8.53,
       calcium_mg: 12,
       iron_mg: 0.55,
       vitaminD_mcg: 0,
@@ -3017,6 +3296,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Bulgur, dry
     per100g: {
       calories: 342,
+      protein_g: 12.3,
+      totalFat_g: 1.33,
+      totalCarbs_g: 75.9,
       calcium_mg: 35,
       iron_mg: 2.46,
       vitaminD_mcg: 0,
@@ -3048,6 +3330,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Fish, anchovy, european, canned in oil, drained solids
     per100g: {
       calories: 210,
+      protein_g: 28.9,
+      totalFat_g: 9.71,
+      totalCarbs_g: 0,
       calcium_mg: 232,
       iron_mg: 4.63,
       vitaminD_mcg: 1.7,
@@ -3085,6 +3370,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Seaweed, wakame, raw
     per100g: {
       calories: 45,
+      protein_g: 3.03,
+      totalFat_g: 0.64,
+      totalCarbs_g: 9.14,
       calcium_mg: 150,
       iron_mg: 2.18,
       vitaminD_mcg: 0,
@@ -3116,6 +3404,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Edamame, frozen, prepared
     per100g: {
       calories: 121,
+      protein_g: 11.9,
+      totalFat_g: 5.2,
+      totalCarbs_g: 8.91,
       calcium_mg: 63,
       iron_mg: 2.27,
       vitaminD_mcg: 0,
@@ -3147,6 +3438,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Mangos, raw
     per100g: {
       calories: 60,
+      protein_g: 0.82,
+      totalFat_g: 0.38,
+      totalCarbs_g: 15,
       calcium_mg: 11,
       iron_mg: 0.16,
       vitaminD_mcg: 0,
@@ -3178,6 +3472,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cheese, feta
     per100g: {
       calories: 265,
+      protein_g: 14.2,
+      totalFat_g: 21.5,
+      totalCarbs_g: 3.88,
       calcium_mg: 493,
       iron_mg: 0.65,
       vitaminD_mcg: 0.4,
@@ -3209,6 +3506,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cheese, mozzarella, whole milk
     per100g: {
       calories: 299,
+      protein_g: 22.2,
+      totalFat_g: 22.1,
+      totalCarbs_g: 2.4,
       calcium_mg: 505,
       iron_mg: 0.44,
       vitaminD_mcg: 0.4,
@@ -3240,6 +3540,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cauliflower, raw
     per100g: {
       calories: 25,
+      protein_g: 1.92,
+      totalFat_g: 0.28,
+      totalCarbs_g: 4.97,
       calcium_mg: 22,
       iron_mg: 0.42,
       vitaminD_mcg: 0,
@@ -3271,6 +3574,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Squash, summer, zucchini, includes skin, raw
     per100g: {
       calories: 17,
+      protein_g: 1.21,
+      totalFat_g: 0.32,
+      totalCarbs_g: 3.11,
       calcium_mg: 16,
       iron_mg: 0.37,
       vitaminD_mcg: 0,
@@ -3302,6 +3608,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Mung beans, mature seeds, sprouted, raw
     per100g: {
       calories: 30,
+      protein_g: 3.04,
+      totalFat_g: 0.18,
+      totalCarbs_g: 5.94,
       calcium_mg: 13,
       iron_mg: 0.91,
       vitaminD_mcg: 0,
@@ -3333,6 +3642,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Sweet potato, raw, unprepared (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 86,
+      protein_g: 1.57,
+      totalFat_g: 0.05,
+      totalCarbs_g: 20.1,
       calcium_mg: 30,
       iron_mg: 0.61,
       vitaminD_mcg: 0,
@@ -3364,6 +3676,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Fish, cod, Atlantic, raw
     per100g: {
       calories: 82,
+      protein_g: 17.8,
+      totalFat_g: 0.67,
+      totalCarbs_g: 0,
       calcium_mg: 16,
       iron_mg: 0.38,
       vitaminD_mcg: 0.9,
@@ -3395,6 +3710,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Fish, tilapia, raw
     per100g: {
       calories: 96,
+      protein_g: 20.1,
+      totalFat_g: 1.7,
+      totalCarbs_g: 0,
       calcium_mg: 10,
       iron_mg: 0.56,
       vitaminD_mcg: 3.1,
@@ -3426,6 +3744,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Pasta, dry, enriched
     per100g: {
       calories: 371,
+      protein_g: 13,
+      totalFat_g: 1.51,
+      totalCarbs_g: 74.7,
       calcium_mg: 21,
       iron_mg: 3.3,
       vitaminD_mcg: 0,
@@ -3457,6 +3778,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Noodles, egg, dry, enriched
     per100g: {
       calories: 384,
+      protein_g: 14.2,
+      totalFat_g: 4.44,
+      totalCarbs_g: 71.3,
       calcium_mg: 35,
       iron_mg: 4.01,
       vitaminD_mcg: 0.3,
@@ -3488,6 +3812,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Tortillas, ready-to-bake or -fry, flour, refrigerated
     per100g: {
       calories: 306,
+      protein_g: 8.2,
+      totalFat_g: 7.99,
+      totalCarbs_g: 49.4,
       calcium_mg: 146,
       iron_mg: 3.63,
       vitaminD_mcg: 0,
@@ -3519,6 +3846,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Beef, loin, top sirloin cap steak, boneless, separable lean only, trimmed to 1/8" fat, choice, raw
     per100g: {
       calories: 138,
+      protein_g: 21.3,
+      totalFat_g: 5.82,
+      totalCarbs_g: 0,
       calcium_mg: 5,
       iron_mg: 2.08,
       vitaminD_mcg: 0.1,
@@ -3550,6 +3880,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Lamb, ground, raw
     per100g: {
       calories: 282,
+      protein_g: 16.6,
+      totalFat_g: 23.4,
+      totalCarbs_g: 0,
       calcium_mg: 16,
       iron_mg: 1.55,
       vitaminD_mcg: 0.1,
@@ -3581,6 +3914,9 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     // USDA SR Legacy: Cheese, ricotta, whole milk
     per100g: {
       calories: 150,
+      protein_g: 7.54,
+      totalFat_g: 10.2,
+      totalCarbs_g: 7.27,
       calcium_mg: 206,
       iron_mg: 0.13,
       vitaminD_mcg: 0.2,

@@ -65,6 +65,10 @@ export type TherapeuticClass =
 export interface NutrientVector {
   /** kcal per 100 g. */
   calories: number;
+  /** The three core macros — the headline numbers a nutrition panel must show. */
+  protein_g: number;
+  totalFat_g: number;
+  totalCarbs_g: number;
   calcium_mg: number;
   iron_mg: number;
   vitaminD_mcg: number;

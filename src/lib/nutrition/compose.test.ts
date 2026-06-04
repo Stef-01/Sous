@@ -5,6 +5,9 @@ import type { Ingredient, NutrientVector } from "@/types/ingredient";
 function vec(partial: Partial<NutrientVector>): NutrientVector {
   return {
     calories: 0,
+    protein_g: 0,
+    totalFat_g: 0,
+    totalCarbs_g: 0,
     calcium_mg: 0,
     iron_mg: 0,
     vitaminD_mcg: 0,

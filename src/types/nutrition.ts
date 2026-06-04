@@ -39,6 +39,11 @@ export interface PerServingNutrition {
   servingsPerRecipe: number;
   /** Calories per serving — non-claim, displayed only on the methodology tooltip. */
   calories: number;
+  /** Core macros (optional: legacy hand-authored entries predate them; the
+   *  composition engine always supplies them). */
+  protein_g?: number;
+  totalFat_g?: number;
+  totalCarbs_g?: number;
   calcium_mg: number;
   iron_mg: number;
   vitaminD_mcg: number;
