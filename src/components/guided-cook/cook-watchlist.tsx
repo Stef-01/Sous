@@ -48,13 +48,13 @@ export function CookWatchlist({ dishSlug, steps }: CookWatchlistProps) {
   if (warnings.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-[var(--nourish-warm)]/30 bg-[var(--nourish-warm)]/5 overflow-hidden">
+    <div className="overflow-hidden rounded-2xl border border-[var(--nourish-warm)]/30 bg-[var(--nourish-warm)]/5">
       <button
         onClick={() => setExpanded((v) => !v)}
         type="button"
         aria-expanded={expanded}
         className={cn(
-          "flex w-full items-center justify-between gap-2 px-3 py-2.5",
+          "flex w-full items-center justify-between gap-2 px-4 py-3",
           "text-left transition-colors hover:bg-[var(--nourish-warm)]/10",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-warm)]/50",
         )}
@@ -88,7 +88,7 @@ export function CookWatchlist({ dishSlug, steps }: CookWatchlistProps) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="overflow-hidden px-3 pb-2.5 space-y-1.5"
+            className="space-y-1.5 overflow-hidden px-4 pb-3"
           >
             {warnings.map((w) => (
               <li
@@ -151,13 +151,13 @@ export function CombinedCookWatchlist({ groups }: CombinedCookWatchlistProps) {
       : `${warnings.length} cook watch-outs`;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[var(--nourish-warm)]/30 bg-[var(--nourish-warm)]/5">
+    <div className="overflow-hidden rounded-2xl border border-[var(--nourish-warm)]/30 bg-[var(--nourish-warm)]/5">
       <button
         onClick={() => setExpanded((value) => !value)}
         type="button"
         aria-expanded={expanded}
         className={cn(
-          "flex w-full items-center justify-between gap-2 px-3 py-2.5",
+          "flex w-full items-center justify-between gap-2 px-4 py-3",
           "text-left transition-colors hover:bg-[var(--nourish-warm)]/10",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-warm)]/50",
         )}

@@ -737,18 +737,23 @@ export default function GuidedCookPage({
                 dishSlug={dish.slug}
                 steps={cookSteps.map((s: unknown) => s as StaticCookStep)}
               />
-              <ServingSlider
-                servings={servings}
-                baseServings={baseServings}
-                onChange={setServingsOverride}
-              />
-              {dishNutrition.perServing &&
-                dishNutrition.massedCoverage >= 0.7 && (
-                  <CookNutritionReadout
-                    perServing={dishNutrition.perServing}
-                    servings={servings}
-                  />
-                )}
+              {/* Recipe scale + nutrition share one card: the slider
+                  causally drives the numbers right below it (divided
+                  section), so they read as one cause→effect surface. */}
+              <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                <ServingSlider
+                  servings={servings}
+                  baseServings={baseServings}
+                  onChange={setServingsOverride}
+                />
+                {dishNutrition.perServing &&
+                  dishNutrition.massedCoverage >= 0.7 && (
+                    <CookNutritionReadout
+                      perServing={dishNutrition.perServing}
+                      servings={servings}
+                    />
+                  )}
+              </div>
               <IngredientList
                 ingredients={scaledIngredients}
                 recipeName={dish.name}

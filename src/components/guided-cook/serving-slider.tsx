@@ -35,20 +35,15 @@ export function ServingSlider({
   const multiplier = baseServings > 0 ? servings / baseServings : 1;
 
   return (
-    <div
-      className={cn(
-        "rounded-2xl border border-neutral-200 bg-white p-4",
-        className,
-      )}
-    >
+    <div className={cn("p-4", className)}>
       <div className="flex items-baseline justify-between">
-        <span className="text-sm font-semibold text-[var(--nourish-dark)]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext-faint)]">
           Servings
         </span>
-        <span className="text-sm font-semibold text-[var(--nourish-green)]">
+        <span className="font-serif text-xl leading-none text-[var(--nourish-green)]">
           {servings}
           {Math.abs(multiplier - 1) > 0.01 && (
-            <span className="ml-1.5 text-[11px] font-medium text-[var(--nourish-subtext)]">
+            <span className="ml-1.5 font-sans text-[11px] font-medium text-[var(--nourish-subtext)]">
               ×{formatMultiplier(multiplier)}
             </span>
           )}
@@ -64,7 +59,7 @@ export function ServingSlider({
         aria-label="Servings"
         className="mt-3 h-2 w-full cursor-pointer appearance-none rounded-full bg-neutral-200 accent-[var(--nourish-green)]"
       />
-      <div className="mt-1.5 flex justify-between text-[10px] font-medium text-[var(--nourish-subtext-faint)]">
+      <div className="mt-2 flex justify-between text-[10px] font-medium text-[var(--nourish-subtext-faint)]">
         <span>{min}</span>
         <span>scales the ingredient amounts</span>
         <span>{max}</span>
