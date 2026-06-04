@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { easeOutExpo } from "./startup-landing-variants";
@@ -59,8 +59,13 @@ const TIMELINE_ZONES = [
 
 export function LandingHeroChart({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
-  const titleId = useId();
-  const liveId = useId();
+  // Stable, deterministic ids (NOT useId): there is exactly one hero chart on
+  // the landing page, so fixed ids can't collide — and unlike useId they're
+  // guaranteed identical on the server and client, so the aria-labelledby /
+  // aria-describedby wiring never triggers a hydration mismatch even if a
+  // sibling/ancestor shifts the useId tree position.
+  const titleId = "landing-hero-chart-title";
+  const liveId = "landing-hero-chart-live";
   const greenPath = useMemo(() => buildGreenRipplePath(), []);
   const [zone, setZone] = useState<number | null>(null);
 
