@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   motion,
@@ -34,7 +33,8 @@ import {
   type AchievementsLauncherHandle,
 } from "@/components/path/achievements-launcher";
 import { PathTutorial } from "@/components/path/path-tutorial";
-import { getSkillNode } from "@/data/skill-tree";
+import { usePathTutorial } from "@/lib/hooks/use-path-tutorial";
+import { useSkillDetailSheet } from "@/lib/hooks/use-skill-detail-sheet";
 import { SectionKicker } from "@/components/shared/section-kicker";
 
 /**
@@ -81,34 +81,15 @@ export default function PathPage() {
     dismissNewUnlocks();
   }, [newlyUnlocked, dismissNewUnlocks]);
   const { level: xpLevel } = useXPSystem();
-  const router = useRouter();
+  const {
+    open: pathTutorialOpen,
+    complete: completePathTutorial,
+    replay: replayPathTutorial,
+  } = usePathTutorial(mounted);
 
-  const [pathTutorialOpen, setPathTutorialOpen] = useState(false);
   // "Your kitchen" toolset is collapsed by default — keeps Path's default view
   // condensed; the tools are one tap away.
   const [kitchenOpen, setKitchenOpen] = useState(false);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const id = window.setTimeout(() => {
-      try {
-        if (localStorage.getItem("sous-path-tutorial-v1") !== "done") {
-          setPathTutorialOpen(true);
-        }
-      } catch {
-        setPathTutorialOpen(true);
-      }
-    }, 400);
-    return () => clearTimeout(id);
-  }, [mounted]);
-
-  const completePathTutorial = useCallback(() => {
-    setPathTutorialOpen(false);
-  }, []);
-
-  const replayPathTutorial = useCallback(() => {
-    setPathTutorialOpen(true);
-  }, []);
 
   const achievementsRef = useRef<AchievementsLauncherHandle>(null);
   const openBadges = useCallback(() => {
@@ -138,41 +119,18 @@ export default function PathPage() {
     checkAchievements,
   ]);
 
-  // Detail sheet state
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const selectedNode = selectedNodeId
-    ? (getSkillNode(selectedNodeId) ?? null)
-    : null;
-  const selectedStatus = selectedNodeId
-    ? getNodeStatus(selectedNodeId)
-    : "locked";
-  const selectedProgress = selectedNodeId
-    ? getNodeProgress(selectedNodeId)
-    : { cooksCompleted: 0 };
-
-  const handleNodeTap = useCallback((nodeId: string) => {
-    setSelectedNodeId(nodeId);
-  }, []);
-
-  const handleStartCook = useCallback(
-    (dishSlug: string) => {
-      setSelectedNodeId(null);
-      router.push(`/cook/${dishSlug}`);
-    },
-    [router],
-  );
-
-  const handlePracticeDish = useCallback(
-    (displayName: string) => {
-      setSelectedNodeId(null);
-      router.push(`/today?craving=${encodeURIComponent(displayName)}`);
-    },
-    [router],
-  );
-
-  const handleCloseSheet = useCallback(() => {
-    setSelectedNodeId(null);
-  }, []);
+  // Skill-detail bottom-sheet orchestration (extracted hook), aliased to the
+  // local names the render below already uses.
+  const {
+    selectedNodeId,
+    node: selectedNode,
+    status: selectedStatus,
+    progress: selectedProgress,
+    onNodeTap: handleNodeTap,
+    onStartCook: handleStartCook,
+    onPracticeDish: handlePracticeDish,
+    onClose: handleCloseSheet,
+  } = useSkillDetailSheet({ getNodeStatus, getNodeProgress });
 
   if (!mounted) {
     return (
