@@ -318,3 +318,39 @@ structured evidence → display) working on a real dish.
 
 The system is built to scale by adding **data** (spec rows, meal ingredient
 lists), not by changing code — every layer is pure, tested, and drift-guarded.
+
+---
+
+## 13. Final state (2026-06-04) — gaps closed + clinician MVP
+
+All three remaining gaps closed + a clinician-evaluable therapeutics MVP shipped,
+hardened over a recursive improvement pass.
+
+- **Gap 1 (meal nutrition):** `meal-ingredients.ts` — 9 exemplar meals with
+  quantified lists → meals now compose real per-serving nutrition (pad-thai 831,
+  masoor-dal 260 kcal/srv). Grows by adding rows.
+- **Gap 2 (display-grade macros):** frying-oil absorption modeling
+  (`FRYING_ABSORPTION`) — karaage 1920→402 kcal. Panel shows an estimated
+  per-serving snapshot for ≥70%-massed dishes, labeled.
+- **Gap 3 (registry breadth):** 88→**106** ingredients; line resolution
+  84.0%→**87.6%**, massed 68.8%→**72.9%**.
+- **Clinician MVP:** `clinicianReviewMode()` + `/clinician` review surface (full
+  registry + methodology + live claim audit) + `docs/THERAPEUTICS-CLINICIAN-APPRAISAL.md`.
+  Personalization visible in review mode, badged "Clinician review" (never
+  "Reviewed" — rule 11).
+
+### Recursive pass findings (the audits that paid off)
+
+1. **Beta-glucan false positive** — lentils matched oat-beta-glucan via generic
+   soluble fiber → specific `beta-glucan` class on oats/barley only.
+2. **IBS legume false positive (clinical)** — lentil dishes matched the IBS
+   psyllium record via soluble fiber, but legumes are high-FODMAP / restricted in
+   IBS → dropped `soluble fiber` from structural matching. IBS now matches **zero**
+   structural signals (only substring low-FODMAP/psyllium), which is correct.
+3. **Frying-oil calorie inflation** — modeled absorption.
+4. **Over-broad `vegetables`** — dropped from structural matching (round 3).
+
+Final: **3,220 tests**, typecheck + lint + build green; full-catalog determinism
+
+- claim-safety + drift guards in place. The whole system scales by adding **data**
+  (ingredient spec rows, meal lists, registry records), not code.
