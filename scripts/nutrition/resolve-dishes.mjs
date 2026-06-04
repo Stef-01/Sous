@@ -65,6 +65,7 @@ for (const slug of slugs) {
   links[slug] = {
     recipeSlug: slug,
     servingsPerRecipe: DEFAULT_SERVINGS,
+    originalLineCount: (dish.ingredients ?? []).length,
     lines,
   };
 }
@@ -108,6 +109,7 @@ const body = slugs
     return `  "${slug}": {
     recipeSlug: "${slug}",
     servingsPerRecipe: ${l.servingsPerRecipe},
+    originalLineCount: ${l.originalLineCount},
     lines: [
 ${lines}
     ],

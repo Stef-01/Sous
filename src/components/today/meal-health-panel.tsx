@@ -15,6 +15,7 @@
  */
 
 import type { ConditionId } from "@/types/therapeutics";
+import type { FoodGroup } from "@/types/ingredient";
 import {
   interventionToEvidenceRow,
   type EvidenceRow,
@@ -83,6 +84,8 @@ export function MealHealthPanel({
         </span>
       </div>
 
+      <WholeFoodComposition foodGroups={profile.foodGroups} />
+
       {matches.length === 0 ? (
         <EmptyState hasConditions={conditions.length > 0} />
       ) : (
@@ -104,6 +107,72 @@ export function MealHealthPanel({
         {FOOD_FIRST_HEDGE}
       </p>
     </section>
+  );
+}
+
+/**
+ * Notable whole-food groups, in display order. Minor groups (condiments,
+ * spices, sweeteners, beverages) are omitted — they don't describe the dish's
+ * nutrition character. This signal is mass- and serving-INDEPENDENT, so it is
+ * accurate even where composed per-serving macros are not yet display-grade.
+ */
+const NOTABLE_GROUPS: ReadonlyArray<FoodGroup> = [
+  "leafy-green",
+  "vegetable",
+  "legume",
+  "fruit",
+  "nut-seed",
+  "seafood",
+  "poultry",
+  "egg",
+  "red-meat",
+  "grain",
+  "dairy",
+  "fat-oil",
+];
+
+const FOOD_GROUP_LABEL: Record<FoodGroup, string> = {
+  vegetable: "vegetables",
+  "leafy-green": "leafy greens",
+  fruit: "fruit",
+  legume: "legumes",
+  grain: "grains",
+  "nut-seed": "nuts & seeds",
+  dairy: "dairy",
+  egg: "eggs",
+  "red-meat": "red meat",
+  poultry: "poultry",
+  seafood: "seafood",
+  "fat-oil": "healthy oils",
+  "herb-spice": "herbs & spices",
+  sweetener: "sweeteners",
+  condiment: "condiments",
+  beverage: "beverages",
+  other: "other",
+};
+
+function WholeFoodComposition({
+  foodGroups,
+}: {
+  foodGroups: ReadonlyArray<FoodGroup>;
+}) {
+  const set = new Set(foodGroups);
+  const shown = NOTABLE_GROUPS.filter((g) => set.has(g)).slice(0, 5);
+  if (shown.length === 0) return null;
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+        Built on
+      </span>
+      {shown.map((g) => (
+        <span
+          key={g}
+          className="rounded-full bg-[var(--nourish-cream)] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-dark)]"
+        >
+          {FOOD_GROUP_LABEL[g]}
+        </span>
+      ))}
+    </div>
   );
 }
 

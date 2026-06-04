@@ -118,5 +118,7 @@ export interface ResolvedIngredientLine {
 export interface RecipeIngredientLink {
   recipeSlug: string;
   servingsPerRecipe: number;
+  /** Total ingredient lines in the source recipe (resolved + unresolved). */
+  originalLineCount: number;
   lines: ResolvedIngredientLine[];
 }
