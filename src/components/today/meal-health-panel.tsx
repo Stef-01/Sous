@@ -20,9 +20,16 @@ import {
   interventionToEvidenceRow,
   type EvidenceRow,
 } from "@/lib/therapeutics/evidence-card";
-import { matchInterventionsForDish } from "@/lib/engine/therapeutic-fit";
+import {
+  matchInterventionsForDish,
+  gramsForSignal,
+} from "@/lib/engine/therapeutic-fit";
 import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile";
-import { getDishNutrition } from "@/lib/engine/dish-nutrition";
+import {
+  getDishNutrition,
+  getDishCompositionGrams,
+  type DishCompositionGrams,
+} from "@/lib/engine/dish-nutrition";
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
 import { CONDITIONS } from "@/data/therapeutics";
 import { cn } from "@/lib/utils/cn";
@@ -64,6 +71,9 @@ export function MealHealthPanel({
     slug,
     `${dishName} ${tags.join(" ")} ${description ?? ""}`,
   );
+  // Per-serving grams of each food group/class → the quantity context shown
+  // beside a matched signal ("legumes ~67g"). Empty for unlinked dishes.
+  const composition = getDishCompositionGrams(slug);
   const matches = matchInterventionsForDish(
     {
       name: dishName,
@@ -117,6 +127,7 @@ export function MealHealthPanel({
                 key={m.record.id}
                 row={interventionToEvidenceRow(m.record)}
                 signals={m.matchedSignals}
+                composition={composition}
               />
             ))}
           </ul>
@@ -255,10 +266,18 @@ function PersonalizedSubhead({
 function EvidenceRowItem({
   row,
   signals,
+  composition,
 }: {
   row: EvidenceRow;
   signals: string[];
+  composition: DishCompositionGrams;
 }) {
+  // Annotate each signal with how much realizing food the dish has per serving
+  // ("legumes ~67g"), when we have quantities. Honest quantity context.
+  const labelFor = (sig: string) => {
+    const grams = gramsForSignal(sig, composition);
+    return grams >= 1 ? `${sig} ~${Math.round(grams)}g` : sig;
+  };
   return (
     <li className="border-t border-neutral-100 pt-3 first:border-0 first:pt-0">
       <div className="flex flex-wrap items-center gap-1.5">
@@ -294,7 +313,7 @@ function EvidenceRowItem({
       </p>
       {signals.length > 0 && (
         <p className="mt-1.5 text-[11px] text-[var(--nourish-subtext-faint)]">
-          In this dish: {signals.join(" · ")}
+          In this dish: {signals.map(labelFor).join(" · ")}
         </p>
       )}
     </li>

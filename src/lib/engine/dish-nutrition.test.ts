@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { getDishNutrition } from "./dish-nutrition";
+import { getDishNutrition, getDishCompositionGrams } from "./dish-nutrition";
+import { gramsForSignal } from "./therapeutic-fit";
 
 describe("getDishNutrition", () => {
   it("composes per-serving nutrition for a well-resolved dish", () => {
@@ -24,5 +25,27 @@ describe("getDishNutrition", () => {
       perServing: null,
       massedCoverage: 0,
     });
+  });
+});
+
+describe("getDishCompositionGrams + gramsForSignal", () => {
+  it("gives per-serving grams of a realizing food group", () => {
+    const masoor = getDishCompositionGrams("masoor-dal");
+    // 1 cup lentils over 4 servings → tens of grams of legume per serving.
+    expect(gramsForSignal("legumes", masoor)).toBeGreaterThan(20);
+    expect(gramsForSignal("salmon", masoor)).toBe(0); // no fish
+  });
+
+  it("maps a class signal to its grams (salmon → oily-fish)", () => {
+    const salmon = getDishCompositionGrams("grilled-salmon");
+    expect(gramsForSignal("salmon", salmon)).toBeGreaterThan(50);
+  });
+
+  it("is empty for unlinked slugs + 0 for unmapped signals", () => {
+    expect(getDishCompositionGrams(undefined)).toEqual({
+      byGroup: {},
+      byClass: {},
+    });
+    expect(gramsForSignal("nonsense", { byGroup: {}, byClass: {} })).toBe(0);
   });
 });

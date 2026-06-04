@@ -14,9 +14,13 @@
  */
 
 import type { PerServingNutrition } from "@/types/nutrition";
+import type { FoodGroup, TherapeuticClass } from "@/types/ingredient";
 import { getRecipeLink } from "@/data/ingredients/recipe-links";
-import { INGREDIENTS } from "@/data/ingredients";
-import { composeRecipeNutrition } from "@/lib/nutrition/compose";
+import { INGREDIENTS, getIngredient } from "@/data/ingredients";
+import {
+  composeRecipeNutrition,
+  FRYING_ABSORPTION,
+} from "@/lib/nutrition/compose";
 
 export interface DishNutrition {
   /** Composed per-serving nutrition (system-facing; see honesty note above). */
@@ -50,4 +54,43 @@ export function getDishNutrition(
     perServing: result.success ? result.data : null,
     massedCoverage,
   };
+}
+
+export interface DishCompositionGrams {
+  /** Per-serving grams contributed by each food group present. */
+  byGroup: Partial<Record<FoodGroup, number>>;
+  /** Per-serving grams contributed by each therapeutic class present. */
+  byClass: Partial<Record<TherapeuticClass, number>>;
+}
+
+/**
+ * Per-serving grams of each food group + therapeutic class in a dish. This is
+ * the quantity context behind a match — "this dish has ~67 g legumes/serving" —
+ * so the panel can show how much of the realizing food is actually present
+ * (honest dose context; food grams are a proxy for the active-compound dose,
+ * not the dose itself). Frying medium counts at its absorbed fraction.
+ */
+export function getDishCompositionGrams(
+  slug: string | undefined,
+): DishCompositionGrams {
+  const empty: DishCompositionGrams = { byGroup: {}, byClass: {} };
+  if (!slug) return empty;
+  const link = getRecipeLink(slug);
+  if (!link || link.servingsPerRecipe <= 0) return empty;
+
+  const byGroup: Partial<Record<FoodGroup, number>> = {};
+  const byClass: Partial<Record<TherapeuticClass, number>> = {};
+  for (const line of link.lines) {
+    if (line.grams <= 0) continue;
+    const ing = getIngredient(line.ingredientId);
+    if (!ing) continue;
+    const grams =
+      (line.fryingMedium ? line.grams * FRYING_ABSORPTION : line.grams) /
+      link.servingsPerRecipe;
+    byGroup[ing.foodGroup] = (byGroup[ing.foodGroup] ?? 0) + grams;
+    for (const c of ing.therapeuticClasses) {
+      byClass[c] = (byClass[c] ?? 0) + grams;
+    }
+  }
+  return { byGroup, byClass };
 }

@@ -121,6 +121,28 @@ function structuralMatch(sig: string, dish: TherapeuticDish): boolean {
 }
 
 /**
+ * Per-serving grams of the food that realizes a signal in a dish — the quantity
+ * context behind a structural match (e.g. "legumes" → the dish's legume grams).
+ * Reads the precomputed composition (byGroup/byClass grams from
+ * getDishCompositionGrams). 0 for substring-only signals (no structure) — the
+ * caller simply omits the gram hint there.
+ */
+export function gramsForSignal(
+  signal: string,
+  composition: {
+    byGroup: Partial<Record<string, number>>;
+    byClass: Partial<Record<string, number>>;
+  },
+): number {
+  const map = SIGNAL_STRUCTURE[signal.toLowerCase()];
+  if (!map) return 0;
+  let grams = 0;
+  for (const c of map.classes ?? []) grams += composition.byClass[c] ?? 0;
+  for (const g of map.groups ?? []) grams += composition.byGroup[g] ?? 0;
+  return grams;
+}
+
+/**
  * THE shared matching predicate — the scorer (below) and the per-dish health
  * panel (matchInterventionsForDish) both go through here, so they can never
  * disagree about whether a dish realizes an intervention. A signal matches by
