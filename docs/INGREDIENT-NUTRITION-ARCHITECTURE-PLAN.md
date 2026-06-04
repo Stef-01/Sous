@@ -235,3 +235,38 @@ already AUTO-BUILD and source-agnostic):
 Sources: USDA FoodData Central download datasets; Open Food Facts data/license;
 `strangetom/ingredient-parser`; curated nutrition repos — all linked in the
 research notes accompanying this plan.
+
+---
+
+## 11. Build status (2026-06-04) + a real-data finding
+
+Stefan picked **Option A (USDA Foundation + SR Legacy)**. Building it surfaced a
+correction worth recording:
+
+> **Finding — SR Legacy is the primary, not Foundation.** Foundation Foods is
+> _analytically_ measured and therefore **incomplete**: "Lentils, dry" (fdcId 2644283) carries minerals but **no fiber** and energy only via Atwater
+> (957/958), not `208`. SR Legacy "Lentils, raw" (172420) has the **complete**
+> panel — 352 kcal, 10.7 g fiber, standard nutrient numbers. So the ingest uses
+> **SR Legacy as the workhorse**, with Foundation available as a fresher
+> per-nutrient override later. (Foundation alone would have shipped lentils
+> showing 0 g fiber — exactly the kind of silent wrong-data the coverage guard
+> exists to prevent.)
+
+| Phase                                                                                       | Status         | Commit    |
+| ------------------------------------------------------------------------------------------- | -------------- | --------- |
+| 0 — `types/ingredient.ts` (schema, taxonomies)                                              | ✅ shipped     | `3f31ecd` |
+| 1 — `composeRecipeNutrition` + `quantityToGrams` (+18 tests)                                | ✅ shipped     | `3f31ecd` |
+| 2 — `scripts/nutrition/usda-ingest.mjs` + real 22-ingredient registry + resolver (+5 tests) | ✅ shipped     | `5445d99` |
+| 3 — resolve the 127 guided-cook dishes → composed per-serving nutrition                     | ⏭ next        |           |
+| 4 — therapeutics bridge (`appliesTo` food-class predicate replaces substring)               | ⏭ next        |           |
+| 5 — grow the registry from 22 → full dish coverage (~250 ingredients)                       | ⏭ incremental |           |
+
+**Proven now:** real USDA values (red-lentils 352 kcal / 10.7 g fiber, salmon
+1.73 g omega-3, olive-oil 884 kcal) and the structural fix —
+`resolveIngredientByName("Masoor Dal") → red-lentils → legume`. The registry is a
+**22-ingredient starter**; the machinery (ingest → resolve → compose → match) is
+complete and grows by adding spec rows, not by changing code.
+
+**Data hygiene:** the multi-hundred-MB USDA source is downloaded at ingest time
+and never committed — only the small generated registry is vendored. Re-run the
+ingest per the script header to refresh.
