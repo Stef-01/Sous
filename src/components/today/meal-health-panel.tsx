@@ -50,8 +50,12 @@ export function MealHealthPanel({
   // what the dish brings across every condition (generic discovery view).
   const scope = conditions.length > 0 ? conditions : undefined;
   // Bridge: resolved ingredient classes/groups let matching reason over food
-  // identity, not spelling. Empty profile → matcher falls back to substring.
-  const profile = getDishTherapeuticProfile(slug);
+  // identity, not spelling. Linked dishes use their ingredient list; meals
+  // (no links) fall back to identity named in their title + tags.
+  const profile = getDishTherapeuticProfile(
+    slug,
+    `${dishName} ${tags.join(" ")}`,
+  );
   const matches = matchInterventionsForDish(
     {
       name: dishName,

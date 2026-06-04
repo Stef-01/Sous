@@ -157,7 +157,7 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     fdcId: 169705,
     fdcDataType: "sr-legacy",
     foodGroup: "grain",
-    therapeuticClasses: ["soluble-fiber", "whole-grain"],
+    therapeuticClasses: ["beta-glucan", "soluble-fiber", "whole-grain"],
     // USDA SR Legacy: Oats (Includes foods for USDA's Food Distribution Program)
     per100g: {
       calories: 389,
@@ -188,7 +188,7 @@ export const INGREDIENTS: Record<string, Ingredient> = {
     fdcId: 170283,
     fdcDataType: "sr-legacy",
     foodGroup: "grain",
-    therapeuticClasses: ["whole-grain", "soluble-fiber"],
+    therapeuticClasses: ["beta-glucan", "whole-grain", "soluble-fiber"],
     // USDA SR Legacy: Barley, hulled
     per100g: {
       calories: 354,

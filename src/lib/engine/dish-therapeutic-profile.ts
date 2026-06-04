@@ -10,7 +10,7 @@
 
 import type { FoodGroup, TherapeuticClass } from "@/types/ingredient";
 import { getRecipeLink } from "@/data/ingredients/recipe-links";
-import { getIngredient } from "@/data/ingredients";
+import { getIngredient, resolveIngredientsInText } from "@/data/ingredients";
 
 export interface DishTherapeuticProfile {
   foodGroups: FoodGroup[];
@@ -22,17 +22,13 @@ const EMPTY: DishTherapeuticProfile = {
   therapeuticClasses: [],
 };
 
-export function getDishTherapeuticProfile(
-  slug: string | undefined,
+function profileFromIngredientIds(
+  ids: ReadonlyArray<string>,
 ): DishTherapeuticProfile {
-  if (!slug) return EMPTY;
-  const link = getRecipeLink(slug);
-  if (!link) return EMPTY;
-
   const groups = new Set<FoodGroup>();
   const classes = new Set<TherapeuticClass>();
-  for (const line of link.lines) {
-    const ing = getIngredient(line.ingredientId);
+  for (const id of ids) {
+    const ing = getIngredient(id);
     if (!ing) continue;
     groups.add(ing.foodGroup);
     for (const c of ing.therapeuticClasses) classes.add(c);
@@ -41,4 +37,26 @@ export function getDishTherapeuticProfile(
     foodGroups: [...groups],
     therapeuticClasses: [...classes],
   };
+}
+
+/**
+ * A dish's food-identity profile. Prefers the structured ingredient links
+ * (sides / guided-cook dishes); for dishes WITHOUT links (meals carry only a
+ * name + tags), falls back to resolving `fallbackText` against the registry —
+ * so "Masoor Dal" still surfaces a legume identity from its own name. The
+ * fallback only reports ingredients actually named, never guessed.
+ */
+export function getDishTherapeuticProfile(
+  slug: string | undefined,
+  fallbackText?: string,
+): DishTherapeuticProfile {
+  const link = slug ? getRecipeLink(slug) : null;
+  if (link && link.lines.length > 0) {
+    return profileFromIngredientIds(link.lines.map((l) => l.ingredientId));
+  }
+  if (fallbackText) {
+    const ids = resolveIngredientsInText(fallbackText);
+    if (ids.length > 0) return profileFromIngredientIds(ids);
+  }
+  return EMPTY;
 }

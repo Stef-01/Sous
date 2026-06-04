@@ -42,6 +42,7 @@ export type FoodGroup =
  */
 export type TherapeuticClass =
   | "soluble-fiber"
+  | "beta-glucan"
   | "whole-grain"
   | "plant-protein"
   | "oily-fish"

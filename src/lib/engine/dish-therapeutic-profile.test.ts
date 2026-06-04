@@ -13,6 +13,16 @@ describe("getDishTherapeuticProfile", () => {
     expect(miso.foodGroups).toContain("legume");
   });
 
+  it("falls back to name+tags for a meal with no ingredient links", () => {
+    // "Masoor Dal" is a meal (no guided-cook links) — its identity comes from
+    // its own name resolving to red-lentils → legume.
+    const masoor = getDishTherapeuticProfile("masoor-dal-meal", "Masoor Dal");
+    expect(masoor.foodGroups).toContain("legume");
+
+    const salmon = getDishTherapeuticProfile(undefined, "Grilled Salmon");
+    expect(salmon.therapeuticClasses).toContain("oily-fish");
+  });
+
   it("is empty for an undefined or unknown slug (safe fallback)", () => {
     expect(getDishTherapeuticProfile(undefined)).toEqual({
       foodGroups: [],

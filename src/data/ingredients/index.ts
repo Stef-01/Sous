@@ -67,3 +67,22 @@ export function resolveIngredientByName(name: string): string | null {
   }
   return null;
 }
+
+/**
+ * Resolve ALL canonical ingredients mentioned anywhere in free text — the
+ * fallback for dishes without a structured ingredient list (e.g. meals, which
+ * carry a name + tags but no guided-cook lines). Honest: it only reports
+ * ingredients whose alias actually appears as a whole phrase. Returns canonical
+ * ids, deduped.
+ */
+export function resolveIngredientsInText(text: string): string[] {
+  const norm = normalize(text);
+  if (!norm) return [];
+  const found = new Set<string>();
+  for (const [alias, id] of CONTAINS_ALIASES) {
+    if (found.has(id)) continue;
+    if (new RegExp(`(^| )${escapeRegExp(alias)}( |$)`).test(norm))
+      found.add(id);
+  }
+  return [...found];
+}

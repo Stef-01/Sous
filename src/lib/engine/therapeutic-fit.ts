@@ -66,9 +66,12 @@ const SIGNAL_STRUCTURE: Record<
   string,
   { classes?: string[]; groups?: string[] }
 > = {
-  oats: { classes: ["soluble-fiber", "whole-grain"] },
-  oatmeal: { classes: ["soluble-fiber", "whole-grain"] },
-  barley: { classes: ["whole-grain", "soluble-fiber"] },
+  // Oat/barley beta-glucan is INGREDIENT-specific evidence — map to the
+  // specific class, NOT generic soluble fiber, so a lentil dish (soluble fiber,
+  // but not beta-glucan) doesn't falsely match the beta-glucan intervention.
+  oats: { classes: ["beta-glucan"] },
+  oatmeal: { classes: ["beta-glucan"] },
+  barley: { classes: ["beta-glucan"] },
   "whole grains": { classes: ["whole-grain"] },
   "whole grain": { classes: ["whole-grain"] },
   "soluble fiber": { classes: ["soluble-fiber"] },
