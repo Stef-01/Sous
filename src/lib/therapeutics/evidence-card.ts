@@ -12,6 +12,7 @@ import type {
   EffectSize,
   Grade,
   InterventionClass,
+  InterventionRecord,
 } from "@/types/therapeutics";
 import {
   CONDITIONS,
@@ -63,20 +64,29 @@ export interface EvidenceCard {
   rows: EvidenceRow[];
 }
 
+/**
+ * Map one registry record to the display row the evidence UI renders. Shared by
+ * `buildEvidenceCard` (per-condition strip) and the swipe-up health panel
+ * (per-dish matches) so the two surfaces shape evidence identically.
+ */
+export function interventionToEvidenceRow(r: InterventionRecord): EvidenceRow {
+  return {
+    id: r.id,
+    label: r.label,
+    grade: r.grade,
+    gradeLabel: GRADE_LABEL[r.grade],
+    classLabel: CLASS_LABEL[r.interventionClass],
+    isEducation: r.interventionClass === "extract-or-supplement",
+    effectText: r.effect ? formatEffect(r.effect) : null,
+    note: r.applicationNote,
+    doseSignal: r.doseSignal,
+  };
+}
+
 export function buildEvidenceCard(conditionId: ConditionId): EvidenceCard {
   const info = CONDITIONS[conditionId];
   const rows: EvidenceRow[] = interventionsForCondition(conditionId).map(
-    (r) => ({
-      id: r.id,
-      label: r.label,
-      grade: r.grade,
-      gradeLabel: GRADE_LABEL[r.grade],
-      classLabel: CLASS_LABEL[r.interventionClass],
-      isEducation: r.interventionClass === "extract-or-supplement",
-      effectText: r.effect ? formatEffect(r.effect) : null,
-      note: r.applicationNote,
-      doseSignal: r.doseSignal,
-    }),
+    interventionToEvidenceRow,
   );
 
   return {
