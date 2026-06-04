@@ -63,7 +63,7 @@ export function MissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25 }
         }
-        className="relative overflow-hidden rounded-xl"
+        className="relative overflow-hidden rounded-[var(--radius-lg)]"
         style={{ aspectRatio: "4 / 3" }}
       >
         {heroImageUrl && !imgError ? (
@@ -103,19 +103,21 @@ export function MissionScreen({
           Time chip moves into the eyebrow row so it competes with
           metadata, not with flavor. */}
       <div className="space-y-2">
-        {/* Eyebrow caps — pattern #2 */}
+        {/* Eyebrow caps — the canonical .sous-label role (was an ad-hoc
+            text-[10px] caps that drifted off the type scale). */}
         <motion.p
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]"
+          className="sous-label"
         >
           {cuisineFamily ? `${cuisineFamily} · ` : ""}
           {totalTime} min
         </motion.p>
 
-        {/* Title — serif headline, line-clamp 2 to keep CTA above
-            the fold on 375px viewports */}
+        {/* Title — the canonical .sous-title serif role (was ad-hoc
+            font-serif text-2xl). line-clamp 2 keeps the CTA above the
+            fold on 375px viewports. */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,7 +127,7 @@ export function MissionScreen({
             damping: 25,
             delay: 0.1,
           }}
-          className="line-clamp-2 font-serif text-2xl leading-tight text-[var(--nourish-dark)]"
+          className="sous-title line-clamp-2 text-[var(--nourish-dark)]"
         >
           {dishName}
         </motion.h1>
