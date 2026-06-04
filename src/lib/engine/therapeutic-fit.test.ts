@@ -128,4 +128,32 @@ describe("matchInterventionsForDish (swipe-up health panel data)", () => {
       expect(matched).toBe(scored);
     }
   });
+
+  it("never surfaces education-only or non-benefit interventions (claim-safety spine)", () => {
+    // The swipe-up panel must inherit the same anti-overclaim guarantee as the
+    // scorer: a supplement/extract record (e.g. UC curcumin) or a no-benefit /
+    // exclude direction must never reach the user as a dish's "evidence", even
+    // for a dish whose text mentions the underlying ingredient.
+    const probes = [
+      dish("Turmeric & Curcumin Rice", ["turmeric", "curcumin", "supplement"]),
+      dish("Oats, Salmon, Olive Oil, Vegetables & Nuts Bowl", [
+        "oats",
+        "salmon",
+        "olive oil",
+        "vegetables",
+        "nuts",
+        "legumes",
+      ]),
+      dish("Coffee-Rubbed Fish with Greens", ["coffee", "fish", "greens"]),
+    ];
+    for (const d of probes) {
+      for (const m of matchInterventionsForDish(d)) {
+        expect(m.record.interventionClass).not.toBe("extract-or-supplement");
+        expect(["lowers", "raises", "improves-symptoms"]).toContain(
+          m.record.direction,
+        );
+        expect(m.matchedSignals.length).toBeGreaterThan(0);
+      }
+    }
+  });
 });

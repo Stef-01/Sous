@@ -217,3 +217,38 @@ per-record guard.
    first-run coachmark that teaches the gesture once then never again?
 4. **Nutrition source** (founder gate): USDA per ADR-0001, or defer the macro row
    entirely and ship therapeutics-only in v1?
+
+---
+
+## 9. Implementation status (shipped 2026-06-04)
+
+Built v1 with the recommended defaults: **one snap** (`peek`, half-image),
+**immersive card only**, **grabber + `Health`** affordance, **therapeutics-only**
+(no fabricated nutrition). All behind `therapeuticsActive()` (absent in test +
+production until the flag flips) and claim-safe per rule 11.
+
+| Phase | What shipped                                                                                                                         | Files                                                                                                             | Commit        |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ------------- |
+| 1     | `matchInterventionsForDish(dish, conditions?)` over a shared `matchedSignalsFor` predicate (identical-by-construction to the scorer) | `lib/engine/therapeutic-fit.ts`                                                                                   | `24032f2`     |
+| 2     | `decidePanelSnap` pure collapsed⇄peek snap (mirrors `decideSwipe`)                                                                   | `components/today/panel-snap.ts`                                                                                  | `24032f2`     |
+| 3     | Static `MealHealthPanel` + reusable `interventionToEvidenceRow` (shared with the EvidenceProvenanceStrip)                            | `components/today/meal-health-panel.tsx`, `lib/therapeutics/evidence-card.ts`                                     | `782c42e`     |
+| 4     | `use-meal-health-panel` hook + `MealHealthSheet` (drag='y', separate from the card's drag='x') wired into `MealSwipeQueueOverlay`    | `lib/hooks/use-meal-health-panel.ts`, `components/today/meal-health-sheet.tsx`, `components/today/quest-card.tsx` | `9d4b402`     |
+| 5     | Personalization (`PersonalizedSubhead`) built + gated on `reviewed` (G1, default off) — dormant slot per rule 12                     | `components/today/meal-health-panel.tsx`                                                                          | `782c42e`     |
+| 7     | Claim-safety regression guard (panel never surfaces extract-only / non-benefit records)                                              | `lib/engine/therapeutic-fit.test.ts`                                                                              | (this commit) |
+
+Live-verified on a clean dev server (375px): grabber positioned above the action
+bar; sheet opens with the photo top-half visible behind a scrim; empty state
+(both copy paths) and the populated state (Grilled Salmon → omega-3 row with
+class + grade badges, effect size, "In this dish: salmon", food-first hedge)
+render cleanly; scrim-tap dismisses; horizontal skip/cook swipe unaffected; zero
+console errors. +20 tests (3162 → guarded), typecheck + lint + build green.
+
+### Decision: nutrition slot deferred (was §8.4)
+
+**Phase 6 (macro row) intentionally NOT built.** Two project rules make a v1
+nutrition block the wrong move: rule 7 (no invented data — there is no real macro
+source in-repo; USDA is founder-gated G-nutrition) and rule 13 (the simplicity
+budget — the dish's real facts, `cuisine / cook-time / ingredient-count`, are
+already shown directly under the photo, so a second copy in the panel is a
+redundant restatement). The panel ships therapeutics-only. When USDA macros land
+(founder gate), add the row as a new, real surface — not a fake placeholder.
