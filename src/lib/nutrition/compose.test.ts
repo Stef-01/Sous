@@ -113,6 +113,33 @@ describe("composeRecipeNutrition", () => {
     expect(r.success && r.data.confidence).toBe("approximated");
   });
 
+  it("counts a frying medium at the absorbed fraction only", () => {
+    const registry = { oil: ing("oil", { calories: 800 }) };
+    const full = composeRecipeNutrition(
+      "t",
+      1,
+      [{ ingredientId: "oil", grams: 100, isOptional: false }],
+      registry,
+      AT,
+    );
+    const fry = composeRecipeNutrition(
+      "t",
+      1,
+      [
+        {
+          ingredientId: "oil",
+          grams: 100,
+          isOptional: false,
+          fryingMedium: true,
+        },
+      ],
+      registry,
+      AT,
+    );
+    expect(full.success && full.data.calories).toBe(800);
+    expect(fry.success && fry.data.calories).toBe(80); // 800 * 0.10
+  });
+
   it("errors on an unknown ingredient instead of silently zeroing", () => {
     const r = composeRecipeNutrition(
       "t",

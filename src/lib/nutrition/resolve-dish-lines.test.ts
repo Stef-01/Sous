@@ -19,6 +19,18 @@ describe("resolveDishLines", () => {
     expect(r.lines[0].grams).toBeGreaterThan(0);
   });
 
+  it("flags an oil listed for frying as a frying medium", () => {
+    const r = resolveDishLines([
+      { name: "Vegetable oil for deep frying", quantity: "4 cups" },
+    ]);
+    expect(r.lines[0].fryingMedium).toBe(true);
+  });
+
+  it("does not flag a normal oil line", () => {
+    const r = resolveDishLines([{ name: "Olive oil", quantity: "2 tbsp" }]);
+    expect(r.lines[0].fryingMedium).toBeUndefined();
+  });
+
   it("keeps a resolved-but-unmassed line at 0 g (e.g. 'to taste')", () => {
     const r = resolveDishLines([{ name: "Salt", quantity: "to taste" }]);
     expect(r.lines).toEqual([

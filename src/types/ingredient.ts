@@ -113,6 +113,12 @@ export interface ResolvedIngredientLine {
   ingredientId: string;
   grams: number;
   isOptional: boolean;
+  /**
+   * True when this is a deep-frying / cooking medium (oil listed for frying):
+   * the recipe lists the whole bath but only a fraction is absorbed, so
+   * composition applies an absorption factor instead of counting it all.
+   */
+  fryingMedium?: boolean;
 }
 
 /** The ordered, mass-resolved ingredient list for one recipe. */

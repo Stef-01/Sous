@@ -22,6 +22,7 @@ import {
 } from "@/lib/therapeutics/evidence-card";
 import { matchInterventionsForDish } from "@/lib/engine/therapeutic-fit";
 import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile";
+import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
 import { CONDITIONS } from "@/data/therapeutics";
 import { cn } from "@/lib/utils/cn";
@@ -122,10 +123,52 @@ export function MealHealthPanel({
         </>
       )}
 
+      <NutritionSnapshot slug={slug} />
+
       <p className="text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
         {FOOD_FIRST_HEDGE}
       </p>
     </section>
+  );
+}
+
+/** Coverage below which composed macros are too partial to show honestly. */
+const NUTRITION_DISPLAY_FLOOR = 0.7;
+
+function NutritionSnapshot({ slug }: { slug?: string }) {
+  const { perServing, massedCoverage } = getDishNutrition(slug);
+  if (!perServing || massedCoverage < NUTRITION_DISPLAY_FLOOR) return null;
+
+  const items: Array<{ label: string; value: string }> = [
+    { label: "Calories", value: `${Math.round(perServing.calories)}` },
+    { label: "Fiber", value: `${perServing.fiber_g.toFixed(1)} g` },
+    { label: "Sodium", value: `${Math.round(perServing.sodium_mg)} mg` },
+    { label: "Sat fat", value: `${perServing.saturatedFat_g.toFixed(1)} g` },
+  ];
+
+  return (
+    <div className="border-t border-neutral-100 pt-3">
+      <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+        Estimated nutrition · per serving
+      </p>
+      <dl className="mt-1.5 grid grid-cols-4 gap-2">
+        {items.map((it) => (
+          <div key={it.label}>
+            <dt className="text-[10px] text-[var(--nourish-subtext-faint)]">
+              {it.label}
+            </dt>
+            <dd className="text-[13px] font-semibold text-[var(--nourish-dark)]">
+              {it.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p className="mt-1.5 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
+        Composed from USDA ingredient data · assumes{" "}
+        {perServing.servingsPerRecipe} servings · frying oil partially absorbed
+        · an estimate, not a label.
+      </p>
+    </div>
   );
 }
 

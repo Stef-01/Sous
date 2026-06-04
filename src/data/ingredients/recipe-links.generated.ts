@@ -140,7 +140,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "shiitake", grams: 72.5, isOptional: false },
       { ingredientId: "ginger", grams: 4, isOptional: false },
       { ingredientId: "soy-sauce", grams: 15.94, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 654, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 654,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   "caprese-salad": {
@@ -183,7 +188,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sesame-oil", grams: 2.27, isOptional: false },
       { ingredientId: "potato", grams: 28.13, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 15.63, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 763, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 763,
+        isOptional: false,
+        fryingMedium: true,
+      },
       { ingredientId: "lemon", grams: 0, isOptional: false },
     ],
   },
@@ -275,7 +285,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "parmesan", grams: 50, isOptional: false },
       { ingredientId: "egg", grams: 0, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 125, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 872, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 872,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   tzatziki: {
@@ -353,7 +368,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "bell-pepper", grams: 298, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 125, isOptional: false },
       { ingredientId: "egg", grams: 50, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 654, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 654,
+        isOptional: false,
+        fryingMedium: true,
+      },
       { ingredientId: "soy-sauce", grams: 31.88, isOptional: false },
     ],
   },
@@ -412,7 +432,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sugar", grams: 50, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 125, isOptional: false },
       { ingredientId: "egg", grams: 50, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 436, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 436,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   "potato-salad": {
@@ -439,7 +464,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "garlic", grams: 2.83, isOptional: false },
       { ingredientId: "paprika", grams: 2.25, isOptional: false },
       { ingredientId: "table-salt", grams: 6.08, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 872, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 872,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   "french-fries": {
@@ -448,7 +478,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     originalLineCount: 3,
     lines: [
       { ingredientId: "potato", grams: 907.18, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 872, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 872,
+        isOptional: false,
+        fryingMedium: true,
+      },
       { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
@@ -800,7 +835,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     lines: [
       { ingredientId: "tofu", grams: 396.89, isOptional: false },
       { ingredientId: "cornstarch", grams: 32, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 436, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 436,
+        isOptional: false,
+        fryingMedium: true,
+      },
       { ingredientId: "soy-sauce", grams: 31.88, isOptional: false },
       { ingredientId: "mirin", grams: 30, isOptional: false },
       { ingredientId: "scallion", grams: 30, isOptional: false },
@@ -950,7 +990,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "scallion", grams: 45, isOptional: false },
       { ingredientId: "cornstarch", grams: 2.67, isOptional: false },
       { ingredientId: "black-pepper", grams: 0, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 872, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 872,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   "wild-rice": {
@@ -1201,7 +1246,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "soy-sauce", grams: 15.94, isOptional: false },
       { ingredientId: "sesame-oil", grams: 4.54, isOptional: false },
       { ingredientId: "scallion", grams: 0, isOptional: false },
-      { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
+      {
+        ingredientId: "vegetable-oil",
+        grams: 27.25,
+        isOptional: false,
+        fryingMedium: true,
+      },
     ],
   },
   "banh-mi": {

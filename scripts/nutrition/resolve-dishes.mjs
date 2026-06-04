@@ -85,7 +85,7 @@ const body = slugs
     const lines = l.lines
       .map(
         (x) =>
-          `      { ingredientId: "${x.ingredientId}", grams: ${x.grams}, isOptional: ${x.isOptional} },`,
+          `      { ingredientId: "${x.ingredientId}", grams: ${x.grams}, isOptional: ${x.isOptional}${x.fryingMedium ? ", fryingMedium: true" : ""} },`,
       )
       .join("\n");
     return `  "${slug}": {

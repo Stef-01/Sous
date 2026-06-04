@@ -62,6 +62,14 @@ function zeroVector(): NutrientVector {
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
 /**
+ * Fraction of a deep-frying oil bath actually absorbed into the food. Deep-fried
+ * foods take on roughly 8–12% of their own weight in oil while the listed bath
+ * is far larger; counting the whole bath inflated dishes (karaage → ~1900 kcal).
+ * A flat 0.10 is a documented heuristic, refined once cooked-weight data exists.
+ */
+export const FRYING_ABSORPTION = 0.1;
+
+/**
  * Compose per-serving nutrition for a recipe.
  *
  * `ingredients` is the canonical registry keyed by id. The composed
@@ -94,7 +102,11 @@ export function composeRecipeNutrition(
     if (ing.provenance !== "usda-fdc" || ing.confidence !== "mapped") {
       mapped = false;
     }
-    const factor = line.grams / 100;
+    // Frying medium contributes only the absorbed fraction, not the whole bath.
+    const grams = line.fryingMedium
+      ? line.grams * FRYING_ABSORPTION
+      : line.grams;
+    const factor = grams / 100;
     for (const key of NUTRIENT_KEYS) {
       total[key] += ing.per100g[key] * factor;
     }

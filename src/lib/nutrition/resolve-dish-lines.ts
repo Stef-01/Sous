@@ -41,10 +41,16 @@ export function resolveDishLines(
     const grams = ingredient
       ? quantityToGrams(ing.quantity ?? "", ingredient)
       : null;
+    // Frying medium: a fat/oil listed for frying — the recipe lists the whole
+    // bath but only a fraction is absorbed (composition handles the factor).
+    const fryingMedium =
+      ingredient?.foodGroup === "fat-oil" &&
+      /\bfry|frying|deep[-\s]?fr/i.test(`${ing.name} ${ing.quantity ?? ""}`);
     lines.push({
       ingredientId: id,
       grams: grams ?? 0,
       isOptional: Boolean(ing.isOptional),
+      ...(fryingMedium ? { fryingMedium: true } : {}),
     });
   }
 
