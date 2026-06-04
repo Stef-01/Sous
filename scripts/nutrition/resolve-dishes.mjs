@@ -17,12 +17,14 @@ import path from "node:path";
 const base = new URL("../../", import.meta.url);
 const guided = await import(new URL("src/data/guided-cook-steps.ts", base));
 const meals = await import(new URL("src/data/meal-ingredients.ts", base));
+const servingsMod = await import(new URL("src/data/dish-servings.ts", base));
 const resolver = await import(
   new URL("src/lib/nutrition/resolve-dish-lines.ts", base)
 );
 
 const { guidedCookData } = guided;
 const { MEAL_INGREDIENTS } = meals;
+const { sideServings } = servingsMod;
 const { resolveDishLines } = resolver;
 
 const DEFAULT_SERVINGS = 4;
@@ -48,7 +50,7 @@ for (const slug of slugs) {
   }
   links[slug] = {
     recipeSlug: slug,
-    servingsPerRecipe: DEFAULT_SERVINGS,
+    servingsPerRecipe: sideServings(slug),
     originalLineCount,
     lines,
   };

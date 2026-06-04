@@ -69,7 +69,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   guacamole: {
     recipeSlug: "guacamole",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 7,
     lines: [
       { ingredientId: "avocado", grams: 603, isOptional: false },
@@ -97,7 +97,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   gyoza: {
     recipeSlug: "gyoza",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 11,
     lines: [
       { ingredientId: "green-cabbage", grams: 170.1, isOptional: false },
@@ -138,7 +138,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "spring-rolls": {
     recipeSlug: "spring-rolls",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 9,
     lines: [
       { ingredientId: "egg-noodles", grams: 0, isOptional: false },
@@ -220,7 +220,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "pico-de-gallo": {
     recipeSlug: "pico-de-gallo",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 6,
     lines: [
       { ingredientId: "tomato", grams: 738, isOptional: false },
@@ -310,7 +310,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   tzatziki: {
     recipeSlug: "tzatziki",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 7,
     lines: [
       { ingredientId: "greek-yogurt", grams: 367.5, isOptional: false },
@@ -442,7 +442,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   churros: {
     recipeSlug: "churros",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 7,
     lines: [
       { ingredientId: "butter", grams: 28.38, isOptional: false },
@@ -612,7 +612,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   satay: {
     recipeSlug: "satay",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 9,
     lines: [
       { ingredientId: "chicken-breast", grams: 0, isOptional: false },
@@ -676,7 +676,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "baked-potato": {
     recipeSlug: "baked-potato",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 2,
     originalLineCount: 4,
     lines: [
       { ingredientId: "potato", grams: 692, isOptional: false },
@@ -699,7 +699,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "summer-rolls": {
     recipeSlug: "summer-rolls",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 10,
     lines: [
       { ingredientId: "white-rice", grams: 0, isOptional: false },
@@ -768,7 +768,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   raita: {
     recipeSlug: "raita",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 8,
     lines: [
       { ingredientId: "milk", grams: 488, isOptional: false },
@@ -836,7 +836,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "mango-chutney": {
     recipeSlug: "mango-chutney",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 10,
     originalLineCount: 10,
     lines: [
       { ingredientId: "mango", grams: 400, isOptional: false },
@@ -872,7 +872,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "smashed-cucumber-salad": {
     recipeSlug: "smashed-cucumber-salad",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 10,
     lines: [
       { ingredientId: "cucumber", grams: 600, isOptional: false },
@@ -935,7 +935,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "tortilla-chips": {
     recipeSlug: "tortilla-chips",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 4,
     lines: [
       { ingredientId: "tortilla", grams: 360, isOptional: false },
@@ -993,7 +993,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "bao-buns": {
     recipeSlug: "bao-buns",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 7,
     lines: [
       { ingredientId: "all-purpose-flour", grams: 250, isOptional: false },
@@ -1005,7 +1005,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "crispy-wontons": {
     recipeSlug: "crispy-wontons",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 11,
     lines: [
       { ingredientId: "ground-pork", grams: 170.1, isOptional: false },
@@ -1303,7 +1303,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "onion-raita": {
     recipeSlug: "onion-raita",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 7,
     lines: [
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
@@ -1418,7 +1418,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   sunomono: {
     recipeSlug: "sunomono",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 6,
     originalLineCount: 8,
     lines: [
       { ingredientId: "cucumber", grams: 600, isOptional: false },
@@ -1699,7 +1699,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   kimchi: {
     recipeSlug: "kimchi",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 10,
     originalLineCount: 8,
     lines: [
       { ingredientId: "napa-cabbage", grams: 0, isOptional: false },
