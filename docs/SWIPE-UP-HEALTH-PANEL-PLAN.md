@@ -1,6 +1,10 @@
 # Swipe-Up Health Panel — Technical Plan
 
-> **Status:** Plan (not yet built). Authored 2026-06-04.
+> **Status:** ✅ BUILT (phases 1–7 shipped 2026-06-04). The deferred nutrition
+> row (§8.4) later landed via the ingredient-nutrition Gap 2 (oil-absorption
+> modeling); the panel now shows an estimated per-serving snapshot for
+> high-coverage dishes. Personalization is visible in clinician-review mode.
+> Authored 2026-06-04.
 > **Feature:** On the immersive meal card, swiping **up** raises a calm,
 > minimalist panel of food-first health + Culinary-Therapeutics info for that
 > dish, while the **bottom half of the food photo stays visible** as the anchor.

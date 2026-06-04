@@ -1,5 +1,10 @@
 # reduced-motion-gate remediation TODO
 
+> **✅ COMPLETE (2026-06-04).** Audit confirms **0 remaining violations** and the
+> rule is enforced at **`error`** in `eslint.config.mjs`
+> (`sous/reduced-motion-gate`). The remediation below is finished; this file is
+> kept as history.
+
 > Tracks the pre-existing violations of the new
 > `sous/reduced-motion-gate` ESLint rule (introduced in W7 of
 > STAGE-3-VIBECODE-AUTONOMOUS-12MO.md). The rule ships in `warn`
