@@ -94,15 +94,15 @@ export function MealHealthPanel({
   return (
     <section
       aria-label={`Food-first evidence for ${dishName}`}
-      className={cn("flex flex-col gap-3", className)}
+      className={cn("flex flex-col gap-6", className)}
     >
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--nourish-green)]">
+      <header className="flex items-center justify-between gap-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]">
           Food-first evidence
         </p>
         <span
           className={cn(
-            "rounded-full px-2 py-0.5 text-[10px] font-medium",
+            "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide",
             reviewed
               ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
               : clinicianReview
@@ -112,16 +112,16 @@ export function MealHealthPanel({
         >
           {statusLabel}
         </span>
-      </div>
+      </header>
 
       <WholeFoodComposition foodGroups={profile.foodGroups} />
 
       {matches.length === 0 ? (
         <EmptyState hasConditions={conditions.length > 0} />
       ) : (
-        <>
+        <div className="flex flex-col gap-3">
           {personalized && <PersonalizedSubhead conditions={conditions} />}
-          <ul className="space-y-3">
+          <ul className="flex flex-col divide-y divide-neutral-100/80">
             {matches.map((m) => (
               <EvidenceRowItem
                 key={m.record.id}
@@ -131,12 +131,12 @@ export function MealHealthPanel({
               />
             ))}
           </ul>
-        </>
+        </div>
       )}
 
       <NutritionSnapshot slug={slug} />
 
-      <p className="text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
+      <p className="text-[10.5px] leading-relaxed text-[var(--nourish-subtext-faint)]">
         {FOOD_FIRST_HEDGE}
       </p>
     </section>
@@ -158,26 +158,25 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
   ];
 
   return (
-    <div className="border-t border-neutral-100 pt-3">
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+    <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--nourish-subtext-faint)]">
         Estimated nutrition · per serving
       </p>
-      <dl className="mt-1.5 grid grid-cols-4 gap-2">
+      <dl className="mt-3 grid grid-cols-4 gap-3">
         {items.map((it) => (
           <div key={it.label}>
-            <dt className="text-[10px] text-[var(--nourish-subtext-faint)]">
-              {it.label}
-            </dt>
-            <dd className="text-[13px] font-semibold text-[var(--nourish-dark)]">
+            <dd className="font-serif text-[19px] leading-none text-[var(--nourish-dark)]">
               {it.value}
             </dd>
+            <dt className="mt-1 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+              {it.label}
+            </dt>
           </div>
         ))}
       </dl>
-      <p className="mt-1.5 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
-        Composed from USDA ingredient data · assumes{" "}
-        {perServing.servingsPerRecipe} servings · frying oil partially absorbed
-        · an estimate, not a label.
+      <p className="mt-3 text-[10px] leading-relaxed text-[var(--nourish-subtext-faint)]">
+        Composed from USDA data · assumes {perServing.servingsPerRecipe}{" "}
+        servings · an estimate, not a label.
       </p>
     </div>
   );
@@ -233,18 +232,20 @@ function WholeFoodComposition({
   const shown = NOTABLE_GROUPS.filter((g) => set.has(g)).slice(0, 5);
   if (shown.length === 0) return null;
   return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+    <div>
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[var(--nourish-subtext-faint)]">
         Built on
-      </span>
-      {shown.map((g) => (
-        <span
-          key={g}
-          className="rounded-full bg-[var(--nourish-cream)] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-dark)]"
-        >
-          {FOOD_GROUP_LABEL[g]}
-        </span>
-      ))}
+      </p>
+      <div className="flex flex-wrap gap-1.5">
+        {shown.map((g) => (
+          <span
+            key={g}
+            className="rounded-full bg-[var(--nourish-cream)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--nourish-dark)]"
+          >
+            {FOOD_GROUP_LABEL[g]}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -278,43 +279,44 @@ function EvidenceRowItem({
     const grams = gramsForSignal(sig, composition);
     return grams >= 1 ? `${sig} ~${Math.round(grams)}g` : sig;
   };
+  const strongGrade = row.grade === "high" || row.grade === "moderate";
   return (
-    <li className="border-t border-neutral-100 pt-3 first:border-0 first:pt-0">
-      <div className="flex flex-wrap items-center gap-1.5">
-        <span className="text-[13px] font-semibold text-[var(--nourish-dark)]">
+    <li className="py-4 first:pt-0 last:pb-0">
+      <div className="flex items-start justify-between gap-3">
+        <h4 className="text-[14.5px] font-semibold leading-snug text-[var(--nourish-dark)]">
           {row.label}
-        </span>
+        </h4>
         <span
           className={cn(
-            "rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide",
-            row.isEducation
-              ? "bg-neutral-100 text-[var(--nourish-subtext)]"
-              : "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]",
+            "mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide",
+            strongGrade
+              ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
+              : "bg-amber-100 text-amber-700",
           )}
         >
-          {row.classLabel}
-        </span>
-        <span className="rounded-full bg-[var(--nourish-cream)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--nourish-subtext)]">
-          {row.gradeLabel} evidence
+          {row.gradeLabel}
         </span>
       </div>
+      <p className="mt-0.5 text-[10.5px] font-medium uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+        {row.classLabel}
+      </p>
+
       {row.effectText && (
-        <p className="mt-1 text-[12px] font-medium text-[var(--nourish-dark)]">
+        <p className="mt-2.5 rounded-lg bg-[var(--nourish-green)]/[0.07] px-2.5 py-1.5 text-[12.5px] font-medium text-[var(--nourish-dark)]">
           {row.effectText}
         </p>
       )}
-      {row.doseSignal && (
-        <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
-          Typically needs: {row.doseSignal}
-        </p>
-      )}
-      <p className="mt-1 text-[12px] leading-snug text-[var(--nourish-subtext)]">
+      <p className="mt-2.5 text-[12.5px] leading-relaxed text-[var(--nourish-subtext)]">
         {row.note}
       </p>
-      {signals.length > 0 && (
-        <p className="mt-1.5 text-[11px] text-[var(--nourish-subtext-faint)]">
-          In this dish: {signals.map(labelFor).join(" · ")}
-        </p>
+
+      {(signals.length > 0 || row.doseSignal) && (
+        <div className="mt-2.5 space-y-1 text-[11px] leading-snug text-[var(--nourish-subtext-faint)]">
+          {signals.length > 0 && (
+            <p>In this dish: {signals.map(labelFor).join(" · ")}</p>
+          )}
+          {row.doseSignal && <p>Typically needs {row.doseSignal}</p>}
+        </div>
       )}
     </li>
   );
