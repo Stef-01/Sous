@@ -5,6 +5,21 @@
 
 ---
 
+## ACTIVE WORKSTREAM: 20-WEEK AUTONOMOUS MOAT-DEEPENING PLAN — IN PROGRESS
+
+> Authored 2026-06-05. Full plan: **`docs/20-WEEK-AUTONOMOUS-MOAT-PLAN.md`**. The
+> AUTO-BUILD track (rule 12) that runs while the founder-gated rails get
+> credentials: 20 weeks, each deepening one compounding moat (Data/Content/
+> Behavioral/Engine/Network), ordered by the STRATEGY §7 impact/effort matrix and
+> the North Star (cooks/week). Phase 1 (W1–4) Engine×Data context intelligence →
+> Phase 2 (W5–8) Content depth + voice → Phase 3 (W9–12) habit-loop depth →
+> Phase 4 (W13–16) craft + reliability → Phase 5 (W17–20) Network-moat prep +
+> founder-gated integration stubs. Founder gates (Auth, Storage, Realtime, Stripe,
+> AI keys, beta cohorts, legal/clinical) are surfaced in the plan header with the
+> autonomous prep that ships for each, so go-live is one config edit, not a rebuild.
+
+---
+
 ## ACTIVE WORKSTREAM: STAGE 1+2 6-MONTH PLAN — IN PROGRESS
 
 > Authored 2026-05-01. The full 26-week plan is in `docs/STAGE-1-2-6MO-TIMELINE.md`. Headline: ship Parent Mode (research-backed, FDA-claim-safe) AND complete production hardening (Clerk, Neon, R2, Redis, Sentry, perf, a11y) by 2026-10-30. Stage 1 prototype is complete; Stage 3 Content tab is complete; this plan integrates remaining production-hardening work with the new Parent Mode feature workstream.
