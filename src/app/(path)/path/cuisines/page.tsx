@@ -85,7 +85,7 @@ export default function CuisinesPage() {
           {rows.map((row) => (
             <li key={row.cuisine}>
               <article
-                className="flex flex-col items-center gap-2 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition hover:border-neutral-200 hover:shadow-md"
+                className="flex h-full flex-col items-center gap-2 rounded-2xl border border-neutral-100/80 bg-white p-3 text-center shadow-sm transition hover:border-neutral-200 hover:shadow-md"
                 aria-label={`${row.cuisine} — ${row.count} of ${row.target} cooks`}
               >
                 <MadeItRing
@@ -96,7 +96,10 @@ export default function CuisinesPage() {
                 />
                 {/* Eyebrow caps — pattern #2 */}
                 <p className="sous-label">{row.cuisine}</p>
-                <p className="text-xs text-[var(--nourish-dark)]">
+                {/* mt-auto + the article's h-full pin the count to the bottom
+                    so a two-line name (e.g. "North African") never pushes its
+                    progress out of alignment with the rest of the row. */}
+                <p className="mt-auto text-xs text-[var(--nourish-dark)]">
                   {row.count}
                   <span className="text-[var(--nourish-subtext)]">
                     /{row.target}
