@@ -140,7 +140,7 @@ export default function EatOutPage() {
               <span className="font-semibold text-[var(--nourish-green)]">
                 Curated picks
               </span>
-              {" — "}live restaurant search arrives in Y7 K.
+              {" — "}live restaurant search is coming soon.
             </p>
 
             <AnimatePresence mode="wait">

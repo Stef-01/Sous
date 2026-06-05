@@ -224,8 +224,8 @@ function LeaderboardInner() {
         {/* Provenance line — make the stub state explicit. */}
         <p className="flex items-start gap-1 rounded-xl bg-white/60 px-3 py-2 text-[11px] leading-snug text-[var(--nourish-subtext)]">
           <Sparkles size={12} className="mt-px shrink-0" aria-hidden />
-          Peer pods are seeded for the V1 demo. Multi-pod cross-server ranking
-          lands in Y6 with the auth + Postgres flip.
+          Peer pods are seeded for the demo. Live multi-pod ranking across
+          everyone is coming soon.
         </p>
       </main>
     </div>
