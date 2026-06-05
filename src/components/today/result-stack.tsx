@@ -83,7 +83,6 @@ export function ResultStack({
   isRerolling,
 }: ResultStackProps) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -272,21 +271,23 @@ export function ResultStack({
             </span>
           </p>
         </div>
-        <button
+        <motion.button
           onClick={onReroll}
           disabled={isRerolling}
+          whileTap={reducedMotion || isRerolling ? undefined : { scale: 0.96 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
             "border border-neutral-200 text-[var(--nourish-subtext)]",
             "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-            "disabled:opacity-50 transition-all duration-200",
+            "disabled:opacity-50 transition-colors duration-200",
           )}
           type="button"
         >
           <RefreshCw size={14} className={isRerolling ? "animate-spin" : ""} />
           Reroll all
-        </button>
+        </motion.button>
       </div>
 
       {sides.length >= 2 && (
@@ -296,20 +297,22 @@ export function ResultStack({
           </span>
           <div className="flex items-center gap-1 rounded-full bg-neutral-100 p-1">
             {Array.from({ length: sides.length }, (_, i) => i + 1).map((n) => (
-              <button
+              <motion.button
                 key={n}
                 type="button"
                 onClick={() => setSideCount(n)}
                 aria-pressed={selectedSides.length === n}
+                whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 className={cn(
-                  "flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-sm font-semibold transition-colors",
+                  "flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-sm font-semibold transition-colors duration-150",
                   selectedSides.length === n
                     ? "bg-white text-[var(--nourish-dark)] shadow-sm"
                     : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
                 )}
               >
                 {n}
-              </button>
+              </motion.button>
             ))}
           </div>
         </div>

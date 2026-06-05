@@ -71,9 +71,12 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         aria-label={`Streak: ${streak} day${streak === 1 ? "" : "s"}. Streak options.`}
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
+        whileTap={
+          reducedMotion || !showMenuButton ? undefined : { scale: 0.94 }
+        }
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
-          "flex items-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-1 transition-colors hover:bg-[var(--nourish-warm)]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+          "flex items-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-1 transition-colors duration-150 hover:bg-[var(--nourish-warm)]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           // Dotted ring when today is a rest day  -  signals the streak is
           // being intentionally held open.
           todayIsRestDay &&

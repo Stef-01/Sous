@@ -99,21 +99,23 @@ export function TodayPlannedSlot({ now }: TodayPlannedSlotProps = {}) {
             {humaniseSlug(recipeSlug)}
           </p>
         </div>
-        <button
+        <motion.button
           type="button"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             clearSlot(slot);
           }}
+          whileTap={reducedMotion ? undefined : { scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 400, damping: 15 }}
           aria-label="Skip today's planned meal"
           className={cn(
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)]",
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors duration-150 hover:bg-white hover:text-[var(--nourish-dark)]",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           )}
         >
           <X size={14} aria-hidden />
-        </button>
+        </motion.button>
       </Link>
     </motion.section>
   );

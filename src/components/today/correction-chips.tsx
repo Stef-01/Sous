@@ -25,7 +25,6 @@ export function CorrectionChips({
   onCustom,
 }: CorrectionChipsProps) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const confidencePct = Math.round(confidence * 100);
 
   return (
@@ -65,11 +64,13 @@ export function CorrectionChips({
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             {[dishName, ...alternates].map((name) => (
-              <button
+              <motion.button
                 key={name}
                 onClick={() => onConfirm(name)}
+                whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 className={cn(
-                  "rounded-full border px-3 py-1.5 text-sm transition-all duration-150",
+                  "rounded-full border px-3 py-1.5 text-sm transition-colors duration-150",
                   name === dishName
                     ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
                     : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]",
@@ -77,32 +78,36 @@ export function CorrectionChips({
                 type="button"
               >
                 {name}
-              </button>
+              </motion.button>
             ))}
-            <button
+            <motion.button
               onClick={onCustom}
-              className="rounded-full border border-dashed border-neutral-300 px-3 py-1.5 text-sm text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] transition-colors"
+              whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="rounded-full border border-dashed border-neutral-300 px-3 py-1.5 text-sm text-[var(--nourish-subtext)] transition-colors duration-150 hover:border-[var(--nourish-green)]"
               type="button"
             >
               Other...
-            </button>
+            </motion.button>
           </div>
         </div>
       )}
 
       {/* Confirm button */}
-      <button
+      <motion.button
         onClick={() => onConfirm(dishName)}
+        whileTap={reducedMotion ? undefined : { scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 400, damping: 15 }}
         className={cn(
           "w-full rounded-xl py-3 text-sm font-semibold text-white",
           "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200 flex items-center justify-center gap-2",
+          "flex items-center justify-center gap-2 transition-colors duration-200",
         )}
         type="button"
       >
         <Check size={16} />
         Looks right - Pair
-      </button>
+      </motion.button>
     </motion.div>
   );
 }

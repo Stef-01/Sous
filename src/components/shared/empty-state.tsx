@@ -83,8 +83,12 @@ export function EmptyState({
           type="button"
           onClick={primaryAction.onClick}
           className={cn(
-            "rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors",
-            "hover:bg-[var(--nourish-dark-green)]",
+            // Dependency-free press feedback so the component stays
+            // motion-free (no framer-motion); the press scale is disabled
+            // under prefers-reduced-motion via the motion-reduce: variants.
+            "rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition duration-150",
+            "hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]",
+            "motion-reduce:transition-none motion-reduce:active:scale-100",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           )}
         >

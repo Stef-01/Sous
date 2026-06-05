@@ -21,7 +21,6 @@ export function CameraInput({
   isProcessing,
 }: CameraInputProps) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [showTypingFallback, setShowTypingFallback] = useState(false);
@@ -106,14 +105,16 @@ export function CameraInput({
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/40 rounded-2xl">
                 <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                 {showTypingFallback && (
-                  <button
+                  <motion.button
                     onClick={onClose}
                     type="button"
-                    className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[var(--nourish-dark)] hover:bg-white transition-colors"
+                    whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                    className="flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[var(--nourish-dark)] transition-colors duration-150 hover:bg-white"
                   >
                     <Keyboard size={12} />
                     Didn&apos;t work - try typing instead
-                  </button>
+                  </motion.button>
                 )}
               </div>
             )}
@@ -143,18 +144,23 @@ export function CameraInput({
         {!preview ? (
           <>
             {/* Upload from file */}
-            <button
+            <motion.button
               onClick={() => fileInputRef.current?.click()}
-              className="flex flex-col items-center gap-1 rounded-xl px-4 py-3 text-white/70 hover:text-white transition-colors"
+              whileTap={reducedMotion ? undefined : { scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex flex-col items-center gap-1 rounded-xl px-4 py-3 text-white/70 transition-colors duration-150 hover:text-white"
               type="button"
             >
               <Upload size={24} />
               <span className="text-xs">Upload</span>
-            </button>
+            </motion.button>
             {/* Shutter button (opens file picker as camera) */}
-            <button
+            <motion.button
               onClick={() => fileInputRef.current?.click()}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg hover:scale-105 transition-transform"
+              whileHover={reducedMotion ? undefined : { scale: 1.05 }}
+              whileTap={reducedMotion ? undefined : { scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg"
               type="button"
               aria-label="Take photo"
             >
@@ -162,34 +168,42 @@ export function CameraInput({
                 aria-hidden
                 className="h-14 w-14 rounded-full border-2 border-neutral-300"
               />
-            </button>
+            </motion.button>
             <div className="w-16" /> {/* Spacer */}
           </>
         ) : (
           <>
             {/* Retake */}
-            <button
+            <motion.button
               onClick={() => setPreview(null)}
               disabled={isProcessing}
-              className="rounded-xl px-6 py-3 text-sm font-medium text-white/70 hover:text-white disabled:opacity-50 transition-colors"
+              whileTap={
+                reducedMotion || isProcessing ? undefined : { scale: 0.96 }
+              }
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              className="rounded-xl px-6 py-3 text-sm font-medium text-white/70 transition-colors duration-150 hover:text-white disabled:opacity-50"
               type="button"
             >
               Retake
-            </button>
+            </motion.button>
 
             {/* Confirm */}
-            <button
+            <motion.button
               onClick={handleConfirm}
               disabled={isProcessing}
+              whileTap={
+                reducedMotion || isProcessing ? undefined : { scale: 0.97 }
+              }
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
               className={cn(
                 "rounded-xl px-8 py-3 text-sm font-semibold",
                 "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-                "disabled:opacity-50 transition-all duration-200",
+                "transition-colors duration-200 disabled:opacity-50",
               )}
               type="button"
             >
               {isProcessing ? "Identifying..." : "Looks right  -  Pair"}
-            </button>
+            </motion.button>
           </>
         )}
       </div>
