@@ -94,10 +94,7 @@ export function WeekCalendar({
         >
           <span aria-hidden />
           {MEALS.map((m) => (
-            <span
-              key={m.key}
-              className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]"
-            >
+            <span key={m.key} className="sous-label">
               {m.label}
             </span>
           ))}

@@ -55,9 +55,7 @@ export function CharityDashboardCard({
       </section>
 
       <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          Reach
-        </p>
+        <p className="sous-label">Reach</p>
         <div className="mt-2 grid grid-cols-2 gap-3 text-sm">
           <div>
             <p className="font-mono text-lg font-semibold tabular-nums text-[var(--nourish-dark)]">
@@ -77,9 +75,7 @@ export function CharityDashboardCard({
       </section>
 
       <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          Status
-        </p>
+        <p className="sous-label">Status</p>
         <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
           <StatusChip label="succeeded" count={summary.statuses.succeeded} />
           <StatusChip label="refunded" count={summary.statuses.refunded} />
@@ -115,9 +111,7 @@ function Stat({
 function StatusChip({ label, count }: { label: string; count: number }) {
   return (
     <div className="rounded-xl border border-[var(--nourish-border-soft)] bg-[var(--nourish-cream)] px-2 py-1.5 text-center">
-      <p className="text-[10px] uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-        {label}
-      </p>
+      <p className="sous-label">{label}</p>
       <p className="mt-0.5 font-mono text-sm tabular-nums">
         {count.toLocaleString()}
       </p>

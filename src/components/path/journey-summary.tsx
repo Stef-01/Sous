@@ -66,9 +66,7 @@ function StatBlock({
         {value}
         {icon}
       </motion.div>
-      <div className="text-[11px] text-[var(--nourish-subtext)] uppercase tracking-wide mt-0.5">
-        {label}
-      </div>
+      <div className="sous-label mt-0.5">{label}</div>
     </motion.div>
   );
 }

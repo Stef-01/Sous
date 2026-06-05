@@ -58,9 +58,7 @@ export default function WeekPlanPage() {
       <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {/* Status strip */}
         <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-            Slots scheduled
-          </p>
+          <p className="sous-label">Slots scheduled</p>
           <p className="mt-0.5 text-sm text-[var(--nourish-dark)]">
             <span className="font-semibold">{summary.filled}</span> of{" "}
             {summary.total}

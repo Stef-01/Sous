@@ -298,9 +298,7 @@ function EvidenceRowItem({
           {row.gradeLabel}
         </span>
       </div>
-      <p className="mt-0.5 text-[10.5px] font-medium uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
-        {row.classLabel}
-      </p>
+      <p className="sous-label mt-0.5">{row.classLabel}</p>
 
       {row.effectText && (
         <p className="mt-2.5 rounded-lg bg-[var(--nourish-green)]/[0.07] px-2.5 py-1.5 text-[12.5px] font-medium text-[var(--nourish-dark)]">

@@ -85,9 +85,7 @@ export default function GamesArcadePage() {
             <h1 className="flex items-center gap-1.5 font-serif text-[15px] font-semibold text-[var(--nourish-dark)]">
               <Joystick size={14} aria-hidden /> Kitchen Arcade
             </h1>
-            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--nourish-subtext)]">
-              Learn food, have fun
-            </p>
+            <p className="sous-label">Learn food, have fun</p>
           </div>
           {/* Spacer keeps title visually centred without forcing the
               back button into a different cell. */}

@@ -149,9 +149,7 @@ export function DailyNoveltyChip() {
           />
         </span>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-            From your pantry
-          </p>
+          <p className="sous-label">From your pantry</p>
           <p className="truncate text-sm font-medium text-[var(--nourish-dark)]">
             {/* Curiosity copy — never FOMO */}
             Have you tried {novelty.suggestedDishName.toLowerCase()}?

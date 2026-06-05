@@ -156,9 +156,7 @@ export default function EcoDashboardPage() {
         {/* Trailing-30 + cook count side-by-side cards. */}
         <section className="grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
-              This month
-            </p>
+            <p className="sous-label">This month</p>
             <p className="mt-1 font-serif text-xl font-bold tabular-nums text-[var(--nourish-green)]">
               {formatKg(monthly.savedKg)}
             </p>
@@ -167,9 +165,7 @@ export default function EcoDashboardPage() {
             </p>
           </div>
           <div className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
-              Cooks logged
-            </p>
+            <p className="sous-label">Cooks logged</p>
             <p className="mt-1 font-serif text-xl font-bold tabular-nums text-[var(--nourish-dark)]">
               {yearly.cookCount}
             </p>
@@ -183,9 +179,7 @@ export default function EcoDashboardPage() {
             comparison up or down. Default `delivery` is the most
             forgiving framing. */}
         <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-            Compare against
-          </p>
+          <p className="sous-label">Compare against</p>
           <p className="mt-1 text-[12px] leading-snug text-[var(--nourish-subtext)]">
             We compare home cooking to whatever else you might have eaten. Pick
             what fits.
@@ -217,9 +211,7 @@ export default function EcoDashboardPage() {
             grounded. Pulls from the same docs the carbon-math
             substrate cites in source comments. */}
         <section className="rounded-2xl border border-dashed border-neutral-200/80 bg-transparent p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-            Sources
-          </p>
+          <p className="sous-label">Sources</p>
           <ul className="mt-2 list-disc space-y-1 pl-4 text-[11px] leading-snug text-[var(--nourish-subtext)]/90">
             <li>Poore &amp; Nemecek 2018 (Science) — life-cycle dataset</li>
             <li>WRI Shifting Diets 2016 — diet-shift carbon analysis</li>

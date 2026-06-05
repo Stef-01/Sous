@@ -185,9 +185,7 @@ export default function ClinicianReviewPage() {
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-xl bg-[var(--nourish-cream)] px-3 py-2.5 text-center">
-      <dt className="text-[10px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
-        {label}
-      </dt>
+      <dt className="sous-label">{label}</dt>
       <dd className="mt-0.5 font-serif text-xl text-[var(--nourish-dark)]">
         {value}
       </dd>

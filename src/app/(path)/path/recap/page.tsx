@@ -146,9 +146,7 @@ export default function RecapPage() {
             {/* Top cuisines */}
             {recap.topCuisines.length > 0 && (
               <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-                  Top cuisines
-                </p>
+                <p className="sous-label">Top cuisines</p>
                 <ol className="mt-2 space-y-1.5">
                   {recap.topCuisines.map((c, i) => (
                     <li
@@ -173,9 +171,7 @@ export default function RecapPage() {
             {/* Top dishes */}
             {recap.topDishes.length > 0 && (
               <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-                  Most-cooked dishes
-                </p>
+                <p className="sous-label">Most-cooked dishes</p>
                 <ol className="mt-2 space-y-1.5">
                   {recap.topDishes.map((d, i) => (
                     <li
@@ -199,9 +195,7 @@ export default function RecapPage() {
 
             {/* By month — sparkline-style bars. */}
             <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-                By month
-              </p>
+              <p className="sous-label">By month</p>
               <ul
                 className="mt-3 grid grid-cols-12 items-end gap-1"
                 aria-label="Cooks per month"

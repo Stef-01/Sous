@@ -133,7 +133,7 @@ export default function MyRecipesPage() {
                 <p className="mt-1 line-clamp-2 text-sm text-[var(--nourish-subtext)]">
                   {recipe.description}
                 </p>
-                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
+                <p className="sous-label mt-2">
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>
@@ -258,9 +258,7 @@ function TemplatesRow() {
                 href={`/path/recipes/new?fork=${t.slug}`}
                 className="flex h-full flex-col gap-1 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm transition hover:border-neutral-200 hover:shadow-md"
               >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-                  {t.cuisine}
-                </span>
+                <span className="sous-label">{t.cuisine}</span>
                 <span className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
                   {t.name}
                 </span>

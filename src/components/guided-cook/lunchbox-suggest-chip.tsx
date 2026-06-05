@@ -118,9 +118,7 @@ function LunchboxSheet({
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-0.5">
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-                  Tomorrow&rsquo;s lunchbox
-                </p>
+                <p className="sous-label">Tomorrow&rsquo;s lunchbox</p>
                 <h2 className="font-serif text-lg leading-tight text-[var(--nourish-dark)]">
                   {recipeName}
                 </h2>

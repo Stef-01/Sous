@@ -123,7 +123,7 @@ export default function AdminPage() {
                 <p className="mt-1 line-clamp-3 text-sm text-[var(--nourish-subtext)]">
                   {recipe.description}
                 </p>
-                <p className="mt-2 text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
+                <p className="sous-label mt-2">
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>

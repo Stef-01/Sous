@@ -57,9 +57,7 @@ export function WhosAtTable() {
       aria-label="Who's at the table"
     >
       <div className="flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          At the table tonight
-        </p>
+        <p className="sous-label">At the table tonight</p>
         {aggregate.count > 0 && (
           <span className="text-[10px] font-medium text-[var(--nourish-subtext-faint)]">
             {aggregate.count} of {members.length}

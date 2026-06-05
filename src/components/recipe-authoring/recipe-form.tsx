@@ -357,9 +357,7 @@ function FormField({
 }) {
   return (
     <label className="block space-y-1">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-        {label}
-      </span>
+      <span className="sous-label">{label}</span>
       {children}
       {error && (
         <span className="text-[11px] text-rose-500" role="alert">

@@ -167,7 +167,7 @@ export default function WhatsCookingGame() {
             <p className="flex items-center gap-1.5 font-serif text-[15px] font-semibold text-[var(--nourish-dark)]">
               <ChefHat size={14} aria-hidden /> What&rsquo;s cooking?
             </p>
-            <p className="text-[10px] uppercase tracking-[0.16em] text-[var(--nourish-subtext)]">
+            <p className="sous-label">
               Round {currentDishIdx + 1} of {dishes.length}
             </p>
           </div>

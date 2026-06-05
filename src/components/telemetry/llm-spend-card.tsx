@@ -62,9 +62,7 @@ export function LlmSpendCard({
 
       {/* Per-surface breakdown. */}
       <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          By surface
-        </p>
+        <p className="sous-label">By surface</p>
         {aggregate.bySurface.length === 0 ? (
           <p className="mt-2 text-sm text-[var(--nourish-subtext)]">
             No calls in this window.
@@ -89,17 +87,13 @@ export function LlmSpendCard({
 
       {/* 14-day spark. */}
       <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          Daily
-        </p>
+        <p className="sous-label">Daily</p>
         <DailySpark daily={aggregate.daily} />
       </section>
 
       {/* Outcome counts. */}
       <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-          Outcomes
-        </p>
+        <p className="sous-label">Outcomes</p>
         <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
           <OutcomeChip label="ok" count={summary.outcomes.ok} />
           <OutcomeChip label="error" count={summary.outcomes.error} />
@@ -135,9 +129,7 @@ function Stat({
 function OutcomeChip({ label, count }: { label: string; count: number }) {
   return (
     <div className="rounded-xl border border-[var(--nourish-border-soft)] bg-[var(--nourish-cream)] px-2 py-1.5 text-center">
-      <p className="text-[10px] uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-        {label}
-      </p>
+      <p className="sous-label">{label}</p>
       <p className="mt-0.5 font-mono text-sm tabular-nums">
         {count.toLocaleString()}
       </p>

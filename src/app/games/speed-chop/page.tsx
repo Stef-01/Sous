@@ -259,7 +259,7 @@ export default function SpeedChopGame() {
             <p className="font-serif text-[14px] font-semibold text-[var(--nourish-dark)]">
               Speed Chop
             </p>
-            <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+            <p className="sous-label flex items-center gap-1.5">
               {Array.from({ length: INITIAL_LIVES }).map((_, i) => (
                 <Heart
                   key={i}

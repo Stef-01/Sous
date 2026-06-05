@@ -277,7 +277,7 @@ export default function FlavorPairsGame() {
             <p className="font-serif text-[14px] font-semibold text-[var(--nourish-dark)]">
               Flavor Pairs
             </p>
-            <p className="tabular-nums text-[10px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
+            <p className="sous-label tabular-nums">
               {matchedPairs} of {PAIR_COUNT} matched · {elapsed}s
             </p>
           </div>

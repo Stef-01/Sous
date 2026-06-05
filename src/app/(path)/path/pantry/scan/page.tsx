@@ -90,9 +90,7 @@ export default function PantryScanPage() {
       <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {state.phase === "capture" && (
           <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-6 shadow-sm">
-            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-              Photo to pantry
-            </p>
+            <p className="sous-label mb-2">Photo to pantry</p>
             <h2 className="mb-2 font-serif text-xl text-[var(--nourish-dark)]">
               Take a photo of your haul
             </h2>
@@ -123,7 +121,7 @@ export default function PantryScanPage() {
         {state.phase === "confirm" && (
           <section className="space-y-3">
             <div className="rounded-2xl border border-[var(--nourish-border-soft)] bg-white p-4">
-              <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
+              <p className="sous-label mb-1">
                 Found {state.items.length} item
                 {state.items.length === 1 ? "" : "s"}
               </p>

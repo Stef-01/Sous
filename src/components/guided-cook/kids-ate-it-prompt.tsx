@@ -71,9 +71,7 @@ export function KidsAteItPrompt({ cookSessionId, recipeSlug }: Props) {
       aria-label="Did the kids eat it?"
       className="space-y-2 rounded-2xl bg-white/70 p-3 ring-1 ring-[var(--nourish-border)]"
     >
-      <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-        Did the kids eat it?
-      </p>
+      <p className="sous-label">Did the kids eat it?</p>
       {chosen === null ? (
         <div
           className="flex items-center gap-2"

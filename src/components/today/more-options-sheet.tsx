@@ -100,7 +100,7 @@ export function MoreOptionsSheet({
 
             <div className="mt-4 space-y-4">
               <div>
-                <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
+                <p className="sous-label mb-1.5 flex items-center gap-1.5">
                   <Moon size={11} />
                   Tonight&apos;s cook
                 </p>
@@ -108,7 +108,7 @@ export function MoreOptionsSheet({
               </div>
 
               <div>
-                <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
+                <p className="sous-label mb-1.5 flex items-center gap-1.5">
                   <Users size={11} />
                   Cooking for two?
                 </p>
@@ -116,9 +116,7 @@ export function MoreOptionsSheet({
               </div>
 
               <div>
-                <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
-                  Quick helpers
-                </p>
+                <p className="sous-label mb-1.5">Quick helpers</p>
                 <div className="grid grid-cols-2 gap-2">
                   {onRescueFridge && (
                     <SheetActionButton

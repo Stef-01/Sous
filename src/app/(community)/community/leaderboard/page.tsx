@@ -170,9 +170,7 @@ function LeaderboardInner() {
               {theme.emoji}
             </span>
             <div className="space-y-0.5">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
-                This week
-              </p>
+              <p className="sous-label">This week</p>
               <p className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
                 {theme.title}
               </p>
@@ -257,9 +255,7 @@ function LeaderboardList({
           subtle && "opacity-90",
         )}
       >
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-          {title}
-        </p>
+        <p className="sous-label">{title}</p>
         <p className="mt-2 text-[12px] text-[var(--nourish-subtext)]">
           {emptyHint}
         </p>
@@ -268,9 +264,7 @@ function LeaderboardList({
   }
   return (
     <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-subtext)]">
-        {title}
-      </p>
+      <p className="sous-label">{title}</p>
       <ol className="mt-2 space-y-1">
         {rows.map((row) => {
           const own = row.podId === ownPodId;

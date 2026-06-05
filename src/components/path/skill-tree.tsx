@@ -309,9 +309,7 @@ export const SkillTree = memo(function SkillTree({
             viewport={{ once: true, margin: "-32px", amount: 0.35 }}
             transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
-              {tl.label}
-            </span>
+            <span className="sous-label">{tl.label}</span>
           </motion.div>
         ))}
 
@@ -380,9 +378,7 @@ export const SkillTree = memo(function SkillTree({
             aria-expanded={masteryOpen}
             className="mx-auto flex min-h-[44px] w-full max-w-md items-center justify-center gap-2 rounded-xl transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
-            <span className="text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--nourish-subtext)]">
-              Cuisine mastery - pick a lane
-            </span>
+            <span className="sous-label">Cuisine mastery - pick a lane</span>
             <motion.span
               animate={{ rotate: masteryOpen ? 180 : 0 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}

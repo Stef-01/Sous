@@ -103,9 +103,7 @@ export function DemoChallengePicker({ open, onClose }: Props) {
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-                  Demo
-                </p>
+                <p className="sous-label">Demo</p>
                 <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
                   Pick a challenge
                 </h2>

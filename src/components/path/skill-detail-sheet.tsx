@@ -154,7 +154,7 @@ export function SkillDetailSheet({
                     <h2 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
                       {node?.name}
                     </h2>
-                    <p className="text-[11px] text-[var(--nourish-subtext)] uppercase tracking-wide">
+                    <p className="sous-label">
                       {node?.cuisineFamily
                         ? `${node.cuisineFamily} specialization`
                         : node?.tier.replace("-", " ")}

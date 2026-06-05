@@ -356,9 +356,7 @@ export function TextPrompt({
             transition={{ duration: reducedMotion ? 0 : 0.15 }}
             className="space-y-1.5"
           >
-            <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
-              Recent
-            </p>
+            <p className="sous-label px-1">Recent</p>
             <div className="flex flex-wrap gap-2">
               {historyEntries.map((entry) => (
                 <motion.button
@@ -482,7 +480,7 @@ export function TextPrompt({
 
                     {semanticHits.length > 0 && (
                       <div className="space-y-1.5">
-                        <p className="px-1 text-[10px] font-bold uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
+                        <p className="sous-label px-1">
                           Closest to what you&apos;re craving
                         </p>
                         <div className="rounded-xl border border-dashed border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.03] overflow-hidden divide-y divide-[var(--nourish-green)]/10">
@@ -598,9 +596,7 @@ function ResultRow({
             <ul className="px-3 pb-2.5 space-y-0.5 text-[11px] text-[var(--nourish-subtext)]">
               {result.axes.map((axis) => (
                 <li key={axis.label} className="flex items-baseline gap-1.5">
-                  <span className="w-16 shrink-0 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
-                    {axis.label}
-                  </span>
+                  <span className="sous-label w-16 shrink-0">{axis.label}</span>
                   <span className="font-medium text-[var(--nourish-dark)]">
                     {axis.value}
                   </span>

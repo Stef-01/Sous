@@ -38,9 +38,7 @@ export default function ResearchBriefPage({
         {/* Citation block lifted from a thin italic line into a proper
             paper-card so the source paper feels load-bearing. */}
         <div className="rounded-xl border border-neutral-200/80 bg-white/70 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--nourish-subtext)]">
-            Source paper
-          </p>
+          <p className="sous-label">Source paper</p>
           <p className="mt-0.5 text-[12px] leading-snug text-[var(--nourish-dark)]/85">
             {brief.paperTitle}
           </p>
@@ -60,9 +58,7 @@ export default function ResearchBriefPage({
 
       <div className="space-y-4 px-5 pt-5">
         <div className="rounded-2xl bg-white p-4 shadow-sm border border-neutral-100/80">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-            Takeaway
-          </p>
+          <p className="sous-label">Takeaway</p>
           <p className="mt-1.5 text-[15px] font-medium leading-[1.6] text-[var(--nourish-dark)]">
             {brief.takeaway}
           </p>

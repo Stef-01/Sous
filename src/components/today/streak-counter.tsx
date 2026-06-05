@@ -147,9 +147,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
                 className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
               >
                 <span>Take a rest day</span>
-                <span className="text-[10px] font-medium uppercase tracking-wide text-[var(--nourish-subtext)]">
-                  1 / week
-                </span>
+                <span className="sous-label">1 / week</span>
               </button>
             ) : (
               <div className="flex flex-col gap-1.5 p-1.5">

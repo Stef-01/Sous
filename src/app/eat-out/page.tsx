@@ -157,10 +157,7 @@ export default function EatOutPage() {
               >
                 <ChevronLeft size={18} />
               </button>
-              <p
-                className="text-[11px] uppercase tracking-[0.14em] text-[var(--nourish-subtext)]"
-                aria-live="polite"
-              >
+              <p className="sous-label" aria-live="polite">
                 Swipe through the deck
               </p>
               <button

@@ -214,9 +214,7 @@ function SearchResultCard({
       style={{ animationDelay: `${idx * 40}ms` }}
     >
       {/* Eyebrow caps — pattern #2 */}
-      <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-        {result.sourceDomain}
-      </p>
+      <p className="sous-label mb-1">{result.sourceDomain}</p>
       <h2 className="font-serif text-base font-semibold leading-snug text-[var(--nourish-dark)]">
         {result.title}
       </h2>

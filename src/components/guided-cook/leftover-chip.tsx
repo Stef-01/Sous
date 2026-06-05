@@ -218,9 +218,7 @@ export function LeftoverChip({
             />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-              Tomorrow&apos;s lunch
-            </p>
+            <p className="sous-label">Tomorrow&apos;s lunch</p>
             <p className="mt-0.5 text-sm font-medium leading-snug text-[var(--nourish-dark)]">
               {copy}
             </p>

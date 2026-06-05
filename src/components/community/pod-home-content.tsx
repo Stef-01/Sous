@@ -253,9 +253,7 @@ function GalleryState({
           whether they've submitted a photo yet. */}
       {ringRows.length > 0 && (
         <section className="rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-            This week
-          </p>
+          <p className="sous-label">This week</p>
           <p className="mt-0.5 mb-2 text-xs text-[var(--nourish-dark)]">
             <span className="font-semibold">{ringSummary.done}</span> of{" "}
             {ringSummary.total} cooked
@@ -365,7 +363,7 @@ function PodHeader({
           <h2 className="font-serif text-base font-semibold text-[var(--nourish-dark)]">
             {pod.name}
           </h2>
-          <p className="text-[11px] uppercase tracking-[0.06em] text-[var(--nourish-subtext-faint)]">
+          <p className="sous-label">
             {pod.members.length} members
             {week ? ` · ${week.weekKey}` : ""}
             {pod.dietaryFlags.length > 0

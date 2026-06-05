@@ -64,9 +64,7 @@ export default function CuisinesPage() {
       <main className="mx-auto max-w-md space-y-6 page-x pt-4">
         {/* Identity strip — pattern #4 (identity reinforcement) */}
         <div className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white/70 px-4 py-3">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-            Your fluency
-          </p>
+          <p className="sous-label">Your fluency</p>
           <p className="mt-1 text-sm text-[var(--nourish-dark)]">
             <span className="font-semibold">{reachedFluency}</span> cuisine
             {reachedFluency === 1 ? "" : "s"} fluent
@@ -97,9 +95,7 @@ export default function CuisinesPage() {
                   centerGlyph={row.glyph}
                 />
                 {/* Eyebrow caps — pattern #2 */}
-                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)]">
-                  {row.cuisine}
-                </p>
+                <p className="sous-label">{row.cuisine}</p>
                 <p className="text-xs text-[var(--nourish-dark)]">
                   {row.count}
                   <span className="text-[var(--nourish-subtext)]">

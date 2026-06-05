@@ -127,9 +127,7 @@ export default function ArticleDetailPage({
 
       {related.length > 0 && (
         <section className="mt-8 space-y-3 px-4">
-          <h2 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-subtext)]">
-            Related
-          </h2>
+          <h2 className="sous-label">Related</h2>
           <ul className="space-y-2">
             {related.map((rel) => (
               <li key={rel.id}>
