@@ -1,6 +1,13 @@
 "use client";
 
-import { Suspense, useState, useCallback, useEffect, useRef } from "react";
+import {
+  Suspense,
+  useState,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SearchX, MoreHorizontal } from "lucide-react";
@@ -63,6 +70,7 @@ const CoachQuiz = dynamic(() =>
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
+import { usePantry } from "@/lib/hooks/use-pantry";
 import { WhosAtTable } from "@/components/today/whos-at-table";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
@@ -150,6 +158,21 @@ function TodayPageContent() {
     tasteBlend.duo,
     tasteBlend.alpha,
   );
+
+  // W1 pantry-reuse inputs for the pairing query: what the user has on hand
+  // (pantry) + the dishes most recently cooked (ingredients likely still in
+  // the fridge). Both feed the engine's waste-reducing reblend; empty → no-op.
+  // We take the ~10 newest completed cooks by ISO-string sort (pure + stable —
+  // avoids an impure Date.now() in render) as the "recent" proxy; precision
+  // isn't critical since the reuse signal rides at a low weight.
+  const { items: pantryItems } = usePantry();
+  const recentCookSlugs = useMemo(() => {
+    const newestFirst = completedSessions
+      .filter((s) => s.completedAt && s.recipeSlug)
+      .sort((a, b) => (a.completedAt! < b.completedAt! ? 1 : -1))
+      .slice(0, 10);
+    return [...new Set(newestFirst.map((s) => s.recipeSlug))];
+  }, [completedSessions]);
 
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
@@ -243,6 +266,10 @@ function TodayPageContent() {
       householdDietaryFlags:
         effectiveDietaryFlags.length > 0 ? effectiveDietaryFlags : undefined,
       effortTolerance,
+      // W1 pantry-reuse: nudge waste-reducing sides up when the user has
+      // ingredients on hand. Both omitted when empty → byte-identical ranking.
+      pantryOnHand: pantryItems.length > 0 ? pantryItems : undefined,
+      recentCookSlugs: recentCookSlugs.length > 0 ? recentCookSlugs : undefined,
     },
     {
       enabled:

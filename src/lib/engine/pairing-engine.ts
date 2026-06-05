@@ -23,6 +23,11 @@ import { scoreTherapeuticFit } from "./therapeutic-fit";
 import { THERAPEUTIC_WEIGHT } from "./therapeutic-weights";
 import { filterByCareExclusions } from "./therapeutic-exclusions";
 import {
+  scorePantryReuse,
+  PANTRY_REUSE_WEIGHT,
+  type PantryReuseContext,
+} from "./scorers/pantry-reuse";
+import {
   therapeuticsActive,
   registryIsClinicianApproved,
 } from "@/lib/therapeutics/feature-flag";
@@ -123,6 +128,41 @@ function reblendTherapeutic(
 }
 
 /**
+ * Re-blend a base ranking with pantry reuse (W1). Same shape as the
+ * therapeutic reblend — scale the base score by (1 − wP) and add the reuse
+ * fraction at wP, applied as a post-rank pass so a strong pantry match ranked
+ * outside the top K can surface into it (the waste-reduction the thesis wants).
+ * Caller guarantees `ctx.onHand` is non-empty before invoking, so this never
+ * runs on the default no-pantry path → rankings stay byte-identical there.
+ */
+function reblendPantryReuse(
+  ranked: ScoredCandidate[],
+  ctx: PantryReuseContext,
+): ScoredCandidate[] {
+  const wP = PANTRY_REUSE_WEIGHT;
+  const blended = ranked.map((c) => {
+    const ingredients = ctx.ingredientsBySlug.get(c.sideDish.slug) ?? [];
+    const p = scorePantryReuse(ctx.onHand, ingredients);
+    return {
+      ...c,
+      scores: { ...c.scores, pantryReuse: p },
+      totalScore: (1 - wP) * c.totalScore + wP * p,
+    };
+  });
+  blended.sort((a, b) => {
+    const diff = b.totalScore - a.totalScore;
+    if (Math.abs(diff) > 0.001) return diff;
+    // Deterministic, stable tie-break by slug (matches the therapeutic reblend).
+    return a.sideDish.slug < b.sideDish.slug
+      ? -1
+      : a.sideDish.slug > b.sideDish.slug
+        ? 1
+        : 0;
+  });
+  return blended;
+}
+
+/**
  * Main entry point: suggest the top 3 side dishes for a main dish.
  *
  * @param main - Parsed main dish intent (from craving parser or photo recognition)
@@ -130,6 +170,9 @@ function reblendTherapeutic(
  * @param userPreferences - User's implicit preference vector (optional)
  * @param weights - Custom scoring weights (optional, uses defaults)
  * @param count - Number of sides to return (default 3)
+ * @param therapeutic - Optional clinician-gated therapeutic re-ranking (dormant)
+ * @param pantry - Optional pantry/recent-cook reuse context (W1). When its
+ *   `onHand` set is non-empty, sides reusing on-hand ingredients are nudged up.
  */
 export function suggestSides(
   main: MainDishIntent,
@@ -138,6 +181,7 @@ export function suggestSides(
   weights?: Partial<Record<keyof ScoreBreakdown, number>>,
   count: number = 3,
   therapeutic?: TherapeuticContext,
+  pantry?: PantryReuseContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -174,12 +218,20 @@ export function suggestSides(
     userPreferences,
   );
 
+  // Pantry-reuse reblend (W1): only when the caller supplied on-hand
+  // ingredients. No-op on the default path → byte-identical rankings.
+  let finalRanked = ranked;
+  if (pantry && pantry.onHand.size > 0) {
+    finalRanked = reblendPantryReuse(finalRanked, pantry);
+  }
+
   // Therapeutic re-blend = PERSONALIZATION → clinician-only (G1), stricter than
   // the educational `active` gate above. Educational mode runs the exclusions
-  // but leaves the ranking untouched.
-  const finalRanked = resolvePersonalize(therapeutic)
-    ? reblendTherapeutic(ranked, therapeutic!.care)
-    : ranked;
+  // but leaves the ranking untouched. Applied after pantry so clinician fit
+  // dominates when an approved care profile is active.
+  if (resolvePersonalize(therapeutic)) {
+    finalRanked = reblendTherapeutic(finalRanked, therapeutic!.care);
+  }
 
   // Select top K
   const top = topK(finalRanked, count);

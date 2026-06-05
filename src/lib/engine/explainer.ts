@@ -47,6 +47,13 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "supports your health focus",
     mid: "fits your health focus",
   },
+  // Pantry-reuse (W1). Surfaces the waste-reduction reason when a side leans
+  // on ingredients the user already has. Only reached when on-hand context
+  // was supplied to the engine.
+  pantryReuse: {
+    high: "uses what's already in your kitchen",
+    mid: "reuses an ingredient you have",
+  },
 };
 
 /**

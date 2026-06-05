@@ -18,10 +18,11 @@
 export const REUSE_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * Ingredients that almost everyone has in staples  -  suggesting reuse here
- * is useless noise. Keep deliberately short.
+ * Ingredients that almost everyone has in staples — suggesting reuse here is
+ * useless noise. Exported so the pantry-reuse reranker (W1) shares one
+ * source of truth rather than keeping a second copy. Keep deliberately short.
  */
-const STAPLE_BLOCKLIST = new Set([
+export const STAPLE_BLOCKLIST = new Set([
   "salt",
   "pepper",
   "black pepper",

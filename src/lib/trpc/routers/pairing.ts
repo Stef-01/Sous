@@ -5,7 +5,10 @@ import { suggestSides } from "@/lib/engine/pairing-engine";
 import {
   getAvailableCookSlugs,
   getAvailableMealCookSlugs,
+  guidedCookData,
 } from "@/data/guided-cook-steps";
+import { normalizeIngredientName } from "@/lib/engine/scorers/pantry-reuse";
+import type { PantryReuseContext } from "@/lib/engine/scorers/pantry-reuse";
 import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
 import {
@@ -121,6 +124,50 @@ function getCandidates(): SideDishCandidate[] {
   return _candidateCache;
 }
 
+/**
+ * W1 pantry-reuse: dish slug → normalized ingredient names, sourced from the
+ * authored guided-cook data (the only place sides/meals carry an ingredient
+ * list). Used both to read a candidate side's ingredients and to expand the
+ * user's recent-cook slugs into "likely still in the fridge" ingredients.
+ * Built once and cached.
+ */
+let _ingredientsBySlug: Map<string, readonly string[]> | null = null;
+function getIngredientsBySlug(): Map<string, readonly string[]> {
+  if (!_ingredientsBySlug) {
+    const map = new Map<string, readonly string[]>();
+    for (const [slug, dish] of Object.entries(guidedCookData)) {
+      const names = (dish.ingredients ?? [])
+        .map((i) => normalizeIngredientName(i.name))
+        .filter(Boolean);
+      if (names.length > 0) map.set(slug, names);
+    }
+    _ingredientsBySlug = map;
+  }
+  return _ingredientsBySlug;
+}
+
+/**
+ * Build the pantry-reuse context from client-supplied pantry items + recently
+ * cooked dish slugs. Returns `undefined` when nothing is on hand, so the engine
+ * skips the reblend entirely and rankings stay byte-identical.
+ */
+function buildPantryContext(
+  pantryOnHand: string[] | undefined,
+  recentCookSlugs: string[] | undefined,
+): PantryReuseContext | undefined {
+  const ingredientsBySlug = getIngredientsBySlug();
+  const onHand = new Set<string>();
+  for (const raw of pantryOnHand ?? []) {
+    const norm = normalizeIngredientName(raw);
+    if (norm) onHand.add(norm);
+  }
+  for (const slug of recentCookSlugs ?? []) {
+    for (const ing of ingredientsBySlug.get(slug) ?? []) onHand.add(ing);
+  }
+  if (onHand.size === 0) return undefined;
+  return { onHand, ingredientsBySlug };
+}
+
 export const pairingRouter = router({
   // Craving parse calls Claude — bucket suggest + rerollSide together so a
   // single device can't burn the AI budget. Generous for real use, caps abuse.
@@ -148,6 +195,14 @@ export const pairingRouter = router({
          *  dietaryFlags don't include every entry here. */
         householdDietaryFlags: z.array(z.string()).max(20).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
+        /** W1 pantry-reuse — ingredient names the user already has in their
+         *  pantry. Joined with `recentCookSlugs` to nudge waste-reducing
+         *  sides up. Absent → ranking is byte-identical to before. */
+        pantryOnHand: z.array(z.string().max(80)).max(200).optional(),
+        /** W1 pantry-reuse — slugs of dishes the user cooked recently; the
+         *  server expands them to ingredient names (likely still in the
+         *  fridge) and folds them into the on-hand set. */
+        recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -199,11 +254,21 @@ export const pairingRouter = router({
         };
       }
 
+      // W1: pantry-reuse context (undefined when nothing is on hand → engine
+      // skips the reblend, rankings byte-identical).
+      const pantry = buildPantryContext(
+        input.pantryOnHand,
+        input.recentCookSlugs,
+      );
+
       const result = suggestSides(
         intent,
         candidates,
         input.userPreferences,
         input.userWeights,
+        3,
+        undefined,
+        pantry,
       );
 
       if (!result.success) {

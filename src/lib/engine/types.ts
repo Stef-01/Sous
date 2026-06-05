@@ -49,6 +49,9 @@ export interface ScoreBreakdown {
   /** Culinary Therapeutics (CT-3). Only set when a clinician-approved care
    *  profile is active; absent on the default path. */
   therapeuticFit?: number;
+  /** Pantry-reuse (W1). Only set when the caller supplies a non-empty on-hand
+   *  ingredient set; absent on the default (no-pantry) path. */
+  pantryReuse?: number;
 }
 
 export interface ScoredCandidate {
@@ -67,9 +70,11 @@ export interface Scorer {
   ): number;
 }
 
-/** The 8 base weight dimensions, all required. */
+/** The 8 base weight dimensions, all required. `therapeuticFit` and
+ *  `pantryReuse` are excluded — they are post-rank reblend dimensions, not
+ *  base ranker weights. */
 export type BaseWeights = Record<
-  Exclude<keyof ScoreBreakdown, "therapeuticFit">,
+  Exclude<keyof ScoreBreakdown, "therapeuticFit" | "pantryReuse">,
   number
 >;
 
