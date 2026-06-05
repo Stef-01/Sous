@@ -23,7 +23,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
     return (
       <Link
         href={`/community/article/${article.slug}`}
-        className="group flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-2.5 transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="group flex items-center gap-3 rounded-2xl border border-neutral-100/80 bg-white p-2.5 transition duration-150 hover:border-[var(--nourish-green)]/25 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
       >
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--nourish-cream)]">
           <Image
@@ -53,7 +53,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
   return (
     <Link
       href={`/community/article/${article.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white transition duration-150 hover:border-[var(--nourish-green)]/25 active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image
@@ -61,7 +61,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
           alt={article.title}
           fill
           sizes="(max-width: 480px) 50vw, 220px"
-          className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
+          className="object-cover transition-transform duration-200 group-hover:scale-[1.04] motion-reduce:transition-none"
         />
         <div className="absolute right-2 top-2">
           <BookmarkButton

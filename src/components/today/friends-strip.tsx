@@ -91,7 +91,7 @@ function FriendCookImage({ src, alt }: { src?: string; alt: string }) {
       alt={alt}
       fill
       sizes="168px"
-      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+      className="object-cover transition-transform duration-200 group-hover:scale-[1.03] motion-reduce:transition-none"
       onError={() => setErrored(true)}
     />
   );
