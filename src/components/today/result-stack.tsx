@@ -320,17 +320,32 @@ export function ResultStack({
 
       <div className="space-y-3">
         {sides.map((side, idx) => (
-          <ResultCard
+          // Entrance-only stagger: the three sides cascade in when results
+          // land, and a rerolled side fades back in (its id changes → remount).
+          // No exit/layout animation — keeps the variable-height expand panel
+          // and the sticky cook bar jank-free.
+          <motion.div
             key={side.id}
-            side={side}
-            mainDish={mainDish}
-            rank={idx + 1}
-            selected={selectedIds.has(side.id)}
-            isRerolling={rerollingIndex === idx}
-            onToggleSelect={() => toggleSelect(side.id)}
-            onRerollSide={() => handleRerollSide(idx)}
-            onCookThis={() => onCookThis(side)}
-          />
+            initial={reducedMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: reducedMotion ? 0 : idx * 0.06,
+            }}
+          >
+            <ResultCard
+              side={side}
+              mainDish={mainDish}
+              rank={idx + 1}
+              selected={selectedIds.has(side.id)}
+              isRerolling={rerollingIndex === idx}
+              onToggleSelect={() => toggleSelect(side.id)}
+              onRerollSide={() => handleRerollSide(idx)}
+              onCookThis={() => onCookThis(side)}
+            />
+          </motion.div>
         ))}
       </div>
 
