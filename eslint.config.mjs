@@ -8,6 +8,7 @@ import { createRequire } from "node:module";
 // they can use `module.exports` — ESLint expects that shape).
 const require = createRequire(import.meta.url);
 const reducedMotionGate = require("./eslint-rules/reduced-motion-gate.js");
+const preferSousLabel = require("./eslint-rules/prefer-sous-label.js");
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -18,6 +19,7 @@ const eslintConfig = defineConfig([
       sous: {
         rules: {
           "reduced-motion-gate": reducedMotionGate,
+          "prefer-sous-label": preferSousLabel,
         },
       },
     },
@@ -30,6 +32,20 @@ const eslintConfig = defineConfig([
       // gate fails CI. Acceptance gate from
       // docs/REDUCED-MOTION-GATE-TODO.md hit on 2026-05-02.
       "sous/reduced-motion-gate": "error",
+      // Custom: keep neutral uppercase labels on the .sous-label role
+      // instead of hand-rolling text-[..px]+uppercase+tracking+subtext.
+      // Added 2026-06 after a 6-round aesthetic sweep converged 62
+      // ad-hoc copies onto the utility; this stops the next one.
+      "sous/prefer-sous-label": "error",
+    },
+  },
+  {
+    // The prefer-sous-label rule's own test fixtures intentionally contain
+    // the ad-hoc neutral-label pattern as input strings; don't lint them
+    // against the rule they exist to exercise.
+    files: ["eslint-rules/**"],
+    rules: {
+      "sous/prefer-sous-label": "off",
     },
   },
   // Override default ignores of eslint-config-next.

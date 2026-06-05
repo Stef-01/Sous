@@ -166,6 +166,7 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
             <dd className="font-serif text-[19px] leading-none text-[var(--nourish-dark)]">
               {it.value}
             </dd>
+            {/* eslint-disable-next-line sous/prefer-sous-label -- data-caption in a tight 4-col macro grid: the faint 10px label under a bold serif number is intentional hierarchy, not a section label */}
             <dt className="mt-1 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
               {it.label}
             </dt>
