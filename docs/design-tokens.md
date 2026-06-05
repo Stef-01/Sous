@@ -10,24 +10,52 @@
 > to encode them as CSS custom properties, Tailwind theme entries,
 > or both, without unwinding a half-decision today.
 
-## Section kicker
+## Section kicker / label → `.sous-label` (shipped + enforced)
 
 Used above section headers across Path home, Content tab home,
 skill-tree milestones, settings sheet sections, forum reply count,
-expert "From X" header, source attribution kicker.
+expert "From X" header, source attribution kicker, and the cook flow
+(Mission eyebrow, Grab card labels).
+
+This is THE most-used micro-pattern in the app, and it had drifted into
+~10 hand-rolled renderings (10/10.5/11/12px, medium/semibold/bold,
+tracking wide/0.08/0.12/0.15em). A 2026-06 aesthetic sweep converged the
+**neutral** variant onto the canonical `.sous-label` utility (defined in
+`src/app/globals.css`):
 
 ```
-text-[10px or 11px]
-font-bold uppercase
-tracking-[0.12em] to tracking-[0.16em]
-text-[var(--nourish-subtext)] (default)
-text-[var(--nourish-green)] (when the kicker carries celebratory
-                              or attribution weight)
+.sous-label  =  font-size var(--text-label) (11px)
+                letter-spacing 0.08em
+                text-transform uppercase
+                font-weight 600
+                color var(--nourish-subtext)
 ```
 
-Sprint 4 promoted this to the most-used micro-pattern in the app.
-Stage 4 should expose it as `<SectionKicker variant="default | green">`
-or as a Tailwind utility class.
+**Use the utility — do not re-inline it.** A neutral caps label is just:
+
+```tsx
+<p className="sous-label">Estimated nutrition</p>
+// + any layout classes:  className="sous-label mb-2"
+```
+
+Hand-rolling `text-[10–12px] + uppercase + tracking-* + subtext` now FAILS
+lint: the custom ESLint rule **`sous/prefer-sous-label`**
+(`eslint-rules/prefer-sous-label.js`, wired `error`) flags it and points
+back here. This is the machine half of the convention; this doc is the
+human half.
+
+Two deliberate exceptions the rule leaves alone:
+
+- **Accent kickers** (celebratory / attribution weight) stay bespoke —
+  e.g. the green `Food-first evidence` eyebrow or a gold streak kicker.
+  The rule skips any caps label carrying an accent color
+  (`nourish-green` / `nourish-gold` / `nourish-warm` / …), so those keep
+  their intentional color. Green kickers are written inline with their
+  accent color, not via a neutral-vs-green `variant` prop.
+- **Data-captions in tight numeric grids** (e.g. the 4-col macro `<dt>`
+  where a faint 10px label sits under a bold serif number) keep their
+  de-emphasized hierarchy and opt out per-line via
+  `// eslint-disable-next-line sous/prefer-sous-label -- <reason>`.
 
 ## Empty-state CTA card
 
