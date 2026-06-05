@@ -526,6 +526,12 @@ function ResultCard({
             <h3 className="line-clamp-2 font-semibold leading-snug text-[var(--nourish-dark)]">
               {side.name}
             </h3>
+            {/* One pill row: colored status chips (match / guided) then gray
+                descriptor tags — all one size + gap so the row reads as a
+                single family, not two mismatched rows (was 11px status above
+                10px tags). Collapsed card stays scannable: the pairing
+                rationale moves to the expand-only "Why this pairs well" panel
+                (rule 6; corpus: progressive-disclosure, whitespace-balance). */}
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
                 {pairingSignal}
@@ -535,16 +541,10 @@ function ResultCard({
                   Guided
                 </span>
               )}
-            </div>
-            {/* Collapsed card stays scannable: name + signal + tags. The
-                pairing rationale (which often echoes the dish name here) moves
-                to the expand-only "Why this pairs well" panel. (rule 6;
-                corpus: progressive-disclosure, whitespace-balance) */}
-            <div className="flex flex-wrap gap-1">
               {side.tags.slice(0, 2).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-subtext)]"
+                  className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
                 >
                   {tag}
                 </span>
