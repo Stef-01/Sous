@@ -22,6 +22,9 @@ import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { CreatorByline } from "@/components/shared/creator-byline";
+import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
+import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
+import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { trpc } from "@/lib/trpc/client";
 
 export interface SideResult {
@@ -648,6 +651,11 @@ function ResultCard({
                 />
               </div>
 
+              {/* Nutrition (macro ring) + ingredients-to-check — so you can
+                  decide whether to make this side before committing. */}
+              <SideNutritionRing slug={side.id} />
+              <IngredientsToCheck slug={side.id} />
+
               {/* Cook just this side  -  secondary inline action */}
               <button
                 onClick={(e) => {
@@ -682,6 +690,17 @@ function getPairingSignal(side: SideResult, rank: number): string {
   if (side.scores.nutritionBalance >= 0.7) return "Balances plate";
   if (side.scores.cuisineFit >= 0.7) return "Same cuisine";
   return "Smart match";
+}
+
+/** The side's macro-ring nutrition, gated by composition coverage. */
+function SideNutritionRing({ slug }: { slug: string }) {
+  const { perServing, massedCoverage } = getDishNutrition(slug);
+  if (!perServing || massedCoverage < 0.7) return null;
+  return (
+    <div className="rounded-2xl bg-[var(--nourish-cream)]/60 p-3">
+      <NutritionRingCard nutrition={perServing} />
+    </div>
+  );
 }
 
 /** A pairing-dimension pill: icon + label, colour encodes strength. No

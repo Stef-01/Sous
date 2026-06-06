@@ -25,6 +25,8 @@ import {
   gramsForSignal,
 } from "@/lib/engine/therapeutic-fit";
 import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile";
+import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
+import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import {
   getDishNutrition,
   getDishCompositionGrams,
@@ -136,6 +138,8 @@ export function MealHealthPanel({
 
       <NutritionSnapshot slug={slug} />
 
+      <IngredientsToCheck slug={slug} />
+
       <p className="text-[10.5px] leading-relaxed text-[var(--nourish-subtext-faint)]">
         {FOOD_FIRST_HEDGE}
       </p>
@@ -150,38 +154,9 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
   const { perServing, massedCoverage } = getDishNutrition(slug);
   if (!perServing || massedCoverage < NUTRITION_DISPLAY_FLOOR) return null;
 
-  const macros: Array<{ label: string; value: string }> = [
-    { label: "Calories", value: `${Math.round(perServing.calories)}` },
-    { label: "Protein", value: `${Math.round(perServing.protein_g ?? 0)} g` },
-    { label: "Carbs", value: `${Math.round(perServing.totalCarbs_g ?? 0)} g` },
-    { label: "Fat", value: `${Math.round(perServing.totalFat_g ?? 0)} g` },
-  ];
-
   return (
     <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
-      <p className="sous-label">Estimated nutrition · per serving</p>
-      <dl className="mt-3 grid grid-cols-4 gap-3">
-        {macros.map((it) => (
-          <div key={it.label}>
-            <dd className="font-serif text-[19px] leading-none text-[var(--nourish-dark)]">
-              {it.value}
-            </dd>
-            {/* eslint-disable-next-line sous/prefer-sous-label -- data-caption in a tight 4-col macro grid: the faint 10px label under a bold serif number is intentional hierarchy, not a section label */}
-            <dt className="mt-1 text-[10px] uppercase tracking-wide text-[var(--nourish-subtext-faint)]">
-              {it.label}
-            </dt>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-3 text-[11px] text-[var(--nourish-subtext)]">
-        Fiber {perServing.fiber_g.toFixed(1)} g · Sodium{" "}
-        {Math.round(perServing.sodium_mg)} mg · Sat fat{" "}
-        {perServing.saturatedFat_g.toFixed(1)} g
-      </p>
-      <p className="mt-2 text-[10px] leading-relaxed text-[var(--nourish-subtext-faint)]">
-        Composed from USDA data · assumes {perServing.servingsPerRecipe}{" "}
-        servings · an estimate, not a label.
-      </p>
+      <NutritionRingCard nutrition={perServing} />
     </div>
   );
 }
