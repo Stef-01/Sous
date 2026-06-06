@@ -21,7 +21,7 @@ import {
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
-import { ChevronUp, HeartPulse } from "lucide-react";
+import { ChevronUp, Info } from "lucide-react";
 import type { ConditionId } from "@/types/therapeutics";
 import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
 import { MealHealthPanel } from "./meal-health-panel";
@@ -81,10 +81,10 @@ export function MealHealthSheet({
             exit={reducedMotion ? undefined : { opacity: 0, y: 8 }}
             style={{ bottom: GRABBER_BOTTOM_PX }}
             className="absolute inset-x-0 z-30 mx-auto flex w-fit cursor-grab touch-none items-center gap-1.5 rounded-full bg-black/55 px-4 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md active:cursor-grabbing"
-            aria-label={`Show health information for ${dishName}`}
+            aria-label={`Show info for ${dishName}`}
           >
-            <HeartPulse size={14} strokeWidth={2.2} />
-            Health
+            <Info size={14} strokeWidth={2.2} />
+            Info
             <ChevronUp
               size={13}
               strokeWidth={2.4}
@@ -110,7 +110,7 @@ export function MealHealthSheet({
             <motion.div
               key="sheet"
               role="dialog"
-              aria-label={`Health information for ${dishName}`}
+              aria-label={`Info for ${dishName}`}
               className="absolute inset-x-0 bottom-0 z-50 flex h-[60%] flex-col rounded-t-[var(--radius-lg)] bg-white shadow-[0_-10px_44px_rgba(0,0,0,0.22)]"
               initial={reducedMotion ? false : { y: "100%" }}
               animate={{ y: 0 }}
