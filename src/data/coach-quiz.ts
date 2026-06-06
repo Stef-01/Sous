@@ -32,6 +32,8 @@ export interface CoachQuizQuestion {
   category: string;
   categoryEmoji: string;
   question: string;
+  /** Optional one-line helper under the question (onboarding-survey style). */
+  subtitle?: string;
   options: CoachQuizOption[];
 }
 
@@ -43,6 +45,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Your style",
     categoryEmoji: "🍳",
     question: "How do you roll in the kitchen?",
+    subtitle: "There's no wrong answer — we'll match the effort to you.",
     options: [
       {
         label: "Keep it simple, please",
@@ -75,6 +78,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Flavor",
     categoryEmoji: "🌶️",
     question: "What flavors do you gravitate towards?",
+    subtitle: "We'll lean your suggestions toward what you actually crave.",
     options: [
       {
         label: "Mild and comforting",
@@ -103,6 +107,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Diet",
     categoryEmoji: "🥗",
     question: "Any food preferences we should know?",
+    subtitle: "We'll quietly filter every recommendation around this.",
     options: [
       {
         label: "No restrictions, bring it on",
@@ -131,6 +136,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Cuisine",
     categoryEmoji: "🌍",
     question: "What cuisines make you happiest?",
+    subtitle: "Pick what excites you — you'll still see new ones to try.",
     options: [
       {
         label: "Asian (Japanese, Korean, Thai)",
@@ -164,6 +170,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Your goal",
     categoryEmoji: "🎯",
     question: "What are you cooking for right now?",
+    subtitle: "This shifts what we put first — it can change any time.",
     options: [
       {
         label: "Quick wins on busy nights",
@@ -196,6 +203,7 @@ export const coachQuizQuestions: CoachQuizQuestion[] = [
     category: "Who's at the table",
     categoryEmoji: "👨‍👩‍👧",
     question: "Who's at the table tonight?",
+    subtitle: "We'll size portions and balance tastes for your table.",
     options: [
       {
         label: "Just me",

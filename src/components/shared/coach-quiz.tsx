@@ -420,23 +420,24 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className="flex-1 flex flex-col"
           >
-            {/* Category pill */}
-            <div className="flex items-center gap-1.5 mb-3">
-              <span className="text-base leading-none">
-                {question.categoryEmoji}
-              </span>
-              <span className="text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
-                {question.category}
-              </span>
-            </div>
-
-            {/* Question text */}
-            <h2 className="font-serif text-xl text-[var(--nourish-dark)] mb-6 leading-snug">
+            {/* Question — large bold sans, centred, with generous breathing
+                room above the option cards (onboarding-survey style). */}
+            <h2 className="mb-3 mt-6 text-center text-[26px] font-bold leading-[1.2] text-[var(--nourish-dark)]">
               {question.question}
             </h2>
+            {question.subtitle && (
+              <p className="mb-8 text-center text-[15px] leading-snug text-[var(--nourish-subtext)]">
+                {question.subtitle}
+              </p>
+            )}
 
             {/* Option cards */}
-            <div className="flex-1 flex flex-col justify-center gap-3">
+            <div
+              className={cn(
+                "flex flex-col gap-3",
+                question.subtitle ? "mt-1" : "mt-8",
+              )}
+            >
               {question.options.map((option, idx) => (
                 <motion.button
                   key={idx}
@@ -469,11 +470,11 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                       : { type: "spring", stiffness: 400, damping: 20 }
                   }
                   className={cn(
-                    "w-full rounded-xl border-2 px-5 py-4 text-left text-sm font-medium",
+                    "w-full rounded-2xl border px-5 py-4 text-left text-[15px] font-medium shadow-sm",
                     "transition-colors duration-150",
                     selectedOption === idx
                       ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/5 text-[var(--nourish-dark)]"
-                      : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-neutral-300",
+                      : "border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] hover:border-neutral-300",
                   )}
                   type="button"
                 >
