@@ -13,6 +13,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { PerServingNutrition } from "@/types/nutrition";
+import { proteinQuality } from "@/lib/nutrition/protein-quality";
 import {
   NUTRIENT_DISPLAY,
   NUTRIENT_GROUP_ORDER,
@@ -269,6 +270,8 @@ export function NutritionRingCard({
     group: g,
     items: rows.filter((r) => r.group === g),
   })).filter((g) => g.items.length > 0);
+  // Protein completeness (DIAAS-lite) — invariant to servings.
+  const pq = proteinQuality(nutrition);
 
   const legend: Array<["protein" | "carbs" | "fat", number]> = [
     ["protein", protein],
@@ -375,10 +378,24 @@ export function NutritionRingCard({
               {groupedRows.map(({ group, items }) => (
                 <div key={group} className="space-y-2.5">
                   <p
-                    className="sous-label"
+                    className="sous-label flex items-center gap-1.5"
                     style={{ color: "var(--grocery-cat)" }}
                   >
                     {group}
+                    {group === "Protein" && pq && (
+                      <span
+                        className="text-[11px] font-medium normal-case tracking-normal"
+                        style={{
+                          color: pq.complete
+                            ? "var(--nourish-green)"
+                            : "var(--nourish-subtext)",
+                        }}
+                      >
+                        {pq.complete
+                          ? "· complete protein"
+                          : `· limited by ${pq.limiting}`}
+                      </span>
+                    )}
                   </p>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                     {items.map((row) => (
