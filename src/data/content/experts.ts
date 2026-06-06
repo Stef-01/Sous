@@ -8,6 +8,7 @@
 
 import type { ExpertVoice } from "@/types/content";
 import { STANFORD_EXPERTS } from "./stanford";
+import { CHEF_TU_EXPERT } from "./chef-tu";
 
 const PLACEHOLDER_EXPERTS: ExpertVoice[] = [
   {
@@ -70,6 +71,7 @@ const PLACEHOLDER_EXPERTS: ExpertVoice[] = [
 
 /** Real Stanford clinicians prepended; placeholders follow. */
 export const EXPERT_VOICES: ExpertVoice[] = [
+  CHEF_TU_EXPERT,
   ...STANFORD_EXPERTS,
   ...PLACEHOLDER_EXPERTS,
 ];

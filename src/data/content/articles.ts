@@ -11,6 +11,7 @@
 
 import type { Article } from "@/types/content";
 import { STANFORD_ARTICLES } from "./stanford";
+import { CHEF_TU_ARTICLES } from "./chef-tu";
 
 const PLACEHOLDER_ARTICLES: Article[] = [
   {
@@ -149,6 +150,7 @@ const PLACEHOLDER_ARTICLES: Article[] = [
  * batch; subsequent runs append to STANFORD_ARTICLES in ./stanford.ts.
  */
 export const ARTICLES: Article[] = [
+  ...CHEF_TU_ARTICLES,
   ...STANFORD_ARTICLES,
   ...PLACEHOLDER_ARTICLES,
 ];
