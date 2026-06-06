@@ -65,5 +65,8 @@ export function proteinQuality(n: PerServingNutrition): ProteinQuality | null {
   }
   if (!Number.isFinite(min)) return null;
   const score = Math.round(min * 100) / 100;
-  return { score, limiting, complete: score >= 0.9 };
+  // "Complete" requires meeting the reference for every EAA (DIAAS ≥ 1.0), as
+  // the ProteinQuality doc states — not the looser 0.9 (honesty: an estimate
+  // shouldn't round a near-miss up to a categorical claim).
+  return { score, limiting, complete: score >= 1.0 };
 }

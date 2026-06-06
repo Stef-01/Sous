@@ -3,45 +3,15 @@
 import { X } from "lucide-react";
 import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
-import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
-import type { PerServingNutrition } from "@/types/nutrition";
-
-// Micros worth flagging a shortfall on (skip the always-easy macros + sodium).
-const FLAGGABLE = new Set([
-  "fiber_g",
-  "iron_mg",
-  "calcium_mg",
-  "potassium_mg",
-  "magnesium_mg",
-  "vitaminC_mg",
-  "vitaminD_mcg",
-  "vitaminA_mcg_rae",
-  "folate_mcg",
-  "vitaminB12_mcg",
-  "zinc_mg",
-  "omega3_g",
-]);
-
-/** Lowest-coverage flaggable nutrient for the day (the deficit insight). */
-function dayDeficit(
-  n: PerServingNutrition,
-): { label: string; pct: number } | null {
-  let lowest: { label: string; pct: number } | null = null;
-  for (const m of NUTRIENT_DISPLAY) {
-    if (!m.dv || !FLAGGABLE.has(String(m.key))) continue;
-    const v = (n[m.key] as number | undefined) ?? 0;
-    const pct = Math.round((v / m.dv) * 100);
-    if (lowest === null || pct < lowest.pct) lowest = { label: m.label, pct };
-  }
-  return lowest;
-}
+import { topDeficit } from "@/lib/nutrition/deficits";
 
 export function DailyNutritionCard() {
   const { mounted, entries, dayNutrition, removeEntry } = useNutritionDiary();
 
   if (!mounted || entries.length === 0) return null;
 
-  const deficit = dayNutrition ? dayDeficit(dayNutrition) : null;
+  // Shared deficit computation (no duplicated nutrient set → no drift).
+  const deficit = topDeficit(dayNutrition);
 
   return (
     <section className="space-y-3 rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
@@ -54,8 +24,9 @@ export function DailyNutritionCard() {
 
       {deficit && deficit.pct < 60 && (
         <p className="text-[13px] text-[var(--nourish-dark)]">
-          Lowest today: <span className="font-semibold">{deficit.label}</span>{" "}
-          at {deficit.pct}% — a targeted side could close the gap.
+          Biggest gap today:{" "}
+          <span className="font-semibold">{deficit.label}</span> — a targeted
+          side could help close it.
         </p>
       )}
 

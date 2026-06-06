@@ -50,6 +50,11 @@ interface ResultStackProps {
   onCookSelected?: (sides: SideResult[]) => void;
   onReroll: () => void;
   isRerolling?: boolean;
+  /** W1/W29 context so a rerolled side honours the same pantry + deficiency
+   *  nudges as the original plate. */
+  pantryOnHand?: string[];
+  recentCookSlugs?: string[];
+  dayDeficits?: Record<string, number>;
 }
 
 export function buildSideMetaLine(input: {
@@ -89,6 +94,9 @@ export function ResultStack({
   onCookSelected,
   onReroll,
   isRerolling,
+  pantryOnHand,
+  recentCookSlugs,
+  dayDeficits,
 }: ResultStackProps) {
   const reducedMotion = useReducedMotion();
   const [showEvaluate, setShowEvaluate] = useState(false);
@@ -142,11 +150,17 @@ export function ResultStack({
     [sides],
   );
 
-  // Per-side reroll via tRPC
+  // Per-side reroll via tRPC — carries the same pantry + deficiency context as
+  // the original plate so a rerolled slot stays consistent with the W1/W29
+  // nudges (otherwise a demoted side could resurface ignoring on-hand
+  // ingredients and the day's nutrient gaps).
   const rerollQuery = trpc.pairing.rerollSide.useQuery(
     {
       mainDish,
       excludeIds: Array.from(seenIds),
+      pantryOnHand,
+      recentCookSlugs,
+      dayDeficits,
     },
     {
       enabled: rerollingIndex !== null,

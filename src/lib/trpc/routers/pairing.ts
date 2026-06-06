@@ -357,6 +357,12 @@ export const pairingRouter = router({
         userWeights: z.record(z.number().nonnegative().finite()).optional(),
         householdDietaryFlags: z.array(z.string()).max(20).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
+        // Reroll must honour the same pantry (W1) + deficiency (W29) nudges as
+        // the original plate, else a rerolled slot ignores on-hand ingredients
+        // and the day's nutrient gaps.
+        pantryOnHand: z.array(z.string().max(80)).max(200).optional(),
+        recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
+        dayDeficits: z.record(z.number().min(0).max(1)).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -393,6 +399,9 @@ export const pairingRouter = router({
         input.userPreferences,
         input.userWeights,
         1,
+        undefined,
+        buildPantryContext(input.pantryOnHand, input.recentCookSlugs),
+        buildDeficiencyContext(input.dayDeficits),
       );
 
       if (!result.success || result.data.sides.length === 0) {

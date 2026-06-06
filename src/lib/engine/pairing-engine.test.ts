@@ -452,6 +452,42 @@ describe("suggestSides (integration)", () => {
     expect(emptyCtx).toEqual(base);
   });
 
+  it("deficiency reblend (active) scores a gap-filling side higher (W29)", () => {
+    // Real registry slugs drive scoreDeficiencyFill via getDishNutrition:
+    // guacamole is fibre-rich (~7 g/serving), raita is fibre-poor (~0.4 g).
+    const fiberRich = {
+      ...tabbouleh,
+      id: "guacamole",
+      slug: "guacamole",
+      name: "Guac",
+    };
+    const fiberPoor = {
+      ...tabbouleh,
+      id: "raita",
+      slug: "raita",
+      name: "Raita",
+    };
+    const res = suggestSides(
+      chickenMain,
+      [fiberRich, fiberPoor],
+      undefined,
+      undefined,
+      2,
+      undefined,
+      undefined,
+      { deficits: new Map([["fiber_g", 1]]) },
+    );
+    expect(res.success).toBe(true);
+    if (res.success) {
+      const g = res.data.sides.find((s) => s.sideDish.slug === "guacamole");
+      const r = res.data.sides.find((s) => s.sideDish.slug === "raita");
+      // The reblend ran (scores set) and the fibre-rich side fills the gap more.
+      expect(g?.scores.deficiencyFill ?? 0).toBeGreaterThan(
+        r?.scores.deficiencyFill ?? 0,
+      );
+    }
+  });
+
   it("scores raita highly for butter chicken (cooling contrast + same cuisine)", () => {
     const result = suggestSides(chickenMain, allCandidates);
     if (result.success) {

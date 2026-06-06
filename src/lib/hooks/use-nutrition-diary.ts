@@ -96,7 +96,6 @@ export function aggregateDay(
 }
 
 export function useNutritionDiary(date = new Date()) {
-  const [todayKey] = useState(() => dayKey(date));
   const [store, setStore] = useState<Store>({});
   const [mounted, setMounted] = useState(false);
 
@@ -105,13 +104,20 @@ export function useNutritionDiary(date = new Date()) {
     setMounted(true);
   }, []);
 
+  // "Today" is recomputed each render (not frozen at mount), so the diary stays
+  // in sync with the real calendar day if the app is left open across midnight.
+  const todayKey = dayKey(date);
+
+  // Writes stamp the LIVE day at call time, so a cook logged just after local
+  // midnight lands in the new day regardless of the last render's key.
   const logCook = useCallback(
     (slug: string, name: string, servings: number) => {
+      const key = dayKey(new Date());
       setStore((prev) => {
-        const day = prev[todayKey] ?? [];
+        const day = prev[key] ?? [];
         const next: Store = {
           ...prev,
-          [todayKey]: [
+          [key]: [
             ...day,
             { slug, name, servings, at: new Date().toISOString() },
           ],
@@ -120,20 +126,18 @@ export function useNutritionDiary(date = new Date()) {
         return next;
       });
     },
-    [todayKey],
+    [],
   );
 
-  const removeEntry = useCallback(
-    (at: string) => {
-      setStore((prev) => {
-        const day = (prev[todayKey] ?? []).filter((e) => e.at !== at);
-        const next = { ...prev, [todayKey]: day };
-        write(next);
-        return next;
-      });
-    },
-    [todayKey],
-  );
+  const removeEntry = useCallback((at: string) => {
+    const key = dayKey(new Date());
+    setStore((prev) => {
+      const day = (prev[key] ?? []).filter((e) => e.at !== at);
+      const next = { ...prev, [key]: day };
+      write(next);
+      return next;
+    });
+  }, []);
 
   const entries = store[todayKey] ?? EMPTY_ENTRIES;
   const dayNutrition = useMemo(() => aggregateDay(entries), [entries]);

@@ -790,6 +790,13 @@ function TodayPageContent() {
                   }}
                   onReroll={handleReroll}
                   isRerolling={pairingQuery.isFetching}
+                  pantryOnHand={
+                    pantryItems.length > 0 ? pantryItems : undefined
+                  }
+                  recentCookSlugs={
+                    recentCookSlugs.length > 0 ? recentCookSlugs : undefined
+                  }
+                  dayDeficits={dayDeficits}
                 />
               )}
 
