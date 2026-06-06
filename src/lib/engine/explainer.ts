@@ -54,6 +54,13 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "uses what's already in your kitchen",
     mid: "reuses an ingredient you have",
   },
+  // Deficiency-fill (W29). Surfaces the gap-closing reason when a side is a
+  // strong source of nutrients the user is short on today. Only reached when
+  // the day's deficits were supplied to the engine.
+  deficiencyFill: {
+    high: "fills a nutrient gap from today",
+    mid: "helps round out today's nutrition",
+  },
 };
 
 /**

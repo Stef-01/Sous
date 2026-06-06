@@ -9,6 +9,7 @@ import {
 } from "@/data/guided-cook-steps";
 import { normalizeIngredientName } from "@/lib/engine/scorers/pantry-reuse";
 import type { PantryReuseContext } from "@/lib/engine/scorers/pantry-reuse";
+import type { DeficiencyContext } from "@/lib/engine/scorers/deficiency-fill";
 import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
 import {
@@ -168,6 +169,22 @@ function buildPantryContext(
   return { onHand, ingredientsBySlug };
 }
 
+/**
+ * Build the deficiency-fill context from the client's day deficits (nutrient
+ * key → weight). Returns `undefined` when nothing's logged today, so the engine
+ * skips the reblend and rankings stay byte-identical.
+ */
+function buildDeficiencyContext(
+  dayDeficits: Record<string, number> | undefined,
+): DeficiencyContext | undefined {
+  if (!dayDeficits) return undefined;
+  const deficits = new Map<string, number>();
+  for (const [key, weight] of Object.entries(dayDeficits)) {
+    if (weight > 0) deficits.set(key, weight);
+  }
+  return deficits.size > 0 ? { deficits } : undefined;
+}
+
 export const pairingRouter = router({
   // Craving parse calls Claude — bucket suggest + rerollSide together so a
   // single device can't burn the AI budget. Generous for real use, caps abuse.
@@ -203,6 +220,10 @@ export const pairingRouter = router({
          *  server expands them to ingredient names (likely still in the
          *  fridge) and folds them into the on-hand set. */
         recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
+        /** W29 deficiency-fill — the day's nutrient gaps (nutrient key →
+         *  deficit weight 0..1) from the user's diary. Sides that best close
+         *  the gaps are nudged up. Absent/empty → byte-identical ranking. */
+        dayDeficits: z.record(z.number().min(0).max(1)).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -261,6 +282,10 @@ export const pairingRouter = router({
         input.recentCookSlugs,
       );
 
+      // W29: deficiency-fill context (undefined when nothing is logged today →
+      // engine skips the reblend, rankings byte-identical).
+      const deficiency = buildDeficiencyContext(input.dayDeficits);
+
       const result = suggestSides(
         intent,
         candidates,
@@ -269,6 +294,7 @@ export const pairingRouter = router({
         3,
         undefined,
         pantry,
+        deficiency,
       );
 
       if (!result.success) {

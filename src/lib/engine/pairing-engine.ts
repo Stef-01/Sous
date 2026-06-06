@@ -28,6 +28,12 @@ import {
   type PantryReuseContext,
 } from "./scorers/pantry-reuse";
 import {
+  scoreDeficiencyFill,
+  DEFICIENCY_FILL_WEIGHT,
+  type DeficiencyContext,
+} from "./scorers/deficiency-fill";
+import { getDishNutrition } from "./dish-nutrition";
+import {
   therapeuticsActive,
   registryIsClinicianApproved,
 } from "@/lib/therapeutics/feature-flag";
@@ -163,6 +169,40 @@ function reblendPantryReuse(
 }
 
 /**
+ * Re-blend a base ranking with deficiency-fill (W29). Same shape as the pantry
+ * reblend: scale the base by (1 − wD), add the day's gap-fill fraction at wD, as
+ * a post-rank pass so a strongly gap-filling side ranked outside the top K can
+ * surface into it. Caller guarantees `ctx.deficits` is non-empty before
+ * invoking, so this never runs on the default no-diary path → byte-identical.
+ */
+function reblendDeficiency(
+  ranked: ScoredCandidate[],
+  ctx: DeficiencyContext,
+): ScoredCandidate[] {
+  const wD = DEFICIENCY_FILL_WEIGHT;
+  const blended = ranked.map((c) => {
+    const { perServing, massedCoverage } = getDishNutrition(c.sideDish.slug);
+    const nutrition = massedCoverage >= 0.7 ? perServing : null;
+    const d = scoreDeficiencyFill(ctx.deficits, nutrition);
+    return {
+      ...c,
+      scores: { ...c.scores, deficiencyFill: d },
+      totalScore: (1 - wD) * c.totalScore + wD * d,
+    };
+  });
+  blended.sort((a, b) => {
+    const diff = b.totalScore - a.totalScore;
+    if (Math.abs(diff) > 0.001) return diff;
+    return a.sideDish.slug < b.sideDish.slug
+      ? -1
+      : a.sideDish.slug > b.sideDish.slug
+        ? 1
+        : 0;
+  });
+  return blended;
+}
+
+/**
  * Main entry point: suggest the top 3 side dishes for a main dish.
  *
  * @param main - Parsed main dish intent (from craving parser or photo recognition)
@@ -182,6 +222,7 @@ export function suggestSides(
   count: number = 3,
   therapeutic?: TherapeuticContext,
   pantry?: PantryReuseContext,
+  deficiency?: DeficiencyContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -223,6 +264,12 @@ export function suggestSides(
   let finalRanked = ranked;
   if (pantry && pantry.onHand.size > 0) {
     finalRanked = reblendPantryReuse(finalRanked, pantry);
+  }
+
+  // Deficiency-fill reblend (W29): only when the caller supplied the day's
+  // nutrient gaps. No-op on the default path → byte-identical rankings.
+  if (deficiency && deficiency.deficits.size > 0) {
+    finalRanked = reblendDeficiency(finalRanked, deficiency);
   }
 
   // Therapeutic re-blend = PERSONALIZATION → clinician-only (G1), stricter than

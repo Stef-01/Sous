@@ -435,6 +435,23 @@ describe("suggestSides (integration)", () => {
     expect(result1).toEqual(result2);
   });
 
+  it("deficiency reblend is byte-identical when inactive (W29 golden)", () => {
+    // No deficiency context, and an empty-deficits context, must both leave the
+    // ranking untouched — exactly like the pantry-reuse golden guarantee.
+    const base = suggestSides(chickenMain, allCandidates);
+    const emptyCtx = suggestSides(
+      chickenMain,
+      allCandidates,
+      undefined,
+      undefined,
+      3,
+      undefined,
+      undefined,
+      { deficits: new Map() },
+    );
+    expect(emptyCtx).toEqual(base);
+  });
+
   it("scores raita highly for butter chicken (cooling contrast + same cuisine)", () => {
     const result = suggestSides(chickenMain, allCandidates);
     if (result.success) {

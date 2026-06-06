@@ -71,6 +71,8 @@ import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
+import { deficitWeightMap } from "@/lib/nutrition/deficits";
 import { WhosAtTable } from "@/components/today/whos-at-table";
 import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
@@ -174,6 +176,18 @@ function TodayPageContent() {
     return [...new Set(newestFirst.map((s) => s.recipeSlug))];
   }, [completedSessions]);
 
+  // W29 deficiency-fill: today's nutrient gaps from the diary. Stable across
+  // renders (dayNutrition is memoised), so it doesn't thrash the pairing query;
+  // empty/undefined when nothing's logged → byte-identical ranking.
+  const { dayNutrition } = useNutritionDiary();
+  const dayDeficits = useMemo(() => {
+    const map = deficitWeightMap(dayNutrition);
+    if (map.size === 0) return undefined;
+    const rec: Record<string, number> = {};
+    for (const [k, v] of map) rec[k] = Math.round(v * 100) / 100;
+    return rec;
+  }, [dayNutrition]);
+
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
     disabled: showSearch,
@@ -270,6 +284,8 @@ function TodayPageContent() {
       // ingredients on hand. Both omitted when empty → byte-identical ranking.
       pantryOnHand: pantryItems.length > 0 ? pantryItems : undefined,
       recentCookSlugs: recentCookSlugs.length > 0 ? recentCookSlugs : undefined,
+      // W29 deficiency-fill: nudge gap-closing sides up when cooks are logged.
+      dayDeficits,
     },
     {
       enabled:

@@ -52,6 +52,9 @@ export interface ScoreBreakdown {
   /** Pantry-reuse (W1). Only set when the caller supplies a non-empty on-hand
    *  ingredient set; absent on the default (no-pantry) path. */
   pantryReuse?: number;
+  /** Deficiency-fill (W29). Only set when the caller supplies the day's nutrient
+   *  deficits; absent on the default (nothing-logged) path. */
+  deficiencyFill?: number;
 }
 
 export interface ScoredCandidate {
@@ -70,11 +73,14 @@ export interface Scorer {
   ): number;
 }
 
-/** The 8 base weight dimensions, all required. `therapeuticFit` and
- *  `pantryReuse` are excluded — they are post-rank reblend dimensions, not
- *  base ranker weights. */
+/** The 8 base weight dimensions, all required. `therapeuticFit`, `pantryReuse`
+ *  and `deficiencyFill` are excluded — they are post-rank reblend dimensions,
+ *  not base ranker weights. */
 export type BaseWeights = Record<
-  Exclude<keyof ScoreBreakdown, "therapeuticFit" | "pantryReuse">,
+  Exclude<
+    keyof ScoreBreakdown,
+    "therapeuticFit" | "pantryReuse" | "deficiencyFill"
+  >,
   number
 >;
 

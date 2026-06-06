@@ -7,7 +7,7 @@
  * deficit insight. Same hydration-guard pattern as useShoppingList / pantry.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
@@ -21,6 +21,8 @@ export interface DiaryEntry {
 
 const KEY = "sous-nutrition-diary-v1";
 const MAX_DAYS = 90;
+/** Stable empty reference so `dayNutrition`'s memo doesn't thrash each render. */
+const EMPTY_ENTRIES: DiaryEntry[] = [];
 
 /** YYYY-MM-DD for a Date (local). */
 export function dayKey(d: Date): string {
@@ -129,13 +131,14 @@ export function useNutritionDiary(date = new Date()) {
     [todayKey],
   );
 
-  const entries = store[todayKey] ?? [];
+  const entries = store[todayKey] ?? EMPTY_ENTRIES;
+  const dayNutrition = useMemo(() => aggregateDay(entries), [entries]);
   return {
     mounted,
     todayKey,
     entries,
     logCook,
     removeEntry,
-    dayNutrition: aggregateDay(entries),
+    dayNutrition,
   };
 }

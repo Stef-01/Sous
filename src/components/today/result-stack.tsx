@@ -570,6 +570,14 @@ function ResultCard({
                   Guided
                 </span>
               )}
+              {/* W29: this side is a strong source of a nutrient you're short
+                  on today (the deficiency-fill reblend lifted it). */}
+              {typeof side.scores?.deficiencyFill === "number" &&
+                side.scores.deficiencyFill >= 0.25 && (
+                  <span className="shrink-0 rounded-full bg-[var(--data-protein)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--data-protein)]">
+                    Fills today&apos;s gaps
+                  </span>
+                )}
               {side.tags.slice(0, 2).map((tag) => (
                 <span
                   key={tag}
