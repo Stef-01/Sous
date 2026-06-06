@@ -13,7 +13,11 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { PerServingNutrition } from "@/types/nutrition";
-import { FDA_DV_4PLUS } from "@/data/nutrition/fda-dv";
+import {
+  NUTRIENT_DISPLAY,
+  NUTRIENT_GROUP_ORDER,
+  type NutrientGroup,
+} from "@/data/nutrition/nutrient-display";
 
 // FDA reference daily values for the macro target bars (21 CFR 101.9, 2000kcal).
 const MACRO_DV = { energy: 2000, protein: 50, carbs: 275, fat: 78 };
@@ -143,50 +147,46 @@ function TargetRow({
   );
 }
 
-interface MicroRow {
+interface NRow {
   key: string;
   label: string;
-  value: number;
   unit: string;
-  dv: number;
+  dv: number | null;
+  value: number;
+  group: NutrientGroup;
 }
 
-/** Build the micro rows (value + %DV) from the per-serving vector, scaled by
- *  the number of servings being made. */
-function buildMicros(n: PerServingNutrition, mult = 1): MicroRow[] {
-  const map: Array<[keyof PerServingNutrition, string]> = [
-    ["fiber_g", "fiber"],
-    ["calcium_mg", "calcium"],
-    ["iron_mg", "iron"],
-    ["potassium_mg", "potassium"],
-    ["magnesium_mg", "magnesium"],
-    ["zinc_mg", "zinc"],
-    ["vitaminA_mcg_rae", "vitaminA"],
-    ["vitaminD_mcg", "vitaminD"],
-    ["vitaminB12_mcg", "vitaminB12"],
-    ["omega3_g", "omega3"],
-    ["choline_mg", "choline"],
-  ];
-  const out: MicroRow[] = [];
-  for (const [field, dvKey] of map) {
-    const meta = FDA_DV_4PLUS[dvKey as keyof typeof FDA_DV_4PLUS];
-    const value = ((n[field] as number) ?? 0) * mult;
-    if (!meta || value <= 0) continue;
-    out.push({
-      key: dvKey,
-      label: meta.displayName,
-      value,
-      unit: meta.unit,
-      dv: meta.dv4plus,
+/** Build every composed nutrient row (value + optional %DV), scaled by servings,
+ *  driven by the full NUTRIENT_DISPLAY table (~50 nutrients). */
+function buildRows(n: PerServingNutrition, mult = 1): NRow[] {
+  const rows: NRow[] = [];
+  for (const m of NUTRIENT_DISPLAY) {
+    const raw = n[m.key] as number | undefined;
+    if (raw == null) continue; // not composed for this dish
+    rows.push({
+      key: String(m.key),
+      label: m.label,
+      unit: m.unit,
+      dv: m.dv,
+      value: raw * mult,
+      group: m.group,
     });
   }
-  return out.sort((a, b) => pct(b.value, b.dv) - pct(a.value, a.dv));
+  return rows;
 }
 
-function MicroBar({ row }: { row: MicroRow }) {
-  const p = pct(row.value, row.dv);
-  const strong = p >= 100;
-  const good = p >= 20;
+function fmtAmount(v: number): string {
+  if (v >= 100) return Math.round(v).toString();
+  if (v >= 10) return v.toFixed(0);
+  if (v >= 1) return v.toFixed(1);
+  return v.toFixed(2);
+}
+
+/** A nutrient row: label + a %DV bar, or the value when there's no daily target. */
+function NutrientBar({ row }: { row: NRow }) {
+  const p = row.dv ? pct(row.value, row.dv) : null;
+  const strong = p != null && p >= 100;
+  const good = p != null && p >= 20;
   return (
     <div className="space-y-1">
       <div className="flex items-baseline justify-between gap-2 text-[13px]">
@@ -199,14 +199,14 @@ function MicroBar({ row }: { row: MicroRow }) {
               : "text-[var(--nourish-subtext)]",
           )}
         >
-          {p}%
+          {p != null ? `${p}%` : `${fmtAmount(row.value)} ${row.unit}`}
         </span>
       </div>
       <span className="block h-1.5 overflow-hidden rounded-full bg-[var(--nourish-border)]">
         <span
           className="block h-full rounded-full"
           style={{
-            width: `${Math.min(100, p)}%`,
+            width: `${p != null ? Math.min(100, p) : 0}%`,
             backgroundColor: strong
               ? "var(--nourish-green)"
               : good
@@ -252,8 +252,23 @@ export function NutritionRingCard({
     carbs: cCal / totalMacroCal,
     fat: fCal / totalMacroCal,
   };
-  const micros = buildMicros(nutrition, mult);
-  const keyMicros = micros.slice(0, 4);
+  const rows = buildRows(nutrition, mult);
+  // Headline macros live in the ring + Daily targets; exclude them from the
+  // micronutrient highlight.
+  const HEADLINE = new Set([
+    "calories",
+    "protein_g",
+    "totalCarbs_g",
+    "totalFat_g",
+  ]);
+  const keyRows = rows
+    .filter((r) => r.dv != null && r.value > 0 && !HEADLINE.has(r.key))
+    .sort((a, b) => pct(b.value, b.dv!) - pct(a.value, a.dv!))
+    .slice(0, 4);
+  const groupedRows = NUTRIENT_GROUP_ORDER.map((g) => ({
+    group: g,
+    items: rows.filter((r) => r.group === g),
+  })).filter((g) => g.items.length > 0);
 
   const legend: Array<["protein" | "carbs" | "fat", number]> = [
     ["protein", protein],
@@ -326,21 +341,22 @@ export function NutritionRingCard({
       </div>
 
       {/* Key micronutrients. */}
-      {keyMicros.length > 0 && (
+      {keyRows.length > 0 && (
         <div className="space-y-3">
           <p className="sous-label" style={{ color: "var(--data-protein)" }}>
             Key nutrients
           </p>
           <div className="grid grid-cols-2 gap-x-4 gap-y-3">
-            {keyMicros.map((row) => (
-              <MicroBar key={row.key} row={row} />
+            {keyRows.map((row) => (
+              <NutrientBar key={row.key} row={row} />
             ))}
           </div>
         </div>
       )}
 
-      {/* Expandable complete nutrient summary. */}
-      {micros.length > keyMicros.length && (
+      {/* Expandable complete nutrient summary — every composed nutrient,
+          grouped (General · Carbs · Fats · Protein · Vitamins · Minerals). */}
+      {groupedRows.length > 0 && (
         <div>
           <button
             type="button"
@@ -355,9 +371,21 @@ export function NutritionRingCard({
             />
           </button>
           {showAll && (
-            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-3">
-              {micros.slice(keyMicros.length).map((row) => (
-                <MicroBar key={row.key} row={row} />
+            <div className="mt-3 space-y-4">
+              {groupedRows.map(({ group, items }) => (
+                <div key={group} className="space-y-2.5">
+                  <p
+                    className="sous-label"
+                    style={{ color: "var(--grocery-cat)" }}
+                  >
+                    {group}
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                    {items.map((row) => (
+                      <NutrientBar key={row.key} row={row} />
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           )}

@@ -59,3 +59,6 @@ canva-asset-sync-*.md
 *.ps1
 !scripts/*.ps1
 .gstack/
+
+# bulk USDA FDC downloads (build-time only, multi-hundred-MB)
+.cache/

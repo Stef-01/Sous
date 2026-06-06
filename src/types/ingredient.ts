@@ -83,6 +83,42 @@ export interface NutrientVector {
   sodium_mg: number;
   addedSugar_g: number;
   saturatedFat_g: number;
+  // ── Expanded panel (USDA FDC SR Legacy, per 100 g). All required numbers;
+  //    a genuinely-absent nutrient is 0. Grouped: general · fats · vitamins ·
+  //    minerals · amino acids. ──
+  water_g: number;
+  alcohol_g: number;
+  caffeine_mg: number;
+  totalSugars_g: number;
+  starch_g: number;
+  monoFat_g: number;
+  polyFat_g: number;
+  transFat_g: number;
+  cholesterol_mg: number;
+  vitaminC_mg: number;
+  vitaminE_mg: number;
+  vitaminK_mcg: number;
+  thiamin_mg: number;
+  riboflavin_mg: number;
+  niacin_mg: number;
+  pantothenicAcid_mg: number;
+  vitaminB6_mg: number;
+  folate_mcg: number;
+  phosphorus_mg: number;
+  copper_mg: number;
+  manganese_mg: number;
+  selenium_mcg: number;
+  histidine_g: number;
+  isoleucine_g: number;
+  leucine_g: number;
+  lysine_g: number;
+  methionine_g: number;
+  phenylalanine_g: number;
+  threonine_g: number;
+  tryptophan_g: number;
+  valine_g: number;
+  cystine_g: number;
+  tyrosine_g: number;
 }
 
 /** Which USDA FoodData Central dataset a mapped ingredient came from. */

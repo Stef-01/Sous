@@ -3,7 +3,17 @@ out
 build
 node_modules
 .claude
+.cache
 
 # tool-managed lockfiles
 pnpm-lock.yaml
 package-lock.json
+
+# large generated data files — prettier OOMs scanning them alongside the tree.
+# Their generators emit clean, deterministic output (prettier-written on gen).
+src/data/guided-cook-steps.ts
+src/data/guided-cook-summary.ts
+src/data/chef-tu-cook-steps.ts
+src/data/chef-tu-cook-steps-2.ts
+src/data/ingredients/registry.generated.ts
+src/data/ingredients/recipe-links.generated.ts

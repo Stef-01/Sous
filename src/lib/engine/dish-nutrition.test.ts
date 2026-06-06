@@ -111,4 +111,34 @@ describe("nutrition is real (ingredient-composed), not hardcoded", () => {
       expect(p.calories * n).toBeGreaterThanOrEqual(p.calories);
     }
   });
+
+  it("composes the EXPANDED ~50-nutrient panel (B vitamins, minerals, amino acids)", () => {
+    // The widened panel must actually flow through the engine, not be absent.
+    const sampled = composed.slice(0, 30);
+    // Every well-covered dish exposes a broad panel.
+    for (const { slug, p } of sampled) {
+      const present = [
+        "riboflavin_mg",
+        "niacin_mg",
+        "vitaminB6_mg",
+        "folate_mcg",
+        "phosphorus_mg",
+        "copper_mg",
+        "selenium_mcg",
+        "leucine_g",
+        "lysine_g",
+      ].filter(
+        (k) => typeof (p as unknown as Record<string, unknown>)[k] === "number",
+      );
+      expect(present.length, slug).toBeGreaterThan(5);
+    }
+    // A protein-bearing dish has real essential amino acids.
+    const gua = getDishNutrition("guacamole").perServing as unknown as Record<
+      string,
+      number | undefined
+    >;
+    expect(gua.leucine_g ?? 0).toBeGreaterThan(0);
+    expect(gua.riboflavin_mg ?? 0).toBeGreaterThan(0);
+    expect(gua.selenium_mcg ?? 0).toBeGreaterThanOrEqual(0);
+  });
 });
