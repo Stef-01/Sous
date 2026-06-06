@@ -1551,5 +1551,428 @@
     "cuisine": "Filipino",
     "description": "Sweet, caramelized cured pork slices served over garlic fried rice with a fried egg and pickled papaya atchara — the classic Filipino tocilog reimagined as a bowl.",
     "nourishVerified": true
+  },
+  {
+    "id": "tu-pho-dac-biet",
+    "name": "Phở Đặc Biệt (Special Beef Pho)",
+    "aliases": ["pho dac biet", "special beef pho", "pho", "beef pho"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "goi-cuon",
+      "tu-goi-ga",
+      "tu-ca-tai-chanh"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "The 'house special' beef pho: a clear bone broth simmered for hours with charred onion, ginger, star anise and cinnamon, ladled over rice noodles with brisket, tendon, tripe and beef balls, finished with herbs, lime and chili.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/phodacbiet"
+    }
+  },
+  {
+    "id": "tu-pho-ga",
+    "name": "Phở Gà (Chicken Pho)",
+    "aliases": ["pho ga", "chicken pho"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "goi-cuon",
+      "tu-goi-ga",
+      "tu-rau-muong"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A lighter, gingery chicken pho — whole chicken poached into a clean stock with charred aromatics, served over rice noodles with poached chicken, scallion and herbs.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/phoga"
+    }
+  },
+  {
+    "id": "tu-turkey-pho",
+    "name": "Phở Gà Tây (Turkey Pho)",
+    "aliases": ["turkey pho", "pho ga tay", "leftover turkey pho"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "tu-goi-ga",
+      "tu-rau-muong",
+      "goi-cuon"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A thrifty post-holiday pho that turns a leftover turkey carcass into a fragrant five-spice broth over rice noodles with shredded turkey and herbs.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/turkeypho"
+    }
+  },
+  {
+    "id": "tu-soondubu-jjigae",
+    "name": "Soondubu Jjigae (Spicy Seafood Tofu Stew)",
+    "aliases": [
+      "soondubu",
+      "sundubu jjigae",
+      "spicy tofu stew",
+      "korean tofu stew"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-steamed-jasmine-rice",
+      "tu-rau-muong",
+      "tu-goi-ga",
+      "smashed-cucumber-salad",
+      "pickled-radish"
+    ],
+    "cuisine": "Korean",
+    "description": "A bubbling Korean stew of silken tofu, shrimp, squid, mussels and clams in a fiery gochugaru-and-fish-sauce broth, served piping hot with rice.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/soondubu"
+    }
+  },
+  {
+    "id": "tu-bun-rieu",
+    "name": "Bún Riêu (Crab & Tomato Noodle Soup)",
+    "aliases": ["bun rieu", "crab noodle soup", "tomato crab soup"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "tu-rau-muong",
+      "tu-goi-ga",
+      "goi-cuon"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A tangy tomato-and-crab noodle soup built on a pork-rib broth with riêu crab-and-egg dumplings, fermented shrimp paste and fresh tomato, served over rice vermicelli.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/bunrieu"
+    }
+  },
+  {
+    "id": "tu-banh-canh-gio-heo-tom",
+    "name": "Bánh Canh Giò Heo Tôm (Pork & Shrimp Tapioca Noodle Soup)",
+    "aliases": [
+      "banh canh",
+      "pork shrimp tapioca noodle soup",
+      "banh canh gio heo"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "tu-rau-muong",
+      "spring-rolls",
+      "tu-goi-ga",
+      "summer-rolls"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Chewy hand-cut tapioca noodles in a shallot-forward pork broth with tender pork shank, ribs, shrimp and squid — a thick, comforting Central Vietnamese soup.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/banhcanhgioheotom"
+    }
+  },
+  {
+    "id": "tu-mi-hoanh-thanh",
+    "name": "Mì Hoành Thánh (Combination Wonton Egg Noodle Soup)",
+    "aliases": ["mi hoanh thanh", "wonton egg noodle soup", "wonton mi"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "tu-rau-muong",
+      "tu-garlic-noodles",
+      "tu-goi-ga",
+      "spring-rolls"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A Chinese-Vietnamese egg-noodle soup in a double pork-and-chicken stock, loaded with pork-and-shrimp wontons, char siu and gai lan.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/hoanhthanhsup"
+    }
+  },
+  {
+    "id": "tu-bun-bo-hue",
+    "name": "Bún Bò Huế (Spicy Beef & Pork Noodle Soup)",
+    "aliases": ["bun bo hue", "spicy beef noodle soup", "hue beef noodle"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "tu-rau-muong",
+      "tu-goi-ga",
+      "goi-cuon"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "The bold, lemongrass-and-chili noodle soup of Huế — a rich beef-and-pork-knuckle broth with shrimp paste and annatto, served over thick round rice noodles with beef shank, tendon and herbs.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/bunbohue"
+    }
+  },
+  {
+    "id": "tu-mi-xao-gion",
+    "name": "Mì Xào Giòn (Crispy Bird's Nest Noodles)",
+    "aliases": ["mi xao gion", "crispy birds nest", "crispy fried noodles"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-rau-muong",
+      "tu-goi-ga",
+      "tu-ca-tai-chanh",
+      "spring-rolls",
+      "tu-nuoc-cham"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A crispy 'bird's nest' of fried egg noodles topped with a glossy stir-fry of shrimp, mushrooms, broccoli and carrot in an oyster-hoisin gravy that softens the noodles as you eat.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/crispybirdsnest"
+    }
+  },
+  {
+    "id": "tu-bun-ga-nuong",
+    "name": "Bún Gà Nướng (Grilled Lemongrass Chicken Vermicelli)",
+    "aliases": [
+      "bun ga nuong",
+      "grilled lemongrass chicken vermicelli",
+      "grilled chicken noodle bowl"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "tu-goi-ga",
+      "tu-rau-muong",
+      "goi-cuon"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A fresh rice-vermicelli bowl topped with smoky lemongrass-marinated grilled chicken, herbs, pickles and peanuts, dressed at the table with nước chấm.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/bunganuong"
+    }
+  },
+  {
+    "id": "tu-bun-nem-nuong",
+    "name": "Bún Nem Nướng (Grilled Pork Sausage Vermicelli)",
+    "aliases": [
+      "bun nem nuong",
+      "grilled pork sausage vermicelli",
+      "nem nuong noodle bowl"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-nuoc-cham",
+      "spring-rolls",
+      "summer-rolls",
+      "tu-goi-ga",
+      "goi-cuon",
+      "tu-rau-muong"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Springy grilled pork-sausage patties over rice vermicelli with fresh herbs, pickled carrot and daikon, peanuts and nước chấm.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/bunnemnuong"
+    }
+  },
+  {
+    "id": "tu-com-ga-hai-nam",
+    "name": "Cơm Gà Hải Nam (Hainanese Chicken & Rice)",
+    "aliases": ["com ga hai nam", "hainanese chicken rice", "chicken and rice"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-canh-cu-cai",
+      "tu-rau-muong",
+      "tu-nuoc-cham",
+      "tu-goi-ga",
+      "smashed-cucumber-salad"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Silky poached chicken with rice cooked in the chicken stock, served with a spicy ginger dipping sauce, cucumber and tomato — the Viet diaspora take on Hainanese chicken rice.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/comgahainam"
+    }
+  },
+  {
+    "id": "tu-com-suon",
+    "name": "Cơm Sườn (Grilled Pork Chop Rice Plate)",
+    "aliases": [
+      "com suon",
+      "pork chop rice",
+      "com tam suon",
+      "broken rice pork chop"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-canh-cu-cai",
+      "tu-rau-muong",
+      "tu-nuoc-cham",
+      "tu-cha-trung-hap",
+      "tu-goi-ga"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A Saigon-style rice plate of marinated fried pork chop over rice, served with pickles, scallion oil and nước chấm.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/comsuonchein"
+    }
+  },
+  {
+    "id": "tu-thit-kho-trung",
+    "name": "Thịt Kho Trứng (Braised Pork Belly & Eggs)",
+    "aliases": [
+      "thit kho trung",
+      "braised pork and eggs",
+      "caramelized pork belly",
+      "thit kho"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-steamed-jasmine-rice",
+      "tu-rau-muong",
+      "tu-canh-cu-cai",
+      "tu-nuoc-cham",
+      "smashed-cucumber-salad"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Pork belly and soft eggs braised in caramel and coconut water until glossy and tender — Vietnamese 'soul food', traditionally eaten through Tết, served with steamed rice.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/thitkhotrung"
+    }
+  },
+  {
+    "id": "tu-char-siu-banh-mi",
+    "name": "Char Siu Bánh Mì (Char Siu Pork Banh Mi)",
+    "aliases": ["char siu banh mi", "bbq pork banh mi", "banh mi"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-garlic-noodles",
+      "tu-goi-ga",
+      "tu-ca-tai-chanh",
+      "spring-rolls",
+      "tu-rau-muong"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A crackly baguette layered with char-siu-marinated pork and creamy chicken-liver pâté, pickled carrot and daikon, cucumber, cilantro and chili.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/charsiubanhmi"
+    }
+  },
+  {
+    "id": "tu-banh-mi-trung-op-la",
+    "name": "Bánh Mì Trứng Ốp La (Fried Egg Banh Mi)",
+    "aliases": ["banh mi trung", "fried egg banh mi", "egg banh mi"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-garlic-noodles",
+      "tu-goi-ga",
+      "tu-ca-tai-chanh",
+      "spring-rolls",
+      "tu-bac-xiu"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "A quick breakfast banh mi of crispy fried eggs with runny yolks, pâté and Kewpie mayo, pickles, cucumber and cilantro in a warm roll.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/banhmitrung"
+    }
+  },
+  {
+    "id": "tu-ga-kho-gung",
+    "name": "Gà Kho Gừng (Caramelized Ginger Chicken)",
+    "aliases": ["ga kho gung", "ginger chicken", "caramelized ginger chicken"],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-steamed-jasmine-rice",
+      "tu-rau-muong",
+      "tu-canh-cu-cai",
+      "tu-nuoc-cham",
+      "tu-goi-ga"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Chicken braised with plenty of ginger, shallot and lemongrass in a salty-sweet caramel and coconut water until sticky and deeply savory — a clay-pot home classic for rice.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/gingerchicken"
+    }
+  },
+  {
+    "id": "tu-ga-chien",
+    "name": "Gà Chiên (Vietnamese Fried Chicken)",
+    "aliases": [
+      "ga chien",
+      "vietnamese fried chicken",
+      "salt and chili fried chicken"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-steamed-jasmine-rice",
+      "tu-goi-ga",
+      "tu-rau-muong",
+      "tu-nuoc-cham",
+      "smashed-cucumber-salad"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Shatter-crisp fried chicken marinated with garlic, ginger and lemongrass and tossed in salt and chili — the Viet answer to fried chicken.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/vietnamesefriedchicken"
+    }
+  },
+  {
+    "id": "tu-thit-heo-quay",
+    "name": "Thịt Heo Quay (Crispy Roast Pork Belly)",
+    "aliases": [
+      "thit heo quay",
+      "crispy pork belly",
+      "roast pork belly",
+      "heo quay"
+    ],
+    "heroImageUrl": null,
+    "sidePool": [
+      "tu-steamed-jasmine-rice",
+      "tu-rau-muong",
+      "tu-canh-cu-cai",
+      "tu-nuoc-cham",
+      "tu-goi-ga"
+    ],
+    "cuisine": "Vietnamese",
+    "description": "Roast pork belly with shatteringly crisp crackling and lemongrass-scented meat — a celebratory dish for weddings and holidays, sliced for rice or banh mi.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/thitheoquay"
+    }
   }
 ]

@@ -2048,5 +2048,201 @@
     "pairingReason": "creamy greens to add iron and fiber",
     "nutritionCategory": "vegetable",
     "nourishVerified": false
+  },
+  {
+    "id": "tu-nuoc-cham",
+    "name": "Nước Chấm (Seasoned Fish Sauce)",
+    "imageUrl": null,
+    "tags": ["condiment", "sauce", "vietnamese"],
+    "description": "The essential Vietnamese table sauce — fish sauce balanced with lime, sugar, garlic and chili, used as a dip and dressing for nearly everything.",
+    "pairingReason": "the bright salty-sweet-sour dip that ties a Vietnamese plate together",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/nuoccham"
+    }
+  },
+  {
+    "id": "tu-steamed-jasmine-rice",
+    "name": "Cơm (Steamed Jasmine Rice)",
+    "imageUrl": null,
+    "tags": ["rice", "staple", "vietnamese"],
+    "description": "Properly washed and steamed medium-grain rice — the foundation of the Vietnamese table, fluffy and separate.",
+    "pairingReason": "the neutral, fluffy base for braises, grills and stir-fries",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/howtocookrice"
+    }
+  },
+  {
+    "id": "tu-garlic-noodles",
+    "name": "Mì Xào Tỏi (Vietnamese Garlic Noodles)",
+    "imageUrl": null,
+    "tags": ["noodles", "garlic", "vietnamese"],
+    "description": "Buttery egg noodles tossed with toasted garlic, fish sauce and oyster sauce — a Viet-American steakhouse side that goes with almost anything.",
+    "pairingReason": "buttery garlic noodles round out grilled and roasted mains",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/garlicnoodles"
+    }
+  },
+  {
+    "id": "tu-rau-muong",
+    "name": "Rau Muống Xào (Stir-Fried Water Spinach)",
+    "imageUrl": null,
+    "tags": ["vegetable", "stir-fry", "vietnamese"],
+    "description": "Water spinach flash-stir-fried with garlic, fish sauce and dried shrimp until just tender and glossy — a crunchy green for any rice meal.",
+    "pairingReason": "garlicky greens to cut through rich braises and fried mains",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/raumuong"
+    }
+  },
+  {
+    "id": "tu-canh-cu-cai",
+    "name": "Canh Củ Cải (Daikon & Pork Rib Soup)",
+    "imageUrl": null,
+    "tags": ["soup", "light", "vietnamese"],
+    "description": "A clean, gently sweet broth of daikon and carrot simmered with pork ribs and dried shrimp — the everyday 'canh' soup that accompanies a rice meal.",
+    "pairingReason": "a light, clean soup to balance a rice-and-protein plate",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/canhcucai"
+    }
+  },
+  {
+    "id": "tu-goi-ga",
+    "name": "Gỏi Gà (Vietnamese Chicken & Cabbage Salad)",
+    "imageUrl": null,
+    "tags": ["salad", "chicken", "vietnamese"],
+    "description": "A crunchy shredded-cabbage and poached-chicken salad with mint, cilantro, red onion and peanuts in a tangy fish-sauce dressing.",
+    "pairingReason": "a crisp, herby salad to lighten a rich main",
+    "nutritionCategory": "vegetable",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/goiga"
+    }
+  },
+  {
+    "id": "tu-ca-tai-chanh",
+    "name": "Cá Tái Chanh (Vietnamese Ceviche)",
+    "imageUrl": null,
+    "tags": ["seafood", "ceviche", "appetizer", "vietnamese"],
+    "description": "Fresh raw fish 'cooked' in lime and fish sauce with ginger, scallion, chili and sesame — a bright, citrusy seafood starter.",
+    "pairingReason": "a bright, citrusy seafood starter before a heavier main",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/vietnameseceviche"
+    }
+  },
+  {
+    "id": "tu-banh-tom",
+    "name": "Bánh Tôm (Shrimp & Sweet Potato Fritter)",
+    "imageUrl": null,
+    "tags": ["fritter", "shrimp", "appetizer", "vietnamese"],
+    "description": "Crisp turmeric fritters of whole shrimp and matchstick sweet potato, eaten with herbs and nước chấm — a Hanoi street snack.",
+    "pairingReason": "a crunchy fried starter to share before the meal",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/banhtom"
+    }
+  },
+  {
+    "id": "tu-cha-trung-hap",
+    "name": "Chả Trứng Hấp (Steamed Egg & Pork Terrine)",
+    "imageUrl": null,
+    "tags": ["egg", "pork", "vietnamese"],
+    "description": "A steamed savory custard of ground pork, egg, glass noodles and wood-ear mushroom, sliced into the rice plate — a com tam classic.",
+    "pairingReason": "a soft, savory terrine that completes a broken-rice plate",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/chatrunghap"
+    }
+  },
+  {
+    "id": "tu-cha-gio-khoai-mon",
+    "name": "Chả Giò Khoai Môn (Taro Egg Rolls)",
+    "imageUrl": null,
+    "tags": ["egg-roll", "fried", "appetizer", "vietnamese"],
+    "description": "Crackly fried egg rolls stuffed with pork, taro, glass noodles and carrot, cut and eaten with herbs and nước chấm.",
+    "pairingReason": "crisp fried rolls to share, dipped in nước chấm",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/taroeggroll"
+    }
+  },
+  {
+    "id": "tu-vietnamese-coffee-tiramisu",
+    "name": "Bánh Kem Vị Cafe (Vietnamese Coffee Tiramisu)",
+    "imageUrl": null,
+    "tags": ["dessert", "coffee", "vietnamese"],
+    "description": "A diaspora tiramisu built on strong Vietnamese phin coffee and condensed milk with mascarpone cream and ladyfingers.",
+    "pairingReason": "a coffee-soaked dessert to close a Vietnamese meal",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/vietnamesecoffeetiramisu"
+    }
+  },
+  {
+    "id": "tu-banh-chuoi-nuong",
+    "name": "Bánh Chuối Nướng (Banana Bread Pudding)",
+    "imageUrl": null,
+    "tags": ["dessert", "banana", "vietnamese"],
+    "description": "A baked banana pudding of caramelized lady-finger bananas, croissant or bread, coconut milk and condensed milk — a frugal, fragrant family dessert.",
+    "pairingReason": "a warm, custardy dessert that uses up ripe bananas",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/banhchouinuong"
+    }
+  },
+  {
+    "id": "tu-bac-xiu",
+    "name": "Bạc Xỉu (Saigon-Style Milk Coffee)",
+    "imageUrl": null,
+    "tags": ["drink", "coffee", "vietnamese"],
+    "description": "The gentler, milkier cousin of cà phê sữa — lots of condensed milk and whole milk with a splash of strong coffee over ice.",
+    "pairingReason": "a sweet iced milk-coffee to sip alongside or after the meal",
+    "nutritionCategory": "dairy",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/saigonstylecoffee"
+    }
+  },
+  {
+    "id": "tu-brown-sugar-boba-coffee",
+    "name": "Brown Sugar Boba Coffee",
+    "imageUrl": null,
+    "tags": ["drink", "coffee", "boba"],
+    "description": "Espresso over chewy brown-sugar boba pearls with milk and cream — a café-style iced coffee with tapioca.",
+    "pairingReason": "a sweet, chewy iced coffee treat",
+    "nutritionCategory": "dairy",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Tu David Phu",
+      "url": "https://cheftu.com/recipelibrary/brownsugarbobacoffee"
+    }
   }
 ]

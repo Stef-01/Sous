@@ -1,0 +1,338 @@
+{
+  "_README": "PLACEHOLDER / RESHOOT REFERENCE ONLY. These are the source image URLs from Chef Tu David Phu's public recipe pages (cheftu.com), recorded so the partner photoshoot team knows what each dish looks like. They are COPYRIGHTED — not downloaded into the repo and NOT used by the app (every dish ships with heroImageUrl=null → gradient+emoji fallback until the aesthetic plate photoshoot replaces them with original /food_images/*.png).",
+  "creator": "Tu David Phu",
+  "library": "https://cheftu.com/recipelibrary",
+  "count": 33,
+  "references": [
+    {
+      "id": "tu-pho-dac-biet",
+      "name": "Phở Đặc Biệt (Special Beef Pho)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/phodacbiet",
+      "sourceImageUrl": "https://i.imgur.com/6hFOojG.jpg",
+      "totalTimeMinutes": 780,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-pho-ga",
+      "name": "Phở Gà (Chicken Pho)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/phoga",
+      "sourceImageUrl": "https://i.imgur.com/f4VbmoZ.jpeg",
+      "totalTimeMinutes": 160,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-turkey-pho",
+      "name": "Phở Gà Tây (Turkey Pho)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/turkeypho",
+      "sourceImageUrl": "https://i.imgur.com/hj6HSMS.jpg",
+      "totalTimeMinutes": 210,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-soondubu-jjigae",
+      "name": "Soondubu Jjigae (Spicy Seafood Tofu Stew)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/soondubu",
+      "sourceImageUrl": "https://i.imgur.com/MUxoiWl.jpg",
+      "totalTimeMinutes": 125,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-bun-rieu",
+      "name": "Bún Riêu (Crab & Tomato Noodle Soup)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/bunrieu",
+      "sourceImageUrl": "https://i.imgur.com/QjiMfZY.jpeg",
+      "totalTimeMinutes": 270,
+      "servings": 8,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-banh-canh-gio-heo-tom",
+      "name": "Bánh Canh Giò Heo Tôm (Pork & Shrimp Tapioca Noodle Soup)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/banhcanhgioheotom",
+      "sourceImageUrl": "https://i.imgur.com/SDZVDd3.jpeg",
+      "totalTimeMinutes": 240,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-mi-hoanh-thanh",
+      "name": "Mì Hoành Thánh (Combination Wonton Egg Noodle Soup)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/hoanhthanhsup",
+      "sourceImageUrl": "https://i.imgur.com/6avOzqX.jpeg",
+      "totalTimeMinutes": 135,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-bun-bo-hue",
+      "name": "Bún Bò Huế (Spicy Beef & Pork Noodle Soup)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/bunbohue",
+      "sourceImageUrl": "https://i.imgur.com/JwZh56P.jpeg",
+      "totalTimeMinutes": 450,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-mi-xao-gion",
+      "name": "Mì Xào Giòn (Crispy Bird's Nest Noodles)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/crispybirdsnest",
+      "sourceImageUrl": "https://i.imgur.com/Y87KMdO.jpeg",
+      "totalTimeMinutes": 25,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-bun-ga-nuong",
+      "name": "Bún Gà Nướng (Grilled Lemongrass Chicken Vermicelli)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/bunganuong",
+      "sourceImageUrl": "https://i.imgur.com/1VmgbNo.jpg",
+      "totalTimeMinutes": 75,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-bun-nem-nuong",
+      "name": "Bún Nem Nướng (Grilled Pork Sausage Vermicelli)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/bunnemnuong",
+      "sourceImageUrl": "https://i.imgur.com/Ej39KIJ.jpg",
+      "totalTimeMinutes": 90,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-com-ga-hai-nam",
+      "name": "Cơm Gà Hải Nam (Hainanese Chicken & Rice)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/comgahainam",
+      "sourceImageUrl": "https://i.imgur.com/CkZjP0G.jpg",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-com-suon",
+      "name": "Cơm Sườn (Grilled Pork Chop Rice Plate)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/comsuonchein",
+      "sourceImageUrl": "https://i.imgur.com/28r6I09.jpg",
+      "totalTimeMinutes": 535,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-thit-kho-trung",
+      "name": "Thịt Kho Trứng (Braised Pork Belly & Eggs)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/thitkhotrung",
+      "sourceImageUrl": "https://i.imgur.com/paDsJSA.jpg",
+      "totalTimeMinutes": 90,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-char-siu-banh-mi",
+      "name": "Char Siu Bánh Mì (Char Siu Pork Banh Mi)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/charsiubanhmi",
+      "sourceImageUrl": "https://i.imgur.com/awDtAmi.jpeg",
+      "totalTimeMinutes": 70,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-banh-mi-trung-op-la",
+      "name": "Bánh Mì Trứng Ốp La (Fried Egg Banh Mi)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/banhmitrung",
+      "sourceImageUrl": "https://i.imgur.com/oE05IQP.jpg",
+      "totalTimeMinutes": 10,
+      "servings": 2,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-ga-kho-gung",
+      "name": "Gà Kho Gừng (Caramelized Ginger Chicken)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/gingerchicken",
+      "sourceImageUrl": "https://i.imgur.com/QE9nIT9.jpeg",
+      "totalTimeMinutes": 60,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-ga-chien",
+      "name": "Gà Chiên (Vietnamese Fried Chicken)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/vietnamesefriedchicken",
+      "sourceImageUrl": "https://i.imgur.com/WQ1Mgi3.jpeg",
+      "totalTimeMinutes": 120,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-thit-heo-quay",
+      "name": "Thịt Heo Quay (Crispy Roast Pork Belly)",
+      "kind": "meal",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/thitheoquay",
+      "sourceImageUrl": "https://i.imgur.com/uTyWgj7.jpg",
+      "totalTimeMinutes": 180,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-nuoc-cham",
+      "name": "Nước Chấm (Seasoned Fish Sauce)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/nuoccham",
+      "sourceImageUrl": "https://i.imgur.com/3S239dq.jpg",
+      "totalTimeMinutes": 14,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-steamed-jasmine-rice",
+      "name": "Cơm (Steamed Jasmine Rice)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/howtocookrice",
+      "sourceImageUrl": "https://i.imgur.com/LBF9srd.jpg",
+      "totalTimeMinutes": 35,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-garlic-noodles",
+      "name": "Mì Xào Tỏi (Vietnamese Garlic Noodles)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/garlicnoodles",
+      "sourceImageUrl": "https://i.imgur.com/cAWQa4T.jpg",
+      "totalTimeMinutes": 30,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-rau-muong",
+      "name": "Rau Muống Xào (Stir-Fried Water Spinach)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/raumuong",
+      "sourceImageUrl": "https://i.imgur.com/PJBXYlG.jpg",
+      "totalTimeMinutes": 45,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-canh-cu-cai",
+      "name": "Canh Củ Cải (Daikon & Pork Rib Soup)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/canhcucai",
+      "sourceImageUrl": "https://i.imgur.com/MGYJYRG.jpg",
+      "totalTimeMinutes": 50,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-goi-ga",
+      "name": "Gỏi Gà (Vietnamese Chicken & Cabbage Salad)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/goiga",
+      "sourceImageUrl": "https://i.imgur.com/DblW0IK.jpg",
+      "totalTimeMinutes": 65,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-ca-tai-chanh",
+      "name": "Cá Tái Chanh (Vietnamese Ceviche)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/vietnameseceviche",
+      "sourceImageUrl": "https://i.imgur.com/31xPSOO.jpg",
+      "totalTimeMinutes": 40,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-banh-tom",
+      "name": "Bánh Tôm (Shrimp & Sweet Potato Fritter)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/banhtom",
+      "sourceImageUrl": "https://i.imgur.com/6JI5rMV.jpg",
+      "totalTimeMinutes": 105,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-cha-trung-hap",
+      "name": "Chả Trứng Hấp (Steamed Egg & Pork Terrine)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/chatrunghap",
+      "sourceImageUrl": "https://i.imgur.com/R0k0IgE.jpg",
+      "totalTimeMinutes": 75,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-cha-gio-khoai-mon",
+      "name": "Chả Giò Khoai Môn (Taro Egg Rolls)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/taroeggroll",
+      "sourceImageUrl": "https://i.imgur.com/54LAiMo.jpg",
+      "totalTimeMinutes": 180,
+      "servings": 4,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-vietnamese-coffee-tiramisu",
+      "name": "Bánh Kem Vị Cafe (Vietnamese Coffee Tiramisu)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/vietnamesecoffeetiramisu",
+      "sourceImageUrl": "https://i.imgur.com/rhAAL6b.jpg",
+      "totalTimeMinutes": 60,
+      "servings": 6,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-banh-chuoi-nuong",
+      "name": "Bánh Chuối Nướng (Banana Bread Pudding)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/banhchouinuong",
+      "sourceImageUrl": "https://i.imgur.com/vrXh4qB.jpeg",
+      "totalTimeMinutes": 90,
+      "servings": 8,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-bac-xiu",
+      "name": "Bạc Xỉu (Saigon-Style Milk Coffee)",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/saigonstylecoffee",
+      "sourceImageUrl": "https://i.imgur.com/sZKd1ss.jpg",
+      "totalTimeMinutes": 15,
+      "servings": 1,
+      "status": "reshoot-needed"
+    },
+    {
+      "id": "tu-brown-sugar-boba-coffee",
+      "name": "Brown Sugar Boba Coffee",
+      "kind": "side",
+      "sourcePageUrl": "https://cheftu.com/recipelibrary/brownsugarbobacoffee",
+      "sourceImageUrl": "https://i.imgur.com/wIOwJ39.jpg",
+      "totalTimeMinutes": 8,
+      "servings": 1,
+      "status": "reshoot-needed"
+    }
+  ]
+}
