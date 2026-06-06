@@ -11,6 +11,7 @@ import {
   REELS,
   RESEARCH_BRIEFS,
 } from "@/data/content";
+import { FeaturedHero } from "@/components/content/featured-hero";
 import { ReelsRail } from "@/components/content/reels-rail";
 import { ArticleCard } from "@/components/content/article-card";
 import { ResearchBriefCard } from "@/components/content/research-brief-card";
@@ -60,6 +61,11 @@ export default function CommunityPage() {
       ),
     [],
   );
+  // Featured story: the flagged article, else the most recent.
+  const featured = useMemo(
+    () => sortedArticles.find((a) => a.featured) ?? sortedArticles[0],
+    [sortedArticles],
+  );
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
@@ -84,6 +90,9 @@ export default function CommunityPage() {
       </header>
 
       <main className="space-y-8 page-x pt-5">
+        {/* Featured — the one highlighted story at the very top. */}
+        {featured && <FeaturedHero article={featured} />}
+
         {/* Group challenge — minimal entry (rule 13: a button, not an
             explainer; the pod page details it on tap). */}
         <Link
