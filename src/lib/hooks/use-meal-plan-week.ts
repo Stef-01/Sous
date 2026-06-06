@@ -82,7 +82,12 @@ export interface UseMealPlanWeekResult {
 export function useMealPlanWeek(
   explicitWeekKey?: string,
 ): UseMealPlanWeekResult {
-  const [weekKey] = useState(() => explicitWeekKey ?? isoWeekKey(new Date()));
+  // Current ISO week is captured once (impure new Date() is allowed in a
+  // useState initialiser). When the caller passes an explicit week key it wins
+  // AND tracks changes — so a week navigator can move between weeks and the
+  // hook re-loads that week's slots (the [weekKey] effect below re-fires).
+  const [fallbackKey] = useState(() => isoWeekKey(new Date()));
+  const weekKey = explicitWeekKey ?? fallbackKey;
   const [week, setWeek] = useState<MealPlanWeek>(() =>
     freshDefaultWeek(weekKey),
   );

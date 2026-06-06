@@ -115,6 +115,26 @@
   --surface-elevated: #ffffff;
   --surface-pressed: rgba(13, 13, 13, 0.04);
   --surface-inverted: #0d0d0d;
+
+  /* ── Meal-type pills — soft, single-purpose colour that encodes WHEN a meal
+     is eaten at a glance (the only saturated colour on the planner). Each is a
+     low-chroma tint background + a readable same-hue text. */
+  --meal-breakfast-bg: #fcefc2;
+  --meal-breakfast-fg: #8a6a16;
+  --meal-lunch-bg: #d4e3fb;
+  --meal-lunch-fg: #2f5aa6;
+  --meal-dinner-bg: #e7dbf7;
+  --meal-dinner-fg: #6a48a3;
+  --meal-snack-bg: #fbddc3;
+  --meal-snack-fg: #b1602a;
+
+  /* Grocery category labels (PANTRY / PRODUCE / …) — a calm periwinkle so the
+     aisle headers read as navigation, not as another accent. */
+  --grocery-cat: #4f74d6;
+
+  /* Warm section divider — the soft cream bar that separates zones without a
+     hard rule (the "premium" tell). Thicker + warmer than a hairline. */
+  --divider-warm: #f1ece1;
 }
 
 /* Y3 W3 — dark-mode token overrides. Designed but not enabled
@@ -143,6 +163,18 @@
   --nourish-border-soft: rgba(255, 255, 255, 0.05);
   --nourish-border: rgba(255, 255, 255, 0.08);
   --nourish-border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Dark meal-type pills: deeper tint + light same-hue text. */
+  --meal-breakfast-bg: #3a3115;
+  --meal-breakfast-fg: #e6c578;
+  --meal-lunch-bg: #1f2f4a;
+  --meal-lunch-fg: #9bbef0;
+  --meal-dinner-bg: #2e2444;
+  --meal-dinner-fg: #c4a9ec;
+  --meal-snack-bg: #43301f;
+  --meal-snack-fg: #eaa873;
+  --grocery-cat: #87a5ee;
+  --divider-warm: rgba(255, 255, 255, 0.08);
 
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-raised:
