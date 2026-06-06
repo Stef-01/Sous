@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { use } from "react";
 import { notFound } from "next/navigation";
+import { CookingPot } from "lucide-react";
+import { lookupDish } from "@/lib/utils/dish-lookup";
 import { getArticleBySlug, getExpertById, ARTICLES } from "@/data/content";
 import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
@@ -101,6 +103,19 @@ export default function ArticleDetailPage({
             {paragraph}
           </p>
         ))}
+
+        {article.relatedRecipeSlug && (
+          <Link
+            href={`/cook/${article.relatedRecipeSlug}`}
+            className="flex items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.99] motion-reduce:active:scale-100"
+          >
+            <CookingPot size={16} aria-hidden />
+            Cook{" "}
+            {lookupDish(article.relatedRecipeSlug)
+              .name.replace(/\s*\([^)]*\)\s*$/, "")
+              .trim()}
+          </Link>
+        )}
 
         <div className="flex flex-wrap gap-2 pt-2">
           {article.tags.map((tag) => (

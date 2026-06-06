@@ -53,6 +53,9 @@ export interface Article extends BaseContentItem {
   readMinutes: number;
   tags: string[];
   featured?: boolean;
+  /** Recipe slug this article teaches — renders a "Cook this" CTA that
+   *  deep-links to the guided cook flow (read → cook). */
+  relatedRecipeSlug?: string;
 }
 
 export interface Reel extends BaseContentItem {

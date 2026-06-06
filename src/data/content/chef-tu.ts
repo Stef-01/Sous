@@ -53,6 +53,7 @@ export const CHEF_TU_ARTICLES: Article[] = [
     authorId: "expert-tu-david-phu",
     readMinutes: 4,
     tags: ["technique", "vietnamese", "seasoning", "chef-tu"],
+    relatedRecipeSlug: "tu-nuoc-cham",
     featured: true,
   },
   {
@@ -76,6 +77,7 @@ export const CHEF_TU_ARTICLES: Article[] = [
     authorId: "expert-tu-david-phu",
     readMinutes: 5,
     tags: ["technique", "vietnamese", "pho", "broth", "chef-tu"],
+    relatedRecipeSlug: "tu-pho-ga",
   },
   {
     id: "art-tu-nuoc-cham",
@@ -97,5 +99,6 @@ export const CHEF_TU_ARTICLES: Article[] = [
     authorId: "expert-tu-david-phu",
     readMinutes: 4,
     tags: ["technique", "vietnamese", "sauce", "balance", "chef-tu"],
+    relatedRecipeSlug: "tu-nuoc-cham",
   },
 ];
