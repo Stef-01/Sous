@@ -25,6 +25,19 @@ export interface ShoppingItem {
   addedAt: string;
   /** True if the user marked it purchased. Stays in list until cleared. */
   bought: boolean;
+  /** Optional display quantity, e.g. "3 tbsp" (threaded from the cook flow). */
+  quantity?: string;
+  /** Recipe this item came from — powers the grocery "Recipes" carousel. */
+  sourceRecipeSlug?: string;
+  sourceRecipeName?: string;
+}
+
+/** A richer add payload. Plain strings are still accepted by addMany. */
+export interface ShoppingAddition {
+  name: string;
+  quantity?: string;
+  sourceRecipeSlug?: string;
+  sourceRecipeName?: string;
 }
 
 interface StoredState {
@@ -68,7 +81,7 @@ export interface UseShoppingListResult {
   mounted: boolean;
   unboughtCount: number;
   add: (name: string) => void;
-  addMany: (names: string[]) => void;
+  addMany: (items: Array<string | ShoppingAddition>) => void;
   remove: (key: string) => void;
   toggleBought: (key: string) => void;
   clear: () => void;
@@ -107,20 +120,34 @@ export function useShoppingList(): UseShoppingListResult {
     });
   }, []);
 
-  const addMany = useCallback((names: string[]) => {
-    if (names.length === 0) return;
+  const addMany = useCallback((entries: Array<string | ShoppingAddition>) => {
+    if (entries.length === 0) return;
     setItems((prev) => {
       let changed = false;
       const existingKeys = new Set(prev.map((i) => i.key));
       const additions: ShoppingItem[] = [];
       const now = new Date().toISOString();
-      for (const raw of names) {
-        const trimmed = raw.trim();
+      for (const entry of entries) {
+        const e: ShoppingAddition =
+          typeof entry === "string" ? { name: entry } : entry;
+        const trimmed = e.name.trim();
         if (!trimmed) continue;
         const key = normalizePantryName(trimmed);
         if (!key || existingKeys.has(key)) continue;
         existingKeys.add(key);
-        additions.push({ key, name: trimmed, addedAt: now, bought: false });
+        additions.push({
+          key,
+          name: trimmed,
+          addedAt: now,
+          bought: false,
+          ...(e.quantity ? { quantity: e.quantity } : {}),
+          ...(e.sourceRecipeSlug
+            ? {
+                sourceRecipeSlug: e.sourceRecipeSlug,
+                sourceRecipeName: e.sourceRecipeName,
+              }
+            : {}),
+        });
         changed = true;
       }
       if (!changed) return prev;

@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
+import { ArrowLeft, Check, ChevronRight, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
@@ -13,6 +15,9 @@ import {
   GROCERY_CATEGORY_ORDER,
   type GroceryCategory,
 } from "@/lib/utils/ingredient-meta";
+import { imageSrc } from "@/lib/image/image-src";
+import { lookupDish } from "@/lib/utils/dish-lookup";
+import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -53,6 +58,20 @@ export default function ShoppingListPage() {
       list: map.get(c)!,
     }));
   }, [unboughtItems]);
+
+  // Distinct source recipes (for the "Recipes" carousel), in first-seen order.
+  const recipes = useMemo(() => {
+    const seen = new Map<string, string>();
+    for (const it of items) {
+      if (it.sourceRecipeSlug && !seen.has(it.sourceRecipeSlug))
+        seen.set(it.sourceRecipeSlug, it.sourceRecipeName ?? "");
+    }
+    return [...seen.keys()].map((slug) => lookupDish(slug));
+  }, [items]);
+
+  const removeRecipe = (slug: string) => {
+    for (const it of items) if (it.sourceRecipeSlug === slug) remove(it.key);
+  };
 
   const handleMoveBoughtToPantry = () => {
     if (boughtItems.length === 0) return;
@@ -116,6 +135,31 @@ export default function ShoppingListPage() {
               <InstacartHint missingCount={unboughtCount} />
             </div>
 
+            {/* Recipes that contributed items — horizontal carousel. */}
+            {recipes.length > 0 && (
+              <section className="mb-1">
+                <p
+                  className="sous-label pb-2 pt-1"
+                  style={{ color: "var(--grocery-cat)" }}
+                >
+                  Recipes
+                </p>
+                <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  {recipes.map((r) => (
+                    <RecipeChip
+                      key={r.slug}
+                      slug={r.slug}
+                      name={r.name}
+                      image={r.image}
+                      tags={r.tags}
+                      cuisine={r.cuisine}
+                      onRemove={() => removeRecipe(r.slug)}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+
             {/* Aisle-grouped, to-buy items. */}
             {grouped.map(({ category, list }, i) => (
               <section key={category}>
@@ -136,6 +180,7 @@ export default function ShoppingListPage() {
                     <GroceryRow
                       key={item.key}
                       name={item.name}
+                      quantity={item.quantity}
                       bought={false}
                       onToggle={() => toggleBought(item.key)}
                       onRemove={() => remove(item.key)}
@@ -159,6 +204,7 @@ export default function ShoppingListPage() {
                     <GroceryRow
                       key={item.key}
                       name={item.name}
+                      quantity={item.quantity}
                       bought
                       onToggle={() => toggleBought(item.key)}
                       onRemove={() => remove(item.key)}
@@ -205,11 +251,13 @@ export default function ShoppingListPage() {
 
 function GroceryRow({
   name,
+  quantity,
   bought,
   onToggle,
   onRemove,
 }: {
   name: string;
+  quantity?: string;
   bought: boolean;
   onToggle: () => void;
   onRemove: () => void;
@@ -235,6 +283,18 @@ function GroceryRow({
         >
           {name}
         </span>
+        {quantity && (
+          <span
+            className={cn(
+              "block truncate text-[13px]",
+              bought
+                ? "text-[var(--nourish-subtext-faint)] line-through"
+                : "text-[var(--nourish-subtext)]",
+            )}
+          >
+            {quantity}
+          </span>
+        )}
       </button>
       {/* Quiet per-item remove — present but subordinate to the checkbox. */}
       <button
@@ -261,5 +321,66 @@ function GroceryRow({
         )}
       </button>
     </li>
+  );
+}
+
+/** A recipe card in the grocery "Recipes" carousel (image + name + View recipe
+ *  + a remove that clears that recipe's items). */
+function RecipeChip({
+  slug,
+  name,
+  image,
+  tags,
+  cuisine,
+  onRemove,
+}: {
+  slug: string;
+  name: string;
+  image: string | null;
+  tags: string[];
+  cuisine: string | null;
+  onRemove: () => void;
+}) {
+  const label = name.replace(/\s*\([^)]*\)\s*$/, "").trim() || name;
+  return (
+    <div className="relative w-[176px] shrink-0 overflow-hidden rounded-2xl border border-[var(--nourish-border-strong)] bg-white">
+      <div className="relative aspect-[4/3] bg-[var(--nourish-cream)]">
+        {image ? (
+          <Image
+            src={imageSrc(image)}
+            alt=""
+            fill
+            sizes="176px"
+            className="object-cover"
+          />
+        ) : (
+          <div
+            className="flex h-full w-full items-center justify-center text-3xl"
+            aria-hidden
+          >
+            {getDishEmoji(tags, cuisine ?? "")}
+          </div>
+        )}
+        <button
+          type="button"
+          onClick={onRemove}
+          aria-label={`Remove ${label} items`}
+          className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[var(--nourish-subtext)] backdrop-blur-sm transition-colors hover:text-[var(--nourish-dark)]"
+        >
+          <X size={13} />
+        </button>
+      </div>
+      <div className="p-2.5">
+        <p className="truncate text-[14px] font-semibold text-[var(--nourish-dark)]">
+          {label}
+        </p>
+        <Link
+          href={`/cook/${slug}`}
+          className="mt-0.5 inline-flex items-center gap-0.5 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
+        >
+          View recipe <ChevronRight size={13} aria-hidden />
+        </Link>
+      </div>
+    </div>
   );
 }

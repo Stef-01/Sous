@@ -142,10 +142,21 @@ export function IngredientList({
   const { addMany: addToShopping } = useShoppingList();
 
   const handleAddMissingToShopping = () => {
-    const missing: string[] = [];
+    const missing: Array<{
+      name: string;
+      quantity?: string;
+      sourceRecipeSlug?: string;
+      sourceRecipeName?: string;
+    }> = [];
     for (const section of effectiveSections) {
       for (const item of section.ingredients) {
-        if (!checked.has(item.id)) missing.push(item.name);
+        if (!checked.has(item.id))
+          missing.push({
+            name: item.name,
+            quantity: item.quantity || undefined,
+            sourceRecipeSlug: dishSlug || undefined,
+            sourceRecipeName: recipeName || undefined,
+          });
       }
     }
     if (missing.length === 0) return;
