@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { DailyNutritionCard } from "@/components/path/daily-nutrition-card";
+import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
@@ -190,9 +191,11 @@ export default function PathPage() {
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
         {/* Today's nutrition — the diary rollup; only renders once a cook is
-            logged today (the macro ring for the whole day vs daily targets). */}
-        <div className="mx-auto max-w-md page-x pt-4">
+            logged today (the macro ring for the whole day vs daily targets).
+            The weekly trend sits below it once a few days are logged. */}
+        <div className="mx-auto max-w-md page-x space-y-3 pt-4">
           <DailyNutritionCard />
+          <WeeklyTrendCard />
         </div>
 
         {/* Looking back: lifetime stats + this week's goal. Demoted below the

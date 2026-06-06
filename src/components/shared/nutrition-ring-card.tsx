@@ -14,6 +14,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { proteinQuality } from "@/lib/nutrition/protein-quality";
+import { isNutrientDense } from "@/lib/nutrition/nutrient-density";
 import {
   NUTRIENT_DISPLAY,
   NUTRIENT_GROUP_ORDER,
@@ -307,6 +308,13 @@ export function NutritionRingCard({
           </span>{" "}
           per serving
         </p>
+      )}
+
+      {/* W24: lots of micronutrients per calorie — a quiet quality cue. */}
+      {isNutrientDense(nutrition) && (
+        <span className="inline-flex w-fit rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-green)]">
+          Nutrient-dense
+        </span>
       )}
 
       {/* Macronutrient targets — vs FDA daily value. */}

@@ -11,6 +11,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
+import {
+  computeWeeklyTrend,
+  type WeeklyTrend,
+} from "@/lib/nutrition/weekly-trend";
 
 export interface DiaryEntry {
   slug: string;
@@ -141,4 +145,34 @@ export function useNutritionDiary(date = new Date()) {
     removeEntry,
     dayNutrition,
   };
+}
+
+/**
+ * useNutritionWeek — the last 7 days of the diary rolled into a per-nutrient
+ * trend (which nutrients are persistently short). Read-only; same hydration
+ * guard as the diary hook.
+ */
+export function useNutritionWeek(): { mounted: boolean } & WeeklyTrend {
+  const [store, setStore] = useState<Store>({});
+  const [mounted, setMounted] = useState(false);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount */
+  useEffect(() => {
+    setStore(read());
+    setMounted(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const result = useMemo(() => {
+    const now = new Date();
+    const perDay: (PerServingNutrition | null)[] = [];
+    for (let i = 0; i < 7; i += 1) {
+      const d = new Date(now);
+      d.setDate(now.getDate() - i);
+      perDay.push(aggregateDay(store[dayKey(d)] ?? EMPTY_ENTRIES));
+    }
+    return computeWeeklyTrend(perDay);
+  }, [store]);
+
+  return { mounted, ...result };
 }
