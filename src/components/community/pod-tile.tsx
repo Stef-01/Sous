@@ -107,9 +107,6 @@ export function PodTile() {
               <p className="font-serif text-sm font-semibold text-[var(--nourish-dark)]">
                 Cook with friends
               </p>
-              <p className="text-[11px] text-[var(--nourish-subtext)]">
-                Form a pod, cook the same recipe each week, share photos Sunday.
-              </p>
             </div>
             <ChevronRight
               size={16}

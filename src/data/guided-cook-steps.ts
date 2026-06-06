@@ -5,6 +5,10 @@
  */
 
 import { CHEF_TU_SIDE_FLOWS, CHEF_TU_MEAL_FLOWS } from "./chef-tu-cook-steps";
+import {
+  CHEF_TU_SIDE_FLOWS_2,
+  CHEF_TU_MEAL_FLOWS_2,
+} from "./chef-tu-cook-steps-2";
 
 export interface StaticCookStep {
   phase: "cook";
@@ -43,6 +47,7 @@ export interface StaticDishData {
 
 export const guidedCookData: Record<string, StaticDishData> = {
   ...CHEF_TU_SIDE_FLOWS,
+  ...CHEF_TU_SIDE_FLOWS_2,
   "caesar-salad": {
     name: "Caesar Salad",
     slug: "caesar-salad",
@@ -15281,6 +15286,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
 
 export const guidedCookMeals: Record<string, StaticDishData> = {
   ...CHEF_TU_MEAL_FLOWS,
+  ...CHEF_TU_MEAL_FLOWS_2,
   "masoor-dal": {
     name: "Masoor Dal",
     slug: "masoor-dal",
