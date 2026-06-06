@@ -123,11 +123,9 @@ export function FullscreenSwipeCard({
 }
 
 export function QueueComplete({
-  dismissed,
   onReset,
   onClose,
 }: {
-  dismissed: QuestDish[];
   onReset: () => void;
   onClose: () => void;
 }) {

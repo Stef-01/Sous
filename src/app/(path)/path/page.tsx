@@ -19,6 +19,7 @@ import {
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
+import { DailyNutritionCard } from "@/components/path/daily-nutrition-card";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
@@ -187,6 +188,12 @@ export default function PathPage() {
             page. The active node IS "what's next" (tap it for the detail +
             cook CTA), so there's no separate Up-Next card duplicating it. */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
+
+        {/* Today's nutrition — the diary rollup; only renders once a cook is
+            logged today (the macro ring for the whole day vs daily targets). */}
+        <div className="mx-auto max-w-md page-x pt-4">
+          <DailyNutritionCard />
+        </div>
 
         {/* Looking back: lifetime stats + this week's goal. Demoted below the
             hero so the dashboard never crowds the top, and merged into ONE

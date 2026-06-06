@@ -10,19 +10,47 @@
  * per-serving values. Both numbers come from the USDA composition engine.
  */
 
+import { Check, Plus } from "lucide-react";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
+import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
+import { toast } from "@/lib/hooks/use-toast";
 
 export function CookNutritionReadout({
   perServing,
   servings,
+  slug,
+  name,
 }: {
   perServing: PerServingNutrition;
   servings: number;
+  slug?: string;
+  name?: string;
 }) {
+  const { logCook, entries } = useNutritionDiary();
+  const logged = !!slug && entries.some((e) => e.slug === slug);
+
   return (
     <div className="p-4">
       <NutritionRingCard nutrition={perServing} servings={servings} />
+      {slug && name && (
+        <button
+          type="button"
+          onClick={() => {
+            logCook(slug, name, servings);
+            toast.push({
+              variant: "success",
+              title: "Added to today's nutrition",
+              body: "See it on the Path tab",
+              dedupKey: "diary-log",
+            });
+          }}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-2.5 text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
+        >
+          {logged ? <Check size={15} /> : <Plus size={15} />}
+          {logged ? "Logged today" : "Add to today's nutrition"}
+        </button>
+      )}
     </div>
   );
 }

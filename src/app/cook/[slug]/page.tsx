@@ -751,6 +751,8 @@ export default function GuidedCookPage({
                     <CookNutritionReadout
                       perServing={dishNutrition.perServing}
                       servings={servings}
+                      slug={dish.slug}
+                      name={dish.name}
                     />
                   )}
               </div>

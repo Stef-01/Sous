@@ -562,11 +562,7 @@ function MealSwipeQueueOverlay({
             ))}
           </AnimatePresence>
         ) : (
-          <QueueComplete
-            dismissed={dismissed}
-            onReset={resetDeck}
-            onClose={onClose}
-          />
+          <QueueComplete onReset={resetDeck} onClose={onClose} />
         )}
 
         {activeDish && therapeuticsActive() && (
