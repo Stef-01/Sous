@@ -11,6 +11,7 @@
  */
 
 import type { PerServingNutrition } from "@/types/nutrition";
+import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 
 export function CookNutritionReadout({
   perServing,
@@ -19,30 +20,15 @@ export function CookNutritionReadout({
   perServing: PerServingNutrition;
   servings: number;
 }) {
-  const round = (n: number) => Math.round(n);
-
   return (
     <div className="p-4">
-      <p className="sous-label">Estimated nutrition</p>
-      <div className="mt-2 flex items-baseline gap-1.5">
-        <span className="font-serif text-2xl leading-none text-[var(--nourish-dark)]">
-          {round(perServing.calories)}
-        </span>
-        <span className="text-xs text-[var(--nourish-subtext)]">
-          cal / serving
-        </span>
-      </div>
-      <p className="mt-1.5 text-xs text-[var(--nourish-subtext)]">
-        {round(perServing.protein_g ?? 0)} g protein ·{" "}
-        {round(perServing.totalCarbs_g ?? 0)} g carbs ·{" "}
-        {round(perServing.totalFat_g ?? 0)} g fat · per serving
-      </p>
-      <p className="mt-2.5 border-t border-neutral-100 pt-2.5 text-[11px] leading-relaxed text-[var(--nourish-subtext-faint)]">
+      <NutritionRingCard nutrition={perServing} />
+      <p className="mt-4 border-t border-neutral-100 pt-3 text-[11px] leading-relaxed text-[var(--nourish-subtext-faint)]">
         Whole batch ({servings} {servings === 1 ? "serving" : "servings"}) ≈{" "}
         <span className="font-semibold text-[var(--nourish-subtext)]">
-          {round(perServing.calories * servings)} cal
+          {Math.round(perServing.calories * servings)} cal
         </span>{" "}
-        — recomputes from the ingredients as you move the slider.
+        — recomputes as you move the slider.
       </p>
     </div>
   );

@@ -1,0 +1,349 @@
+"use client";
+
+/**
+ * NutritionRingCard — the macro-ring nutrition view (energy donut + macro
+ * legend + target bars + key micros + an expandable complete-nutrient summary),
+ * adapted to Sous's cream theme and --data-* macro palette. Reusable across the
+ * cook flow, the Today "Info" sheet, and side-pairing detail.
+ *
+ * Dependency-free: the ring is hand-rolled SVG (stroke-dasharray arcs).
+ */
+
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
+import type { PerServingNutrition } from "@/types/nutrition";
+import { FDA_DV_4PLUS } from "@/data/nutrition/fda-dv";
+
+// FDA reference daily values for the macro target bars (21 CFR 101.9, 2000kcal).
+const MACRO_DV = { energy: 2000, protein: 50, carbs: 275, fat: 78 };
+
+const MACRO = {
+  protein: { label: "Protein", color: "var(--data-protein)", kcalPerG: 4 },
+  carbs: { label: "Carbs", color: "var(--data-carb)", kcalPerG: 4 },
+  fat: { label: "Fat", color: "var(--data-fat)", kcalPerG: 9 },
+} as const;
+
+function pct(n: number, d: number): number {
+  if (!d) return 0;
+  return Math.round((n / d) * 100);
+}
+
+/** Macro donut: three arcs sized by each macro's share of calories. */
+function MacroRing({
+  calories,
+  shares,
+}: {
+  calories: number;
+  shares: { protein: number; carbs: number; fat: number };
+}) {
+  const r = 52;
+  const C = 2 * Math.PI * r;
+  const order = ["protein", "carbs", "fat"] as const;
+  let offset = 0;
+  return (
+    <svg viewBox="0 0 128 128" className="h-[128px] w-[128px] shrink-0">
+      <circle
+        cx="64"
+        cy="64"
+        r={r}
+        fill="none"
+        stroke="var(--nourish-border)"
+        strokeWidth="12"
+      />
+      {order.map((k) => {
+        const frac = shares[k];
+        const len = frac * C;
+        const seg = (
+          <circle
+            key={k}
+            cx="64"
+            cy="64"
+            r={r}
+            fill="none"
+            stroke={MACRO[k].color}
+            strokeWidth="12"
+            strokeLinecap="round"
+            strokeDasharray={`${Math.max(0, len - 4)} ${C - Math.max(0, len - 4)}`}
+            strokeDashoffset={-offset}
+            transform="rotate(-90 64 64)"
+          />
+        );
+        offset += len;
+        return seg;
+      })}
+      <text
+        x="64"
+        y="60"
+        textAnchor="middle"
+        className="fill-[var(--nourish-dark)] text-[26px] font-bold"
+      >
+        {Math.round(calories)}
+      </text>
+      <text
+        x="64"
+        y="78"
+        textAnchor="middle"
+        className="fill-[var(--nourish-subtext)] text-[12px]"
+      >
+        kcal
+      </text>
+    </svg>
+  );
+}
+
+/** A target row: label, value/target, % bar. */
+function TargetRow({
+  label,
+  value,
+  target,
+  unit,
+  color,
+}: {
+  label: string;
+  value: number;
+  target: number;
+  unit: string;
+  color?: string;
+}) {
+  const p = pct(value, target);
+  const over = p >= 100;
+  return (
+    <div className="space-y-1">
+      <div className="flex items-baseline justify-between gap-2 text-[13px]">
+        <span className="text-[var(--nourish-dark)]">
+          <span className="font-semibold">{label}</span>{" "}
+          <span className="text-[var(--nourish-subtext)]">
+            {value.toFixed(value < 10 ? 1 : 0)} / {target} {unit}
+          </span>
+        </span>
+        <span
+          className={cn(
+            "shrink-0 font-semibold tabular-nums",
+            over
+              ? "text-[var(--nourish-green)]"
+              : "text-[var(--nourish-subtext)]",
+          )}
+        >
+          {p}%
+        </span>
+      </div>
+      <span className="block h-1.5 overflow-hidden rounded-full bg-[var(--nourish-border)]">
+        <span
+          className="block h-full rounded-full"
+          style={{
+            width: `${Math.min(100, p)}%`,
+            backgroundColor: over
+              ? "var(--nourish-green)"
+              : (color ?? "var(--nourish-subtext)"),
+          }}
+        />
+      </span>
+    </div>
+  );
+}
+
+interface MicroRow {
+  key: string;
+  label: string;
+  value: number;
+  unit: string;
+  dv: number;
+}
+
+/** Build the micro rows (value + %DV) from the per-serving vector. */
+function buildMicros(n: PerServingNutrition): MicroRow[] {
+  const map: Array<[keyof PerServingNutrition, string]> = [
+    ["fiber_g", "fiber"],
+    ["calcium_mg", "calcium"],
+    ["iron_mg", "iron"],
+    ["potassium_mg", "potassium"],
+    ["magnesium_mg", "magnesium"],
+    ["zinc_mg", "zinc"],
+    ["vitaminA_mcg_rae", "vitaminA"],
+    ["vitaminD_mcg", "vitaminD"],
+    ["vitaminB12_mcg", "vitaminB12"],
+    ["omega3_g", "omega3"],
+    ["choline_mg", "choline"],
+  ];
+  const out: MicroRow[] = [];
+  for (const [field, dvKey] of map) {
+    const meta = FDA_DV_4PLUS[dvKey as keyof typeof FDA_DV_4PLUS];
+    const value = (n[field] as number) ?? 0;
+    if (!meta || value <= 0) continue;
+    out.push({
+      key: dvKey,
+      label: meta.displayName,
+      value,
+      unit: meta.unit,
+      dv: meta.dv4plus,
+    });
+  }
+  return out.sort((a, b) => pct(b.value, b.dv) - pct(a.value, a.dv));
+}
+
+function MicroBar({ row }: { row: MicroRow }) {
+  const p = pct(row.value, row.dv);
+  const strong = p >= 100;
+  const good = p >= 20;
+  return (
+    <div className="space-y-1">
+      <div className="flex items-baseline justify-between gap-2 text-[13px]">
+        <span className="truncate text-[var(--nourish-dark)]">{row.label}</span>
+        <span
+          className={cn(
+            "shrink-0 font-semibold tabular-nums",
+            strong
+              ? "text-[var(--nourish-green)]"
+              : "text-[var(--nourish-subtext)]",
+          )}
+        >
+          {p}%
+        </span>
+      </div>
+      <span className="block h-1.5 overflow-hidden rounded-full bg-[var(--nourish-border)]">
+        <span
+          className="block h-full rounded-full"
+          style={{
+            width: `${Math.min(100, p)}%`,
+            backgroundColor: strong
+              ? "var(--nourish-green)"
+              : good
+                ? "var(--nourish-light-green)"
+                : "var(--nourish-subtext-faint)",
+          }}
+        />
+      </span>
+    </div>
+  );
+}
+
+export function NutritionRingCard({
+  nutrition,
+  className,
+}: {
+  nutrition: PerServingNutrition;
+  className?: string;
+}) {
+  const [showAll, setShowAll] = useState(false);
+
+  const protein = nutrition.protein_g ?? 0;
+  const carbs = nutrition.totalCarbs_g ?? 0;
+  const fat = nutrition.totalFat_g ?? 0;
+  const pCal = protein * MACRO.protein.kcalPerG;
+  const cCal = carbs * MACRO.carbs.kcalPerG;
+  const fCal = fat * MACRO.fat.kcalPerG;
+  const totalMacroCal = pCal + cCal + fCal || 1;
+  const shares = {
+    protein: pCal / totalMacroCal,
+    carbs: cCal / totalMacroCal,
+    fat: fCal / totalMacroCal,
+  };
+  const micros = buildMicros(nutrition);
+  const keyMicros = micros.slice(0, 4);
+
+  const legend: Array<["protein" | "carbs" | "fat", number]> = [
+    ["protein", protein],
+    ["carbs", carbs],
+    ["fat", fat],
+  ];
+
+  return (
+    <div className={cn("space-y-5", className)}>
+      {/* Energy summary — ring + macro legend. */}
+      <div className="flex items-center gap-4">
+        <MacroRing calories={nutrition.calories} shares={shares} />
+        <div className="min-w-0 flex-1 space-y-1.5">
+          {legend.map(([k, grams]) => (
+            <p key={k} className="text-[15px]">
+              <span style={{ color: MACRO[k].color }} className="font-medium">
+                {MACRO[k].label} ({Math.round(shares[k] * 100)}%)
+              </span>{" "}
+              <span className="font-semibold text-[var(--nourish-dark)]">
+                {grams.toFixed(1)}g
+              </span>
+            </p>
+          ))}
+        </div>
+      </div>
+
+      {/* Macronutrient targets — vs FDA daily value. */}
+      <div className="space-y-3">
+        <p className="sous-label" style={{ color: "var(--data-protein)" }}>
+          Daily targets
+        </p>
+        <TargetRow
+          label="Energy"
+          value={nutrition.calories}
+          target={MACRO_DV.energy}
+          unit="kcal"
+        />
+        <TargetRow
+          label="Protein"
+          value={protein}
+          target={MACRO_DV.protein}
+          unit="g"
+          color={MACRO.protein.color}
+        />
+        <TargetRow
+          label="Carbs"
+          value={carbs}
+          target={MACRO_DV.carbs}
+          unit="g"
+          color={MACRO.carbs.color}
+        />
+        <TargetRow
+          label="Fat"
+          value={fat}
+          target={MACRO_DV.fat}
+          unit="g"
+          color={MACRO.fat.color}
+        />
+      </div>
+
+      {/* Key micronutrients. */}
+      {keyMicros.length > 0 && (
+        <div className="space-y-3">
+          <p className="sous-label" style={{ color: "var(--data-protein)" }}>
+            Key nutrients
+          </p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+            {keyMicros.map((row) => (
+              <MicroBar key={row.key} row={row} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Expandable complete nutrient summary. */}
+      {micros.length > keyMicros.length && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowAll((s) => !s)}
+            className="flex w-full items-center justify-between py-1 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
+          >
+            {showAll ? "Hide full breakdown" : "Complete nutrient summary"}
+            <ChevronDown
+              size={15}
+              className={cn("transition-transform", showAll && "rotate-180")}
+              aria-hidden
+            />
+          </button>
+          {showAll && (
+            <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-3">
+              {micros.slice(keyMicros.length).map((row) => (
+                <MicroBar key={row.key} row={row} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      <p className="text-[11px] leading-snug text-[var(--nourish-subtext-faint)]">
+        Per serving · composed from USDA data · % of FDA Daily Value · an
+        estimate.
+      </p>
+    </div>
+  );
+}
