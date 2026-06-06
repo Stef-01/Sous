@@ -116,23 +116,33 @@ Ingest is reproducible: `node scripts/ingest-chef-tu.mjs` (idempotent — aborts
 
 ## 5. Images — separate placeholder / reshoot section
 
-Per the brief, the dishes' real photos are **his copyrighted work** and the team
-will reshoot aesthetic plate photography. Therefore:
+**Authorization update:** the partner chef has explicitly authorized Sous to
+incorporate his recipe-library photos, so the 33 images are now **self-hosted
+and live** (interim) — the aesthetic plate reshoot remains a future enhancement
+that will replace them.
 
-- **No image is downloaded into the repo.** Every dish ships with
-  `heroImageUrl/imageUrl = null` → the app's existing **gradient + emoji
-  fallback** until the photoshoot drops in original `/food_images/*.png`.
-- The **exact source-image URLs** (what each dish looks like) are recorded
-  ONLY in **`src/data/chef-tu-image-references.json`** as reshoot reference for
-  the photo team — linked, never copied, never shipped. 33 references, each
-  flagged `status: "reshoot-needed"`, with the source page + the dish's
-  prep/cook time + servings (captured for the next phase).
+- **Images incorporated (33/33).** His photos were downloaded into the existing
+  local store **`public/food_images/tu_*.jpg`** (self-hosted alongside the other
+  130 food images and the R2 CDN migration path — not hotlinked from imgur), and
+  each `tu-` dish's `heroImageUrl`/`imageUrl` now points at its local file. A
+  dish only gets an image if the file actually exists on disk, so nothing broken
+  can ship; otherwise it falls back to the gradient+emoji placeholder.
+- **`src/data/chef-tu-image-references.json`** is the provenance + reshoot map:
+  each entry carries `sourcePageUrl`, the original `sourceImageUrl`, the
+  self-hosted `localPath`, and `status: "incorporated"` (flips back to a reshoot
+  status when the photoshoot repoints it to original `/food_images/*.png`).
+- **Adversarial visual QA:** every downloaded image was opened and checked by a
+  fan-out of vision agents against its expected dish — 33/33 verified, 0
+  mismatches (1 noted as a stylistic colour variant of the right dish, kept).
+- Pipeline (reproducible): `node scripts/download-chef-tu-images.mjs`
+  (fetch + JPEG-magic + size validation) → visual-verify workflow →
+  `node scripts/wire-chef-tu-images.mjs` (file-existence-guarded wiring).
 
 ---
 
 ## 6. Next steps (not in this pass)
 
-1. **Photoshoot** → replace the 33 `null` images with original `/food_images/*.png`; flip `heroImageUrl`/`imageUrl`.
+1. **Aesthetic reshoot** (future enhancement) → replace the 33 interim self-hosted `tu_*.jpg` photos with original plate photography; repoint `heroImageUrl`/`imageUrl` + the reference map.
 2. **Guided-cook flows** (Mission→Grab→Cook→Win) for the iconic dishes — author from the factual steps on each source page (own wording), add to `guided-cook-steps.ts`.
 3. **Nutrition** — run the ingredient registry/resolver over the new dishes once guided-cook ingredient lists exist.
 4. **Cookbook wishlist** (do NOT ingest — needs his permission to reproduce): Cơm Tấm, Lá Sả lemongrass paste, Tuna Bloodline Tartare, Salmon-head sour soup, Truffled Garlic Noodles, Bánh Canh Carbonara, Dungeness Crab Donburi, Roasted Duck Phở, and others from _The Memory of Taste_.

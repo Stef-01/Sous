@@ -1,5 +1,5 @@
 {
-  "_README": "PLACEHOLDER / RESHOOT REFERENCE ONLY. These are the source image URLs from Chef Tu David Phu's public recipe pages (cheftu.com), recorded so the partner photoshoot team knows what each dish looks like. They are COPYRIGHTED — not downloaded into the repo and NOT used by the app (every dish ships with heroImageUrl=null → gradient+emoji fallback until the aesthetic plate photoshoot replaces them with original /food_images/*.png).",
+  "_README": "Chef Tu David Phu's recipe-library photos, incorporated with the partner chef's authorization. `localPath` is the self-hosted copy now used by the app (public/food_images/*.jpg); `sourceImageUrl` is the original on his site. These interim photos will be replaced by the original aesthetic plate photoshoot, after which `status` flips back to reshoot and localPath is repointed to the new /food_images/*.png.",
   "creator": "Tu David Phu",
   "library": "https://cheftu.com/recipelibrary",
   "count": 33,
@@ -12,7 +12,8 @@
       "sourceImageUrl": "https://i.imgur.com/6hFOojG.jpg",
       "totalTimeMinutes": 780,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_pho_dac_biet.jpg"
     },
     {
       "id": "tu-pho-ga",
@@ -22,7 +23,8 @@
       "sourceImageUrl": "https://i.imgur.com/f4VbmoZ.jpeg",
       "totalTimeMinutes": 160,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_pho_ga.jpg"
     },
     {
       "id": "tu-turkey-pho",
@@ -32,7 +34,8 @@
       "sourceImageUrl": "https://i.imgur.com/hj6HSMS.jpg",
       "totalTimeMinutes": 210,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_turkey_pho.jpg"
     },
     {
       "id": "tu-soondubu-jjigae",
@@ -42,7 +45,8 @@
       "sourceImageUrl": "https://i.imgur.com/MUxoiWl.jpg",
       "totalTimeMinutes": 125,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_soondubu_jjigae.jpg"
     },
     {
       "id": "tu-bun-rieu",
@@ -52,7 +56,8 @@
       "sourceImageUrl": "https://i.imgur.com/QjiMfZY.jpeg",
       "totalTimeMinutes": 270,
       "servings": 8,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_bun_rieu.jpg"
     },
     {
       "id": "tu-banh-canh-gio-heo-tom",
@@ -62,7 +67,8 @@
       "sourceImageUrl": "https://i.imgur.com/SDZVDd3.jpeg",
       "totalTimeMinutes": 240,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_banh_canh_gio_heo_tom.jpg"
     },
     {
       "id": "tu-mi-hoanh-thanh",
@@ -72,7 +78,8 @@
       "sourceImageUrl": "https://i.imgur.com/6avOzqX.jpeg",
       "totalTimeMinutes": 135,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_mi_hoanh_thanh.jpg"
     },
     {
       "id": "tu-bun-bo-hue",
@@ -82,7 +89,8 @@
       "sourceImageUrl": "https://i.imgur.com/JwZh56P.jpeg",
       "totalTimeMinutes": 450,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_bun_bo_hue.jpg"
     },
     {
       "id": "tu-mi-xao-gion",
@@ -92,7 +100,8 @@
       "sourceImageUrl": "https://i.imgur.com/Y87KMdO.jpeg",
       "totalTimeMinutes": 25,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_mi_xao_gion.jpg"
     },
     {
       "id": "tu-bun-ga-nuong",
@@ -102,7 +111,8 @@
       "sourceImageUrl": "https://i.imgur.com/1VmgbNo.jpg",
       "totalTimeMinutes": 75,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_bun_ga_nuong.jpg"
     },
     {
       "id": "tu-bun-nem-nuong",
@@ -112,7 +122,8 @@
       "sourceImageUrl": "https://i.imgur.com/Ej39KIJ.jpg",
       "totalTimeMinutes": 90,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_bun_nem_nuong.jpg"
     },
     {
       "id": "tu-com-ga-hai-nam",
@@ -122,7 +133,8 @@
       "sourceImageUrl": "https://i.imgur.com/CkZjP0G.jpg",
       "totalTimeMinutes": 60,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_com_ga_hai_nam.jpg"
     },
     {
       "id": "tu-com-suon",
@@ -132,7 +144,8 @@
       "sourceImageUrl": "https://i.imgur.com/28r6I09.jpg",
       "totalTimeMinutes": 535,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_com_suon.jpg"
     },
     {
       "id": "tu-thit-kho-trung",
@@ -142,7 +155,8 @@
       "sourceImageUrl": "https://i.imgur.com/paDsJSA.jpg",
       "totalTimeMinutes": 90,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_thit_kho_trung.jpg"
     },
     {
       "id": "tu-char-siu-banh-mi",
@@ -152,7 +166,8 @@
       "sourceImageUrl": "https://i.imgur.com/awDtAmi.jpeg",
       "totalTimeMinutes": 70,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_char_siu_banh_mi.jpg"
     },
     {
       "id": "tu-banh-mi-trung-op-la",
@@ -162,7 +177,8 @@
       "sourceImageUrl": "https://i.imgur.com/oE05IQP.jpg",
       "totalTimeMinutes": 10,
       "servings": 2,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_banh_mi_trung_op_la.jpg"
     },
     {
       "id": "tu-ga-kho-gung",
@@ -172,7 +188,8 @@
       "sourceImageUrl": "https://i.imgur.com/QE9nIT9.jpeg",
       "totalTimeMinutes": 60,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_ga_kho_gung.jpg"
     },
     {
       "id": "tu-ga-chien",
@@ -182,7 +199,8 @@
       "sourceImageUrl": "https://i.imgur.com/WQ1Mgi3.jpeg",
       "totalTimeMinutes": 120,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_ga_chien.jpg"
     },
     {
       "id": "tu-thit-heo-quay",
@@ -192,7 +210,8 @@
       "sourceImageUrl": "https://i.imgur.com/uTyWgj7.jpg",
       "totalTimeMinutes": 180,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_thit_heo_quay.jpg"
     },
     {
       "id": "tu-nuoc-cham",
@@ -202,7 +221,8 @@
       "sourceImageUrl": "https://i.imgur.com/3S239dq.jpg",
       "totalTimeMinutes": 14,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_nuoc_cham.jpg"
     },
     {
       "id": "tu-steamed-jasmine-rice",
@@ -212,7 +232,8 @@
       "sourceImageUrl": "https://i.imgur.com/LBF9srd.jpg",
       "totalTimeMinutes": 35,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_steamed_jasmine_rice.jpg"
     },
     {
       "id": "tu-garlic-noodles",
@@ -222,7 +243,8 @@
       "sourceImageUrl": "https://i.imgur.com/cAWQa4T.jpg",
       "totalTimeMinutes": 30,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_garlic_noodles.jpg"
     },
     {
       "id": "tu-rau-muong",
@@ -232,7 +254,8 @@
       "sourceImageUrl": "https://i.imgur.com/PJBXYlG.jpg",
       "totalTimeMinutes": 45,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_rau_muong.jpg"
     },
     {
       "id": "tu-canh-cu-cai",
@@ -242,7 +265,8 @@
       "sourceImageUrl": "https://i.imgur.com/MGYJYRG.jpg",
       "totalTimeMinutes": 50,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_canh_cu_cai.jpg"
     },
     {
       "id": "tu-goi-ga",
@@ -252,7 +276,8 @@
       "sourceImageUrl": "https://i.imgur.com/DblW0IK.jpg",
       "totalTimeMinutes": 65,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_goi_ga.jpg"
     },
     {
       "id": "tu-ca-tai-chanh",
@@ -262,7 +287,8 @@
       "sourceImageUrl": "https://i.imgur.com/31xPSOO.jpg",
       "totalTimeMinutes": 40,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_ca_tai_chanh.jpg"
     },
     {
       "id": "tu-banh-tom",
@@ -272,7 +298,8 @@
       "sourceImageUrl": "https://i.imgur.com/6JI5rMV.jpg",
       "totalTimeMinutes": 105,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_banh_tom.jpg"
     },
     {
       "id": "tu-cha-trung-hap",
@@ -282,7 +309,8 @@
       "sourceImageUrl": "https://i.imgur.com/R0k0IgE.jpg",
       "totalTimeMinutes": 75,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_cha_trung_hap.jpg"
     },
     {
       "id": "tu-cha-gio-khoai-mon",
@@ -292,7 +320,8 @@
       "sourceImageUrl": "https://i.imgur.com/54LAiMo.jpg",
       "totalTimeMinutes": 180,
       "servings": 4,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_cha_gio_khoai_mon.jpg"
     },
     {
       "id": "tu-vietnamese-coffee-tiramisu",
@@ -302,7 +331,8 @@
       "sourceImageUrl": "https://i.imgur.com/rhAAL6b.jpg",
       "totalTimeMinutes": 60,
       "servings": 6,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_vietnamese_coffee_tiramisu.jpg"
     },
     {
       "id": "tu-banh-chuoi-nuong",
@@ -312,7 +342,8 @@
       "sourceImageUrl": "https://i.imgur.com/vrXh4qB.jpeg",
       "totalTimeMinutes": 90,
       "servings": 8,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_banh_chuoi_nuong.jpg"
     },
     {
       "id": "tu-bac-xiu",
@@ -322,7 +353,8 @@
       "sourceImageUrl": "https://i.imgur.com/sZKd1ss.jpg",
       "totalTimeMinutes": 15,
       "servings": 1,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_bac_xiu.jpg"
     },
     {
       "id": "tu-brown-sugar-boba-coffee",
@@ -332,7 +364,8 @@
       "sourceImageUrl": "https://i.imgur.com/wIOwJ39.jpg",
       "totalTimeMinutes": 8,
       "servings": 1,
-      "status": "reshoot-needed"
+      "status": "incorporated",
+      "localPath": "/food_images/tu_brown_sugar_boba_coffee.jpg"
     }
   ]
 }

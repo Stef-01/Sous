@@ -1556,7 +1556,7 @@
     "id": "tu-pho-dac-biet",
     "name": "Phở Đặc Biệt (Special Beef Pho)",
     "aliases": ["pho dac biet", "special beef pho", "pho", "beef pho"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_pho_dac_biet.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1577,7 +1577,7 @@
     "id": "tu-pho-ga",
     "name": "Phở Gà (Chicken Pho)",
     "aliases": ["pho ga", "chicken pho"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_pho_ga.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1598,7 +1598,7 @@
     "id": "tu-turkey-pho",
     "name": "Phở Gà Tây (Turkey Pho)",
     "aliases": ["turkey pho", "pho ga tay", "leftover turkey pho"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_turkey_pho.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1624,7 +1624,7 @@
       "spicy tofu stew",
       "korean tofu stew"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_soondubu_jjigae.jpg",
     "sidePool": [
       "tu-steamed-jasmine-rice",
       "tu-rau-muong",
@@ -1644,7 +1644,7 @@
     "id": "tu-bun-rieu",
     "name": "Bún Riêu (Crab & Tomato Noodle Soup)",
     "aliases": ["bun rieu", "crab noodle soup", "tomato crab soup"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_bun_rieu.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1669,7 +1669,7 @@
       "pork shrimp tapioca noodle soup",
       "banh canh gio heo"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_banh_canh_gio_heo_tom.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "tu-rau-muong",
@@ -1689,7 +1689,7 @@
     "id": "tu-mi-hoanh-thanh",
     "name": "Mì Hoành Thánh (Combination Wonton Egg Noodle Soup)",
     "aliases": ["mi hoanh thanh", "wonton egg noodle soup", "wonton mi"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_mi_hoanh_thanh.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "tu-rau-muong",
@@ -1709,7 +1709,7 @@
     "id": "tu-bun-bo-hue",
     "name": "Bún Bò Huế (Spicy Beef & Pork Noodle Soup)",
     "aliases": ["bun bo hue", "spicy beef noodle soup", "hue beef noodle"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_bun_bo_hue.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1730,7 +1730,7 @@
     "id": "tu-mi-xao-gion",
     "name": "Mì Xào Giòn (Crispy Bird's Nest Noodles)",
     "aliases": ["mi xao gion", "crispy birds nest", "crispy fried noodles"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_mi_xao_gion.jpg",
     "sidePool": [
       "tu-rau-muong",
       "tu-goi-ga",
@@ -1754,7 +1754,7 @@
       "grilled lemongrass chicken vermicelli",
       "grilled chicken noodle bowl"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_bun_ga_nuong.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1779,7 +1779,7 @@
       "grilled pork sausage vermicelli",
       "nem nuong noodle bowl"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_bun_nem_nuong.jpg",
     "sidePool": [
       "tu-nuoc-cham",
       "spring-rolls",
@@ -1800,7 +1800,7 @@
     "id": "tu-com-ga-hai-nam",
     "name": "Cơm Gà Hải Nam (Hainanese Chicken & Rice)",
     "aliases": ["com ga hai nam", "hainanese chicken rice", "chicken and rice"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_com_ga_hai_nam.jpg",
     "sidePool": [
       "tu-canh-cu-cai",
       "tu-rau-muong",
@@ -1825,7 +1825,7 @@
       "com tam suon",
       "broken rice pork chop"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_com_suon.jpg",
     "sidePool": [
       "tu-canh-cu-cai",
       "tu-rau-muong",
@@ -1850,7 +1850,7 @@
       "caramelized pork belly",
       "thit kho"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_thit_kho_trung.jpg",
     "sidePool": [
       "tu-steamed-jasmine-rice",
       "tu-rau-muong",
@@ -1870,7 +1870,7 @@
     "id": "tu-char-siu-banh-mi",
     "name": "Char Siu Bánh Mì (Char Siu Pork Banh Mi)",
     "aliases": ["char siu banh mi", "bbq pork banh mi", "banh mi"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_char_siu_banh_mi.jpg",
     "sidePool": [
       "tu-garlic-noodles",
       "tu-goi-ga",
@@ -1890,7 +1890,7 @@
     "id": "tu-banh-mi-trung-op-la",
     "name": "Bánh Mì Trứng Ốp La (Fried Egg Banh Mi)",
     "aliases": ["banh mi trung", "fried egg banh mi", "egg banh mi"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_banh_mi_trung_op_la.jpg",
     "sidePool": [
       "tu-garlic-noodles",
       "tu-goi-ga",
@@ -1910,7 +1910,7 @@
     "id": "tu-ga-kho-gung",
     "name": "Gà Kho Gừng (Caramelized Ginger Chicken)",
     "aliases": ["ga kho gung", "ginger chicken", "caramelized ginger chicken"],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_ga_kho_gung.jpg",
     "sidePool": [
       "tu-steamed-jasmine-rice",
       "tu-rau-muong",
@@ -1934,7 +1934,7 @@
       "vietnamese fried chicken",
       "salt and chili fried chicken"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_ga_chien.jpg",
     "sidePool": [
       "tu-steamed-jasmine-rice",
       "tu-goi-ga",
@@ -1959,7 +1959,7 @@
       "roast pork belly",
       "heo quay"
     ],
-    "heroImageUrl": null,
+    "heroImageUrl": "/food_images/tu_thit_heo_quay.jpg",
     "sidePool": [
       "tu-steamed-jasmine-rice",
       "tu-rau-muong",
