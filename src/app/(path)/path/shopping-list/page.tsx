@@ -124,7 +124,7 @@ export default function ShoppingListPage() {
               icon={ShoppingCart}
               iconSize={24}
               primary="List is empty."
-              helper={`Tap "Add to shopping list" on the Grab screen while you cook — missing ingredients land here.`}
+              helper={`Tap "Add to shopping list" while you cook.`}
               cta={{ label: "Find something to cook" }}
               href="/today"
             />

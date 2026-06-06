@@ -63,14 +63,9 @@ export class ErrorBoundary extends Component<Props, State> {
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
           </div>
-          <div className="space-y-1.5">
-            <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-              Something went wrong
-            </p>
-            <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
-              Sous hit an unexpected error. Tap below to try again.
-            </p>
-          </div>
+          <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+            Something went wrong
+          </p>
           <button
             onClick={this.handleReset}
             className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--nourish-dark-green)]"

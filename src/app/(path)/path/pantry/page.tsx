@@ -46,12 +46,6 @@ export default function PantryPage() {
       </header>
 
       <main className="mx-auto max-w-md page-x pt-2 pb-28">
-        <p className="mb-4 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
-          Ingredients you&apos;ve stashed are auto-checked on the Grab screen
-          next time a recipe needs them. The more you cook, the less ticking off
-          you do.
-        </p>
-
         {!mounted ? (
           <div className="space-y-2 animate-pulse">
             <div className="rounded-xl bg-neutral-100 h-12" />
@@ -63,7 +57,7 @@ export default function PantryPage() {
             icon={Bookmark}
             iconSize={24}
             primary="Nothing stashed yet."
-            helper="Tap the bookmark next to any ingredient while you cook — the pantry remembers, so you don't have to."
+            helper="Bookmark ingredients while you cook."
             cta={{ label: "Find something to cook" }}
             href="/today"
           />

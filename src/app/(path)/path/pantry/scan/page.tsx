@@ -91,13 +91,9 @@ export default function PantryScanPage() {
         {state.phase === "capture" && (
           <section className="rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-6 shadow-sm">
             <p className="sous-label mb-2">Photo to pantry</p>
-            <h2 className="mb-2 font-serif text-xl text-[var(--nourish-dark)]">
+            <h2 className="mb-4 font-serif text-xl text-[var(--nourish-dark)]">
               Take a photo of your haul
             </h2>
-            <p className="mb-5 text-sm leading-relaxed text-[var(--nourish-subtext)]">
-              One picture of the counter, fridge, or pantry — we&apos;ll list
-              what we find and you confirm in one tap.
-            </p>
 
             <button
               type="button"
@@ -121,13 +117,9 @@ export default function PantryScanPage() {
         {state.phase === "confirm" && (
           <section className="space-y-3">
             <div className="rounded-2xl border border-[var(--nourish-border-soft)] bg-white p-4">
-              <p className="sous-label mb-1">
+              <p className="sous-label">
                 Found {state.items.length} item
                 {state.items.length === 1 ? "" : "s"}
-              </p>
-              <p className="text-sm text-[var(--nourish-dark)]">
-                Tap to remove anything we got wrong, then accept all to add to
-                pantry.
               </p>
             </div>
 

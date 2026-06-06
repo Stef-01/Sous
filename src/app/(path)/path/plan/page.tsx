@@ -171,10 +171,10 @@ export default function SwipePlannerPage() {
       <main className="mx-auto flex max-w-md flex-col page-x pt-3">
         {/* Progress strip */}
         <div className="mb-4 rounded-2xl border border-[var(--nourish-border-strong)] bg-white px-4 py-2.5">
-          <p className="sous-label">Swipe to plan</p>
+          <p className="sous-label">This week</p>
           <p className="mt-1 text-xs text-[var(--nourish-dark)]">
             <span className="font-semibold">{scheduledCount}</span> of{" "}
-            {TARGET_SCHEDULED} scheduled · 90-second flow
+            {TARGET_SCHEDULED} scheduled
           </p>
         </div>
 

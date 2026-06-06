@@ -140,8 +140,7 @@ export function QueueComplete({
         Queue complete
       </h3>
       <p className="mt-4 max-w-[28ch] text-sm leading-relaxed text-white/64">
-        You passed {dismissed.length} ideas. Reset the queue for another pass or
-        head back to Today.
+        Reset for another pass, or head back to Today.
       </p>
       <div className="mt-8 flex w-full max-w-sm flex-col gap-3">
         <button

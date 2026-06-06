@@ -61,13 +61,11 @@ export default function ScrapbookPage() {
                 Wonder, then measure the wonder.
               </p>
               <p className="text-xs leading-relaxed text-[var(--nourish-subtext)]">
-                Every finished plate lands here as a keepsake. The same wall
-                will feed the upcoming{" "}
+                Every finished plate lands here, and feeds the upcoming{" "}
                 <span className="font-semibold text-[var(--nourish-dark)]">
                   meal evaluator
-                </span>{" "}
-                - plating eye, technique line, and coach notes - so you can feel
-                the arc from home-cook nights to confident dinner-party energy.
+                </span>
+                .
               </p>
               <p className="flex items-center gap-1 text-[11px] font-medium text-[var(--nourish-green)]">
                 <Sparkles className="h-3 w-3" aria-hidden />
@@ -117,9 +115,7 @@ export default function ScrapbookPage() {
                 No polaroids yet - your first victory lap is one cook away.
               </p>
               <p className="text-xs leading-relaxed text-[var(--nourish-subtext)] max-w-[260px]">
-                Finish a guided cook from Today. We will frame the plate, tuck
-                in your note, and start the invisible graph of how your hands
-                are leveling up.
+                Finish a guided cook to get your first plate.
               </p>
             </div>
             <motion.button

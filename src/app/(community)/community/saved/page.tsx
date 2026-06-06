@@ -67,11 +67,11 @@ export default function SavedContentPage() {
         <h1 className="font-serif text-2xl text-[var(--nourish-dark)]">
           Saved
         </h1>
-        <p className="text-[12px] text-[var(--nourish-subtext)]">
-          {totalSaved === 0
-            ? "Tap the bookmark on any article, reel, brief, or thread to save it here."
-            : `${totalSaved} saved item${totalSaved === 1 ? "" : "s"}.`}
-        </p>
+        {totalSaved > 0 && (
+          <p className="text-[12px] text-[var(--nourish-subtext)]">
+            {totalSaved} saved item{totalSaved === 1 ? "" : "s"}.
+          </p>
+        )}
       </header>
 
       <main className="space-y-7 page-x pt-5">
@@ -80,7 +80,7 @@ export default function SavedContentPage() {
             icon={Bookmark}
             iconSize={32}
             primary="Nothing saved yet."
-            helper="Tap the bookmark on any article, reel, brief, or thread to save it here."
+            helper="Bookmark anything to save it here."
             cta={{ label: "Browse Content" }}
             href="/community"
           />
