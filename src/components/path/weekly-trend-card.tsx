@@ -42,8 +42,10 @@ export function WeeklyTrendCard() {
                 />
                 {g.label}
               </span>
-              <span className="tabular-nums text-[var(--nourish-subtext)]">
-                avg {g.avgPct}% · short {g.daysShort}/{g.daysLogged}
+              <span className="text-[var(--nourish-subtext)]">
+                {g.daysShort === g.daysLogged
+                  ? "short every cook"
+                  : `short ${g.daysShort}/${g.daysLogged} days`}
               </span>
             </li>
           ))}
@@ -53,7 +55,7 @@ export function WeeklyTrendCard() {
       {strong && strong.avgPct >= 80 && (
         <p className="flex items-center gap-1.5 text-[13px] text-[var(--nourish-green)]">
           <TrendingUp size={14} aria-hidden />
-          Strong on {strong.label} ({strong.avgPct}%)
+          Strong on {strong.label}
         </p>
       )}
     </section>
