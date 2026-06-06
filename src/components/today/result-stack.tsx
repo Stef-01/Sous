@@ -10,6 +10,10 @@ import {
   Check,
   RotateCcw,
   UtensilsCrossed,
+  Globe,
+  Leaf,
+  Zap,
+  type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
@@ -614,75 +618,34 @@ function ResultCard({
             className="overflow-hidden"
           >
             <div className="border-t border-neutral-100 px-4 pb-4 pt-3 space-y-3">
-              {/* "Why this pairs well" header */}
-              <p className="sous-label text-[var(--nourish-green)]">
-                Why this pairs well
-              </p>
-
-              {/* AI-enhanced pairing explanation */}
-              <p className="text-sm text-[var(--nourish-dark)] leading-relaxed">
+              {/* The one genuine per-pairing insight (already behind a tap). */}
+              <p className="text-sm leading-relaxed text-[var(--nourish-dark)]">
                 {displayExplanation}
               </p>
 
-              {/* Dimension-by-dimension breakdown */}
-              <div className="space-y-1.5">
-                <PairingDimension
-                  label="Cuisine fit"
-                  value={side.scores.cuisineFit}
-                  reason={
-                    side.scores.cuisineFit >= 0.7
-                      ? "Comes from the same culinary tradition"
-                      : side.scores.cuisineFit >= 0.4
-                        ? "Bridges flavors across cuisines"
-                        : "An adventurous cross-cuisine pick"
-                  }
-                />
-                <PairingDimension
-                  label="Flavor contrast"
-                  value={side.scores.flavorContrast}
-                  reason={
-                    side.scores.flavorContrast >= 0.7
-                      ? "Bright, contrasting flavors cut through richness"
-                      : side.scores.flavorContrast >= 0.4
-                        ? "Adds complementary taste notes"
-                        : "Similar flavor profile — a harmonious match"
-                  }
-                />
-                <PairingDimension
-                  label="Nutrition balance"
-                  value={side.scores.nutritionBalance}
-                  reason={
-                    side.scores.nutritionBalance >= 0.7
-                      ? "Fills gaps in the meal's nutritional profile"
-                      : "Adds variety to the plate"
-                  }
-                />
-                <PairingDimension
-                  label="Prep burden"
-                  value={side.scores.prepBurden}
-                  reason={
-                    side.scores.prepBurden >= 0.7
-                      ? "Quick to prepare alongside your main"
-                      : "A bit more involved, but worth the effort"
-                  }
-                />
-              </div>
-
-              {/* Score badges (compact) */}
-              <div className="flex flex-wrap gap-2">
-                <ScoreBadge
+              {/* Dimension pills — icon + label, colour encodes strength.
+                  No prose, no percentages (rule 13: disclosure on demand). */}
+              <div className="flex flex-wrap gap-1.5">
+                <DimPill
+                  icon={Globe}
                   label="Cuisine fit"
                   value={side.scores.cuisineFit}
                 />
-                <ScoreBadge
+                <DimPill
+                  icon={Sparkles}
                   label="Flavor contrast"
                   value={side.scores.flavorContrast}
                 />
-                <ScoreBadge
+                <DimPill
+                  icon={Leaf}
                   label="Nutrition"
                   value={side.scores.nutritionBalance}
                 />
-                <ScoreBadge label="Quick prep" value={side.scores.prepBurden} />
+                <DimPill
+                  icon={Zap}
+                  label="Quick prep"
+                  value={side.scores.prepBurden}
+                />
               </div>
 
               {/* Cook just this side  -  secondary inline action */}
@@ -721,57 +684,31 @@ function getPairingSignal(side: SideResult, rank: number): string {
   return "Smart match";
 }
 
-function PairingDimension({
+/** A pairing-dimension pill: icon + label, colour encodes strength. No
+ *  percentage, no explanatory prose — the label stands on its own (rule 13). */
+function DimPill({
+  icon: Icon,
   label,
   value,
-  reason,
 }: {
+  icon: LucideIcon;
   label: string;
   value: number;
-  reason: string;
 }) {
-  const pct = Math.round(value * 100);
-  return (
-    <div className="flex items-start gap-2">
-      <div className="mt-1 flex h-4 w-12 shrink-0 overflow-hidden rounded-full bg-neutral-100">
-        <div
-          className={cn(
-            "h-full rounded-full transition-all",
-            pct >= 70
-              ? "bg-[var(--nourish-green)]"
-              : pct >= 50
-                ? "bg-[var(--nourish-gold)]"
-                : "bg-neutral-300",
-          )}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <div className="min-w-0 flex-1">
-        <span className="text-[11px] font-medium text-[var(--nourish-dark)]">
-          {label}
-        </span>
-        <p className="text-[11px] text-[var(--nourish-subtext)] leading-snug">
-          {reason}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function ScoreBadge({ label, value }: { label: string; value: number }) {
-  const pct = Math.round(value * 100);
+  const tone = value >= 0.7 ? "strong" : value >= 0.45 ? "mid" : "weak";
   return (
     <span
       className={cn(
-        "rounded-full px-2 py-0.5 text-[11px] font-medium",
-        pct >= 70
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[12px] font-medium",
+        tone === "strong"
           ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-          : pct >= 50
+          : tone === "mid"
             ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
             : "bg-neutral-100 text-[var(--nourish-subtext)]",
       )}
     >
-      {label} {pct}%
+      <Icon size={13} aria-hidden />
+      {label}
     </span>
   );
 }

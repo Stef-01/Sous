@@ -351,10 +351,6 @@ function ChosenMainHero({
         <h2 className="font-serif text-[30px] leading-none text-[var(--nourish-dark)]">
           {mainDish}
         </h2>
-        <p className="text-sm leading-relaxed text-[var(--nourish-subtext)]">
-          Choose a side or cook the preselected plate. Matches are ranked for
-          flavor contrast, balance, and prep timing.
-        </p>
       </div>
     </section>
   );
