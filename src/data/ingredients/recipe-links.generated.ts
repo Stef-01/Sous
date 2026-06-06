@@ -9,6 +9,35 @@
 import type { RecipeIngredientLink } from "@/types/ingredient";
 
 export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
+  "tu-nuoc-cham": {
+    recipeSlug: "tu-nuoc-cham",
+    servingsPerRecipe: 4,
+    originalLineCount: 8,
+    lines: [
+      { ingredientId: "coconut", grams: 80, isOptional: false },
+      { ingredientId: "lemon-juice", grams: 61, isOptional: false },
+      { ingredientId: "fish-sauce", grams: 67.5, isOptional: false },
+      { ingredientId: "sugar", grams: 37.5, isOptional: false },
+      { ingredientId: "shallots", grams: 20, isOptional: false },
+      { ingredientId: "garlic", grams: 5.67, isOptional: false },
+      { ingredientId: "jalapeno", grams: 3.75, isOptional: true },
+    ],
+  },
+  "tu-garlic-noodles": {
+    recipeSlug: "tu-garlic-noodles",
+    servingsPerRecipe: 4,
+    originalLineCount: 8,
+    lines: [
+      { ingredientId: "egg-noodles", grams: 566.99, isOptional: false },
+      { ingredientId: "butter", grams: 42.56, isOptional: false },
+      { ingredientId: "garlic", grams: 15, isOptional: false },
+      { ingredientId: "fish-sauce", grams: 16.88, isOptional: false },
+      { ingredientId: "oyster-sauce", grams: 16.88, isOptional: false },
+      { ingredientId: "sugar", grams: 4.17, isOptional: false },
+      { ingredientId: "scallion", grams: 25, isOptional: false },
+      { ingredientId: "black-pepper", grams: 1.2, isOptional: true },
+    ],
+  },
   "caesar-salad": {
     recipeSlug: "caesar-salad",
     servingsPerRecipe: 4,

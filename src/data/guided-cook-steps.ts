@@ -4,6 +4,8 @@
  * Each entry provides full cook flow: ingredients + steps.
  */
 
+import { CHEF_TU_SIDE_FLOWS, CHEF_TU_MEAL_FLOWS } from "./chef-tu-cook-steps";
+
 export interface StaticCookStep {
   phase: "cook";
   stepNumber: number;
@@ -40,6 +42,7 @@ export interface StaticDishData {
 }
 
 export const guidedCookData: Record<string, StaticDishData> = {
+  ...CHEF_TU_SIDE_FLOWS,
   "caesar-salad": {
     name: "Caesar Salad",
     slug: "caesar-salad",
@@ -15277,6 +15280,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
 // Main dishes with full cook flows. Same StaticDishData shape as sides.
 
 export const guidedCookMeals: Record<string, StaticDishData> = {
+  ...CHEF_TU_MEAL_FLOWS,
   "masoor-dal": {
     name: "Masoor Dal",
     slug: "masoor-dal",

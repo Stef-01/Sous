@@ -2,6 +2,7 @@
 // Lightweight per-dish summary (times + ingredient names) extracted from the
 // ~599KB guided-cook-steps.ts so Today-side clients don't bundle the full cook
 // steps. Regenerate: pnpm tsx scripts/gen-cook-summary.ts
+/* eslint-disable */
 
 export interface CookSummary {
   prepTimeMinutes: number;
@@ -10,6 +11,34 @@ export interface CookSummary {
 }
 
 const SIDE_SUMMARY: Record<string, CookSummary> = {
+  "tu-nuoc-cham": {
+    prepTimeMinutes: 12,
+    cookTimeMinutes: 0,
+    ingredientNames: [
+      "coconut water",
+      "fresh lemon juice",
+      "fish sauce",
+      "sugar",
+      "minced shallot",
+      "minced garlic",
+      "Thai chili, finely chopped",
+      "sambal (fermented chili paste)",
+    ],
+  },
+  "tu-garlic-noodles": {
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 20,
+    ingredientNames: [
+      "Sun Noodle kaedama (fresh ramen-style noodles)",
+      "unsalted butter",
+      "garlic, finely minced",
+      "fish sauce",
+      "oyster sauce",
+      "sugar",
+      "chives or scallions, thinly sliced",
+      "coarse ground black pepper",
+    ],
+  },
   "caesar-salad": {
     prepTimeMinutes: 10,
     cookTimeMinutes: 5,
@@ -1681,6 +1710,85 @@ const SIDE_SUMMARY: Record<string, CookSummary> = {
   },
 };
 const MEAL_SUMMARY: Record<string, CookSummary> = {
+  "tu-pho-ga": {
+    prepTimeMinutes: 30,
+    cookTimeMinutes: 150,
+    ingredientNames: [
+      "Whole chicken, fresh and preferably organic",
+      "Yellow onion",
+      "Garlic",
+      "Fresh ginger, unpeeled",
+      "Pho spice blend (star anise, cinnamon, coriander, clove, cardamom)",
+      "Granulated sugar",
+      "Kosher salt",
+      "Fish sauce",
+      "Filtered water",
+      "Chicken stock",
+      "Dried flat rice noodles (banh pho)",
+      "Scallions, sliced",
+      "Lap xuong (Chinese sausage) or applewood-smoked bacon, small diced",
+      "Avocado oil",
+      "Rice vinegar",
+      "Cilantro leaves",
+      "Serrano chili, thinly sliced",
+    ],
+  },
+  "tu-banh-mi-trung-op-la": {
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 8,
+    ingredientNames: [
+      "banh mi rolls",
+      "large eggs",
+      "cooking oil",
+      "pâté de campagne",
+      "Kewpie mayo",
+      "Maggi seasoning",
+      "banh mi pickles (do chua, pickled carrot and daikon)",
+      "Persian cucumber, sliced lengthwise into 4 thin spears",
+      "fresh cilantro sprigs",
+      "kosher salt",
+      "ground black pepper",
+    ],
+  },
+  "tu-com-ga-hai-nam": {
+    prepTimeMinutes: 25,
+    cookTimeMinutes: 125,
+    ingredientNames: [
+      "whole chicken, preferably heritage breed",
+      "chicken stock",
+      "filtered water",
+      "kosher salt",
+      "fish sauce",
+      "sugar",
+      "jasmine rice",
+      "ice for an ice bath",
+      "ginger fish-sauce dip (nuoc mam gung)",
+      "iceberg lettuce, mint, and sliced tomato",
+    ],
+  },
+  "tu-ga-kho-gung": {
+    prepTimeMinutes: 45,
+    cookTimeMinutes: 50,
+    ingredientNames: [
+      "chicken wings, cut through the joints into 3 sections",
+      "fresh ginger, peeled and cut into matchsticks",
+      "shallot, minced",
+      "lemongrass, tender core only, minced",
+      "garlic, minced",
+      "makrut (kaffir) lime leaves",
+      "fish sauce",
+      "sugar (for marinade)",
+      "kosher salt",
+      "neutral cooking oil",
+      "granulated sugar (for the coconut caramel / nuoc mau)",
+      "coconut water",
+      "lemon juice",
+      "scallions, thinly sliced",
+      "cilantro sprigs",
+      "Thai chili, chopped",
+      "steamed jasmine rice, for serving",
+    ],
+  },
   "masoor-dal": {
     prepTimeMinutes: 10,
     cookTimeMinutes: 25,
