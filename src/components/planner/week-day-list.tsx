@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils/cn";
 import { imageSrc } from "@/lib/image/image-src";
 import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { lookupDish, type DishRef } from "@/lib/utils/dish-lookup";
+import { recipeCreditShort } from "@/lib/utils/recipe-credit";
 import { MealTypeTag } from "./meal-type-tag";
 import { buildSlotKey, type DayKey, type MealKey } from "@/types/meal-plan";
 
@@ -153,7 +154,14 @@ export function WeekDayList({
                             {dish.name.replace(/\s*\([^)]*\)\s*$/, "").trim() ||
                               dish.name}
                           </span>
-                          <MealTypeTag type={mealKey} className="mt-1.5" />
+                          <span className="mt-1.5 flex items-center gap-2">
+                            <MealTypeTag type={mealKey} />
+                            {recipeCreditShort(dish.slug) && (
+                              <span className="text-[11px] font-medium text-[var(--nourish-subtext-faint)]">
+                                {recipeCreditShort(dish.slug)}
+                              </span>
+                            )}
+                          </span>
                         </span>
                       </button>
                     </li>

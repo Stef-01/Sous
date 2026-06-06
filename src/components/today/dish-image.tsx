@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { QuestDish } from "./quest-card";
+import { recipeCreditShort } from "@/lib/utils/recipe-credit";
 
 /**
  * Dish hero image with a graceful fallback — extracted verbatim from quest-card
@@ -77,6 +78,8 @@ export function DishImage({
 }) {
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  // Subtle partner-chef credit (e.g. "Chef Tu") for attributed recipes.
+  const credit = recipeCreditShort(dish.slug);
 
   if (!dish.heroImageUrl || imgError) {
     return (
@@ -88,6 +91,7 @@ export function DishImage({
         <span className="max-w-[18rem] px-8 text-center text-lg font-semibold text-white/90">
           {dish.dishName}
         </span>
+        {credit && <ChefCreditChip label={credit} />}
       </div>
     );
   }
@@ -111,6 +115,16 @@ export function DishImage({
         onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
+      {credit && <ChefCreditChip label={credit} />}
     </>
+  );
+}
+
+/** Subtle, light credit chip pinned to the image's bottom-left. */
+function ChefCreditChip({ label }: { label: string }) {
+  return (
+    <span className="pointer-events-none absolute bottom-2 left-2 z-10 rounded-full bg-black/35 px-2 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur-sm">
+      {label}
+    </span>
   );
 }
