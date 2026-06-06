@@ -11,6 +11,7 @@ import {
   Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { ingredientEmoji } from "@/lib/utils/ingredient-meta";
 import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
@@ -555,6 +556,12 @@ function IngredientRow({
           )}
         </button>
 
+        {/* Food emoji — a visual anchor for the ingredient (recipe-preview
+            style); decorative, the name carries the label. */}
+        <span className="mt-px shrink-0 text-lg leading-none" aria-hidden>
+          {ingredientEmoji(item.name)}
+        </span>
+
         {/* Ingredient info */}
         <button
           onClick={onToggle}
@@ -562,48 +569,36 @@ function IngredientRow({
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
-          <div className="flex items-center gap-2">
-            {/* Pantry-status dot — only rendered when the item IS in the
-                pantry (a calm green confirmation). For the common
-                not-in-pantry case we show nothing rather than a faint
-                outline on every row: an empty "missing" dot restates the
-                absence of a bookmark-fill and just adds a second circle
-                next to the checkbox (rule 13 — no redundant restatement). */}
+          {/* Recipe-preview style: a bold quantity leads, then the name, on
+              one wrapping line (a long amount pushes the name to the next line
+              rather than crushing it). The pantry dot stays inline. */}
+          <div className="flex items-start gap-1.5">
             {inPantry && (
               <IngredientPantryDot
                 status="have"
                 optional={item.isOptional ?? false}
-                className="shrink-0"
+                className="mt-1 shrink-0"
               />
             )}
-            <span
+            <p
               className={cn(
-                "text-sm font-medium",
+                "text-sm leading-snug",
                 checked
                   ? "text-[var(--nourish-subtext)] line-through"
                   : "text-[var(--nourish-dark)]",
               )}
             >
+              {item.quantity && (
+                <span className="font-semibold">{item.quantity} </span>
+              )}
               {item.name}
-            </span>
-            {item.isOptional && (
-              <span className="text-[11px] text-[var(--nourish-subtext)] italic">
-                optional
-              </span>
-            )}
+              {item.isOptional && (
+                <span className="text-[var(--nourish-subtext)] italic">
+                  {" · optional"}
+                </span>
+              )}
+            </p>
           </div>
-          {/* Quantity on its own line so a long amount never crushes the
-              name into a multi-line wrap (the old inline layout did). */}
-          <p
-            className={cn(
-              "mt-0.5 text-xs",
-              checked
-                ? "text-[var(--nourish-subtext-faint)]"
-                : "text-[var(--nourish-subtext)]",
-            )}
-          >
-            {item.quantity}
-          </p>
           {item.substitution && !showingSub && !rememberedSub && (
             <p className="mt-0.5 text-xs text-[var(--nourish-subtext-faint)]">
               sub: {item.substitution}
