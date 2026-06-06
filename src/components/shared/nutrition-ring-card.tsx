@@ -151,8 +151,9 @@ interface MicroRow {
   dv: number;
 }
 
-/** Build the micro rows (value + %DV) from the per-serving vector. */
-function buildMicros(n: PerServingNutrition): MicroRow[] {
+/** Build the micro rows (value + %DV) from the per-serving vector, scaled by
+ *  the number of servings being made. */
+function buildMicros(n: PerServingNutrition, mult = 1): MicroRow[] {
   const map: Array<[keyof PerServingNutrition, string]> = [
     ["fiber_g", "fiber"],
     ["calcium_mg", "calcium"],
@@ -169,7 +170,7 @@ function buildMicros(n: PerServingNutrition): MicroRow[] {
   const out: MicroRow[] = [];
   for (const [field, dvKey] of map) {
     const meta = FDA_DV_4PLUS[dvKey as keyof typeof FDA_DV_4PLUS];
-    const value = (n[field] as number) ?? 0;
+    const value = ((n[field] as number) ?? 0) * mult;
     if (!meta || value <= 0) continue;
     out.push({
       key: dvKey,
@@ -220,26 +221,38 @@ function MicroBar({ row }: { row: MicroRow }) {
 
 export function NutritionRingCard({
   nutrition,
+  servings = 1,
   className,
 }: {
   nutrition: PerServingNutrition;
+  /** Servings being made — scales the absolute totals shown so the cook slider
+   *  visibly drives the ring. Per-serving values are invariant by design, so
+   *  without this the ring would never move. */
+  servings?: number;
   className?: string;
 }) {
   const [showAll, setShowAll] = useState(false);
 
-  const protein = nutrition.protein_g ?? 0;
-  const carbs = nutrition.totalCarbs_g ?? 0;
-  const fat = nutrition.totalFat_g ?? 0;
-  const pCal = protein * MACRO.protein.kcalPerG;
-  const cCal = carbs * MACRO.carbs.kcalPerG;
-  const fCal = fat * MACRO.fat.kcalPerG;
+  const mult = Math.max(1, servings);
+  // Per-serving values drive the macro PROPORTIONS (ring arcs are ratios — they
+  // don't change with batch size); the slider scales the absolute totals shown.
+  const proteinBase = nutrition.protein_g ?? 0;
+  const carbsBase = nutrition.totalCarbs_g ?? 0;
+  const fatBase = nutrition.totalFat_g ?? 0;
+  const protein = proteinBase * mult;
+  const carbs = carbsBase * mult;
+  const fat = fatBase * mult;
+  const calories = nutrition.calories * mult;
+  const pCal = proteinBase * MACRO.protein.kcalPerG;
+  const cCal = carbsBase * MACRO.carbs.kcalPerG;
+  const fCal = fatBase * MACRO.fat.kcalPerG;
   const totalMacroCal = pCal + cCal + fCal || 1;
   const shares = {
     protein: pCal / totalMacroCal,
     carbs: cCal / totalMacroCal,
     fat: fCal / totalMacroCal,
   };
-  const micros = buildMicros(nutrition);
+  const micros = buildMicros(nutrition, mult);
   const keyMicros = micros.slice(0, 4);
 
   const legend: Array<["protein" | "carbs" | "fat", number]> = [
@@ -250,9 +263,9 @@ export function NutritionRingCard({
 
   return (
     <div className={cn("space-y-5", className)}>
-      {/* Energy summary — ring + macro legend. */}
+      {/* Energy summary — ring + macro legend (totals for the chosen servings). */}
       <div className="flex items-center gap-4">
-        <MacroRing calories={nutrition.calories} shares={shares} />
+        <MacroRing calories={calories} shares={shares} />
         <div className="min-w-0 flex-1 space-y-1.5">
           {legend.map(([k, grams]) => (
             <p key={k} className="text-[15px]">
@@ -267,6 +280,17 @@ export function NutritionRingCard({
         </div>
       </div>
 
+      {/* When making more than one serving, anchor the per-plate number. */}
+      {mult > 1 && (
+        <p className="-mt-2 text-[12px] text-[var(--nourish-subtext)]">
+          For {Math.round(mult)} servings ·{" "}
+          <span className="font-semibold text-[var(--nourish-dark)]">
+            {Math.round(nutrition.calories)} kcal
+          </span>{" "}
+          per serving
+        </p>
+      )}
+
       {/* Macronutrient targets — vs FDA daily value. */}
       <div className="space-y-3">
         <p className="sous-label" style={{ color: "var(--data-protein)" }}>
@@ -274,7 +298,7 @@ export function NutritionRingCard({
         </p>
         <TargetRow
           label="Energy"
-          value={nutrition.calories}
+          value={calories}
           target={MACRO_DV.energy}
           unit="kcal"
         />
@@ -341,7 +365,8 @@ export function NutritionRingCard({
       )}
 
       <p className="text-[11px] leading-snug text-[var(--nourish-subtext-faint)]">
-        Per serving · composed from USDA data · % of FDA Daily Value · an
+        {mult > 1 ? `Totals for ${Math.round(mult)} servings` : "Per serving"} ·
+        composed live from USDA ingredient data · % of FDA Daily Value · an
         estimate.
       </p>
     </div>

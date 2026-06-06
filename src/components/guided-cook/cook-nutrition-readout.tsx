@@ -22,14 +22,7 @@ export function CookNutritionReadout({
 }) {
   return (
     <div className="p-4">
-      <NutritionRingCard nutrition={perServing} />
-      <p className="mt-4 border-t border-neutral-100 pt-3 text-[11px] leading-relaxed text-[var(--nourish-subtext-faint)]">
-        Whole batch ({servings} {servings === 1 ? "serving" : "servings"}) ≈{" "}
-        <span className="font-semibold text-[var(--nourish-subtext)]">
-          {Math.round(perServing.calories * servings)} cal
-        </span>{" "}
-        — recomputes as you move the slider.
-      </p>
+      <NutritionRingCard nutrition={perServing} servings={servings} />
     </div>
   );
 }
