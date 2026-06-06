@@ -2,20 +2,26 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Check, ShoppingCart, X } from "lucide-react";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
-import { GLIDE, RM } from "@/lib/utils/motion";
+import {
+  ingredientCategory,
+  ingredientEmoji,
+  GROCERY_CATEGORY_ORDER,
+  type GroceryCategory,
+} from "@/lib/utils/ingredient-meta";
 import { cn } from "@/lib/utils/cn";
 import { toast } from "@/lib/hooks/use-toast";
 
 /**
- * Shopping list  -  the inverse of the pantry. Things you wanted to cook with
- * but didn't have. Tap to toggle "bought"; a bought item can be sent
- * straight into your pantry with one tap.
+ * Shopping list — the inverse of the pantry, redesigned as an aisle-grouped
+ * grocery list: items grouped under colour-coded aisle labels (Produce, Meat &
+ * Seafood, …), each row a food-emoji + name + a rounded checkbox, warm cream
+ * bars between aisles. Tap an item to mark it bought; bought items can be sent
+ * straight to the pantry. Motion-free / reduced-motion safe by construction.
  */
 export default function ShoppingListPage() {
   const router = useRouter();
@@ -33,6 +39,21 @@ export default function ShoppingListPage() {
   const boughtItems = useMemo(() => items.filter((i) => i.bought), [items]);
   const unboughtItems = useMemo(() => items.filter((i) => !i.bought), [items]);
 
+  // Group unbought items by aisle, in display order, skipping empty aisles.
+  const grouped = useMemo(() => {
+    const map = new Map<GroceryCategory, typeof unboughtItems>();
+    for (const it of unboughtItems) {
+      const cat = ingredientCategory(it.name);
+      const arr = map.get(cat) ?? [];
+      arr.push(it);
+      map.set(cat, arr);
+    }
+    return GROCERY_CATEGORY_ORDER.filter((c) => map.has(c)).map((c) => ({
+      category: c,
+      list: map.get(c)!,
+    }));
+  }, [unboughtItems]);
+
   const handleMoveBoughtToPantry = () => {
     if (boughtItems.length === 0) return;
     for (const item of boughtItems) addToPantry(item.name);
@@ -46,125 +67,112 @@ export default function ShoppingListPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
-      <header className="app-header page-x py-3">
-        <div className="mx-auto flex max-w-md items-center gap-3">
-          <motion.button
+      <header className="app-header page-x py-2.5">
+        <div className="mx-auto flex max-w-md items-center">
+          <button
             onClick={() => router.push("/path")}
-            whileTap={{ scale: 0.88 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
             type="button"
             aria-label="Back to Path"
           >
             <ArrowLeft size={18} />
-          </motion.button>
-          <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+          </button>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-md page-x pb-28">
+        {/* Title row — big serif. */}
+        <div className="flex items-center justify-between gap-2 pt-1 pb-1">
+          <h1 className="sous-title text-[var(--nourish-dark)]">
             Shopping list
           </h1>
           {unboughtCount > 0 && (
-            <span className="ml-auto text-xs text-[var(--nourish-subtext)]">
+            <span className="shrink-0 text-[13px] font-medium text-[var(--nourish-subtext)]">
               {unboughtCount} to buy
             </span>
           )}
         </div>
-      </header>
-
-      <main className="mx-auto max-w-md page-x pt-2 pb-28">
-        <p className="mb-1 text-[13px] leading-[1.55] text-[var(--nourish-subtext)]">
-          Missing ingredients from your recent cooks show up here. Tap to mark
-          bought - then one tap sends them into your pantry.
-        </p>
-        {/* Instacart placeholder hint — same minimal pattern as the
-            in-cook IngredientList. Encourages "keep going" instead of
-            "give up" by surfacing how fast the missing items can land. */}
-        <div className="mb-4">
-          <InstacartHint missingCount={unboughtCount} />
-        </div>
 
         {!mounted ? (
-          <div className="space-y-2 animate-pulse">
-            <div className="rounded-xl bg-neutral-100 h-12" />
-            <div className="rounded-xl bg-neutral-100 h-12" />
-            <div className="rounded-xl bg-neutral-100 h-12" />
+          <div className="mt-4 animate-pulse space-y-2">
+            <div className="h-12 rounded-xl bg-neutral-100" />
+            <div className="h-12 rounded-xl bg-neutral-100" />
+            <div className="h-12 rounded-xl bg-neutral-100" />
           </div>
         ) : items.length === 0 ? (
-          <EmptyStateCTA
-            icon={ShoppingCart}
-            iconSize={24}
-            primary="List is empty."
-            helper={`Tap "Add to shopping list" on the Grab screen while you cook — missing ingredients land here.`}
-            cta={{ label: "Find something to cook" }}
-            href="/today"
-          />
+          <div className="pt-4">
+            <EmptyStateCTA
+              icon={ShoppingCart}
+              iconSize={24}
+              primary="List is empty."
+              helper={`Tap "Add to shopping list" on the Grab screen while you cook — missing ingredients land here.`}
+              cta={{ label: "Find something to cook" }}
+              href="/today"
+            />
+          </div>
         ) : (
           <>
-            {/* Quiet progress strip — only shows once at least one
-                item has been bought, so an unstarted list stays clean. */}
-            {boughtItems.length > 0 && unboughtCount > 0 && (
-              <div
-                className="mb-3 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-[11px] tabular-nums text-[var(--nourish-subtext)] ring-1 ring-neutral-200"
-                aria-label={`${boughtItems.length} of ${items.length} bought`}
-              >
-                <span className="font-semibold text-[var(--nourish-dark)]">
-                  {boughtItems.length}
-                </span>
-                <span>of {items.length} bought</span>
-                <span
-                  aria-hidden
-                  className="ml-auto h-1.5 w-20 overflow-hidden rounded-full bg-neutral-200"
-                >
-                  <span
-                    className="block h-full bg-[var(--nourish-green)] transition-[width] duration-300"
-                    style={{
-                      width: `${Math.round(
-                        (boughtItems.length / items.length) * 100,
-                      )}%`,
-                    }}
-                  />
-                </span>
-              </div>
-            )}
+            <div className="mb-2 mt-1">
+              <InstacartHint missingCount={unboughtCount} />
+            </div>
 
-            <ul className="space-y-1.5">
-              <AnimatePresence initial={false}>
-                {unboughtItems.map((item) => (
-                  <ShoppingRow
-                    key={item.key}
-                    name={item.name}
-                    bought={item.bought}
-                    onToggle={() => toggleBought(item.key)}
-                    onRemove={() => remove(item.key)}
+            {/* Aisle-grouped, to-buy items. */}
+            {grouped.map(({ category, list }, i) => (
+              <section key={category}>
+                {i > 0 && (
+                  <div
+                    className="-mx-[var(--gutter)] mt-1 h-1.5 bg-[var(--divider-warm)]"
+                    aria-hidden
                   />
-                ))}
-              </AnimatePresence>
-            </ul>
+                )}
+                <p
+                  className="sous-label pt-4 pb-1"
+                  style={{ color: "var(--grocery-cat)" }}
+                >
+                  {category}
+                </p>
+                <ul className="divide-y divide-[var(--nourish-border)]">
+                  {list.map((item) => (
+                    <GroceryRow
+                      key={item.key}
+                      name={item.name}
+                      bought={false}
+                      onToggle={() => toggleBought(item.key)}
+                      onRemove={() => remove(item.key)}
+                    />
+                  ))}
+                </ul>
+              </section>
+            ))}
 
             {boughtItems.length > 0 && (
-              <>
-                <h2 className="mt-6 mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--nourish-subtext)]">
-                  Bought ({boughtItems.length})
-                </h2>
-                <ul className="space-y-1.5">
-                  <AnimatePresence initial={false}>
-                    {boughtItems.map((item) => (
-                      <ShoppingRow
-                        key={item.key}
-                        name={item.name}
-                        bought={item.bought}
-                        onToggle={() => toggleBought(item.key)}
-                        onRemove={() => remove(item.key)}
-                      />
-                    ))}
-                  </AnimatePresence>
+              <section>
+                <div
+                  className="-mx-[var(--gutter)] mt-1 h-1.5 bg-[var(--divider-warm)]"
+                  aria-hidden
+                />
+                <p className="sous-label pt-4 pb-1 text-[var(--nourish-subtext-faint)]">
+                  In the cart ({boughtItems.length})
+                </p>
+                <ul className="divide-y divide-[var(--nourish-border)]">
+                  {boughtItems.map((item) => (
+                    <GroceryRow
+                      key={item.key}
+                      name={item.name}
+                      bought
+                      onToggle={() => toggleBought(item.key)}
+                      onRemove={() => remove(item.key)}
+                    />
+                  ))}
                 </ul>
-              </>
+              </section>
             )}
 
             <div className="mt-6 space-y-2">
               {boughtItems.length > 0 && (
                 <button
                   onClick={handleMoveBoughtToPantry}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-3 text-sm font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-3 text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
                   type="button"
                 >
                   <Check size={14} />
@@ -195,7 +203,7 @@ export default function ShoppingListPage() {
   );
 }
 
-function ShoppingRow({
+function GroceryRow({
   name,
   bought,
   onToggle,
@@ -206,48 +214,52 @@ function ShoppingRow({
   onToggle: () => void;
   onRemove: () => void;
 }) {
-  const reducedMotion = useReducedMotion();
   return (
-    <motion.li
-      layout={!reducedMotion}
-      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }}
-      transition={reducedMotion ? RM : GLIDE}
-      className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
-    >
-      <button
-        onClick={onToggle}
-        className="flex h-11 w-11 shrink-0 -m-1.5 items-center justify-center active:scale-90 transition-transform"
-        type="button"
-        aria-label={bought ? `Mark ${name} unbought` : `Mark ${name} bought`}
-      >
-        {bought ? (
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--nourish-green)]">
-            <Check size={12} className="text-white" strokeWidth={3} />
-          </span>
-        ) : (
-          <span className="h-5 w-5 rounded-full border-2 border-neutral-300" />
-        )}
-      </button>
-      <span
-        className={cn(
-          "flex-1 text-sm capitalize",
-          bought
-            ? "text-[var(--nourish-subtext)] line-through"
-            : "text-[var(--nourish-dark)]",
-        )}
-      >
-        {name}
+    <li className="flex items-center gap-3 py-3">
+      <span className="w-7 shrink-0 text-center text-xl" aria-hidden>
+        {ingredientEmoji(name)}
       </span>
       <button
+        onClick={onToggle}
+        className="min-w-0 flex-1 text-left"
+        type="button"
+        aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
+      >
+        <span
+          className={cn(
+            "block truncate text-[15px] capitalize",
+            bought
+              ? "text-[var(--nourish-subtext)] line-through"
+              : "text-[var(--nourish-dark)]",
+          )}
+        >
+          {name}
+        </span>
+      </button>
+      {/* Quiet per-item remove — present but subordinate to the checkbox. */}
+      <button
         onClick={onRemove}
-        className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-[var(--nourish-dark)]"
         type="button"
         aria-label={`Remove ${name}`}
       >
         <X size={14} />
       </button>
-    </motion.li>
+      {/* Rounded-square checkbox (matches the reference). */}
+      <button
+        onClick={onToggle}
+        className="shrink-0 transition-transform active:scale-90 motion-reduce:active:scale-100"
+        type="button"
+        aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
+      >
+        {bought ? (
+          <span className="flex h-[22px] w-[22px] items-center justify-center rounded-md bg-[var(--nourish-green)]">
+            <Check size={14} className="text-white" strokeWidth={3} />
+          </span>
+        ) : (
+          <span className="block h-[22px] w-[22px] rounded-md border-2 border-neutral-300" />
+        )}
+      </button>
+    </li>
   );
 }
