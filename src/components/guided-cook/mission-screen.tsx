@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils/cn";
 import { PlanCookChip } from "./plan-cook-chip";
 import { BigHandsToggle } from "./big-hands-toggle";
 import { DishRecallLine } from "./dish-recall-line";
+import { CreatorByline } from "@/components/shared/creator-byline";
 
 interface MissionScreenProps {
   dishName: string;
@@ -131,6 +132,9 @@ export function MissionScreen({
         >
           {dishName}
         </motion.h1>
+
+        {/* Creator byline — "by Chef Tu" for partner-chef recipes. */}
+        {dishSlug && <CreatorByline slug={dishSlug} className="pt-1.5" />}
 
         {/* Flavor pills — pattern #3 meta strip. Time chip moved
             into the eyebrow row above; this row is now flavor-only

@@ -17,6 +17,7 @@ import type { ScoreBreakdown } from "@/lib/engine/types";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
+import { CreatorByline } from "@/components/shared/creator-byline";
 import { trpc } from "@/lib/trpc/client";
 
 export interface SideResult {
@@ -544,6 +545,9 @@ function ResultCard({
             <h3 className="line-clamp-2 font-semibold leading-snug text-[var(--nourish-dark)]">
               {side.name}
             </h3>
+            {/* "by Chef Tu" byline for partner-chef sides. */}
+            <CreatorByline slug={side.id} />
+
             {/* One pill row: colored status chips (match / guided) then gray
                 descriptor tags — all one size + gap so the row reads as a
                 single family, not two mismatched rows (was 11px status above
