@@ -48,7 +48,16 @@ function MacroRing({
   const order = ["protein", "carbs", "fat"] as const;
   let offset = 0;
   return (
-    <svg viewBox="0 0 128 128" className="h-[128px] w-[128px] shrink-0">
+    <svg
+      viewBox="0 0 128 128"
+      className="h-[128px] w-[128px] shrink-0"
+      role="img"
+      aria-label={`Macronutrient ring: ${Math.round(calories)} kcal — ${Math.round(
+        shares.protein * 100,
+      )}% protein, ${Math.round(shares.carbs * 100)}% carbs, ${Math.round(
+        shares.fat * 100,
+      )}% fat`}
+    >
       <circle
         cx="64"
         cy="64"
@@ -386,6 +395,7 @@ export function NutritionRingCard({
           <button
             type="button"
             onClick={() => setShowAll((s) => !s)}
+            aria-expanded={showAll}
             className="flex w-full items-center justify-between py-1 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
           >
             {showAll ? "Hide full breakdown" : "Complete nutrient summary"}

@@ -54,6 +54,16 @@ export function BrandedFoodSearch() {
   }, [q, open]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
+  // Close on Escape (keyboard accessibility for the modal sheet).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const pick = (f: BrandedFood) => {
     logBranded(f, 1);
     toast.push({
@@ -92,7 +102,12 @@ export function BrandedFoodSearch() {
         className="flex-1"
         onClick={() => setOpen(false)}
       />
-      <div className="max-h-[80dvh] overflow-hidden rounded-t-3xl bg-[var(--nourish-cream)] pb-[env(safe-area-inset-bottom)]">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search packaged foods"
+        className="max-h-[80dvh] overflow-hidden rounded-t-3xl bg-[var(--nourish-cream)] pb-[env(safe-area-inset-bottom)]"
+      >
         <div className="flex items-center gap-2 border-b border-[var(--nourish-border)] p-4">
           <Search
             size={18}
