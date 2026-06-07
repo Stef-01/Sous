@@ -21,6 +21,7 @@ import {
 import { PathHeader } from "@/components/path/path-header";
 import { DailyNutritionCard } from "@/components/path/daily-nutrition-card";
 import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
+import { BrandedFoodSearch } from "@/components/path/branded-food-search";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
@@ -196,6 +197,7 @@ export default function PathPage() {
         <div className="mx-auto max-w-md page-x space-y-3 pt-4">
           <DailyNutritionCard />
           <WeeklyTrendCard />
+          <BrandedFoodSearch />
         </div>
 
         {/* Looking back: lifetime stats + this week's goal. Demoted below the

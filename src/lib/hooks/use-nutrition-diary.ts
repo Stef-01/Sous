@@ -18,12 +18,17 @@ import {
   computeWeeklyTrend,
   type WeeklyTrend,
 } from "@/lib/nutrition/weekly-trend";
+import type { BrandedFood } from "@/lib/nutrition/branded-food";
 
 export interface DiaryEntry {
   slug: string;
   name: string;
   servings: number;
   at: string;
+  /** Branded foods (W20): a brand label + embedded nutrition, since they're not
+   *  in the ingredient registry. When present, aggregateDay uses it directly. */
+  brand?: string;
+  nutrition?: PerServingNutrition;
 }
 
 const KEY = "sous-nutrition-diary-v1";
@@ -79,11 +84,19 @@ export function aggregateDay(
   const total: Record<string, number> = {};
   let any = false;
   for (const e of entries) {
-    const { perServing, massedCoverage } = getDishNutrition(e.slug);
-    if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) continue;
+    // Branded foods carry their own (partial) nutrition; cooked dishes resolve
+    // from the registry, coverage-gated.
+    let per: PerServingNutrition | null = e.nutrition ?? null;
+    if (!per) {
+      const { perServing, massedCoverage } = getDishNutrition(e.slug);
+      if (perServing && massedCoverage >= NUTRITION_COVERAGE_FLOOR) {
+        per = perServing;
+      }
+    }
+    if (!per) continue;
     any = true;
     for (const k of keys) {
-      const v = (perServing[k] as number | undefined) ?? 0;
+      const v = (per[k] as number | undefined) ?? 0;
       total[k] = (total[k] ?? 0) + v * e.servings;
     }
   }
@@ -132,6 +145,30 @@ export function useNutritionDiary(date = new Date()) {
     [],
   );
 
+  // Branded foods (W20) carry their own nutrition (not in the registry).
+  const logBranded = useCallback((food: BrandedFood, servings: number) => {
+    const key = dayKey(new Date());
+    setStore((prev) => {
+      const day = prev[key] ?? [];
+      const next: Store = {
+        ...prev,
+        [key]: [
+          ...day,
+          {
+            slug: `off:${food.barcode}`,
+            name: food.name,
+            brand: food.brand ?? undefined,
+            servings,
+            at: new Date().toISOString(),
+            nutrition: food.nutrition,
+          },
+        ],
+      };
+      write(next);
+      return next;
+    });
+  }, []);
+
   const removeEntry = useCallback((at: string) => {
     const key = dayKey(new Date());
     setStore((prev) => {
@@ -149,6 +186,7 @@ export function useNutritionDiary(date = new Date()) {
     todayKey,
     entries,
     logCook,
+    logBranded,
     removeEntry,
     dayNutrition,
   };

@@ -42,4 +42,19 @@ describe("aggregateDay", () => {
     expect(mixed).not.toBeNull();
     if (mixed && g) expect(mixed.calories).toBeCloseTo(g.calories, 0);
   });
+
+  it("uses a branded entry's embedded nutrition (W20), scaled by servings", () => {
+    const branded = {
+      slug: "off:123",
+      name: "Yogurt",
+      servings: 2,
+      at: "",
+      nutrition: { calories: 100, protein_g: 10 } as unknown as ReturnType<
+        typeof aggregateDay
+      >,
+    };
+    const r = aggregateDay([branded as never]);
+    expect(r?.calories).toBe(200); // 100 × 2 servings, no registry lookup
+    expect(r?.protein_g).toBe(20);
+  });
 });
