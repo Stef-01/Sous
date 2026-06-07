@@ -13,6 +13,8 @@ export interface DishRef {
   image: string | null;
   cuisine: string | null;
   tags: string[];
+  /** Recipe description — used by the dietary inference (W34). */
+  description: string;
 }
 
 const _byId = new Map<string, DishRef>();
@@ -23,6 +25,7 @@ for (const m of meals) {
     image: m.heroImageUrl ?? null,
     cuisine: (m.cuisine as string) ?? null,
     tags: [],
+    description: (m.description as string) ?? "",
   });
 }
 for (const s of sides) {
@@ -33,6 +36,7 @@ for (const s of sides) {
     image: s.imageUrl ?? null,
     cuisine: null,
     tags: s.tags ?? [],
+    description: (s.description as string) ?? "",
   });
 }
 
@@ -46,5 +50,6 @@ export function lookupDish(slug: string): DishRef {
     image: null,
     cuisine: null,
     tags: [],
+    description: "",
   };
 }

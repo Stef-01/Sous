@@ -28,6 +28,7 @@ import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
+import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
   getDishCompositionGrams,
@@ -140,6 +141,8 @@ export function MealHealthPanel({
       <NutritionSnapshot slug={slug} />
 
       <IngredientsToCheck slug={slug} />
+
+      <DietaryProfile slug={slug} />
 
       <p className="text-[10.5px] leading-relaxed text-[var(--nourish-subtext-faint)]">
         {FOOD_FIRST_HEDGE}

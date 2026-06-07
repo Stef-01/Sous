@@ -25,6 +25,7 @@ import { CreatorByline } from "@/components/shared/creator-byline";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
+import { DietaryProfile } from "@/components/shared/dietary-profile";
 import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { trpc } from "@/lib/trpc/client";
 
@@ -678,6 +679,7 @@ function ResultCard({
                   decide whether to make this side before committing. */}
               <SideNutritionRing slug={side.id} />
               <IngredientsToCheck slug={side.id} />
+              <DietaryProfile slug={side.id} />
 
               {/* Cook just this side  -  secondary inline action */}
               <button
