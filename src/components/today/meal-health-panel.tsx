@@ -27,6 +27,7 @@ import {
 import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
+import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import {
   getDishNutrition,
   getDishCompositionGrams,
@@ -155,8 +156,11 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
   if (!perServing || massedCoverage < NUTRITION_DISPLAY_FLOOR) return null;
 
   return (
-    <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
-      <NutritionRingCard nutrition={perServing} />
+    <div className="space-y-3">
+      <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
+        <NutritionRingCard nutrition={perServing} />
+      </div>
+      <BioavailabilityTip nutrition={perServing} />
     </div>
   );
 }

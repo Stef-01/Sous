@@ -24,6 +24,7 @@ import { EvaluateSheet } from "@/components/results/EvaluateSheet";
 import { CreatorByline } from "@/components/shared/creator-byline";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
+import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import { getDishNutrition } from "@/lib/engine/dish-nutrition";
 import { trpc } from "@/lib/trpc/client";
 
@@ -719,8 +720,11 @@ function SideNutritionRing({ slug }: { slug: string }) {
   const { perServing, massedCoverage } = getDishNutrition(slug);
   if (!perServing || massedCoverage < 0.7) return null;
   return (
-    <div className="rounded-2xl bg-[var(--nourish-cream)]/60 p-3">
-      <NutritionRingCard nutrition={perServing} />
+    <div className="space-y-2">
+      <div className="rounded-2xl bg-[var(--nourish-cream)]/60 p-3">
+        <NutritionRingCard nutrition={perServing} />
+      </div>
+      <BioavailabilityTip nutrition={perServing} />
     </div>
   );
 }
