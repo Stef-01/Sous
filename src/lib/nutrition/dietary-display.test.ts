@@ -2,35 +2,36 @@ import { describe, expect, it } from "vitest";
 import { dietaryDisplay } from "./dietary-display";
 
 describe("dietaryDisplay", () => {
-  it("surfaces positive diet compatibilities, deduping vegan→vegetarian", () => {
+  it("shows nothing without an ingredient list (never guesses)", () => {
+    const d = dietaryDisplay({ tags: [], ingredients: [] });
+    expect(d.diets).toEqual([]);
+    expect(d.mayContain).toEqual([]);
+  });
+
+  it("surfaces Vegan from a clean ingredient list, deduping Vegetarian", () => {
     const d = dietaryDisplay({
-      tags: ["vegan"],
-      description: "A fresh salad.",
+      tags: [],
+      ingredients: ["avocado", "lime", "cilantro", "salt", "onion"],
     });
     expect(d.diets).toContain("Vegan");
     expect(d.diets).not.toContain("Vegetarian"); // vegan already implies it
   });
 
-  it("warns 'may contain nuts' only when a nut term is detected", () => {
-    const withNuts = dietaryDisplay({
-      tags: [],
-      description: "Tossed with toasted almonds and a handful of walnuts.",
-    });
-    expect(withNuts.mayContain).toContain("nuts");
-
-    const noNuts = dietaryDisplay({
-      tags: [],
-      description: "A simple green salad with lemon.",
-    });
-    expect(noNuts.mayContain).not.toContain("nuts");
+  it("NEVER shows a positive gluten-free or dairy-free pill (safety)", () => {
+    const clean = dietaryDisplay({ tags: [], ingredients: ["rice", "water"] });
+    expect(clean.diets.join(" ")).not.toMatch(/gluten|dairy/i);
   });
 
-  it("never asserts a dish is nut/shellfish FREE (warnings are the only channel)", () => {
+  it("warns 'may contain' when a violation ingredient is present", () => {
     const d = dietaryDisplay({
       tags: [],
-      description: "A simple green salad with lemon.",
+      ingredients: ["wheat flour", "milk", "shrimp paste", "peanuts"],
     });
-    // The positive diet pills must never include an allergen-free safety claim.
-    expect(d.diets.join(" ")).not.toMatch(/nut|shellfish/i);
+    expect(d.mayContain).toContain("gluten");
+    expect(d.mayContain).toContain("dairy");
+    expect(d.mayContain).toContain("shellfish");
+    expect(d.mayContain).toContain("nuts");
+    // animal ingredients ⇒ not vegan
+    expect(d.diets).not.toContain("Vegan");
   });
 });

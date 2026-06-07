@@ -1,20 +1,22 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
+import { getMealCookSummary } from "@/data/guided-cook-summary";
 import { lookupDish } from "@/lib/utils/dish-lookup";
 import { dietaryDisplay } from "@/lib/nutrition/dietary-display";
 
 /**
- * DietaryProfile (W34) — the recipe's apparent diet compatibilities + acute
- * allergen warnings, honestly framed as inferred (never an allergen guarantee).
- * Renders nothing when there's no signal.
+ * DietaryProfile (W34) — preference-diet pills + acute-allergen warnings, read
+ * from the recipe's actual ingredient list (never a marketing blurb). Health-
+ * stakes claims (gluten/dairy) are only ever WARNINGS, never positive "free"
+ * pills. Renders nothing without an ingredient list or signal.
  */
 export function DietaryProfile({ slug }: { slug?: string }) {
   if (!slug) return null;
-  const dish = lookupDish(slug);
+  const ingredients = getMealCookSummary(slug)?.ingredientNames ?? [];
   const { diets, mayContain } = dietaryDisplay({
-    tags: dish.tags,
-    description: dish.description,
+    tags: lookupDish(slug).tags,
+    ingredients,
   });
   if (diets.length === 0 && mayContain.length === 0) return null;
 
@@ -43,10 +45,11 @@ export function DietaryProfile({ slug }: { slug?: string }) {
           May contain {mayContain.join(" · ")}
         </p>
       )}
-      {/* Safety caveat is load-bearing here, so it stays visible (not hidden). */}
-      <p className="text-[10.5px] leading-snug text-[var(--nourish-subtext-faint)]">
-        Inferred from the recipe — always check ingredients yourself if you cook
-        for allergies.
+      {/* Load-bearing safety caveat — covers allergies AND intolerances (celiac,
+          lactose), and that no warning is not a guarantee. */}
+      <p className="text-[10.5px] leading-relaxed text-[var(--nourish-subtext-faint)]">
+        From the recipe&apos;s ingredients — always check labels yourself for
+        any allergy or intolerance.
       </p>
     </div>
   );
