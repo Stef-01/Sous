@@ -61,7 +61,7 @@ export function PlanBalanceCard() {
       </div>
 
       {missing.length > 0 && (
-        <p className="flex items-center gap-1.5 text-[12px] text-[var(--nourish-dark)]">
+        <p className="flex items-center gap-1.5 text-[13px] text-[var(--nourish-dark)]">
           <Leaf
             size={13}
             className="shrink-0 text-[var(--nourish-green)]"

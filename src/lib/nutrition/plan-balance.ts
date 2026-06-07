@@ -13,18 +13,18 @@
 import { getDishCompositionGrams } from "@/lib/engine/dish-nutrition";
 import type { FoodGroup } from "@/types/ingredient";
 
+// PRIMARY protein groups only. Dairy + nuts/seeds carry some protein but are
+// usually trace at side scale, and counting them would suppress a useful
+// "add a protein" nudge for a genuinely protein-light week.
 const PROTEIN_GROUPS: ReadonlySet<FoodGroup> = new Set([
   "legume",
   "seafood",
   "poultry",
   "egg",
   "red-meat",
-  "nut-seed",
-  "dairy",
 ]);
 
 export interface PlanBalance {
-  mealsCounted: number;
   /** Distinct whole-food groups present across the plan, most grams first. */
   foodGroups: FoodGroup[];
   hasVegetable: boolean;
@@ -46,7 +46,6 @@ export function planBalance(slugs: ReadonlyArray<string>): PlanBalance {
     .map(([g]) => g);
 
   return {
-    mealsCounted: slugs.length,
     foodGroups,
     hasVegetable: foodGroups.some(
       (g) => g === "vegetable" || g === "leafy-green",
