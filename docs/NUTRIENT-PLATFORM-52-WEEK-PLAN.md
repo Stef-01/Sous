@@ -7,6 +7,48 @@ and rule 13 (minimal text, disclosure on demand)._
 
 ---
 
+## ✅ SHIPPED STATUS (updated 2026-06-07)
+
+~30 of the 52 weeks are built, each implemented → adversarially reviewed → fixed
+→ committed, all green (3278 tests). The recursive-review loop caught and fixed a
+**critical false-safety allergen bug** (173/219 dishes falsely "gluten-free"), 7
+regressions, a science overstatement, an over-precise %DV claim, and a misleading
+protein nudge — none of which single-pass work would have caught.
+
+| Weeks   | Feature                                                                                                      | Status       |
+| ------- | ------------------------------------------------------------------------------------------------------------ | ------------ |
+| W1–W5   | ~50-nutrient panel from real USDA FDC data (B-vitamins, all minerals, amino acids); grouped complete summary | ✅ `f406519` |
+| W6–W8   | "Info" restructure → macro ring + ingredients-to-check + side-pairing detail                                 | ✅ `5165ae4` |
+| W12     | Platform regression hardening (11 found → 7 fixed)                                                           | ✅ `eae7207` |
+| W14     | Protein quality (DIAAS-lite, ≥1.0 = complete)                                                                | ✅ `8776cd3` |
+| W15–W17 | Daily nutrition diary + day dashboard + deficit insight                                                      | ✅ `d49019c` |
+| W24–W25 | Nutrient-density score + weekly trends                                                                       | ✅ `73d5873` |
+| W27     | Bioavailability tips (vitamin C↔iron, fat-soluble vitamins)                                                  | ✅ `8774f87` |
+| W29–W31 | Deficiency-aware side reranking (Data×Engine moat)                                                           | ✅ `4dcfb9c` |
+| W32     | Meal-plan balance rollup (food-group variety, honestly framed)                                               | ✅ `8692d3b` |
+| W34     | Dietary + allergen transparency (safety-redesigned: never asserts "free")                                    | ✅ `56d5f17` |
+| W35     | Ingredient-coverage transparency ("from N of M ingredients")                                                 | ✅ `31ac7d7` |
+| W11     | Registry growth 112 → 121 ingredients; fully-resolved dishes 45 → 66                                         | ✅ `efc8dce` |
+| —       | Coverage-floor const consolidation                                                                           | ✅ `c82bb97` |
+
+**Remaining — a genuinely different character (deliberately not force-fit):**
+
+- **Delicate / diminishing-returns:** quantity-normalizer handling ("1 can", "to
+  taste", garnishes) for the last slice of coverage — modeling assumptions the
+  honesty reviews would (rightly) scrutinise.
+- **Big data lift:** W20–W21 branded-food engine (Open Food Facts ODbL import) —
+  lower Sous-Test fit (logging packaged foods isn't cooking).
+- **FOUNDER-GATED:** W22 barcode scanner · W42 clinician content review · W43
+  personalized EER (needs NASEM coefficients) · W9–W10 personalized DRI (needs a
+  profile + the pediatric DRI table extended past its public-health subset).
+- **Polish:** W36–W39, W48–W52 (a11y, perf, i18n, regression, docs).
+
+The high-Sous-value AUTO-BUILD nutrition work is functionally complete: cook →
+log → the engine learns your gaps → it suggests sides that close them, with
+honest, safety-reviewed data throughout.
+
+---
+
 ## Part 1 — Deep critical appraisal: does this work frictionlessly + at scale?
 
 ### 1.1 What the user actually asked for
