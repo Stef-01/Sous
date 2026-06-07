@@ -38,7 +38,7 @@ export function bioavailabilityTip(
   if (ironPct >= 0.2 && vitCPct < 0.1) {
     return {
       tip: "A squeeze of citrus or some peppers helps you absorb the iron here.",
-      why: "Vitamin C converts plant (non-heme) iron to a form the body absorbs far better.",
+      why: "Vitamin C helps your body absorb plant (non-heme) iron.",
     };
   }
 
