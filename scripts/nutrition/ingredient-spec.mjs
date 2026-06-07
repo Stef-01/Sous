@@ -8,7 +8,10 @@
  * (TherapeuticClass[]), cup (g per US cup | null), piece (g per piece | null),
  * aliases (lowercased match keys; keep them specific to avoid mis-resolution).
  *
- * Water is intentionally excluded — zero nutrition; resolving it adds nothing.
+ * Water IS included now (it was excluded as "zero nutrition") — once ingredient
+ * coverage became a surfaced honesty signal, leaving the single most common
+ * line (water) unresolved penalised every recipe that lists it. Resolving water
+ * carries ~0 nutrition but makes the "from N of M ingredients" note accurate.
  */
 
 export const SPEC = [
@@ -1263,5 +1266,80 @@ export const SPEC = [
     cup: 246,
     piece: null,
     aliases: ["ricotta", "cottage cheese", "fresh cheese"],
+  },
+  // ── water + leaveners + cheeses (registry-growth: resolve the most common
+  //    unresolved lines to raise honest coverage; water carries ~0 nutrition
+  //    but IS a real ingredient line, so resolving it makes coverage accurate
+  //    rather than penalising every recipe that lists water). ──
+  {
+    id: "water",
+    fdcId: 174158,
+    name: "Water",
+    group: "beverage",
+    classes: [],
+    cup: 237,
+    piece: null,
+    aliases: [
+      "water",
+      "cold water",
+      "hot water",
+      "warm water",
+      "filtered water",
+      "boiling water",
+      "ice water",
+      "ice",
+      "ice cubes",
+      "room temperature water",
+    ],
+  },
+  {
+    id: "baking-powder",
+    fdcId: 172803,
+    name: "Baking powder",
+    group: "other",
+    classes: [],
+    cup: 230,
+    piece: null,
+    aliases: ["baking powder", "double-acting baking powder"],
+  },
+  {
+    id: "baking-soda",
+    fdcId: 175040,
+    name: "Baking soda",
+    group: "other",
+    classes: [],
+    cup: 220,
+    piece: null,
+    aliases: ["baking soda", "sodium bicarbonate", "bicarbonate of soda"],
+  },
+  {
+    id: "cotija-cheese",
+    fdcId: 170898,
+    name: "Cotija cheese",
+    group: "dairy",
+    classes: [],
+    cup: 132,
+    piece: null,
+    aliases: ["cotija cheese", "cotija", "queso cotija"],
+  },
+  {
+    id: "mascarpone",
+    fdcId: 173418,
+    name: "Mascarpone",
+    group: "dairy",
+    classes: [],
+    cup: 232,
+    piece: null,
+    aliases: ["mascarpone", "mascarpone cheese"],
+  },
+  {
+    id: "active-dry-yeast",
+    fdcId: 175043,
+    name: "Active dry yeast",
+    group: "other",
+    classes: [],
+    cup: 136,
+    piece: 7,
+    aliases: ["instant yeast", "active dry yeast", "dry yeast", "yeast"],
   },
 ];
