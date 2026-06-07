@@ -73,7 +73,10 @@
 - **Real Content-tab editorial** (clinician names + lab affiliations) — a
   Stage-2 editorial workstream protected by rule 11; sample content stays
   flagged `isPlaceholder`.
-- **i18n, legal pages, clinical-partner flow** — content/decision work.
+- **i18n** — DEFERRED to the final public launch (post-beta) per founder
+  direction (2026-06-07). It is NOT a beta deliverable; do not schedule string
+  externalization or number/unit localization into beta work.
+- **Legal pages, clinical-partner flow** — content/decision work.
 
 ---
 

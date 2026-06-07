@@ -41,7 +41,10 @@ protein nudge — none of which single-pass work would have caught.
 - **FOUNDER-GATED:** W22 barcode scanner · W42 clinician content review · W43
   personalized EER (needs NASEM coefficients) · W9–W10 personalized DRI (needs a
   profile + the pediatric DRI table extended past its public-health subset).
-- **Polish:** W36–W39, W48–W52 (a11y, perf, i18n, regression, docs).
+- **Polish:** W36–W39, W48–W52 — a11y (✅ done for the new surfaces), perf,
+  regression, docs. **i18n is explicitly DEFERRED to the final public launch
+  (post-beta), per founder direction (2026-06-07) — it is not a beta deliverable
+  and must not be scheduled into beta work.**
 
 The high-Sous-value AUTO-BUILD nutrition work is functionally complete: cook →
 log → the engine learns your gaps → it suggests sides that close them, with
@@ -414,7 +417,11 @@ review queue + educational gating already exist; gated on a real reviewer.
 spotlight a nutrient/ingredient — the "ingredient advertisement" variant the user
 asked for).
 **W47 — Onboarding: nutrition goals (playful) [AB]**.
-**W48 — A11y + i18n number/unit formatting [AB]**.
+**W48 — A11y + i18n number/unit formatting [AB]**. _A11y: ✅ done for the new
+nutrition surfaces (dialog/Escape, ring SVG aria-label, aria-expanded). i18n
+(incl. number/unit formatting + string externalization) is DEFERRED to the final
+public launch (post-beta) per founder direction 2026-06-07 — do NOT schedule it
+into beta._
 **W49 — Full regression + drift-guard sweep [AB]**.
 **W50 — Scale test: 1000 dishes, 500 ingredients [AB]** — generate synthetic load,
 confirm build-time composition + bundle budgets hold.
