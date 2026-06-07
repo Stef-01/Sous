@@ -26,6 +26,7 @@ import {
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
+import { PlanBalanceCard } from "@/components/path/plan-balance-card";
 import {
   buildSlotKey,
   type DayKey,
@@ -181,7 +182,10 @@ export default function SwipePlannerPage() {
         {!planMounted || !pantryMounted ? (
           <div className="h-64 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white" />
         ) : isComplete ? (
-          <CompletionPanel scheduled={scheduledCount} />
+          <div className="space-y-4">
+            <CompletionPanel scheduled={scheduledCount} />
+            <PlanBalanceCard />
+          </div>
         ) : currentCard ? (
           <AnimatePresence mode="wait" initial={false}>
             <motion.article
