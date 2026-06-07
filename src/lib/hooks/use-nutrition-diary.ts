@@ -181,6 +181,15 @@ export function useNutritionDiary(date = new Date()) {
 
   const entries = store[todayKey] ?? EMPTY_ENTRIES;
   const dayNutrition = useMemo(() => aggregateDay(entries), [entries]);
+  // Gap signals (deficit insight + weekly trend + the deficiency reranker) use
+  // COOKED dishes only. Branded foods report macros but rarely micros, so their
+  // honest zeros would otherwise fabricate micronutrient deficits (a logged soda
+  // would make the engine think you're short on iron). They still count in the
+  // day-total ring (dayNutrition) — just not in "what your cooking is missing".
+  const cookedDayNutrition = useMemo(
+    () => aggregateDay(entries.filter((e) => !e.nutrition)),
+    [entries],
+  );
   return {
     mounted,
     todayKey,
@@ -189,6 +198,7 @@ export function useNutritionDiary(date = new Date()) {
     logBranded,
     removeEntry,
     dayNutrition,
+    cookedDayNutrition,
   };
 }
 
@@ -214,7 +224,12 @@ export function useNutritionWeek(): { mounted: boolean } & WeeklyTrend {
     for (let i = 0; i < 7; i += 1) {
       const d = new Date(now);
       d.setDate(now.getDate() - i);
-      perDay.push(aggregateDay(store[dayKey(d)] ?? EMPTY_ENTRIES));
+      // Cooked dishes only — branded foods' missing micros must not fabricate
+      // a "short" day in the trend (see cookedDayNutrition above).
+      const cooked = (store[dayKey(d)] ?? EMPTY_ENTRIES).filter(
+        (e) => !e.nutrition,
+      );
+      perDay.push(aggregateDay(cooked));
     }
     return computeWeeklyTrend(perDay);
   }, [store]);

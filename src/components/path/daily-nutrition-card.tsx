@@ -6,12 +6,14 @@ import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { topDeficit } from "@/lib/nutrition/deficits";
 
 export function DailyNutritionCard() {
-  const { mounted, entries, dayNutrition, removeEntry } = useNutritionDiary();
+  const { mounted, entries, dayNutrition, cookedDayNutrition, removeEntry } =
+    useNutritionDiary();
 
   if (!mounted || entries.length === 0) return null;
 
-  // Shared deficit computation (no duplicated nutrient set → no drift).
-  const deficit = topDeficit(dayNutrition);
+  // The ring shows the whole day; the gap insight uses cooked-only nutrition so
+  // a branded food's missing micros can't fabricate a deficit.
+  const deficit = topDeficit(cookedDayNutrition);
 
   return (
     <section className="space-y-3 rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">

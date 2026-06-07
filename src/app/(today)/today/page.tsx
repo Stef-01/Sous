@@ -179,14 +179,15 @@ function TodayPageContent() {
   // W29 deficiency-fill: today's nutrient gaps from the diary. Stable across
   // renders (dayNutrition is memoised), so it doesn't thrash the pairing query;
   // empty/undefined when nothing's logged → byte-identical ranking.
-  const { dayNutrition } = useNutritionDiary();
+  // Cooked-only — branded foods' missing micros must not drive side suggestions.
+  const { cookedDayNutrition } = useNutritionDiary();
   const dayDeficits = useMemo(() => {
-    const map = deficitWeightMap(dayNutrition);
+    const map = deficitWeightMap(cookedDayNutrition);
     if (map.size === 0) return undefined;
     const rec: Record<string, number> = {};
     for (const [k, v] of map) rec[k] = Math.round(v * 100) / 100;
     return rec;
-  }, [dayNutrition]);
+  }, [cookedDayNutrition]);
 
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
