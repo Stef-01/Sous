@@ -38,6 +38,15 @@ export const DISH_SERVINGS: Record<string, number> = {
   // Condiment-scale.
   "smashed-cucumber-salad": 6,
   sunomono: 6,
+  // Chef Tu broth-heavy mains — a whole-chicken pho / big bone broth yields
+  // ~6-8 bowls, so counting the whole protein ÷ the default 4 overstates every
+  // serving. These are the big noodle soups; other mains keep the 4 default.
+  "tu-pho-ga": 6,
+  "tu-pho-dac-biet": 8,
+  "tu-turkey-pho": 6,
+  "tu-bun-bo-hue": 8,
+  "tu-bun-rieu": 6,
+  "tu-banh-canh-gio-heo-tom": 6,
 };
 
 /** The base serving count for a side dish (override → default). */

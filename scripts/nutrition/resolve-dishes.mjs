@@ -22,7 +22,7 @@ const resolver = await import(
   new URL("src/lib/nutrition/resolve-dish-lines.ts", base)
 );
 
-const { guidedCookData } = guided;
+const { guidedCookData, guidedCookMeals } = guided;
 const { MEAL_INGREDIENTS } = meals;
 const { sideServings } = servingsMod;
 const { resolveDishLines } = resolver;
@@ -72,6 +72,29 @@ for (const slug of mealSlugs) {
   links[slug] = {
     recipeSlug: slug,
     servingsPerRecipe: meal.servings,
+    originalLineCount,
+    lines,
+  };
+}
+
+// Meals with a guided-cook flow but NO curated MEAL_INGREDIENTS list (all of
+// Chef Tu's) — resolve their step-by-step ingredient lines so the Info sheet can
+// actually preview nutrition. Skip any already handled above (the quantified
+// MEAL_INGREDIENTS exemplar wins for the 6 overlapping meals).
+for (const slug of Object.keys(guidedCookMeals ?? {})) {
+  if (links[slug]) continue;
+  const { lines, originalLineCount, unresolved } = resolveDishLines(
+    guidedCookMeals[slug].ingredients ?? [],
+  );
+  totalLines += originalLineCount;
+  resolvedLines += lines.length;
+  massedLines += lines.filter((l) => l.grams > 0).length;
+  for (const name of unresolved) {
+    unresolvedNames.set(name, (unresolvedNames.get(name) ?? 0) + 1);
+  }
+  links[slug] = {
+    recipeSlug: slug,
+    servingsPerRecipe: sideServings(slug),
     originalLineCount,
     lines,
   };
@@ -146,5 +169,5 @@ const outPath = path.join(
 );
 fs.writeFileSync(outPath, out);
 console.log(
-  `\nwrote ${allSlugs.length} dish links (${slugs.length} sides + ${mealSlugs.length} meals) → ${outPath}`,
+  `\nwrote ${allSlugs.length} dish links (${slugs.length} sides + ${allSlugs.length - slugs.length} meals) → ${outPath}`,
 );
