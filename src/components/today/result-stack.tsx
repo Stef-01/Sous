@@ -26,7 +26,10 @@ import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
-import { getDishNutrition } from "@/lib/engine/dish-nutrition";
+import {
+  getDishNutrition,
+  NUTRITION_COVERAGE_FLOOR,
+} from "@/lib/engine/dish-nutrition";
 import { trpc } from "@/lib/trpc/client";
 
 export interface SideResult {
@@ -721,7 +724,7 @@ function getPairingSignal(side: SideResult, rank: number): string {
 function SideNutritionRing({ slug }: { slug: string }) {
   const { perServing, massedCoverage, massedLines, totalLines } =
     getDishNutrition(slug);
-  if (!perServing || massedCoverage < 0.7) return null;
+  if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) return null;
   return (
     <div className="space-y-2">
       <div className="rounded-2xl bg-[var(--nourish-cream)]/60 p-3">

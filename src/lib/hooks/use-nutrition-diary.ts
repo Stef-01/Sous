@@ -9,7 +9,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PerServingNutrition } from "@/types/nutrition";
-import { getDishNutrition } from "@/lib/engine/dish-nutrition";
+import {
+  getDishNutrition,
+  NUTRITION_COVERAGE_FLOOR,
+} from "@/lib/engine/dish-nutrition";
 import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
 import {
   computeWeeklyTrend,
@@ -77,7 +80,7 @@ export function aggregateDay(
   let any = false;
   for (const e of entries) {
     const { perServing, massedCoverage } = getDishNutrition(e.slug);
-    if (!perServing || massedCoverage < 0.7) continue;
+    if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) continue;
     any = true;
     for (const k of keys) {
       const v = (perServing[k] as number | undefined) ?? 0;

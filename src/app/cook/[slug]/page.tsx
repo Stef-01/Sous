@@ -30,7 +30,10 @@ import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import { ServingSlider } from "@/components/guided-cook/serving-slider";
 import { CookNutritionReadout } from "@/components/guided-cook/cook-nutrition-readout";
 import { scaleQuantity } from "@/lib/cook/scale-quantity";
-import { getDishNutrition } from "@/lib/engine/dish-nutrition";
+import {
+  getDishNutrition,
+  NUTRITION_COVERAGE_FLOOR,
+} from "@/lib/engine/dish-nutrition";
 import { getRecipeLink } from "@/data/ingredients/recipe-links";
 import { CookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import type { StaticCookStep } from "@/data/guided-cook-steps";
@@ -747,7 +750,7 @@ export default function GuidedCookPage({
                   onChange={setServingsOverride}
                 />
                 {dishNutrition.perServing &&
-                  dishNutrition.massedCoverage >= 0.7 && (
+                  dishNutrition.massedCoverage >= NUTRITION_COVERAGE_FLOOR && (
                     <CookNutritionReadout
                       perServing={dishNutrition.perServing}
                       servings={servings}

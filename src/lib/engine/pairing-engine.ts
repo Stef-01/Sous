@@ -32,7 +32,7 @@ import {
   DEFICIENCY_FILL_WEIGHT,
   type DeficiencyContext,
 } from "./scorers/deficiency-fill";
-import { getDishNutrition } from "./dish-nutrition";
+import { getDishNutrition, NUTRITION_COVERAGE_FLOOR } from "./dish-nutrition";
 import {
   therapeuticsActive,
   registryIsClinicianApproved,
@@ -182,7 +182,8 @@ function reblendDeficiency(
   const wD = DEFICIENCY_FILL_WEIGHT;
   const blended = ranked.map((c) => {
     const { perServing, massedCoverage } = getDishNutrition(c.sideDish.slug);
-    const nutrition = massedCoverage >= 0.7 ? perServing : null;
+    const nutrition =
+      massedCoverage >= NUTRITION_COVERAGE_FLOOR ? perServing : null;
     const d = scoreDeficiencyFill(ctx.deficits, nutrition);
     return {
       ...c,

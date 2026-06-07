@@ -32,6 +32,7 @@ import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
   getDishCompositionGrams,
+  NUTRITION_COVERAGE_FLOOR,
   type DishCompositionGrams,
 } from "@/lib/engine/dish-nutrition";
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
@@ -151,13 +152,10 @@ export function MealHealthPanel({
   );
 }
 
-/** Coverage below which composed macros are too partial to show honestly. */
-const NUTRITION_DISPLAY_FLOOR = 0.7;
-
 function NutritionSnapshot({ slug }: { slug?: string }) {
   const { perServing, massedCoverage, massedLines, totalLines } =
     getDishNutrition(slug);
-  if (!perServing || massedCoverage < NUTRITION_DISPLAY_FLOOR) return null;
+  if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) return null;
 
   return (
     <div className="space-y-3">

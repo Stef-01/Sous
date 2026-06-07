@@ -22,6 +22,14 @@ import {
   FRYING_ABSORPTION,
 } from "@/lib/nutrition/compose";
 
+/**
+ * Minimum ingredient-mass coverage for composed nutrition to be shown/used.
+ * Below this, too many ingredient lines failed to resolve to a gram mass for
+ * the totals to be honest — surfaces hide it and the engine skips it. Single
+ * source of truth so the floor can never drift between consumers.
+ */
+export const NUTRITION_COVERAGE_FLOOR = 0.7;
+
 export interface DishNutrition {
   /** Composed per-serving nutrition (system-facing; see honesty note above). */
   perServing: PerServingNutrition | null;
