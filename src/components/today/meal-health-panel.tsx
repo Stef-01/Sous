@@ -155,13 +155,17 @@ export function MealHealthPanel({
 const NUTRITION_DISPLAY_FLOOR = 0.7;
 
 function NutritionSnapshot({ slug }: { slug?: string }) {
-  const { perServing, massedCoverage } = getDishNutrition(slug);
+  const { perServing, massedCoverage, massedLines, totalLines } =
+    getDishNutrition(slug);
   if (!perServing || massedCoverage < NUTRITION_DISPLAY_FLOOR) return null;
 
   return (
     <div className="space-y-3">
       <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
-        <NutritionRingCard nutrition={perServing} />
+        <NutritionRingCard
+          nutrition={perServing}
+          coverage={{ massed: massedLines, total: totalLines }}
+        />
       </div>
       <BioavailabilityTip nutrition={perServing} />
     </div>

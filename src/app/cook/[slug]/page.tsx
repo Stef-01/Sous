@@ -753,6 +753,10 @@ export default function GuidedCookPage({
                       servings={servings}
                       slug={dish.slug}
                       name={dish.name}
+                      coverage={{
+                        massed: dishNutrition.massedLines,
+                        total: dishNutrition.totalLines,
+                      }}
                     />
                   )}
               </div>

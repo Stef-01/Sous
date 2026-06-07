@@ -224,6 +224,7 @@ function NutrientBar({ row }: { row: NRow }) {
 export function NutritionRingCard({
   nutrition,
   servings = 1,
+  coverage,
   className,
 }: {
   nutrition: PerServingNutrition;
@@ -231,6 +232,9 @@ export function NutritionRingCard({
    *  visibly drives the ring. Per-serving values are invariant by design, so
    *  without this the ring would never move. */
   servings?: number;
+  /** Ingredient coverage (W35) — how many of the recipe's ingredients were
+   *  actually counted. Shown in the footnote so a partial total is honest. */
+  coverage?: { massed: number; total: number };
   className?: string;
 }) {
   const [showAll, setShowAll] = useState(false);
@@ -273,6 +277,16 @@ export function NutritionRingCard({
   })).filter((g) => g.items.length > 0);
   // Protein completeness (DIAAS-lite) — invariant to servings.
   const pq = proteinQuality(nutrition);
+  // W35: the footnote tells the truth about data completeness. Coverage (how
+  // many of the recipe's ingredients were actually counted) is the variable,
+  // informative signal — most dishes have a few unmapped ingredients that
+  // undercount the totals. Confidence is the fallback (uniformly USDA-mapped).
+  const sourcePhrase =
+    coverage && coverage.massed < coverage.total
+      ? `from ${coverage.massed} of ${coverage.total} ingredients`
+      : nutrition.confidence === "approximated"
+        ? "composed from USDA data, some ingredients estimated"
+        : "composed from USDA ingredient data";
 
   const legend: Array<["protein" | "carbs" | "fat", number]> = [
     ["protein", protein],
@@ -418,9 +432,8 @@ export function NutritionRingCard({
       )}
 
       <p className="text-[11px] leading-snug text-[var(--nourish-subtext-faint)]">
-        {mult > 1 ? `Totals for ${Math.round(mult)} servings` : "Per serving"} ·
-        composed live from USDA ingredient data · % of FDA Daily Value · an
-        estimate.
+        {mult > 1 ? `Totals for ${Math.round(mult)} servings` : "Per serving"} ·{" "}
+        {sourcePhrase} · % of FDA Daily Value · an estimate.
       </p>
     </div>
   );

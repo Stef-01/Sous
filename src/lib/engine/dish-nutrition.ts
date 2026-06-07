@@ -27,13 +27,22 @@ export interface DishNutrition {
   perServing: PerServingNutrition | null;
   /** Fraction of source ingredient lines resolved to a positive gram mass. */
   massedCoverage: number;
+  /** Ingredient lines that resolved to a gram mass (and so were counted). */
+  massedLines: number;
+  /** Total ingredient lines in the source recipe. */
+  totalLines: number;
 }
 
 export function getDishNutrition(
   slug: string | undefined,
   ingestedAt = "",
 ): DishNutrition {
-  const empty: DishNutrition = { perServing: null, massedCoverage: 0 };
+  const empty: DishNutrition = {
+    perServing: null,
+    massedCoverage: 0,
+    massedLines: 0,
+    totalLines: 0,
+  };
   if (!slug) return empty;
   const link = getRecipeLink(slug);
   if (!link || link.lines.length === 0) return empty;
@@ -53,6 +62,8 @@ export function getDishNutrition(
   return {
     perServing: result.success ? result.data : null,
     massedCoverage,
+    massedLines: massed,
+    totalLines: link.originalLineCount,
   };
 }
 

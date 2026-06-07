@@ -719,12 +719,16 @@ function getPairingSignal(side: SideResult, rank: number): string {
 
 /** The side's macro-ring nutrition, gated by composition coverage. */
 function SideNutritionRing({ slug }: { slug: string }) {
-  const { perServing, massedCoverage } = getDishNutrition(slug);
+  const { perServing, massedCoverage, massedLines, totalLines } =
+    getDishNutrition(slug);
   if (!perServing || massedCoverage < 0.7) return null;
   return (
     <div className="space-y-2">
       <div className="rounded-2xl bg-[var(--nourish-cream)]/60 p-3">
-        <NutritionRingCard nutrition={perServing} />
+        <NutritionRingCard
+          nutrition={perServing}
+          coverage={{ massed: massedLines, total: totalLines }}
+        />
       </div>
       <BioavailabilityTip nutrition={perServing} />
     </div>

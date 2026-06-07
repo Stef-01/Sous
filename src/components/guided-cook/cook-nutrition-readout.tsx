@@ -22,18 +22,24 @@ export function CookNutritionReadout({
   servings,
   slug,
   name,
+  coverage,
 }: {
   perServing: PerServingNutrition;
   servings: number;
   slug?: string;
   name?: string;
+  coverage?: { massed: number; total: number };
 }) {
   const { logCook, entries } = useNutritionDiary();
   const logged = !!slug && entries.some((e) => e.slug === slug);
 
   return (
     <div className="space-y-4 p-4">
-      <NutritionRingCard nutrition={perServing} servings={servings} />
+      <NutritionRingCard
+        nutrition={perServing}
+        servings={servings}
+        coverage={coverage}
+      />
       <BioavailabilityTip nutrition={perServing} />
       {slug && name && (
         <button

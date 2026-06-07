@@ -18,14 +18,14 @@ describe("getDishNutrition", () => {
   });
 
   it("is empty + null for undefined / unknown slugs (safe fallback)", () => {
-    expect(getDishNutrition(undefined)).toEqual({
+    const empty = {
       perServing: null,
       massedCoverage: 0,
-    });
-    expect(getDishNutrition("no-such-dish")).toEqual({
-      perServing: null,
-      massedCoverage: 0,
-    });
+      massedLines: 0,
+      totalLines: 0,
+    };
+    expect(getDishNutrition(undefined)).toEqual(empty);
+    expect(getDishNutrition("no-such-dish")).toEqual(empty);
   });
 });
 
