@@ -613,6 +613,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 6,
     lines: [
+      { ingredientId: "pinto-beans", grams: 0, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "onion", grams: 55, isOptional: false },
       { ingredientId: "garlic", grams: 6, isOptional: false },
@@ -775,6 +776,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 6,
     lines: [
+      { ingredientId: "mixed-greens", grams: 141.75, isOptional: false },
       { ingredientId: "shallots", grams: 25, isOptional: false },
       { ingredientId: "dijon-mustard", grams: 5.19, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 29.88, isOptional: false },
@@ -1039,6 +1041,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     lines: [
       { ingredientId: "white-rice", grams: 370, isOptional: false },
       { ingredientId: "red-lentils", grams: 96, isOptional: false },
+      { ingredientId: "fenugreek-seeds", grams: 1.56, isOptional: false },
       { ingredientId: "white-rice", grams: 23.13, isOptional: true },
       { ingredientId: "table-salt", grams: 6.08, isOptional: false },
       { ingredientId: "ghee", grams: 0, isOptional: false },

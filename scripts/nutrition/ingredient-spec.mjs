@@ -1342,4 +1342,36 @@ export const SPEC = [
     piece: 7,
     aliases: ["instant yeast", "active dry yeast", "dry yeast", "yeast"],
   },
+  // ── one-line-from-full dishes: each of these resolves the LAST unmapped
+  //    ingredient in a recipe that was sitting just under the coverage floor. ──
+  {
+    id: "pinto-beans",
+    fdcId: 173797,
+    name: "Pinto beans",
+    group: "legume",
+    classes: ["soluble-fiber", "plant-protein"],
+    cup: 171,
+    piece: null,
+    aliases: ["pinto beans", "canned pinto beans", "pinto bean"],
+  },
+  {
+    id: "fenugreek-seeds",
+    fdcId: 171324,
+    name: "Fenugreek seeds",
+    group: "herb-spice",
+    classes: [],
+    cup: 150,
+    piece: null,
+    aliases: ["fenugreek seeds", "fenugreek", "methi"],
+  },
+  {
+    id: "mixed-greens",
+    fdcId: 169249,
+    name: "Mixed salad greens",
+    group: "leafy-green",
+    classes: [],
+    cup: 36,
+    piece: null,
+    aliases: ["mixed salad greens", "mixed greens", "salad greens", "mesclun"],
+  },
 ];
