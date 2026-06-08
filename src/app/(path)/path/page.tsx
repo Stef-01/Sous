@@ -14,6 +14,7 @@ import {
   ChevronDown,
   Heart,
   Leaf,
+  NotebookText,
   ShoppingCart,
   Sparkles,
   Users,
@@ -288,6 +289,11 @@ export default function PathPage() {
               >
                 <div className="grid grid-cols-3 gap-2 pt-2">
                   {[
+                    {
+                      href: "/path/diary",
+                      icon: NotebookText,
+                      label: "Diary",
+                    },
                     {
                       href: "/path/pantry",
                       icon: Bookmark,
