@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, X, Plus, Loader2 } from "lucide-react";
+import { Search, X, Plus, Minus, Loader2 } from "lucide-react";
 import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
 import type { BrandedFood } from "@/lib/nutrition/branded-food";
 import { toast } from "@/lib/hooks/use-toast";
@@ -9,7 +9,7 @@ import { toast } from "@/lib/hooks/use-toast";
 /**
  * BrandedFoodSearch (W20-W21) — search Open Food Facts for a packaged food and
  * log it to the diary alongside cooked dishes. Opens a search sheet; debounced
- * server-proxied query; tap a result to log one serving.
+ * server-proxied query; pick a servings count, then tap a result to log it.
  */
 export function BrandedFoodSearch() {
   const [open, setOpen] = useState(false);
@@ -17,6 +17,7 @@ export function BrandedFoodSearch() {
   const [results, setResults] = useState<BrandedFood[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [servings, setServings] = useState(1);
   const { logBranded } = useNutritionDiary();
 
   /* eslint-disable react-hooks/set-state-in-effect -- debounced search: clears
@@ -64,24 +65,34 @@ export function BrandedFoodSearch() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const pick = (f: BrandedFood) => {
-    logBranded(f, 1);
-    toast.push({
-      variant: "success",
-      title: `Logged ${f.name}`,
-      body: "Added to today's nutrition",
-      dedupKey: "branded-log",
-    });
+  const close = () => {
     setOpen(false);
     setQ("");
     setResults([]);
+    setServings(1);
+  };
+
+  const pick = (f: BrandedFood) => {
+    logBranded(f, servings);
+    toast.push({
+      variant: "success",
+      title: `Logged ${servings === 1 ? "" : `${servings}× `}${f.name}`,
+      body: "Added to today's nutrition",
+      dedupKey: "branded-log",
+    });
+    close();
   };
 
   if (!open) {
     return (
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setQ("");
+          setResults([]);
+          setServings(1);
+          setOpen(true);
+        }}
         className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-dark)] transition-colors hover:bg-neutral-50"
       >
         <Search
@@ -100,7 +111,7 @@ export function BrandedFoodSearch() {
         type="button"
         aria-label="Close"
         className="flex-1"
-        onClick={() => setOpen(false)}
+        onClick={close}
       />
       <div
         role="dialog"
@@ -124,12 +135,43 @@ export function BrandedFoodSearch() {
           />
           <button
             type="button"
-            onClick={() => setOpen(false)}
+            onClick={close}
             aria-label="Close"
             className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-neutral-200/60"
           >
             <X size={16} />
           </button>
+        </div>
+
+        {/* Servings stepper — applies to the next food you tap. Half-step so a
+            half portion ("half a soda") is loggable. */}
+        <div className="flex items-center justify-between border-b border-[var(--nourish-border)] px-4 py-2.5">
+          <span className="text-[13px] font-medium text-[var(--nourish-subtext)]">
+            Servings
+          </span>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setServings((s) => Math.max(0.5, s - 0.5))}
+              disabled={servings <= 0.5}
+              aria-label="Fewer servings"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors hover:bg-neutral-50 disabled:opacity-40"
+            >
+              <Minus size={15} />
+            </button>
+            <span className="w-8 text-center text-[15px] font-semibold tabular-nums text-[var(--nourish-dark)]">
+              {servings % 1 === 0 ? servings : servings.toFixed(1)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setServings((s) => Math.min(10, s + 0.5))}
+              disabled={servings >= 10}
+              aria-label="More servings"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors hover:bg-neutral-50 disabled:opacity-40"
+            >
+              <Plus size={15} />
+            </button>
+          </div>
         </div>
 
         <div className="max-h-[60dvh] overflow-y-auto p-2">

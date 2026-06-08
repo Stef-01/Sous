@@ -76,9 +76,9 @@ export default function CombinedCookPage() {
 function CombinedCookContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // W7 follow-up: reduced-motion gate. Consumed by the page-shell
-  // entrance below; full per-site gating queued in Tier 1 of
-  // docs/REDUCED-MOTION-GATE-TODO.md.
+  // Reduced-motion gate, consumed by the page-shell entrance below. Site-wide
+  // gating is complete (the sous/reduced-motion-gate ESLint rule is enforced at
+  // error; see docs/REDUCED-MOTION-GATE-TODO.md, marked done 2026-06-04).
   const reducedMotion = useReducedMotion();
 
   const mainSlug = searchParams.get("main") ?? "";

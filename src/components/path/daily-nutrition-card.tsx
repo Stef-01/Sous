@@ -44,7 +44,7 @@ export function DailyNutritionCard() {
           >
             <span className="min-w-0 flex-1 truncate">
               {e.name.replace(/\s*\([^)]*\)\s*$/, "").trim() || e.name}
-              {e.servings > 1 && (
+              {e.servings !== 1 && (
                 <span className="text-[var(--nourish-subtext)]">
                   {" "}
                   × {e.servings}
