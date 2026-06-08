@@ -31,6 +31,7 @@ import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import { AyurvedicDishNote } from "@/components/shared/ayurvedic-dish-note";
 import { GlycemicPill } from "@/components/shared/glycemic-pill";
 import { NutritionShareButton } from "@/components/shared/nutrition-share-button";
+import { LogItButton } from "@/components/shared/log-it-button";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
@@ -182,7 +183,12 @@ function NutritionSnapshot({
         ingredientIds={ingredientIds}
       />
       <AyurvedicDishNote ingredientIds={ingredientIds} />
-      <div className="flex justify-end">
+      <div className="flex items-center justify-between gap-2">
+        {slug ? (
+          <LogItButton slug={slug} name={dishName ?? "This dish"} />
+        ) : (
+          <span />
+        )}
         <NutritionShareButton
           title={dishName ?? "This dish"}
           nutrition={perServing}

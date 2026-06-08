@@ -111,6 +111,47 @@ export function aggregateDay(
   } as PerServingNutrition;
 }
 
+type DiaryStore = Record<string, DiaryEntry[]>;
+
+/** W15 — consecutive days (ending today or yesterday) that have ≥1 entry. An
+ *  un-logged today does NOT reset a live streak — you can still log later. */
+export function loggingStreak(store: DiaryStore, today: Date): number {
+  const d = new Date(today);
+  const hasToday = (store[dayKey(d)]?.length ?? 0) > 0;
+  if (!hasToday) d.setDate(d.getDate() - 1);
+  let streak = 0;
+  for (let i = 0; i < 400; i++) {
+    if ((store[dayKey(d)]?.length ?? 0) > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else break;
+  }
+  return streak;
+}
+
+/** W8 — most-recent DISTINCT cooked dishes across history, newest first, for the
+ *  quick-add tray (branded entries excluded — you re-cook dishes, not sodas). */
+export function recentDistinctDishes(
+  store: DiaryStore,
+  limit = 6,
+): { slug: string; name: string }[] {
+  const byDayDesc = Object.keys(store).sort((a, b) => (a < b ? 1 : -1));
+  const seen = new Set<string>();
+  const out: { slug: string; name: string }[] = [];
+  for (const day of byDayDesc) {
+    const entries = [...(store[day] ?? [])].sort((a, b) =>
+      a.at < b.at ? 1 : -1,
+    );
+    for (const e of entries) {
+      if (e.brand || seen.has(e.slug)) continue;
+      seen.add(e.slug);
+      out.push({ slug: e.slug, name: e.name });
+      if (out.length >= limit) return out;
+    }
+  }
+  return out;
+}
+
 export function useNutritionDiary(date = new Date()) {
   const [store, setStore] = useState<Store>({});
   const [mounted, setMounted] = useState(false);
@@ -235,4 +276,24 @@ export function useNutritionWeek(): { mounted: boolean } & WeeklyTrend {
   }, [store]);
 
   return { mounted, ...result };
+}
+
+/**
+ * useDiaryHistory (W8/W15) — read-only access to the whole diary store for the
+ * logging streak + the quick-add recents. Same hydration guard as the others.
+ */
+export function useDiaryHistory() {
+  const [store, setStore] = useState<Store>({});
+  const [mounted, setMounted] = useState(false);
+
+  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from localStorage on mount */
+  useEffect(() => {
+    setStore(read());
+    setMounted(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const streak = useMemo(() => loggingStreak(store, new Date()), [store]);
+  const recents = useMemo(() => recentDistinctDishes(store, 6), [store]);
+  return { mounted, streak, recents };
 }
