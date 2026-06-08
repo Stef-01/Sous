@@ -330,3 +330,92 @@ export function ayurvedicHerbsForDish(
   }
   return out;
 }
+
+/**
+ * W20 — a structured interaction matrix, DERIVED from each herb's safety note
+ * (so it can never drift from the prose). Surfaced as compact caution tags.
+ */
+export type InteractionTag =
+  | "blood-thinners"
+  | "glucose-meds"
+  | "blood-pressure-meds"
+  | "pregnancy"
+  | "antidepressants"
+  | "thyroid"
+  | "sedatives"
+  | "liver";
+
+const INTERACTION_LABEL: Record<InteractionTag, string> = {
+  "blood-thinners": "Blood thinners",
+  "glucose-meds": "Diabetes meds",
+  "blood-pressure-meds": "Blood-pressure meds",
+  pregnancy: "Pregnancy",
+  antidepressants: "Antidepressants",
+  thyroid: "Thyroid meds",
+  sedatives: "Sedatives",
+  liver: "Liver (high dose)",
+};
+
+export function interactionLabel(tag: InteractionTag): string {
+  return INTERACTION_LABEL[tag];
+}
+
+export function herbInteractions(herb: AyurvedicHerb): InteractionTag[] {
+  const s = herb.safety.toLowerCase();
+  const tags: InteractionTag[] = [];
+  if (/blood thinner/.test(s)) tags.push("blood-thinners");
+  if (/glucose|diabetes med|blood sugar|glucose-lowering/.test(s))
+    tags.push("glucose-meds");
+  if (/blood.?pressure/.test(s)) tags.push("blood-pressure-meds");
+  if (/pregnan/.test(s)) tags.push("pregnancy");
+  if (/antidepressant|ssri/.test(s)) tags.push("antidepressants");
+  if (/thyroid/.test(s)) tags.push("thyroid");
+  if (/sedative/.test(s)) tags.push("sedatives");
+  if (/liver/.test(s)) tags.push("liver");
+  return tags;
+}
+
+/**
+ * W24 — gentle condition tie-ins, ONLY where the trial evidence supports a named
+ * outcome. Educational, not a prescription; surfaced behind the same honesty rails.
+ */
+const CONDITION_TIE_INS: Record<string, { condition: string; note: string }> = {
+  ginger: {
+    condition: "Nausea",
+    note: "Strong RCT support, especially pregnancy and post-operative nausea.",
+  },
+  turmeric: {
+    condition: "Joint comfort",
+    note: "Curcumin extracts ease knee osteoarthritis pain in trials.",
+  },
+  fenugreek: {
+    condition: "Blood sugar",
+    note: "Lowers fasting glucose / HbA1c in trials, mostly at higher doses.",
+  },
+  tulsi: {
+    condition: "Blood sugar",
+    note: "Lowers fasting glucose in adults with metabolic disease.",
+  },
+  nigella: {
+    condition: "Blood sugar & lipids",
+    note: "Improves glucose and cholesterol across many trials.",
+  },
+  garlic: {
+    condition: "Blood pressure",
+    note: "Modestly lowers blood pressure and LDL cholesterol.",
+  },
+  saffron: {
+    condition: "Low mood",
+    note: "Eases mild-to-moderate depression in trials.",
+  },
+  amla: {
+    condition: "Cholesterol",
+    note: "Linked to improved blood lipids across RCTs.",
+  },
+};
+
+export function herbConditionTieIn(
+  id: string,
+): { condition: string; note: string } | null {
+  return CONDITION_TIE_INS[id] ?? null;
+}

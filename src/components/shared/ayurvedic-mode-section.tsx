@@ -5,6 +5,9 @@ import { Leaf, ChevronDown, ExternalLink, AlertTriangle } from "lucide-react";
 import { useAyurvedicMode } from "@/lib/hooks/use-ayurvedic-mode";
 import {
   AYURVEDIC_HERBS,
+  herbInteractions,
+  herbConditionTieIn,
+  interactionLabel,
   type EvidenceStrength,
 } from "@/data/ayurvedic-evidence";
 import { cn } from "@/lib/utils/cn";
@@ -111,6 +114,8 @@ export function AyurvedicModeSection() {
           </div>
           {AYURVEDIC_HERBS.map((h) => {
             const s = STRENGTH[h.strength];
+            const tie = herbConditionTieIn(h.id);
+            const inter = herbInteractions(h);
             return (
               <div
                 key={h.id}
@@ -140,7 +145,13 @@ export function AyurvedicModeSection() {
                 <p className="mt-1 text-[11.5px] text-[var(--nourish-dark)]">
                   <span className="font-semibold">Research:</span> {h.research}
                 </p>
-                <p className="mt-1 flex items-start gap-1 text-[11px] text-amber-700">
+                {tie && (
+                  <p className="mt-1.5 text-[11px] text-[var(--nourish-green)]">
+                    <span className="font-semibold">{tie.condition}:</span>{" "}
+                    {tie.note}
+                  </p>
+                )}
+                <p className="mt-1.5 flex items-start gap-1 text-[11px] text-amber-700">
                   <AlertTriangle
                     size={11}
                     className="mt-0.5 shrink-0"
@@ -148,6 +159,21 @@ export function AyurvedicModeSection() {
                   />
                   <span>{h.safety}</span>
                 </p>
+                {inter.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap items-center gap-1">
+                    <span className="text-[10px] font-medium text-[var(--nourish-subtext-faint)]">
+                      Check with meds:
+                    </span>
+                    {inter.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700"
+                      >
+                        {interactionLabel(tag)}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="mt-1.5 space-y-1">
                   {h.sources.map((src) => (
                     <a
