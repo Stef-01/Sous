@@ -29,6 +29,7 @@ import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import { AyurvedicDishNote } from "@/components/shared/ayurvedic-dish-note";
+import { GlycemicPill } from "@/components/shared/glycemic-pill";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
@@ -168,6 +169,7 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
           coverage={{ massed: massedLines, total: totalLines }}
         />
       </div>
+      <GlycemicPill nutrition={perServing} />
       <BioavailabilityTip
         nutrition={perServing}
         ingredientIds={ingredientIds}
