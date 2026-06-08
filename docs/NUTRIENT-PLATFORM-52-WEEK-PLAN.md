@@ -377,8 +377,10 @@ the diary. Files: `src/components/.../branded-search.tsx`.
 _Prep (AB):_ the branded lookup-by-barcode path + a manual barcode-entry fallback.
 _Gated:_ the camera-scan front-end + lib choice + (optional) OFF live API key.
 
-**W23 — Water + hydration tracking [AB]**
-Add `water_ml` to vectors (FDC has it) + a day water target; small diary affordance.
+**W23 — Water + hydration tracking [AB]** — ✅ SHIPPED `86fb819`. HydrationCard on
+Path: tap-the-pip glass tracker (rule 13), 8-glass/2 L goal, localStorage per-day,
+kept separate from the diary's food-moisture `water` nutrient to avoid
+double-counting. (A personalised target rides with W43's EER work.)
 
 **W24 — Nutrient-density score (ANDI-lite) [AB]**
 A per-dish density score (nutrients per calorie) for ranking/badging; feeds the
