@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
 import { DailyNutritionCard } from "@/components/path/daily-nutrition-card";
+import { HydrationCard } from "@/components/path/hydration-card";
 import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
 import { BrandedFoodSearch } from "@/components/path/branded-food-search";
 import { JourneySummary } from "@/components/path/journey-summary";
@@ -195,6 +196,7 @@ export default function PathPage() {
             logged today (the macro ring for the whole day vs daily targets).
             The weekly trend sits below it once a few days are logged. */}
         <div className="mx-auto max-w-md page-x space-y-3 pt-4">
+          <HydrationCard />
           <DailyNutritionCard />
           <WeeklyTrendCard />
           <BrandedFoodSearch />
