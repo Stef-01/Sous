@@ -162,6 +162,8 @@ function getBaseMealDishes(): BaseQuestDish[] {
       hasGuidedCook: hasCook,
       isMeal: true,
       isVerified: !!meal.nourishVerified,
+      role: "main" as const,
+      dayparts: meal.dayparts ?? ["lunch", "dinner"],
     };
   });
   return _baseMealDishes;
@@ -197,9 +199,36 @@ function getBaseSideDishes(): BaseQuestDish[] {
       hasGuidedCook: guidedSlugs.has(side.id),
       isMeal: false,
       isVerified: false,
+      role: side.role ?? "side",
     };
   });
   return _baseSideDishes;
+}
+
+/**
+ * Build the quest feed for a non-main role (side / drink / snack) — every
+ * catalogue dish of that role, scored lightly (has-image → guided → name) +
+ * per-call pantry fit. Mains keep `buildQuestDishes`; this powers the Today
+ * Filter's role switch (TODAY-FILTER-PLAN.md Phase D).
+ */
+export function buildRoleQuestDishes(
+  role: "side" | "drink" | "snack",
+  pantryNames?: string[],
+): QuestDish[] {
+  const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
+  return getBaseSideDishes()
+    .filter((d) => d.role === role)
+    .map((base) => ({
+      ...base,
+      pantryFit: computePantryFit(base.ingredientNames, pantrySet),
+    }))
+    .sort((a, b) => {
+      const img = (b.heroImageUrl ? 1 : 0) - (a.heroImageUrl ? 1 : 0);
+      if (img) return img;
+      const guided = (b.hasGuidedCook ? 1 : 0) - (a.hasGuidedCook ? 1 : 0);
+      if (guided) return guided;
+      return a.dishName.localeCompare(b.dishName);
+    });
 }
 
 /**

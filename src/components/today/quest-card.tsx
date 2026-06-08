@@ -3,22 +3,12 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import {
-  Clock,
-  X,
-  Heart,
-  UtensilsCrossed,
-  Maximize2,
-  ChefHat,
-} from "lucide-react";
+import { X, Heart, UtensilsCrossed, Maximize2, ChefHat } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry } from "@/lib/hooks/use-pantry";
-import {
-  FilterDropdown,
-  type FilterOption,
-} from "@/components/shared/filter-dropdown";
+import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
 import {
@@ -26,14 +16,20 @@ import {
   QueueComplete,
   QUEUE_EXIT_MS,
 } from "./meal-swipe-queue-cards";
-import { buildQuestDishes } from "./quest-pool";
+import { buildQuestDishes, buildRoleQuestDishes } from "./quest-pool";
+import { QuestFilterButton } from "./quest-filter-button";
+import { QuestFilterSheet } from "./quest-filter-sheet";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
 import {
   therapeuticsActive,
   clinicianReviewMode,
 } from "@/lib/therapeutics/feature-flag";
 import { registryIsClinicianApproved } from "@/data/therapeutics";
-import { useQuestFilters } from "@/lib/hooks/use-quest-filters";
+import {
+  useQuestFilters,
+  type DishRoleFilter,
+} from "@/lib/hooks/use-quest-filters";
+import type { Daypart } from "@/types";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { useDifficultyProgression } from "@/lib/hooks/use-difficulty-progression";
 
@@ -53,6 +49,11 @@ export interface QuestDish {
   hasGuidedCook: boolean;
   isMeal: boolean;
   isVerified: boolean;
+  /** Dish role — drives the Today Filter. Mains are "main"; sides carry their
+   *  classified role. */
+  role: DishRoleFilter;
+  /** Dayparts a main suits (Today "Meal type" filter). Undefined for sides. */
+  dayparts?: Daypart[];
   /** Fraction of ingredients already in the user's pantry, 0..1. */
   pantryFit: number;
 }
@@ -121,19 +122,33 @@ export function QuestCard({
   void reducedMotion;
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
   const progression = useDifficultyProgression(cookSessions ?? []);
-  const baseDishes = useMemo(
-    () =>
-      buildQuestDishes(
-        userPreferences,
-        cookHistory,
-        pantryMounted ? pantryItems : undefined,
-        progression,
-      ),
-    [userPreferences, cookHistory, pantryItems, pantryMounted, progression],
-  );
-  // Quest filters: cook-time cap + cuisine. Both session-scoped so they
-  // never become permanent settings  -  they reset at app close.
+  // Quest filters: role / meal-type / cuisine / cook-time. Session-scoped so
+  // they never become permanent settings — they reset at app close.
   const filters = useQuestFilters();
+  const [filterOpen, setFilterOpen] = useState(false);
+  // The role facet rewires the feed: Main → the full quest pool; Side/Drink/Snack
+  // → the role-specific catalogue feed (same quest shell, rule 4).
+  const baseDishes = useMemo(() => {
+    const pantry = pantryMounted ? pantryItems : undefined;
+    // Main → the full quest pool, but kept to actual mains (the pool mixes in a
+    // few sides; the role filter makes "Main" mean mains). Side/Drink/Snack →
+    // the role-specific feed.
+    return filters.role === "main"
+      ? buildQuestDishes(
+          userPreferences,
+          cookHistory,
+          pantry,
+          progression,
+        ).filter((d) => d.role === "main")
+      : buildRoleQuestDishes(filters.role, pantry);
+  }, [
+    userPreferences,
+    cookHistory,
+    pantryItems,
+    pantryMounted,
+    progression,
+    filters.role,
+  ]);
 
   // Build the cuisine option list from the actual dish index so we never
   // show an option that has zero results. Keeps the dropdown honest.
@@ -164,19 +179,37 @@ export function QuestCard({
         ? Number.POSITIVE_INFINITY
         : Number.parseInt(filters.cookTime, 10);
     const cuisineKey = filters.cuisine.toLowerCase();
+    // Meal type only applies to mains (sides aren't daypart-bound).
+    const dayType =
+      filters.role === "main" && filters.mealType !== "any"
+        ? filters.mealType
+        : null;
     const filtered = baseDishes.filter((d) => {
       if (d.cookTimeMinutes > cap) return false;
       if (filters.cuisine !== "any") {
         if (d.cuisineFamily.toLowerCase() !== cuisineKey) return false;
       }
+      if (dayType && !(d.dayparts ?? []).includes(dayType)) return false;
       return true;
     });
     // Graceful fallback: if the filter combination yields nothing, return
     // the base feed so the user never hits an empty state because of filters.
     return filtered.length > 0 ? filtered : baseDishes;
-  }, [baseDishes, filters.cookTime, filters.cuisine]);
+  }, [
+    baseDishes,
+    filters.cookTime,
+    filters.cuisine,
+    filters.role,
+    filters.mealType,
+  ]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [queueOpen, setQueueOpen] = useState(false);
+
+  // When a filter changes the feed, snap the preview back to the first dish.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset preview position on filter change
+    setPreviewIndex(0);
+  }, [filters.role, filters.cuisine, filters.cookTime, filters.mealType]);
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
@@ -274,43 +307,21 @@ export function QuestCard({
 
   return (
     <div className="space-y-3">
-      {/* Section header + filter pills  -  two clickable dropdowns replace the
-          old binary "Under 20 min" toggle. Both reset at tab close. */}
+      {/* Section header + the single faceted Filter entry (role / meal type /
+          cuisine / cook time). Replaces the old two pills. Session-scoped. */}
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="shrink-0 sous-label">Meal queue</h2>
-        <div className="flex items-center gap-1.5">
-          <FilterDropdown
-            label="Cook time"
-            value={filters.cookTime}
-            defaultValue="any"
-            onChange={(v) => {
-              filters.setCookTime(v);
-              setPreviewIndex(0);
-            }}
-            leadingIcon={<Clock size={11} strokeWidth={2.2} />}
-            align="end"
-            options={[
-              { value: "any", label: "Any time", pillLabel: "Any time" },
-              { value: "15", label: "≤ 15 min", pillLabel: "≤ 15 min" },
-              { value: "20", label: "≤ 20 min", pillLabel: "≤ 20 min" },
-              { value: "30", label: "≤ 30 min", pillLabel: "≤ 30 min" },
-              { value: "45", label: "≤ 45 min", pillLabel: "≤ 45 min" },
-              { value: "60", label: "≤ 60 min", pillLabel: "≤ 60 min" },
-            ]}
-          />
-          <FilterDropdown
-            label="Cuisine"
-            value={filters.cuisine}
-            defaultValue="any"
-            onChange={(v) => {
-              filters.setCuisine(v);
-              setPreviewIndex(0);
-            }}
-            align="end"
-            options={cuisineOptions}
-          />
-        </div>
+        <QuestFilterButton
+          activeCount={filters.activeFilterCount}
+          onClick={() => setFilterOpen(true)}
+        />
       </div>
+      <QuestFilterSheet
+        open={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        filters={filters}
+        cuisineOptions={cuisineOptions}
+      />
 
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
       {previewDish && (
