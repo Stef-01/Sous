@@ -43,9 +43,13 @@ export function resolveDishLines(
       : null;
     // Frying medium: a fat/oil listed for frying — the recipe lists the whole
     // bath but only a fraction is absorbed (composition handles the factor).
+    // Triggered by an explicit "fry" cue OR by quantity: no dish CONSUMES ≥~1 cup
+    // (≈200 g) of oil, so a bath that large is deep-frying oil, not a dressing or
+    // sauté fat — this catches authored lines like "vegetable oil, 3 cups".
     const fryingMedium =
       ingredient?.foodGroup === "fat-oil" &&
-      /\bfry|frying|deep[-\s]?fr/i.test(`${ing.name} ${ing.quantity ?? ""}`);
+      (/\bfry|frying|deep[-\s]?fr/i.test(`${ing.name} ${ing.quantity ?? ""}`) ||
+        (grams ?? 0) >= 200);
     lines.push({
       ingredientId: id,
       grams: grams ?? 0,
