@@ -28,6 +28,7 @@ import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
+import { AyurvedicDishNote } from "@/components/shared/ayurvedic-dish-note";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
@@ -157,6 +158,7 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
   const { perServing, massedCoverage, massedLines, totalLines } =
     getDishNutrition(slug);
   if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) return null;
+  const ingredientIds = getDishIngredientIds(slug);
 
   return (
     <div className="space-y-3">
@@ -168,8 +170,9 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
       </div>
       <BioavailabilityTip
         nutrition={perServing}
-        ingredientIds={getDishIngredientIds(slug)}
+        ingredientIds={ingredientIds}
       />
+      <AyurvedicDishNote ingredientIds={ingredientIds} />
     </div>
   );
 }

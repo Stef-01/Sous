@@ -45,6 +45,7 @@ import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { NutritionEvidencePanel } from "@/components/shared/nutrition-evidence-panel";
+import { AyurvedicModeSection } from "@/components/shared/ayurvedic-mode-section";
 import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
 import { PreferencesSection } from "@/components/shared/preferences-section";
@@ -242,6 +243,8 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 never-shame copy. Toggle is the same shape as Parent
                 Mode for visual consistency. */}
             <EcoModeToggle />
+
+            <AyurvedicModeSection />
 
             {/* Preferences section (Y5 C substrate · Y5 D UI wire-up).
                 Surfaces inferred + manual tags + time-of-day patterns.

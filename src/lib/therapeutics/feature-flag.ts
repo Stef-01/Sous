@@ -32,7 +32,13 @@ export function therapeuticsActive(): boolean {
   const env = process.env.NEXT_PUBLIC_THERAPEUTICS_ACTIVE;
   if (env === "1") return true;
   if (env === "0") return false;
-  return process.env.NODE_ENV === "development";
+  // Live everywhere EXCEPT the test runner (keeps dormancy golden tests
+  // byte-identical). Enabled on deployed/preview builds so a clinician can test
+  // the full educational therapeutic layer; personalization stays gated on G1
+  // (registryIsClinicianApproved) so nothing is ever claimed "reviewed". The
+  // founder can hard-kill with NEXT_PUBLIC_THERAPEUTICS_ACTIVE="0" before any
+  // FTC/FDA-reviewed public launch (G5).
+  return process.env.NODE_ENV !== "test";
 }
 
 /**
@@ -76,5 +82,8 @@ export function clinicianReviewMode(): boolean {
   const env = process.env.NEXT_PUBLIC_THERAPEUTICS_CLINICIAN_REVIEW;
   if (env === "1") return true;
   if (env === "0") return false;
-  return process.env.NODE_ENV === "development";
+  // Live everywhere EXCEPT the test runner, so a clinician evaluating a deployed
+  // build sees the FULL system + the /clinician surface — every record badged
+  // "Clinician review · unreviewed" (never "Reviewed"). Kill with "0".
+  return process.env.NODE_ENV !== "test";
 }
