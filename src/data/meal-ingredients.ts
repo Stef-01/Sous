@@ -355,7 +355,7 @@ export const MEAL_INGREDIENTS: Record<string, MealIngredients> = {
     ],
   },
   "bbq-ribs": {
-    servings: 6,
+    servings: 8,
     ingredients: [
       { name: "pork ribs", quantity: "2 kg" },
       { name: "brown-sugar", quantity: "1/4 cup" },

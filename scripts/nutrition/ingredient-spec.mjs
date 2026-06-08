@@ -1585,4 +1585,33 @@ export const SPEC = [
     piece: 182,
     aliases: ["apple", "apples"],
   },
+  // quality-pass fixes: a real fish that was unresolving (the main vanished), and
+  // shirataki — near-zero-cal konjac that was wrongly matching the generic
+  // "noodles" → egg-noodles fallback. No FDC konjac entry exists, so it proxies
+  // water (97% water; calories ≈ 0), accurate for the macro panel.
+  {
+    id: "pompano",
+    fdcId: 173682,
+    name: "Pompano",
+    group: "seafood",
+    classes: ["oily-fish", "omega-3-source"],
+    cup: null,
+    piece: 170,
+    aliases: ["pompano", "florida pompano"],
+  },
+  {
+    id: "shirataki",
+    fdcId: 174158,
+    name: "Shirataki noodles",
+    group: "grain",
+    classes: [],
+    cup: 115,
+    piece: null,
+    aliases: [
+      "shirataki noodles",
+      "shirataki",
+      "konjac noodles",
+      "miracle noodles",
+    ],
+  },
 ];

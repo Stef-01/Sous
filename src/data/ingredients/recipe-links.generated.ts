@@ -2302,7 +2302,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "bbq-ribs": {
     recipeSlug: "bbq-ribs",
-    servingsPerRecipe: 6,
+    servingsPerRecipe: 8,
     originalLineCount: 11,
     lines: [
       { ingredientId: "pork-belly", grams: 2000, isOptional: false },
@@ -3027,6 +3027,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 9,
     lines: [
+      { ingredientId: "pompano", grams: 340, isOptional: false },
       { ingredientId: "tomato", grams: 246, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "ginger", grams: 6, isOptional: false },
@@ -4697,7 +4698,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 2,
     originalLineCount: 6,
     lines: [
-      { ingredientId: "egg-noodles", grams: 400, isOptional: false },
+      { ingredientId: "shirataki", grams: 400, isOptional: false },
       { ingredientId: "soy-sauce", grams: 31.88, isOptional: false },
       { ingredientId: "sesame-oil", grams: 13.63, isOptional: false },
       { ingredientId: "scallion", grams: 30, isOptional: false },
