@@ -30,6 +30,7 @@ import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
 import { BioavailabilityTip } from "@/components/shared/bioavailability-tip";
 import { AyurvedicDishNote } from "@/components/shared/ayurvedic-dish-note";
 import { GlycemicPill } from "@/components/shared/glycemic-pill";
+import { NutritionShareButton } from "@/components/shared/nutrition-share-button";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
@@ -142,7 +143,7 @@ export function MealHealthPanel({
         </div>
       )}
 
-      <NutritionSnapshot slug={slug} />
+      <NutritionSnapshot slug={slug} dishName={dishName} />
 
       <IngredientsToCheck slug={slug} />
 
@@ -155,7 +156,13 @@ export function MealHealthPanel({
   );
 }
 
-function NutritionSnapshot({ slug }: { slug?: string }) {
+function NutritionSnapshot({
+  slug,
+  dishName,
+}: {
+  slug?: string;
+  dishName?: string;
+}) {
   const { perServing, massedCoverage, massedLines, totalLines } =
     getDishNutrition(slug);
   if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) return null;
@@ -175,6 +182,12 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
         ingredientIds={ingredientIds}
       />
       <AyurvedicDishNote ingredientIds={ingredientIds} />
+      <div className="flex justify-end">
+        <NutritionShareButton
+          title={dishName ?? "This dish"}
+          nutrition={perServing}
+        />
+      </div>
     </div>
   );
 }
