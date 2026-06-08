@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Flame, Plus, X, UtensilsCrossed } from "lucide-react";
 import {
@@ -8,6 +9,9 @@ import {
 } from "@/lib/hooks/use-nutrition-diary";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { haptic } from "@/lib/motion/haptics";
+import { streakMilestone } from "@/lib/engagement/milestones";
+import { toast } from "@/lib/hooks/use-toast";
+import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
 
 /**
  * Today's diary (W5) — a compact day view: a logging-streak header (W15), the
@@ -19,6 +23,26 @@ export default function DiaryPage() {
   const { mounted, entries, dayNutrition, logCook, removeEntry } =
     useNutritionDiary();
   const history = useDiaryHistory();
+
+  // W14 — celebrate a streak milestone once (deduped in localStorage).
+  useEffect(() => {
+    if (!history.mounted) return;
+    const m = streakMilestone(history.streak);
+    if (!m) return;
+    const seenKey = `sous-celebrated-${m.id}`;
+    try {
+      if (window.localStorage.getItem(seenKey)) return;
+      window.localStorage.setItem(seenKey, "1");
+    } catch {
+      return;
+    }
+    toast.push({
+      variant: "achievement",
+      emoji: m.emoji,
+      title: m.title,
+      body: m.body,
+    });
+  }, [history.mounted, history.streak]);
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
@@ -70,9 +94,9 @@ export default function DiaryPage() {
         {entries.length > 0 && (
           <section>
             <p className="sous-label mb-1.5">Logged today</p>
-            <ul className="space-y-1.5">
+            <StaggerList className="space-y-1.5">
               {entries.map((e) => (
-                <li
+                <StaggerItem
                   key={e.at}
                   className="flex items-center gap-3 rounded-xl border border-neutral-200/70 bg-white px-3 py-2.5"
                 >
@@ -102,9 +126,9 @@ export default function DiaryPage() {
                   >
                     <X size={15} />
                   </button>
-                </li>
+                </StaggerItem>
               ))}
-            </ul>
+            </StaggerList>
           </section>
         )}
 
