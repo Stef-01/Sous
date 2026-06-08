@@ -17,8 +17,7 @@ import {
   QUEUE_EXIT_MS,
 } from "./meal-swipe-queue-cards";
 import { buildQuestDishes, buildRoleQuestDishes } from "./quest-pool";
-import { QuestFilterButton } from "./quest-filter-button";
-import { QuestFilterSheet } from "./quest-filter-sheet";
+import { QuestFilterMenu } from "./quest-filter-menu";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
 import {
   therapeuticsActive,
@@ -125,7 +124,6 @@ export function QuestCard({
   // Quest filters: role / meal-type / cuisine / cook-time. Session-scoped so
   // they never become permanent settings — they reset at app close.
   const filters = useQuestFilters();
-  const [filterOpen, setFilterOpen] = useState(false);
   // The role facet rewires the feed: Main → the full quest pool; Side/Drink/Snack
   // → the role-specific catalogue feed (same quest shell, rule 4).
   const baseDishes = useMemo(() => {
@@ -307,21 +305,12 @@ export function QuestCard({
 
   return (
     <div className="space-y-3">
-      {/* Section header + the single faceted Filter entry (role / meal type /
-          cuisine / cook time). Replaces the old two pills. Session-scoped. */}
+      {/* Section header + the single faceted Filter entry — a compact text
+          dropdown (role / meal type / cuisine / cook time). Session-scoped. */}
       <div className="flex items-center justify-between gap-2 px-1">
         <h2 className="shrink-0 sous-label">Meal queue</h2>
-        <QuestFilterButton
-          activeCount={filters.activeFilterCount}
-          onClick={() => setFilterOpen(true)}
-        />
+        <QuestFilterMenu filters={filters} cuisineOptions={cuisineOptions} />
       </div>
-      <QuestFilterSheet
-        open={filterOpen}
-        onClose={() => setFilterOpen(false)}
-        filters={filters}
-        cuisineOptions={cuisineOptions}
-      />
 
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
       {previewDish && (
