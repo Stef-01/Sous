@@ -462,7 +462,7 @@ function ResultCard({
         selected ? "border-[var(--nourish-green)]/45" : "border-neutral-200/80",
       )}
     >
-      <div className="flex w-full items-start gap-3 p-3">
+      <div className="flex w-full items-center gap-3 p-3">
         {/* Selection checkbox  -  min 44px touch target wrapping the visual circle */}
         <motion.button
           onClick={(e) => {
@@ -494,7 +494,7 @@ function ResultCard({
         {/* Card content (tappable to expand) */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex min-w-0 flex-1 items-start gap-3 text-left"
+          className="flex min-w-0 flex-1 items-center gap-3 text-left"
           type="button"
           aria-expanded={expanded}
         >
