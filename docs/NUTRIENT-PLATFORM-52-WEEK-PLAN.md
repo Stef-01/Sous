@@ -1,3 +1,9 @@
+> **⚠️ SUPERSEDED (2026-06-08) by `SOUS-COMPREHENSIVE-YEAR-PLAN.md`.** That redraft
+> widens this nutrient-only plan into a comprehensive product year plan with three
+> added tracks (UI animation/engagement, frictionless logging, expanded Ayurveda).
+> This document's nutrient track continues there as **Track D**; keep it for the
+> deep appraisal + shipped detail.
+
 # Sous Nutrient & Ingredient Platform — Deep Appraisal + 52-Week Plan
 
 _Authored 2026-06-06. Grounds: the live Sous nutrition infra map, two external

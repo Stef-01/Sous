@@ -2,10 +2,13 @@
  * Ayurvedic mode — EVIDENCE-VALIDATED ONLY.
  *
  * Ayurveda is a traditional system; most of its framework (doshas, etc.) has not
- * been validated by rigorous trials, so NONE of that is included. This is a
- * deliberately narrow set: culinary herbs/spices used in Ayurvedic cooking that
- * ALSO carry modern clinical evidence (meta-analyses / RCTs), each labelled with
- * its evidence strength, the limits, and a safety note.
+ * been validated by rigorous trials, so NONE of that is included. This is an
+ * evidence-tiered set: culinary herbs/spices used in Ayurvedic cooking that ALSO
+ * carry modern clinical evidence (meta-analyses / RCTs). v2 is deliberately LESS
+ * conservative — it admits any herb with ≥1 meta-analysis or ≥2 RCTs, labelled by
+ * strength ("strong" / "moderate" / "limited"=emerging), with the limits and a
+ * safety note. The bar is evidence, not enthusiasm: ashwagandha is flagged as a
+ * supplement (not a spice), and every entry keeps its food-vs-supplement caveat.
  *
  * Honesty rails (rule 7/11 + the claim contract):
  *  - traditional use and modern evidence are stated separately;
@@ -141,6 +144,173 @@ export const AYURVEDIC_HERBS: AyurvedicHerb[] = [
         label:
           "Turmeric + black pepper / piperine + curcumin (Healthline, reviews Shoba 1998)",
         url: "https://www.healthline.com/nutrition/turmeric-and-black-pepper",
+      },
+    ],
+  },
+  {
+    id: "garlic",
+    name: "Garlic",
+    botanical: "Allium sativum",
+    ayurvedicName: "Lashuna",
+    ingredientId: "garlic",
+    traditionalUse:
+      "A warming rasayana used for circulation, digestion, and respiratory health.",
+    research:
+      "Meta-analyses of RCTs (39 trials, ~2,300 adults) show garlic modestly lowers blood pressure in people with hypertension and trims total/LDL cholesterol when taken for 2+ months.",
+    strength: "strong",
+    safety:
+      "Food amounts are safe. Concentrated/aged-garlic supplements can interact with blood thinners and may cause reflux.",
+    sources: [
+      {
+        label:
+          "Garlic, blood pressure & cholesterol — meta-analysis (J Nutrition)",
+        url: "https://jn.nutrition.org/article/S0022-3166(23)00519-9/fulltext",
+      },
+    ],
+  },
+  {
+    id: "nigella",
+    name: "Black cumin (kalonji)",
+    botanical: "Nigella sativa",
+    ayurvedicName: "Krishna jeeraka",
+    ingredientId: "nigella-seeds",
+    traditionalUse:
+      "Tiny black seeds tempered into breads and curries; traditionally a digestive and tonic.",
+    research:
+      "Across ~50 RCTs, Nigella sativa improves glucose homeostasis (fasting glucose, HbA1c) and lowers total cholesterol, triglycerides, and LDL — most clearly in type-2 diabetes.",
+    strength: "strong",
+    safety:
+      "Culinary amounts are fine. Concentrated seed oil can add to glucose- and blood-pressure-lowering medication; avoid medicinal doses in pregnancy.",
+    sources: [
+      {
+        label:
+          "Nigella sativa — glycaemic & lipid meta-analysis (Phytother Res)",
+        url: "https://onlinelibrary.wiley.com/doi/10.1002/ptr.6708",
+      },
+    ],
+  },
+  {
+    id: "saffron",
+    name: "Saffron",
+    botanical: "Crocus sativus",
+    ayurvedicName: "Kesar / Kumkuma",
+    ingredientId: "saffron",
+    traditionalUse:
+      "Prized crimson threads used in milk, rice, and sweets; traditionally a mood and complexion tonic.",
+    research:
+      "Meta-analyses find saffron eases mild-to-moderate depression — more than placebo and non-inferior to standard antidepressants in head-to-head trials.",
+    strength: "strong",
+    safety:
+      "Culinary pinches are safe. The studied effect used concentrated doses; high doses are unsafe in pregnancy and can interact with antidepressants — clinician territory, not self-treatment.",
+    sources: [
+      {
+        label: "Saffron for mild–moderate depression — meta-analysis (PubMed)",
+        url: "https://pubmed.ncbi.nlm.nih.gov/30036891/",
+      },
+    ],
+  },
+  {
+    id: "tulsi",
+    name: "Holy basil (tulsi)",
+    botanical: "Ocimum sanctum",
+    ayurvedicName: "Tulsi",
+    ingredientId: "holy-basil",
+    traditionalUse:
+      "A sacred adaptogen taken as tea; traditionally for stress, respiratory, and metabolic balance.",
+    research:
+      "A meta-analysis of RCTs found tulsi lowers fasting blood glucose (≈ −16 mg/dL) and improves lipids in adults with metabolic disease, mostly at ≥1 g/day.",
+    strength: "moderate",
+    safety:
+      "Tea/culinary use is fine. Can add to glucose-lowering medication and may affect fertility/pregnancy at medicinal doses.",
+    sources: [
+      {
+        label:
+          "Tulsi, fasting glucose & lipids — meta-analysis (ScienceDirect)",
+        url: "https://www.sciencedirect.com/science/article/abs/pii/S1756464618301166",
+      },
+    ],
+  },
+  {
+    id: "amla",
+    name: "Amla (Indian gooseberry)",
+    botanical: "Phyllanthus emblica",
+    ayurvedicName: "Amalaki",
+    ingredientId: "amla",
+    traditionalUse:
+      "A sour rasayana eaten fresh, dried, or in chutney; exceptionally high in vitamin C.",
+    research:
+      "A meta-analysis of nine RCTs links amla to improved blood lipids (lower total/LDL cholesterol and triglycerides), though trials are small and varied.",
+    strength: "moderate",
+    safety:
+      "Food amounts are safe and vitamin-C-rich. Concentrated extracts may add to blood thinners; very high intake can upset some stomachs.",
+    sources: [
+      {
+        label:
+          "Amla (Phyllanthus emblica) — nutraceutical review & lipid RCTs (PMC)",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC9137578/",
+      },
+    ],
+  },
+  {
+    id: "ashwagandha",
+    name: "Ashwagandha (supplement, not a spice)",
+    botanical: "Withania somnifera",
+    ayurvedicName: "Ashwagandha",
+    ingredientId: "ashwagandha",
+    traditionalUse:
+      "A root rasayana taken as a powder or with milk — a classic adaptogen, NOT a cooking spice.",
+    research:
+      "Meta-analyses (22 RCTs) show ashwagandha reduces stress and anxiety, with a smaller but real benefit for sleep, strongest at ≥600 mg/day over 8+ weeks.",
+    strength: "moderate",
+    safety:
+      "This is a supplement, not food — treat it as one. Rare liver-injury reports; can interact with thyroid medication and sedatives; avoid in pregnancy. Discuss with a clinician.",
+    sources: [
+      {
+        label: "Ashwagandha — NIH Office of Dietary Supplements fact sheet",
+        url: "https://ods.od.nih.gov/factsheets/Ashwagandha-HealthProfessional/",
+      },
+      {
+        label: "Ashwagandha & sleep — systematic review & meta-analysis (PMC)",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC8462692/",
+      },
+    ],
+  },
+  {
+    id: "cardamom",
+    name: "Cardamom",
+    botanical: "Elettaria cardamomum",
+    ayurvedicName: "Elaichi",
+    ingredientId: "cardamom",
+    traditionalUse:
+      "An aromatic pod used in chai, rice, and sweets; traditionally a digestive and breath-freshener.",
+    research:
+      "Early but real: a meta-analysis of RCTs found small reductions in blood pressure and inflammatory markers — promising, with few trials, so read it as emerging.",
+    strength: "limited",
+    safety: "Food amounts are safe and well-tolerated.",
+    sources: [
+      {
+        label: "Cardamom, blood pressure & inflammation — meta-analysis (PMC)",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC10804083/",
+      },
+    ],
+  },
+  {
+    id: "cumin",
+    name: "Cumin",
+    botanical: "Cuminum cyminum",
+    ayurvedicName: "Jeeraka",
+    ingredientId: "cumin-seeds",
+    traditionalUse:
+      "A foundational tempering spice; traditionally a digestive (deepana) across Indian cooking.",
+    research:
+      "Emerging: small RCTs suggest cumin may modestly improve lipids and glycaemic markers, but the evidence base is still thin — treat as early.",
+    strength: "limited",
+    safety: "Food amounts are safe.",
+    sources: [
+      {
+        label:
+          "Nigella & cumin family — overview of systematic reviews (Frontiers)",
+        url: "https://www.frontiersin.org/journals/nutrition/articles/10.3389/fnut.2023.1107750/full",
       },
     ],
   },

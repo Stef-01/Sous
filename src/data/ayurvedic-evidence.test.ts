@@ -2,6 +2,21 @@ import { describe, expect, it } from "vitest";
 import { AYURVEDIC_HERBS, ayurvedicHerbsForDish } from "./ayurvedic-evidence";
 
 describe("ayurvedic evidence (validated-only mode)", () => {
+  it("the v2 library is expanded (≥13 herbs) across all strength tiers", () => {
+    expect(AYURVEDIC_HERBS.length).toBeGreaterThanOrEqual(13);
+    const tiers = new Set(AYURVEDIC_HERBS.map((h) => h.strength));
+    expect(tiers.has("strong")).toBe(true);
+    expect(tiers.has("moderate")).toBe(true);
+    expect(tiers.has("limited")).toBe(true);
+    // the researched additions are present
+    for (const id of ["garlic", "nigella", "saffron", "tulsi", "ashwagandha"]) {
+      expect(
+        AYURVEDIC_HERBS.some((h) => h.id === id),
+        `${id} added`,
+      ).toBe(true);
+    }
+  });
+
   it("every herb is complete with a strength, a safety note, and real sources", () => {
     const ids = new Set<string>();
     const strengths = new Set(["strong", "moderate", "limited"]);
@@ -35,7 +50,9 @@ describe("ayurvedic evidence (validated-only mode)", () => {
       new Set(["turmeric", "black-pepper", "onion"]),
     );
     expect(herbs.map((h) => h.id).sort()).toEqual(["black-pepper", "turmeric"]);
-    expect(ayurvedicHerbsForDish(new Set(["onion", "garlic"]))).toEqual([]);
+    expect(
+      ayurvedicHerbsForDish(new Set(["onion", "rice", "chicken"])),
+    ).toEqual([]);
     expect(ayurvedicHerbsForDish(undefined)).toEqual([]);
   });
 });
