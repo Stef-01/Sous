@@ -156,22 +156,23 @@ export default function DiaryPage() {
         {mounted && history.recents.length > 0 && (
           <section>
             <p className="sous-label mb-1.5">Quick add</p>
-            <div className="flex flex-wrap gap-2">
+            <StaggerList className="flex flex-wrap gap-2">
               {history.recents.map((r) => (
-                <button
-                  key={r.slug}
-                  type="button"
-                  onClick={() => {
-                    haptic("commit");
-                    logCook(r.slug, r.name, 1);
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
-                >
-                  <Plus size={12} className="text-[var(--nourish-green)]" />
-                  {r.name}
-                </button>
+                <StaggerItem key={r.slug}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      haptic("commit");
+                      logCook(r.slug, r.name, 1);
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
+                  >
+                    <Plus size={12} className="text-[var(--nourish-green)]" />
+                    {r.name}
+                  </button>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerList>
           </section>
         )}
 

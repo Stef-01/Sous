@@ -20,7 +20,6 @@ export function OwlAvatar({
   ariaLabel?: string;
 }) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   return (
     <motion.button
       onClick={onClick}
@@ -30,7 +29,14 @@ export function OwlAvatar({
       type="button"
       aria-label={ariaLabel}
     >
-      <svg
+      {/* W22 — a gentle idle head-tilt so the owl feels alive (reduced-motion off). */}
+      <motion.svg
+        animate={reducedMotion ? undefined : { rotate: [0, -4, 0, 3, 0] }}
+        transition={
+          reducedMotion
+            ? undefined
+            : { duration: 5, repeat: Infinity, repeatDelay: 3.5, ease: "easeInOut" }
+        }
         width="22"
         height="22"
         viewBox="0 0 64 44"
