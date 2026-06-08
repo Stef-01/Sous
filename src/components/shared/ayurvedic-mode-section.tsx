@@ -97,6 +97,18 @@ export function AyurvedicModeSection() {
             advice — some herbs interact with medications; check with your
             clinician, especially if pregnant or on medication.
           </p>
+          {/* W6 — the 3-tier evidence legend. */}
+          <div className="flex flex-wrap gap-1.5 text-[10px] font-medium">
+            <span className="rounded-full bg-[var(--nourish-green)]/12 px-2 py-0.5 text-[var(--nourish-green)]">
+              Good · consistent meta-analyses
+            </span>
+            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-700">
+              Some · mixed / dose-dependent
+            </span>
+            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-neutral-500">
+              Limited · early but real
+            </span>
+          </div>
           {AYURVEDIC_HERBS.map((h) => {
             const s = STRENGTH[h.strength];
             return (

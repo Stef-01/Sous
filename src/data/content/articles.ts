@@ -13,6 +13,7 @@ import type { Article } from "@/types/content";
 import { STANFORD_ARTICLES } from "./stanford";
 import { CHEF_TU_ARTICLES } from "./chef-tu";
 import { NUTRIENT_SPOTLIGHT_ARTICLES } from "./nutrient-spotlight";
+import { AYURVEDIC_ARTICLES } from "./ayurvedic-content";
 
 const PLACEHOLDER_ARTICLES: Article[] = [
   {
@@ -154,6 +155,7 @@ export const ARTICLES: Article[] = [
   ...CHEF_TU_ARTICLES,
   ...STANFORD_ARTICLES,
   ...NUTRIENT_SPOTLIGHT_ARTICLES,
+  ...AYURVEDIC_ARTICLES,
   ...PLACEHOLDER_ARTICLES,
 ];
 
