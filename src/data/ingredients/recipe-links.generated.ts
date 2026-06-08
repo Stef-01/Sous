@@ -109,7 +109,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-banh-tom": {
     recipeSlug: "tu-banh-tom",
     servingsPerRecipe: 4,
-    originalLineCount: 14,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "shrimp", grams: 907.18, isOptional: false },
       { ingredientId: "sweet-potato", grams: 399, isOptional: false },
@@ -119,7 +119,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "water", grams: 237, isOptional: false },
       { ingredientId: "turmeric", grams: 2.5, isOptional: false },
       { ingredientId: "baking-powder", grams: 4.79, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 654, isOptional: false, fryingMedium: true },
       { ingredientId: "romaine", grams: 0, isOptional: false },
       { ingredientId: "mint", grams: 0, isOptional: false },
@@ -173,18 +172,17 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-steamed-jasmine-rice": {
     recipeSlug: "tu-steamed-jasmine-rice",
     servingsPerRecipe: 4,
-    originalLineCount: 4,
+    originalLineCount: 3,
     lines: [
       { ingredientId: "white-rice", grams: 370, isOptional: false },
       { ingredientId: "water", grams: 592.5, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: true },
-      { ingredientId: "water", grams: 0, isOptional: false },
     ],
   },
   "tu-rau-muong": {
     recipeSlug: "tu-rau-muong",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "spinach", grams: 453.59, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false, fryingMedium: true },
@@ -192,7 +190,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "shrimp", grams: 0, isOptional: true },
       { ingredientId: "oyster-sauce", grams: 11.25, isOptional: false },
       { ingredientId: "fish-sauce", grams: 5.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "jalapeno", grams: 14, isOptional: true },
     ],
   },
@@ -215,12 +212,11 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-vietnamese-coffee-tiramisu": {
     recipeSlug: "tu-vietnamese-coffee-tiramisu",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "cornstarch", grams: 8, isOptional: false },
       { ingredientId: "milk", grams: 122, isOptional: false },
-      { ingredientId: "milk", grams: 0, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
+      { ingredientId: "milk", grams: 200, isOptional: false },
       { ingredientId: "heavy-cream", grams: 226.8, isOptional: false },
       { ingredientId: "mascarpone", grams: 226.8, isOptional: false },
       { ingredientId: "cinnamon", grams: 0, isOptional: false },
@@ -229,7 +225,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-brown-sugar-boba-coffee": {
     recipeSlug: "tu-brown-sugar-boba-coffee",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "brown-sugar", grams: 82.5, isOptional: false },
       { ingredientId: "heavy-cream", grams: 59.5, isOptional: false },
@@ -269,7 +265,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tabbouleh": {
     recipeSlug: "tabbouleh",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "bulgur", grams: 70, isOptional: false },
       { ingredientId: "tomato", grams: 492, isOptional: false },
@@ -279,7 +275,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "scallion", grams: 60, isOptional: false },
       { ingredientId: "olive-oil", grams: 47.25, isOptional: false },
       { ingredientId: "lime-juice", grams: 53.81, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "tomato-soup": {
@@ -287,7 +282,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 8,
     lines: [
-      { ingredientId: "tomato", grams: 246, isOptional: false },
+      { ingredientId: "tomato", grams: 800, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "garlic", grams: 9, isOptional: false },
       { ingredientId: "butter", grams: 28.38, isOptional: false },
@@ -300,7 +295,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "guacamole": {
     recipeSlug: "guacamole",
     servingsPerRecipe: 6,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "avocado", grams: 603, isOptional: false },
       { ingredientId: "lime", grams: 67, isOptional: false },
@@ -308,7 +303,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cilantro", grams: 4, isOptional: false },
       { ingredientId: "jalapeno", grams: 14, isOptional: true },
       { ingredientId: "tomato", grams: 123, isOptional: true },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "bruschetta": {
@@ -387,7 +381,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "caprese-salad": {
     recipeSlug: "caprese-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "mozzarella", grams: 0, isOptional: false },
       { ingredientId: "tomato", grams: 0, isOptional: false },
@@ -396,7 +390,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "apple-cider-vinegar", grams: 14.94, isOptional: false },
       { ingredientId: "garlic", grams: 3, isOptional: false },
       { ingredientId: "dijon-mustard", grams: 2.59, isOptional: false },
-      { ingredientId: "balsamic-vinegar", grams: 0, isOptional: true },
     ],
   },
   "baingan-bharta": {
@@ -416,7 +409,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "karaage": {
     recipeSlug: "karaage",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "chicken-breast", grams: 680.39, isOptional: false },
       { ingredientId: "soy-sauce", grams: 15.94, isOptional: false },
@@ -427,18 +420,16 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "potato", grams: 28.13, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 15.63, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 763, isOptional: false, fryingMedium: true },
-      { ingredientId: "lemon", grams: 0, isOptional: false },
     ],
   },
   "edamame": {
     recipeSlug: "edamame",
     servingsPerRecipe: 4,
-    originalLineCount: 4,
+    originalLineCount: 3,
     lines: [
       { ingredientId: "edamame", grams: 453.59, isOptional: false },
       { ingredientId: "table-salt", grams: 6.08, isOptional: false },
       { ingredientId: "sesame-oil", grams: 4.54, isOptional: true },
-      { ingredientId: "cayenne", grams: 0, isOptional: true },
     ],
   },
   "pico-de-gallo": {
@@ -470,19 +461,18 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "minestrone": {
     recipeSlug: "minestrone",
     servingsPerRecipe: 4,
-    originalLineCount: 12,
+    originalLineCount: 11,
     lines: [
       { ingredientId: "olive-oil", grams: 40.5, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "carrot", grams: 122, isOptional: false },
       { ingredientId: "celery", grams: 80, isOptional: false },
       { ingredientId: "garlic", grams: 12, isOptional: false },
-      { ingredientId: "tomato", grams: 123, isOptional: false },
+      { ingredientId: "tomato", grams: 400, isOptional: false },
       { ingredientId: "chicken-broth", grams: 1440, isOptional: false },
       { ingredientId: "pasta", grams: 45.5, isOptional: false },
       { ingredientId: "zucchini", grams: 196, isOptional: false },
       { ingredientId: "spinach", grams: 60, isOptional: false },
-      { ingredientId: "parmesan", grams: 0, isOptional: true },
     ],
   },
   "esquites": {
@@ -564,11 +554,10 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "lachha-paratha": {
     recipeSlug: "lachha-paratha",
     servingsPerRecipe: 4,
-    originalLineCount: 5,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "all-purpose-flour", grams: 250, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "water", grams: 0, isOptional: false },
       { ingredientId: "ghee", grams: 102.5, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 31.25, isOptional: false },
     ],
@@ -576,15 +565,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "baba-ganoush": {
     recipeSlug: "baba-ganoush",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "tahini", grams: 45, isOptional: false },
       { ingredientId: "lemon-juice", grams: 30.5, isOptional: false },
       { ingredientId: "garlic", grams: 4.5, isOptional: false },
       { ingredientId: "table-salt", grams: 4.56, isOptional: false },
       { ingredientId: "olive-oil", grams: 33.75, isOptional: false },
-      { ingredientId: "paprika", grams: 0, isOptional: true },
-      { ingredientId: "parsley", grams: 0, isOptional: true },
     ],
   },
   "roti": {
@@ -615,14 +602,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "refried-beans": {
     recipeSlug: "refried-beans",
     servingsPerRecipe: 4,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
-      { ingredientId: "pinto-beans", grams: 0, isOptional: false },
+      { ingredientId: "pinto-beans", grams: 800, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "onion", grams: 55, isOptional: false },
       { ingredientId: "garlic", grams: 6, isOptional: false },
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "basmati-rice": {
@@ -639,13 +625,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "sweet-potato-fries": {
     recipeSlug: "sweet-potato-fries",
     servingsPerRecipe: 4,
-    originalLineCount: 5,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "sweet-potato", grams: 260, isOptional: false },
       { ingredientId: "olive-oil", grams: 27, isOptional: false },
       { ingredientId: "cornstarch", grams: 8, isOptional: false },
       { ingredientId: "paprika", grams: 2.25, isOptional: true },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "seaweed-salad": {
@@ -678,7 +663,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "potato-salad": {
     recipeSlug: "potato-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "potato", grams: 907.18, isOptional: false },
       { ingredientId: "mayonnaise", grams: 110, isOptional: false },
@@ -686,7 +671,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "apple-cider-vinegar", grams: 29.88, isOptional: false },
       { ingredientId: "celery", grams: 120, isOptional: false },
       { ingredientId: "onion", grams: 40, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "onion-rings": {
@@ -705,21 +689,19 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "french-fries": {
     recipeSlug: "french-fries",
     servingsPerRecipe: 4,
-    originalLineCount: 3,
+    originalLineCount: 2,
     lines: [
       { ingredientId: "potato", grams: 907.18, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 872, isOptional: false, fryingMedium: true },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "corn-on-cob": {
     recipeSlug: "corn-on-cob",
     servingsPerRecipe: 4,
-    originalLineCount: 3,
+    originalLineCount: 2,
     lines: [
       { ingredientId: "corn", grams: 0, isOptional: false },
       { ingredientId: "butter", grams: 28.38, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "fattoush": {
@@ -739,7 +721,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "stuffed-grape-leaves": {
     recipeSlug: "stuffed-grape-leaves",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "white-rice", grams: 185, isOptional: false },
       { ingredientId: "onion", grams: 0, isOptional: false },
@@ -747,7 +729,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "parsley", grams: 15, isOptional: false },
       { ingredientId: "lemon-juice", grams: 61, isOptional: false },
       { ingredientId: "olive-oil", grams: 54, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "takoyaki": {
@@ -780,14 +761,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "mixed-green-salad": {
     recipeSlug: "mixed-green-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "mixed-greens", grams: 141.75, isOptional: false },
       { ingredientId: "shallots", grams: 25, isOptional: false },
       { ingredientId: "dijon-mustard", grams: 5.19, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 29.88, isOptional: false },
       { ingredientId: "olive-oil", grams: 67.5, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "japchae": {
@@ -838,10 +818,9 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "sticky-rice": {
     recipeSlug: "sticky-rice",
     servingsPerRecipe: 4,
-    originalLineCount: 2,
+    originalLineCount: 1,
     lines: [
       { ingredientId: "glutinous-rice", grams: 370, isOptional: false },
-      { ingredientId: "water", grams: 0, isOptional: false },
     ],
   },
   "larb": {
@@ -932,7 +911,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "creamed-spinach": {
     recipeSlug: "creamed-spinach",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "spinach", grams: 453.59, isOptional: false },
       { ingredientId: "butter", grams: 56.75, isOptional: false },
@@ -942,13 +921,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "milk", grams: 244, isOptional: false },
       { ingredientId: "heavy-cream", grams: 59.5, isOptional: false },
       { ingredientId: "parmesan", grams: 25, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "dal-tadka": {
     recipeSlug: "dal-tadka",
     servingsPerRecipe: 4,
-    originalLineCount: 15,
+    originalLineCount: 13,
     lines: [
       { ingredientId: "red-lentils", grams: 192, isOptional: false },
       { ingredientId: "water", grams: 711, isOptional: false },
@@ -962,7 +940,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
       { ingredientId: "cayenne", grams: 0, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
     ],
   },
@@ -985,7 +962,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "raita": {
     recipeSlug: "raita",
     servingsPerRecipe: 6,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "milk", grams: 488, isOptional: false },
       { ingredientId: "cucumber", grams: 300, isOptional: false },
@@ -994,19 +971,17 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mint", grams: 3.75, isOptional: true },
       { ingredientId: "jalapeno", grams: 14, isOptional: true },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "cumin", grams: 0, isOptional: true },
     ],
   },
   "tamagoyaki": {
     recipeSlug: "tamagoyaki",
     servingsPerRecipe: 4,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "egg", grams: 150, isOptional: false },
       { ingredientId: "water", grams: 29.63, isOptional: false },
       { ingredientId: "soy-sauce", grams: 5.31, isOptional: false },
       { ingredientId: "mirin", grams: 15, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 6.81, isOptional: false },
     ],
   },
@@ -1043,14 +1018,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "plain-dosa": {
     recipeSlug: "plain-dosa",
     servingsPerRecipe: 4,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "white-rice", grams: 370, isOptional: false },
       { ingredientId: "red-lentils", grams: 96, isOptional: false },
       { ingredientId: "fenugreek-seeds", grams: 1.56, isOptional: false },
       { ingredientId: "white-rice", grams: 23.13, isOptional: true },
       { ingredientId: "table-salt", grams: 6.08, isOptional: false },
-      { ingredientId: "ghee", grams: 0, isOptional: false },
     ],
   },
   "mango-chutney": {
@@ -1118,7 +1092,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "sigeumchi-namul": {
     recipeSlug: "sigeumchi-namul",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "spinach", grams: 226.8, isOptional: false },
       { ingredientId: "garlic", grams: 6, isOptional: false },
@@ -1127,7 +1101,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sesame-seeds", grams: 3, isOptional: false },
       { ingredientId: "scallion", grams: 30, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "sugar", grams: 0, isOptional: true },
     ],
   },
   "soba-noodles": {
@@ -1152,12 +1125,11 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tortilla-chips": {
     recipeSlug: "tortilla-chips",
     servingsPerRecipe: 6,
-    originalLineCount: 4,
+    originalLineCount: 3,
     lines: [
       { ingredientId: "tortilla", grams: 360, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "lime-juice", grams: 0, isOptional: true },
     ],
   },
   "samosa": {
@@ -1197,7 +1169,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "papaya-salad": {
     recipeSlug: "papaya-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "papaya", grams: 290, isOptional: false },
       { ingredientId: "tomato", grams: 984, isOptional: false },
@@ -1227,7 +1199,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "crispy-wontons": {
     recipeSlug: "crispy-wontons",
     servingsPerRecipe: 6,
-    originalLineCount: 11,
+    originalLineCount: 10,
     lines: [
       { ingredientId: "ground-pork", grams: 170.1, isOptional: false },
       { ingredientId: "shrimp", grams: 113.4, isOptional: false },
@@ -1237,7 +1209,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "garlic", grams: 6, isOptional: false },
       { ingredientId: "scallion", grams: 45, isOptional: false },
       { ingredientId: "cornstarch", grams: 2.67, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 872, isOptional: false, fryingMedium: true },
     ],
   },
@@ -1272,7 +1243,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 12,
     lines: [
-      { ingredientId: "coconut-milk", grams: 0, isOptional: false },
+      { ingredientId: "coconut-milk", grams: 400, isOptional: false },
       { ingredientId: "chicken-breast", grams: 0, isOptional: false },
       { ingredientId: "lemongrass", grams: 40, isOptional: false },
       { ingredientId: "ginger", grams: 0, isOptional: false },
@@ -1521,7 +1492,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "onion-raita": {
     recipeSlug: "onion-raita",
     servingsPerRecipe: 6,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -1529,7 +1500,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: true },
     ],
   },
   "coconut-chutney": {
@@ -1604,14 +1574,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "uttapam": {
     recipeSlug: "uttapam",
     servingsPerRecipe: 4,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "tomato", grams: 123, isOptional: false },
       { ingredientId: "jalapeno", grams: 0, isOptional: false },
       { ingredientId: "cilantro", grams: 3, isOptional: false },
       { ingredientId: "ghee", grams: 0, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "masala-papad": {
@@ -1629,7 +1598,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "hiyayakko": {
     recipeSlug: "hiyayakko",
     servingsPerRecipe: 4,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "tofu", grams: 0, isOptional: false },
       { ingredientId: "soy-sauce", grams: 31.88, isOptional: false },
@@ -1656,7 +1625,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "nasu-dengaku": {
     recipeSlug: "nasu-dengaku",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "eggplant", grams: 1832, isOptional: false },
       { ingredientId: "miso", grams: 51.56, isOptional: false },
@@ -1665,13 +1634,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sugar", grams: 4.17, isOptional: false },
       { ingredientId: "sesame-oil", grams: 4.54, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
-      { ingredientId: "sesame-seeds", grams: 0, isOptional: true },
     ],
   },
   "kongnamul": {
     recipeSlug: "kongnamul",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "garlic", grams: 6, isOptional: false },
       { ingredientId: "sesame-oil", grams: 13.63, isOptional: false },
@@ -1679,7 +1647,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "scallion", grams: 30, isOptional: false },
       { ingredientId: "sesame-seeds", grams: 3, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: true },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "bhindi-fry-side": {
@@ -1782,7 +1749,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "gamja-jorim": {
     recipeSlug: "gamja-jorim",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "potato", grams: 0, isOptional: false },
       { ingredientId: "soy-sauce", grams: 47.81, isOptional: false },
@@ -1793,7 +1760,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sesame-oil", grams: 4.54, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "water", grams: 118.5, isOptional: false },
-      { ingredientId: "sesame-seeds", grams: 0, isOptional: true },
     ],
   },
   "goi-cuon": {
@@ -1818,7 +1784,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "lotus-root-salad": {
     recipeSlug: "lotus-root-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "apple-cider-vinegar", grams: 44.81, isOptional: false },
       { ingredientId: "sugar", grams: 12.5, isOptional: false },
@@ -1826,7 +1792,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sesame-oil", grams: 4.54, isOptional: false },
       { ingredientId: "garlic", grams: 3, isOptional: false },
       { ingredientId: "ginger", grams: 1, isOptional: true },
-      { ingredientId: "cayenne", grams: 0, isOptional: true },
       { ingredientId: "sesame-seeds", grams: 3, isOptional: false },
       { ingredientId: "scallion", grams: 0, isOptional: false },
     ],
@@ -1850,13 +1815,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "nam-tok": {
     recipeSlug: "nam-tok",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "beef-steak", grams: 340.19, isOptional: false },
       { ingredientId: "lime-juice", grams: 46.13, isOptional: false },
       { ingredientId: "fish-sauce", grams: 33.75, isOptional: false },
       { ingredientId: "white-rice", grams: 17.34, isOptional: false },
-      { ingredientId: "cayenne", grams: 0, isOptional: false },
       { ingredientId: "shallots", grams: 0, isOptional: false },
       { ingredientId: "mint", grams: 10, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: false },
@@ -1913,16 +1877,15 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "hummus": {
     recipeSlug: "hummus",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
-      { ingredientId: "chickpeas", grams: 0, isOptional: false },
+      { ingredientId: "chickpeas", grams: 400, isOptional: false },
       { ingredientId: "tahini", grams: 45, isOptional: false },
       { ingredientId: "lemon", grams: 58, isOptional: false },
       { ingredientId: "garlic", grams: 4.5, isOptional: false },
       { ingredientId: "olive-oil", grams: 27, isOptional: false },
       { ingredientId: "water", grams: 51.84, isOptional: false },
       { ingredientId: "table-salt", grams: 3.04, isOptional: false },
-      { ingredientId: "paprika", grams: 0, isOptional: true },
     ],
   },
   "kimchi": {
@@ -1943,7 +1906,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "coleslaw": {
     recipeSlug: "coleslaw",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "green-cabbage", grams: 0, isOptional: false },
       { ingredientId: "carrot", grams: 122, isOptional: false },
@@ -1952,7 +1915,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sugar", grams: 12.5, isOptional: false },
       { ingredientId: "dijon-mustard", grams: 5.19, isOptional: false },
       { ingredientId: "celery", grams: 1.05, isOptional: true },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "cornbread": {
@@ -1971,14 +1933,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "grilled-salmon": {
     recipeSlug: "grilled-salmon",
     servingsPerRecipe: 2,
-    originalLineCount: 6,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "salmon", grams: 280, isOptional: false },
       { ingredientId: "olive-oil", grams: 13.5, isOptional: false },
       { ingredientId: "lemon", grams: 58, isOptional: false },
       { ingredientId: "garlic", grams: 6, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "teriyaki-salmon": {
@@ -2017,7 +1977,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "masoor-dal": {
     recipeSlug: "masoor-dal",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "red-lentils", grams: 192, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -2027,14 +1987,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "turmeric", grams: 2.5, isOptional: false },
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: false },
     ],
   },
   "butter-chicken": {
     recipeSlug: "butter-chicken",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "chicken-breast", grams: 500, isOptional: false },
       { ingredientId: "butter", grams: 42.56, isOptional: false },
@@ -2044,7 +2003,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "garlic", grams: 12, isOptional: false },
       { ingredientId: "ginger", grams: 6, isOptional: false },
       { ingredientId: "turmeric", grams: 2.5, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "chicken-tikka-masala": {
@@ -2111,27 +2069,23 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "pasta-carbonara": {
     recipeSlug: "pasta-carbonara",
     servingsPerRecipe: 2,
-    originalLineCount: 6,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "pasta", grams: 200, isOptional: false },
       { ingredientId: "egg", grams: 100, isOptional: false },
       { ingredientId: "parmesan", grams: 50, isOptional: false },
       { ingredientId: "ground-pork", grams: 80, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "beef-burger": {
     recipeSlug: "beef-burger",
     servingsPerRecipe: 1,
-    originalLineCount: 6,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "ground-beef", grams: 150, isOptional: false },
       { ingredientId: "bread", grams: 25, isOptional: false },
       { ingredientId: "onion", grams: 27.5, isOptional: false },
       { ingredientId: "tomato", grams: 123, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "chicken-shawarma": {
@@ -2166,14 +2120,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "steak": {
     recipeSlug: "steak",
     servingsPerRecipe: 1,
-    originalLineCount: 6,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "beef-steak", grams: 250, isOptional: false },
       { ingredientId: "olive-oil", grams: 13.5, isOptional: false },
       { ingredientId: "garlic", grams: 6, isOptional: false },
       { ingredientId: "butter", grams: 14.19, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
-      { ingredientId: "black-pepper", grams: 0, isOptional: false },
     ],
   },
   "tacos-al-pastor": {
@@ -2440,7 +2392,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "bell-pepper-curry": {
     recipeSlug: "bell-pepper-curry",
     servingsPerRecipe: 4,
-    originalLineCount: 12,
+    originalLineCount: 11,
     lines: [
       { ingredientId: "bell-pepper", grams: 476, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -2453,13 +2405,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "roasted-peanuts", grams: 36.5, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "bhindi-masala": {
     recipeSlug: "bhindi-masala",
     servingsPerRecipe: 4,
-    originalLineCount: 12,
+    originalLineCount: 11,
     lines: [
       { ingredientId: "okra", grams: 500, isOptional: false },
       { ingredientId: "onion", grams: 220, isOptional: false },
@@ -2471,13 +2422,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "coriander-seed", grams: 5.63, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 40.88, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "eggplant-methi": {
     recipeSlug: "eggplant-methi",
     servingsPerRecipe: 4,
-    originalLineCount: 12,
+    originalLineCount: 11,
     lines: [
       { ingredientId: "eggplant", grams: 500, isOptional: false },
       { ingredientId: "fenugreek-seeds", grams: 300, isOptional: false },
@@ -2490,13 +2440,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "coriander-seed", grams: 5.63, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 40.88, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "kadhi": {
     recipeSlug: "kadhi",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
       { ingredientId: "chickpeas", grams: 100, isOptional: false },
@@ -2509,13 +2458,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "ghee", grams: 25.63, isOptional: false },
       { ingredientId: "water", grams: 711, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "marathi-moong-curry": {
     recipeSlug: "marathi-moong-curry",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "tomato", grams: 123, isOptional: false },
@@ -2527,13 +2475,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "mixed-veg-paneer": {
     recipeSlug: "mixed-veg-paneer",
     servingsPerRecipe: 4,
-    originalLineCount: 14,
+    originalLineCount: 13,
     lines: [
       { ingredientId: "paneer", grams: 250, isOptional: false },
       { ingredientId: "bell-pepper", grams: 119, isOptional: false },
@@ -2547,13 +2494,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "turmeric", grams: 1.25, isOptional: false },
       { ingredientId: "heavy-cream", grams: 59.5, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "mumbai-pav-bhaji": {
     recipeSlug: "mumbai-pav-bhaji",
     servingsPerRecipe: 4,
-    originalLineCount: 14,
+    originalLineCount: 13,
     lines: [
       { ingredientId: "potato", grams: 519, isOptional: false },
       { ingredientId: "cauliflower", grams: 107, isOptional: false },
@@ -2566,13 +2512,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "bread", grams: 0, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: false },
       { ingredientId: "lemon", grams: 58, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "mushroom-masala": {
     recipeSlug: "mushroom-masala",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "mushroom", grams: 400, isOptional: false },
       { ingredientId: "onion", grams: 220, isOptional: false },
@@ -2585,13 +2530,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "heavy-cream", grams: 59.5, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "sambar": {
     recipeSlug: "sambar",
     servingsPerRecipe: 6,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "red-lentils", grams: 192, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -2603,13 +2547,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "tandoori-vegetables": {
     recipeSlug: "tandoori-vegetables",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "bell-pepper", grams: 238, isOptional: false },
       { ingredientId: "cauliflower", grams: 107, isOptional: false },
@@ -2622,13 +2565,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "turmeric", grams: 1.25, isOptional: false },
       { ingredientId: "lemon-juice", grams: 30.5, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "tofu-bhurji": {
     recipeSlug: "tofu-bhurji",
     servingsPerRecipe: 4,
-    originalLineCount: 13,
+    originalLineCount: 12,
     lines: [
       { ingredientId: "tofu", grams: 400, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -2642,7 +2584,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "chicken-katsu": {
@@ -2709,7 +2650,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "kimchi-jjigae": {
     recipeSlug: "kimchi-jjigae",
     servingsPerRecipe: 4,
-    originalLineCount: 11,
+    originalLineCount: 10,
     lines: [
       { ingredientId: "kimchi", grams: 300, isOptional: false },
       { ingredientId: "ground-pork", grams: 200, isOptional: false },
@@ -2720,13 +2661,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cayenne", grams: 5.63, isOptional: false },
       { ingredientId: "sesame-oil", grams: 13.63, isOptional: false },
       { ingredientId: "water", grams: 711, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "soondubu-jjigae": {
     recipeSlug: "soondubu-jjigae",
     servingsPerRecipe: 2,
-    originalLineCount: 11,
+    originalLineCount: 10,
     lines: [
       { ingredientId: "tofu", grams: 350, isOptional: false },
       { ingredientId: "kimchi", grams: 75, isOptional: false },
@@ -2738,7 +2678,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "sesame-oil", grams: 13.63, isOptional: false },
       { ingredientId: "egg", grams: 50, isOptional: false },
       { ingredientId: "water", grams: 474, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "japchae-main": {
@@ -3086,7 +3025,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "grilled-pompano": {
     recipeSlug: "grilled-pompano",
     servingsPerRecipe: 4,
-    originalLineCount: 10,
+    originalLineCount: 9,
     lines: [
       { ingredientId: "tomato", grams: 246, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -3094,7 +3033,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "garlic", grams: 9, isOptional: false },
       { ingredientId: "scallion", grams: 45, isOptional: false },
       { ingredientId: "lemon", grams: 58, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "black-pepper", grams: 2.4, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
     ],
@@ -3121,7 +3059,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "open-face-pandesal-sandwich": {
     recipeSlug: "open-face-pandesal-sandwich",
     servingsPerRecipe: 2,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "egg", grams: 150, isOptional: false },
       { ingredientId: "tomato", grams: 123, isOptional: false },
@@ -3129,7 +3067,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "scallion", grams: 30, isOptional: false },
       { ingredientId: "butter", grams: 14.19, isOptional: false },
       { ingredientId: "black-pepper", grams: 1.2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "chia-champorado": {
@@ -3212,7 +3149,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-pho-ga": {
     recipeSlug: "tu-pho-ga",
     servingsPerRecipe: 6,
-    originalLineCount: 17,
+    originalLineCount: 16,
     lines: [
       { ingredientId: "chicken-breast", grams: 1587.57, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -3225,7 +3162,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "water", grams: 0, isOptional: false },
       { ingredientId: "chicken-broth", grams: 0, isOptional: false },
       { ingredientId: "rice-noodles", grams: 396.89, isOptional: false },
-      { ingredientId: "scallion", grams: 0, isOptional: false },
       { ingredientId: "avocado", grams: 28.13, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 1.24, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: true },
@@ -3381,7 +3317,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-banh-canh-gio-heo-tom": {
     recipeSlug: "tu-banh-canh-gio-heo-tom",
     servingsPerRecipe: 6,
-    originalLineCount: 24,
+    originalLineCount: 20,
     lines: [
       { ingredientId: "all-purpose-flour", grams: 250, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 31.25, isOptional: false },
@@ -3400,16 +3336,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "fish-sauce", grams: 33.75, isOptional: false },
       { ingredientId: "table-salt", grams: 18.25, isOptional: false },
       { ingredientId: "shrimp", grams: 453.59, isOptional: false },
-      { ingredientId: "bean-sprouts", grams: 0, isOptional: false },
-      { ingredientId: "scallion", grams: 0, isOptional: false },
-      { ingredientId: "shallots", grams: 0, isOptional: false },
-      { ingredientId: "fish-sauce", grams: 0, isOptional: false },
     ],
   },
   "tu-mi-hoanh-thanh": {
     recipeSlug: "tu-mi-hoanh-thanh",
     servingsPerRecipe: 4,
-    originalLineCount: 23,
+    originalLineCount: 21,
     lines: [
       { ingredientId: "ground-pork", grams: 453.59, isOptional: false },
       { ingredientId: "shrimp", grams: 453.59, isOptional: false },
@@ -3430,7 +3362,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "ground-pork", grams: 0, isOptional: true },
       { ingredientId: "ground-beef", grams: 0, isOptional: true },
       { ingredientId: "scallion", grams: 50, isOptional: false },
-      { ingredientId: "apple-cider-vinegar", grams: 0, isOptional: true },
     ],
   },
   "tu-bun-bo-hue": {
@@ -3530,7 +3461,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "tu-char-siu-banh-mi": {
     recipeSlug: "tu-char-siu-banh-mi",
     servingsPerRecipe: 4,
-    originalLineCount: 23,
+    originalLineCount: 22,
     lines: [
       { ingredientId: "pork-shoulder", grams: 907.18, isOptional: false },
       { ingredientId: "garlic", grams: 9, isOptional: false },
@@ -3542,7 +3473,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "carrot", grams: 256, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 119.5, isOptional: false },
       { ingredientId: "water", grams: 237, isOptional: false },
-      { ingredientId: "sugar", grams: 0, isOptional: false },
       { ingredientId: "table-salt", grams: 1.52, isOptional: false },
       { ingredientId: "jalapeno", grams: 7, isOptional: true },
       { ingredientId: "butter", grams: 28.38, isOptional: false },
@@ -3941,20 +3871,19 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "mint-raita": {
     recipeSlug: "mint-raita",
     servingsPerRecipe: 6,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "greek-yogurt", grams: 367.5, isOptional: false },
       { ingredientId: "mint", grams: 15, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "jalapeno", grams: 14, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "cucumber-tomato-raita": {
     recipeSlug: "cucumber-tomato-raita",
     servingsPerRecipe: 6,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "greek-yogurt", grams: 367.5, isOptional: false },
       { ingredientId: "cucumber", grams: 300, isOptional: false },
@@ -3962,7 +3891,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "onion", grams: 40, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "plain-dahi": {
@@ -3976,7 +3904,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "cilantro-mint-chutney": {
     recipeSlug: "cilantro-mint-chutney",
     servingsPerRecipe: 8,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "cilantro", grams: 16, isOptional: false },
       { ingredientId: "mint", grams: 15, isOptional: false },
@@ -3984,26 +3912,24 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "ginger", grams: 2, isOptional: false },
       { ingredientId: "lemon", grams: 0, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "dry-chutneys": {
     recipeSlug: "dry-chutneys",
     servingsPerRecipe: 8,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "roasted-peanuts", grams: 73, isOptional: false },
       { ingredientId: "sesame-seeds", grams: 18, isOptional: false },
       { ingredientId: "garlic", grams: 12, isOptional: false },
       { ingredientId: "cayenne", grams: 5.63, isOptional: false },
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "green-tomato-chutney": {
     recipeSlug: "green-tomato-chutney",
     servingsPerRecipe: 8,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "tomato", grams: 492, isOptional: false },
       { ingredientId: "garlic", grams: 12, isOptional: false },
@@ -4012,13 +3938,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "turmeric", grams: 1.25, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "sugar", grams: 4.17, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "red-dosa-chutney": {
     recipeSlug: "red-dosa-chutney",
     servingsPerRecipe: 8,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "coconut", grams: 80, isOptional: false },
       { ingredientId: "tomato", grams: 123, isOptional: false },
@@ -4028,13 +3953,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "tamarind", grams: 2.5, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 0.94, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "tomato-chutney": {
     recipeSlug: "tomato-chutney",
     servingsPerRecipe: 8,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "tomato", grams: 492, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
@@ -4043,7 +3967,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "tamarind", grams: 2.5, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "aam-ka-achar": {
@@ -4101,7 +4024,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "beet-koshimbir": {
     recipeSlug: "beet-koshimbir",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "beet", grams: 164, isOptional: false },
       { ingredientId: "greek-yogurt", grams: 122.5, isOptional: false },
@@ -4110,13 +4033,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 0.94, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "coconut-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "beetroot-salad": {
     recipeSlug: "beetroot-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "beet", grams: 164, isOptional: false },
       { ingredientId: "coconut", grams: 20, isOptional: false },
@@ -4125,13 +4047,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 0.94, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "coconut-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "cabbage-salad-with-indian-tadka": {
     recipeSlug: "cabbage-salad-with-indian-tadka",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "green-cabbage", grams: 267, isOptional: false },
       { ingredientId: "carrot", grams: 61, isOptional: false },
@@ -4141,13 +4062,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "lemon", grams: 0, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "kakdi-koshimbir": {
     recipeSlug: "kakdi-koshimbir",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "cucumber", grams: 600, isOptional: false },
       { ingredientId: "roasted-peanuts", grams: 27.38, isOptional: false },
@@ -4157,25 +4077,23 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cilantro", grams: 2, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 13.63, isOptional: false },
       { ingredientId: "sugar", grams: 2.08, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "laccha-pyaz": {
     recipeSlug: "laccha-pyaz",
     servingsPerRecipe: 6,
-    originalLineCount: 5,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "onion", grams: 220, isOptional: false },
       { ingredientId: "lemon", grams: 0, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "cilantro", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "vibrant-apple-beet-carrot-salad": {
     recipeSlug: "vibrant-apple-beet-carrot-salad",
     servingsPerRecipe: 4,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "apple", grams: 182, isOptional: false },
       { ingredientId: "beet", grams: 82, isOptional: false },
@@ -4183,38 +4101,35 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "lemon", grams: 0, isOptional: false },
       { ingredientId: "honey", grams: 7.06, isOptional: false },
       { ingredientId: "olive-oil", grams: 13.5, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "air-fryer-corn-on-the-cob": {
     recipeSlug: "air-fryer-corn-on-the-cob",
     servingsPerRecipe: 4,
-    originalLineCount: 5,
+    originalLineCount: 4,
     lines: [
       { ingredientId: "corn", grams: 0, isOptional: false },
       { ingredientId: "butter", grams: 28.38, isOptional: false },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "lemon", grams: 0, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "asparagus-stir-fry-subzi": {
     recipeSlug: "asparagus-stir-fry-subzi",
     servingsPerRecipe: 4,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "coconut", grams: 20, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "jalapeno", grams: 14, isOptional: false },
       { ingredientId: "turmeric", grams: 0.63, isOptional: false },
       { ingredientId: "coconut-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "bagara-baingan": {
     recipeSlug: "bagara-baingan",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "eggplant", grams: 400, isOptional: false },
       { ingredientId: "roasted-peanuts", grams: 27.38, isOptional: false },
@@ -4224,13 +4139,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "ginger", grams: 2, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 40.88, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "beans-poriyal": {
     recipeSlug: "beans-poriyal",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "green-beans", grams: 300, isOptional: false },
       { ingredientId: "coconut", grams: 26.4, isOptional: false },
@@ -4239,13 +4153,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "jalapeno", grams: 14, isOptional: false },
       { ingredientId: "turmeric", grams: 0.63, isOptional: false },
       { ingredientId: "coconut-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "cabbage-poriyal": {
     recipeSlug: "cabbage-poriyal",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "green-cabbage", grams: 356, isOptional: false },
       { ingredientId: "coconut", grams: 15, isOptional: false },
@@ -4253,13 +4166,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "jalapeno", grams: 28, isOptional: false },
       { ingredientId: "turmeric", grams: 0.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "peanut-thecha": {
     recipeSlug: "peanut-thecha",
     servingsPerRecipe: 6,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "roasted-peanuts", grams: 146, isOptional: false },
       { ingredientId: "jalapeno", grams: 112, isOptional: false },
@@ -4267,13 +4179,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cilantro", grams: 4, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "stuffed-tomatoes": {
     recipeSlug: "stuffed-tomatoes",
     servingsPerRecipe: 4,
-    originalLineCount: 9,
+    originalLineCount: 8,
     lines: [
       { ingredientId: "tomato", grams: 738, isOptional: false },
       { ingredientId: "potato", grams: 346, isOptional: false },
@@ -4281,13 +4192,12 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
       { ingredientId: "turmeric", grams: 1.25, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "vellarika-pachadi": {
     recipeSlug: "vellarika-pachadi",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "cucumber", grams: 238, isOptional: false },
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
@@ -4295,7 +4205,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "jalapeno", grams: 28, isOptional: false },
       { ingredientId: "coconut-oil", grams: 13.63, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "instant-pot-brown-rice": {
@@ -4362,14 +4271,13 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "oats-idli": {
     recipeSlug: "oats-idli",
     servingsPerRecipe: 6,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "oats", grams: 162, isOptional: false },
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
       { ingredientId: "carrot", grams: 0, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
       { ingredientId: "table-salt", grams: 6.08, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "plain-idli": {
@@ -4385,19 +4293,18 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "masala-fries": {
     recipeSlug: "masala-fries",
     servingsPerRecipe: 4,
-    originalLineCount: 6,
+    originalLineCount: 5,
     lines: [
       { ingredientId: "potato", grams: 692, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 436, isOptional: false, fryingMedium: true },
       { ingredientId: "cayenne", grams: 0.94, isOptional: false },
       { ingredientId: "turmeric", grams: 0.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "millet-khichdi": {
     recipeSlug: "millet-khichdi",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "red-lentils", grams: 96, isOptional: false },
       { ingredientId: "water", grams: 948, isOptional: false },
@@ -4405,7 +4312,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "cumin", grams: 2.08, isOptional: false },
       { ingredientId: "turmeric", grams: 1.25, isOptional: false },
       { ingredientId: "ginger", grams: 2, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "roasted-papad": {
@@ -4419,7 +4325,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "indian-egg-bites": {
     recipeSlug: "indian-egg-bites",
     servingsPerRecipe: 6,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "egg", grams: 300, isOptional: false },
       { ingredientId: "onion", grams: 80, isOptional: false },
@@ -4428,7 +4334,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "jalapeno", grams: 14, isOptional: false },
       { ingredientId: "turmeric", grams: 0.63, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 13.63, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "kinpira-gobo": {
@@ -4471,7 +4376,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "hobak-bokkeum": {
     recipeSlug: "hobak-bokkeum",
     servingsPerRecipe: 6,
-    originalLineCount: 7,
+    originalLineCount: 6,
     lines: [
       { ingredientId: "zucchini", grams: 392, isOptional: false },
       { ingredientId: "sesame-oil", grams: 13.63, isOptional: false },
@@ -4479,7 +4384,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "scallion", grams: 15, isOptional: false },
       { ingredientId: "shrimp", grams: 0, isOptional: false },
       { ingredientId: "sesame-seeds", grams: 3, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
     ],
   },
   "musaengchae": {
@@ -4688,7 +4592,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   "ensaladang-talong": {
     recipeSlug: "ensaladang-talong",
     servingsPerRecipe: 4,
-    originalLineCount: 8,
+    originalLineCount: 7,
     lines: [
       { ingredientId: "eggplant", grams: 1374, isOptional: false },
       { ingredientId: "tomato", grams: 246, isOptional: false },
@@ -4696,7 +4600,6 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "egg", grams: 100, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 44.81, isOptional: false },
       { ingredientId: "fish-sauce", grams: 16.88, isOptional: false },
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
       { ingredientId: "black-pepper", grams: 1.2, isOptional: false },
     ],
   },

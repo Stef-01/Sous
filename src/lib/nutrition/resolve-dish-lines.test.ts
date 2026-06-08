@@ -32,11 +32,23 @@ describe("resolveDishLines", () => {
     expect(r.lines[0].fryingMedium).toBeUndefined();
   });
 
-  it("keeps a resolved-but-unmassed line at 0 g (e.g. 'to taste')", () => {
-    const r = resolveDishLines([{ name: "Salt", quantity: "to taste" }]);
-    expect(r.lines).toEqual([
-      { ingredientId: "table-salt", grams: 0, isOptional: false },
+  it("drops a negligible 'to taste' line and excludes it from coverage", () => {
+    // A "to taste" pinch is intentionally massless — not a data gap. It is
+    // dropped (no nutrition) AND removed from the coverage denominator, so a
+    // garnish never penalises a dish whose real ingredients all resolved.
+    const r = resolveDishLines([
+      { name: "Chicken breast", quantity: "200 g" },
+      { name: "Salt", quantity: "to taste" },
     ]);
+    expect(r.lines).toEqual([
+      { ingredientId: "chicken-breast", grams: 200, isOptional: false },
+    ]);
+    expect(r.originalLineCount).toBe(1); // the salt line is excluded
+  });
+
+  it("resolves '1 can' to a standard can mass (400 g)", () => {
+    const r = resolveDishLines([{ name: "Black beans", quantity: "1 can" }]);
+    expect(r.lines[0]?.grams).toBe(400);
   });
 });
 

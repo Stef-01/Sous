@@ -74,17 +74,28 @@ const COUNT_UNITS = new Set([
   "sprigs",
   "leaf",
   "leaves",
-  "can",
-  "cans",
   "whole",
   "large",
   "medium",
   "small",
 ]);
 
+/** A standard 14–15 oz can (beans, tomatoes, coconut milk). Cans are a fixed
+ *  retail size, so "1 can" resolves to mass directly rather than via a per-piece
+ *  weight the canned ingredient doesn't carry. */
+const CAN_GRAMS = 400;
+
 /** Non-quantities that contribute negligible mass; resolved to null. */
 const NON_QUANTITY =
   /(to taste|as needed|for (garnish|serving|drizzling)|pinch|dash|optional)/;
+
+/** True for a quantity that is intentionally massless (a pinch of salt "to
+ *  taste", herbs "for garnish"). The resolver excludes these from the coverage
+ *  denominator — they are not missing data, they genuinely carry no real mass. */
+export function isNegligibleQuantity(quantity: string): boolean {
+  const q = quantity.trim().toLowerCase();
+  return q !== "" && NON_QUANTITY.test(q);
+}
 
 const UNICODE_FRACTIONS: Record<string, number> = {
   "½": 0.5,
@@ -196,6 +207,12 @@ export function quantityToGrams(
   if (unitToken in VOLUME_TO_CUP) {
     if (ingredient.densityGPerCup === null) return null;
     return round(amount * VOLUME_TO_CUP[unitToken] * ingredient.densityGPerCup);
+  }
+
+  // A can is a fixed retail size → resolve directly (canned beans/tomatoes carry
+  // no per-piece mass, so the count path below would fail on "1 can").
+  if (unitToken === "can" || unitToken === "cans") {
+    return round(amount * CAN_GRAMS);
   }
 
   // Count unit, or a bare number with no unit (e.g. "2 eggs", "3 tomatoes").

@@ -9,7 +9,7 @@
 
 import type { ResolvedIngredientLine } from "@/types/ingredient";
 import { resolveIngredientByName, getIngredient } from "@/data/ingredients";
-import { quantityToGrams } from "./quantity-to-grams";
+import { quantityToGrams, isNegligibleQuantity } from "./quantity-to-grams";
 
 export interface RawIngredientLine {
   name: string;
@@ -31,7 +31,14 @@ export function resolveDishLines(
   const lines: ResolvedIngredientLine[] = [];
   const unresolved: string[] = [];
 
-  for (const ing of raw) {
+  // Intentionally-massless lines (salt "to taste", herbs "for garnish") are not
+  // missing data — they genuinely carry no real mass. Drop them up front so they
+  // neither add nutrition nor count against coverage (the denominator below).
+  const massBearing = raw.filter(
+    (ing) => !isNegligibleQuantity(ing.quantity ?? ""),
+  );
+
+  for (const ing of massBearing) {
     const id = resolveIngredientByName(ing.name);
     if (!id) {
       unresolved.push(ing.name);
@@ -58,5 +65,5 @@ export function resolveDishLines(
     });
   }
 
-  return { lines, originalLineCount: raw.length, unresolved };
+  return { lines, originalLineCount: massBearing.length, unresolved };
 }
