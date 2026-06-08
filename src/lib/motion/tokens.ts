@@ -1,0 +1,49 @@
+/**
+ * W1 — Motion tokens: ONE source of truth for JS/Framer animations, mirroring
+ * the CSS `--dur-*` / `--ease-*` set in globals.css. Components import these
+ * instead of hand-rolling durations and springs, and every transition collapses
+ * to instant under `prefers-reduced-motion` via `motionTransition`.
+ */
+
+import type { Transition } from "framer-motion";
+
+/** Seconds (Framer uses seconds; CSS uses ms — kept in lockstep). */
+export const DURATION = {
+  fast: 0.15,
+  base: 0.22,
+  slow: 0.3,
+} as const;
+
+/** Cubic-bezier control points, matching --ease-out / --ease-in. */
+export const EASE = {
+  out: [0.22, 1, 0.36, 1] as const,
+  in: [0.4, 0, 1, 1] as const,
+};
+
+/** Named spring configs — pick by feel, never re-tune inline. */
+export const SPRING: Record<"soft" | "snappy" | "gentle", Transition> = {
+  soft: { type: "spring", stiffness: 260, damping: 30 },
+  snappy: { type: "spring", stiffness: 400, damping: 28 },
+  gentle: { type: "spring", stiffness: 180, damping: 26 },
+};
+
+/** A tasteful default entrance transition. */
+export const ENTRANCE: Transition = { duration: DURATION.base, ease: EASE.out };
+
+/**
+ * Wrap any transition so it becomes instant when the user prefers reduced
+ * motion — the single guard every animated surface should route through.
+ */
+export function motionTransition(
+  transition: Transition,
+  reducedMotion: boolean | null,
+): Transition {
+  return reducedMotion ? { duration: 0 } : transition;
+}
+
+/** Stagger helper for lists (W10) — children fade/slide in sequence. */
+export function staggerChildren(reducedMotion: boolean | null, step = 0.04) {
+  return reducedMotion
+    ? { staggerChildren: 0 }
+    : { staggerChildren: step, delayChildren: 0.02 };
+}
