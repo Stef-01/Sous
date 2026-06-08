@@ -539,9 +539,6 @@ function MealSwipeQueueOverlay({
                 transition={{ duration: 0.2 }}
               />
             </div>
-            <p className="mt-2 text-center text-[11px] font-medium text-white/62">
-              {activeDish ? seenCount + 1 : initialTotal} / {initialTotal}
-            </p>
           </div>
           <div className="h-11 w-11" aria-hidden="true" />
         </div>

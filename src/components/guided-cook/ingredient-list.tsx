@@ -8,7 +8,6 @@ import {
   ArrowRightLeft,
   Utensils,
   ShoppingCart,
-  Bookmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { ingredientEmoji } from "@/lib/utils/ingredient-meta";
@@ -507,7 +506,6 @@ function IngredientRow({
   onRememberSub,
   onToggle,
   onAskSub,
-  onTogglePantry,
 }: {
   item: Ingredient;
   idx: number;
@@ -610,39 +608,10 @@ function IngredientRow({
               )}
             </p>
           </div>
-          {item.substitution && !showingSub && !rememberedSub && (
-            <p className="mt-0.5 text-xs text-[var(--nourish-subtext-faint)]">
-              sub: {item.substitution}
-            </p>
-          )}
-          {rememberedSub && !showingSub && (
-            <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
-              last time: {rememberedSub}
-            </p>
-          )}
         </button>
 
-        {/* Stash in pantry  -  small bookmark toggle, preserves future cooks */}
-        <button
-          onClick={onTogglePantry}
-          className={cn(
-            "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
-            inPantry
-              ? "text-[var(--nourish-green)]"
-              : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
-          )}
-          type="button"
-          aria-label={
-            inPantry
-              ? `Remove ${item.name} from pantry`
-              : `Add ${item.name} to pantry`
-          }
-          title={inPantry ? "In your pantry" : "Add to pantry"}
-        >
-          <Bookmark size={14} fill={inPantry ? "currentColor" : "none"} />
-        </button>
-
-        {/* Substitution toggle  -  44px touch target */}
+        {/* Substitution toggle  -  44px touch target. The ONLY side action: the
+            recipe's default sub is surfaced here on tap, never inline. */}
         {!checked && !item.isOptional && (
           <button
             onClick={onAskSub}

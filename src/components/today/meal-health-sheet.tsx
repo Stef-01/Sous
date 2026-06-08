@@ -21,16 +21,10 @@ import {
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
-import { ChevronUp, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import type { ConditionId } from "@/types/therapeutics";
 import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
 import { MealHealthPanel } from "./meal-health-panel";
-
-/**
- * Distance from the screen bottom to rest the collapsed grabber, clearing the
- * floating Pass/Save/Cook bar. Matches the card's `pb-[126px]` image inset.
- */
-const GRABBER_BOTTOM_PX = 134;
 
 interface Props {
   dishName: string;
@@ -64,33 +58,23 @@ export function MealHealthSheet({
 
   return (
     <>
-      {/* Collapsed affordance — a draggable, tappable "Health" grabber. */}
+      {/* Collapsed affordance — a clear, tappable "Info" pill at the top-right of
+          the photo. (Was a bottom-center grabber pinned to a magic offset that
+          the taller Pass/Save/Cook bar occluded into an unusable sliver.) */}
       <AnimatePresence>
         {!isOpen && (
           <motion.button
             key="grabber"
             type="button"
             onClick={open}
-            drag={reducedMotion ? false : "y"}
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={{ top: 0.6, bottom: 0, left: 0, right: 0 }}
-            dragSnapToOrigin
-            onDragEnd={handleDragEnd}
-            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reducedMotion ? undefined : { opacity: 0, y: 8 }}
-            style={{ bottom: GRABBER_BOTTOM_PX }}
-            className="absolute inset-x-0 z-30 mx-auto flex w-fit cursor-grab touch-none items-center gap-1.5 rounded-full bg-black/55 px-4 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md active:cursor-grabbing"
+            initial={reducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={reducedMotion ? undefined : { opacity: 0 }}
+            className="absolute right-4 top-4 z-30 flex items-center gap-1.5 rounded-full bg-black/55 px-3.5 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md"
             aria-label={`Show info for ${dishName}`}
           >
             <Info size={14} strokeWidth={2.2} />
             Info
-            <ChevronUp
-              size={13}
-              strokeWidth={2.4}
-              className="opacity-75"
-              aria-hidden="true"
-            />
           </motion.button>
         )}
       </AnimatePresence>
