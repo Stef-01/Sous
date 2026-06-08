@@ -25,7 +25,18 @@ const DV = {
   vitaminE_mg: 15,
   vitaminK_mcg: 120,
   calcium_mg: 1300,
+  zinc_mg: 11,
 };
+
+/** Dried-legume ids whose phytates soaking/sprouting/fermenting helps break down
+ *  (processed soy like tofu is excluded — the prep no longer applies). */
+const LEGUMES: ReadonlySet<string> = new Set([
+  "red-lentils",
+  "chickpeas",
+  "black-beans",
+  "pinto-beans",
+  "navy-beans",
+]);
 
 export interface BioavailabilityTip {
   tip: string;
@@ -70,7 +81,25 @@ export function bioavailabilityTip(
     };
   }
 
-  // 4) Calcium + vitamin D together → they work as a pair.
+  // 4) Legume dish carrying iron/zinc → soaking/sprouting frees the minerals.
+  const hasLegume =
+    !!ingredientIds && [...LEGUMES].some((l) => ingredientIds.has(l));
+  if (hasLegume && (ironPct >= 0.15 || frac(n.zinc_mg, DV.zinc_mg) >= 0.15)) {
+    return {
+      tip: "Soaking or sprouting dried beans before cooking frees up more of their iron and zinc.",
+      why: "Phytates in beans and grains bind iron and zinc; soaking, sprouting, or fermenting breaks them down so more is absorbed.",
+    };
+  }
+
+  // 5) Tomato in the dish → cooked tomatoes give up far more lycopene than raw.
+  if (ingredientIds?.has("tomato") || ingredientIds?.has("tomato-paste")) {
+    return {
+      tip: "Cooked tomatoes give up far more lycopene than raw — a simmered sauce especially.",
+      why: "Heat breaks the tomato's cell walls, freeing the antioxidant lycopene; a little oil helps you absorb it.",
+    };
+  }
+
+  // 6) Calcium + vitamin D together → they work as a pair.
   if (
     frac(n.calcium_mg, DV.calcium_mg) >= 0.2 &&
     frac(n.vitaminD_mcg, DV.vitaminD_mcg) >= 0.2

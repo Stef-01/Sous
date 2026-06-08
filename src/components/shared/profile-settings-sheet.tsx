@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
+import { NutritionEvidencePanel } from "@/components/shared/nutrition-evidence-panel";
 import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
 import { PreferencesSection } from "@/components/shared/preferences-section";
@@ -398,6 +399,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 />
                 <span>Made for cooking confidence at home.</span>
               </p>
+              <div className="mt-4">
+                <NutritionEvidencePanel />
+              </div>
             </section>
           </div>
         </Drawer.Content>

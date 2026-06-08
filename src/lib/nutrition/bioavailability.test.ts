@@ -33,6 +33,19 @@ describe("bioavailabilityTip", () => {
     expect(t?.tip).toMatch(/vitamin D|calcium/i);
   });
 
+  it("suggests soaking for a legume dish carrying iron/zinc", () => {
+    const t = bioavailabilityTip(
+      N({ iron_mg: 3, vitaminC_mg: 50 }),
+      new Set(["chickpeas", "onion"]),
+    );
+    expect(t?.tip).toMatch(/soak|sprout/i);
+  });
+
+  it("notes lycopene for a dish containing tomato", () => {
+    const t = bioavailabilityTip(N({}), new Set(["tomato", "garlic"]));
+    expect(t?.tip).toMatch(/lycopene|tomato/i);
+  });
+
   it("the add-fat cue takes priority over the calcium pairing when fat is low", () => {
     const t = bioavailabilityTip(N({ calcium_mg: 400, vitaminD_mcg: 6 }));
     expect(t?.tip).toMatch(/fat|A, D, E/i);
