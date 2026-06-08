@@ -1,8 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Flame, Plus, X, UtensilsCrossed } from "lucide-react";
+import {
+  ArrowLeft,
+  Flame,
+  Plus,
+  X,
+  UtensilsCrossed,
+  Barcode,
+  ChevronDown,
+} from "lucide-react";
+import { BrandedFoodSearch } from "@/components/path/branded-food-search";
+import { cn } from "@/lib/utils/cn";
 import {
   useNutritionDiary,
   useDiaryHistory,
@@ -20,9 +30,10 @@ import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
  */
 export default function DiaryPage() {
   const router = useRouter();
-  const { mounted, entries, dayNutrition, logCook, removeEntry } =
+  const { mounted, entries, dayNutrition, logCook, removeEntry, restoreEntry } =
     useNutritionDiary();
   const history = useDiaryHistory();
+  const [showBranded, setShowBranded] = useState(false);
 
   // W14 — celebrate a streak milestone once (deduped in localStorage).
   useEffect(() => {
@@ -120,6 +131,15 @@ export default function DiaryPage() {
                     onClick={() => {
                       haptic("select");
                       removeEntry(e.at);
+                      toast.push({
+                        variant: "info",
+                        title: `Removed ${e.name}`,
+                        dedupKey: `rm-${e.at}`,
+                        action: {
+                          label: "Undo",
+                          onClick: () => restoreEntry(e),
+                        },
+                      });
                     }}
                     aria-label={`Remove ${e.name}`}
                     className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 hover:text-[var(--nourish-dark)]"
@@ -154,6 +174,33 @@ export default function DiaryPage() {
             </div>
           </section>
         )}
+
+        {/* W21 — log a packaged/branded food (barcode scan is founder-gated). */}
+        <section>
+          <button
+            type="button"
+            onClick={() => setShowBranded((s) => !s)}
+            aria-expanded={showBranded}
+            className="flex w-full items-center gap-2 rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-left"
+          >
+            <Barcode size={15} className="text-[var(--nourish-subtext)]" />
+            <span className="flex-1 text-[13px] font-medium text-[var(--nourish-dark)]">
+              Add a packaged food
+            </span>
+            <ChevronDown
+              size={16}
+              className={cn(
+                "text-[var(--nourish-subtext)] transition-transform",
+                showBranded && "rotate-180",
+              )}
+            />
+          </button>
+          {showBranded && (
+            <div className="mt-2">
+              <BrandedFoodSearch />
+            </div>
+          )}
+        </section>
       </main>
     </div>
   );

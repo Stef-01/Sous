@@ -220,6 +220,18 @@ export function useNutritionDiary(date = new Date()) {
     });
   }, []);
 
+  // W25 — undo: re-insert a removed entry exactly (preserves branded nutrition).
+  const restoreEntry = useCallback((entry: DiaryEntry) => {
+    const key = dayKey(new Date());
+    setStore((prev) => {
+      const day = prev[key] ?? [];
+      if (day.some((e) => e.at === entry.at)) return prev;
+      const next = { ...prev, [key]: [...day, entry] };
+      write(next);
+      return next;
+    });
+  }, []);
+
   const entries = store[todayKey] ?? EMPTY_ENTRIES;
   const dayNutrition = useMemo(() => aggregateDay(entries), [entries]);
   // Gap signals (deficit insight + weekly trend + the deficiency reranker) use
@@ -238,6 +250,7 @@ export function useNutritionDiary(date = new Date()) {
     logCook,
     logBranded,
     removeEntry,
+    restoreEntry,
     dayNutrition,
     cookedDayNutrition,
   };
