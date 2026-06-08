@@ -9,6 +9,7 @@ import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
+import { GroceryNutritionPreview } from "@/components/shared/grocery-nutrition-preview";
 import {
   ingredientCategory,
   ingredientEmoji,
@@ -158,6 +159,15 @@ export default function ShoppingListPage() {
                   ))}
                 </div>
               </section>
+            )}
+
+            {/* W33 — what the planned recipes will deliver (nutrition rollup). */}
+            {recipes.length > 0 && (
+              <div className="mb-3">
+                <GroceryNutritionPreview
+                  recipeSlugs={recipes.map((r) => r.slug)}
+                />
+              </div>
             )}
 
             {/* Aisle-grouped, to-buy items. */}
