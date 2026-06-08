@@ -35,7 +35,12 @@ export function OwlAvatar({
         transition={
           reducedMotion
             ? undefined
-            : { duration: 5, repeat: Infinity, repeatDelay: 3.5, ease: "easeInOut" }
+            : {
+                duration: 5,
+                repeat: Infinity,
+                repeatDelay: 3.5,
+                ease: "easeInOut",
+              }
         }
         width="22"
         height="22"
@@ -63,7 +68,7 @@ export function OwlAvatar({
         <ellipse cx="32" cy="14" rx="11" ry="4.5" fill="white" />
         <rect x="25" y="9" width="14" height="7" rx="2" fill="white" />
         <circle cx="32" cy="8" r="3.5" fill="white" />
-      </svg>
+      </motion.svg>
     </motion.button>
   );
 }
