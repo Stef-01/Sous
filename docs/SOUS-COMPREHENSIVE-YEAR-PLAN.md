@@ -336,3 +336,65 @@ cinnamon, black pepper — sources in that file.
   framing, a safety note, and ≥1 live source; doshas excluded; the matrix + the
   Content section live.
 - **Track D:** ~95% coverage, provenance shown, gated go-lives prepped, scale-tested.
+
+---
+
+## 7. Founder-flagged UI defect batch (2026-06-08) — 4-ROUND agent verification
+
+The founder flagged four issues from real phone screenshots. These run under a
+STRICTER **4-round recursive protocol** (one extra round beyond §0.5), with an
+independent verifier agent confirming each round before the next. The bar: the
+founder is _impressed_, not merely unblocked.
+
+### The 4-round protocol (applied to every item here)
+
+- **R1 — Build to spec.** Implement; self-review against the exact complaint;
+  RCA the root cause (not the symptom) and record it.
+- **R2 — Adversarial verify.** A separate verifier agent attacks the fix: overlap/
+  occlusion/z-index (the bug class that broke the Info pill), long names, missing
+  data, reduced-motion, the 375×667 no-scroll constraint, light + dark, RTL.
+- **R3 — Cross-state sweep.** Re-check across many dishes, every ingredient
+  category, both phone widths, and each surface the change touches (Grab list,
+  shopping list, pantry) — live screenshots, not assertions.
+- **R4 — Founder-acceptance.** Eyes-on against the ORIGINAL screenshot/complaint:
+  the specific defect is gone, nothing regressed, and it looks genuinely better.
+  Only then is the item done.
+
+### The batch
+
+1. **Info affordance broken (RCA + fix).** _Done._ Root cause: the collapsed health
+   pill was pinned to a magic `134px` bottom offset to clear the action bar; the
+   bar grew taller and occluded it into an unusable sliver. Fix: a clear top-right
+   "ⓘ Info" pill (no drag, no magic offset). _R1–R4 passed; verified at top:16/
+   right:16._ Follow-up (R3/R4 continuous): confirm on dishes with/without
+   therapeutic evidence + long titles.
+2. **Remove the "N / 18" queue counter.** _Done._ Kept the progress bar; dropped
+   the count (no signal). _Verified absent._
+3. **Declutter ingredient rows.** _Done._ Removed the inline "sub: X" subtext AND
+   the bookmark/save button; the recipe's default substitution surfaces ONLY when
+   the side ⇄ button is tapped. Pantry-stash remains reachable via the shopping-
+   list → pantry flow. _R4 follow-up:_ confirm the sub panel still shows the
+   default on tap across the Grab list.
+4. **Replace ingredient emoji with realistic icons (the big one — full 4 rounds).**
+   - **Repo selected:** Microsoft **Fluent Emoji** (`github.com/microsoft/
+fluentui-emoji`, MIT) — the **3D** variant renders photoreal-ish food; Google
+     **Noto Emoji** (Apache-2.0) is the flat-detailed fallback. Both beat the OS
+     emoji that render inconsistently per device (the founder's "terrible" cause).
+   - **R1 — integrate.** Vendor the needed subset into `public/ingredient-icons/`
+     (no CDN, offline-safe, bundle-measured). Add `ingredientIcon(name)` resolving
+     a canonical ingredient → asset, and an `<IngredientIcon>` that renders the
+     image with the existing `ingredientEmoji()` as the graceful fallback. Map all
+     registry ingredients + the common free-text names.
+   - **R2 — adversarial.** Unmapped ingredients fall back cleanly; no broken-image
+     icons; fixed dimensions (zero layout shift); `loading="lazy"`; bundle delta
+     within budget; a11y (`alt`/decorative correct); reduced-motion irrelevant.
+   - **R3 — cross-state.** Every ingredient category across the Grab list, shopping
+     list, and pantry; long lists; light/dark; both phone widths — live shots.
+   - **R4 — founder-acceptance.** Side-by-side vs the emoji screenshot; the icons
+     read as the real ingredient and look premium. Ships under **Track A** as the
+     ingredient-icon system; coverage gaps logged (no silent fallback at scale).
+   - _Tests:_ `ingredientIcon` returns a path for known ingredients + null→fallback
+     for unknowns; every mapped path exists on disk; the fallback never throws.
+
+This batch's R1–R3 are AUTO-BUILD; R4 is a founder eyes-on gate (fast, not a
+blocker). Item 4 (icons) is the only non-trivial build remaining.
