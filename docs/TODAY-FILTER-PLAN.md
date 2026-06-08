@@ -1,5 +1,11 @@
 # Today Filter — comprehensive plan
 
+> ✅ **SHIPPED 2026-06-07** — Phase A `2e09934` (data/classify) · Phase B `9acca7c`
+> (state) · Phases C–E `fdb2cc1` (button + sheet + role-aware wiring + polish).
+> Verified live: Main → Side switches the feed (main → side); Meal type hides for
+> non-main roles; "Any cuisine" + active-count badge. typecheck · lint · 3299
+> tests · build green.
+
 > Replace the Today page's two filter pills ("Any time" + "Cuisine") with a
 > single **Filter** entry that opens a modern, frictionless faceted sheet, and
 > add two new facets — **Meal type** (breakfast/lunch/dinner) and **Dish role**
