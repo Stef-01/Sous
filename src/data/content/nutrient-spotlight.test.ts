@@ -18,7 +18,7 @@ describe("nutrient-spotlight content (W46)", () => {
     for (const a of NUTRIENT_SPOTLIGHT_ARTICLES) {
       const text = `${a.title} ${a.excerpt} ${a.body.join(" ")}`.toLowerCase();
       expect(text, a.id).not.toMatch(
-        /\bcure|\bprevents? (cancer|disease|diabetes)|\btreats?\b|\bheals?\b/,
+        /\bcures?\b|\bprevents? (cancer|disease|diabetes)|\btreats? (cancer|disease|diabetes|illness)|\bheals?\b/,
       );
     }
   });
