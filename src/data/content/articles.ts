@@ -12,6 +12,7 @@
 import type { Article } from "@/types/content";
 import { STANFORD_ARTICLES } from "./stanford";
 import { CHEF_TU_ARTICLES } from "./chef-tu";
+import { NUTRIENT_SPOTLIGHT_ARTICLES } from "./nutrient-spotlight";
 
 const PLACEHOLDER_ARTICLES: Article[] = [
   {
@@ -152,6 +153,7 @@ const PLACEHOLDER_ARTICLES: Article[] = [
 export const ARTICLES: Article[] = [
   ...CHEF_TU_ARTICLES,
   ...STANFORD_ARTICLES,
+  ...NUTRIENT_SPOTLIGHT_ARTICLES,
   ...PLACEHOLDER_ARTICLES,
 ];
 
