@@ -516,6 +516,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "egg", grams: 0, isOptional: false },
       { ingredientId: "mozzarella", grams: 113.4, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 125, isOptional: false },
+      { ingredientId: "bread", grams: 0, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 872, isOptional: false, fryingMedium: true },
     ],
   },
@@ -1081,6 +1082,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 7,
     lines: [
+      { ingredientId: "bok-choy", grams: 453.59, isOptional: false },
       { ingredientId: "garlic", grams: 13.5, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 27.25, isOptional: false },
       { ingredientId: "oyster-sauce", grams: 33.75, isOptional: false },
@@ -1305,7 +1307,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "tahini", grams: 45, isOptional: false },
       { ingredientId: "sugar", grams: 4.17, isOptional: false },
       { ingredientId: "garlic", grams: 9, isOptional: false },
-      { ingredientId: "spinach", grams: 113.4, isOptional: false },
+      { ingredientId: "bok-choy", grams: 113.4, isOptional: false },
       { ingredientId: "scallion", grams: 0, isOptional: false },
     ],
   },
@@ -1332,6 +1334,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 4,
     originalLineCount: 12,
     lines: [
+      { ingredientId: "semolina", grams: 167, isOptional: false },
       { ingredientId: "water", grams: 592.5, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "jalapeno", grams: 21, isOptional: false },
@@ -2592,6 +2595,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     originalLineCount: 8,
     lines: [
       { ingredientId: "chicken-breast", grams: 0, isOptional: false },
+      { ingredientId: "bread", grams: 0, isOptional: false },
       { ingredientId: "all-purpose-flour", grams: 62.5, isOptional: false },
       { ingredientId: "egg", grams: 100, isOptional: false },
       { ingredientId: "vegetable-oil", grams: 436, isOptional: false, fryingMedium: true },
@@ -2932,6 +2936,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "roasted-peanuts", grams: 73, isOptional: false },
       { ingredientId: "eggplant", grams: 916, isOptional: false },
       { ingredientId: "green-beans", grams: 200, isOptional: false },
+      { ingredientId: "bok-choy", grams: 0, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "garlic", grams: 12, isOptional: false },
       { ingredientId: "shrimp", grams: 0, isOptional: false },
@@ -3163,6 +3168,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "water", grams: 0, isOptional: false },
       { ingredientId: "chicken-broth", grams: 0, isOptional: false },
       { ingredientId: "rice-noodles", grams: 396.89, isOptional: false },
+      { ingredientId: "bacon", grams: 0, isOptional: true },
       { ingredientId: "avocado", grams: 28.13, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 1.24, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: true },
@@ -3671,8 +3677,11 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     servingsPerRecipe: 6,
     originalLineCount: 9,
     lines: [
+      { ingredientId: "navy-beans", grams: 500, isOptional: false },
+      { ingredientId: "bacon", grams: 150, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
       { ingredientId: "tomato-paste", grams: 32.75, isOptional: false },
+      { ingredientId: "molasses", grams: 84.25, isOptional: false },
       { ingredientId: "brown-sugar", grams: 55, isOptional: false },
       { ingredientId: "dijon-mustard", grams: 15.56, isOptional: false },
       { ingredientId: "apple-cider-vinegar", grams: 29.88, isOptional: false },
@@ -3862,6 +3871,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     originalLineCount: 7,
     lines: [
       { ingredientId: "greek-yogurt", grams: 367.5, isOptional: false },
+      { ingredientId: "squash", grams: 300, isOptional: false },
       { ingredientId: "cumin", grams: 1.04, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 0.94, isOptional: false },
       { ingredientId: "jalapeno", grams: 0, isOptional: false },
@@ -4275,6 +4285,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     originalLineCount: 7,
     lines: [
       { ingredientId: "oats", grams: 162, isOptional: false },
+      { ingredientId: "semolina", grams: 83.5, isOptional: false },
       { ingredientId: "greek-yogurt", grams: 245, isOptional: false },
       { ingredientId: "carrot", grams: 0, isOptional: false },
       { ingredientId: "mustard-seeds", grams: 1.88, isOptional: false },
@@ -4627,6 +4638,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
     lines: [
       { ingredientId: "eggplant", grams: 916, isOptional: false },
       { ingredientId: "okra", grams: 0, isOptional: false },
+      { ingredientId: "squash", grams: 200, isOptional: false },
       { ingredientId: "green-beans", grams: 100, isOptional: false },
       { ingredientId: "tomato", grams: 246, isOptional: false },
       { ingredientId: "onion", grams: 110, isOptional: false },
