@@ -32,6 +32,7 @@ import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
   getDishCompositionGrams,
+  getDishIngredientIds,
   NUTRITION_COVERAGE_FLOOR,
   type DishCompositionGrams,
 } from "@/lib/engine/dish-nutrition";
@@ -165,7 +166,10 @@ function NutritionSnapshot({ slug }: { slug?: string }) {
           coverage={{ massed: massedLines, total: totalLines }}
         />
       </div>
-      <BioavailabilityTip nutrition={perServing} />
+      <BioavailabilityTip
+        nutrition={perServing}
+        ingredientIds={getDishIngredientIds(slug)}
+      />
     </div>
   );
 }

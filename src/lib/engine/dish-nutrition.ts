@@ -75,6 +75,15 @@ export function getDishNutrition(
   };
 }
 
+/** The set of canonical ingredient ids resolved for a dish — used by the
+ *  bioavailability tips for ingredient-specific cues (e.g. turmeric + pepper). */
+export function getDishIngredientIds(slug: string | undefined): Set<string> {
+  if (!slug) return new Set();
+  const link = getRecipeLink(slug);
+  if (!link) return new Set();
+  return new Set(link.lines.map((l) => l.ingredientId));
+}
+
 export interface DishCompositionGrams {
   /** Per-serving grams contributed by each food group present. */
   byGroup: Partial<Record<FoodGroup, number>>;

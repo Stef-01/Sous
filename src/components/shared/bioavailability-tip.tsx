@@ -12,11 +12,15 @@ import type { PerServingNutrition } from "@/types/nutrition";
  */
 export function BioavailabilityTip({
   nutrition,
+  ingredientIds,
 }: {
   nutrition: PerServingNutrition;
+  /** The dish's resolved ingredient ids — enables ingredient-specific tips
+   *  (e.g. turmeric + black pepper). Omit for the nutrition-only tips. */
+  ingredientIds?: ReadonlySet<string>;
 }) {
   const [showWhy, setShowWhy] = useState(false);
-  const t = bioavailabilityTip(nutrition);
+  const t = bioavailabilityTip(nutrition, ingredientIds);
   if (!t) return null;
 
   return (
