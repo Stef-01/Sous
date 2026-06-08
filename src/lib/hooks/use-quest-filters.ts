@@ -4,32 +4,60 @@ import { useCallback, useEffect, useState } from "react";
 
 export type CookTimeFilter = "any" | "15" | "20" | "30" | "45" | "60";
 export type CuisineFilter = string; // "any" | normalized cuisine family
+export type MealTypeFilter = "any" | "breakfast" | "lunch" | "dinner";
+export type DishRoleFilter = "main" | "side" | "drink" | "snack";
+
+const MEAL_TYPES: ReadonlySet<MealTypeFilter> = new Set([
+  "any",
+  "breakfast",
+  "lunch",
+  "dinner",
+]);
+const DISH_ROLES: ReadonlySet<DishRoleFilter> = new Set([
+  "main",
+  "side",
+  "drink",
+  "snack",
+]);
 
 const STORAGE_KEY = "sous-quest-filters-v1";
 
 export interface QuestFilterState {
   cookTime: CookTimeFilter;
   cuisine: CuisineFilter;
+  mealType: MealTypeFilter;
+  role: DishRoleFilter;
 }
 
 const DEFAULT_STATE: QuestFilterState = {
   cookTime: "any",
   cuisine: "any",
+  mealType: "any",
+  role: "main",
 };
+
+/** Coerce arbitrary parsed storage into a valid state — missing or corrupt /
+ *  older-version values fall back to defaults. Pure; exported for tests. */
+export function coerceQuestFilterState(parsed: unknown): QuestFilterState {
+  const p = (parsed ?? {}) as Partial<QuestFilterState>;
+  return {
+    cookTime: (p.cookTime as CookTimeFilter) ?? DEFAULT_STATE.cookTime,
+    cuisine: typeof p.cuisine === "string" ? p.cuisine : DEFAULT_STATE.cuisine,
+    mealType: MEAL_TYPES.has(p.mealType as MealTypeFilter)
+      ? (p.mealType as MealTypeFilter)
+      : DEFAULT_STATE.mealType,
+    role: DISH_ROLES.has(p.role as DishRoleFilter)
+      ? (p.role as DishRoleFilter)
+      : DEFAULT_STATE.role,
+  };
+}
 
 function loadState(): QuestFilterState {
   if (typeof window === "undefined") return DEFAULT_STATE;
   try {
     const raw = window.sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
-    const parsed = JSON.parse(raw) as Partial<QuestFilterState>;
-    return {
-      cookTime: (parsed.cookTime as CookTimeFilter) ?? DEFAULT_STATE.cookTime,
-      cuisine:
-        typeof parsed.cuisine === "string"
-          ? parsed.cuisine
-          : DEFAULT_STATE.cuisine,
-    };
+    return coerceQuestFilterState(JSON.parse(raw));
   } catch {
     return DEFAULT_STATE;
   }
@@ -84,10 +112,48 @@ export function useQuestFilters() {
     });
   }, []);
 
+  const setMealType = useCallback((mealType: MealTypeFilter) => {
+    setState((prev) => {
+      const next = { ...prev, mealType };
+      persistState(next);
+      return next;
+    });
+  }, []);
+
+  const setRole = useCallback((role: DishRoleFilter) => {
+    setState((prev) => {
+      const next = { ...prev, role };
+      persistState(next);
+      return next;
+    });
+  }, []);
+
   const reset = useCallback(() => {
     persistState(DEFAULT_STATE);
     setState(DEFAULT_STATE);
   }, []);
 
-  return { ...state, mounted, setCookTime, setCuisine, reset };
+  // Non-default facets — drives the "Filter · N" badge.
+  const activeFilterCount = countActiveFilters(state);
+
+  return {
+    ...state,
+    mounted,
+    activeFilterCount,
+    setCookTime,
+    setCuisine,
+    setMealType,
+    setRole,
+    reset,
+  };
+}
+
+/** Pure helper: count of non-default facets in a state. Exported for tests. */
+export function countActiveFilters(state: QuestFilterState): number {
+  return (
+    (state.cookTime !== "any" ? 1 : 0) +
+    (state.cuisine !== "any" ? 1 : 0) +
+    (state.mealType !== "any" ? 1 : 0) +
+    (state.role !== "main" ? 1 : 0)
+  );
 }
