@@ -146,15 +146,6 @@ export function ResultStack({
     });
   }, []);
 
-  // Quick side-count control: pick the top-N ranked sides (default is all 3).
-  // Per-card checkboxes still allow swapping which specific sides are chosen.
-  const setSideCount = useCallback(
-    (n: number) => {
-      setSelectedIds(new Set(sides.slice(0, n).map((s) => s.id)));
-    },
-    [sides],
-  );
-
   // Per-side reroll via tRPC — carries the same pantry + deficiency context as
   // the original plate so a rerolled slot stays consistent with the W1/W29
   // nudges (otherwise a demoted side could resurface ignoring on-hand
@@ -316,34 +307,6 @@ export function ResultStack({
           Reroll all
         </motion.button>
       </div>
-
-      {sides.length >= 2 && (
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-medium text-[var(--nourish-subtext)]">
-            How many sides?
-          </span>
-          <div className="flex items-center gap-1 rounded-full bg-neutral-100 p-1">
-            {Array.from({ length: sides.length }, (_, i) => i + 1).map((n) => (
-              <motion.button
-                key={n}
-                type="button"
-                onClick={() => setSideCount(n)}
-                aria-pressed={selectedSides.length === n}
-                whileTap={reducedMotion ? undefined : { scale: 0.92 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                className={cn(
-                  "flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-sm font-semibold transition-colors duration-150",
-                  selectedSides.length === n
-                    ? "bg-white text-[var(--nourish-dark)] shadow-sm"
-                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                )}
-              >
-                {n}
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className="space-y-3">
         {sides.map((side, idx) => (
@@ -574,12 +537,11 @@ function ResultCard({
             {/* "by Chef Tu" byline for partner-chef sides. */}
             <CreatorByline slug={side.id} />
 
-            {/* One pill row: colored status chips (match / guided) then gray
-                descriptor tags — all one size + gap so the row reads as a
-                single family, not two mismatched rows (was 11px status above
-                10px tags). Collapsed card stays scannable: the pairing
-                rationale moves to the expand-only "Why this pairs well" panel
-                (rule 6; corpus: progressive-disclosure, whitespace-balance). */}
+            {/* Collapsed card carries ONLY the meaningful signal chips (pairing
+                reason, guided, fills-a-gap). The gray descriptor tags (cuisine /
+                flavor like "salad", "mediterranean") were noise on the initial
+                view — they live in the expand-only detail instead (rule 6/13:
+                progressive disclosure, minimal initial text). */}
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/10 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-green)]">
                 {pairingSignal}
@@ -597,14 +559,6 @@ function ResultCard({
                     Fills today&apos;s gaps
                   </span>
                 )}
-              {side.tags.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
-                >
-                  {tag}
-                </span>
-              ))}
             </div>
           </div>
 
