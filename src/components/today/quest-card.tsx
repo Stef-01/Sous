@@ -3,7 +3,15 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
-import { X, Heart, UtensilsCrossed, Maximize2, ChefHat } from "lucide-react";
+import {
+  X,
+  Heart,
+  UtensilsCrossed,
+  Maximize2,
+  ChefHat,
+  Info,
+  ChevronUp,
+} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
@@ -11,6 +19,7 @@ import { usePantry } from "@/lib/hooks/use-pantry";
 import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
+import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
 import {
   FullscreenSwipeCard,
   QueueComplete,
@@ -443,6 +452,7 @@ function MealSwipeQueueOverlay({
     };
   }, []);
 
+  const healthPanel = useMealHealthPanel();
   const activeDish = unswiped[0] ?? null;
   const seenCount = dismissed.length;
   const progress = initialTotal
@@ -572,6 +582,9 @@ function MealSwipeQueueOverlay({
             conditions={careProfile.conditions}
             reviewed={registryIsClinicianApproved()}
             clinicianReview={clinicianReviewMode()}
+            isOpen={healthPanel.isOpen}
+            onClose={healthPanel.close}
+            onDragEnd={healthPanel.onDragEnd}
           />
         )}
       </div>
@@ -583,6 +596,27 @@ function MealSwipeQueueOverlay({
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.875rem)",
           }}
         >
+          {/* Floating Info button — anchored just above the recipe name, over the
+              photo, so it can never be occluded by this bar. Reveals the health
+              sheet. Hidden while the sheet is open. */}
+          {therapeuticsActive() && !healthPanel.isOpen && (
+            <button
+              type="button"
+              onClick={healthPanel.open}
+              aria-label={`Show info for ${activeDish.dishName}`}
+              className="absolute -top-[52px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-4 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md transition-transform active:scale-95"
+            >
+              <Info size={14} strokeWidth={2.2} />
+              Info
+              <ChevronUp
+                size={13}
+                strokeWidth={2.4}
+                className="opacity-75"
+                aria-hidden="true"
+              />
+            </button>
+          )}
+
           <div className="mx-auto mb-2 max-w-[430px] space-y-1">
             <h3 className="line-clamp-1 font-serif text-[25px] leading-none text-white">
               {activeDish.dishName}
