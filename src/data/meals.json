@@ -16,7 +16,8 @@
     ],
     "cuisine": "Italian",
     "description": "A classic Neapolitan pizza with San Marzano tomato sauce, fresh mozzarella, fragrant basil leaves, and a drizzle of olive oil on a thin, beautifully charred crust.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "butter-chicken",
@@ -41,7 +42,8 @@
     ],
     "cuisine": "Indian",
     "description": "Tender marinated chicken simmered in a rich, velvety tomato-based sauce with butter, cream, and a warm blend of garam masala, fenugreek, and a touch of honey.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "fish-tacos",
@@ -60,7 +62,8 @@
     ],
     "cuisine": "Mexican",
     "description": "Crispy beer-battered or grilled white fish nestled in warm corn tortillas, topped with crunchy cabbage slaw, tangy lime crema, and a squeeze of fresh lime.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tonkotsu-ramen",
@@ -79,7 +82,8 @@
     ],
     "cuisine": "Japanese",
     "description": "A deeply flavourful pork bone broth simmered for hours until creamy and rich, served with springy noodles, soft-boiled egg, chashu pork, and nori.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "grilled-salmon",
@@ -98,7 +102,8 @@
     ],
     "cuisine": "American",
     "description": "A perfectly seared salmon fillet with a golden, slightly crispy skin and a tender, flaky interior, seasoned simply with lemon, herbs, and a hint of garlic.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "falafel-wrap",
@@ -117,7 +122,8 @@
     ],
     "cuisine": "Mediterranean",
     "description": "Golden-crisp chickpea fritters tucked into warm pita bread with fresh vegetables, creamy tahini sauce, and pickled turnips for a satisfying plant-based meal.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "pad-thai",
@@ -136,7 +142,8 @@
     ],
     "cuisine": "Thai",
     "description": "Wok-tossed rice noodles in a sweet-sour tamarind sauce with prawns or tofu, bean sprouts, crushed peanuts, and a squeeze of lime, all kissed by high heat.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "pasta-carbonara",
@@ -155,7 +162,8 @@
     ],
     "cuisine": "Italian",
     "description": "Silky al dente spaghetti coated in a luscious emulsion of egg yolks, Pecorino Romano, and crispy guanciale, finished with a generous crack of black pepper.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "sushi-platter",
@@ -172,7 +180,8 @@
     ],
     "cuisine": "Japanese",
     "description": "An artful arrangement of fresh nigiri, maki rolls, and sashimi featuring the finest seasonal fish, served with pickled ginger, wasabi, and soy sauce.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "chicken-tikka-masala",
@@ -197,7 +206,8 @@
     ],
     "cuisine": "Indian",
     "description": "Chunks of tandoori-spiced chicken bathed in a creamy, mildly spiced tomato and yogurt sauce with aromatic cumin, coriander, and a swirl of fresh cream.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bbq-ribs",
@@ -216,7 +226,8 @@
     ],
     "cuisine": "American",
     "description": "Fall-off-the-bone tender pork ribs slow-smoked for hours, glazed with a sticky-sweet barbecue sauce that caramelises into irresistible charred edges.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bibimbap",
@@ -235,7 +246,8 @@
     ],
     "cuisine": "Korean",
     "description": "A vibrant bowl of warm rice topped with an array of seasoned vegetables, gochujang chilli paste, a fried egg, and optional bulgogi beef, mixed together before eating.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "beef-burger",
@@ -254,7 +266,8 @@
     ],
     "cuisine": "American",
     "description": "A juicy, flame-grilled beef patty stacked with melted cheese, crisp lettuce, ripe tomato, and special sauce, all held together by a toasted brioche bun.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "chicken-shawarma",
@@ -273,7 +286,8 @@
     ],
     "cuisine": "Mediterranean",
     "description": "Thinly shaved layers of marinated chicken, slow-roasted on a vertical spit until golden and crispy-edged, served with garlic sauce, pickles, and warm flatbread.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "pho",
@@ -292,7 +306,8 @@
     ],
     "cuisine": "Vietnamese",
     "description": "A fragrant, star anise and cinnamon-infused beef broth ladled over silky rice noodles and paper-thin slices of beef, garnished with fresh herbs, bean sprouts, and lime.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "steak",
@@ -317,7 +332,8 @@
     ],
     "cuisine": "American",
     "description": "A premium cut of beef seared to a perfect crust on the outside and a blushing pink centre, rested and finished with a knob of herb butter and flaky sea salt.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tacos-al-pastor",
@@ -336,7 +352,8 @@
     ],
     "cuisine": "Mexican",
     "description": "Spit-roasted pork marinated in a smoky dried chilli and pineapple adobo, carved onto small corn tortillas with diced onion, cilantro, and a wedge of grilled pineapple.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "chicken-biryani",
@@ -359,7 +376,8 @@
     ],
     "cuisine": "Indian",
     "description": "Fragrant basmati rice layered with spiced chicken, caramelised onions, and saffron-infused milk, slow-cooked under a sealed lid to let the flavours mingle beautifully.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "moussaka",
@@ -378,7 +396,8 @@
     ],
     "cuisine": "Mediterranean",
     "description": "A hearty Greek casserole of silky roasted eggplant, seasoned lamb mince in tomato sauce, and a golden, bubbling layer of creamy béchamel on top.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "dim-sum",
@@ -397,7 +416,8 @@
     ],
     "cuisine": "Chinese",
     "description": "An assortment of bite-sized steamed and fried dumplings, buns, and pastries served in bamboo baskets, perfect for sharing over tea in the Cantonese tradition.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "lamb-chops",
@@ -416,7 +436,8 @@
     ],
     "cuisine": "Mediterranean",
     "description": "Succulent, herb-crusted lamb cutlets seared in a hot pan until beautifully caramelised outside and rosy pink within, finished with a rosemary and garlic jus.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "enchiladas",
@@ -435,7 +456,8 @@
     ],
     "cuisine": "Mexican",
     "description": "Soft corn tortillas rolled around a savoury filling of chicken, cheese, or beef, smothered in a vibrant chilli sauce and baked until bubbly with melted cheese on top.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bell-pepper-curry",
@@ -454,7 +476,8 @@
     ],
     "cuisine": "Indian",
     "description": "Vibrant bell peppers simmered in a fragrant onion-tomato gravy seasoned with cumin, coriander, and turmeric. This everyday North Indian sabzi brings a gentle sweetness from the peppers that balances beautifully with the warm spices.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bhindi-masala",
@@ -478,7 +501,8 @@
     ],
     "cuisine": "Indian",
     "description": "Tender okra stir-fried with onions, tomatoes, and a bold blend of coriander, cumin, and amchur until perfectly crisp-tender. This beloved dry sabzi is a staple across Indian households, prized for its earthy flavor and satisfying texture.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "eggplant-methi",
@@ -497,7 +521,8 @@
     ],
     "cuisine": "Indian",
     "description": "Soft eggplant pieces cooked with fresh fenugreek leaves, garlic, and a warming spice blend of mustard seeds, cumin, and red chili. The slight bitterness of the methi leaves complements the creamy eggplant for a deeply satisfying vegetable dish.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "kadhi",
@@ -516,7 +541,8 @@
     ],
     "cuisine": "Indian",
     "description": "A tangy and comforting yogurt-based curry thickened with besan and tempered with mustard seeds, curry leaves, and dried red chilies. Often studded with crispy pakoras, this home-style dish is the quintessential comfort food paired with steamed rice.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "marathi-moong-curry",
@@ -535,7 +561,8 @@
     ],
     "cuisine": "Indian",
     "description": "A wholesome Maharashtrian preparation of whole green moong beans cooked in a coconut and peanut-based masala with aromatic curry leaves and mustard seeds. This protein-rich curry is a staple in Marathi households, offering a hearty and nutritious everyday meal.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "masoor-dal",
@@ -554,7 +581,8 @@
     ],
     "cuisine": "Indian",
     "description": "Pink-red lentils simmered until meltingly soft and finished with a sizzling tadka of ghee, cumin, garlic, and whole dried chilies. This everyday dal is beloved for its simplicity, quick cooking time, and deeply satisfying, earthy flavor.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "mattar-paneer",
@@ -580,7 +608,8 @@
     ],
     "cuisine": "Indian",
     "description": "Cubes of soft paneer and sweet green peas simmered in a luscious tomato-onion gravy spiced with garam masala, turmeric, and kasuri methi. This iconic North Indian curry is a vegetarian crowd-pleaser found on restaurant menus and home tables alike.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "mixed-veg-paneer",
@@ -599,7 +628,8 @@
     ],
     "cuisine": "Indian",
     "description": "A colorful medley of seasonal vegetables and golden paneer cubes tossed in a fragrant masala of ginger, garlic, and warming spices. This versatile dry sabzi is a nutritious one-pot dish that showcases whatever fresh produce is in season.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "mumbai-pav-bhaji",
@@ -618,7 +648,8 @@
     ],
     "cuisine": "Indian",
     "description": "A beloved Mumbai street food featuring a thick, buttery mash of mixed vegetables cooked with a special pav bhaji masala and heaps of butter, served sizzling hot alongside toasted, buttered pav rolls. The generous squeeze of lemon and raw onion garnish are essential to the experience.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "mushroom-masala",
@@ -640,7 +671,8 @@
     ],
     "cuisine": "Indian",
     "description": "Meaty button mushrooms cooked in a rich onion-tomato gravy with ginger, garlic, and a blend of garam masala and kasuri methi. The mushrooms soak up the aromatic sauce beautifully, making this a favorite vegetarian curry for both everyday meals and special occasions.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "sambar",
@@ -659,7 +691,8 @@
     ],
     "cuisine": "Indian",
     "description": "A tangy and aromatic South Indian lentil stew made with toor dal, tamarind, seasonal vegetables, and a freshly ground sambar powder of coriander, fenugreek, and dried chilies. Finished with a crackling tempering of mustard seeds, curry leaves, and asafoetida, it is the cornerstone of any South Indian meal.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tandoori-vegetables",
@@ -682,7 +715,8 @@
     ],
     "cuisine": "Indian",
     "description": "An assortment of vegetables such as paneer, bell peppers, onions, and mushrooms marinated in a vibrant tandoori yogurt spice paste and charred in high heat until smoky and caramelized. These smoky, slightly charred bites capture the essence of tandoor cooking in a vegetarian form.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tofu-bhurji",
@@ -701,7 +735,8 @@
     ],
     "cuisine": "Indian",
     "description": "Crumbled tofu scrambled with onions, tomatoes, green chilies, and turmeric in the style of classic Indian paneer bhurji. This protein-packed plant-based dish comes together in minutes and delivers bold, satisfying flavor with every bite.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["breakfast", "lunch"]
   },
   {
     "id": "teriyaki-salmon",
@@ -723,7 +758,8 @@
     ],
     "cuisine": "Japanese",
     "description": "Thick salmon fillets glazed with a sweet-savory teriyaki sauce of soy, mirin, and sake, grilled until caramelized and flaky.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "chicken-katsu",
@@ -744,7 +780,8 @@
     ],
     "cuisine": "Japanese",
     "description": "A crispy panko-breaded chicken cutlet deep-fried to a golden crunch, served with tangy tonkatsu sauce and shredded cabbage.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "gyudon",
@@ -764,7 +801,8 @@
     ],
     "cuisine": "Japanese",
     "description": "Thin-sliced beef and sweet onions simmered in a dashi-soy-mirin broth, served over a steaming bowl of rice with a soft-cooked egg.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "yakitori",
@@ -785,7 +823,8 @@
     ],
     "cuisine": "Japanese",
     "description": "Bite-sized chicken pieces skewered on bamboo sticks and grilled over binchōtan charcoal, brushed with tare sauce or simply salted.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "miso-cod",
@@ -806,7 +845,8 @@
     ],
     "cuisine": "Japanese",
     "description": "Buttery black cod marinated in sweet white miso for days, then broiled until caramelized and flaking apart.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tempura-udon",
@@ -827,7 +867,8 @@
     ],
     "cuisine": "Japanese",
     "description": "Thick, chewy wheat noodles served in a steaming dashi broth topped with crispy shrimp and vegetable tempura.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "kimchi-jjigae",
@@ -848,7 +889,8 @@
     ],
     "cuisine": "Korean",
     "description": "A fiery, deeply savory stew of aged kimchi, pork belly, tofu, and scallions, bubbling in an earthenware pot.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bulgogi",
@@ -870,7 +912,8 @@
     ],
     "cuisine": "Korean",
     "description": "Paper-thin beef slices marinated in a sweet soy-pear sauce with garlic, sesame, and scallions, grilled over an open flame.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "soondubu-jjigae",
@@ -891,7 +934,8 @@
     ],
     "cuisine": "Korean",
     "description": "A spicy, silky stew of uncurdled soft tofu, seafood, vegetables, and a cracked egg in a bubbling gochugaru broth.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "japchae-main",
@@ -912,7 +956,8 @@
     ],
     "cuisine": "Korean",
     "description": "Glassy sweet potato noodles stir-fried with colorful julienned vegetables, beef, and a sweet soy-sesame sauce — a Korean celebration dish.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "dakgalbi",
@@ -933,7 +978,8 @@
     ],
     "cuisine": "Korean",
     "description": "Chunky chicken thighs stir-fried on a massive hot plate with cabbage, sweet potato, rice cakes, and a fiery gochujang sauce.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "green-curry",
@@ -954,7 +1000,8 @@
     ],
     "cuisine": "Thai",
     "description": "A fragrant coconut milk curry simmered with green curry paste, Thai eggplant, bamboo shoots, basil, and tender chicken.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "massaman-curry",
@@ -975,7 +1022,8 @@
     ],
     "cuisine": "Thai",
     "description": "A rich, mild Thai curry with warm spices — cinnamon, cardamom, star anise — slow-simmered with potatoes, peanuts, and beef.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tom-kha-gai",
@@ -996,7 +1044,8 @@
     ],
     "cuisine": "Thai",
     "description": "A creamy coconut milk soup perfumed with galangal, lemongrass, kaffir lime, mushrooms, and tender chicken.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "khao-pad",
@@ -1017,7 +1066,8 @@
     ],
     "cuisine": "Thai",
     "description": "Jasmine rice wok-fried with egg, garlic, onion, and a splash of fish sauce, served with a wedge of lime and sliced cucumber.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "basil-chicken",
@@ -1038,7 +1088,8 @@
     ],
     "cuisine": "Thai",
     "description": "Minced chicken stir-fried with holy basil, garlic, chili, and soy-oyster sauce, served over rice with a crispy fried egg on top.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "kung-pao-chicken",
@@ -1059,7 +1110,8 @@
     ],
     "cuisine": "Chinese",
     "description": "Crispy diced chicken wok-tossed with peanuts, dried chilies, and Sichuan peppercorns in a tangy-sweet soy-vinegar sauce.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "char-siu",
@@ -1080,7 +1132,8 @@
     ],
     "cuisine": "Chinese",
     "description": "Pork shoulder lacquered in a sweet-savory glaze of hoisin, honey, five-spice, and red fermented tofu, then roasted until charred at the edges.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "mapo-tofu-main",
@@ -1101,7 +1154,8 @@
     ],
     "cuisine": "Chinese",
     "description": "Silken tofu swimming in a fiery, numbing sauce of doubanjiang, Sichuan peppercorns, and minced pork — Chengdu's signature dish.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "steamed-fish-cantonese",
@@ -1122,7 +1176,8 @@
     ],
     "cuisine": "Chinese",
     "description": "A whole white fish delicately steamed with ginger and scallion, finished with a sizzle of hot oil and light soy sauce.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "wonton-noodle-soup",
@@ -1143,7 +1198,8 @@
     ],
     "cuisine": "Chinese",
     "description": "Thin egg noodles in a clear, savory broth with plump shrimp-and-pork wontons, choy sum, and a scattering of fried shallots.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bun-bo-hue",
@@ -1164,7 +1220,8 @@
     ],
     "cuisine": "Vietnamese",
     "description": "A fiery, lemongrass-perfumed beef noodle soup from Huế with thick round noodles, beef shank, pork knuckle, and chili oil.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "com-tam",
@@ -1183,7 +1240,8 @@
     ],
     "cuisine": "Vietnamese",
     "description": "Saigon's signature broken rice plate with a caramelized grilled pork chop, a fried egg, shredded pork skin, and pickled vegetables.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "banh-xeo",
@@ -1203,7 +1261,8 @@
     ],
     "cuisine": "Vietnamese",
     "description": "A crispy, turmeric-yellow rice flour crêpe stuffed with shrimp, pork, bean sprouts, and herbs — wrapped in lettuce to eat.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "ca-kho-to",
@@ -1222,7 +1281,8 @@
     ],
     "cuisine": "Vietnamese",
     "description": "Catfish fillets braised in a clay pot with a rich caramel sauce of fish sauce, sugar, black pepper, and shallots.",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "chicken-adobo",
@@ -1242,7 +1302,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Chicken braised in a bold sauce of vinegar, soy sauce, garlic, bay leaves, and black peppercorns — the Philippines' national dish.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "sinigang-na-baboy",
@@ -1261,7 +1322,8 @@
     ],
     "cuisine": "Filipino",
     "description": "A sour, savory pork soup made with tamarind broth, loaded with bok choy, radish, eggplant, string beans, and taro.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "kare-kare",
@@ -1280,7 +1342,8 @@
     ],
     "cuisine": "Filipino",
     "description": "A rich, nutty peanut-based stew with oxtail, tripe, bok choy, and eggplant, served with fermented shrimp paste on the side.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tinola",
@@ -1304,7 +1367,8 @@
     ],
     "cuisine": "Filipino",
     "description": "A light, ginger-forward chicken soup with chayote, zucchini, green papaya wedges, malunggay leaves, and fish sauce — Filipino comfort at its purest.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "bistek-tagalog",
@@ -1323,7 +1387,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Thin-sliced beef marinated in soy sauce and calamansi juice, pan-fried until tender and topped with caramelized onion rings.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "eggplant-adobo",
@@ -1343,7 +1408,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Tender eggplant braised in a rich soy-vinegar sauce with garlic and bay leaves — a hearty vegetarian twist on the Filipino classic.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tortang-talong-with-chicken",
@@ -1366,7 +1432,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Flame-roasted eggplant flattened and pan-fried with seasoned ground chicken and sautéed vegetables in a golden egg batter — a protein-rich Filipino comfort dish.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["breakfast", "lunch"]
   },
   {
     "id": "open-lumpia-bowl",
@@ -1386,7 +1453,8 @@
     ],
     "cuisine": "Filipino",
     "description": "All the flavors of classic lumpia — seasoned pork, shredded cabbage, carrots, and garlic — served deconstructed in a bowl with a side of sweet chili dipping sauce.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "grilled-pompano",
@@ -1406,7 +1474,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Whole pompano stuffed with tomatoes, onions, and calamansi, then grilled over charcoal until smoky and perfectly flaky — a Filipino seafood favorite.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "arroz-caldo",
@@ -1426,7 +1495,8 @@
     ],
     "cuisine": "Filipino",
     "description": "A fragrant Filipino chicken rice porridge infused with ginger, garlic, and fish sauce, topped with toasted garlic, scallions, and a wedge of calamansi.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["breakfast", "lunch", "dinner"]
   },
   {
     "id": "open-face-pandesal-sandwich",
@@ -1446,7 +1516,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Soft, pillowy pandesal rolls topped with a choice of corned beef, egg, cheese, or sardines — the beloved Filipino breakfast open-face style.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["breakfast", "lunch"]
   },
   {
     "id": "chia-champorado",
@@ -1470,7 +1541,8 @@
     ],
     "cuisine": "Filipino",
     "description": "A healthier take on the classic Filipino chocolate rice porridge, using chia seeds for added fiber and omega-3s, sweetened with coconut sugar and topped with coconut milk.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["breakfast", "lunch"]
   },
   {
     "id": "bbq-chicken-filipino",
@@ -1490,7 +1562,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Chicken marinated in a sweet-savory banana ketchup and soy sauce glaze, skewered and grilled until caramelized and smoky — a Filipino street food staple.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "veg-pancit",
@@ -1510,7 +1583,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Stir-fried rice noodles loaded with julienned vegetables, soy sauce, and calamansi — a plant-forward version of the classic Filipino birthday noodle dish.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "filipino-grilled-shrimp",
@@ -1530,7 +1604,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Jumbo shrimp marinated in garlic butter, calamansi, and soy sauce, then grilled until pink and slightly charred — served with a spiced vinegar dip.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tocino-rice-bowl",
@@ -1550,7 +1625,8 @@
     ],
     "cuisine": "Filipino",
     "description": "Sweet, caramelized cured pork slices served over garlic fried rice with a fried egg and pickled papaya atchara — the classic Filipino tocilog reimagined as a bowl.",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-pho-dac-biet",
@@ -1571,7 +1647,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/phodacbiet"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-pho-ga",
@@ -1592,7 +1669,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/phoga"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-turkey-pho",
@@ -1613,7 +1691,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/turkeypho"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-soondubu-jjigae",
@@ -1638,7 +1717,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/soondubu"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-bun-rieu",
@@ -1659,7 +1739,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/bunrieu"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-banh-canh-gio-heo-tom",
@@ -1683,7 +1764,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/banhcanhgioheotom"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-mi-hoanh-thanh",
@@ -1703,7 +1785,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/hoanhthanhsup"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-bun-bo-hue",
@@ -1724,7 +1807,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/bunbohue"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-mi-xao-gion",
@@ -1744,7 +1828,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/crispybirdsnest"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-bun-ga-nuong",
@@ -1769,7 +1854,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/bunganuong"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-bun-nem-nuong",
@@ -1794,7 +1880,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/bunnemnuong"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-com-ga-hai-nam",
@@ -1814,7 +1901,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/comgahainam"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-com-suon",
@@ -1839,7 +1927,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/comsuonchein"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-thit-kho-trung",
@@ -1864,7 +1953,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/thitkhotrung"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-char-siu-banh-mi",
@@ -1884,7 +1974,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/charsiubanhmi"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-banh-mi-trung-op-la",
@@ -1904,7 +1995,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/banhmitrung"
-    }
+    },
+    "dayparts": ["breakfast", "lunch"]
   },
   {
     "id": "tu-ga-kho-gung",
@@ -1924,7 +2016,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/gingerchicken"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-ga-chien",
@@ -1948,7 +2041,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/vietnamesefriedchicken"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   },
   {
     "id": "tu-thit-heo-quay",
@@ -1973,6 +2067,7 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/thitheoquay"
-    }
+    },
+    "dayparts": ["lunch", "dinner"]
   }
 ]

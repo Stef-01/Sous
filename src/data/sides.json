@@ -7,7 +7,8 @@
     "description": "Crisp romaine lettuce tossed with creamy Caesar dressing, shaved Parmesan, and crunchy garlic croutons.",
     "pairingReason": "crisp greens to cut through rich, heavy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "garlic-bread",
@@ -17,7 +18,8 @@
     "description": "Golden-toasted baguette slices brushed with garlic butter and fresh herbs, crisp on the outside and soft within.",
     "pairingReason": "warm bread to soak up sauces and juices",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tomato-soup",
@@ -27,7 +29,8 @@
     "description": "A velvety smooth soup made from ripe tomatoes, onion, and a swirl of cream, perfect for dipping bread into.",
     "pairingReason": "comforting warmth alongside cheesy or baked dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mixed-green-salad",
@@ -37,7 +40,8 @@
     "description": "A light, refreshing medley of baby greens, cherry tomatoes, cucumber, and a zesty vinaigrette.",
     "pairingReason": "light freshness to balance richer proteins",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "bruschetta",
@@ -47,7 +51,8 @@
     "description": "Toasted ciabatta topped with a vibrant mix of diced tomatoes, fresh basil, garlic, and a drizzle of balsamic glaze.",
     "pairingReason": "bright tomato acidity to complement Italian mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "minestrone",
@@ -57,7 +62,8 @@
     "description": "A hearty Italian vegetable soup brimming with beans, pasta, zucchini, and tomatoes in a savoury broth.",
     "pairingReason": "hearty vegetable soup for a complete Italian meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "caprese-salad",
@@ -67,7 +73,8 @@
     "description": "Thick slices of ripe tomato and creamy mozzarella layered with fresh basil, olive oil, and a pinch of sea salt.",
     "pairingReason": "fresh mozzarella and tomato to echo Italian flavours",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "arancini",
@@ -77,7 +84,8 @@
     "description": "Crispy deep-fried risotto balls filled with gooey mozzarella, coated in golden breadcrumbs and served piping hot.",
     "pairingReason": "crispy fried bite for textural contrast",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "naan-bread",
@@ -87,7 +95,8 @@
     "description": "Soft, pillowy Indian flatbread baked in a tandoor oven, brushed with butter and perfect for scooping up curries.",
     "pairingReason": "warm bread to scoop up rich curry sauces",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "basmati-rice",
@@ -97,7 +106,8 @@
     "description": "Long-grain aromatic rice steamed to fluffy perfection, with each grain separate and delicately fragrant.",
     "pairingReason": "fluffy base to absorb and carry bold spices",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "raita",
@@ -107,7 +117,8 @@
     "description": "A cool, creamy yogurt condiment with grated cucumber, cumin, and fresh mint that tempers the heat of spicy dishes.",
     "pairingReason": "cool yoghurt to calm the heat of spice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "mango-chutney",
@@ -117,7 +128,8 @@
     "description": "A sweet and tangy preserve made from ripe mangoes, vinegar, sugar, and warming spices like ginger and mustard seed.",
     "pairingReason": "sweet-tangy contrast to savoury curries",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "samosa",
@@ -127,7 +139,8 @@
     "description": "A crispy, golden-fried pastry triangle stuffed with spiced potatoes, peas, and cumin, served with tamarind chutney.",
     "pairingReason": "crispy spiced pastry to start the meal",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "snack"
   },
   {
     "id": "aloo-gobi",
@@ -137,7 +150,8 @@
     "description": "Tender potatoes and cauliflower florets gently spiced with turmeric, cumin, and coriander in a dry-style curry.",
     "pairingReason": "dry vegetable dish to complement saucy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "dal-tadka",
@@ -147,7 +161,8 @@
     "description": "Creamy yellow lentils simmered until soft and finished with a sizzling temper of cumin, garlic, and dried chillies.",
     "pairingReason": "protein-rich lentils to round out the plate",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "papadum",
@@ -157,7 +172,8 @@
     "description": "Thin, crispy lentil wafers that shatter satisfyingly with each bite, often served with pickles and chutneys.",
     "pairingReason": "shattering crunch to contrast soft curries",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "snack"
   },
   {
     "id": "guacamole",
@@ -167,7 +183,8 @@
     "description": "Ripe avocados mashed with lime juice, cilantro, diced onion, and a kick of jalapeño for a creamy, zesty dip.",
     "pairingReason": "creamy richness to cool spicy fillings",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mexican-rice",
@@ -177,7 +194,8 @@
     "description": "Fluffy rice toasted until golden, then simmered with tomatoes, garlic, and chicken broth for a savoury side.",
     "pairingReason": "savoury tomato rice to soak up bold salsas",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "elote",
@@ -187,7 +205,8 @@
     "description": "Chargrilled corn on the cob slathered with creamy mayo, cotija cheese, chilli powder, and a squeeze of lime.",
     "pairingReason": "charred sweetness to balance smoky meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pico-de-gallo",
@@ -197,7 +216,8 @@
     "description": "A fresh, chunky salsa of diced tomatoes, white onion, jalapeño, cilantro, and lime juice — bright and vibrant.",
     "pairingReason": "bright, raw freshness to lift heavy dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "refried-beans",
@@ -207,7 +227,8 @@
     "description": "Pinto beans cooked until tender, then mashed and fried with onion and lard for a rich, creamy, savoury side.",
     "pairingReason": "creamy protein to make the meal substantial",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "churros",
@@ -217,7 +238,8 @@
     "description": "Golden, ridged sticks of fried dough rolled in cinnamon sugar, crispy outside and soft inside, served with chocolate sauce.",
     "pairingReason": "sweet finish to close a savoury meal",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "esquites",
@@ -227,7 +249,8 @@
     "description": "Mexican street corn kernels served in a cup with mayo, cotija cheese, chilli, lime, and a sprinkle of tajín.",
     "pairingReason": "tangy street-food corn for textural variety",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tortilla-chips",
@@ -237,7 +260,8 @@
     "description": "Thin wedges of corn tortilla fried or baked until perfectly crunchy, ideal for scooping salsa, guac, or queso.",
     "pairingReason": "crunchy scoop for dips and salsas alongside",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "gyoza",
@@ -247,7 +271,8 @@
     "description": "Japanese pan-fried dumplings with a crispy golden bottom and juicy pork-and-cabbage filling, served with soy-vinegar dip.",
     "pairingReason": "crispy-bottomed dumplings for a savoury starter",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "edamame",
@@ -257,7 +282,8 @@
     "description": "Steamed young soybeans in their fuzzy pods, lightly salted — a simple, addictive snack packed with plant protein.",
     "pairingReason": "light, salty snack to nibble before the main",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "tempura",
@@ -267,7 +293,8 @@
     "description": "Vegetables and prawns dipped in a light, ice-cold batter and flash-fried until shatteringly crisp and airy.",
     "pairingReason": "airy crunch to contrast brothy, soupy dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "miso-soup",
@@ -277,7 +304,8 @@
     "description": "A warming dashi broth enriched with fermented miso paste, silky tofu cubes, and wisps of wakame seaweed.",
     "pairingReason": "warming umami broth to open the palate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "takoyaki",
@@ -287,7 +315,8 @@
     "description": "Golden, ball-shaped batter bites filled with diced octopus, drizzled with takoyaki sauce, mayo, and dancing bonito flakes.",
     "pairingReason": "playful street-food bites alongside noodles",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "seaweed-salad",
@@ -297,7 +326,8 @@
     "description": "Emerald-green wakame dressed in a tangy sesame-soy vinaigrette with a sprinkle of toasted sesame seeds.",
     "pairingReason": "mineral-rich seaweed for oceanic depth",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "karaage",
@@ -307,7 +337,8 @@
     "description": "Bite-sized chicken thigh pieces marinated in soy, ginger, and garlic, then fried to an ultra-crispy, juicy finish.",
     "pairingReason": "juicy fried chicken for a hearty pairing",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "onigiri",
@@ -317,7 +348,8 @@
     "description": "Hand-pressed rice triangles wrapped in nori, filled with savoury ingredients like salmon, umeboshi, or tuna mayo.",
     "pairingReason": "portable rice bites to complement broth dishes",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "roasted-asparagus",
@@ -327,7 +359,8 @@
     "description": "Tender asparagus spears roasted with olive oil and sea salt until their tips turn delicately crispy and caramelised.",
     "pairingReason": "elegant green vegetable for fine dining mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mashed-potatoes",
@@ -337,7 +370,8 @@
     "description": "Buttery, cloud-like mashed potatoes whipped with cream and a pinch of nutmeg for the ultimate comfort side.",
     "pairingReason": "velvety comfort to catch gravies and jus",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "coleslaw",
@@ -347,7 +381,8 @@
     "description": "Crunchy shredded cabbage and carrots tossed in a creamy, tangy dressing with a hint of celery seed.",
     "pairingReason": "cool crunch to offset smoky, grilled meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "corn-on-cob",
@@ -357,7 +392,8 @@
     "description": "Sweet summer corn grilled or boiled until tender, slathered in melted butter and sprinkled with salt.",
     "pairingReason": "buttery sweetness alongside barbecue and grills",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "wild-rice",
@@ -367,7 +403,8 @@
     "description": "Nutty, chewy wild rice with an earthy flavour, rich in fibre and protein — a wholesome alternative to white rice.",
     "pairingReason": "nutty grain to ground delicate fish or meat",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "steamed-broccoli",
@@ -377,7 +414,8 @@
     "description": "Bright green broccoli florets steamed until just tender-crisp, finished with a squeeze of lemon and a pat of butter.",
     "pairingReason": "simple green for a nutritionally balanced plate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "hummus",
@@ -387,7 +425,8 @@
     "description": "Silky-smooth chickpea purée blended with tahini, lemon juice, and garlic, swirled with olive oil and a dusting of paprika.",
     "pairingReason": "creamy dip to spread on wraps and pitas",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tabbouleh",
@@ -397,7 +436,8 @@
     "description": "A bright herb salad of finely chopped parsley, mint, bulgur wheat, tomato, and lemon-olive oil dressing.",
     "pairingReason": "herby, lemony freshness to lighten the plate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "baba-ganoush",
@@ -407,7 +447,8 @@
     "description": "Smoky, fire-roasted eggplant mashed with tahini, garlic, and lemon juice for a velvety, deeply flavoured dip.",
     "pairingReason": "smoky depth from fire-roasted eggplant",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "fattoush",
@@ -417,7 +458,8 @@
     "description": "A Levantine bread salad with crispy pita shards, fresh vegetables, herbs, and a tangy sumac-lemon dressing.",
     "pairingReason": "crispy pita salad for crunch and tang",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "stuffed-grape-leaves",
@@ -427,7 +469,8 @@
     "description": "Tender vine leaves wrapped around a fragrant filling of herbed rice, pine nuts, and a splash of lemon juice.",
     "pairingReason": "delicate herbed bites for a traditional spread",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tzatziki",
@@ -437,7 +480,8 @@
     "description": "A refreshing Greek dip of thick strained yogurt, grated cucumber, garlic, dill, and a drizzle of olive oil.",
     "pairingReason": "cool cucumber dip to tame grilled meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pita-chips",
@@ -447,7 +491,8 @@
     "description": "Pita bread cut into triangles and baked until golden and crunchy, seasoned with olive oil, salt, and za'atar.",
     "pairingReason": "crunchy za'atar chips for scooping dips",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "pickled-turnips",
@@ -457,7 +502,8 @@
     "description": "Vibrant pink-hued turnips pickled in vinegar and beet juice, offering a crunchy, tangy contrast to rich dishes.",
     "pairingReason": "tangy pickle to cut through fatty, rich bites",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "spring-rolls",
@@ -467,7 +513,8 @@
     "description": "Crispy, golden-fried rolls filled with vegetables and glass noodles, served with a sweet chilli dipping sauce.",
     "pairingReason": "crispy fried starter to open a Thai meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "tom-yum-soup",
@@ -477,7 +524,8 @@
     "description": "A hot-and-sour Thai soup bursting with lemongrass, galangal, kaffir lime, prawns, and fiery bird's eye chillies.",
     "pairingReason": "hot-sour broth to awaken the appetite",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "papaya-salad",
@@ -487,7 +535,8 @@
     "description": "Shredded green papaya pounded with tomatoes, peanuts, dried shrimp, lime, and chilli in a spicy-sour dressing.",
     "pairingReason": "spicy-sour crunch to contrast noodle dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "thai-iced-tea",
@@ -497,7 +546,8 @@
     "description": "A creamy, bright-orange iced tea made from strongly brewed Ceylon tea, sweetened condensed milk, and crushed ice.",
     "pairingReason": "sweet, creamy drink to cool spicy heat",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "drink"
   },
   {
     "id": "satay",
@@ -507,7 +557,8 @@
     "description": "Tender, marinated chicken or pork skewers grilled over charcoal and served with a rich, spiced peanut dipping sauce.",
     "pairingReason": "chargrilled skewers with nutty peanut sauce",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "sticky-rice",
@@ -517,7 +568,8 @@
     "description": "Glutinous rice steamed until beautifully sticky and chewy, the perfect vessel for soaking up rich Thai curries and sauces.",
     "pairingReason": "chewy, sticky rice to absorb bold sauces",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "larb",
@@ -527,7 +579,8 @@
     "description": "A zesty Thai minced meat salad seasoned with lime, fish sauce, toasted rice powder, chilli, and fresh herbs.",
     "pairingReason": "zesty meat salad for a punch of herbs",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "coconut-soup",
@@ -537,7 +590,8 @@
     "description": "A silky, aromatic soup made with creamy coconut milk, galangal, lemongrass, mushrooms, and a hint of lime.",
     "pairingReason": "velvety coconut broth to round out spice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pickled-ginger",
@@ -547,7 +601,8 @@
     "description": "Paper-thin slices of young ginger pickled in sweet rice vinegar, turning a delicate pink — a palate cleanser between bites.",
     "pairingReason": "palate cleanser between different flavours",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "french-fries",
@@ -557,7 +612,8 @@
     "description": "Twice-fried potato sticks with a shattering golden crust and fluffy interior, generously seasoned with salt.",
     "pairingReason": "salty, crispy classic alongside burgers",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "onion-rings",
@@ -567,7 +623,8 @@
     "description": "Thick-cut onion slices dipped in seasoned batter and fried until the coating turns crispy and deep golden brown.",
     "pairingReason": "sweet-savoury crunch for a diner-style pairing",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "sweet-potato-fries",
@@ -577,7 +634,8 @@
     "description": "Crispy-on-the-outside, soft-inside sweet potato sticks with a natural caramel sweetness and a hint of sea salt.",
     "pairingReason": "natural sweetness for a lighter fry option",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "potato-salad",
@@ -587,7 +645,8 @@
     "description": "Tender potato chunks folded with mayo, mustard, crunchy celery, hard-boiled eggs, and a scatter of fresh dill.",
     "pairingReason": "creamy potato side for outdoor cookouts",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "cornbread",
@@ -597,7 +656,8 @@
     "description": "Warm, golden cornbread with a slightly sweet crumb and a buttery crust, baked in a cast-iron skillet.",
     "pairingReason": "sweet, crumbly bread to mop up barbecue sauce",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "baked-beans",
@@ -607,7 +667,8 @@
     "description": "Navy beans slow-baked in a smoky, sweet molasses and tomato sauce with bits of bacon and brown sugar.",
     "pairingReason": "smoky-sweet beans for a classic barbecue spread",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mac-and-cheese",
@@ -617,7 +678,8 @@
     "description": "Elbow pasta swimming in a luscious, three-cheese sauce, topped with buttery breadcrumbs and baked until bubbly.",
     "pairingReason": "indulgent cheese comfort for hearty meals",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pickles",
@@ -627,7 +689,8 @@
     "description": "Crunchy dill pickle spears brined in vinegar, garlic, and dill — a tangy, refreshing palate cleanser.",
     "pairingReason": "sharp tang to cut through greasy, rich bites",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "kimchi",
@@ -637,7 +700,8 @@
     "description": "Spicy, tangy fermented napa cabbage seasoned with gochugaru, garlic, ginger, and fish sauce — Korea's iconic side.",
     "pairingReason": "fermented funk and heat with every Korean meal",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "korean-pancake",
@@ -647,7 +711,8 @@
     "description": "A crispy, savoury pancake loaded with scallions, seafood, or kimchi, pan-fried until golden and served with soy dip.",
     "pairingReason": "crispy savoury pancake for sharing",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "japchae",
@@ -657,7 +722,8 @@
     "description": "Glassy sweet potato noodles stir-fried with colourful vegetables, beef, and a sweet soy-sesame sauce.",
     "pairingReason": "sweet glassy noodles for textural contrast",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mandu",
@@ -667,7 +733,8 @@
     "description": "Korean dumplings filled with seasoned pork, tofu, and vegetables, either steamed, boiled, or pan-fried until crispy.",
     "pairingReason": "juicy dumplings to complement rice bowls",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "bean-sprout-salad",
@@ -677,7 +744,8 @@
     "description": "Blanched bean sprouts tossed in sesame oil, garlic, scallions, and a pinch of salt — a simple, nutty banchan.",
     "pairingReason": "simple banchan for a balanced Korean table",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tteokbokki",
@@ -687,7 +755,8 @@
     "description": "Chewy cylindrical rice cakes simmered in a fiery, sweet gochujang sauce — Korea's beloved street food snack.",
     "pairingReason": "chewy, spicy rice cakes for bold flavour",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "seaweed-soup",
@@ -697,7 +766,8 @@
     "description": "A light, nourishing Korean soup made with tender wakame seaweed in a clear beef or anchovy broth with sesame oil.",
     "pairingReason": "nourishing broth to sip between bites",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pickled-radish",
@@ -707,7 +777,8 @@
     "description": "Bright yellow cubes of Korean radish pickled in a sweet vinegar brine — crunchy, tangy, and palate-cleansing.",
     "pairingReason": "crunchy palate cleanser between bold bites",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "banh-mi",
@@ -717,7 +788,8 @@
     "description": "A crusty baguette filled with savoury meats, pâté, pickled daikon and carrots, cilantro, and sliced jalapeños.",
     "pairingReason": "crusty baguette sandwich for variety",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "vietnamese-coffee",
@@ -727,7 +799,8 @@
     "description": "Bold, dark-roast Vietnamese coffee brewed slowly through a phin filter over sweetened condensed milk, served iced.",
     "pairingReason": "rich, sweet iced coffee to close the meal",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "drink"
   },
   {
     "id": "bao-buns",
@@ -737,7 +810,8 @@
     "description": "Fluffy, cloud-like steamed buns folded around tender braised pork, pickled vegetables, and a drizzle of hoisin.",
     "pairingReason": "pillowy buns for a textural change of pace",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "crispy-wontons",
@@ -747,7 +821,8 @@
     "description": "Thin wonton wrappers filled with seasoned pork or cream cheese, deep-fried until shatteringly crispy and golden.",
     "pairingReason": "shatteringly crispy bites for variety",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "lotus-root-salad",
@@ -757,7 +832,8 @@
     "description": "Thinly sliced lotus root with a satisfying crunch, tossed with shrimp, herbs, and a tangy Vietnamese dressing.",
     "pairingReason": "crunchy lotus root for a refreshing contrast",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "summer-rolls",
@@ -767,7 +843,8 @@
     "description": "Translucent rice paper rolls filled with fresh herbs, vermicelli, prawns, and vegetables, served with peanut sauce.",
     "pairingReason": "light, fresh rolls to balance rich broths",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "creamed-spinach",
@@ -777,7 +854,8 @@
     "description": "Tender spinach leaves wilted and folded into a rich, garlicky cream sauce with a hint of nutmeg.",
     "pairingReason": "rich, creamy greens alongside steak",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "baked-potato",
@@ -787,7 +865,8 @@
     "description": "A russet potato baked until the skin is crispy and the inside is fluffy, split open and loaded with butter and sour cream.",
     "pairingReason": "loaded baked potato for a hearty companion",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "greek-salad",
@@ -797,7 +876,8 @@
     "description": "Juicy tomatoes, cucumber, red onion, Kalamata olives, and a slab of creamy feta, dressed in olive oil and oregano.",
     "pairingReason": "classic Mediterranean salad for freshness",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "spanakopita",
@@ -807,7 +887,8 @@
     "description": "Flaky layers of buttery phyllo pastry encasing a savoury filling of spinach, feta cheese, dill, and scallions.",
     "pairingReason": "flaky phyllo pastry for an indulgent side",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "mirchi-ka-salan",
@@ -817,7 +898,8 @@
     "description": "A tangy Hyderabadi curry of green chillies simmered in a rich gravy of peanuts, sesame seeds, coconut, and tamarind.",
     "pairingReason": "tangy chilli curry, the classic biryani partner",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "congee",
@@ -827,7 +909,8 @@
     "description": "A soothing rice porridge slow-cooked until silky and thick, topped with shredded ginger, scallions, and crispy shallots.",
     "pairingReason": "soothing rice porridge for comforting warmth",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "sesame-balls",
@@ -837,7 +920,8 @@
     "description": "Chewy glutinous rice balls coated in sesame seeds and deep-fried, filled with sweet red bean or lotus paste.",
     "pairingReason": "sweet, chewy dessert to end on a high note",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "turnip-cake",
@@ -847,7 +931,8 @@
     "description": "Savoury steamed radish cake sliced and pan-fried until golden and crispy outside, soft and fragrant with dried shrimp inside.",
     "pairingReason": "crispy-soft dim sum classic for the table",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "chinese-broccoli",
@@ -857,7 +942,8 @@
     "description": "Jade-green gai lan blanched and drizzled with oyster sauce and a splash of sesame oil for a simple, elegant side.",
     "pairingReason": "simple greens to balance fried dim sum",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "egg-tart",
@@ -867,7 +953,8 @@
     "description": "A flaky, buttery pastry shell cradling a smooth, jiggly egg custard filling caramelised to a golden blush on top.",
     "pairingReason": "silky custard tart for a sweet ending",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "avocado-raita",
@@ -877,7 +964,8 @@
     "description": "Creamy mashed avocado folded into chilled yogurt with cumin, cilantro, and a hint of green chili for a rich, cooling dip.",
     "pairingReason": "creamy coolness to tame spicy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "beet-cucumber-raita",
@@ -887,7 +975,8 @@
     "description": "Vibrant pink-hued yogurt raita with grated beetroot and cool cucumber, seasoned with roasted cumin and fresh mint.",
     "pairingReason": "colorful cooling contrast for spicy curries",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "boondi-raita",
@@ -897,7 +986,8 @@
     "description": "Chilled yogurt mixed with tiny crispy chickpea-flour boondi pearls, tempered with cumin and garnished with cilantro.",
     "pairingReason": "crunchy boondi bits in cool yogurt",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "burani-raita",
@@ -907,7 +997,8 @@
     "description": "A Mughlai-style garlic-infused yogurt raita with fried onions, mint, and a drizzle of tempered oil on top.",
     "pairingReason": "garlicky richness alongside biryani",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "onion-raita",
@@ -917,7 +1008,8 @@
     "description": "Finely diced raw onions stirred into thick yogurt with roasted cumin, chili powder, and a squeeze of lemon juice.",
     "pairingReason": "sharp onion bite to cut rich biryani",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "pumpkin-raita",
@@ -927,7 +1019,8 @@
     "description": "Sweet roasted pumpkin mashed into seasoned yogurt with mustard seeds, curry leaves, and a touch of jaggery.",
     "pairingReason": "sweet pumpkin mellows fiery dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "mint-raita",
@@ -937,7 +1030,8 @@
     "description": "A refreshing yogurt dip loaded with fresh mint, a hint of cumin, and a squeeze of lemon — perfect alongside kebabs and biryanis.",
     "pairingReason": "minty coolness to cut through rich grills",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "cucumber-tomato-raita",
@@ -947,7 +1041,8 @@
     "description": "A chunky yogurt side with diced cucumber, tomato, and onion seasoned with roasted cumin and chaat masala.",
     "pairingReason": "crunchy, cool yogurt to tame spicy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "plain-dahi",
@@ -957,7 +1052,8 @@
     "description": "Fresh, thick-set Indian curd served chilled as a simple, probiotic-rich accompaniment to any meal.",
     "pairingReason": "plain yogurt to balance every thali",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "cilantro-mint-chutney",
@@ -967,7 +1063,8 @@
     "description": "A bright, vibrant green chutney blended from fresh cilantro, mint, green chili, and lemon juice.",
     "pairingReason": "herbaceous zing for snacks and chaat",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "coconut-chutney",
@@ -977,7 +1074,8 @@
     "description": "A smooth South Indian chutney made from fresh coconut, roasted chana dal, green chili, and tempered with mustard seeds.",
     "pairingReason": "creamy coconut dip for dosa and idli",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "dry-chutneys",
@@ -987,7 +1085,8 @@
     "description": "Assorted dry powdered chutneys made from roasted peanuts, garlic, sesame, or flaxseeds blended with red chili.",
     "pairingReason": "nutty dry powder to sprinkle on bread",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "green-tomato-chutney",
@@ -997,7 +1096,8 @@
     "description": "A tangy, slightly spicy chutney cooked from unripe green tomatoes with mustard seeds, curry leaves, and jaggery.",
     "pairingReason": "tart tanginess to brighten any plate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "red-dosa-chutney",
@@ -1007,7 +1107,8 @@
     "description": "A fiery South Indian chutney made from dried red chilies, roasted chana dal, tamarind, and garlic.",
     "pairingReason": "bold red heat for dosa and idli",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "tamarind-date-chutney",
@@ -1017,7 +1118,8 @@
     "description": "A thick, dark sweet-and-sour chutney simmered from tamarind pulp, dates, jaggery, and warming spices.",
     "pairingReason": "sweet-sour depth for chaat and samosas",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "tomato-chutney",
@@ -1027,7 +1129,8 @@
     "description": "A tangy, mildly spiced chutney made from ripe tomatoes cooked down with onion, red chili, and a mustard seed tempering.",
     "pairingReason": "versatile tomato tang for any spread",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "aam-ka-achar",
@@ -1037,7 +1140,8 @@
     "description": "A bold, pungent Indian pickle of raw mango chunks preserved in mustard oil with fenugreek, fennel, and red chili.",
     "pairingReason": "pungent punch to liven up dal-rice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "hari-mirch-achar",
@@ -1047,7 +1151,8 @@
     "description": "Slit green chilies stuffed with a tangy spice mix of mustard, fennel, and amchur, preserved in mustard oil.",
     "pairingReason": "fiery chili kick for bold eaters",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "nimbu-achar",
@@ -1057,7 +1162,8 @@
     "description": "Sun-ripened lemon wedges pickled with salt, turmeric, red chili, and mustard seeds for an intensely sour-spicy condiment.",
     "pairingReason": "sour-spicy spark for every meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "sirke-wale-pyaaz",
@@ -1067,7 +1173,8 @@
     "description": "Thinly sliced onion rings pickled in vinegar with beetroot juice, turning them a vibrant pink with a sharp tangy bite.",
     "pairingReason": "tangy pink onions alongside kebabs",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "beet-koshimbir",
@@ -1077,7 +1184,8 @@
     "description": "A Maharashtrian raw beetroot salad with grated coconut, roasted peanuts, lemon juice, and a mustard seed tempering.",
     "pairingReason": "earthy beet crunch for thali balance",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "beetroot-salad",
@@ -1087,7 +1195,8 @@
     "description": "Boiled and diced beetroot tossed with onion, green chili, lemon juice, and fresh cilantro for a simple, vibrant salad.",
     "pairingReason": "sweet beet freshness with every meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "cabbage-salad-with-indian-tadka",
@@ -1097,7 +1206,8 @@
     "description": "Shredded raw cabbage dressed with lemon and topped with a sizzling tadka of mustard seeds, curry leaves, and dried chili.",
     "pairingReason": "crunchy tempered slaw for the thali",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "kachumber",
@@ -1107,7 +1217,8 @@
     "description": "A classic Indian chopped salad of diced cucumber, tomato, and onion dressed with lemon juice, salt, and chili.",
     "pairingReason": "refreshing raw crunch with every bite",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "kakdi-koshimbir",
@@ -1117,7 +1228,8 @@
     "description": "A Maharashtrian cucumber salad with grated coconut, roasted peanuts, and a tempering of mustard seeds and green chili.",
     "pairingReason": "cool cucumber for a Maharashtrian thali",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "laccha-pyaz",
@@ -1127,7 +1239,8 @@
     "description": "Thinly sliced onion rings soaked in lemon juice with a sprinkle of chaat masala, salt, and chopped green chili.",
     "pairingReason": "sharp onion rings for tandoori meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "vibrant-apple-beet-carrot-salad",
@@ -1137,7 +1250,8 @@
     "description": "A colorful raw salad of grated apple, beetroot, and carrot tossed with lemon, chaat masala, and fresh herbs.",
     "pairingReason": "vibrant sweetness to lighten heavy mains",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "air-fryer-broccoli",
@@ -1147,7 +1261,8 @@
     "description": "Broccoli florets tossed with Indian spices and air-fried until charred and crispy at the edges yet tender inside.",
     "pairingReason": "crispy spiced greens for healthy pairing",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "air-fryer-brussels-sprouts",
@@ -1157,7 +1272,8 @@
     "description": "Halved Brussels sprouts air-fried with cumin, turmeric, and garlic until deeply caramelized and nutty.",
     "pairingReason": "caramelized sprouts for textural contrast",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "air-fryer-corn-on-the-cob",
@@ -1167,7 +1283,8 @@
     "description": "Whole corn cobs brushed with spiced butter and air-fried until charred, finished with chaat masala and lime.",
     "pairingReason": "charred masala corn for bold flavor",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "air-fryer-green-beans",
@@ -1177,7 +1294,8 @@
     "description": "Crisp green beans air-fried with mustard seeds, curry leaves, and grated coconut for a South Indian-inspired side.",
     "pairingReason": "snappy beans with coconut and spice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "asparagus-stir-fry-subzi",
@@ -1187,7 +1305,8 @@
     "description": "Fresh asparagus spears stir-fried with cumin, mustard seeds, and green chili for a quick Indian-style sabzi.",
     "pairingReason": "quick veggie stir-fry for lighter meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "bagara-baingan",
@@ -1197,7 +1316,8 @@
     "description": "Hyderabadi baby eggplants simmered in a rich, tangy gravy of peanuts, sesame, coconut, and tamarind.",
     "pairingReason": "rich eggplant curry for biryani nights",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "baingan-bharta",
@@ -1207,7 +1327,8 @@
     "description": "Fire-roasted eggplant mashed and cooked with onions, tomatoes, green chilies, and aromatic spices for a smoky, hearty dish.",
     "pairingReason": "smoky mashed eggplant with warm rotis",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "batata-bhaji",
@@ -1217,7 +1338,8 @@
     "description": "A simple Maharashtrian dry potato dish tempered with mustard seeds, turmeric, curry leaves, and green chili.",
     "pairingReason": "humble spiced potatoes for poori meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "beans-poriyal",
@@ -1227,7 +1349,8 @@
     "description": "Finely chopped green beans stir-fried with urad dal, mustard seeds, curry leaves, and freshly grated coconut.",
     "pairingReason": "South Indian coconut-green bean classic",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "cabbage-poriyal",
@@ -1237,7 +1360,8 @@
     "description": "Shredded cabbage sauteed with mustard seeds, urad dal, curry leaves, and finished with fresh grated coconut.",
     "pairingReason": "light cabbage stir-fry for sambar rice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "peanut-thecha",
@@ -1247,7 +1371,8 @@
     "description": "A coarse, fiery Maharashtrian chutney of crushed roasted peanuts, garlic, and green chilies pounded in a mortar.",
     "pairingReason": "fiery peanut punch for bhakri meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "roasted-carrots-and-pearl-onions",
@@ -1257,7 +1382,8 @@
     "description": "Carrots and pearl onions roasted with cumin, coriander, and a drizzle of ghee until caramelized and tender.",
     "pairingReason": "sweet caramelized veggies with Indian spice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "stuffed-tomatoes",
@@ -1267,7 +1393,8 @@
     "description": "Ripe tomatoes hollowed and stuffed with a spiced peanut-coconut filling, then pan-cooked until soft and fragrant.",
     "pairingReason": "spiced stuffed tomatoes for dal meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "vellarika-pachadi",
@@ -1277,7 +1404,8 @@
     "description": "A Kerala-style cucumber-yogurt dish tempered with coconut, mustard seeds, and curry leaves in a creamy base.",
     "pairingReason": "Kerala-style cooling side for Onam feast",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "instant-pot-brown-rice",
@@ -1287,7 +1415,8 @@
     "description": "Nutty whole-grain brown rice pressure-cooked in an Instant Pot for perfectly fluffy, fiber-rich results every time.",
     "pairingReason": "wholesome grain base for curries",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "instant-pot-jasmine-rice",
@@ -1297,7 +1426,8 @@
     "description": "Fragrant jasmine rice steamed in an Instant Pot until each grain is soft, fluffy, and delicately perfumed.",
     "pairingReason": "fragrant fluffy rice for saucy dishes",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "instant-pot-jeera-rice",
@@ -1307,7 +1437,8 @@
     "description": "Basmati rice cooked with whole cumin seeds and ghee in an Instant Pot for an aromatic, everyday Indian side.",
     "pairingReason": "cumin-scented rice for dal pairing",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "instant-pot-quinoa",
@@ -1317,7 +1448,8 @@
     "description": "Protein-rich quinoa pressure-cooked to fluffy perfection, a nutritious modern alternative to traditional rice.",
     "pairingReason": "protein-packed grain swap for rice",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "lachha-paratha",
@@ -1327,7 +1459,8 @@
     "description": "A flaky, multi-layered Indian flatbread with crispy spiraling layers, cooked on a tawa with ghee until golden.",
     "pairingReason": "flaky layers to scoop up rich gravies",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "phulka",
@@ -1337,7 +1470,8 @@
     "description": "A thin, puffed whole wheat flatbread cooked directly on the flame until it balloons up, light and soft inside.",
     "pairingReason": "puffed light bread for everyday meals",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "puri",
@@ -1347,7 +1481,8 @@
     "description": "Deep-fried whole wheat bread that puffs up into a golden, crispy balloon, traditionally served with aloo sabzi or halwa.",
     "pairingReason": "crispy fried puffs for festive meals",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "roti",
@@ -1357,7 +1492,8 @@
     "description": "A simple, soft whole wheat flatbread cooked on a hot tawa, the essential accompaniment to any Indian curry.",
     "pairingReason": "everyday bread to pair with any curry",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "buttered-ladi-pav",
@@ -1367,7 +1503,8 @@
     "description": "Soft, pillowy Bombay dinner rolls toasted with a generous slather of butter, the classic partner for pav bhaji.",
     "pairingReason": "buttery rolls for pav bhaji and curries",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "medu-vada",
@@ -1377,7 +1514,8 @@
     "description": "Crispy, golden doughnut-shaped fritters made from urad dal batter, crunchy outside and fluffy inside, served with sambar.",
     "pairingReason": "crispy lentil fritters with sambar",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "oats-idli",
@@ -1387,7 +1525,8 @@
     "description": "A healthy twist on the classic idli, made with oats and semolina, steamed into soft cakes with a light, fluffy texture.",
     "pairingReason": "healthy steamed cakes for light meals",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "plain-dosa",
@@ -1397,7 +1536,8 @@
     "description": "A thin, crispy fermented rice-and-lentil crepe cooked until golden on a hot griddle, served with chutney and sambar.",
     "pairingReason": "crispy crepe for chutney and sambar",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "plain-idli",
@@ -1407,7 +1547,8 @@
     "description": "Soft, pillowy steamed rice-and-lentil cakes that are light on the stomach and perfect for soaking up sambar and chutney.",
     "pairingReason": "soft steamed cakes to soak up sambar",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "uttapam",
@@ -1417,7 +1558,8 @@
     "description": "A thick, spongy South Indian pancake topped with onions, tomatoes, and green chilies, cooked on a griddle until golden.",
     "pairingReason": "thick veggie pancake for a filling side",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "air-fryer-sweet-potato-fries",
@@ -1427,7 +1569,8 @@
     "description": "Crispy sweet potato fries seasoned with chaat masala and air-fried for a guilt-free Indian-spiced snack.",
     "pairingReason": "masala-spiced fries for fusion meals",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "curd-rice",
@@ -1437,7 +1580,8 @@
     "description": "Cooling South Indian comfort food of rice mixed with creamy yogurt, tempered with mustard seeds, curry leaves, and ginger.",
     "pairingReason": "cooling curd rice to end a spicy meal",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "masala-fries",
@@ -1447,7 +1591,8 @@
     "description": "Golden crispy fries tossed with a bold blend of chaat masala, red chili powder, and a squeeze of fresh lime.",
     "pairingReason": "spiced fries for Indian street-food vibes",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "masala-papad",
@@ -1457,7 +1602,8 @@
     "description": "Roasted or fried papad topped with a zesty mix of diced onion, tomato, green chili, cilantro, and chaat masala.",
     "pairingReason": "crunchy topped papad as a thali starter",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "snack"
   },
   {
     "id": "millet-khichdi",
@@ -1467,7 +1613,8 @@
     "description": "A wholesome one-pot dish of millet and lentils cooked with turmeric, cumin, and ghee for a nourishing, light meal.",
     "pairingReason": "nourishing millet-lentil comfort bowl",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "roasted-papad",
@@ -1477,7 +1624,8 @@
     "description": "Thin urad or jeera papad roasted over an open flame until blistered and crispy, a staple crunch on every Indian thali.",
     "pairingReason": "essential crispy cracker for the thali",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "snack"
   },
   {
     "id": "upma",
@@ -1487,7 +1635,8 @@
     "description": "A savory South Indian porridge of roasted semolina cooked with mustard seeds, curry leaves, onions, and vegetables.",
     "pairingReason": "savory semolina for a filling side",
     "nutritionCategory": "carb",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "indian-egg-bites",
@@ -1497,7 +1646,8 @@
     "description": "Fluffy baked egg bites seasoned with turmeric, cumin, green chili, and cilantro for a protein-packed Indian-spiced snack.",
     "pairingReason": "protein-rich spiced eggs for any meal",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "goma-ae-spinach",
@@ -1507,7 +1657,8 @@
     "description": "Blanched spinach dressed in a sweet, nutty sesame sauce with a hint of soy and mirin.",
     "pairingReason": "nutty sesame greens to balance grilled proteins",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "hiyayakko",
@@ -1517,7 +1668,8 @@
     "description": "Silky chilled tofu topped with grated ginger, scallions, bonito flakes, and a drizzle of soy sauce.",
     "pairingReason": "cool, silky protein with minimal carbs",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "kinpira-gobo",
@@ -1527,7 +1679,8 @@
     "description": "Julienned burdock root and carrot stir-fried in soy sauce, mirin, and sesame oil until tender-crisp.",
     "pairingReason": "earthy root crunch to ground noodle dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "sunomono",
@@ -1537,7 +1690,8 @@
     "description": "Paper-thin cucumber slices in a tangy rice vinegar dressing with toasted sesame and wakame seaweed.",
     "pairingReason": "refreshing acidity to cleanse a rich palate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "nasu-dengaku",
@@ -1547,7 +1701,8 @@
     "description": "Tender roasted eggplant halves glazed with a sweet white miso paste, caramelized under a broiler.",
     "pairingReason": "sweet-savory miso depth with every bite",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tamagoyaki",
@@ -1557,7 +1712,8 @@
     "description": "A layered Japanese omelette gently seasoned with dashi, soy, and mirin, rolled into a golden log.",
     "pairingReason": "light, sweet egg protein to round the plate",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tsukemono",
@@ -1567,7 +1723,8 @@
     "description": "An assortment of salt-pickled and vinegar-pickled vegetables — daikon, cucumber, eggplant — served as a palate cleanser.",
     "pairingReason": "crunchy, tangy pickles between every bite",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "agedashi-tofu",
@@ -1577,7 +1734,8 @@
     "description": "Lightly fried tofu cubes in a warm dashi-soy broth topped with grated daikon, ginger, and bonito flakes.",
     "pairingReason": "crispy-soft tofu in savory dashi broth",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "ohitashi",
@@ -1587,7 +1745,8 @@
     "description": "Blanched spinach or komatsuna soaked in a light dashi and soy dressing, topped with bonito flakes.",
     "pairingReason": "delicate umami greens to pair with rice",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "soba-noodles",
@@ -1597,7 +1756,8 @@
     "description": "Nutty buckwheat noodles served chilled with a dashi-soy dipping sauce, scallions, and wasabi.",
     "pairingReason": "low-GI buckwheat noodles for a lighter carb",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "sigeumchi-namul",
@@ -1607,7 +1767,8 @@
     "description": "Blanched spinach seasoned with sesame oil, garlic, soy sauce, and toasted sesame seeds.",
     "pairingReason": "classic banchan greens for every Korean meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "kongnamul",
@@ -1617,7 +1778,8 @@
     "description": "Soybean sprouts blanched and tossed with sesame oil, garlic, and a pinch of gochugaru chili flakes.",
     "pairingReason": "crunchy sprouts to refresh between bold bites",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "hobak-bokkeum",
@@ -1627,7 +1789,8 @@
     "description": "Thinly sliced zucchini quickly stir-fried with garlic, sesame oil, and a pinch of salt until just tender.",
     "pairingReason": "quick veggie banchan for balanced Korean meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "gamja-jorim",
@@ -1637,7 +1800,8 @@
     "description": "Bite-sized potatoes braised in a sweet soy sauce glaze with garlic and sesame seeds until glossy and tender.",
     "pairingReason": "sweet-savory glazed potatoes for the table",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "musaengchae",
@@ -1647,7 +1811,8 @@
     "description": "Matchstick-cut Korean radish dressed in gochugaru, vinegar, garlic, and a touch of sugar for a crisp, tangy bite.",
     "pairingReason": "crunchy, spicy radish to cut through rich stews",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "miyeok-muchim",
@@ -1657,7 +1822,8 @@
     "description": "Rehydrated wakame seaweed tossed in a tangy sesame-vinegar dressing with garlic and chili flakes.",
     "pairingReason": "mineral-rich seaweed for oceanic balance",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "dubu-jorim",
@@ -1667,7 +1833,8 @@
     "description": "Pan-fried tofu slices braised in a spicy soy-gochugaru sauce with scallions and sesame seeds.",
     "pairingReason": "spicy braised tofu for plant protein",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "som-tum",
@@ -1677,7 +1844,8 @@
     "description": "Shredded green papaya pounded with tomatoes, green beans, peanuts, dried shrimp, lime, and bird's eye chili.",
     "pairingReason": "spicy-sour crunch as the quintessential Thai side",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "nam-tok",
@@ -1687,7 +1855,8 @@
     "description": "Grilled sliced beef tossed with toasted rice powder, lime, fish sauce, shallots, mint, and chili flakes.",
     "pairingReason": "herbaceous grilled beef for a protein-rich side",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pak-boong",
@@ -1697,7 +1866,8 @@
     "description": "Water spinach flash-fried in a blazing wok with garlic, soybean paste, and Thai chili for a smoky, spicy green.",
     "pairingReason": "fiery wok-charred greens in seconds",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "gai-yang",
@@ -1707,7 +1877,8 @@
     "description": "Lemongrass-marinated chicken grilled over charcoal until smoky and charred, served with sweet chili dip.",
     "pairingReason": "smoky charcoal chicken alongside sticky rice",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "yum-woon-sen",
@@ -1717,7 +1888,8 @@
     "description": "Tangy glass noodle salad with minced pork, shrimp, celery, onion, peanuts, and a fiery lime dressing.",
     "pairingReason": "tangy, slippery noodle salad for textural contrast",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "pla-rad-prik",
@@ -1727,7 +1899,8 @@
     "description": "Whole deep-fried fish draped in a sweet-sour-spicy tamarind and chili sauce with crispy shallots.",
     "pairingReason": "crispy whole fish for an impressive shared side",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tod-mun-pla",
@@ -1737,7 +1910,8 @@
     "description": "Bouncy, fragrant fish cakes loaded with red curry paste, kaffir lime, and green beans, served with cucumber relish.",
     "pairingReason": "herbal, bouncy fish cakes for a Thai starter",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "mapo-tofu",
@@ -1747,7 +1921,8 @@
     "description": "Silken tofu simmered in a fiery sauce of doubanjiang, Sichuan peppercorns, minced pork, and fermented black beans.",
     "pairingReason": "numbing-spicy tofu for bold Sichuan pairing",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "bok-choy-garlic",
@@ -1757,7 +1932,8 @@
     "description": "Baby bok choy halves seared in a hot wok with garlic, a splash of soy, and a drizzle of sesame oil.",
     "pairingReason": "quick garlic greens for every Chinese meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "smashed-cucumber-salad",
@@ -1767,7 +1943,8 @@
     "description": "Cucumbers smashed to absorb a bold dressing of garlic, chili oil, black vinegar, and toasted sesame.",
     "pairingReason": "garlicky, spicy crunch to cut through oily dishes",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "hot-and-sour-soup",
@@ -1777,7 +1954,8 @@
     "description": "A silky egg-drop soup thickened with tofu, wood ear mushrooms, bamboo shoots, and balanced with vinegar and white pepper.",
     "pairingReason": "warming sour-spicy broth to open the meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "dan-dan-noodles",
@@ -1787,7 +1965,8 @@
     "description": "Thin wheat noodles in a nutty, spicy sesame-chili sauce topped with preserved vegetables and minced pork.",
     "pairingReason": "numbing-spicy noodles for a Sichuan feast",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "xiao-long-bao",
@@ -1797,7 +1976,8 @@
     "description": "Delicate steamed dumplings filled with seasoned pork and a burst of hot, savory broth inside each bite.",
     "pairingReason": "soupy dumplings for an elegant dim sum starter",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "wood-ear-mushroom-salad",
@@ -1807,7 +1987,8 @@
     "description": "Sliced wood ear mushrooms tossed in a tangy dressing of black vinegar, chili oil, cilantro, and garlic.",
     "pairingReason": "crunchy mushrooms for a refreshing cold dish",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "steamed-fish-ginger",
@@ -1817,7 +1998,8 @@
     "description": "A whole white fish steamed to perfection with julienned ginger, scallions, and a drizzle of hot soy-sesame oil.",
     "pairingReason": "clean, delicate steamed fish for a healthy plate",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "goi-cuon",
@@ -1827,7 +2009,8 @@
     "description": "Translucent rice paper rolls stuffed with shrimp, vermicelli, herbs, lettuce, and served with peanut hoisin dip.",
     "pairingReason": "light, fresh rolls to start any Vietnamese meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "rau-muong-xao-toi",
@@ -1837,7 +2020,8 @@
     "description": "Water spinach wok-tossed with garlic in high heat, finished with fish sauce and a squeeze of lime.",
     "pairingReason": "garlicky greens — Vietnam's everyday veggie",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "canh-chua",
@@ -1847,7 +2031,8 @@
     "description": "A tangy tamarind-based soup with catfish, tomatoes, pineapple, bean sprouts, and fresh herbs.",
     "pairingReason": "sour-sweet soup for a balanced Vietnamese table",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "bun-cha",
@@ -1857,7 +2042,8 @@
     "description": "Charcoal-grilled pork patties and sliced belly served over rice vermicelli with herbs and sweet fish sauce dip.",
     "pairingReason": "smoky grilled pork for a Hanoi classic",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "goi-ga",
@@ -1867,7 +2053,8 @@
     "description": "Shredded poached chicken tossed with cabbage, Vietnamese coriander, onion, lime, and fried shallots.",
     "pairingReason": "herbaceous chicken salad for fresh contrast",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "cha-gio",
@@ -1877,7 +2064,8 @@
     "description": "Crispy, golden-fried rice paper rolls stuffed with pork, shrimp, mushrooms, and glass noodles, served with nuoc cham.",
     "pairingReason": "crispy golden rolls for a crunchy contrast",
     "nutritionCategory": "protein",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "snack"
   },
   {
     "id": "ensaladang-talong",
@@ -1887,7 +2075,8 @@
     "description": "Char-grilled eggplant peeled and dressed with vinegar, onions, tomatoes, and a drizzle of bagoong.",
     "pairingReason": "smoky eggplant to brighten any Filipino meal",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "atchara",
@@ -1897,7 +2086,8 @@
     "description": "Sweet and tangy pickled green papaya with carrots, bell peppers, ginger, and raisins in a vinegar brine.",
     "pairingReason": "sweet-sour pickle to cut through rich grilled meats",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "pinakbet",
@@ -1907,7 +2097,8 @@
     "description": "An Ilocano medley of bitter melon, eggplant, squash, okra, and string beans simmered with bagoong shrimp paste.",
     "pairingReason": "vegetable stew bursting with Filipino flavors",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "ginisang-munggo",
@@ -1917,7 +2108,8 @@
     "description": "Hearty mung bean stew sauteed with garlic, onions, tomatoes, and leafy greens like malunggay or ampalaya leaves.",
     "pairingReason": "fiber-rich bean stew for a nutritious pairing",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "tortang-talong",
@@ -1927,7 +2119,8 @@
     "description": "Charred eggplant flattened and coated in beaten egg, pan-fried until golden — a simple Filipino breakfast staple.",
     "pairingReason": "eggy charred eggplant for protein and fiber",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "laing",
@@ -1937,7 +2130,8 @@
     "description": "Dried taro leaves slow-simmered in rich coconut milk with chili, ginger, and shrimp paste until meltingly tender.",
     "pairingReason": "creamy, spicy coconut greens for Bicolano flair",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "lumpiang-sariwa",
@@ -1947,7 +2141,8 @@
     "description": "Fresh crepe wrappers filled with julienned jicama, carrots, green beans, and tofu, topped with a sweet peanut sauce.",
     "pairingReason": "fresh vegetable rolls with a sweet-savory drizzle",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "brown-rice-bowl",
@@ -1957,7 +2152,8 @@
     "description": "Nutty, chewy brown rice served plain as a fiber-rich, lower-GI alternative to white rice for any Asian cuisine.",
     "pairingReason": "wholesome grain base that slows blood sugar rise",
     "nutritionCategory": "carb",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "cauliflower-rice",
@@ -1967,7 +2163,8 @@
     "description": "Finely riced cauliflower sauteed with a touch of oil and salt — a near-zero-carb swap for traditional rice.",
     "pairingReason": "ultra-low-carb rice alternative for any curry",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "shirataki-noodles",
@@ -1977,7 +2174,8 @@
     "description": "Translucent, gelatinous noodles made from konjac yam with virtually zero calories and carbs, absorbing any sauce.",
     "pairingReason": "zero-carb noodle swap for ramen or stir-fries",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "chaas",
@@ -1987,7 +2185,8 @@
     "description": "A refreshing spiced buttermilk drink seasoned with roasted cumin, curry leaves, and fresh cilantro — the quintessential cooling companion to any Indian meal.",
     "pairingReason": "cooling probiotic drink to balance spicy mains",
     "nutritionCategory": "dairy",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "drink"
   },
   {
     "id": "bellpepper-curry",
@@ -1997,7 +2196,8 @@
     "description": "Vibrant bell peppers simmered in a fragrant onion-tomato masala with cumin, coriander, and a hint of turmeric — a colorful, mild curry.",
     "pairingReason": "mild, colorful vegetable curry to add variety",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "egg-drop-soup-with-veggies",
@@ -2007,7 +2207,8 @@
     "description": "A light, savory broth with silky ribbons of egg and tender mixed vegetables — a warm, nourishing Filipino staple.",
     "pairingReason": "light brothy warmth alongside heartier Filipino mains",
     "nutritionCategory": "protein",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "bhindi-fry-side",
@@ -2017,7 +2218,8 @@
     "description": "Crispy okra stir-fried with cumin, turmeric, and dry mango powder — a crunchy, fiber-rich side perfect for blood sugar balance.",
     "pairingReason": "crunchy green side to balance soft curries",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "baingan-bharta-side",
@@ -2027,7 +2229,8 @@
     "description": "Smoky mashed eggplant cooked with onions, tomatoes, and green chilies. A flavorful, low-glycemic vegetable side.",
     "pairingReason": "smoky flavor depth for rich meals",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "cabbage-thoran",
@@ -2037,7 +2240,8 @@
     "description": "Finely chopped cabbage stir-fried with fresh coconut, mustard seeds, and curry leaves. Light, crunchy, and nutritious.",
     "pairingReason": "sweet crunch of coconut cabbage cleanses the palate",
     "nutritionCategory": "vegetable",
-    "nourishVerified": true
+    "nourishVerified": true,
+    "role": "side"
   },
   {
     "id": "palak-corn",
@@ -2047,7 +2251,8 @@
     "description": "Creamy spinach curry studded with sweet corn kernels and a garlic tempering. Packed with iron and fiber.",
     "pairingReason": "creamy greens to add iron and fiber",
     "nutritionCategory": "vegetable",
-    "nourishVerified": false
+    "nourishVerified": false,
+    "role": "side"
   },
   {
     "id": "tu-nuoc-cham",
@@ -2061,7 +2266,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/nuoccham"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-steamed-jasmine-rice",
@@ -2075,7 +2281,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/howtocookrice"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-garlic-noodles",
@@ -2089,7 +2296,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/garlicnoodles"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-rau-muong",
@@ -2103,7 +2311,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/raumuong"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-canh-cu-cai",
@@ -2117,7 +2326,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/canhcucai"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-goi-ga",
@@ -2131,7 +2341,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/goiga"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-ca-tai-chanh",
@@ -2145,7 +2356,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/vietnameseceviche"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-banh-tom",
@@ -2159,7 +2371,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/banhtom"
-    }
+    },
+    "role": "snack"
   },
   {
     "id": "tu-cha-trung-hap",
@@ -2173,7 +2386,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/chatrunghap"
-    }
+    },
+    "role": "side"
   },
   {
     "id": "tu-cha-gio-khoai-mon",
@@ -2187,7 +2401,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/taroeggroll"
-    }
+    },
+    "role": "snack"
   },
   {
     "id": "tu-vietnamese-coffee-tiramisu",
@@ -2201,7 +2416,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/vietnamesecoffeetiramisu"
-    }
+    },
+    "role": "snack"
   },
   {
     "id": "tu-banh-chuoi-nuong",
@@ -2215,7 +2431,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/banhchouinuong"
-    }
+    },
+    "role": "snack"
   },
   {
     "id": "tu-bac-xiu",
@@ -2229,7 +2446,8 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/saigonstylecoffee"
-    }
+    },
+    "role": "drink"
   },
   {
     "id": "tu-brown-sugar-boba-coffee",
@@ -2243,6 +2461,7 @@
     "source": {
       "creator": "Tu David Phu",
       "url": "https://cheftu.com/recipelibrary/brownsugarbobacoffee"
-    }
+    },
+    "role": "drink"
   }
 ]

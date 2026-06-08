@@ -1,3 +1,12 @@
+/** Dayparts a meal suits — drives the Today "Meal type" filter. Optional for
+ *  back-compat; a meal with none defaults to lunch + dinner. */
+export type Daypart = "breakfast" | "lunch" | "dinner";
+
+/** A non-main dish role — drives the Today "Dish role" filter. Mains live in
+ *  meals.json (implicitly role "main"); these classify sides.json entries.
+ *  Optional for back-compat; an unclassified side defaults to "side". */
+export type SideRole = "side" | "drink" | "snack";
+
 export interface Meal {
   id: string;
   name: string;
@@ -7,6 +16,7 @@ export interface Meal {
   cuisine: string;
   description: string;
   nourishVerified?: boolean;
+  dayparts?: Daypart[];
 }
 
 export interface SideDish {
@@ -18,6 +28,7 @@ export interface SideDish {
   pairingReason: string;
   nutritionCategory: "protein" | "carb" | "vegetable";
   nourishVerified?: boolean;
+  role?: SideRole;
 }
 
 export interface PairingState {

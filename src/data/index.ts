@@ -2,8 +2,11 @@ import type { Meal, SideDish } from "@/types";
 import mealsData from "./meals.json";
 import sidesData from "./sides.json";
 
-export const meals: Meal[] = mealsData;
-export const sides: SideDish[] = sidesData as SideDish[];
+// `as unknown as` because TS infers the JSON's `dayparts`/`role` as plain
+// string[] / string, not the Daypart[]/SideRole unions on the interfaces; the
+// dish-facets test pins them to the enums at runtime.
+export const meals = mealsData as unknown as Meal[];
+export const sides = sidesData as unknown as SideDish[];
 
 const sidesMap = new Map<string, SideDish>();
 for (const side of sides) {
