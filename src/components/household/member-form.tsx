@@ -20,6 +20,7 @@ import {
   type HouseholdAgeBand,
 } from "@/types/household-member";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { cn } from "@/lib/utils/cn";
 
 export const COMMON_DIETARY_FLAGS = [
@@ -131,10 +132,15 @@ export function MemberForm({
       </FormField>
 
       <FormField label="Age band">
-        <ChipGroup
-          options={[...HOUSEHOLD_AGE_BANDS]}
-          selected={ageBand}
-          onSelect={(v) => setAgeBand(v as HouseholdAgeBand)}
+        <FilterDropdown
+          label="Age band"
+          value={ageBand}
+          defaultValue="adult"
+          onChange={(v) => setAgeBand(v)}
+          options={HOUSEHOLD_AGE_BANDS.map((b) => ({
+            value: b,
+            label: b.charAt(0).toUpperCase() + b.slice(1),
+          }))}
         />
       </FormField>
 
@@ -193,36 +199,6 @@ export function MemberForm({
         )}
       </div>
     </section>
-  );
-}
-
-function ChipGroup({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: ReadonlyArray<string>;
-  selected: string;
-  onSelect: (value: string) => void;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((opt) => (
-        <button
-          key={opt}
-          type="button"
-          onClick={() => onSelect(opt)}
-          className={cn(
-            "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wide transition",
-            opt === selected
-              ? "bg-[var(--nourish-green)] text-white"
-              : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
-          )}
-        >
-          {opt}
-        </button>
-      ))}
-    </div>
   );
 }
 

@@ -20,7 +20,6 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Drawer } from "vaul";
 import {
-  Check,
   ChevronDown,
   Eye,
   Heart,
@@ -44,6 +43,7 @@ import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
 import { PreferencesSection } from "@/components/shared/preferences-section";
@@ -205,42 +205,21 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                     <SectionKicker as="p" size="10px" className="mt-4">
                       Age at the table
                     </SectionKicker>
-                    <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      {AGE_BANDS.map((band) => {
-                        const isActive = profile.ageBand === band.id;
-                        return (
-                          <button
-                            key={band.id}
-                            type="button"
-                            onClick={() => {
-                              haptic();
-                              setAgeBand(band.id);
-                            }}
-                            aria-pressed={isActive}
-                            className={cn(
-                              "flex items-center justify-between rounded-xl px-3 py-2 text-left transition-colors",
-                              isActive
-                                ? "bg-[var(--nourish-green)]/10 ring-1 ring-[var(--nourish-green)]/40"
-                                : "bg-neutral-50 hover:bg-neutral-100",
-                            )}
-                          >
-                            <div>
-                              <p className="text-[13px] font-semibold text-[var(--nourish-dark)]">
-                                {band.label}
-                              </p>
-                              <p className="text-[10px] text-[var(--nourish-subtext)]">
-                                {band.help}
-                              </p>
-                            </div>
-                            {isActive && (
-                              <Check
-                                size={14}
-                                className="text-[var(--nourish-green)]"
-                              />
-                            )}
-                          </button>
-                        );
-                      })}
+                    <div className="mt-2">
+                      <FilterDropdown
+                        label="Age band"
+                        value={profile.ageBand}
+                        defaultValue="4-8"
+                        onChange={(v) => {
+                          haptic();
+                          setAgeBand(v);
+                        }}
+                        options={AGE_BANDS.map((band) => ({
+                          value: band.id,
+                          label: `${band.label} · ${band.help}`,
+                          pillLabel: band.label,
+                        }))}
+                      />
                     </div>
                     <p className="mt-3 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
                       Used to frame nutrition info. Daily Values are based on

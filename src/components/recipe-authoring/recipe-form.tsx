@@ -19,7 +19,26 @@
  */
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { FilterDropdown } from "@/components/shared/filter-dropdown";
+
+/** The standard cuisines offered in the recipe form; "Other…" keeps free-text
+ *  for anything not listed (custom recipes can name any cuisine). */
+const RECIPE_CUISINES = [
+  "American",
+  "Chinese",
+  "Filipino",
+  "Indian",
+  "Italian",
+  "Japanese",
+  "Korean",
+  "Mediterranean",
+  "Mexican",
+  "Thai",
+  "Vietnamese",
+];
+const CUISINE_OTHER = "__other__";
 import { Plus, Trash2 } from "lucide-react";
 import {
   appendBlankIngredient,
@@ -63,6 +82,15 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
     control: form.control,
     name: "steps",
   });
+
+  // Cuisine: a dropdown of the standard cuisines + an "Other…" escape hatch that
+  // reveals a free-text field (custom recipes can name any cuisine). Local state
+  // drives the dropdown (avoids form.watch, which the React Compiler can't track).
+  const initialCuisine = initialValues.cuisineFamily ?? "";
+  const [cuisine, setCuisine] = useState(initialCuisine);
+  const [cuisineOther, setCuisineOther] = useState(
+    () => !!initialCuisine && !RECIPE_CUISINES.includes(initialCuisine),
+  );
 
   const onSubmit = form.handleSubmit((draft) => {
     const committed = commitDraft(draft);
@@ -114,11 +142,38 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
           label="Cuisine family"
           error={form.formState.errors.cuisineFamily?.message}
         >
-          <input
-            {...form.register("cuisineFamily")}
-            placeholder="indian / italian / mexican / …"
-            className={inputClass}
-          />
+          <div className="space-y-2">
+            <FilterDropdown
+              label="Cuisine family"
+              value={cuisineOther ? CUISINE_OTHER : cuisine}
+              defaultValue=""
+              align="start"
+              onChange={(v) => {
+                if (v === CUISINE_OTHER) {
+                  setCuisineOther(true);
+                  setCuisine("");
+                  form.setValue("cuisineFamily", "", { shouldValidate: true });
+                } else {
+                  setCuisineOther(false);
+                  setCuisine(v);
+                  form.setValue("cuisineFamily", v, { shouldValidate: true });
+                }
+              }}
+              options={[
+                { value: "", label: "Choose a cuisine", pillLabel: "Cuisine" },
+                ...RECIPE_CUISINES.map((c) => ({ value: c, label: c })),
+                { value: CUISINE_OTHER, label: "Other…" },
+              ]}
+            />
+            {cuisineOther && (
+              <input
+                {...form.register("cuisineFamily")}
+                placeholder="Name your cuisine"
+                className={inputClass}
+                autoFocus
+              />
+            )}
+          </div>
         </FormField>
 
         <FormField
