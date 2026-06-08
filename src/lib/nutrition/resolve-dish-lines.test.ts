@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { resolveDishLines } from "./resolve-dish-lines";
-import { guidedCookData } from "@/data/guided-cook-steps";
+import { guidedCookData, guidedCookMeals } from "@/data/guided-cook-steps";
 import { MEAL_INGREDIENTS } from "@/data/meal-ingredients";
+import { SIDE_INGREDIENTS } from "@/data/side-ingredients";
+import { sideServings } from "@/data/dish-servings";
 import { RECIPE_LINKS } from "@/data/ingredients/recipe-links";
 
 describe("resolveDishLines", () => {
@@ -73,6 +75,29 @@ describe("recipe-links drift guard", () => {
       const committed = RECIPE_LINKS[slug];
       expect(committed, slug).toBeDefined();
       expect(committed.servingsPerRecipe, slug).toBe(meal.servings);
+      expect(committed.lines, slug).toEqual(fresh.lines);
+    }
+  });
+
+  it("committed links match a fresh resolve of every catalogue side", () => {
+    for (const slug of Object.keys(SIDE_INGREDIENTS)) {
+      if (guidedCookData[slug]) continue; // a cook flow wins in resolve-dishes
+      const side = SIDE_INGREDIENTS[slug];
+      const fresh = resolveDishLines(side.ingredients);
+      const committed = RECIPE_LINKS[slug];
+      expect(committed, slug).toBeDefined();
+      expect(committed.servingsPerRecipe, slug).toBe(side.servings);
+      expect(committed.lines, slug).toEqual(fresh.lines);
+    }
+  });
+
+  it("committed links match a fresh resolve of every guided-cook meal", () => {
+    for (const slug of Object.keys(guidedCookMeals)) {
+      if (MEAL_INGREDIENTS[slug]) continue; // the curated exemplar wins
+      const fresh = resolveDishLines(guidedCookMeals[slug].ingredients ?? []);
+      const committed = RECIPE_LINKS[slug];
+      expect(committed, slug).toBeDefined();
+      expect(committed.servingsPerRecipe, slug).toBe(sideServings(slug));
       expect(committed.lines, slug).toEqual(fresh.lines);
     }
   });
