@@ -495,7 +495,7 @@ deficits, a 3995-kcal frying-oil over-count, eggplant→egg collisions).
 4. **End-of-week tests.** Co-located `*.test.ts` for the core logic + **every edge
    case surfaced in Round 2**; a **drift-guard** test if generated data changed
    (mirror the recipe-links guard); the full gate (`typecheck · lint · test ·
-   build`); a **live preview** check of the user-facing behavior; commit + push.
+build`); a **live preview** check of the user-facing behavior; commit + push.
 
 ---
 
@@ -504,6 +504,7 @@ deficits, a 3995-kcal frying-oil over-count, eggplant→egg collisions).
 **W28 — Glycemic estimate (GI/GL heuristic).** Per-dish glycemic load from carb
 composition + fiber (+ sugar/starch ratio), shown as a soft, clearly-estimated
 Info pill; optional soft engine factor.
+
 - _R1:_ `estimateGlycemicLoad(nutrition)` = available-carbs × heuristic GI ÷ 100,
   fiber discount; gate behind the coverage floor; label "rough estimate".
 - _R2:_ the heuristic IS the risk — verify no single GI is presented as fact;
@@ -515,6 +516,7 @@ Info pill; optional soft engine factor.
 **W46 — Nutrient education content (Content tab).** Reuse the Featured hero to
 spotlight a nutrient/ingredient ("why omega-3", "iron + vitamin-C"). Sample-flagged
 copy (`isPlaceholder`) until the editorial workstream (rule 11).
+
 - _R1:_ a `NutrientSpotlight` content type + 3–4 sample entries; wire into the
   Featured rotation; `(sample)` affiliation suffixes, no real clinician names.
 - _R2:_ check for science overstatement (the W12-class bug) — every claim hedged,
@@ -527,6 +529,7 @@ copy (`isPlaceholder`) until the editorial workstream (rule 11).
 **W47 — Onboarding: nutrition goals (playful).** Capture a light goal (more
 protein / more veg / hydration) via a coach interaction (NOT a settings form,
 rule 3); feeds a soft target.
+
 - _R1:_ a one-tap coach card on first visit; store in the care-profile shape;
   default to "balanced" if skipped.
 - _R2:_ ensure skippable + non-blocking; no PII; the goal only SOFTLY nudges (never
@@ -538,6 +541,7 @@ rule 3); feeds a soft target.
 
 **W45 — Export / share nutrition (image card).** Render a day's (or dish's)
 nutrition as a shareable image card.
+
 - _R1:_ an off-DOM canvas/SVG → PNG of the ring + key numbers + the "estimate"
   footer; a share/download affordance (download is permission-gated per the
   action rules).
@@ -550,6 +554,7 @@ nutrition as a shareable image card.
 
 **W33 — Grocery nutrition preview.** The grocery list shows the nutrition the
 planned recipes will deliver (sum the planned dishes' per-serving × servings).
+
 - _R1:_ reuse `getDishNutrition` over the planned list → a compact rollup on the
   grocery screen; gate at coverage.
 - _R2:_ watch double-counting (shared ingredients) and the framing snag noted in
@@ -562,6 +567,7 @@ planned recipes will deliver (sum the planned dishes' per-serving × servings).
 **W36 — Restaurant/branded diary parity.** Make branded + (future) restaurant
 diary entries first-class in the day rollup + history, consistent with cooked
 entries.
+
 - _R1:_ unify the entry renderer (cooked / branded share one row component);
   history view includes both.
 - _R2:_ re-verify the cooked-only gap-signal split (branded must not drive the
@@ -572,6 +578,7 @@ entries.
 
 **W44 — Branded data refresh pipeline.** A scheduled/manual OFF re-extract so the
 branded cache (when added) stays fresh; until then, document the env-var contract.
+
 - _R1:_ a `scripts/nutrition/refresh-branded.mjs` stub + the OFF attribution +
   rate-limit contract; a "last refreshed" timestamp surfaced.
 - _R2:_ politeness (OFF rate-limit/cache — reuse the route's `checkRateLimit`);
@@ -582,6 +589,7 @@ branded cache (when added) stays fresh; until then, document the env-var contrac
 
 **W40–W41 — Coverage to ~95% (final tranche).** Continue the long-tail registry +
 ingredient-list curation from today's 89%.
+
 - _R1:_ blocker analysis (the `.blockall` script pattern) → add the next FDC-backed
   batch; alias obvious synonyms.
 - _R2:_ **outlier scan every batch** (the data-quality pass pattern — catch
@@ -593,6 +601,7 @@ ingredient-list curation from today's 89%.
 
 **W50 — Scale test (1000 dishes, 500 ingredients).** Synthetic load to confirm
 build-time composition + bundle budgets hold.
+
 - _R1:_ a generator for synthetic dishes/ingredients; run the full pipeline;
   measure resolve + build time + bundle size.
 - _R2:_ find the break point (memory in `usda-ingest`/`expand`; prettier OOM);
@@ -603,6 +612,7 @@ build-time composition + bundle budgets hold.
 
 **W49 — Full regression + drift-guard sweep.** End-to-end pass over every
 nutrition surface + every generated artifact.
+
 - _R1:_ re-run all generators; diff against committed; eyes-on every surface with
   real data.
 - _R2:_ a completeness critic — "what's untested / unverified / drifted?"; close
@@ -612,6 +622,7 @@ nutrition surface + every generated artifact.
 
 **W51 — Documentation + runbook.** "How to add an ingredient, regenerate, verify"
 end-to-end.
+
 - _R1:_ write `docs/NUTRITION-RUNBOOK.md`: the spec → ingest → extract → expand →
   resolve → precompute-considered pipeline, with the tsx-vs-node + memory + prettier
   gotchas captured this year.
