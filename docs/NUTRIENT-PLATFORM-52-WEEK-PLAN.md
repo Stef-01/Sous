@@ -458,3 +458,209 @@ verify).
 2. Widen `NutrientVector` (W2) — additive, back-compat, unlocks the panel.
 3. Info rename + restructure (W6) + ingredients-to-check (W7) — the highest
    user-visible friction win, and zero new data.
+
+---
+
+## Part 6 — Execution playbook: remaining weeks (3-round review + unit tests each)
+
+> Status at 2026-06-07: catalogue nutrition coverage **89%** (280/314), registry
+> **154 ingredients**, **3290 tests**. Shipped this run: #1 catalogue coverage,
+> #2 quantity normalizer, #3 dietary-inferer fix, W20–21 branded engine + servings
+> stepper, W23 hydration, the SIDE_INGREDIENTS drift-guard, the data-quality pass.
+> W37 perf was **investigated → negative result** (precompute would regress the
+> bundle; see below). Everything below is queued.
+
+### The standard per-week loop — applied to EVERY week in this part
+
+Each week is built then run through **three recursive review rounds** before the
+**end-of-week test pass**. Do not skip a round; each has caught real bugs this
+year (a 173/219 false-"gluten-free" safety bug, branded zeros fabricating
+deficits, a 3995-kcal frying-oil over-count, eggplant→egg collisions).
+
+1. **Round 1 — build + self-review.** Implement the deliverable. Self-audit for:
+   correctness; **honesty** (no overclaim — gate display at `massedCoverage ≥ 0.7`,
+   keep the "an estimate" framing, never assert a "free-of" allergen claim); and
+   rule compliance (6/13 minimal text + disclosure-on-demand, 7 no invented
+   recipes/images, 10 no-scroll at 375×667, 11 current-feature-state). Run
+   `pnpm typecheck && pnpm lint`.
+2. **Round 2 — adversarial review.** Spawn a fresh reviewer (Agent, or a Workflow
+   find→verify for bigger weeks) prompted to BREAK it: wrong numbers, false-safety
+   claims, double-counting, substring/collision bugs, and the edge cases
+   (empty / null / huge / fractional / zero-coverage inputs). Fix every confirmed
+   finding; re-review until a round comes back clean.
+3. **Round 3 — polish + consistency.** a11y (role/`aria-label`/`aria-expanded`/
+   Escape/keyboard reach, contrast, a text alternative for any SVG/chart),
+   visual-token + spacing consistency, the reduced-motion gate, 375×667 no-scroll,
+   and cross-surface consistency with the existing nutrition cards.
+4. **End-of-week tests.** Co-located `*.test.ts` for the core logic + **every edge
+   case surfaced in Round 2**; a **drift-guard** test if generated data changed
+   (mirror the recipe-links guard); the full gate (`typecheck · lint · test ·
+   build`); a **live preview** check of the user-facing behavior; commit + push.
+
+---
+
+### Coming up next — AUTO-BUILD queue (priority order)
+
+**W28 — Glycemic estimate (GI/GL heuristic).** Per-dish glycemic load from carb
+composition + fiber (+ sugar/starch ratio), shown as a soft, clearly-estimated
+Info pill; optional soft engine factor.
+- _R1:_ `estimateGlycemicLoad(nutrition)` = available-carbs × heuristic GI ÷ 100,
+  fiber discount; gate behind the coverage floor; label "rough estimate".
+- _R2:_ the heuristic IS the risk — verify no single GI is presented as fact;
+  attack zero-carb, all-fiber, and sugar-bomb dishes; ensure it never contradicts
+  the honesty contract.
+- _R3:_ one icon + short-label pill (rule 13), behind tap-to-expand; a11y label.
+- _Tests:_ lentils GL < white-rice GL; fiber lowers GL; zero-carb → 0; null → null.
+
+**W46 — Nutrient education content (Content tab).** Reuse the Featured hero to
+spotlight a nutrient/ingredient ("why omega-3", "iron + vitamin-C"). Sample-flagged
+copy (`isPlaceholder`) until the editorial workstream (rule 11).
+- _R1:_ a `NutrientSpotlight` content type + 3–4 sample entries; wire into the
+  Featured rotation; `(sample)` affiliation suffixes, no real clinician names.
+- _R2:_ check for science overstatement (the W12-class bug) — every claim hedged,
+  food-first framing, no therapeutic promises; verify placeholder flags present.
+- _R3:_ Content-tab visual parity; reduced-motion; image fallbacks (rule: no
+  generated images).
+- _Tests:_ every spotlight entry carries `isPlaceholder: true`; the Featured
+  rotation includes/excludes correctly; no entry asserts a cure.
+
+**W47 — Onboarding: nutrition goals (playful).** Capture a light goal (more
+protein / more veg / hydration) via a coach interaction (NOT a settings form,
+rule 3); feeds a soft target.
+- _R1:_ a one-tap coach card on first visit; store in the care-profile shape;
+  default to "balanced" if skipped.
+- _R2:_ ensure skippable + non-blocking; no PII; the goal only SOFTLY nudges (never
+  hard-filters the plate); idempotent re-runs.
+- _R3:_ rule-3 compliance (no settings page), no-scroll, reduced-motion, a11y of
+  the choice control.
+- _Tests:_ goal persists; skip → balanced default; goal maps to the expected soft
+  weight; runs once.
+
+**W45 — Export / share nutrition (image card).** Render a day's (or dish's)
+nutrition as a shareable image card.
+- _R1:_ an off-DOM canvas/SVG → PNG of the ring + key numbers + the "estimate"
+  footer; a share/download affordance (download is permission-gated per the
+  action rules).
+- _R2:_ the export must carry the SAME honesty framing as the UI (estimate +
+  coverage); attack empty-day, over-goal, and missing-data states; no PII leak in
+  the image.
+- _R3:_ a11y of the trigger; reduced-motion; correct rendering at 2× DPI.
+- _Tests:_ the serializer produces a card for a known day; empty day → friendly
+  empty card; the footer string is present.
+
+**W33 — Grocery nutrition preview.** The grocery list shows the nutrition the
+planned recipes will deliver (sum the planned dishes' per-serving × servings).
+- _R1:_ reuse `getDishNutrition` over the planned list → a compact rollup on the
+  grocery screen; gate at coverage.
+- _R2:_ watch double-counting (shared ingredients) and the framing snag noted in
+  the audit (is it "what you'll buy" vs "what you'll eat"?); branded items
+  excluded from cooking-gap signals (the W20 fix pattern).
+- _R3:_ minimal text, no-scroll, consistency with the meal-plan rollup (W32).
+- _Tests:_ rollup = sum of planned dishes; empty list → null; partial-coverage
+  dishes excluded.
+
+**W36 — Restaurant/branded diary parity.** Make branded + (future) restaurant
+diary entries first-class in the day rollup + history, consistent with cooked
+entries.
+- _R1:_ unify the entry renderer (cooked / branded share one row component);
+  history view includes both.
+- _R2:_ re-verify the cooked-only gap-signal split (branded must not drive the
+  reranker — already fixed; add a regression test); fractional servings labels.
+- _R3:_ visual parity, a11y of the unified row.
+- _Tests:_ a mixed day aggregates both; gap signals stay cooked-only; remove works
+  for both types.
+
+**W44 — Branded data refresh pipeline.** A scheduled/manual OFF re-extract so the
+branded cache (when added) stays fresh; until then, document the env-var contract.
+- _R1:_ a `scripts/nutrition/refresh-branded.mjs` stub + the OFF attribution +
+  rate-limit contract; a "last refreshed" timestamp surfaced.
+- _R2:_ politeness (OFF rate-limit/cache — reuse the route's `checkRateLimit`);
+  idempotent; graceful when OFF is unreachable.
+- _R3:_ runbook note; founder-gated bits clearly flagged (scheduler/cron is FG).
+- _Tests:_ the mapper handles a fixture OFF payload; malformed rows dropped; the
+  timestamp updates.
+
+**W40–W41 — Coverage to ~95% (final tranche).** Continue the long-tail registry +
+ingredient-list curation from today's 89%.
+- _R1:_ blocker analysis (the `.blockall` script pattern) → add the next FDC-backed
+  batch; alias obvious synonyms.
+- _R2:_ **outlier scan every batch** (the data-quality pass pattern — catch
+  855-kcal-shirataki / 96-kcal-fish class errors); verify no proxy distortion.
+- _R3:_ servings sanity for broth/fried/batch dishes; "estimate" framing intact.
+- _Tests:_ the SIDE/MEAL drift guards stay green; a coverage-percentage assertion
+  ratchets up and never regresses; per-batch outlier bounds (no dish > Nk kcal
+  unflagged).
+
+**W50 — Scale test (1000 dishes, 500 ingredients).** Synthetic load to confirm
+build-time composition + bundle budgets hold.
+- _R1:_ a generator for synthetic dishes/ingredients; run the full pipeline;
+  measure resolve + build time + bundle size.
+- _R2:_ find the break point (memory in `usda-ingest`/`expand`; prettier OOM);
+  confirm the `.prettierignore`/`.gitignore` guards still hold at scale.
+- _R3:_ document the budgets; add a CI-style budget assertion.
+- _Tests:_ pipeline completes at 10× scale; a bundle-budget assertion; resolve is
+  O(n) not O(n²).
+
+**W49 — Full regression + drift-guard sweep.** End-to-end pass over every
+nutrition surface + every generated artifact.
+- _R1:_ re-run all generators; diff against committed; eyes-on every surface with
+  real data.
+- _R2:_ a completeness critic — "what's untested / unverified / drifted?"; close
+  each gap.
+- _R3:_ a11y + reduced-motion sweep of all nutrition surfaces (W38 scope).
+- _Tests:_ all drift guards green; a snapshot of the coverage stats; the full gate.
+
+**W51 — Documentation + runbook.** "How to add an ingredient, regenerate, verify"
+end-to-end.
+- _R1:_ write `docs/NUTRITION-RUNBOOK.md`: the spec → ingest → extract → expand →
+  resolve → precompute-considered pipeline, with the tsx-vs-node + memory + prettier
+  gotchas captured this year.
+- _R2:_ have a fresh agent follow it cold to add one ingredient; fix every
+  ambiguity it hits.
+- _R3:_ link it from CLAUDE.md + the plan; keep it minimal.
+- _Tests:_ a smoke test that the documented commands exist + run (lint the runbook
+  code blocks).
+
+---
+
+### Review / checkpoint weeks (lighter, but still 3-round)
+
+- **W26 / W39 — Q2 / Q3 reviews.** R1 inventory what shipped vs planned; R2
+  adversarial "what's missing / overclaimed"; R3 polish + doc-sync. Tests: the
+  full gate + a coverage/test-count snapshot committed to the plan.
+- **W37 — Performance pass.** _Investigated this run → negative:_ a precompute
+  table is ~412 KB ≈ the registry+recipe-links it would replace, and the registry
+  still loads via the therapeutic path, so it would REGRESS the bundle. Re-open only
+  with real bundle measurement; the safe win is **precompute + lazy-load
+  meal-health-panel together** (drops ~270 KB raw) — do it measured, drift-guarded.
+- **W38 — A11y + reduced-motion sweep.** Done for the new surfaces (dialog/Escape,
+  ring SVG `aria-label`, `aria-expanded`, hydration pips). Remaining: a full
+  axe-style pass over every nutrition surface. R1 audit; R2 keyboard-only + SR
+  walkthrough; R3 fix + add the `sous/reduced-motion-gate` checks. Tests: a11y
+  assertions on the key components.
+- **W52 — Year review + next-year thesis.** Narrative + metrics; no code.
+
+---
+
+### Founder-gated weeks (AUTO-BUILD prep now; integration is one config edit)
+
+Per rule 12, build the abstraction + schema + wiring stub now; the gate is only the
+external credential/asset.
+
+- **W18 / W43 — Personalized EER + DRI [FG: G1].** _Prep (AB):_ `eer.json` schema +
+  `energyTarget(profile)` + the age/sex DRI matrix shape, shipping with the FDA-DV
+  fallback. _Gate:_ transcribe the 2023 NASEM EER coefficients. R1 schema +
+  fallback; R2 verify the fallback is honestly labeled "general DV, not personal";
+  R3 a11y of any target display. Tests: fallback targets correct; the swap is a
+  pure data change (a fixture proves it).
+- **W19 — Profile capture (playful) [AB, feeds G1].** Build the coach-driven age/
+  activity capture now (rule-3 compliant); it just has nothing personalized to feed
+  until W43. Same 3-round + tests as W47.
+- **W22 — Barcode scan [FG: G2].** _Prep (AB):_ `lookupBranded(barcode)` + a manual
+  barcode-entry fallback (already partially there via the OFF route). _Gate:_ the
+  camera-scan front-end + scanner lib + optional OFF API key. R2 must cover the
+  malformed/﻿unknown-barcode path; tests on the lookup + manual entry.
+- **W42 — Clinician review surface [FG: G3/G4].** Prep (the review queue +
+  educational gating) already exists. _Gate:_ a real reviewer. Until then the
+  Content/therapeutic copy stays `(sample)`-flagged (rule 11). R2 must verify
+  nothing personalized/clinical ships un-reviewed.
