@@ -17,6 +17,7 @@ import path from "node:path";
 const base = new URL("../../", import.meta.url);
 const guided = await import(new URL("src/data/guided-cook-steps.ts", base));
 const meals = await import(new URL("src/data/meal-ingredients.ts", base));
+const sideIng = await import(new URL("src/data/side-ingredients.ts", base));
 const servingsMod = await import(new URL("src/data/dish-servings.ts", base));
 const resolver = await import(
   new URL("src/lib/nutrition/resolve-dish-lines.ts", base)
@@ -24,6 +25,7 @@ const resolver = await import(
 
 const { guidedCookData, guidedCookMeals } = guided;
 const { MEAL_INGREDIENTS } = meals;
+const { SIDE_INGREDIENTS } = sideIng;
 const { sideServings } = servingsMod;
 const { resolveDishLines } = resolver;
 
@@ -95,6 +97,28 @@ for (const slug of Object.keys(guidedCookMeals ?? {})) {
   links[slug] = {
     recipeSlug: slug,
     servingsPerRecipe: sideServings(slug),
+    originalLineCount,
+    lines,
+  };
+}
+
+// Catalogue SIDES with no guided-cook flow (#1 coverage): compose from their
+// authored SIDE_INGREDIENTS. Skip any already linked via a cook flow above.
+for (const slug of Object.keys(SIDE_INGREDIENTS)) {
+  if (links[slug]) continue;
+  const side = SIDE_INGREDIENTS[slug];
+  const { lines, originalLineCount, unresolved } = resolveDishLines(
+    side.ingredients,
+  );
+  totalLines += originalLineCount;
+  resolvedLines += lines.length;
+  massedLines += lines.filter((l) => l.grams > 0).length;
+  for (const name of unresolved) {
+    unresolvedNames.set(name, (unresolvedNames.get(name) ?? 0) + 1);
+  }
+  links[slug] = {
+    recipeSlug: slug,
+    servingsPerRecipe: side.servings,
     originalLineCount,
     lines,
   };
