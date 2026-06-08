@@ -50,6 +50,33 @@ describe("inferDietaryFlags — animal exclusions", () => {
     expect(result).not.toContain("gluten-free");
   });
 
+  it("eggplant does NOT read as 'egg' — a roasted eggplant dish stays vegan", () => {
+    const result = inferDietaryFlags({
+      tags: ["vegetable"],
+      description: "Smoky charred eggplant with garlic, tomato, and herbs.",
+    });
+    expect(result).toContain("vegan");
+    expect(result).toContain("vegetarian");
+    expect(result).toContain("dairy-free");
+  });
+
+  it("butternut does NOT read as 'butter' — butternut squash soup stays vegan", () => {
+    const result = inferDietaryFlags({
+      tags: ["soup"],
+      description: "Velvety roasted butternut squash with onion and sage.",
+    });
+    expect(result).toContain("vegan");
+    expect(result).toContain("dairy-free");
+  });
+
+  it("a true egg dish is still caught (the fix is surgical)", () => {
+    const result = inferDietaryFlags({
+      tags: ["breakfast"],
+      description: "Fried egg over rice with scallion.",
+    });
+    expect(result).not.toContain("vegan");
+  });
+
   it("a chicken dish is NOT vegan or vegetarian", () => {
     const result = inferDietaryFlags({
       tags: ["protein"],

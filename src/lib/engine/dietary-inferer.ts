@@ -171,9 +171,26 @@ const VIOLATION_TERMS: Record<DietaryFlag, string[]> = {
   ],
 };
 
-/** Lowercase + collapse whitespace for the haystack scan. */
+/** Words that CONTAIN a violation term as a substring but are NOT that
+ *  ingredient — neutralised before the (intentionally substring) scan so e.g.
+ *  "eggplant" doesn't read as "egg" (it's a nightshade) or "butternut" as
+ *  "butter" (it's a squash). Each replacement is a neutral synonym carrying no
+ *  violation term. Only unambiguous cases live here: "creamy" is deliberately
+ *  NOT defanged — a "creamy" dish may well contain cream, and over-claiming a
+ *  dairy violation is the safe error. */
+const FALSE_POSITIVE_WORDS: Record<string, string> = {
+  eggplant: "aubergine",
+  eggplants: "aubergines",
+  butternut: "squash",
+};
+
+/** Lowercase + neutralise known substring false-positives for the scan. */
 function normalise(text: string): string {
-  return text.toLowerCase();
+  let s = text.toLowerCase();
+  for (const [word, repl] of Object.entries(FALSE_POSITIVE_WORDS)) {
+    s = s.split(word).join(repl);
+  }
+  return s;
 }
 
 /** True when any violation term appears in the haystack. Uses
