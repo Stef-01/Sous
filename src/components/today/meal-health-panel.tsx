@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * MealHealthPanel — the content of the swipe-up health sheet (Culinary
  * Therapeutics, swipe-up panel phase 3).
@@ -43,6 +45,10 @@ import {
 import { FOOD_FIRST_HEDGE } from "@/lib/therapeutics/claim-contract";
 import { CONDITIONS } from "@/data/therapeutics";
 import { cn } from "@/lib/utils/cn";
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { SousReadCard } from "@/components/shared/sous-read-card";
+import { HonestyChip } from "@/components/shared/honesty-chip";
 
 export interface MealHealthPanelProps {
   dishName: string;
@@ -71,6 +77,7 @@ export function MealHealthPanel({
   clinicianReview = false,
   className,
 }: MealHealthPanelProps) {
+  const [showEvidence, setShowEvidence] = useState(false);
   // Scope to the user's conditions when set (relevant view); otherwise surface
   // what the dish brings across every condition (generic discovery view).
   const scope = conditions.length > 0 ? conditions : undefined;
@@ -101,11 +108,18 @@ export function MealHealthPanel({
       ? "Clinician review"
       : "Educational";
 
-  return (
-    <section
-      aria-label={`Food-first evidence for ${dishName}`}
-      className={cn("flex flex-col gap-6", className)}
-    >
+  // Glance nutrition (Sous-read + compact ring + tip + log), gated at coverage.
+  const { perServing, massedCoverage, massedLines, totalLines } =
+    getDishNutrition(slug);
+  const hasNutrition =
+    !!perServing && massedCoverage >= NUTRITION_COVERAGE_FLOOR;
+  const ingredientIds = getDishIngredientIds(slug);
+
+  // The clinical layer + full breakdown — collapsed behind one disclosure. The
+  // status badge + hedge live WITH the evidence here (R1), and a glance-level
+  // status pill (below) carries the "not reviewed" signal even when collapsed.
+  const evidenceBlock = (
+    <div className="space-y-6">
       <header className="flex items-center justify-between gap-3">
         <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]">
           Food-first evidence
@@ -144,57 +158,96 @@ export function MealHealthPanel({
         </div>
       )}
 
-      <NutritionSnapshot slug={slug} dishName={dishName} />
-
+      {hasNutrition && <GlycemicPill nutrition={perServing} />}
+      <AyurvedicDishNote ingredientIds={ingredientIds} />
       <IngredientsToCheck slug={slug} />
-
       <DietaryProfile slug={slug} />
+
+      {hasNutrition && (
+        <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
+          <NutritionRingCard
+            nutrition={perServing}
+            coverage={{ massed: massedLines, total: totalLines }}
+          />
+        </div>
+      )}
 
       <p className="text-[10.5px] leading-relaxed text-[var(--nourish-subtext-faint)]">
         {FOOD_FIRST_HEDGE}
       </p>
-    </section>
+    </div>
   );
-}
-
-function NutritionSnapshot({
-  slug,
-  dishName,
-}: {
-  slug?: string;
-  dishName?: string;
-}) {
-  const { perServing, massedCoverage, massedLines, totalLines } =
-    getDishNutrition(slug);
-  if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) return null;
-  const ingredientIds = getDishIngredientIds(slug);
 
   return (
-    <div className="space-y-3">
-      <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
-        <NutritionRingCard
-          nutrition={perServing}
-          coverage={{ massed: massedLines, total: totalLines }}
-        />
-      </div>
-      <GlycemicPill nutrition={perServing} />
-      <BioavailabilityTip
-        nutrition={perServing}
-        ingredientIds={ingredientIds}
-      />
-      <AyurvedicDishNote ingredientIds={ingredientIds} />
-      <div className="flex items-center justify-between gap-2">
-        {slug ? (
-          <LogItButton slug={slug} name={dishName ?? "This dish"} />
-        ) : (
-          <span />
+    <section
+      aria-label={`Health info for ${dishName}`}
+      className={cn("flex flex-col gap-4", className)}
+    >
+      {/* GLANCE — ambient honesty + the review-status pill (R1: glance-visible). */}
+      <div className="flex flex-wrap items-center gap-2">
+        <HonestyChip />
+        {!reviewed && (
+          <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-medium text-[var(--nourish-subtext)]">
+            {clinicianReview
+              ? "Clinician review · unreviewed"
+              : "Educational · not reviewed"}
+          </span>
         )}
-        <NutritionShareButton
-          title={dishName ?? "This dish"}
-          nutrition={perServing}
-        />
       </div>
-    </div>
+
+      {hasNutrition && (
+        <SousReadCard
+          nutrition={perServing}
+          foodGroups={profile.foodGroups}
+          coverage={massedCoverage}
+        />
+      )}
+
+      {hasNutrition && (
+        <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
+          <NutritionRingCard
+            nutrition={perServing}
+            compact
+            coverage={{ massed: massedLines, total: totalLines }}
+          />
+        </div>
+      )}
+
+      {hasNutrition && (
+        <BioavailabilityTip
+          nutrition={perServing}
+          ingredientIds={ingredientIds}
+        />
+      )}
+
+      {hasNutrition && (
+        <div className="flex items-center justify-between gap-2">
+          {slug ? <LogItButton slug={slug} name={dishName} /> : <span />}
+          <NutritionShareButton title={dishName} nutrition={perServing} />
+        </div>
+      )}
+
+      {/* DEEP-DIVE — clinical evidence + full nutrition, one tap away. */}
+      <div className="border-t border-[var(--nourish-border)] pt-1">
+        <button
+          type="button"
+          onClick={() => setShowEvidence((s) => !s)}
+          aria-expanded={showEvidence}
+          className="flex w-full items-center justify-between py-2 text-[13px] font-semibold text-[var(--nourish-dark)]"
+        >
+          Evidence &amp; full nutrition
+          <ChevronDown
+            size={16}
+            className={cn(
+              "text-[var(--nourish-subtext)] transition-transform",
+              showEvidence && "rotate-180",
+            )}
+            aria-hidden
+          />
+        </button>
+        {showEvidence && <div className="mt-2">{evidenceBlock}</div>}
+      </div>
+    </section>
   );
 }
 
