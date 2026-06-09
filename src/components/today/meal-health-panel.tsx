@@ -53,6 +53,12 @@ import {
   EvidenceTierBadge,
   gradeToTier,
 } from "@/components/shared/evidence-tier";
+import {
+  useHealthLens,
+  lensFilter,
+  HEALTH_LENSES,
+  type HealthLens,
+} from "@/lib/hooks/use-health-lens";
 
 export interface MealHealthPanelProps {
   dishName: string;
@@ -119,50 +125,67 @@ export function MealHealthPanel({
     !!perServing && massedCoverage >= NUTRITION_COVERAGE_FLOOR;
   const ingredientIds = getDishIngredientIds(slug);
 
+  // Phase 10 — the reading lens (default everyday). It gates only the OPTIONAL
+  // layers; the status badge + hedge render regardless, and the AyurvedicDishNote
+  // auto-respects it via the now-derived useAyurvedicMode (lens === "ayurvedic").
+  const { lens, setLens } = useHealthLens();
+  const showEvidenceRows = lensFilter(lens).showEvidence;
+
   // The clinical layer + full breakdown — collapsed behind one disclosure. The
   // status badge + hedge live WITH the evidence here (R1), and a glance-level
   // status pill (below) carries the "not reviewed" signal even when collapsed.
   const evidenceBlock = (
     <div className="space-y-6">
-      <header className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--tier-strong)]">
-          Food-first evidence
-        </p>
-        <span
-          className={cn(
-            "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide",
-            reviewed
-              ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
-              : clinicianReview
-                ? "bg-amber-100 text-amber-800"
-                : "bg-neutral-100 text-[var(--nourish-subtext)]",
+      {/* Lens switcher — Everyday (default) · Therapeutic · Ayurvedic. A view
+          toggle, not a settings panel (Rule 3); subordinate to Log it (Rule 2). */}
+      <LensSwitcher lens={lens} onChange={setLens} />
+
+      {/* Therapeutic lens only: the food-first evidence rows + their status badge,
+          gated exactly as before by reviewed/clinicianReview. */}
+      {showEvidenceRows && (
+        <>
+          <header className="flex items-center justify-between gap-3">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--tier-strong)]">
+              Food-first evidence
+            </p>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide",
+                reviewed
+                  ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
+                  : clinicianReview
+                    ? "bg-amber-100 text-amber-800"
+                    : "bg-neutral-100 text-[var(--nourish-subtext)]",
+              )}
+            >
+              {statusLabel}
+            </span>
+          </header>
+
+          {matches.length === 0 ? (
+            <EmptyState hasConditions={conditions.length > 0} />
+          ) : (
+            <div className="flex flex-col gap-3">
+              {personalized && <PersonalizedSubhead conditions={conditions} />}
+              <ul className="flex flex-col divide-y divide-neutral-100/80">
+                {matches.map((m) => (
+                  <EvidenceRowItem
+                    key={m.record.id}
+                    row={interventionToEvidenceRow(m.record)}
+                    signals={m.matchedSignals}
+                    composition={composition}
+                  />
+                ))}
+              </ul>
+            </div>
           )}
-        >
-          {statusLabel}
-        </span>
-      </header>
+        </>
+      )}
 
       <WholeFoodComposition foodGroups={profile.foodGroups} />
 
-      {matches.length === 0 ? (
-        <EmptyState hasConditions={conditions.length > 0} />
-      ) : (
-        <div className="flex flex-col gap-3">
-          {personalized && <PersonalizedSubhead conditions={conditions} />}
-          <ul className="flex flex-col divide-y divide-neutral-100/80">
-            {matches.map((m) => (
-              <EvidenceRowItem
-                key={m.record.id}
-                row={interventionToEvidenceRow(m.record)}
-                signals={m.matchedSignals}
-                composition={composition}
-              />
-            ))}
-          </ul>
-        </div>
-      )}
-
       {hasNutrition && <GlycemicPill nutrition={perServing} />}
+      {/* Ayurvedic lens only (auto-gated inside via the derived useAyurvedicMode). */}
       <AyurvedicDishNote ingredientIds={ingredientIds} />
       <IngredientsToCheck slug={slug} />
       <DietaryProfile slug={slug} />
@@ -261,6 +284,46 @@ export function MealHealthPanel({
  * nutrition character. This signal is mass- and serving-INDEPENDENT, so it is
  * accurate even where composed per-serving macros are not yet display-grade.
  */
+const LENS_LABEL: Record<HealthLens, string> = {
+  everyday: "Everyday",
+  therapeutic: "Therapeutic",
+  ayurvedic: "Ayurvedic",
+};
+
+function LensSwitcher({
+  lens,
+  onChange,
+}: {
+  lens: HealthLens;
+  onChange: (l: HealthLens) => void;
+}) {
+  return (
+    <div
+      role="tablist"
+      aria-label="Health reading lens"
+      className="flex rounded-full bg-neutral-100 p-0.5"
+    >
+      {HEALTH_LENSES.map((l) => (
+        <button
+          key={l}
+          type="button"
+          role="tab"
+          aria-selected={lens === l}
+          onClick={() => onChange(l)}
+          className={cn(
+            "flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors",
+            lens === l
+              ? "bg-white text-[var(--nourish-dark)] shadow-sm"
+              : "text-[var(--nourish-subtext)]",
+          )}
+        >
+          {LENS_LABEL[l]}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 const NOTABLE_GROUPS: ReadonlyArray<FoodGroup> = [
   "leafy-green",
   "vegetable",
