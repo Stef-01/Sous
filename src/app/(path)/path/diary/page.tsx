@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -78,9 +79,16 @@ export default function DiaryPage() {
               className="mx-auto text-[var(--nourish-subtext-faint)]"
             />
             <p className="mt-2 text-[13px] text-[var(--nourish-subtext)]">
-              Nothing logged yet today. Tap a dish below — or “Log it” on any
-              dish’s Info.
+              Cook or log your first dish to start today’s plate.
             </p>
+            {/* Rule 2 — the one primary action points at the existing primary
+                (the Today craving search), never a rival CTA. */}
+            <Link
+              href="/today"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+            >
+              Find something to cook
+            </Link>
           </div>
         )}
 

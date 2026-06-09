@@ -20,7 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
-import { DailyNutritionCard } from "@/components/path/daily-nutrition-card";
 import { HydrationCard } from "@/components/path/hydration-card";
 import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
 import { BrandedFoodSearch } from "@/components/path/branded-food-search";
@@ -193,12 +192,11 @@ export default function PathPage() {
             cook CTA), so there's no separate Up-Next card duplicating it. */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
-        {/* Today's nutrition — the diary rollup; only renders once a cook is
-            logged today (the macro ring for the whole day vs daily targets).
-            The weekly trend sits below it once a few days are logged. */}
+        {/* Path = the longer arc (journey). "Today's plate" now lives on Today
+            (TodayEatingCard) — the canonical daily surface — so it isn't
+            duplicated here; the editable full day stays at /path/diary. Phase 4. */}
         <div className="mx-auto max-w-md page-x space-y-3 pt-4">
           <HydrationCard />
-          <DailyNutritionCard />
           <WeeklyTrendCard />
           <BrandedFoodSearch />
         </div>

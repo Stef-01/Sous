@@ -36,6 +36,7 @@ const ProfileSettingsSheet = dynamic(
 );
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { NutritionGoalCard } from "@/components/today/nutrition-goal-card";
+import { TodayEatingCard } from "@/components/today/today-eating-card";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { HeadroomHeader } from "@/components/shared/headroom-header";
 
@@ -594,6 +595,10 @@ function TodayPageContent() {
         <TonightChip mode="banner-only" />
         <TodayPlannedSlot />
         <WhosAtTable />
+
+        {/* Phase 4 — "your plate today" ring once anything is logged (null until
+            then; the empty state is the first-run invitation on the diary). */}
+        <TodayEatingCard />
 
         {/* Tiny, deliberately unassuming "more options" entry point.
             Everything secondary (tonight commit, cook-for-two, rescue fridge,
