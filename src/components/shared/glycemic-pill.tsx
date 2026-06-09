@@ -7,15 +7,14 @@ import {
   type GlycemicBand,
 } from "@/lib/nutrition/glycemic";
 import type { PerServingNutrition } from "@/types/nutrition";
-import { cn } from "@/lib/utils/cn";
-
-const BAND: Record<GlycemicBand, { label: string; cls: string }> = {
-  low: {
-    label: "Low",
-    cls: "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]",
-  },
-  medium: { label: "Medium", cls: "bg-amber-100 text-amber-700" },
-  high: { label: "High", cls: "bg-orange-100 text-orange-700" },
+// Phase 8 — glycemic load is DIRECTIONAL (low good → high bad), NOT a strength,
+// so it is deliberately kept OFF the evidence-tier ramp: rendering "high glycemic"
+// in the same amber as "moderate evidence" would conflate a warning with a
+// quality. We show a neutral label + a single sage dot only when the load is low.
+const BAND_LABEL: Record<GlycemicBand, string> = {
+  low: "Low",
+  medium: "Medium",
+  high: "High",
 };
 
 /**
@@ -31,7 +30,7 @@ export function GlycemicPill({
   const [open, setOpen] = useState(false);
   const est = estimateGlycemicLoad(nutrition);
   if (!est) return null;
-  const b = BAND[est.band];
+  const label = BAND_LABEL[est.band];
 
   return (
     <div>
@@ -39,7 +38,7 @@ export function GlycemicPill({
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        aria-label={`Estimated glycemic load: ${b.label}. Tap for details.`}
+        aria-label={`Estimated glycemic load: ${label}. Tap for details.`}
         className="inline-flex items-center gap-1.5 rounded-full bg-neutral-50 py-1 pl-2 pr-2.5 text-[11px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-100"
       >
         <Activity
@@ -48,8 +47,15 @@ export function GlycemicPill({
           aria-hidden
         />
         Glycemic load
-        <span className={cn("rounded-full px-1.5 py-0.5", b.cls)}>
-          {b.label}
+        <span className="inline-flex items-center gap-1 font-semibold text-[var(--nourish-dark)]">
+          {est.band === "low" && (
+            <span
+              className="h-1.5 w-1.5 rounded-full"
+              style={{ backgroundColor: "var(--tier-strong)" }}
+              aria-hidden
+            />
+          )}
+          {label}
         </span>
         <span className="text-[var(--nourish-subtext-faint)]">est.</span>
       </button>

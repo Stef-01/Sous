@@ -10,6 +10,18 @@
   --nourish-dark-green: #1a3d25;
   --nourish-light-green: #4a8c5c;
   --nourish-gold: #d4a84b;
+
+  /* Evidence-tier ramp — the ONLY colours allowed for evidence / quality
+     strength (Phase 8). strong = sage, deliberately DISTINCT from the brand-green
+     CTA so "good" never reads as "tap me" (Phase 9). Glycemic is EXCLUDED: it is
+     directional (low good → high bad), not a strength, so mapping it here would
+     conflate "high glycemic = bad" with "strong evidence = good". */
+  --tier-strong: #2f6b41;
+  --tier-strong-bg: #e6f1ea;
+  --tier-moderate: #8a6400;
+  --tier-moderate-bg: #fbf0d4;
+  --tier-limited: #5b6470;
+  --tier-limited-bg: #eef1f4;
   --nourish-warm: #e8833a; /* unified flame/streak accent (was amber-500/orange-500 drift) */
   --nourish-cream: #fafaf8;
   --nourish-dark: #0d0d0d;
@@ -145,6 +157,13 @@
   --foreground: #fafaf8;
   --nourish-green: #4a8c5c;
   --nourish-dark-green: #6ba87b;
+  /* Evidence-tier ramp (dark) — lifted fg + low-alpha bg for legibility. */
+  --tier-strong: #7fc899;
+  --tier-strong-bg: rgba(127, 200, 153, 0.16);
+  --tier-moderate: #e3b85a;
+  --tier-moderate-bg: rgba(227, 184, 90, 0.16);
+  --tier-limited: #9aa3af;
+  --tier-limited-bg: rgba(154, 163, 175, 0.16);
   --nourish-light-green: #2d5a3d;
   --nourish-gold: #e6c578;
   --nourish-warm: #e89968;

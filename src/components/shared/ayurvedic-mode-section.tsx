@@ -11,17 +11,17 @@ import {
   type EvidenceStrength,
 } from "@/data/ayurvedic-evidence";
 import { cn } from "@/lib/utils/cn";
+import {
+  EvidenceTierBadge,
+  strengthToTier,
+  TIER,
+} from "@/components/shared/evidence-tier";
 
-const STRENGTH: Record<EvidenceStrength, { label: string; cls: string }> = {
-  strong: {
-    label: "Good evidence",
-    cls: "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]",
-  },
-  moderate: { label: "Some evidence", cls: "bg-amber-100 text-amber-700" },
-  limited: {
-    label: "Limited evidence",
-    cls: "bg-neutral-100 text-neutral-500",
-  },
+// Phase 8 — labels only; colour comes from the shared tier ramp.
+const STRENGTH_LABEL: Record<EvidenceStrength, string> = {
+  strong: "Good evidence",
+  moderate: "Some evidence",
+  limited: "Limited evidence",
 };
 
 /**
@@ -102,18 +102,32 @@ export function AyurvedicModeSection() {
           </p>
           {/* W6 — the 3-tier evidence legend. */}
           <div className="flex flex-wrap gap-1.5 text-[10px] font-medium">
-            <span className="rounded-full bg-[var(--nourish-green)]/12 px-2 py-0.5 text-[var(--nourish-green)]">
+            <span
+              className="rounded-full px-2 py-0.5"
+              style={{ color: TIER.strong.fg, backgroundColor: TIER.strong.bg }}
+            >
               Good · consistent meta-analyses
             </span>
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-amber-700">
+            <span
+              className="rounded-full px-2 py-0.5"
+              style={{
+                color: TIER.moderate.fg,
+                backgroundColor: TIER.moderate.bg,
+              }}
+            >
               Some · mixed / dose-dependent
             </span>
-            <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-neutral-500">
+            <span
+              className="rounded-full px-2 py-0.5"
+              style={{
+                color: TIER.limited.fg,
+                backgroundColor: TIER.limited.bg,
+              }}
+            >
               Limited · early but real
             </span>
           </div>
           {AYURVEDIC_HERBS.map((h) => {
-            const s = STRENGTH[h.strength];
             const tie = herbConditionTieIn(h.id);
             const inter = herbInteractions(h);
             return (
@@ -130,14 +144,10 @@ export function AyurvedicModeSection() {
                       <span className="italic">({h.botanical})</span>
                     </span>
                   </span>
-                  <span
-                    className={cn(
-                      "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                      s.cls,
-                    )}
-                  >
-                    {s.label}
-                  </span>
+                  <EvidenceTierBadge
+                    tier={strengthToTier(h.strength)}
+                    label={STRENGTH_LABEL[h.strength]}
+                  />
                 </div>
                 <p className="mt-1 text-[11.5px] text-[var(--nourish-subtext)]">
                   {h.traditionalUse}

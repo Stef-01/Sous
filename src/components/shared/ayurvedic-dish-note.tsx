@@ -8,17 +8,17 @@ import {
   type EvidenceStrength,
 } from "@/data/ayurvedic-evidence";
 import { cn } from "@/lib/utils/cn";
+import {
+  EvidenceTierBadge,
+  strengthToTier,
+} from "@/components/shared/evidence-tier";
 
-const STRENGTH: Record<EvidenceStrength, { label: string; cls: string }> = {
-  strong: {
-    label: "Good evidence",
-    cls: "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]",
-  },
-  moderate: { label: "Some evidence", cls: "bg-amber-100 text-amber-700" },
-  limited: {
-    label: "Limited evidence",
-    cls: "bg-neutral-100 text-neutral-500",
-  },
+// Phase 8 — labels only; colour comes from the shared tier ramp (no bespoke
+// strength colours), so herb strength reads in the same grammar as evidence grades.
+const STRENGTH_LABEL: Record<EvidenceStrength, string> = {
+  strong: "Good evidence",
+  moderate: "Some evidence",
+  limited: "Limited evidence",
 };
 
 /**
@@ -47,7 +47,6 @@ export function AyurvedicDishNote({
       <ul className="mt-2 space-y-1">
         {herbs.map((h) => {
           const open = openId === h.id;
-          const s = STRENGTH[h.strength];
           return (
             <li key={h.id}>
               <button
@@ -63,14 +62,10 @@ export function AyurvedicDishNote({
                     {h.ayurvedicName}
                   </span>
                 </span>
-                <span
-                  className={cn(
-                    "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                    s.cls,
-                  )}
-                >
-                  {s.label}
-                </span>
+                <EvidenceTierBadge
+                  tier={strengthToTier(h.strength)}
+                  label={STRENGTH_LABEL[h.strength]}
+                />
                 <ChevronDown
                   size={14}
                   className={cn(

@@ -49,6 +49,10 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { SousReadCard } from "@/components/shared/sous-read-card";
 import { HonestyChip } from "@/components/shared/honesty-chip";
+import {
+  EvidenceTierBadge,
+  gradeToTier,
+} from "@/components/shared/evidence-tier";
 
 export interface MealHealthPanelProps {
   dishName: string;
@@ -346,23 +350,19 @@ function EvidenceRowItem({
     const grams = gramsForSignal(sig, composition);
     return grams >= 1 ? `${sig} ~${Math.round(grams)}g` : sig;
   };
-  const strongGrade = row.grade === "high" || row.grade === "moderate";
   return (
     <li className="py-4 first:pt-0 last:pb-0">
       <div className="flex items-start justify-between gap-3">
         <h4 className="text-[14.5px] font-semibold leading-snug text-[var(--nourish-dark)]">
           {row.label}
         </h4>
-        <span
-          className={cn(
-            "mt-0.5 shrink-0 rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide",
-            strongGrade
-              ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
-              : "bg-amber-100 text-amber-700",
-          )}
-        >
-          {row.gradeLabel}
-        </span>
+        {/* Phase 8 — one quality grammar; moderate now reads as its own amber
+            tier, not green (R6 honesty correction). */}
+        <EvidenceTierBadge
+          tier={gradeToTier(row.grade)}
+          label={row.gradeLabel}
+          className="mt-0.5"
+        />
       </div>
       <p className="sous-label mt-0.5">{row.classLabel}</p>
 
