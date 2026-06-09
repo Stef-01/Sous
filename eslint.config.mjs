@@ -63,6 +63,9 @@ const eslintConfig = defineConfig([
     // Standalone utility scripts (CommonJS, not part of the app)
     "grants/**",
     "scripts/**",
+    // Auto-generated data (carries its own blanket eslint-disable, which lint
+    // then flags as "unused" when the generated output is clean — flaky gate).
+    "src/data/guided-cook-summary.ts",
   ]),
 ]);
 
