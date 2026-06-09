@@ -39,6 +39,7 @@ import {
   ConfettiLayer,
   SparkleBurst,
 } from "@/components/guided-cook/win-celebration-effects";
+import { cuisineAccent } from "@/components/today/dish-image";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -389,13 +390,20 @@ export function WinScreen({
 
   return (
     <div className="relative">
-      {/* Confetti burst  -  fixed overlay, auto-hides */}
-      <AnimatePresence>{showConfetti && <ConfettiLayer />}</AnimatePresence>
+      {/* Confetti burst  -  fixed overlay, auto-hides. W22b: both layers take
+          the dish's cuisine accent so the celebration feels like THIS dish. */}
+      <AnimatePresence>
+        {showConfetti && (
+          <ConfettiLayer accent={cuisineAccent(cuisineFamily)} />
+        )}
+      </AnimatePresence>
       {/* W22b: spring-physics sparkle burst from center, additive to
           the falling confetti above. Sharper "earned" moment. Skipped
           under prefers-reduced-motion. */}
       <AnimatePresence>
-        {showConfetti && !prefersReducedMotion && <SparkleBurst />}
+        {showConfetti && !prefersReducedMotion && (
+          <SparkleBurst accent={cuisineAccent(cuisineFamily)} />
+        )}
       </AnimatePresence>
 
       <motion.div

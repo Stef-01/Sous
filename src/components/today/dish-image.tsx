@@ -23,26 +23,35 @@ import { recipeCreditShort } from "@/lib/utils/recipe-credit";
  */
 
 /** Cuisine-specific gradient backgrounds for cards without images. */
+const CUISINE_GRADIENTS: Record<string, string> = {
+  japanese: "linear-gradient(135deg, #c0392b 0%, #e74c3c 30%, #f39c12 100%)",
+  korean: "linear-gradient(135deg, #d63031 0%, #e17055 40%, #fdcb6e 100%)",
+  thai: "linear-gradient(135deg, #00b894 0%, #55efc4 40%, #ffeaa7 100%)",
+  chinese: "linear-gradient(135deg, #d63031 0%, #e74c3c 35%, #f9ca24 100%)",
+  vietnamese: "linear-gradient(135deg, #27ae60 0%, #2ecc71 40%, #f1c40f 100%)",
+  filipino: "linear-gradient(135deg, #e17055 0%, #fab1a0 40%, #ffeaa7 100%)",
+  indian: "linear-gradient(135deg, #e67e22 0%, #f39c12 35%, #f1c40f 100%)",
+  italian: "linear-gradient(135deg, #27ae60 0%, #f1f1f1 50%, #e74c3c 100%)",
+  mexican: "linear-gradient(135deg, #00b894 0%, #f1f1f1 50%, #d63031 100%)",
+  mediterranean:
+    "linear-gradient(135deg, #0984e3 0%, #74b9ff 40%, #ffeaa7 100%)",
+};
+
 function getCuisineGradient(cuisine: string): string {
-  const c = cuisine.toLowerCase();
-  const gradients: Record<string, string> = {
-    japanese: "linear-gradient(135deg, #c0392b 0%, #e74c3c 30%, #f39c12 100%)",
-    korean: "linear-gradient(135deg, #d63031 0%, #e17055 40%, #fdcb6e 100%)",
-    thai: "linear-gradient(135deg, #00b894 0%, #55efc4 40%, #ffeaa7 100%)",
-    chinese: "linear-gradient(135deg, #d63031 0%, #e74c3c 35%, #f9ca24 100%)",
-    vietnamese:
-      "linear-gradient(135deg, #27ae60 0%, #2ecc71 40%, #f1c40f 100%)",
-    filipino: "linear-gradient(135deg, #e17055 0%, #fab1a0 40%, #ffeaa7 100%)",
-    indian: "linear-gradient(135deg, #e67e22 0%, #f39c12 35%, #f1c40f 100%)",
-    italian: "linear-gradient(135deg, #27ae60 0%, #f1f1f1 50%, #e74c3c 100%)",
-    mexican: "linear-gradient(135deg, #00b894 0%, #f1f1f1 50%, #d63031 100%)",
-    mediterranean:
-      "linear-gradient(135deg, #0984e3 0%, #74b9ff 40%, #ffeaa7 100%)",
-  };
   return (
-    gradients[c] ??
+    CUISINE_GRADIENTS[cuisine.toLowerCase()] ??
     "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)"
   );
+}
+
+/** W22b — the dish's dominant accent (the first gradient stop) for tinting
+ *  celebration moments. Null when the cuisine has no mapped palette. */
+export function cuisineAccent(
+  cuisine: string | null | undefined,
+): string | null {
+  if (!cuisine) return null;
+  const g = CUISINE_GRADIENTS[cuisine.toLowerCase()];
+  return g?.match(/#[0-9a-fA-F]{6}/)?.[0] ?? null;
 }
 
 const CUISINE_ICON_MAP: Record<string, LucideIcon> = {

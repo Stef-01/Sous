@@ -54,12 +54,19 @@ function generateConfetti(): ConfettiParticle[] {
   });
 }
 
-export function ConfettiLayer() {
+export function ConfettiLayer({ accent }: { accent?: string | null }) {
   const reducedMotion = useReducedMotion();
   const [particles] = useState(generateConfetti);
   // Celebratory motion → skip entirely for reduced-motion users (the win
   // headline + chips still convey the moment). Normal users are unaffected.
   if (reducedMotion) return null;
+  // W22b — the celebration respects the dish's accent: two palette slots take
+  // the cuisine colour so the rain reads dish-tinted, brand anchors kept.
+  const tint = (c: string, i: number) =>
+    accent &&
+    (i % CONFETTI_COLORS.length === 2 || i % CONFETTI_COLORS.length === 5)
+      ? accent
+      : c;
 
   return (
     <div
@@ -92,7 +99,7 @@ export function ConfettiLayer() {
             position: "absolute",
             width: p.size,
             height: p.isSquare ? p.size * 0.5 : p.size,
-            backgroundColor: p.color,
+            backgroundColor: tint(p.color, p.id),
             borderRadius: p.isCircle ? "50%" : 2,
           }}
         />
@@ -109,7 +116,7 @@ export function ConfettiLayer() {
  * background party. Pointer-events disabled. Respects reduced-motion
  * via Framer's useReducedMotion default.
  */
-export function SparkleBurst() {
+export function SparkleBurst({ accent }: { accent?: string | null }) {
   // Stable per-mount sparkle layout. Math.random() is impure under
   // the repo's react-compiler rule; useState lazy-init runs the
   // generator exactly once and never re-runs on re-render.
@@ -123,10 +130,12 @@ export function SparkleBurst() {
         x: Math.cos(angle) * distance,
         y: Math.sin(angle) * distance,
         delay: i * 0.022,
-        color: i % 2 === 0 ? "#FFFFFF" : "#FFD466", // white + warm gold
+        even: i % 2 === 0,
       };
     }),
   );
+  // W22b — white + the dish's accent (warm gold when no cuisine palette).
+  const altColor = accent ?? "#FFD466";
   // Already gated at the win-screen call site too; self-gating keeps the
   // reduced-motion contract with the component regardless of caller.
   if (reducedMotion) return null;
@@ -155,8 +164,8 @@ export function SparkleBurst() {
           style={{
             width: 8,
             height: 8,
-            background: s.color,
-            boxShadow: `0 0 12px ${s.color}aa`,
+            background: s.even ? "#FFFFFF" : altColor,
+            boxShadow: `0 0 12px ${s.even ? "#FFFFFF" : altColor}aa`,
           }}
         />
       ))}
