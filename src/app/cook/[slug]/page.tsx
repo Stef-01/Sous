@@ -42,6 +42,7 @@ import { WinScreen } from "@/components/guided-cook/win-screen";
 import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
@@ -314,6 +315,18 @@ export default function GuidedCookPage({
           ingredients: staticData?.ingredients?.map((i) => i.name),
         }),
       });
+      // Auto-log the finished cook into the nutrition diary (founder-directed,
+      // 2026-06-09) — the win screen shows a quiet "logged" line with undo.
+      // Carries the serving slider's batch size (same recipe-link base the
+      // render uses), consistent with the manual Log-it button. Runs once per
+      // completion (event handler, double-tap guarded above).
+      const loggedServings =
+        servingsOverride ??
+        getRecipeLink(slug)?.servingsPerRecipe ??
+        FALLBACK_SERVINGS;
+      diaryLogCook(slug, staticData?.name ?? slug, loggedServings, {
+        auto: true,
+      });
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -332,6 +345,7 @@ export default function GuidedCookPage({
     awardXP,
     cuisine,
     recordPreferenceSignal,
+    servingsOverride,
   ]);
 
   const handleToggleChip = useCallback(

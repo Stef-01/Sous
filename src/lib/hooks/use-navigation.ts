@@ -1,18 +1,18 @@
 import { useMemo } from "react";
 
 type Tab = {
-  id: "today" | "path" | "community";
+  id: "today" | "path" | "nutrition" | "community";
   label: string;
   href: string;
   visible: boolean;
 };
 
 /**
- * Tab navigation  -  Today, Path, Content are always visible.
- * The third tab is a Flo-style content magazine (reels, articles,
- * research, expert voices), NOT a social graph — so the label is
- * "Content" (CLAUDE.md rule 5/11). The route id stays `community`
- * for URL/back-compat; only the user-facing label is "Content".
+ * Tab navigation  -  Today, Path, Nutrition, Content — always visible.
+ * Nutrition (founder-directed, 2026-06-09) is the diary + insights home,
+ * placed left of Content. The Content tab is a Flo-style magazine, NOT a
+ * social graph — the route id stays `community` for URL/back-compat; only
+ * the user-facing label is "Content".
  *
  * The `pathUnlocked` / `communityUnlocked` props are retained
  * for call-site backwards compatibility but no longer gate
@@ -29,6 +29,12 @@ export function useNavigation(
     const tabs: Tab[] = [
       { id: "today", label: "Today", href: "/today", visible: true },
       { id: "path", label: "Path", href: "/path", visible: true },
+      {
+        id: "nutrition",
+        label: "Nutrition",
+        href: "/nutrition",
+        visible: true,
+      },
       {
         id: "community",
         label: "Content",

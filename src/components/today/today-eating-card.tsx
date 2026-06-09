@@ -18,7 +18,7 @@ export function TodayEatingCard() {
 
   return (
     <Link
-      href="/path/diary"
+      href="/nutrition"
       aria-label="Open today's diary"
       className="block rounded-2xl border border-[var(--nourish-border)] bg-white/70 p-4 transition-colors hover:bg-white"
     >

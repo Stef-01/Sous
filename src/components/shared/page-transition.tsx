@@ -26,7 +26,8 @@ import { useEffect, useState, type ReactNode } from "react";
 const TAB_ORDER: Record<string, number> = {
   "/today": 0,
   "/path": 1,
-  "/community": 2,
+  "/nutrition": 2,
+  "/community": 3,
 };
 
 function tabOrderFor(pathname: string): number | null {

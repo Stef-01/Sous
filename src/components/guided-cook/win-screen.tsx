@@ -26,8 +26,10 @@ import {
   PartyPopper,
   Award,
   Send,
+  NotebookText,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
 import { trpc } from "@/lib/trpc/client";
 import { logShare } from "@/lib/hooks/use-share-log";
 import { useInvitePrompts } from "@/lib/hooks/use-invite-prompts";
@@ -439,6 +441,9 @@ export function WinScreen({
           {/* Eco Mode savings line — renders only when Eco Mode is
               on AND savings are positive. (Y5 D, audit P0 #2.) */}
           <WinEcoSavingsLine />
+          {/* Auto-logged confirmation — the cook just landed in the nutrition
+              diary; one quiet line with undo (founder-directed, 2026-06-09). */}
+          <AutoLoggedLine slug={dishSlug} />
         </motion.div>
 
         {/* ── Streak + skill chips ── */}
@@ -1025,5 +1030,37 @@ export function WinScreen({
         </div>
       </motion.div>
     </div>
+  );
+}
+
+/**
+ * AutoLoggedLine — quiet confirmation that the finished cook auto-logged into
+ * the nutrition diary (founder-directed, 2026-06-09), with a one-tap undo.
+ * Reads the SHARED diary store, so undoing here updates every surface
+ * (Nutrition tab ring, Today's plate card) instantly; the line removes itself
+ * when the entry is gone.
+ */
+function AutoLoggedLine({ slug }: { slug?: string }) {
+  const { entries, removeEntry } = useNutritionDiary();
+  if (!slug) return null;
+  const entry = [...entries].reverse().find((e) => e.slug === slug && e.auto);
+  if (!entry) return null;
+  return (
+    <p className="inline-flex items-center gap-2 text-[12px] text-[var(--nourish-subtext)]">
+      <NotebookText
+        size={13}
+        className="text-[var(--tier-strong)]"
+        aria-hidden
+      />
+      Logged to your diary
+      {entry.servings !== 1 && <span>×{entry.servings}</span>}
+      <button
+        type="button"
+        onClick={() => removeEntry(entry.at)}
+        className="font-semibold text-[var(--nourish-subtext)] underline underline-offset-2 transition-colors hover:text-[var(--nourish-dark)]"
+      >
+        Undo
+      </button>
+    </p>
   );
 }

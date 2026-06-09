@@ -33,6 +33,7 @@ import { TimerStack } from "@/components/guided-cook/timer-stack";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { toast } from "@/lib/hooks/use-toast";
@@ -389,6 +390,10 @@ function CombinedCookContent() {
               ingredients: od.ingredients.map((i) => i.name),
             }),
           });
+          // Auto-log each finished dish into the nutrition diary
+          // (founder-directed, 2026-06-09). One serving per dish — the
+          // combined cook has no per-dish serving slider.
+          diaryLogCook(od.dish.slug, od.dish.name, 1, { auto: true });
         }
         completeCookPhase();
       }

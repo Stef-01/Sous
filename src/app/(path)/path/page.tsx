@@ -12,17 +12,14 @@ import {
   Bookmark,
   ChefHat,
   ChevronDown,
+  Flame,
   Heart,
   Leaf,
-  NotebookText,
   ShoppingCart,
   Sparkles,
   Users,
 } from "lucide-react";
 import { PathHeader } from "@/components/path/path-header";
-import { HydrationCard } from "@/components/path/hydration-card";
-import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
-import { BrandedFoodSearch } from "@/components/path/branded-food-search";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
@@ -95,6 +92,10 @@ export default function PathPage() {
   // "Your kitchen" toolset is collapsed by default — keeps Path's default view
   // condensed; the tools are one tap away.
   const [kitchenOpen, setKitchenOpen] = useState(false);
+  // Progression (Up-next + skill tree + journey + badges) lives in a
+  // collapsible at the BOTTOM (founder-directed, 2026-06-09) — Path leads with
+  // the everyday kitchen utilities; the journey is one tap away.
+  const [progressionOpen, setProgressionOpen] = useState(false);
 
   const achievementsRef = useRef<AchievementsLauncherHandle>(null);
   const openBadges = useCallback(() => {
@@ -188,102 +189,41 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Phase 7 — a slim "Up next" action banner naming the active skill +
-            carrying the live streak. It SHARES handleNodeTap with the tree (one
-            source of truth) — a thin action row, not a duplicate node card. */}
-        <UpNextBanner
-          node={pickUpNextNode(nodesWithStatus)}
-          streak={stats.currentStreak}
-          onTap={handleNodeTap}
-        />
-
-        {/* Skill tree is the single hero — the signature journey map leads the
-            page. Tapping the banner above or the active node opens the same
-            SkillDetailSheet. */}
-        <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
-
-        {/* Path = the longer arc (journey). "Today's plate" now lives on Today
-            (TodayEatingCard) — the canonical daily surface — so it isn't
-            duplicated here; the editable full day stays at /path/diary. Phase 4. */}
-        <div className="mx-auto max-w-md page-x space-y-3 pt-4">
-          <HydrationCard />
-          <WeeklyTrendCard />
-          <BrandedFoodSearch />
-        </div>
-
-        {/* Looking back: lifetime stats + this week's goal. Demoted below the
-            hero so the dashboard never crowds the top, and merged into ONE
-            grouped card (iOS-style, hairline divider between rows) so the
-            section reads as a single surface instead of two floating cards. */}
-        <motion.div
-          className="mx-auto max-w-md page-x pt-4"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2, margin: "0px 0px -40px 0px" }}
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.08 } },
-          }}
-        >
-          <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-100 bg-white">
-            <motion.div
-              className="p-5"
-              variants={{
-                hidden: { opacity: 0, y: 14 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { type: "spring", stiffness: 320, damping: 28 },
-                },
-              }}
-            >
-              <JourneySummary
-                bare
-                stats={stats}
-                recentSessions={completedSessions}
-                // Phase 7 — the Up-next banner is the single live streak readout
-                // when present, so don't double-print it here (Rule 13).
-                showStreak={
-                  !(
-                    stats.currentStreak >= 1 &&
-                    pickUpNextNode(nodesWithStatus) != null
-                  )
-                }
-              />
-            </motion.div>
-            <motion.div
-              className="p-4"
-              variants={{
-                hidden: { opacity: 0, y: 14 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: { type: "spring", stiffness: 320, damping: 28 },
-                },
-              }}
-            >
-              <WeeklyGoalCard bare completedSessions={completedSessions} />
-            </motion.div>
+        {/* Kitchen utilities FIRST (founder-directed, 2026-06-09): Pantry +
+            Shopping list are the everyday tools — promoted to the top. */}
+        <div className="mx-auto max-w-md page-x pt-4">
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { href: "/path/pantry", icon: Bookmark, label: "Pantry" },
+              {
+                href: "/path/shopping-list",
+                icon: ShoppingCart,
+                label: "Shopping list",
+              },
+            ].map(({ href, icon: Icon, label }) => (
+              <motion.div
+                key={href}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              >
+                <Link
+                  href={href}
+                  className="flex min-h-[64px] w-full items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white text-sm font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                >
+                  <Icon size={18} className="text-[var(--nourish-green)]" />
+                  {label}
+                </Link>
+              </motion.div>
+            ))}
           </div>
-        </motion.div>
 
-        {(unlockedAchievements.length > 0 || lockedAchievements.length > 0) && (
-          <AchievementsLauncher
-            unlocked={unlockedAchievements}
-            locked={lockedAchievements}
-            openRef={achievementsRef}
-          />
-        )}
-
-        {/* Quick links at bottom (above tab bar). Section kicker uses
-            the same uppercase tracking pattern as the rest of Path
-            home and the Content tab — visual rhythm consistency. */}
-        <div className="mx-auto max-w-md page-x pb-24 pt-4">
+          {/* The rest of the kitchen — one tap away. (Diary became the
+              Nutrition tab; Pantry + Shopping list moved up.) */}
           <button
             type="button"
             onClick={() => setKitchenOpen((o) => !o)}
             aria-expanded={kitchenOpen}
-            className="flex min-h-[44px] w-full items-center justify-between rounded-xl px-1 text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="mt-3 flex min-h-[44px] w-full items-center justify-between rounded-xl px-1 text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <SectionKicker>Your kitchen</SectionKicker>
             <motion.span
@@ -305,21 +245,6 @@ export default function PathPage() {
               >
                 <div className="grid grid-cols-3 gap-2 pt-2">
                   {[
-                    {
-                      href: "/path/diary",
-                      icon: NotebookText,
-                      label: "Diary",
-                    },
-                    {
-                      href: "/path/pantry",
-                      icon: Bookmark,
-                      label: "Pantry",
-                    },
-                    {
-                      href: "/path/shopping-list",
-                      icon: ShoppingCart,
-                      label: "Shopping list",
-                    },
                     {
                       href: "/path/favorites",
                       icon: Heart,
@@ -364,6 +289,87 @@ export default function PathPage() {
                       </Link>
                     </motion.div>
                   ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Progression — collapsible, at the bottom (founder-directed,
+            2026-06-09). The header row keeps the ambient momentum signals
+            (streak flame) visible even while collapsed; expanding reveals the
+            Up-next banner, the skill tree, the journey summary + weekly goal,
+            and the badges launcher. */}
+        <div className="mx-auto max-w-md page-x pb-24 pt-6">
+          <button
+            type="button"
+            onClick={() => setProgressionOpen((o) => !o)}
+            aria-expanded={progressionOpen}
+            className="flex min-h-[44px] w-full items-center justify-between rounded-xl px-1 text-left transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          >
+            <SectionKicker>Progression</SectionKicker>
+            <span className="flex items-center gap-2">
+              {stats.currentStreak >= 1 && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--nourish-warm)]">
+                  <Flame size={11} />
+                  {stats.currentStreak}-day
+                </span>
+              )}
+              <motion.span
+                animate={{ rotate: progressionOpen ? 180 : 0 }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[var(--nourish-subtext)]"
+              >
+                <ChevronDown size={18} />
+              </motion.span>
+            </span>
+          </button>
+          <AnimatePresence initial={false}>
+            {progressionOpen && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-4 pt-3">
+                  {/* Phase 7 banner — the section header above now carries the
+                      streak (single print, Rule 13), so the banner doesn't. */}
+                  <UpNextBanner
+                    node={pickUpNextNode(nodesWithStatus)}
+                    streak={0}
+                    onTap={handleNodeTap}
+                  />
+                  <SkillTree
+                    nodes={nodesWithStatus}
+                    onNodeTap={handleNodeTap}
+                  />
+                  <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-100 bg-white">
+                    <div className="p-5">
+                      <JourneySummary
+                        bare
+                        stats={stats}
+                        recentSessions={completedSessions}
+                        // The section header carries the live streak readout.
+                        showStreak={stats.currentStreak < 1}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <WeeklyGoalCard
+                        bare
+                        completedSessions={completedSessions}
+                      />
+                    </div>
+                  </div>
+                  {(unlockedAchievements.length > 0 ||
+                    lockedAchievements.length > 0) && (
+                    <AchievementsLauncher
+                      unlocked={unlockedAchievements}
+                      locked={lockedAchievements}
+                      openRef={achievementsRef}
+                    />
+                  )}
                 </div>
               </motion.div>
             )}

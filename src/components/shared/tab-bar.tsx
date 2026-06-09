@@ -99,7 +99,7 @@ function TabIcon({
   id,
   active,
 }: {
-  id: "today" | "path" | "community";
+  id: "today" | "path" | "nutrition" | "community";
   active: boolean;
 }) {
   const strokeColor = active
@@ -143,6 +143,25 @@ function TabIcon({
           <path d="M18 20V10" />
           <path d="M12 20V4" />
           <path d="M6 20v-6" />
+        </svg>
+      );
+    case "nutrition":
+      // Apple glyph — the universal "nutrition" signal.
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path d="M12 8c0-2.5 2-4.5 4.5-4.5C19 3.5 21 5.5 21 8.5c0 5-4 10-9 12.5C7 18.5 3 13.5 3 8.5 3 5.5 5 3.5 7.5 3.5 10 3.5 12 5.5 12 8z" />
+          <path d="M12 7c0-2 1-3.5 2.5-4.5" />
         </svg>
       );
     case "community":

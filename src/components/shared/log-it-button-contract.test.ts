@@ -73,22 +73,37 @@ describe("CookNutritionReadout — routes through the canonical button carrying 
   });
 });
 
-describe("celebration effect — fires at the tap, deduped, never on mount (Phase 3 / R4)", () => {
+describe("celebration — fires at the tap inside the log ACTIONS, deduped, never on mount (Phase 3 / R4, store refactor)", () => {
   const src = read(DIARY_HOOK);
 
-  it("milestonesForLog is exported and pure (used by the effect)", () => {
+  it("milestonesForLog is exported and pure (used by the celebrate step)", () => {
     expect(src).toMatch(/export function milestonesForLog\(/);
   });
 
-  it("the celebrate effect is gated on justLoggedRef and clears it before dispatch", () => {
-    expect(src).toMatch(/if\s*\(!justLoggedRef\.current\)\s*return;/);
-    expect(src).toMatch(/justLoggedRef\.current\s*=\s*false;/);
+  it("celebrate() runs inside BOTH log actions (event-scoped — no mount path)", () => {
+    // The store refactor moved celebration from a justLoggedRef-gated effect
+    // into the module actions themselves: actions run once per user event, so
+    // there is no StrictMode double-fire and no mount/hydrate path at all.
+    expect((src.match(/celebrate\(next\);/g) ?? []).length).toBe(2);
+    expect(src).toMatch(
+      /export function diaryLogCook\([\s\S]*?celebrate\(next\);[\s\S]*?\n\}/,
+    );
+    expect(src).toMatch(
+      /export function diaryLogBranded\([\s\S]*?celebrate\(next\);[\s\S]*?\n\}/,
+    );
   });
 
-  it("both logCook and logBranded arm the justLogged flag (remove/restore do NOT)", () => {
-    const setTrue = (src.match(/justLoggedRef\.current\s*=\s*true;/g) ?? [])
-      .length;
-    expect(setTrue).toBe(2);
+  it("remove/restore do NOT celebrate", () => {
+    const removeBody = src.slice(
+      src.indexOf("export function diaryRemoveEntry"),
+      src.indexOf("export function diaryRestoreEntry"),
+    );
+    const restoreBody = src.slice(
+      src.indexOf("export function diaryRestoreEntry"),
+      src.indexOf("export function diaryTodayEntries"),
+    );
+    expect(removeBody).not.toContain("celebrate(");
+    expect(restoreBody).not.toContain("celebrate(");
   });
 
   it("localStorage is the single once-only dedup source (sous-celebrated-<id>)", () => {
@@ -97,11 +112,9 @@ describe("celebration effect — fires at the tap, deduped, never on mount (Phas
     expect(src).toMatch(/localStorage\.setItem\(seenKey,\s*"1"\)/);
   });
 
-  it("the side effect lives in a useEffect keyed on the committed store, not inside setStore", () => {
-    const effectIdx = src.indexOf("for (const m of milestonesForLog(store");
-    const logCookIdx = src.indexOf("const logCook = useCallback");
-    expect(effectIdx).toBeGreaterThan(-1);
-    expect(effectIdx).toBeLessThan(logCookIdx);
+  it("the diary is ONE shared reactive store (useSyncExternalStore, shared snapshot)", () => {
+    expect(src).toMatch(/useSyncExternalStore\(subscribe, getSnapshot/);
+    expect(src).toMatch(/listeners\.forEach\(\(l\)\s*=>\s*l\(\)\)/);
   });
 
   it("celebration toasts are the 'achievement' variant", () => {
@@ -109,15 +122,15 @@ describe("celebration effect — fires at the tap, deduped, never on mount (Phas
   });
 });
 
-describe("diary page — the duplicate page-visit celebration is gone (hook owns it)", () => {
+describe("diary page — superseded by the Nutrition tab (founder-directed)", () => {
   const src = read(DIARY_PAGE);
 
-  it("no longer imports or calls the milestone/streak celebration", () => {
-    expect(src).not.toMatch(/streakMilestone|firstMilestone|milestonesForLog/);
-    expect(src).not.toContain("sous-celebrated");
+  it("is a redirect to /nutrition (old deep links keep working)", () => {
+    expect(src).toMatch(/redirect\("\/nutrition"\)/);
   });
 
-  it("documents that the celebration moved to the tap (regression breadcrumb)", () => {
-    expect(src).toMatch(/fires at the moment of the tap/i);
+  it("carries no celebration logic of its own", () => {
+    expect(src).not.toMatch(/streakMilestone|firstMilestone|milestonesForLog/);
+    expect(src).not.toContain("sous-celebrated");
   });
 });
