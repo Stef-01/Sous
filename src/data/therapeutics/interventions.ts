@@ -171,6 +171,11 @@ export const INTERVENTIONS: InterventionRecord[] = [
       "vegetables",
       "whole grains",
     ],
+    // RCA fix: Mediterranean is a PATTERN, not a single ingredient — require
+    // olive oil (its defining fat) + ≥1 more component, so olive-oil-cooked steak
+    // / sushi / Pad Thai no longer read as "Mediterranean".
+    keystoneSignal: "olive oil",
+    minSignals: 2,
     prepImplication:
       "Whole-food cooking; reduce ultra-processed foods and sugary drinks.",
     applicationNote:
@@ -354,6 +359,9 @@ export const INTERVENTIONS: InterventionRecord[] = [
       "fish",
       "whole grains",
     ],
+    // RCA fix: pattern, not a single ingredient (see masld-mediterranean).
+    keystoneSignal: "olive oil",
+    minSignals: 2,
     prepImplication:
       "Individualize fiber amount and texture during active symptoms.",
     applicationNote:
@@ -394,6 +402,9 @@ export const INTERVENTIONS: InterventionRecord[] = [
       "olive oil",
       "whole grains",
     ],
+    // RCA fix: "Mediterranean baseline" is a pattern (see masld-mediterranean).
+    keystoneSignal: "olive oil",
+    minSignals: 2,
     prepImplication: "Manage texture and deficiency risk with your care team.",
     applicationNote:
       "Use for background dietary quality, symptom-aware texture, and deficiency awareness — framed as supportive, not a remission strategy.",

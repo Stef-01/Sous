@@ -17,16 +17,20 @@ describe("structural bridge (food identity beats spelling)", () => {
   const noSignalName = "Grandma's Tuesday Bowl";
 
   it("matches a legume intervention via resolved food group, not the name", () => {
+    // high-ldl (portfolio) treats legumes as single-ingredient evidence. masld's
+    // only legume-bearing record is the Mediterranean PATTERN, which now (RCA
+    // fix) requires its olive-oil keystone + ≥2 components, so legume-alone
+    // correctly no longer fires it.
     const withProfile = matchInterventionsForDish(
       { name: noSignalName, tags: [], resolvedGroups: ["legume"] },
-      ["masld"],
+      ["high-ldl"],
     );
     expect(withProfile.length).toBeGreaterThan(0);
 
     // Same dish WITHOUT the resolved profile → substring finds nothing.
     const withoutProfile = matchInterventionsForDish(
       { name: noSignalName, tags: [] },
-      ["masld"],
+      ["high-ldl"],
     );
     expect(withoutProfile.length).toBe(0);
   });
@@ -40,11 +44,12 @@ describe("structural bridge (food identity beats spelling)", () => {
   });
 
   it("lifts the fit score through the bridge", () => {
-    const plain = scoreTherapeuticFit(care(["masld"]), {
+    // high-ldl: legumes are single-ingredient portfolio evidence (no pattern gate).
+    const plain = scoreTherapeuticFit(care(["high-ldl"]), {
       name: noSignalName,
       tags: [],
     });
-    const bridged = scoreTherapeuticFit(care(["masld"]), {
+    const bridged = scoreTherapeuticFit(care(["high-ldl"]), {
       name: noSignalName,
       tags: [],
       resolvedGroups: ["legume"],

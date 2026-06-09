@@ -156,9 +156,17 @@ function matchedSignalsFor(
 ): string[] {
   if (!POSITIVE_DIRECTIONS.has(rec.direction)) return [];
   const haystack = dishHaystack(dish);
-  return rec.recipeSignals.filter(
+  const matched = rec.recipeSignals.filter(
     (sig) => haystack.includes(sig.toLowerCase()) || structuralMatch(sig, dish),
   );
+  // Pattern gate (RCA fix): a whole DIETARY PATTERN must not fire on a single
+  // shared ingredient. Require the keystone component (e.g. olive oil — the
+  // defining Mediterranean fat that Thai/Japanese/Indian dishes don't use) AND a
+  // minimum number of distinct components, so Pad Thai / sushi / steak-in-olive-
+  // oil no longer read as "Mediterranean". Default (no gate) = single-ingredient.
+  if (rec.keystoneSignal && !matched.includes(rec.keystoneSignal)) return [];
+  if (matched.length < (rec.minSignals ?? 1)) return [];
+  return matched;
 }
 
 /**

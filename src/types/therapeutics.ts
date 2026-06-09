@@ -97,6 +97,13 @@ export interface InterventionRecord {
   /** Catalog tags / ingredient terms that realize this intervention in a
    *  recipe. Matched against a dish's tags/name/description (CT-3). */
   recipeSignals: string[];
+  /** Pattern gate (RCA fix): a whole DIETARY PATTERN (e.g. Mediterranean) must
+   *  not fire on a single shared ingredient. `minSignals` requires at least N
+   *  distinct components to co-occur (default 1 = single-ingredient evidence).
+   *  `keystoneSignal` requires a defining component to be present (e.g. olive
+   *  oil for Mediterranean — the fat Thai/Japanese/Indian dishes don't use). */
+  minSignals?: number;
+  keystoneSignal?: string;
   /** True for time-limited / phased protocols (e.g. low-FODMAP elimination →
    *  reintroduction). The engine must never present these as permanent diets. */
   phased?: boolean;
