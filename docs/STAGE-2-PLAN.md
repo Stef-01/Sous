@@ -2,7 +2,7 @@
 
 > **Status:** PLANNED. Entered after Stage 1 prototype is complete.
 > **Updated:** 2026-05-01
-> **Related docs:** `ROADMAP.md` (stage summary), `STRATEGY.md` (moats + decision log), `CLAUDE.md` + `claude.md` (conventions), `PRD.md` (product vision), `docs/NEXT-20-PHASES.md` … `NEXT-20D-PHASES.md` (Stage 0.5–0.9 sprint history).
+> **Related docs:** `ROADMAP.md` (stage summary), `STRATEGY.md` (moats + decision log), `CLAUDE.md` + `claude.md` (conventions), `PRD.md` (product vision), `docs/archive/NEXT-20-PHASES.md` … `NEXT-20D-PHASES.md` (Stage 0.5–0.9 sprint history).
 
 ---
 

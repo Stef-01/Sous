@@ -1,5 +1,7 @@
 # Sous UI Overhaul — Sequenced Execution Plan
 
+> **✅ EXECUTED IN FULL — all 10 phases shipped 2026-06-08/09** (commits `616b652`…`297852a`), plus the post-ship appraisal (3 rounds × 5 phases, zero bugs) and the 847-commit feature-loss review (`e5246f6`). Kept for the design rationale + binding revisions R1–R7.
+
 > Built by a 7-agent workflow (4 code-grounded designers → sequence → synthesize →
 > adversarial review) and then **revised** to close the honesty/correctness gaps the
 > review found. The corrections below are **binding** — they override anything later

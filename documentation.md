@@ -1,5 +1,7 @@
 # Sous — System Documentation
 
+> **⚠️ STALE SNAPSHOT (last updated 2026-04-06).** Describes the system as of early April 2026 — hundreds of commits behind. Where this conflicts with the code, `CLAUDE.md`, or `ROADMAP.md`, trust those. Kept because its architectural orientation is still broadly correct.
+
 > **Audience:** Developers and AI agents. **Purpose:** Describe how everything that's been built works, where code lives, and what state each system is in. For forward planning, see **`planning.md`**. For pairing data pipeline, see **`PIPELINE.md`**.
 
 ---

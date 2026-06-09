@@ -1,7 +1,7 @@
 # Sous — Prototype Roadmap
 
 > **Updated:** 2026-05-01
-> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/CONTENT-VISUAL-PHASE.md`** (W19b screenshots-vs-competitors audit + V2 redesign week), **`docs/QUICK-WINS-PUNCHLIST.md`** (4-item non-functional-buttons list, slotted into W11/W18), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/PATH-OVERLAP-RCA.md`, **`docs/PRODUCTION-READINESS-PLAN.md`** (Supabase-native go-live staging in 9 stages, AI integrations last), **`docs/SUPABASE-SETUP.md`** (live Supabase backend — schema, seed, RLS, the one founder step), **`docs/CULINARY-THERAPEUTICS-PLAN.md`** (Y5 4-sprint workstream — evidence-graded therapeutic-fit scorer #9 + hard-exclusion safety screen over the existing catalog; 5 founder gates surfaced up front)
+> **Related docs:** `planning.md`, `documentation.md`, `CLAUDE.md`, `docs/STAGE-3-LEAN-CONTENT.md`, **`docs/archive/STAGE-1-2-6MO-TIMELINE.md`**, **`docs/PARENT-MODE-PLAN.md`**, **`docs/PARENT-MODE-RESEARCH.md`**, **`docs/REELS-V2-PLAN.md`** (TikTok-style infinite vertical feed design), **`docs/POLISH-CHECKLIST.md`** (recurring nav/scaling/minimalism/animation passes + Duolingo deep-dive), **`docs/CONTENT-POPULATION-PHASE.md`** (Stanford-attributed content swap workflow + sprinkle schedule W3/W11/W17/W19/W22a), **`docs/CONTENT-VISUAL-PHASE.md`** (W19b screenshots-vs-competitors audit + V2 redesign week), **`docs/QUICK-WINS-PUNCHLIST.md`** (4-item non-functional-buttons list, slotted into W11/W18), **`docs/adr/0001-nutrition-data-source.md`** (USDA build decision + free-public-good pricing posture), `docs/archive/NEXT-20-PHASES.md`, `docs/NEXT-20B-PHASES.md`, `docs/archive/NEXT-20C-PHASES.md`, `docs/NEXT-20D-PHASES.md`, `docs/archive/PATH-OVERLAP-RCA.md`, **`docs/PRODUCTION-READINESS-PLAN.md`** (Supabase-native go-live staging in 9 stages, AI integrations last), **`docs/SUPABASE-SETUP.md`** (live Supabase backend — schema, seed, RLS, the one founder step), **`docs/CULINARY-THERAPEUTICS-PLAN.md`** (Y5 4-sprint workstream — evidence-graded therapeutic-fit scorer #9 + hard-exclusion safety screen over the existing catalog; 5 founder gates surfaced up front)
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## ACTIVE WORKSTREAM: STAGE 1+2 6-MONTH PLAN — IN PROGRESS
 
-> Authored 2026-05-01. The full 26-week plan is in `docs/STAGE-1-2-6MO-TIMELINE.md`. Headline: ship Parent Mode (research-backed, FDA-claim-safe) AND complete production hardening (Clerk, Neon, R2, Redis, Sentry, perf, a11y) by 2026-10-30. Stage 1 prototype is complete; Stage 3 Content tab is complete; this plan integrates remaining production-hardening work with the new Parent Mode feature workstream.
+> Authored 2026-05-01. The full 26-week plan is in `docs/archive/STAGE-1-2-6MO-TIMELINE.md`. Headline: ship Parent Mode (research-backed, FDA-claim-safe) AND complete production hardening (Clerk, Neon, R2, Redis, Sentry, perf, a11y) by 2026-10-30. Stage 1 prototype is complete; Stage 3 Content tab is complete; this plan integrates remaining production-hardening work with the new Parent Mode feature workstream.
 >
 > Five phases: A (foundation, weeks 1–8), B (Parent Mode UX, weeks 9–12), C (production hardening, weeks 13–18), D (polish + content + closed beta + legal review, weeks 19–24), E (launch prep + buffer, weeks 25–26).
 >
@@ -145,7 +145,7 @@ plan.
 
 A third 20-phase sprint focused on making the app remember the user, surface
 preference-aware moments, and coalesce multi-dish prep without adding UI
-clutter. All phases shipped 2026-04-17. See `docs/NEXT-20C-PHASES.md` for the
+clutter. All phases shipped 2026-04-17. See `docs/archive/NEXT-20C-PHASES.md` for the
 full plan.
 
 - **P1** — `PreferenceStrip` on Path renders a single collapsed "What Sous has learned" line backed by `derivePreferenceObservations` over the user's completed cook sessions; auto-suppresses after three views and only appears once real data exists.
@@ -167,7 +167,7 @@ full plan.
 
 A targeted hotfix sprint triggered by a screenshot showing the Sprint 20B
 P16 hover-tooltip fix had not actually resolved the overlap. Full RCA in
-`docs/PATH-OVERLAP-RCA.md`. Shipped 2026-04-17.
+`docs/archive/PATH-OVERLAP-RCA.md`. Shipped 2026-04-17.
 
 - **Phase 0** — Written RCA mapping every observed symptom (header clip, floating tooltip, label overlap, FAB overlap, default scrollbar, whitespace) to root cause before touching code.
 - **Phase 1** — `TrainingHoverPanel` component deleted outright; removed from `SkillNodeComponent` + `MasteryCuisineCard`; `.skill-hover-preview` block removed from `globals.css`. Native `title` attribute retained on every node for hover information without any overlay.
@@ -198,7 +198,7 @@ A second 20-phase sprint focused on simplifying the Today home, upgrading cravin
 
 ## STAGE 0.5: NEXT-20 INTUITION + BEAUTY BUILD — COMPLETE
 
-A focused 20-phase pass on making the app more intuitive, accessible, and visually engaging, with a middle-aged-to-senior user in mind. All phases shipped between 2026-04-15 and 2026-04-16. See `docs/NEXT-20-PHASES.md` for the full plan.
+A focused 20-phase pass on making the app more intuitive, accessible, and visually engaging, with a middle-aged-to-senior user in mind. All phases shipped between 2026-04-15 and 2026-04-16. See `docs/archive/NEXT-20-PHASES.md` for the full plan.
 
 - **Phase 1** — Readable-by-default typography pass (css variables for body/caption/cook sizes, cook-prose class).
 - **Phase 2** — Tap target + contrast audit via a shared `IconButton` primitive (all icon controls ≥44×44).

@@ -1,5 +1,7 @@
 # NOURISH — Product Requirements Document
 
+> **Note:** the canonical product context is `docs/Sous_whitepaper_PRD_v1.docx` (per CLAUDE.md). This markdown PRD is an earlier draft kept for searchability.
+
 > **Version:** 1.0 · **Last updated:** February 2026
 > **Author:** Dev Asiathottunkal · **Design Partner:** IDEO-method synthesis
 

@@ -1,5 +1,7 @@
 # Data Structure Inventory — Sous
 
+> **⚠️ STALE SNAPSHOT (last updated 2026-04-06).** Schemas have evolved since (Supabase migration, nutrition vectors, therapeutics registry). The source of truth is `src/types/` (Zod schemas) and `src/lib/db/schema`. Kept for orientation only.
+
 > **Purpose:** Single source of truth for all existing data in the repo. Consult this before creating, modifying, or migrating any data to avoid redundancy and rework.
 
 ---

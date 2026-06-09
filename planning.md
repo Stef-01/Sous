@@ -1,5 +1,7 @@
 # Sous — Forward Build Plan
 
+> **⚠️ STALE SNAPSHOT (last updated 2026-04-05) — historical context only.** This plan predates hundreds of commits (it says "~70% feature-complete"; the app shipped far past it). Agents: do NOT build from this. Current sources of truth: `ROADMAP.md` (build state), `STRATEGY.md` (thesis + decision log), `CLAUDE.md` (conventions), `docs/SOUS-COMPREHENSIVE-YEAR-PLAN.md` (forward plan).
+
 > **Last updated:** 2026-04-05
 > **Related docs:** `documentation.md` (what's built), `CLAUDE.md` (conventions), `PIPELINE.md` (pairing data), `PRD.md` (product vision), `data-structure.md` (data schemas)
 

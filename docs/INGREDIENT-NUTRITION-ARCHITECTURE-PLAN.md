@@ -5,7 +5,7 @@
 > **Supersedes the data-flow of:** the per-recipe-only nutrition model in
 > `docs/adr/0001-nutrition-data-source.md` (the USDA _source_ decision still
 > holds; what changes is the _grain_ — per-ingredient, not per-recipe).
-> **Unblocks:** the swipe-up health panel (`docs/SWIPE-UP-HEALTH-PANEL-PLAN.md`),
+> **Unblocks:** the swipe-up health panel (`docs/archive/SWIPE-UP-HEALTH-PANEL-PLAN.md`),
 > whose literal substring matching is the visible symptom this plan cures.
 > **One founder decision required up front** — see §10. Everything else is
 > AUTO-BUILD.
