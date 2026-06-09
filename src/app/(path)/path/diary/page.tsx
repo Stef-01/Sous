@@ -12,6 +12,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { BrandedFoodSearch } from "@/components/path/branded-food-search";
+import { TextQuickLog } from "@/components/shared/text-quick-log";
 import { cn } from "@/lib/utils/cn";
 import {
   useNutritionDiary,
@@ -151,6 +152,9 @@ export default function DiaryPage() {
             </StaggerList>
           </section>
         )}
+
+        {/* W29 — log a dish by typing / dictating its name. */}
+        <TextQuickLog />
 
         {/* Quick-add recents */}
         {mounted && history.recents.length > 0 && (
