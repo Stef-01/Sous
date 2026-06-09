@@ -380,7 +380,7 @@ function RevealCard({
         <button
           type="button"
           onClick={onShare}
-          className="flex items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+          className="flex items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Share2 size={14} aria-hidden />
           Share grid

@@ -164,7 +164,7 @@ export default function EatOutPage() {
                 type="button"
                 onClick={handleNext}
                 aria-label="Next card"
-                className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] disabled:opacity-50"
+                className="transition flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] disabled:opacity-50 active:scale-[0.97]"
                 disabled={cards.length <= 1}
               >
                 <ChevronRight size={18} />

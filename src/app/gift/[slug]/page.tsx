@@ -173,7 +173,7 @@ export default async function GiftPage({
         {/* Single CTA  -  no signup wall, lands on Today with the dish cued */}
         <Link
           href={`/today?craving=${encodeURIComponent(dish.name)}`}
-          className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] py-4 text-base font-semibold text-white shadow-sm shadow-[var(--nourish-green)]/20 transition-colors hover:bg-[var(--nourish-dark-green)]"
+          className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] py-4 text-base font-semibold text-white shadow-sm shadow-[var(--nourish-green)]/20 transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           Cook this too
           <ArrowRight

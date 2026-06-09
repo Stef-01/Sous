@@ -107,7 +107,7 @@ export default function PantryScanPage() {
             <button
               type="button"
               onClick={runDemoScan}
-              className="w-full rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
+              className="w-full rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               Run a demo scan
             </button>
@@ -150,7 +150,7 @@ export default function PantryScanPage() {
               <button
                 type="button"
                 onClick={onAcceptAll}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 <Check size={14} aria-hidden />
                 Accept all + add to pantry
@@ -183,7 +183,7 @@ export default function PantryScanPage() {
             <div className="mt-5 flex flex-col gap-2">
               <Link
                 href="/path/pantry"
-                className="rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
+                className="rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 Back to pantry
               </Link>

@@ -177,7 +177,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
                       setConfirming(false);
                       setOpen(false);
                     }}
-                    className="flex-1 rounded-lg bg-[var(--nourish-green)] px-2.5 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                    className="flex-1 rounded-lg bg-[var(--nourish-green)] px-2.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 active:scale-[0.97]"
                   >
                     Rest today
                   </button>

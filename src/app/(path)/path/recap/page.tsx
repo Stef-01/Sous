@@ -240,7 +240,7 @@ export default function RecapPage() {
               <button
                 type="button"
                 onClick={() => router.push(`/cook/${recap.signatureDishSlug}`)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 <Sparkles size={14} aria-hidden />
                 Cook this year&apos;s signature again

@@ -106,7 +106,7 @@ export default function DiaryPage() {
                 (the Today craving search), never a rival CTA. */}
             <Link
               href="/today"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.97]"
             >
               Find something to cook
             </Link>

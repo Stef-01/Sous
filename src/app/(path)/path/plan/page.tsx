@@ -266,7 +266,7 @@ export default function SwipePlannerPage() {
           <div className="mt-6 flex flex-col gap-2">
             <Link
               href="/path/plan/week"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               Review the week
               <ArrowRight size={14} aria-hidden />

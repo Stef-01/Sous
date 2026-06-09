@@ -184,7 +184,7 @@ export function MemberForm({
           type="button"
           onClick={submit}
           disabled={!name.trim()}
-          className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] disabled:opacity-50"
+          className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] disabled:opacity-50 active:scale-[0.97]"
         >
           {mode === "add" ? "Save member" : "Save changes"}
         </button>

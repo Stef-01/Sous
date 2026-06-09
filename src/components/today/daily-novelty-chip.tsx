@@ -210,7 +210,7 @@ export function DailyNoveltyChip() {
                     // lands at Y3 W22 with the MealPlanWeek hook.
                     setExpanded(false);
                   }}
-                  className="rounded-full bg-[var(--nourish-green)] px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)]"
+                  className="rounded-full bg-[var(--nourish-green)] px-3 py-1 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                 >
                   Save the idea
                 </button>

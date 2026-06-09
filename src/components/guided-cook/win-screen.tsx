@@ -649,7 +649,7 @@ export function WinScreen({
             onClick={onBackToday}
             whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition-colors shadow-sm shadow-[var(--nourish-green)]/20"
+            className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition shadow-sm shadow-[var(--nourish-green)]/20 active:scale-[0.97]"
             type="button"
           >
             <Home size={14} />
@@ -685,7 +685,7 @@ export function WinScreen({
                   <button
                     onClick={handleInvite}
                     type="button"
-                    className="rounded-lg bg-[var(--nourish-green)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition-colors"
+                    className="rounded-lg bg-[var(--nourish-green)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition active:scale-[0.97]"
                   >
                     Send invite
                   </button>

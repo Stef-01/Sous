@@ -97,7 +97,7 @@ export function AgentSearchFallback({ query }: AgentSearchFallbackProps) {
         type="button"
         onClick={handleSendAgent}
         disabled={mutation.isPending || query.trim().length === 0}
-        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-4 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-[var(--nourish-dark-green)] disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
+        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-4 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400 active:scale-[0.97]"
       >
         <Sparkles size={14} aria-hidden />
         {mutation.isPending ? "Sending agent…" : "Send agent"}

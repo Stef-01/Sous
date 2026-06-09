@@ -90,7 +90,7 @@ export default function HouseholdPage() {
                 setEditingId(null);
                 setAddOpen((v) => !v);
               }}
-              className="ml-auto inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+              className="ml-auto inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               <Plus size={12} aria-hidden /> Add
             </button>

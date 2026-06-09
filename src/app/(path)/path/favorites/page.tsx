@@ -84,7 +84,7 @@ export default function FavoritesPage() {
               onClick={() => router.push("/today")}
               whileTap={{ scale: 0.96 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white cta-shadow transition-colors hover:bg-[var(--nourish-dark-green)]"
+              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white cta-shadow transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               type="button"
             >
               Find something to cook →

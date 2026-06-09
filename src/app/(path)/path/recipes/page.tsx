@@ -83,7 +83,7 @@ export default function MyRecipesPage() {
             </Link>
             <Link
               href="/path/recipes/new"
-              className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+              className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               <Plus size={12} aria-hidden /> New
             </Link>
@@ -176,7 +176,7 @@ export default function MyRecipesPage() {
                 <div className="mt-3 flex gap-2">
                   <Link
                     href={`/cook/${recipe.slug}`}
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                   >
                     <Play size={12} aria-hidden /> Cook
                   </Link>

@@ -83,7 +83,7 @@ export default function JoinPodPage() {
 
         <Link
           href="/community/pod/create"
-          className="block w-full rounded-2xl bg-[var(--nourish-green)] py-3 text-center text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+          className="block w-full rounded-2xl bg-[var(--nourish-green)] py-3 text-center text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           Create a pod instead
         </Link>

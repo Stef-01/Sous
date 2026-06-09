@@ -131,7 +131,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => handleApprove(recipe.id)}
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                   >
                     <Check size={12} aria-hidden /> Verify
                   </button>

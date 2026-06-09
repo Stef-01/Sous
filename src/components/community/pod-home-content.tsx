@@ -149,7 +149,7 @@ function MidWeekState({
         </div>
         <Link
           href={`/cook/${week.recipeSlug}?pod=${pod.id}&week=${week.weekKey}`}
-          className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Play size={14} aria-hidden /> Cook this week&apos;s challenge
         </Link>

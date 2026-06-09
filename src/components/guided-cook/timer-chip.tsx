@@ -62,7 +62,7 @@ export function TimerChip({
             <div className="px-3 py-3">
               <button
                 onClick={onStart}
-                className="w-full rounded-lg bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition-colors"
+                className="w-full rounded-lg bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition active:scale-[0.97]"
                 type="button"
                 aria-label={`Start ${formatTime(seconds)} countdown timer`}
               >

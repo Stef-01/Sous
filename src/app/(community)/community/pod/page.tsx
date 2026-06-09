@@ -128,7 +128,7 @@ function NoPodState({ onTryDemo }: { onTryDemo: () => void }) {
       <div className="flex flex-col gap-2 pt-1 sm:flex-row">
         <Link
           href="/community/pod/create"
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)]"
+          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Plus size={14} aria-hidden /> Create a pod
         </Link>

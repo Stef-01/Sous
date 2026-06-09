@@ -126,7 +126,7 @@ export default function EcoDashboardPage() {
             <button
               type="button"
               onClick={toggle}
-              className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white hover:bg-[var(--nourish-dark-green)]"
+              className="transition mt-3 inline-flex w-full items-center justify-center rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               Turn Eco Mode on
             </button>
