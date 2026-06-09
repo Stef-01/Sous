@@ -11,6 +11,8 @@ import {
   PartyPopper,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { haptic } from "@/lib/motion/haptics";
+import { playSound } from "@/lib/sound/sound";
 import {
   coachQuizQuestions,
   computePreferencesFromAnswers,
@@ -103,6 +105,10 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
   const handleSelect = useCallback(
     (optionIdx: number) => {
       setSelectedOption(optionIdx);
+      // W22b: the answer moment gets a tap haptic + (opt-in) soft chime; the
+      // chosen chip also fires a sparkle pulse (rendered below).
+      haptic("select");
+      playSound("select");
       setTimeout(() => {
         const newAnswers = [...answers];
         newAnswers[currentQ] = optionIdx;
@@ -470,7 +476,7 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                       : { type: "spring", stiffness: 400, damping: 20 }
                   }
                   className={cn(
-                    "w-full rounded-2xl border px-5 py-4 text-left text-[15px] font-medium shadow-sm",
+                    "relative w-full rounded-2xl border px-5 py-4 text-left text-[15px] font-medium shadow-sm",
                     "transition-colors duration-150",
                     selectedOption === idx
                       ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/5 text-[var(--nourish-dark)]"
@@ -478,6 +484,8 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
                   )}
                   type="button"
                 >
+                  {/* W22b: sparkle pulse on the chosen chip. */}
+                  {selectedOption === idx && !reducedMotion && <SelectBurst />}
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <span className="text-xl leading-none">
@@ -509,5 +517,36 @@ export function CoachQuiz({ onClose, onComplete }: CoachQuizProps) {
         </AnimatePresence>
       </div>
     </motion.div>
+  );
+}
+
+/**
+ * W22b — a tiny sparkle pulse anchored on the chosen quiz chip (6 deterministic
+ * particles, ~500ms, green + warm gold). Rendered only while the selection
+ * lingers (320ms before advance) and never under reduced motion.
+ */
+function SelectBurst() {
+  const parts = Array.from({ length: 6 }, (_, i) => {
+    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+    return {
+      id: i,
+      x: Math.cos(angle) * (26 + (i % 2) * 10),
+      y: Math.sin(angle) * (22 + (i % 2) * 8),
+      color: i % 2 === 0 ? "var(--nourish-green)" : "#FFD466",
+    };
+  });
+  return (
+    <span aria-hidden className="pointer-events-none absolute left-1/2 top-1/2">
+      {parts.map((p) => (
+        <motion.span
+          key={p.id}
+          initial={{ x: 0, y: 0, scale: 0, opacity: 0 }}
+          animate={{ x: p.x, y: p.y, scale: [0, 1, 0], opacity: [0, 1, 0] }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="absolute block h-1.5 w-1.5 rounded-full"
+          style={{ background: p.color }}
+        />
+      ))}
+    </span>
   );
 }
