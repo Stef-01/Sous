@@ -11,15 +11,18 @@
  * is a real a11y win — the swipe card previously animated regardless).
  */
 
+import { useRef } from "react";
 import {
   motion,
   useMotionValue,
+  useMotionValueEvent,
   useTransform,
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
-import { Check, RotateCcw } from "lucide-react";
+import { Check, ChefHat, RotateCcw, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { haptic } from "@/lib/motion/haptics";
 import { DishImage } from "./dish-image";
 import type { QuestDish } from "./quest-card";
 
@@ -42,6 +45,36 @@ export function FullscreenSwipeCard({
   const reducedMotion = useReducedMotion();
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-240, 240], [-13, 13]);
+
+  // W22b "threshold snap": the drag pops a Cook/Pass stamp + fires one haptic
+  // the moment the release threshold arms (re-arms when you pull back). The
+  // stamp ramps sharply over the last ~50px so it reads as a snap, not a fade.
+  const cookStampOpacity = useTransform(
+    x,
+    [55, FULLSCREEN_SWIPE_THRESHOLD],
+    [0, 1],
+  );
+  const cookStampScale = useTransform(
+    x,
+    [55, FULLSCREEN_SWIPE_THRESHOLD],
+    [0.72, 1],
+  );
+  const passStampOpacity = useTransform(
+    x,
+    [-FULLSCREEN_SWIPE_THRESHOLD, -55],
+    [1, 0],
+  );
+  const passStampScale = useTransform(
+    x,
+    [-FULLSCREEN_SWIPE_THRESHOLD, -55],
+    [1, 0.72],
+  );
+  const armedRef = useRef(false);
+  useMotionValueEvent(x, "change", (latest) => {
+    const armed = Math.abs(latest) > FULLSCREEN_SWIPE_THRESHOLD;
+    if (armed && !armedRef.current) haptic("select");
+    armedRef.current = armed;
+  });
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
     const strongVelocity = Math.abs(info.velocity.x) > 650;
@@ -117,6 +150,33 @@ export function FullscreenSwipeCard({
         aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}
       >
         <DishImage dish={dish} priority={isTop} fit="cover" />
+        {/* Threshold stamps — visible only while dragging the top card. */}
+        {isTop && (
+          <>
+            <motion.span
+              aria-hidden
+              style={{
+                opacity: cookStampOpacity,
+                scale: reducedMotion ? 1 : cookStampScale,
+              }}
+              className="absolute left-4 top-4 z-10 inline-flex -rotate-12 items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-neutral-950 shadow-lg"
+            >
+              <ChefHat size={15} strokeWidth={2.4} />
+              Cook
+            </motion.span>
+            <motion.span
+              aria-hidden
+              style={{
+                opacity: passStampOpacity,
+                scale: reducedMotion ? 1 : passStampScale,
+              }}
+              className="absolute right-4 top-4 z-10 inline-flex rotate-12 items-center gap-1.5 rounded-xl border-2 border-white bg-black/45 px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-lg backdrop-blur-sm"
+            >
+              <X size={15} strokeWidth={2.6} />
+              Pass
+            </motion.span>
+          </>
+        )}
       </article>
     </motion.div>
   );
