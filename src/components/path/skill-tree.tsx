@@ -64,7 +64,7 @@ function MasteryCuisineCard({
       onClick={() => isInteractive && onTap(node.id)}
       disabled={!isInteractive}
       className={[
-        "group relative flex w-full flex-col items-center gap-2 overflow-visible rounded-2xl border p-4 text-center transition-all duration-200",
+        "group relative flex w-full flex-col items-center gap-2 overflow-visible rounded-2xl border p-4 text-center transition duration-200",
         node.status === "completed"
           ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5"
           : node.status === "in_progress"

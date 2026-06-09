@@ -38,7 +38,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[var(--nourish-green)] to-emerald-400 transition-all"
+          className="h-full rounded-full bg-gradient-to-r from-[var(--nourish-green)] to-emerald-400 transition"
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -90,7 +90,7 @@ export function ScrapbookEntryCard({
         <button
           onClick={() => onToggleFavorite(session.sessionId)}
           className={cn(
-            "shrink-0 rounded-lg p-1.5 transition-all active:scale-90",
+            "shrink-0 rounded-lg p-1.5 transition active:scale-90",
             session.favorite
               ? "text-pink-500"
               : "text-neutral-300 hover:text-pink-400",

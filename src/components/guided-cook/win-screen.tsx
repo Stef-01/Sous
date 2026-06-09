@@ -912,7 +912,7 @@ export function WinScreen({
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition-all duration-150",
+              "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition duration-150",
               showReflection
                 ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
                 : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",

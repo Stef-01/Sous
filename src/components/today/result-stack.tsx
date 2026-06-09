@@ -450,7 +450,7 @@ function ResultCard({
         >
           <span
             className={cn(
-              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition-all duration-150",
+              "flex h-5 w-5 items-center justify-center rounded-full border-2 transition duration-150",
               selected
                 ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
                 : "border-neutral-300 bg-white",

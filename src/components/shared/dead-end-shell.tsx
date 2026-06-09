@@ -132,7 +132,7 @@ export function DeadEndShell({
           <button
             type="button"
             onClick={primary.onClick}
-            className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
+            className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
           >
             {primary.label}
           </button>

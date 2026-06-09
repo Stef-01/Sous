@@ -19,7 +19,7 @@ export function HackChip({ hack, isExpanded, onToggle }: HackChipProps) {
         onClick={onToggle}
         className={cn(
           "flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium",
-          "border transition-all duration-150",
+          "border transition duration-150",
           isExpanded
             ? "border-blue-300/50 bg-blue-50 text-blue-700"
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",

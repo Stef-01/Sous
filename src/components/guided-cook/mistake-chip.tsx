@@ -52,7 +52,7 @@ export function MistakeChip({
     <div>
       <div
         className={cn(
-          "flex w-full items-stretch rounded-lg border transition-all duration-150",
+          "flex w-full items-stretch rounded-lg border transition duration-150",
           isExpanded
             ? "border-amber-300/50 bg-amber-50"
             : "border-neutral-200 hover:border-neutral-300",

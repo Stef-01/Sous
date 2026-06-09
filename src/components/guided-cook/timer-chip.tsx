@@ -33,7 +33,7 @@ export function TimerChip({
         onClick={onToggle}
         className={cn(
           "flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium",
-          "border transition-all duration-150",
+          "border transition duration-150",
           isExpanded
             ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",

@@ -453,7 +453,7 @@ export function StepCard({
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium",
-            "border transition-all duration-150",
+            "border transition duration-150",
             showQA
               ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
               : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",

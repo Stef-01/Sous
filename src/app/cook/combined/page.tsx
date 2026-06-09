@@ -561,7 +561,7 @@ function CombinedCookContent() {
         </p>
         <button
           onClick={handleBackToday}
-          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
+          className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
           type="button"
         >
           Back to Today
@@ -687,7 +687,7 @@ function CombinedCookContent() {
                 </div>
                 <button
                   onClick={handleBackToday}
-                  className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[var(--nourish-dark-green)] active:scale-95"
+                  className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
                   type="button"
                 >
                   Back to Today

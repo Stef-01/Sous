@@ -185,7 +185,7 @@ export function ActiveChallengeBanner() {
           >
             <div
               className={cn(
-                "h-full rounded-full transition-all",
+                "h-full rounded-full transition",
                 sponsored
                   ? "bg-[var(--nourish-gold)]"
                   : "bg-[var(--nourish-green)]",

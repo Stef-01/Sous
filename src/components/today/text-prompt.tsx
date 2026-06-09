@@ -312,7 +312,7 @@ export function TextPrompt({
             "placeholder:text-[var(--nourish-subtext)]",
             "focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/30 focus:border-[var(--nourish-green)]",
             "disabled:opacity-50",
-            "transition-all duration-200",
+            "transition duration-200",
           )}
         />
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
@@ -332,7 +332,7 @@ export function TextPrompt({
             whileTap={text.trim() && !isLoading ? { scale: 0.88 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "rounded-lg p-2 transition-all duration-200",
+              "rounded-lg p-2 transition duration-200",
               text.trim() && !isLoading
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
                 : "text-[var(--nourish-subtext-faint)] cursor-not-allowed",

@@ -502,7 +502,7 @@ export function StartupLanding({
             >
               <Link
                 href="/today"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-6 py-3.5 text-[14px] font-medium text-white transition-all duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_12px_28px_-10px_rgba(13,13,13,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-6 py-3.5 text-[14px] font-medium text-white transition duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_12px_28px_-10px_rgba(13,13,13,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
               >
                 Try it tonight
                 <ArrowRight
@@ -518,7 +518,7 @@ export function StartupLanding({
                 Why Sous
                 <span
                   aria-hidden
-                  className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition-all duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
+                  className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
                 />
               </a>
             </motion.div>
@@ -756,7 +756,7 @@ export function StartupLanding({
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-4 md:col-span-6 md:justify-end">
                   <Link
                     href="/today"
-                    className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-7 py-4 text-[15px] font-medium text-white transition-all duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_16px_32px_-12px_rgba(13,13,13,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
+                    className="group inline-flex items-center gap-2 rounded-full bg-[#0d0d0d] px-7 py-4 text-[15px] font-medium text-white transition duration-200 hover:translate-y-[-1px] hover:bg-[#1a1a1a] hover:shadow-[0_16px_32px_-12px_rgba(13,13,13,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2d5a3d] focus-visible:ring-offset-2"
                   >
                     Open the demo
                     <ArrowUpRight
@@ -772,7 +772,7 @@ export function StartupLanding({
                     See the practice path
                     <span
                       aria-hidden
-                      className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition-all duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
+                      className="inline-block h-px w-6 translate-y-[-3px] bg-[#1a1a1a] transition duration-300 group-hover:w-10 group-hover:bg-[#2d5a3d]"
                     />
                   </Link>
                 </div>

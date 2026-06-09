@@ -19,7 +19,7 @@ export function FactChip({ fact, isExpanded, onToggle }: FactChipProps) {
         onClick={onToggle}
         className={cn(
           "flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium",
-          "border transition-all duration-150",
+          "border transition duration-150",
           isExpanded
             ? "border-purple-300/50 bg-purple-50 text-purple-700"
             : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
