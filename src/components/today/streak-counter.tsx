@@ -83,21 +83,27 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
             "outline-dashed outline-1 outline-offset-2 outline-[var(--nourish-warm)]/60",
         )}
       >
-        {/* W22b animation: gentle continuous flicker on the flame
-            when the streak has gathered some momentum (>= 3 days).
-            Loops scale + opacity in a slow sine; respects
-            prefers-reduced-motion (handled by motion.span at the
-            global Framer level — defaults to no animation if the OS
-            asks). Cheap, never blocks the main thread. */}
+        {/* W22b animation: continuous flicker on the flame once the streak
+            has momentum (>= 3 days) — and the flame EARNS intensity with the
+            streak: gentle at 3+, filled + livelier at 7+, a proud wobble at
+            30+. Cheap sine loops; skipped under prefers-reduced-motion. */}
         <motion.span
           aria-label="streak"
           animate={
             streak >= 3 && !reducedMotion
-              ? { scale: [1, 1.08, 1], opacity: [1, 0.85, 1] }
+              ? {
+                  scale: [
+                    1,
+                    streak >= 30 ? 1.16 : streak >= 7 ? 1.12 : 1.08,
+                    1,
+                  ],
+                  opacity: [1, 0.85, 1],
+                  ...(streak >= 30 ? { rotate: [0, -4, 4, 0] } : {}),
+                }
               : undefined
           }
           transition={{
-            duration: 1.6,
+            duration: streak >= 30 ? 1.1 : streak >= 7 ? 1.3 : 1.6,
             repeat: Infinity,
             ease: "easeInOut",
           }}
@@ -105,7 +111,11 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         >
           <Flame
             size={12}
-            className="text-[var(--nourish-warm)]"
+            className={cn(
+              "text-[var(--nourish-warm)]",
+              // A week of momentum fills the flame — the quiet badge upgrade.
+              streak >= 7 && "fill-current",
+            )}
             strokeWidth={2.2}
           />
         </motion.span>
