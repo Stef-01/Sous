@@ -37,6 +37,7 @@ const ProfileSettingsSheet = dynamic(
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { NutritionGoalCard } from "@/components/today/nutrition-goal-card";
 import { TodayEatingCard } from "@/components/today/today-eating-card";
+import { FirstRunCoachmark } from "@/components/today/first-run-coachmark";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { HeadroomHeader } from "@/components/shared/headroom-header";
 
@@ -570,6 +571,9 @@ function TodayPageContent() {
       <main className="page-x mx-auto max-w-md pt-4 pb-24 space-y-5">
         {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
+
+        {/* Phase 4 — first-run nudge pointing at the craving search (self-clearing). */}
+        <FirstRunCoachmark />
 
         {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
             under the search, so the one thing the user opened the app for is
