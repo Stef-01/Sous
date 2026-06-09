@@ -24,7 +24,15 @@ describe("scale test (W48)", () => {
   });
 
   it("runs every content helper over 1200 synthetic dishes without error", () => {
-    const HERBS = ["turmeric", "garlic", "ginger", "tomato", "red-lentils", "black-pepper", "cinnamon"];
+    const HERBS = [
+      "turmeric",
+      "garlic",
+      "ginger",
+      "tomato",
+      "red-lentils",
+      "black-pepper",
+      "cinnamon",
+    ];
     const t0 = performance.now();
     for (let i = 0; i < 1200; i++) {
       const n = {

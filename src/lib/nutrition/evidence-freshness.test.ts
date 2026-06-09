@@ -13,7 +13,9 @@ describe("evidence freshness job (W31)", () => {
     expect(herbsDueForReview(reviewed + 30 * DAY)).toEqual([]);
   });
   it("everything is due once the cadence has elapsed", () => {
-    const due = herbsDueForReview(reviewed + (EVIDENCE_REVIEW_CADENCE_DAYS + 5) * DAY);
+    const due = herbsDueForReview(
+      reviewed + (EVIDENCE_REVIEW_CADENCE_DAYS + 5) * DAY,
+    );
     expect(due.length).toBe(AYURVEDIC_HERBS.length);
   });
   it("the cadence is honoured exactly (nothing due at the boundary)", () => {
