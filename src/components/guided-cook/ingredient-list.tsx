@@ -318,23 +318,35 @@ export function IngredientList({
                             <Circle size={6} className="text-transparent" />
                           )}
                         </span>
+                        {/* Reference grammar (matches IngredientRow): emoji
+                            anchor + bold quantity leading the name inline. */}
+                        <span
+                          className="mt-px shrink-0 text-lg leading-none"
+                          aria-hidden
+                        >
+                          {ingredientEmoji(item.name)}
+                        </span>
                         <span className="flex-1">
                           <span
                             className={cn(
-                              "block text-sm font-medium",
+                              "block text-sm leading-snug",
                               isChecked
                                 ? "text-[var(--nourish-subtext)] line-through"
                                 : "text-[var(--nourish-dark)]",
                             )}
                           >
+                            {item.quantity && (
+                              <span className="font-semibold">
+                                {item.quantity}{" "}
+                              </span>
+                            )}
                             {item.name}
                           </span>
-                          <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
-                            {item.quantity}
-                            {item.sources.length > 1
-                              ? ` · ${item.sources.join(" & ")}`
-                              : ""}
-                          </span>
+                          {item.sources.length > 1 && (
+                            <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
+                              {item.sources.join(" & ")}
+                            </span>
+                          )}
                         </span>
                       </button>
                     );
