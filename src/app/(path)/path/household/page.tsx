@@ -100,7 +100,7 @@ export default function HouseholdPage() {
 
       <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         {!mounted ? (
-          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
+          <div className="h-24 shimmer rounded-2xl" />
         ) : (
           <>
             {(addOpen || members.length === 0) && (

@@ -47,7 +47,7 @@ export default function CharitySpendPage() {
       <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {!mounted ? (
           <div
-            className="h-64 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white"
+            className="h-64 shimmer rounded-2xl border border-[var(--nourish-border-soft)]"
             aria-hidden
           />
         ) : (

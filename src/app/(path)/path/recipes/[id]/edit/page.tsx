@@ -88,9 +88,9 @@ export default function EditRecipePage({
 
       {!mounted ? (
         <div className="mx-auto max-w-md space-y-4 page-x pt-4">
-          <div className="h-44 animate-pulse rounded-2xl bg-white/70" />
-          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
-          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
+          <div className="h-44 shimmer rounded-2xl" />
+          <div className="h-24 shimmer rounded-2xl" />
+          <div className="h-24 shimmer rounded-2xl" />
         </div>
       ) : recipe ? (
         <>

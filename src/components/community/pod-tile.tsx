@@ -82,7 +82,7 @@ export function PodTile() {
   }, [mounted, pod, weeks, state]);
 
   if (view.kind === "loading") {
-    return <div className="h-16 animate-pulse rounded-2xl bg-white/40" />;
+    return <div className="h-16 shimmer rounded-2xl" />;
   }
 
   if (view.kind === "no-pod") {

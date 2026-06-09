@@ -99,7 +99,7 @@ export default function AdminPage() {
 
       <main className="mx-auto max-w-md space-y-4 page-x pt-4">
         {!adminMounted || !draftsMounted ? (
-          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
+          <div className="h-24 shimmer rounded-2xl" />
         ) : !isAdmin ? (
           <NotAdminState />
         ) : queue.length === 0 ? (

@@ -39,7 +39,7 @@ export function WhosAtTable() {
   // Don't render at all until both hooks have hydrated. Avoids
   // the brief "no members" flash on first paint.
   if (!membersReady || !tableReady) {
-    return <div className="h-12 animate-pulse rounded-2xl bg-white/40" />;
+    return <div className="h-12 shimmer rounded-2xl" />;
   }
 
   // Empty-roster: render nothing. The "Add household members"

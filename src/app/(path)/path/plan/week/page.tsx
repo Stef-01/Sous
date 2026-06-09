@@ -127,7 +127,7 @@ export default function WeekPlanPage() {
 
         {!now || !mounted ? (
           <div
-            className="mt-4 h-64 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white"
+            className="mt-4 h-64 shimmer rounded-2xl border border-[var(--nourish-border-soft)]"
             aria-hidden
           />
         ) : (

@@ -107,7 +107,7 @@ export default function MyRecipesPage() {
         {!mounted ? (
           // Pre-hydration skeleton — matches the height of one card so
           // the page doesn't jump when localStorage resolves.
-          <div className="h-24 animate-pulse rounded-2xl bg-white/70" />
+          <div className="h-24 shimmer rounded-2xl" />
         ) : filteredDrafts.length === 0 ? (
           drafts.length === 0 ? (
             <EmptyState onCreate={() => router.push("/path/recipes/new")} />

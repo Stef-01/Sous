@@ -27,7 +27,7 @@ export function EcoModeToggle() {
   if (!mounted) {
     return (
       <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-        <div className="h-3 w-20 animate-pulse rounded bg-neutral-100" />
+        <div className="h-3 w-20 shimmer rounded" />
       </section>
     );
   }

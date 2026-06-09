@@ -180,7 +180,7 @@ export default function SwipePlannerPage() {
         </div>
 
         {!planMounted || !pantryMounted ? (
-          <div className="h-64 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white" />
+          <div className="h-64 shimmer rounded-2xl border border-[var(--nourish-border-soft)]" />
         ) : isComplete ? (
           <div className="space-y-4">
             <CompletionPanel scheduled={scheduledCount} />

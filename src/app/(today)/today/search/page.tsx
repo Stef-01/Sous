@@ -165,7 +165,7 @@ export default function SearchPage() {
             {[0, 1, 2].map((i) => (
               <li
                 key={i}
-                className="h-24 animate-pulse rounded-2xl border border-[var(--nourish-border-soft)] bg-white"
+                className="h-24 shimmer rounded-2xl border border-[var(--nourish-border-soft)]"
                 aria-hidden
               />
             ))}
