@@ -499,6 +499,6 @@ keys land._
 
 _Cross-references: `docs/SUPABASE-SETUP.md` (current state),
 `docs/FOUNDER-UNLOCK-RUNBOOK.md` (per-credential unlock detail + Clerk/R2/
-Upstash fallbacks), `docs/STAGE-1-2-6MO-TIMELINE.md` (the 26-week
+Upstash fallbacks), `docs/archive/STAGE-1-2-6MO-TIMELINE.md` (the 26-week
 production-hardening calendar this plan re-sequences onto Supabase),
 `STRATEGY.md` (moat rationale), `ROADMAP.md` (build log)._
