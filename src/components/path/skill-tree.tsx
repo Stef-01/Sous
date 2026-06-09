@@ -135,24 +135,38 @@ export const SkillTree = memo(function SkillTree({
     scrollRm ? [1, 1, 1] : [0.05, 0.32, 1],
   );
 
-  // Track completed node ids across renders to detect new completions
+  // Track completed node ids across renders to detect new completions.
+  // W22b "node bloom": a newly-completed node gets a one-shot outward ripple +
+  // colour wash (rendered in the node map below) alongside the haptic + chime.
   const prevCompletedRef = useRef<Set<string>>(new Set());
+  const bloomTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [bloomIds, setBloomIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
   useEffect(() => {
     const currentCompleted = new Set(
       nodes.filter((n) => n.status === "completed").map((n) => n.id),
     );
     const prev = prevCompletedRef.current;
     if (prev.size > 0) {
-      for (const id of currentCompleted) {
-        if (!prev.has(id)) {
-          haptic();
-          sound.complete();
-          break;
-        }
+      const fresh = [...currentCompleted].filter((id) => !prev.has(id));
+      if (fresh.length > 0) {
+        haptic();
+        sound.complete();
+
+        setBloomIds(new Set(fresh));
+        if (bloomTimeoutRef.current) clearTimeout(bloomTimeoutRef.current);
+        bloomTimeoutRef.current = setTimeout(() => setBloomIds(new Set()), 900);
       }
     }
     prevCompletedRef.current = currentCompleted;
   }, [nodes, haptic, sound]);
+  useEffect(
+    () => () => {
+      if (bloomTimeoutRef.current) clearTimeout(bloomTimeoutRef.current);
+    },
+    [],
+  );
 
   // Split mastery (grid) from the rest (tree)
   const treeNodes = useMemo(
@@ -354,6 +368,27 @@ export const SkillTree = memo(function SkillTree({
               className="absolute -translate-x-1/2 -translate-y-1/2"
               style={{ left: pos.cx, top: pos.cy }}
             >
+              {/* W22b node bloom — one-shot ripple + colour wash on the node
+                  that just completed (haptic + chime fire in the effect). */}
+              {bloomIds.has(node.id) && !scrollRm && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                >
+                  <motion.span
+                    className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--nourish-green)]"
+                    initial={{ scale: 0.7, opacity: 0.9 }}
+                    animate={{ scale: 2.4, opacity: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                  />
+                  <motion.span
+                    className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--nourish-green)]"
+                    initial={{ scale: 0.9, opacity: 0.35 }}
+                    animate={{ scale: 1.9, opacity: 0 }}
+                    transition={{ duration: 0.55, ease: "easeOut" }}
+                  />
+                </span>
+              )}
               <SkillNodeComponent
                 id={node.id}
                 name={node.name}
