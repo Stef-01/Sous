@@ -8,23 +8,28 @@ import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * LogItButton (W2) — the one-tap "I ate this". Writes a cooked-dish diary entry
- * with smart defaults (today, 1 serving), a commit haptic, and a confirm toast.
- * No form, no modal. Remove/adjust lives in the diary day view.
+ * LogItButton (W2 · Phase 3) — the ONE canonical "I ate this" control across every
+ * surface (Info sheet, cook readout, quick-add). One write path, one toast, one
+ * haptic, one "already logged today" state. `variant`: a compact `pill` (default)
+ * or a full-width `block` (the cook-readout style). No form, no modal.
  */
 export function LogItButton({
   slug,
   name,
   servings = 1,
+  variant = "pill",
   className,
 }: {
   slug: string;
   name: string;
   servings?: number;
+  variant?: "pill" | "block";
   className?: string;
 }) {
-  const { logCook } = useNutritionDiary();
+  const { logCook, entries } = useNutritionDiary();
   const [justLogged, setJustLogged] = useState(false);
+  // Already-logged detection lives here now (was re-derived per surface).
+  const logged = justLogged || entries.some((e) => e.slug === slug);
 
   const onLog = () => {
     logCook(slug, name, servings);
@@ -35,10 +40,36 @@ export function LogItButton({
       variant: "success",
       emoji: "🍽️",
       title: `Logged ${name}`,
-      body: "Added to today's diary.",
+      body: "In today's diary.",
       dedupKey: `log-${slug}`,
     });
   };
+
+  const tone = logged
+    ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
+    : "bg-[var(--nourish-green)] text-white hover:opacity-90";
+
+  if (variant === "block") {
+    // Subordinate full-width style (Rule 2): tinted, never solid — it sits under a
+    // screen's primary CTA (e.g. the cook "Finish" action).
+    return (
+      <button
+        type="button"
+        onClick={onLog}
+        aria-label={`Log ${name} to today's diary`}
+        className={cn(
+          "flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-sm font-medium text-[var(--nourish-green)] transition-colors",
+          logged
+            ? "bg-[var(--nourish-green)]/12"
+            : "bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10",
+          className,
+        )}
+      >
+        {logged ? <Check size={15} /> : <Plus size={15} />}
+        {logged ? "Logged today" : "Log it"}
+      </button>
+    );
+  }
 
   return (
     <button
@@ -47,14 +78,12 @@ export function LogItButton({
       aria-label={`Log ${name} to today's diary`}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors",
-        justLogged
-          ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
-          : "bg-[var(--nourish-green)] text-white hover:opacity-90",
+        tone,
         className,
       )}
     >
-      {justLogged ? <Check size={13} /> : <Plus size={13} />}
-      {justLogged ? "Logged" : "Log it"}
+      {logged ? <Check size={13} /> : <Plus size={13} />}
+      {logged ? "Logged" : "Log it"}
     </button>
   );
 }

@@ -7,7 +7,7 @@
  * deficit insight. Same hydration-guard pattern as useShoppingList / pantry.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PerServingNutrition } from "@/types/nutrition";
 import {
   getDishNutrition,
@@ -19,6 +19,12 @@ import {
   type WeeklyTrend,
 } from "@/lib/nutrition/weekly-trend";
 import type { BrandedFood } from "@/lib/nutrition/branded-food";
+import {
+  firstMilestone,
+  streakMilestone,
+  type Milestone,
+} from "@/lib/engagement/milestones";
+import { toast } from "@/lib/hooks/use-toast";
 
 export interface DiaryEntry {
   slug: string;
@@ -152,14 +158,53 @@ export function recentDistinctDishes(
   return out;
 }
 
+/** Pure (R4): the milestones a fresh log into `store` earns — the first-ever log
+ *  and any streak threshold just crossed. The effect owns the localStorage dedup +
+ *  toast; keeping the decision pure makes "did I just earn this?" testable. */
+export function milestonesForLog(store: DiaryStore, today: Date): Milestone[] {
+  const lifetime = Object.values(store).reduce((n, day) => n + day.length, 0);
+  const streak = loggingStreak(store, today);
+  return [firstMilestone("log", lifetime), streakMilestone(streak)].filter(
+    (m): m is Milestone => m != null,
+  );
+}
+
 export function useNutritionDiary(date = new Date()) {
   const [store, setStore] = useState<Store>({});
   const [mounted, setMounted] = useState(false);
+  // R4 — a celebration fires only for a user log/branded action, never a
+  // mount/hydrate or a remove/restore. logCook/logBranded set this; the effect
+  // reads + clears it, with localStorage as the single once-only dedup source.
+  const justLoggedRef = useRef(false);
 
   useEffect(() => {
     setStore(read());
     setMounted(true);
   }, []);
+
+  // The single celebration authority (Phase 3): when the user logs, fire the
+  // first-log + streak milestones at the MOMENT of the tap. Pure-compute here,
+  // deduped in localStorage, idempotent under StrictMode (justLogged gate clears
+  // on the first invoke so the second invoke is a no-op).
+  useEffect(() => {
+    if (!justLoggedRef.current) return;
+    justLoggedRef.current = false;
+    for (const m of milestonesForLog(store, new Date())) {
+      const seenKey = `sous-celebrated-${m.id}`;
+      try {
+        if (window.localStorage.getItem(seenKey)) continue;
+        window.localStorage.setItem(seenKey, "1");
+      } catch {
+        continue;
+      }
+      toast.push({
+        variant: "achievement",
+        emoji: m.emoji,
+        title: m.title,
+        body: m.body,
+      });
+    }
+  }, [store]);
 
   // "Today" is recomputed each render (not frozen at mount), so the diary stays
   // in sync with the real calendar day if the app is left open across midnight.
@@ -169,6 +214,7 @@ export function useNutritionDiary(date = new Date()) {
   // midnight lands in the new day regardless of the last render's key.
   const logCook = useCallback(
     (slug: string, name: string, servings: number) => {
+      justLoggedRef.current = true;
       const key = dayKey(new Date());
       setStore((prev) => {
         const day = prev[key] ?? [];
@@ -188,6 +234,7 @@ export function useNutritionDiary(date = new Date()) {
 
   // Branded foods (W20) carry their own nutrition (not in the registry).
   const logBranded = useCallback((food: BrandedFood, servings: number) => {
+    justLoggedRef.current = true;
     const key = dayKey(new Date());
     setStore((prev) => {
       const day = prev[key] ?? [];

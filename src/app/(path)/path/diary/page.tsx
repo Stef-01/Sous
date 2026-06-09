@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -20,7 +20,6 @@ import {
 } from "@/lib/hooks/use-nutrition-diary";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { haptic } from "@/lib/motion/haptics";
-import { streakMilestone } from "@/lib/engagement/milestones";
 import { toast } from "@/lib/hooks/use-toast";
 import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
 
@@ -36,25 +35,8 @@ export default function DiaryPage() {
   const history = useDiaryHistory();
   const [showBranded, setShowBranded] = useState(false);
 
-  // W14 — celebrate a streak milestone once (deduped in localStorage).
-  useEffect(() => {
-    if (!history.mounted) return;
-    const m = streakMilestone(history.streak);
-    if (!m) return;
-    const seenKey = `sous-celebrated-${m.id}`;
-    try {
-      if (window.localStorage.getItem(seenKey)) return;
-      window.localStorage.setItem(seenKey, "1");
-    } catch {
-      return;
-    }
-    toast.push({
-      variant: "achievement",
-      emoji: m.emoji,
-      title: m.title,
-      body: m.body,
-    });
-  }, [history.mounted, history.streak]);
+  // Streak celebration now fires at the moment of the tap in useNutritionDiary
+  // (Phase 3) — no longer on diary-page visit.
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
