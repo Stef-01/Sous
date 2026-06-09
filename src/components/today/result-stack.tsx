@@ -21,6 +21,7 @@ import type { ScoreBreakdown } from "@/lib/engine/types";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
+import { PlateRing } from "@/components/today/plate-ring";
 import { CreatorByline } from "@/components/shared/creator-byline";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { IngredientsToCheck } from "@/components/shared/ingredients-to-check";
@@ -253,13 +254,6 @@ export function ResultStack({
     return evaluatePlate({ meal, sides: sideDishes });
   }, [mainDish, selectedSides]);
 
-  const toneColor =
-    evaluation?.appraisalTone === "balanced"
-      ? "text-[var(--nourish-green)]"
-      : evaluation?.appraisalTone === "needs-work"
-        ? "text-amber-600"
-        : "text-[var(--nourish-subtext)]";
-
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
 
@@ -343,7 +337,15 @@ export function ResultStack({
           A cream gradient backdrop fades the cards out beneath the pill instead
           of letting them bleed through its rounded corners. (corpus:
           fixed-element-offset, whitespace-balance) */}
-      <div className="sticky bottom-0 z-20 -mx-[var(--gutter)] bg-gradient-to-t from-[var(--nourish-cream)] from-60% to-transparent px-[var(--gutter)] pb-4 pt-5">
+      <div className="sticky bottom-0 z-20 -mx-[var(--gutter)] space-y-2.5 bg-gradient-to-t from-[var(--nourish-cream)] from-60% to-transparent px-[var(--gutter)] pb-4 pt-5">
+        {/* Phase 6 — live plate ring (food-group coverage + honest appraisal),
+            tap to open the existing EvaluateSheet. Replaces the old button. */}
+        {evaluation && (
+          <PlateRing
+            evaluation={evaluation}
+            onOpen={() => setShowEvaluate(true)}
+          />
+        )}
         <motion.button
           onClick={handleCookSelected}
           disabled={selectedSides.length === 0}
@@ -367,37 +369,6 @@ export function ResultStack({
           </span>
         </motion.button>
       </div>
-
-      {/* Evaluate plate button  -  visually secondary */}
-      {evaluation && (
-        <motion.button
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          onClick={() => setShowEvaluate(true)}
-          className={cn(
-            "flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl",
-            "border border-neutral-200 bg-white py-2.5 text-xs font-medium",
-            "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40",
-            "hover:text-[var(--nourish-green)] transition-all duration-200",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-          )}
-          type="button"
-        >
-          <Sparkles size={14} />
-          <span>Evaluate plate</span>
-          {evaluation.appraisal && (
-            <span className={cn("ml-1", toneColor)}>
-              -{" "}
-              {evaluation.status === "balanced"
-                ? "Balanced"
-                : evaluation.status === "good_start"
-                  ? "Good start"
-                  : "Room to improve"}
-            </span>
-          )}
-        </motion.button>
-      )}
 
       {/* Evaluate sheet */}
       {evaluation && (
