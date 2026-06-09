@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { topDeficit } from "@/lib/nutrition/deficits";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
@@ -31,8 +32,19 @@ import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
  */
 export default function DiaryPage() {
   const router = useRouter();
-  const { mounted, entries, dayNutrition, logCook, removeEntry, restoreEntry } =
-    useNutritionDiary();
+  const {
+    mounted,
+    entries,
+    dayNutrition,
+    cookedDayNutrition,
+    logCook,
+    removeEntry,
+    restoreEntry,
+  } = useNutritionDiary();
+  // Re-homed from the removed DailyNutritionCard (Phase 4): the per-day "biggest
+  // gap" insight from the user's COOKED dishes (branded foods' missing micros
+  // must not fabricate a deficit). Shown only when the top gap is notable.
+  const gap = topDeficit(cookedDayNutrition);
   const history = useDiaryHistory();
   const [showBranded, setShowBranded] = useState(false);
 
@@ -69,8 +81,17 @@ export default function DiaryPage() {
       <main className="mx-auto max-w-md page-x space-y-4 pb-28 pt-4">
         {/* Day ring */}
         {dayNutrition ? (
-          <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
-            <NutritionRingCard nutrition={dayNutrition} />
+          <div className="space-y-2">
+            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
+              <NutritionRingCard nutrition={dayNutrition} />
+            </div>
+            {gap && gap.pct < 60 && (
+              <p className="rounded-xl bg-[var(--tier-strong-bg)] px-3 py-2 text-[12.5px] leading-snug text-[var(--nourish-dark)]">
+                Biggest gap today:{" "}
+                <span className="font-semibold">{gap.label}</span> — a targeted
+                side could help close it.
+              </p>
+            )}
           </div>
         ) : (
           <div className="rounded-2xl border border-dashed border-neutral-300 bg-white p-6 text-center">

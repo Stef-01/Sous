@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Bookmark, Users, ChevronRight } from "lucide-react";
+import { Bookmark, Users, ChevronRight, X, Trophy } from "lucide-react";
+import { ActiveChallengeBanner } from "@/components/community/active-challenge-banner";
 import {
   ARTICLES,
   EXPERT_VOICES,
@@ -27,6 +28,16 @@ import { ContentDisclaimer } from "@/components/content/content-disclaimer";
  */
 export default function CommunityPage() {
   const router = useRouter();
+
+  // Tag filter (restored): article #tags deep-link to /community?tag=X. Read it
+  // client-side (no Suspense constraint) and narrow the Learn list, with a clear
+  // chip — the lightweight tag-discovery view, no TagCloud revival needed.
+  const [tag, setTag] = useState<string | null>(null);
+  /* eslint-disable react-hooks/set-state-in-effect -- read ?tag= from the URL on mount */
+  useEffect(() => {
+    setTag(new URLSearchParams(window.location.search).get("tag"));
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const sortedArticles = useMemo(
     () =>
@@ -66,6 +77,11 @@ export default function CommunityPage() {
     () => sortedArticles.find((a) => a.featured) ?? sortedArticles[0],
     [sortedArticles],
   );
+  const articlesToShow = useMemo(
+    () =>
+      tag ? sortedArticles.filter((a) => a.tags.includes(tag)) : sortedArticles,
+    [tag, sortedArticles],
+  );
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
@@ -93,6 +109,10 @@ export default function CommunityPage() {
         {/* Featured — the one highlighted story at the very top. */}
         {featured && <FeaturedHero article={featured} />}
 
+        {/* Seasonal/sponsored challenge banner — self-hides when none is active
+            (restored: was built but never rendered). */}
+        <ActiveChallengeBanner />
+
         {/* Group challenge — minimal entry (rule 13: a button, not an
             explainer; the pod page details it on tap). */}
         <Link
@@ -115,6 +135,22 @@ export default function CommunityPage() {
           />
         </Link>
 
+        {/* Leaderboard — restore an inbound link (the page existed but was
+            unreachable). Slim, subordinate to the Group Challenge entry. */}
+        <Link
+          href="/community/leaderboard"
+          className="flex items-center gap-2 px-1 text-[12px] font-medium text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-green)]"
+        >
+          <Trophy
+            size={14}
+            className="shrink-0"
+            strokeWidth={1.9}
+            aria-hidden
+          />
+          <span className="flex-1">This week’s leaderboard</span>
+          <ChevronRight size={14} className="shrink-0" aria-hidden />
+        </Link>
+
         <ReelsRail
           reels={sortedReels}
           onSelect={(reel) => router.push(`/community/reels?start=${reel.id}`)}
@@ -130,10 +166,29 @@ export default function CommunityPage() {
             title="Learn"
             subtitle="Readable cooking ideas and plain-English food research."
           />
+          {tag && (
+            <button
+              type="button"
+              onClick={() => {
+                setTag(null);
+                router.replace("/community");
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-[12px] font-semibold text-[var(--nourish-green)]"
+              aria-label={`Clear the #${tag} filter`}
+            >
+              Tagged #{tag}
+              <X size={13} aria-hidden />
+            </button>
+          )}
           <div className="grid grid-cols-2 gap-3">
-            {sortedArticles.map((article) => (
+            {articlesToShow.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
+            {tag && articlesToShow.length === 0 && (
+              <p className="col-span-2 text-[13px] text-[var(--nourish-subtext)]">
+                No reads tagged #{tag} yet.
+              </p>
+            )}
           </div>
           <div className="space-y-2">
             {sortedResearch.map((brief) => (
