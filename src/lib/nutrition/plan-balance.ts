@@ -24,6 +24,24 @@ const PROTEIN_GROUPS: ReadonlySet<FoodGroup> = new Set([
   "red-meat",
 ]);
 
+export interface FoodGroupRoles {
+  hasVegetable: boolean;
+  hasProtein: boolean;
+}
+
+/** Pure: which dietary roles a set of food groups covers. Shared by planBalance
+ *  and sousRead so the two can't drift on what counts as veg / protein. */
+export function foodGroupRoles(
+  foodGroups: readonly FoodGroup[],
+): FoodGroupRoles {
+  return {
+    hasVegetable: foodGroups.some(
+      (g) => g === "vegetable" || g === "leafy-green",
+    ),
+    hasProtein: foodGroups.some((g) => PROTEIN_GROUPS.has(g)),
+  };
+}
+
 export interface PlanBalance {
   /** Distinct whole-food groups present across the plan, most grams first. */
   foodGroups: FoodGroup[];
@@ -45,11 +63,5 @@ export function planBalance(slugs: ReadonlyArray<string>): PlanBalance {
     .sort((a, b) => b[1] - a[1])
     .map(([g]) => g);
 
-  return {
-    foodGroups,
-    hasVegetable: foodGroups.some(
-      (g) => g === "vegetable" || g === "leafy-green",
-    ),
-    hasProtein: foodGroups.some((g) => PROTEIN_GROUPS.has(g)),
-  };
+  return { foodGroups, ...foodGroupRoles(foodGroups) };
 }

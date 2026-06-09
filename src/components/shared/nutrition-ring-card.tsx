@@ -235,6 +235,7 @@ export function NutritionRingCard({
   servings = 1,
   coverage,
   className,
+  compact = false,
 }: {
   nutrition: PerServingNutrition;
   /** Servings being made — scales the absolute totals shown so the cook slider
@@ -245,6 +246,10 @@ export function NutritionRingCard({
    *  actually counted. Shown in the footnote so a partial total is honest. */
   coverage?: { massed: number; total: number };
   className?: string;
+  /** Phase 1 — glance mode: ring + macro legend + servings line + footnote only.
+   *  Skips the Nutrient-dense badge, Daily targets, Key nutrients, and the full
+   *  breakdown (the Sous-read glance owns those). Default false = unchanged. */
+  compact?: boolean;
 }) {
   const [showAll, setShowAll] = useState(false);
 
@@ -333,49 +338,52 @@ export function NutritionRingCard({
         </p>
       )}
 
-      {/* W24: lots of micronutrients per calorie — a quiet quality cue. */}
-      {isNutrientDense(nutrition) && (
+      {/* W24: lots of micronutrients per calorie — a quiet quality cue. (Hidden
+          in compact/glance mode; the Sous-read facet owns it there.) */}
+      {!compact && isNutrientDense(nutrition) && (
         <span className="inline-flex w-fit rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-green)]">
           Nutrient-dense
         </span>
       )}
 
       {/* Macronutrient targets — vs FDA daily value. */}
-      <div className="space-y-3">
-        <p className="sous-label" style={{ color: "var(--data-protein)" }}>
-          Daily targets
-        </p>
-        <TargetRow
-          label="Energy"
-          value={calories}
-          target={MACRO_DV.energy}
-          unit="kcal"
-        />
-        <TargetRow
-          label="Protein"
-          value={protein}
-          target={MACRO_DV.protein}
-          unit="g"
-          color={MACRO.protein.color}
-        />
-        <TargetRow
-          label="Carbs"
-          value={carbs}
-          target={MACRO_DV.carbs}
-          unit="g"
-          color={MACRO.carbs.color}
-        />
-        <TargetRow
-          label="Fat"
-          value={fat}
-          target={MACRO_DV.fat}
-          unit="g"
-          color={MACRO.fat.color}
-        />
-      </div>
+      {!compact && (
+        <div className="space-y-3">
+          <p className="sous-label" style={{ color: "var(--data-protein)" }}>
+            Daily targets
+          </p>
+          <TargetRow
+            label="Energy"
+            value={calories}
+            target={MACRO_DV.energy}
+            unit="kcal"
+          />
+          <TargetRow
+            label="Protein"
+            value={protein}
+            target={MACRO_DV.protein}
+            unit="g"
+            color={MACRO.protein.color}
+          />
+          <TargetRow
+            label="Carbs"
+            value={carbs}
+            target={MACRO_DV.carbs}
+            unit="g"
+            color={MACRO.carbs.color}
+          />
+          <TargetRow
+            label="Fat"
+            value={fat}
+            target={MACRO_DV.fat}
+            unit="g"
+            color={MACRO.fat.color}
+          />
+        </div>
+      )}
 
       {/* Key micronutrients. */}
-      {keyRows.length > 0 && (
+      {!compact && keyRows.length > 0 && (
         <div className="space-y-3">
           <p className="sous-label" style={{ color: "var(--data-protein)" }}>
             Key nutrients
@@ -390,7 +398,7 @@ export function NutritionRingCard({
 
       {/* Expandable complete nutrient summary — every composed nutrient,
           grouped (General · Carbs · Fats · Protein · Vitamins · Minerals). */}
-      {groupedRows.length > 0 && (
+      {!compact && groupedRows.length > 0 && (
         <div>
           <button
             type="button"
