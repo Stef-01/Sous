@@ -7,7 +7,7 @@ import {
   X,
   Heart,
   UtensilsCrossed,
-  Maximize2,
+  Layers,
   ChefHat,
   Info,
   ChevronUp,
@@ -325,6 +325,7 @@ export function QuestCard({
       {previewDish && (
         <MealQueuePreview
           dish={previewDish}
+          count={queueDishes.length}
           onOpen={() => setQueueOpen(true)}
         />
       )}
@@ -362,9 +363,11 @@ export function QuestCard({
 
 function MealQueuePreview({
   dish,
+  count,
   onOpen,
 }: {
   dish: QuestDish;
+  count: number;
   onOpen: () => void;
 }) {
   return (
@@ -380,12 +383,23 @@ function MealQueuePreview({
         whileTap={{ scale: 0.985 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className="group w-full text-left"
-        aria-label={`Open meal queue starting with ${dish.dishName}`}
+        aria-label={`Browse ${count} meals, starting with ${dish.dishName}`}
       >
-        <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] border border-neutral-200 bg-white">
-          <DishImage dish={dish} priority fit="cover" />
-          <div className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white/92 text-neutral-900 transition-colors group-hover:bg-white">
-            <Maximize2 size={17} strokeWidth={1.9} />
+        {/* Phase 5 — the whole card is the door to the deck: a "Browse N meals"
+            pill + a 2px card-peek telegraph a swipeable deck (no orphan circle). */}
+        <div className="relative">
+          <div
+            aria-hidden
+            className="absolute -inset-x-1 -bottom-1.5 top-2 -z-10 rounded-[var(--radius-lg)] border border-neutral-200 bg-neutral-100 [transform:rotate(-1.5deg)]"
+          />
+          <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] border border-neutral-200 bg-white">
+            <DishImage dish={dish} priority fit="cover" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-3">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/92 px-3.5 py-1.5 text-[12px] font-semibold text-neutral-900 shadow-sm transition-colors group-hover:bg-white">
+                <Layers size={14} strokeWidth={2} aria-hidden />
+                Browse {count} meals
+              </span>
+            </div>
           </div>
         </div>
 
@@ -630,7 +644,9 @@ function MealSwipeQueueOverlay({
             </div>
           </div>
 
-          <div className="mx-auto grid max-w-[430px] grid-cols-[52px_0.9fr_1.2fr] items-center gap-3">
+          {/* Phase 5 — one dominant action: Pass + Save are equal ghost circles,
+              Cook is the single wide solid primary (Rule 2). */}
+          <div className="mx-auto grid max-w-[430px] grid-cols-[52px_52px_1fr] items-center gap-3">
             <button
               type="button"
               onClick={() => swipeTop("left")}
@@ -643,7 +659,7 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={saveActive}
               className={cn(
-                "flex h-[52px] items-center justify-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors",
+                "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-colors",
                 isDishSaved(activeDish.slug)
                   ? "border-pink-200 bg-pink-50 text-pink-500"
                   : "border-white/16 bg-transparent text-white hover:bg-white/10",
@@ -655,10 +671,9 @@ function MealSwipeQueueOverlay({
               }
             >
               <Heart
-                size={18}
+                size={20}
                 className={isDishSaved(activeDish.slug) ? "fill-current" : ""}
               />
-              <span>{isDishSaved(activeDish.slug) ? "Saved" : "Save"}</span>
             </button>
             <button
               type="button"

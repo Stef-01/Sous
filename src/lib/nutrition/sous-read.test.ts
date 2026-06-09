@@ -5,7 +5,6 @@ import { getDishTherapeuticProfile } from "@/lib/engine/dish-therapeutic-profile
 import { assertNoMedicalClaim } from "@/lib/therapeutics/claim-contract";
 import { meals, sides } from "@/data";
 import type { PerServingNutrition } from "@/types/nutrition";
-import type { FoodGroup } from "@/types/ingredient";
 
 const N = (o: Record<string, number>) => o as unknown as PerServingNutrition;
 
