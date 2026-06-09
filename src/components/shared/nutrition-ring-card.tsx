@@ -136,7 +136,7 @@ function TargetRow({
           className={cn(
             "shrink-0 font-semibold tabular-nums",
             over
-              ? "text-[var(--nourish-green)]"
+              ? "text-[var(--tier-strong)]"
               : "text-[var(--nourish-subtext)]",
           )}
         >
@@ -149,7 +149,7 @@ function TargetRow({
           style={{
             width: `${Math.min(100, p)}%`,
             backgroundColor: over
-              ? "var(--nourish-green)"
+              ? "var(--tier-strong)"
               : (color ?? "var(--nourish-subtext)"),
           }}
         />
@@ -206,7 +206,7 @@ function NutrientBar({ row }: { row: NRow }) {
           className={cn(
             "shrink-0 font-semibold tabular-nums",
             strong
-              ? "text-[var(--nourish-green)]"
+              ? "text-[var(--tier-strong)]"
               : "text-[var(--nourish-subtext)]",
           )}
         >
@@ -219,7 +219,7 @@ function NutrientBar({ row }: { row: NRow }) {
           style={{
             width: `${p != null ? Math.min(100, p) : 0}%`,
             backgroundColor: strong
-              ? "var(--nourish-green)"
+              ? "var(--tier-strong)"
               : good
                 ? "var(--nourish-light-green)"
                 : "var(--nourish-subtext-faint)",
@@ -341,7 +341,7 @@ export function NutritionRingCard({
       {/* W24: lots of micronutrients per calorie — a quiet quality cue. (Hidden
           in compact/glance mode; the Sous-read facet owns it there.) */}
       {!compact && isNutrientDense(nutrition) && (
-        <span className="inline-flex w-fit rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-green)]">
+        <span className="inline-flex w-fit rounded-full bg-[var(--tier-strong)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--tier-strong)]">
           Nutrient-dense
         </span>
       )}
@@ -427,7 +427,7 @@ export function NutritionRingCard({
                         className="text-[11px] font-medium normal-case tracking-normal"
                         style={{
                           color: pq.complete
-                            ? "var(--nourish-green)"
+                            ? "var(--tier-strong)"
                             : "var(--nourish-subtext)",
                         }}
                       >

@@ -32,7 +32,7 @@ export function SousReadCard({
           {read.facets.map((f) => (
             <span
               key={f}
-              className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-green)]"
+              className="rounded-full bg-[var(--tier-strong-bg)] px-2.5 py-1 text-[11px] font-medium text-[var(--tier-strong)]"
             >
               {f}
             </span>

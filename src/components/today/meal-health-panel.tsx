@@ -125,7 +125,7 @@ export function MealHealthPanel({
   const evidenceBlock = (
     <div className="space-y-6">
       <header className="flex items-center justify-between gap-3">
-        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--tier-strong)]">
           Food-first evidence
         </p>
         <span
@@ -330,7 +330,7 @@ function PersonalizedSubhead({
   return (
     <p className="text-[12px] font-medium text-[var(--nourish-dark)]">
       Matched to your focus:{" "}
-      <span className="text-[var(--nourish-green)]">{names}</span>
+      <span className="text-[var(--tier-strong)]">{names}</span>
     </p>
   );
 }
@@ -367,7 +367,7 @@ function EvidenceRowItem({
       <p className="sous-label mt-0.5">{row.classLabel}</p>
 
       {row.effectText && (
-        <p className="mt-2.5 rounded-lg bg-[var(--nourish-green)]/[0.07] px-2.5 py-1.5 text-[12.5px] font-medium text-[var(--nourish-dark)]">
+        <p className="mt-2.5 rounded-lg bg-[var(--tier-strong-bg)] px-2.5 py-1.5 text-[12.5px] font-medium text-[var(--nourish-dark)]">
           {row.effectText}
         </p>
       )}
