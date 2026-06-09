@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
+import { haptic } from "@/lib/motion/haptics";
+import { playSound } from "@/lib/sound/sound";
 import {
   useActiveToast,
   toast as toastApi,
@@ -56,6 +58,18 @@ export function ToastHost() {
     return () => clearTimeout(timer);
   }, [active]);
 
+  // W22b: earned moments get the full sensory triple through this one choke
+  // point — visual (the toast) + success haptic + the opt-in win chime — so
+  // every achievement / level-up / streak milestone app-wide celebrates the
+  // same way without per-call-site wiring.
+  useEffect(() => {
+    if (!active) return;
+    if (active.variant === "achievement" || active.variant === "level-up") {
+      haptic("success");
+      playSound("win");
+    }
+  }, [active]);
+
   return (
     <div
       aria-live="polite"
@@ -107,6 +121,7 @@ export function ToastHost() {
 }
 
 function ToastCard({ toast }: { toast: Toast }) {
+  const reducedMotion = useReducedMotion();
   const style = VARIANT_STYLES[toast.variant];
   const label = style.label;
   const isDark =
@@ -124,7 +139,9 @@ function ToastCard({ toast }: { toast: Toast }) {
       <div className="flex items-center gap-4">
         {(toast.emoji || isDark) && (
           <motion.span
-            initial={{ rotate: -20, scale: 0 }}
+            // Icon entrance pop — gated off under reduced motion (the outer
+            // container already collapses to a fade there).
+            initial={reducedMotion ? false : { rotate: -20, scale: 0 }}
             animate={{ rotate: 0, scale: 1 }}
             transition={{
               type: "spring",
