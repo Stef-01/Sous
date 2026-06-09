@@ -1,0 +1,126 @@
+"use client";
+
+import { useState } from "react";
+import { Minus, Plus, X } from "lucide-react";
+import {
+  diaryRemoveEntry,
+  diaryRestoreEntry,
+  diaryUpdateServings,
+  type DiaryEntry,
+} from "@/lib/hooks/use-nutrition-diary";
+import { haptic } from "@/lib/motion/haptics";
+import { toast } from "@/lib/hooks/use-toast";
+import { cn } from "@/lib/utils/cn";
+
+/**
+ * One diary entry row — name, servings, provenance, remove-with-undo, and the
+ * stage-3 in-place servings stepper (before this, the only "edit" was remove +
+ * re-log, which lost the count).
+ *
+ * Stepper design — approaches compared:
+ *  - always-visible − / + : fastest (1 tap per step) but two extra controls on
+ *    every row all the time (rule 6 fail);
+ *  - ×½ / ×1 / ×2 presets: fast but can't express 1.5 or 3;
+ *  - CHOSEN: the ×N pill is itself the button — tap to reveal − / + (0.5
+ *    steps, min 0.5), tap elsewhere keeps it open while adjusting, auto-quiet.
+ *    Clean default, 2 taps to first adjustment, 1 tap per step after.
+ */
+export function DiaryEntryRow({
+  entry,
+  date,
+}: {
+  entry: DiaryEntry;
+  date: Date;
+}) {
+  const [editing, setEditing] = useState(false);
+
+  const step = (delta: number) => {
+    const next = Math.max(0.5, Math.round((entry.servings + delta) * 2) / 2);
+    if (next !== entry.servings) {
+      haptic("select");
+      diaryUpdateServings(entry.at, next, date);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-white px-3 py-2.5">
+      <span className="min-w-0 flex-1 text-[13px] text-[var(--nourish-dark)]">
+        <span className="font-semibold">{entry.name}</span>
+        {entry.brand && (
+          <span className="text-[var(--nourish-subtext-faint)]">
+            {" "}
+            · {entry.brand}
+          </span>
+        )}
+        {entry.auto && (
+          <span className="text-[var(--nourish-subtext-faint)]"> · cooked</span>
+        )}
+      </span>
+
+      {/* Servings — the pill toggles the stepper. */}
+      {editing ? (
+        <span className="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            onClick={() => step(-0.5)}
+            aria-label={`Reduce ${entry.name} servings`}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
+          >
+            <Minus size={13} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            aria-label="Done adjusting servings"
+            className="min-w-[40px] rounded-full bg-[var(--nourish-green)]/10 px-2 py-1 text-center text-[12px] font-semibold text-[var(--nourish-green)]"
+          >
+            ×{entry.servings}
+          </button>
+          <button
+            type="button"
+            onClick={() => step(0.5)}
+            aria-label={`Increase ${entry.name} servings`}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
+          >
+            <Plus size={13} />
+          </button>
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setEditing(true)}
+          aria-label={`Adjust ${entry.name} servings (currently ${entry.servings})`}
+          className={cn(
+            "shrink-0 rounded-full px-2 py-1 text-[12px] font-medium transition-colors",
+            entry.servings !== 1
+              ? "bg-neutral-100 text-[var(--nourish-dark)]"
+              : "text-[var(--nourish-subtext-faint)] hover:bg-neutral-100",
+          )}
+        >
+          ×{entry.servings}
+        </button>
+      )}
+
+      <button
+        type="button"
+        onClick={() => {
+          haptic("select");
+          diaryRemoveEntry(entry.at, date);
+          toast.push({
+            variant: "info",
+            title: `Removed ${entry.name}`,
+            dedupKey: `rm-${entry.at}`,
+            action: {
+              label: "Undo",
+              onClick: () => diaryRestoreEntry(entry, date),
+            },
+          });
+        }}
+        aria-label={`Remove ${entry.name}`}
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 hover:text-[var(--nourish-dark)]"
+      >
+        <X size={15} />
+      </button>
+    </div>
+  );
+}

@@ -1,63 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Flame,
   Plus,
-  X,
   UtensilsCrossed,
   Barcode,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { topDeficit } from "@/lib/nutrition/deficits";
-import { BrandedFoodSearch } from "@/components/path/branded-food-search";
+import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
+import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { TextQuickLog } from "@/components/shared/text-quick-log";
-import { WeeklyTrendCard } from "@/components/path/weekly-trend-card";
-import { HydrationCard } from "@/components/path/hydration-card";
+import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
+import { HydrationCard } from "@/components/nutrition/hydration-card";
 import { cn } from "@/lib/utils/cn";
 import {
   useNutritionDiary,
   useDiaryHistory,
+  diaryLogCook,
 } from "@/lib/hooks/use-nutrition-diary";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { haptic } from "@/lib/motion/haptics";
-import { toast } from "@/lib/hooks/use-toast";
 import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
 
+/** The daily energy reference used across the ring card (FDA DV). */
+const ENERGY_TARGET_KCAL = 2000;
+/** How far back the day pager reaches — matches the weekly trend window. */
+const MAX_DAYS_BACK = 6;
+
+function labelFor(offset: number, d: Date): string {
+  if (offset === 0) return "Today";
+  if (offset === 1) return "Yesterday";
+  return d.toLocaleDateString(undefined, { weekday: "long" });
+}
+
 /**
- * The Nutrition tab — the diary promoted to a first-class surface (was buried
- * two taps deep at /path/diary). One screen, action-first:
+ * The Nutrition tab — the diary promoted to a first-class surface. One screen,
+ * action-first: glance (day ring + kcal left + biggest gap) → entries (adjust
+ * servings in place, remove with undo) → log (type/dictate with kcal previews,
+ * one-tap staples, packaged) → insights (weekly trend, hydration).
  *
- *   glance (day ring + biggest gap) → log (one-tap recents, type/dictate,
- *   packaged) → today's entries (undo) → insights (weekly trend, hydration).
- *
- * Cooked recipes auto-log on completion (entries carry `auto`), so for most
- * users this page is read-mostly — the ring fills itself.
+ * Stage 5: the day pager (‹ Today ›) reaches back 7 days, and every log
+ * affordance writes to the VIEWED day — "I forgot to log yesterday's dinner"
+ * is a two-tap fix, not a lost day. Cooked recipes auto-log on completion, so
+ * for most users this page is read-mostly — the ring fills itself.
  */
 export default function NutritionPage() {
-  const {
-    entries,
-    dayNutrition,
-    cookedDayNutrition,
-    logCook,
-    removeEntry,
-    restoreEntry,
-  } = useNutritionDiary();
+  const [dayOffset, setDayOffset] = useState(0);
+  const viewedDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - dayOffset);
+    return d;
+  }, [dayOffset]);
+
+  const { entries, dayNutrition, cookedDayNutrition } =
+    useNutritionDiary(viewedDate);
   const gap = topDeficit(cookedDayNutrition);
   const history = useDiaryHistory();
   const [showBranded, setShowBranded] = useState(false);
+
+  const isToday = dayOffset === 0;
+  const consumedKcal = dayNutrition?.calories ?? 0;
+  const kcalLeft = Math.max(0, Math.round(ENERGY_TARGET_KCAL - consumedKcal));
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
       <header className="app-header page-x py-2.5">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <div className="min-w-0 flex-1">
-            <p className="sous-label">Today</p>
+            <p className="sous-label">{isToday ? "Today" : "Diary"}</p>
             <h1 className="font-serif text-[19px] leading-tight text-[var(--nourish-dark)]">
               Nutrition
             </h1>
           </div>
+          {/* Stage 7 — the tracking glance: what's left today (only when
+              something is logged; complements the ring's consumed-vs-targets). */}
+          {isToday && consumedKcal > 0 && (
+            <span className="text-[12px] font-medium text-[var(--nourish-subtext)]">
+              {kcalLeft} kcal left
+            </span>
+          )}
           {history.streak > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/15 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-gold)]">
               <Flame size={13} />
@@ -68,13 +94,49 @@ export default function NutritionPage() {
       </header>
 
       <main className="mx-auto max-w-md page-x space-y-4 pb-28 pt-4">
+        {/* Stage 5 — day pager: review or back-fill the last 7 days. */}
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => setDayOffset((o) => Math.min(MAX_DAYS_BACK, o + 1))}
+            disabled={dayOffset >= MAX_DAYS_BACK}
+            aria-label="Previous day"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-dark)] transition-colors disabled:opacity-30"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setDayOffset(0)}
+            disabled={isToday}
+            className={cn(
+              "rounded-full px-3 py-1 text-[13px] font-semibold transition-colors",
+              isToday
+                ? "text-[var(--nourish-dark)]"
+                : "bg-neutral-100 text-[var(--nourish-dark)] hover:bg-neutral-200",
+            )}
+            aria-label={isToday ? "Viewing today" : "Jump back to today"}
+          >
+            {labelFor(dayOffset, viewedDate)}
+          </button>
+          <button
+            type="button"
+            onClick={() => setDayOffset((o) => Math.max(0, o - 1))}
+            disabled={isToday}
+            aria-label="Next day"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-dark)] transition-colors disabled:opacity-30"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+
         {/* Day ring — the glanceable status */}
         {dayNutrition ? (
           <div className="space-y-2">
             <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
               <NutritionRingCard nutrition={dayNutrition} />
             </div>
-            {gap && gap.pct < 60 && (
+            {isToday && gap && gap.pct < 60 && (
               <p className="rounded-xl bg-[var(--tier-strong-bg)] px-3 py-2 text-[12.5px] leading-snug text-[var(--nourish-dark)]">
                 Biggest gap today:{" "}
                 <span className="font-semibold">{gap.label}</span> — a targeted
@@ -89,91 +151,54 @@ export default function NutritionPage() {
               className="mx-auto text-[var(--nourish-subtext-faint)]"
             />
             <p className="mt-2 text-[13px] text-[var(--nourish-subtext)]">
-              Cook a recipe and it logs itself — or add anything below.
+              {isToday
+                ? "Cook a recipe and it logs itself — or add anything below."
+                : `Nothing logged ${labelFor(dayOffset, viewedDate).toLowerCase()} — add what you ate below.`}
             </p>
             {/* Rule 2 — the one primary action points at the existing primary
                 (the Today craving search), never a rival CTA. */}
-            <Link
-              href="/today"
-              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.97]"
-            >
-              Find something to cook
-            </Link>
+            {isToday && (
+              <Link
+                href="/today"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.97]"
+              >
+                Find something to cook
+              </Link>
+            )}
           </div>
         )}
 
-        {/* Logged today — entries with undo; auto-logged cooks are labelled */}
+        {/* Entries — adjust servings in place (stage 3), remove with undo. */}
         {entries.length > 0 && (
           <section>
-            <p className="sous-label mb-1.5">Logged today</p>
+            <p className="sous-label mb-1.5">
+              {isToday ? "Logged today" : "Logged"}
+            </p>
             <StaggerList className="space-y-1.5">
               {entries.map((e) => (
-                <StaggerItem
-                  key={e.at}
-                  className="flex items-center gap-3 rounded-xl border border-neutral-200/70 bg-white px-3 py-2.5"
-                >
-                  <span className="flex-1 text-[13px] text-[var(--nourish-dark)]">
-                    <span className="font-semibold">{e.name}</span>
-                    {e.servings !== 1 && (
-                      <span className="text-[var(--nourish-subtext)]">
-                        {" "}
-                        ×{e.servings}
-                      </span>
-                    )}
-                    {e.brand && (
-                      <span className="text-[var(--nourish-subtext-faint)]">
-                        {" "}
-                        · {e.brand}
-                      </span>
-                    )}
-                    {e.auto && (
-                      <span className="text-[var(--nourish-subtext-faint)]">
-                        {" "}
-                        · cooked
-                      </span>
-                    )}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      haptic("select");
-                      removeEntry(e.at);
-                      toast.push({
-                        variant: "info",
-                        title: `Removed ${e.name}`,
-                        dedupKey: `rm-${e.at}`,
-                        action: {
-                          label: "Undo",
-                          onClick: () => restoreEntry(e),
-                        },
-                      });
-                    }}
-                    aria-label={`Remove ${e.name}`}
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 hover:text-[var(--nourish-dark)]"
-                  >
-                    <X size={15} />
-                  </button>
+                <StaggerItem key={e.at}>
+                  <DiaryEntryRow entry={e} date={viewedDate} />
                 </StaggerItem>
               ))}
             </StaggerList>
           </section>
         )}
 
-        {/* W29 — log a dish by typing / dictating its name. */}
-        <TextQuickLog />
+        {/* W29 — log a dish by typing / dictating; writes to the viewed day. */}
+        <TextQuickLog date={viewedDate} />
 
-        {/* Quick-add recents — one-tap re-log */}
-        {history.recents.length > 0 && (
+        {/* Quick add — 30-day staples first (stage 4: frequency + recency). */}
+        {history.frequents.length > 0 && (
           <section>
             <p className="sous-label mb-1.5">Quick add</p>
             <StaggerList className="flex flex-wrap gap-2">
-              {history.recents.map((r) => (
+              {history.frequents.map((r) => (
                 <StaggerItem key={r.slug}>
                   <button
                     type="button"
                     onClick={() => {
                       haptic("commit");
-                      logCook(r.slug, r.name, 1);
+                      diaryLogCook(r.slug, r.name, 1, { date: viewedDate });
                     }}
                     className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
                   >
@@ -213,7 +238,7 @@ export default function NutritionPage() {
           )}
         </section>
 
-        {/* Insights — moved here from Path (nutrition belongs on Nutrition) */}
+        {/* Insights — weekly trend + hydration (nutrition lives on Nutrition). */}
         <WeeklyTrendCard />
         <HydrationCard />
       </main>

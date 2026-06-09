@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Search, Mic, Plus } from "lucide-react";
 import { matchDishesByText } from "@/lib/nutrition/match-dish-by-text";
-import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
+import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
 import { haptic } from "@/lib/motion/haptics";
 
 /** Minimal shape of the browser SpeechRecognition we use (avoids `any`). */
@@ -27,11 +27,12 @@ function getSpeechRecognition(): (new () => SpeechRecognitionLike) | null {
 
 /**
  * TextQuickLog (W29) — log a meal by typing (or dictating) its name. Offline
- * fuzzy match against the catalogue; voice is offered only where the browser
- * supports it. No AI key required.
+ * fuzzy match against the catalogue (prefix + one-typo tolerant, stage 6);
+ * results carry a kcal preview so the user picks confidently. Voice is offered
+ * only where the browser supports it. No AI key required. `date` (default
+ * today) lets the day pager back-fill a past day (stage 5).
  */
-export function TextQuickLog() {
-  const { logCook } = useNutritionDiary();
+export function TextQuickLog({ date }: { date?: Date }) {
   const [q, setQ] = useState("");
   const matches = matchDishesByText(q);
   const SR = getSpeechRecognition();
@@ -83,13 +84,18 @@ export function TextQuickLog() {
               type="button"
               onClick={() => {
                 haptic("commit");
-                logCook(m.id, m.name, 1);
+                diaryLogCook(m.id, m.name, 1, { date });
                 setQ("");
               }}
               className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
             >
               <Plus size={12} className="text-[var(--nourish-green)]" />
               {m.name}
+              {m.kcal !== null && (
+                <span className="text-[var(--nourish-subtext-faint)]">
+                  {m.kcal} kcal
+                </span>
+              )}
             </button>
           ))}
         </div>

@@ -173,6 +173,40 @@ export function loggingStreak(store: DiaryStore, today: Date): number {
   return streak;
 }
 
+/** Stage 4 — the quick-add ranking: people's staples repeat, so rank by HOW
+ *  OFTEN a dish was logged in the last 30 days (frequency), tie-broken by how
+ *  recently. Compared against recency-only (the old order): recency surfaces
+ *  one-offs and buries the daily oatmeal; frequency+recency keeps the staples
+ *  on top while a brand-new dish still appears (count 1, newest). Branded
+ *  entries excluded — you re-eat dishes, not barcodes. */
+export function frequentDishes(
+  store: DiaryStore,
+  limit = 6,
+  now: Date = new Date(),
+): { slug: string; name: string }[] {
+  const cutoff = new Date(now);
+  cutoff.setDate(cutoff.getDate() - 30);
+  const cutoffKey = dayKey(cutoff);
+  const agg = new Map<string, { name: string; count: number; last: string }>();
+  for (const [day, entries] of Object.entries(store)) {
+    if (day < cutoffKey) continue;
+    for (const e of entries) {
+      if (e.brand) continue;
+      const cur = agg.get(e.slug);
+      if (cur) {
+        cur.count += 1;
+        if (e.at > cur.last) cur.last = e.at;
+      } else {
+        agg.set(e.slug, { name: e.name, count: 1, last: e.at });
+      }
+    }
+  }
+  return [...agg.entries()]
+    .sort((a, b) => b[1].count - a[1].count || (a[1].last < b[1].last ? 1 : -1))
+    .slice(0, limit)
+    .map(([slug, v]) => ({ slug, name: v.name }));
+}
+
 /** W8 — most-recent DISTINCT cooked dishes across history, newest first, for the
  *  quick-add tray (branded entries excluded — you re-cook dishes, not sodas). */
 export function recentDistinctDishes(
@@ -227,14 +261,15 @@ function celebrate(store: Store): void {
   }
 }
 
-/** Log a cooked dish (today, live clock). `auto` marks cook-completion logs. */
+/** Log a cooked dish. `auto` marks cook-completion logs; `date` (default now)
+ *  lets a forgotten meal be back-filled onto a past day (stage 5). */
 export function diaryLogCook(
   slug: string,
   name: string,
   servings: number,
-  opts?: { auto?: boolean },
+  opts?: { auto?: boolean; date?: Date },
 ): void {
-  const key = dayKey(new Date());
+  const key = dayKey(opts?.date ?? new Date());
   const prev = getSnapshot();
   const entry: DiaryEntry = {
     slug,
@@ -246,6 +281,24 @@ export function diaryLogCook(
   const next: Store = { ...prev, [key]: [...(prev[key] ?? []), entry] };
   commit(next);
   celebrate(next);
+}
+
+/** Stage 3 — adjust an entry's servings in place (the missing CRUD: before
+ *  this, the only "edit" was remove + re-log, which lost the serving count). */
+export function diaryUpdateServings(
+  at: string,
+  servings: number,
+  date: Date = new Date(),
+): void {
+  if (!Number.isFinite(servings) || servings <= 0) return;
+  const key = dayKey(date);
+  const prev = getSnapshot();
+  const day = prev[key] ?? [];
+  if (!day.some((e) => e.at === at)) return;
+  commit({
+    ...prev,
+    [key]: day.map((e) => (e.at === at ? { ...e, servings } : e)),
+  });
 }
 
 /** Branded foods (W20) carry their own nutrition (not in the registry). */
@@ -265,8 +318,8 @@ export function diaryLogBranded(food: BrandedFood, servings: number): void {
   celebrate(next);
 }
 
-export function diaryRemoveEntry(at: string): void {
-  const key = dayKey(new Date());
+export function diaryRemoveEntry(at: string, date: Date = new Date()): void {
+  const key = dayKey(date);
   const prev = getSnapshot();
   const next: Store = {
     ...prev,
@@ -276,8 +329,11 @@ export function diaryRemoveEntry(at: string): void {
 }
 
 /** W25 — undo: re-insert a removed entry exactly (preserves branded nutrition). */
-export function diaryRestoreEntry(entry: DiaryEntry): void {
-  const key = dayKey(new Date());
+export function diaryRestoreEntry(
+  entry: DiaryEntry,
+  date: Date = new Date(),
+): void {
+  const key = dayKey(date);
   const prev = getSnapshot();
   const day = prev[key] ?? [];
   if (day.some((e) => e.at === entry.at)) return;
@@ -373,5 +429,7 @@ export function useDiaryHistory() {
   const store = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const streak = useMemo(() => loggingStreak(store, new Date()), [store]);
   const recents = useMemo(() => recentDistinctDishes(store, 6), [store]);
-  return { mounted: true, streak, recents };
+  // Stage 4 — the quick-add tray ranks by 30-day frequency (staples first).
+  const frequents = useMemo(() => frequentDishes(store, 6), [store]);
+  return { mounted: true, streak, recents, frequents };
 }
