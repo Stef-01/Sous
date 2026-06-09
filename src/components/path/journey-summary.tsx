@@ -19,6 +19,9 @@ interface JourneySummaryProps {
    *  composed as one row inside a shared grouped card. The parent supplies the
    *  border, background, and padding; we keep only the internal spacing. */
   bare?: boolean;
+  /** Phase 7 — hide the Day-streak stat when the Up-next banner already carries
+   *  the live streak, so it isn't printed in two places (Rule 13). Default true. */
+  showStreak?: boolean;
 }
 
 interface StatBlockProps {
@@ -88,6 +91,7 @@ export const JourneySummary = memo(function JourneySummary({
   stats,
   recentSessions = [],
   bare = false,
+  showStreak = true,
 }: JourneySummaryProps) {
   const reducedMotion = useReducedMotion();
   const recent = recentSessions.filter((s) => !!s.completedAt).slice(0, 8);
@@ -144,21 +148,24 @@ export const JourneySummary = memo(function JourneySummary({
           highlight={stats.completedCooks >= 10}
         />
 
-        <div className="h-10 w-px bg-neutral-100" />
-
-        <StatBlock
-          value={stats.currentStreak}
-          icon={
-            <Flame
-              size={18}
-              className="text-[var(--nourish-warm)]"
-              strokeWidth={2.2}
+        {showStreak && (
+          <>
+            <div className="h-10 w-px bg-neutral-100" />
+            <StatBlock
+              value={stats.currentStreak}
+              icon={
+                <Flame
+                  size={18}
+                  className="text-[var(--nourish-warm)]"
+                  strokeWidth={2.2}
+                />
+              }
+              label="Day streak"
+              delay={0.1}
+              highlight={stats.currentStreak >= 3}
             />
-          }
-          label="Day streak"
-          delay={0.1}
-          highlight={stats.currentStreak >= 3}
-        />
+          </>
+        )}
 
         <div className="h-10 w-px bg-neutral-100" />
 

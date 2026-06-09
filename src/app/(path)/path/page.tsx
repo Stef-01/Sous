@@ -26,6 +26,7 @@ import { BrandedFoodSearch } from "@/components/path/branded-food-search";
 import { JourneySummary } from "@/components/path/journey-summary";
 import { WeeklyGoalCard } from "@/components/path/weekly-goal-card";
 import { SkillTree } from "@/components/path/skill-tree";
+import { UpNextBanner, pickUpNextNode } from "@/components/path/up-next-banner";
 import { SkillDetailSheet } from "@/components/path/skill-detail-sheet";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -187,9 +188,18 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
+        {/* Phase 7 — a slim "Up next" action banner naming the active skill +
+            carrying the live streak. It SHARES handleNodeTap with the tree (one
+            source of truth) — a thin action row, not a duplicate node card. */}
+        <UpNextBanner
+          node={pickUpNextNode(nodesWithStatus)}
+          streak={stats.currentStreak}
+          onTap={handleNodeTap}
+        />
+
         {/* Skill tree is the single hero — the signature journey map leads the
-            page. The active node IS "what's next" (tap it for the detail +
-            cook CTA), so there's no separate Up-Next card duplicating it. */}
+            page. Tapping the banner above or the active node opens the same
+            SkillDetailSheet. */}
         <SkillTree nodes={nodesWithStatus} onNodeTap={handleNodeTap} />
 
         {/* Path = the longer arc (journey). "Today's plate" now lives on Today
@@ -231,6 +241,14 @@ export default function PathPage() {
                 bare
                 stats={stats}
                 recentSessions={completedSessions}
+                // Phase 7 — the Up-next banner is the single live streak readout
+                // when present, so don't double-print it here (Rule 13).
+                showStreak={
+                  !(
+                    stats.currentStreak >= 1 &&
+                    pickUpNextNode(nodesWithStatus) != null
+                  )
+                }
               />
             </motion.div>
             <motion.div
