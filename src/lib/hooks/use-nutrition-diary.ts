@@ -315,8 +315,12 @@ export function diaryUpdateServings(
 }
 
 /** Branded foods (W20) carry their own nutrition (not in the registry). */
-export function diaryLogBranded(food: BrandedFood, servings: number): void {
-  const key = dayKey(new Date());
+export function diaryLogBranded(
+  food: BrandedFood,
+  servings: number,
+  opts?: { date?: Date },
+): void {
+  const key = dayKey(opts?.date ?? new Date());
   const prev = getSnapshot();
   const entry: DiaryEntry = {
     slug: `off:${food.barcode}`,

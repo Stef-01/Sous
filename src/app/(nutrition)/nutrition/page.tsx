@@ -15,6 +15,7 @@ import {
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
+import { BarcodeScan } from "@/components/nutrition/barcode-scan";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { TextQuickLog } from "@/components/shared/text-quick-log";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
@@ -341,7 +342,9 @@ export default function NutritionPage() {
             />
           </button>
           {showBranded && (
-            <div className="mt-2">
+            <div className="mt-2 space-y-2">
+              {/* #14 — scan (BarcodeDetector where available) or type the code. */}
+              <BarcodeScan date={viewedDate} />
               <BrandedFoodSearch />
             </div>
           )}

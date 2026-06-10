@@ -46,6 +46,8 @@ describe("buildWeeklyWrapped (#8)", () => {
   });
 
   it("returns null for an empty week (cold start stays quiet)", () => {
-    expect(buildWeeklyWrapped({ sessions: [], diary: {}, now: NOW })).toBeNull();
+    expect(
+      buildWeeklyWrapped({ sessions: [], diary: {}, now: NOW }),
+    ).toBeNull();
   });
 });

@@ -54,7 +54,8 @@ export default function RecapPage() {
   // #8 — this week (cooks + diary), recomputed when either source changes.
   const diaryStore = useDiaryStore();
   const wrapped = useMemo(
-    () => buildWeeklyWrapped({ sessions: completedSessions, diary: diaryStore }),
+    () =>
+      buildWeeklyWrapped({ sessions: completedSessions, diary: diaryStore }),
     [completedSessions, diaryStore],
   );
 
