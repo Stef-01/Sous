@@ -2,6 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { normalizePantryName } from "./use-pantry";
+import {
+  canonicalIngredientId,
+  combineQuantities,
+} from "@/lib/shopping/aggregate-quantity";
 
 /**
  * Shopping list  -  ingredients you've wanted but not yet cooked with. Each
@@ -30,6 +34,9 @@ export interface ShoppingItem {
   /** Recipe this item came from — powers the grocery "Recipes" carousel. */
   sourceRecipeSlug?: string;
   sourceRecipeName?: string;
+  /** Recipes whose quantities are already folded into this row — makes
+   *  same-recipe re-adds idempotent (no double-counting on a second tap). */
+  contributedBy?: string[];
 }
 
 /** A richer add payload. Plain strings are still accepted by addMany. */
@@ -124,8 +131,18 @@ export function useShoppingList(): UseShoppingListResult {
     if (entries.length === 0) return;
     setItems((prev) => {
       let changed = false;
-      const existingKeys = new Set(prev.map((i) => i.key));
-      const additions: ShoppingItem[] = [];
+      const working = [...prev];
+      // Two indexes into UNBOUGHT rows: exact key, and canonical registry id
+      // (so "granulated sugar" merges into an existing "sugar" row instead of
+      // duplicating — the aggregation the reference mockup fails at).
+      const byKey = new Map<string, number>();
+      const byCanonical = new Map<string, number>();
+      working.forEach((i, idx) => {
+        if (i.bought) return;
+        byKey.set(i.key, idx);
+        const canon = canonicalIngredientId(i.name);
+        if (canon && !byCanonical.has(canon)) byCanonical.set(canon, idx);
+      });
       const now = new Date().toISOString();
       for (const entry of entries) {
         const e: ShoppingAddition =
@@ -133,9 +150,42 @@ export function useShoppingList(): UseShoppingListResult {
         const trimmed = e.name.trim();
         if (!trimmed) continue;
         const key = normalizePantryName(trimmed);
-        if (!key || existingKeys.has(key)) continue;
-        existingKeys.add(key);
-        additions.push({
+        if (!key) continue;
+        const canon = canonicalIngredientId(trimmed);
+        const matchIdx =
+          byKey.get(key) ?? (canon ? byCanonical.get(canon) : undefined);
+        if (matchIdx !== undefined) {
+          // Merge: combine quantities (registry-massed when possible) and
+          // adopt the recipe source when the row didn't have one. A recipe
+          // that already contributed is a no-op (idempotent re-add).
+          const target = working[matchIdx];
+          const ledger =
+            target.contributedBy ??
+            (target.sourceRecipeSlug ? [target.sourceRecipeSlug] : []);
+          if (e.sourceRecipeSlug && ledger.includes(e.sourceRecipeSlug))
+            continue;
+          const quantity = canon
+            ? combineQuantities(target.quantity, e.quantity, canon)
+            : target.quantity && e.quantity && target.quantity !== e.quantity
+              ? `${target.quantity} + ${e.quantity}`
+              : (target.quantity ?? e.quantity);
+          working[matchIdx] = {
+            ...target,
+            ...(quantity ? { quantity } : {}),
+            ...(!target.sourceRecipeSlug && e.sourceRecipeSlug
+              ? {
+                  sourceRecipeSlug: e.sourceRecipeSlug,
+                  sourceRecipeName: e.sourceRecipeName,
+                }
+              : {}),
+            ...(e.sourceRecipeSlug
+              ? { contributedBy: [...ledger, e.sourceRecipeSlug] }
+              : {}),
+          };
+          changed = true;
+          continue;
+        }
+        const item: ShoppingItem = {
           key,
           name: trimmed,
           addedAt: now,
@@ -145,13 +195,18 @@ export function useShoppingList(): UseShoppingListResult {
             ? {
                 sourceRecipeSlug: e.sourceRecipeSlug,
                 sourceRecipeName: e.sourceRecipeName,
+                contributedBy: [e.sourceRecipeSlug],
               }
             : {}),
-        });
+        };
+        working.push(item);
+        byKey.set(key, working.length - 1);
+        if (canon && !byCanonical.has(canon))
+          byCanonical.set(canon, working.length - 1);
         changed = true;
       }
       if (!changed) return prev;
-      const next = [...prev, ...additions].slice(-MAX_ITEMS);
+      const next = working.slice(-MAX_ITEMS);
       writeState(next);
       return next;
     });
