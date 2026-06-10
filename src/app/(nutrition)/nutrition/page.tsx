@@ -11,7 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { topDeficit } from "@/lib/nutrition/deficits";
+import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { TextQuickLog } from "@/components/shared/text-quick-log";
@@ -60,7 +60,11 @@ export default function NutritionPage() {
 
   const { entries, dayNutrition, cookedDayNutrition } =
     useNutritionDiary(viewedDate);
-  const gap = topDeficit(cookedDayNutrition);
+  // #3 — biggest gap + the dishes that close it (memo: catalogue scan).
+  const deficitFill = useMemo(
+    () => deficitFillFor(cookedDayNutrition),
+    [cookedDayNutrition],
+  );
   const history = useDiaryHistory();
   const [showBranded, setShowBranded] = useState(false);
 
@@ -142,12 +146,31 @@ export default function NutritionPage() {
             <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
               <NutritionRingCard nutrition={dayNutrition} />
             </div>
-            {isToday && gap && gap.pct < 60 && (
-              <p className="rounded-xl bg-[var(--tier-strong-bg)] px-3 py-2 text-[12.5px] leading-snug text-[var(--nourish-dark)]">
-                Biggest gap today:{" "}
-                <span className="font-semibold">{gap.label}</span> — a targeted
-                side could help close it.
-              </p>
+            {isToday && deficitFill && (
+              <div className="rounded-xl bg-[var(--tier-strong-bg)] px-3 py-2.5">
+                <p className="text-[12.5px] leading-snug text-[var(--nourish-dark)]">
+                  Biggest gap today:{" "}
+                  <span className="font-semibold">
+                    {deficitFill.deficit.label}
+                  </span>
+                </p>
+                {/* #3 — the food-first fix: dishes that close the gap, straight
+                    from the same engine that reweights the side reranker. */}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {deficitFill.suggestions.map((s) => (
+                    <Link
+                      key={s.slug}
+                      href={`/cook/${s.slug}`}
+                      className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-medium text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-green)]/5 active:scale-[0.97]"
+                    >
+                      {s.name}
+                      <span className="font-semibold text-[var(--tier-strong)]">
+                        +{Math.min(100, s.closesPct)}%
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         ) : (
