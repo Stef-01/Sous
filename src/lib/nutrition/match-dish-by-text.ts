@@ -98,3 +98,28 @@ export function matchDishesByText(query: string, limit = 5): DishMatch[] {
   // kcal computed only for the returned page (≤ limit dishes), not the catalogue.
   return scored.slice(0, limit).map((x) => ({ ...x.d, kcal: kcalFor(x.d.id) }));
 }
+
+/**
+ * #2 — multi-item logging: "dal and rice with a lassi" → the best match per
+ * segment. Local + offline (separator split → existing scorer); the Claude
+ * craving parser can upgrade ambiguous phrases later. Segments that match the
+ * same dish are de-duplicated; single-segment queries return [] so the caller
+ * keeps the richer single-match chip flow.
+ */
+export function matchMultipleByText(query: string): DishMatch[] {
+  const segments = query
+    .split(/\s*(?:,|;|\band\b|\bwith\b|\bplus\b|\+|&)\s*/i)
+    .map((s) => s.trim())
+    .filter((s) => s.length >= 2);
+  if (segments.length < 2) return [];
+  const out: DishMatch[] = [];
+  const seen = new Set<string>();
+  for (const seg of segments) {
+    const best = matchDishesByText(seg, 1)[0];
+    if (best && !seen.has(best.id)) {
+      seen.add(best.id);
+      out.push(best);
+    }
+  }
+  return out.length >= 2 ? out : [];
+}

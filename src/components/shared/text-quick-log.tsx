@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { Search, Mic, Plus } from "lucide-react";
-import { matchDishesByText } from "@/lib/nutrition/match-dish-by-text";
+import {
+  matchDishesByText,
+  matchMultipleByText,
+} from "@/lib/nutrition/match-dish-by-text";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
 import { haptic } from "@/lib/motion/haptics";
 
@@ -35,6 +38,7 @@ function getSpeechRecognition(): (new () => SpeechRecognitionLike) | null {
 export function TextQuickLog({ date }: { date?: Date }) {
   const [q, setQ] = useState("");
   const matches = matchDishesByText(q);
+  const multi = matchMultipleByText(q);
   const SR = getSpeechRecognition();
 
   const startVoice = () => {
@@ -76,6 +80,21 @@ export function TextQuickLog({ date }: { date?: Date }) {
           </button>
         )}
       </div>
+      {/* #2 — "dal and rice" logs both in one tap. */}
+      {multi.length >= 2 && (
+        <button
+          type="button"
+          onClick={() => {
+            haptic("commit");
+            for (const m of multi) diaryLogCook(m.id, m.name, 1, { date });
+            setQ("");
+          }}
+          className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-3.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+        >
+          <Plus size={12} />
+          Log all {multi.length}: {multi.map((m) => m.name).join(" + ")}
+        </button>
+      )}
       {matches.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">
           {matches.map((m) => (

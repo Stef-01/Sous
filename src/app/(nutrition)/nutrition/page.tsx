@@ -227,12 +227,20 @@ export default function NutritionPage() {
                     type="button"
                     onClick={() => {
                       haptic("commit");
-                      diaryLogCook(r.slug, r.name, 1, { date: viewedDate });
+                      // #7 — logs the dish's USUAL portion, not always ×1.
+                      diaryLogCook(r.slug, r.name, r.usual, {
+                        date: viewedDate,
+                      });
                     }}
                     className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
                   >
                     <Plus size={12} className="text-[var(--nourish-green)]" />
                     {r.name}
+                    {r.usual !== 1 && (
+                      <span className="text-[var(--nourish-subtext-faint)]">
+                        ×{r.usual}
+                      </span>
+                    )}
                   </button>
                 </StaggerItem>
               ))}

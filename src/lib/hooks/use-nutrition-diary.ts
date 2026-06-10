@@ -207,6 +207,19 @@ export function frequentDishes(
     .map(([slug, v]) => ({ slug, name: v.name }));
 }
 
+/** #7 — the dish's last-used portion (the "usual"): quick-add logs this
+ *  instead of always ×1, so a habitual ×0.5 lunch stays ×0.5. */
+export function lastServingsFor(store: DiaryStore, slug: string): number {
+  const byDayDesc = Object.keys(store).sort((a, b) => (a < b ? 1 : -1));
+  for (const day of byDayDesc) {
+    const entries = [...(store[day] ?? [])].sort((a, b) =>
+      a.at < b.at ? 1 : -1,
+    );
+    for (const e of entries) if (e.slug === slug) return e.servings;
+  }
+  return 1;
+}
+
 /** W8 — most-recent DISTINCT cooked dishes across history, newest first, for the
  *  quick-add tray (branded entries excluded — you re-cook dishes, not sodas). */
 export function recentDistinctDishes(
@@ -430,6 +443,14 @@ export function useDiaryHistory() {
   const streak = useMemo(() => loggingStreak(store, new Date()), [store]);
   const recents = useMemo(() => recentDistinctDishes(store, 6), [store]);
   // Stage 4 — the quick-add tray ranks by 30-day frequency (staples first).
-  const frequents = useMemo(() => frequentDishes(store, 6), [store]);
+  // #7 — each carries the dish's last-used portion (the "usual").
+  const frequents = useMemo(
+    () =>
+      frequentDishes(store, 6).map((d) => ({
+        ...d,
+        usual: lastServingsFor(store, d.slug),
+      })),
+    [store],
+  );
   return { mounted: true, streak, recents, frequents };
 }
