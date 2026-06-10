@@ -7,6 +7,8 @@ import {
   boolean,
   timestamp,
   jsonb,
+  unique,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 // ── Side dishes (V1 internal content) ──────────────────
@@ -223,3 +225,46 @@ export const recipeOverlay = pgTable("recipe_overlay", {
 // - idx_cook_session_user on cook_sessions(user_id)
 // - idx_cook_session_status on cook_sessions(status)
 // - idx_saved_recipe_user on saved_recipes(user_id)
+
+// ── Nutrition diary sync (#1 depth work) ───────────────
+// Device-as-user rows (userId = device id, like cook_sessions). `at` is the
+// client's entry identity; (userId, at) is unique so pushes are idempotent.
+// Removals are tombstones (deleted=true) so other devices converge.
+export const diaryEntries = pgTable(
+  "diary_entries",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: text("user_id")
+      .references(() => users.id)
+      .notNull(),
+    day: text("day").notNull(),
+    at: text("at").notNull(),
+    slug: text("slug").notNull(),
+    name: text("name").notNull(),
+    servings: real("servings").notNull(),
+    brand: text("brand"),
+    nutrition: jsonb("nutrition").$type<Record<string, unknown>>(),
+    auto: boolean("auto").default(false).notNull(),
+    deleted: boolean("deleted").default(false).notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    userAt: unique("diary_entries_user_at").on(t.userId, t.at),
+  }),
+);
+
+// Small per-device key-value store: personal targets, streak freezes.
+export const deviceKv = pgTable(
+  "device_kv",
+  {
+    userId: text("user_id")
+      .references(() => users.id)
+      .notNull(),
+    key: text("key").notNull(),
+    value: jsonb("value").$type<Record<string, unknown>>().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.key] }),
+  }),
+);

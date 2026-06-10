@@ -14,6 +14,8 @@ import {
   type PersonalProfile,
   type PersonalTargets,
 } from "@/lib/nutrition/personal-targets";
+import { enqueueKvSync } from "@/lib/sync/diary-sync";
+import { registerKvHandler } from "@/lib/hooks/use-nutrition-diary";
 
 const KEY = "sous-personal-profile-v1";
 
@@ -41,7 +43,10 @@ function subscribe(cb: () => void): () => void {
   return () => listeners.delete(cb);
 }
 
-export function setPersonalProfile(profile: PersonalProfile | null): void {
+export function setPersonalProfile(
+  profile: PersonalProfile | null,
+  opts?: { sync?: boolean },
+): void {
   snapshot = profile;
   try {
     if (profile) window.localStorage.setItem(KEY, JSON.stringify(profile));
@@ -50,7 +55,20 @@ export function setPersonalProfile(profile: PersonalProfile | null): void {
     // privacy mode — in-memory still works for the session
   }
   listeners.forEach((l) => l());
+  // #1 sync — write through to device_kv (skip when ADOPTING a remote pull).
+  if (opts?.sync !== false) {
+    enqueueKvSync({ key: "personal-profile", value: { profile } });
+  }
 }
+
+// Pull-side: adopt the remote profile only when this device has none set —
+// the device the user typed on stays authoritative for its own edits.
+registerKvHandler("personal-profile", (value) => {
+  const remote = (value as { profile?: PersonalProfile | null }).profile;
+  if (remote && getSnapshot() === null) {
+    setPersonalProfile(remote, { sync: false });
+  }
+});
 
 export function usePersonalTargets(): {
   profile: PersonalProfile | null;

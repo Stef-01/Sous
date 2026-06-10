@@ -19,6 +19,11 @@ import { getDeviceId } from "@/lib/hooks/use-device-id";
 
 let _client: ReturnType<typeof createTRPCClient<AppRouter>> | null = null;
 
+/** Raw vanilla client — for sync modules that need query+mutate directly. */
+export function getVanillaTrpc() {
+  return client();
+}
+
 function client() {
   if (!_client) {
     _client = createTRPCClient<AppRouter>({

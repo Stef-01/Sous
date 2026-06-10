@@ -10,6 +10,7 @@ import { planRouter } from "./plan";
 import { podRouter } from "./pod";
 import { aiRouter } from "./ai";
 import { recipeAutogenRouter } from "./recipe-autogen";
+import { diaryRouter } from "./diary";
 
 export const appRouter = router({
   pairing: pairingRouter,
@@ -23,6 +24,7 @@ export const appRouter = router({
   pod: podRouter,
   ai: aiRouter,
   recipeAutogen: recipeAutogenRouter,
+  diary: diaryRouter,
 });
 
 export type AppRouter = typeof appRouter;

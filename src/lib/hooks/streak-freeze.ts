@@ -9,7 +9,12 @@
  */
 
 import { useSyncExternalStore } from "react";
-import { dayKey, type DiaryEntry } from "@/lib/hooks/use-nutrition-diary";
+import {
+  dayKey,
+  registerKvHandler,
+  type DiaryEntry,
+} from "@/lib/hooks/use-nutrition-diary";
+import { enqueueKvSync } from "@/lib/sync/diary-sync";
 
 type DiaryStore = Record<string, DiaryEntry[]>;
 
@@ -41,7 +46,7 @@ function subscribe(cb: () => void): () => void {
   return () => listeners.delete(cb);
 }
 
-export function spendFreezeOn(day: string): void {
+export function spendFreezeOn(day: string, opts?: { sync?: boolean }): void {
   const prev = getSnapshot();
   if (prev.used.includes(day)) return;
   snapshot = { used: [...prev.used, day] };
@@ -51,7 +56,18 @@ export function spendFreezeOn(day: string): void {
     // privacy mode — session-only
   }
   listeners.forEach((l) => l());
+  if (opts?.sync !== false) {
+    enqueueKvSync({ key: "streak-freezes", value: { used: snapshot.used } });
+  }
 }
+
+// Pull-side: spent freezes UNION across devices (a freeze spent anywhere is
+// spent everywhere — the honest direction for an earned resource).
+registerKvHandler("streak-freezes", (value) => {
+  const remote = (value as { used?: string[] }).used;
+  if (!Array.isArray(remote)) return;
+  for (const day of remote) spendFreezeOn(day, { sync: false });
+});
 
 // ── Pure helpers (unit-tested) ───────────────────────────────────────────────
 

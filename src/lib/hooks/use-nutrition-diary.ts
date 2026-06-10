@@ -36,6 +36,11 @@ import {
   type Milestone,
 } from "@/lib/engagement/milestones";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  enqueueEntrySync,
+  ensurePulled,
+  type SyncKv,
+} from "@/lib/sync/diary-sync";
 
 export interface DiaryEntry {
   slug: string;
@@ -95,7 +100,37 @@ function getServerSnapshot(): Store {
 
 function subscribe(cb: () => void): () => void {
   listeners.add(cb);
+  // #1 sync — the first subscriber of the session triggers the remote pull;
+  // adopted rows commit (notify) but never re-enqueue (enqueues live in the
+  // user actions below, not in commit).
+  ensurePulled({
+    getLocal: getSnapshot,
+    applyStore: (next) => commit(next),
+    applyKv: (rows) => {
+      for (const r of rows) {
+        pendingKv.set(r.key, r.value);
+        kvHandlers[r.key]?.(r.value);
+      }
+    },
+  });
   return () => listeners.delete(cb);
+}
+
+/** KV adopt handlers — registered by the targets/freeze stores to avoid
+ *  import cycles (they import enqueueKvSync; we route pulls back to them). */
+const kvHandlers: Partial<
+  Record<SyncKv["key"], (value: Record<string, unknown>) => void>
+> = {};
+const pendingKv = new Map<SyncKv["key"], Record<string, unknown>>();
+export function registerKvHandler(
+  key: SyncKv["key"],
+  handler: (value: Record<string, unknown>) => void,
+): void {
+  kvHandlers[key] = handler;
+  // Replay: if the pull landed before this store module was imported (e.g.
+  // the freeze store only loads on the Nutrition page), deliver it now.
+  const stashed = pendingKv.get(key);
+  if (stashed) handler(stashed);
 }
 
 /** Persist (trimmed to MAX_DAYS), swap the snapshot, notify every subscriber. */
@@ -295,6 +330,15 @@ export function diaryLogCook(
   const next: Store = { ...prev, [key]: [...(prev[key] ?? []), entry] };
   commit(next);
   celebrate(next);
+  enqueueEntrySync({
+    day: key,
+    at: entry.at,
+    slug: entry.slug,
+    name: entry.name,
+    servings: entry.servings,
+    nutrition: (entry.nutrition as unknown as Record<string, unknown>) ?? null,
+    auto: entry.auto ?? false,
+  });
 }
 
 /** Stage 3 — adjust an entry's servings in place (the missing CRUD: before
@@ -313,6 +357,20 @@ export function diaryUpdateServings(
     ...prev,
     [key]: day.map((e) => (e.at === at ? { ...e, servings } : e)),
   });
+  const updated = day.find((e) => e.at === at);
+  if (updated) {
+    enqueueEntrySync({
+      day: key,
+      at,
+      slug: updated.slug,
+      name: updated.name,
+      servings,
+      brand: updated.brand ?? null,
+      nutrition:
+        (updated.nutrition as unknown as Record<string, unknown>) ?? null,
+      auto: updated.auto ?? false,
+    });
+  }
 }
 
 /** Branded foods (W20) carry their own nutrition (not in the registry). */
@@ -334,16 +392,37 @@ export function diaryLogBranded(
   const next: Store = { ...prev, [key]: [...(prev[key] ?? []), entry] };
   commit(next);
   celebrate(next);
+  enqueueEntrySync({
+    day: key,
+    at: entry.at,
+    slug: entry.slug,
+    name: entry.name,
+    servings: entry.servings,
+    brand: entry.brand ?? null,
+    nutrition: (entry.nutrition as unknown as Record<string, unknown>) ?? null,
+  });
 }
 
 export function diaryRemoveEntry(at: string, date: Date = new Date()): void {
   const key = dayKey(date);
   const prev = getSnapshot();
+  const removed = (prev[key] ?? []).find((e) => e.at === at);
   const next: Store = {
     ...prev,
     [key]: (prev[key] ?? []).filter((e) => e.at !== at),
   };
   commit(next);
+  if (removed) {
+    // Tombstone — other devices converge instead of resurrecting the entry.
+    enqueueEntrySync({
+      day: key,
+      at,
+      slug: removed.slug,
+      name: removed.name,
+      servings: removed.servings,
+      deleted: true,
+    });
+  }
 }
 
 /** W25 — undo: re-insert a removed entry exactly (preserves branded nutrition). */
@@ -356,6 +435,17 @@ export function diaryRestoreEntry(
   const day = prev[key] ?? [];
   if (day.some((e) => e.at === entry.at)) return;
   commit({ ...prev, [key]: [...day, entry] });
+  enqueueEntrySync({
+    day: key,
+    at: entry.at,
+    slug: entry.slug,
+    name: entry.name,
+    servings: entry.servings,
+    brand: entry.brand ?? null,
+    nutrition: (entry.nutrition as unknown as Record<string, unknown>) ?? null,
+    auto: entry.auto ?? false,
+    deleted: false,
+  });
 }
 
 /** Subscribe-free read for non-React callers (e.g. the win screen's undo). */
