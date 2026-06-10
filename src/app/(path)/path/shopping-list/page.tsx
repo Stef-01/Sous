@@ -185,7 +185,7 @@ export default function ShoppingListPage() {
                 >
                   {category}
                 </p>
-                <ul className="divide-y divide-[var(--nourish-border)]">
+                <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
                   {list.map((item) => (
                     <GroceryRow
                       key={item.key}
@@ -209,7 +209,7 @@ export default function ShoppingListPage() {
                 <p className="sous-label pt-4 pb-1 text-[var(--nourish-subtext-faint)]">
                   In the cart ({boughtItems.length})
                 </p>
-                <ul className="divide-y divide-[var(--nourish-border)]">
+                <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
                   {boughtItems.map((item) => (
                     <GroceryRow
                       key={item.key}
@@ -272,50 +272,11 @@ function GroceryRow({
   onToggle: () => void;
   onRemove: () => void;
 }) {
+  // Reference grammar (Crouton mockups): checkbox LEFT, name left, BOLD
+  // quantity right-aligned on the same line, food emoji far right.
   return (
     <li className="flex items-center gap-3 py-3">
-      <span className="w-7 shrink-0 text-center text-xl" aria-hidden>
-        {ingredientEmoji(name)}
-      </span>
-      <button
-        onClick={onToggle}
-        className="min-w-0 flex-1 text-left"
-        type="button"
-        aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
-      >
-        <span
-          className={cn(
-            "block truncate text-[15px] capitalize",
-            bought
-              ? "text-[var(--nourish-subtext)] line-through"
-              : "text-[var(--nourish-dark)]",
-          )}
-        >
-          {name}
-        </span>
-        {quantity && (
-          <span
-            className={cn(
-              "block truncate text-[13px]",
-              bought
-                ? "text-[var(--nourish-subtext-faint)] line-through"
-                : "text-[var(--nourish-subtext)]",
-            )}
-          >
-            {quantity}
-          </span>
-        )}
-      </button>
-      {/* Quiet per-item remove — present but subordinate to the checkbox. */}
-      <button
-        onClick={onRemove}
-        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-[var(--nourish-dark)]"
-        type="button"
-        aria-label={`Remove ${name}`}
-      >
-        <X size={14} />
-      </button>
-      {/* Rounded-square checkbox (matches the reference). */}
+      {/* Rounded-square checkbox — LEFT edge, like the reference mockups. */}
       <button
         onClick={onToggle}
         className="shrink-0 transition-transform active:scale-90 motion-reduce:active:scale-100"
@@ -329,6 +290,47 @@ function GroceryRow({
         ) : (
           <span className="block h-[22px] w-[22px] rounded-md border-2 border-neutral-300" />
         )}
+      </button>
+      <button
+        onClick={onToggle}
+        className="min-w-0 flex flex-1 items-center gap-3 text-left"
+        type="button"
+        aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
+      >
+        <span
+          className={cn(
+            "min-w-0 flex-1 truncate text-[15px] capitalize",
+            bought
+              ? "text-[var(--nourish-subtext)] line-through"
+              : "text-[var(--nourish-dark)]",
+          )}
+        >
+          {name}
+        </span>
+        {quantity && (
+          <span
+            className={cn(
+              "shrink-0 text-[14px] font-semibold",
+              bought
+                ? "text-[var(--nourish-subtext-faint)] line-through"
+                : "text-[var(--nourish-dark)]",
+            )}
+          >
+            {quantity}
+          </span>
+        )}
+        <span className="w-7 shrink-0 text-center text-xl" aria-hidden>
+          {ingredientEmoji(name)}
+        </span>
+      </button>
+      {/* Quiet per-item remove — present but subordinate to the checkbox. */}
+      <button
+        onClick={onRemove}
+        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-[var(--nourish-dark)]"
+        type="button"
+        aria-label={`Remove ${name}`}
+      >
+        <X size={14} />
       </button>
     </li>
   );

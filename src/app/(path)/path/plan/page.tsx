@@ -98,6 +98,17 @@ export default function SwipePlannerPage() {
   const [poolCursor, setPoolCursor] = useState(0);
   const [scheduledCount, setScheduledCount] = useState(0);
   const [twistVersion, setTwistVersion] = useState(0);
+  // ?slot=thu-dinner (week-view popover) — honoured for the FIRST schedule,
+  // then assignment falls back to next-empty. Lazy-init keeps this client-only
+  // read out of effects; the value never renders, so hydration is unaffected.
+  const [targetSlot, setTargetSlot] = useState<SlotKey | null>(() => {
+    if (typeof window === "undefined") return null;
+    const raw = new URLSearchParams(window.location.search).get("slot");
+    return raw &&
+      /^(mon|tue|wed|thu|fri|sat|sun)-(breakfast|lunch|dinner)$/.test(raw)
+      ? (raw as SlotKey)
+      : null;
+  });
 
   const pool = useMemo<SwipeCard[]>(() => {
     if (!pantryMounted) return [];
@@ -145,8 +156,12 @@ export default function SwipePlannerPage() {
 
   const onSchedule = () => {
     if (!currentCard) return;
-    const slot = nextEmptySlot(filledSlots);
+    const slot =
+      targetSlot && !filledSlots.has(targetSlot)
+        ? targetSlot
+        : nextEmptySlot(filledSlots);
     if (!slot) return; // calendar full
+    if (slot === targetSlot) setTargetSlot(null);
     scheduleSlot(slot, currentCard.recipeSlug, "swipe-planned");
     setScheduledCount((c) => c + 1);
     setPoolCursor((c) => c + 1);

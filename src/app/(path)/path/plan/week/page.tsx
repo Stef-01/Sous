@@ -62,8 +62,11 @@ export default function WeekPlanPage() {
   const { slotMap, mounted, clearAll } = useMealPlanWeek(weekKey);
   const summary = summariseSlotMap(slotMap);
 
-  // V1: adding / tapping a meal re-enters the swipe planner (same week store).
+  // Adding routes into the swipe planner; a picked slot rides along so the
+  // first schedule lands exactly where the user pointed (reference popover).
   const goPlan = () => router.push("/path/plan");
+  const goPlanSlot = (day: DayKey, meal: string) =>
+    router.push(`/path/plan?slot=${day}-${meal}`);
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
@@ -135,7 +138,7 @@ export default function WeekPlanPage() {
             weekDates={weekDates}
             slotMap={slotMap}
             todayKey={todayKey}
-            onAddToDay={goPlan}
+            onAddToSlot={goPlanSlot}
             onTapMeal={goPlan}
           />
         )}

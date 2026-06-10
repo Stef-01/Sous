@@ -17,10 +17,10 @@ const remote = (
 
 describe("mergeRemoteEntries (#1 sync — the pure core)", () => {
   it("adds unseen remote entries to their day (sorted by at)", () => {
-    const out = mergeRemoteEntries(
-      { "2026-06-09": [local("a", "T2")] },
-      [remote("2026-06-09", "T1", "b"), remote("2026-06-10", "T3", "c")],
-    );
+    const out = mergeRemoteEntries({ "2026-06-09": [local("a", "T2")] }, [
+      remote("2026-06-09", "T1", "b"),
+      remote("2026-06-10", "T3", "c"),
+    ]);
     expect(out.changed).toBe(true);
     expect(out.store["2026-06-09"].map((e) => e.at)).toEqual(["T1", "T2"]);
     expect(out.store["2026-06-10"].map((e) => e.slug)).toEqual(["c"]);
