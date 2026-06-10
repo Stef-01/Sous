@@ -10,8 +10,10 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Download,
 } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
+import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { TextQuickLog } from "@/components/shared/text-quick-log";
@@ -133,6 +135,28 @@ export default function NutritionPage() {
               <Flame size={13} />
               {bridgedStreak}-day
             </span>
+          )}
+          {/* #13 — clinician-shareable CSV (last 7 days, the same composed
+              nutrition the ring shows). Icon-only, subordinate (rule 13). */}
+          {Object.keys(diaryStore).length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                const csv = buildDiaryCsv(diaryStore, 7);
+                const url = URL.createObjectURL(
+                  new Blob([csv], { type: "text/csv" }),
+                );
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "sous-diary-week.csv";
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              aria-label="Export the last 7 days as CSV"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)] active:scale-95"
+            >
+              <Download size={15} />
+            </button>
           )}
         </div>
       </header>
