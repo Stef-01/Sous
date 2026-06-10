@@ -16,6 +16,7 @@ import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
 import { BarcodeScan } from "@/components/nutrition/barcode-scan";
+import { PhotoLog } from "@/components/nutrition/photo-log";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { TextQuickLog } from "@/components/shared/text-quick-log";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
@@ -285,6 +286,9 @@ export default function NutritionPage() {
             </StaggerList>
           </section>
         )}
+
+        {/* #1 — snap your plate (vision → catalogue match → confirm chip). */}
+        <PhotoLog date={viewedDate} />
 
         {/* W29 — log a dish by typing / dictating; writes to the viewed day. */}
         <TextQuickLog date={viewedDate} />

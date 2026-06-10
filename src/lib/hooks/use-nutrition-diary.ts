@@ -280,7 +280,7 @@ export function diaryLogCook(
   slug: string,
   name: string,
   servings: number,
-  opts?: { auto?: boolean; date?: Date },
+  opts?: { auto?: boolean; date?: Date; nutrition?: PerServingNutrition },
 ): void {
   const key = dayKey(opts?.date ?? new Date());
   const prev = getSnapshot();
@@ -290,6 +290,7 @@ export function diaryLogCook(
     servings,
     at: new Date().toISOString(),
     ...(opts?.auto ? { auto: true } : {}),
+    ...(opts?.nutrition ? { nutrition: opts.nutrition } : {}),
   };
   const next: Store = { ...prev, [key]: [...(prev[key] ?? []), entry] };
   commit(next);

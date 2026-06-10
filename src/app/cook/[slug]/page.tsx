@@ -42,6 +42,7 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
+import { computeUserRecipeNutrition } from "@/lib/nutrition/user-recipe-nutrition";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { useBigHands } from "@/lib/hooks/use-big-hands";
@@ -323,9 +324,26 @@ export default function GuidedCookPage({
         servingsOverride ??
         getRecipeLink(slug)?.servingsPerRecipe ??
         FALLBACK_SERVINGS;
-      diaryLogCook(slug, staticData?.name ?? slug, loggedServings, {
-        auto: true,
-      });
+      // #5 — a USER recipe has no catalogue vector, so compose one through the
+      // registry (names→aliases, quantities→grams via density/piece data) and
+      // embed it on the entry (the branded-food pattern) — the diary ring then
+      // counts user-recipe cooks with REAL math, coverage-gated at 50%.
+      const userRecipe = findUserRecipeBySlug(userDrafts, slug);
+      const userNutrition =
+        !getRecipeLink(slug) && userRecipe
+          ? computeUserRecipeNutrition(userRecipe.ingredients, loggedServings)
+          : null;
+      diaryLogCook(
+        slug,
+        staticData?.name ?? userRecipe?.title ?? slug,
+        loggedServings,
+        {
+          auto: true,
+          ...(userNutrition && userNutrition.coverage >= 0.5
+            ? { nutrition: userNutrition.perServing }
+            : {}),
+        },
+      );
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -345,6 +363,7 @@ export default function GuidedCookPage({
     cuisine,
     recordPreferenceSignal,
     servingsOverride,
+    userDrafts,
   ]);
 
   const handleToggleChip = useCallback(
