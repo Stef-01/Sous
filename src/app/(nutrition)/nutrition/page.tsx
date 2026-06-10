@@ -24,10 +24,11 @@ import {
   diaryLogCook,
 } from "@/lib/hooks/use-nutrition-diary";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
+import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import { haptic } from "@/lib/motion/haptics";
 import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
 
-/** The daily energy reference used across the ring card (FDA DV). */
+/** FDA DV fallback when no personal profile is set (#6). */
 const ENERGY_TARGET_KCAL = 2000;
 /** How far back the day pager reaches — matches the weekly trend window. */
 const MAX_DAYS_BACK = 6;
@@ -65,7 +66,12 @@ export default function NutritionPage() {
 
   const isToday = dayOffset === 0;
   const consumedKcal = dayNutrition?.calories ?? 0;
-  const kcalLeft = Math.max(0, Math.round(ENERGY_TARGET_KCAL - consumedKcal));
+  // #6 — "kcal left" counts down from YOUR target once the profile is set.
+  const { targets: personalTargets } = usePersonalTargets();
+  const kcalLeft = Math.max(
+    0,
+    Math.round((personalTargets?.kcal ?? ENERGY_TARGET_KCAL) - consumedKcal),
+  );
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">

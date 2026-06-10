@@ -14,6 +14,7 @@ import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { proteinQuality } from "@/lib/nutrition/protein-quality";
+import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import { isNutrientDense } from "@/lib/nutrition/nutrient-density";
 import {
   NUTRIENT_DISPLAY,
@@ -253,6 +254,18 @@ export function NutritionRingCard({
 }) {
   const [showAll, setShowAll] = useState(false);
 
+  // #6 — personalised targets (Mifflin, educational) override the FDA DV in
+  // the target bars when the user's profile is set; null profile = unchanged.
+  const { targets: personal } = usePersonalTargets();
+  const dv = personal
+    ? {
+        energy: personal.kcal,
+        protein: personal.protein_g,
+        carbs: personal.carbs_g,
+        fat: personal.fat_g,
+      }
+    : MACRO_DV;
+
   const mult = Math.max(1, servings);
   // Per-serving values drive the macro PROPORTIONS (ring arcs are ratios — they
   // don't change with batch size); the slider scales the absolute totals shown.
@@ -346,36 +359,37 @@ export function NutritionRingCard({
         </span>
       )}
 
-      {/* Macronutrient targets — vs FDA daily value. */}
+      {/* Macronutrient targets — the user's personalised targets when their
+          profile is set (#6, Mifflin-based, educational), else FDA DV. */}
       {!compact && (
         <div className="space-y-3">
           <p className="sous-label" style={{ color: "var(--data-protein)" }}>
-            Daily targets
+            {personal ? "Your daily targets" : "Daily targets"}
           </p>
           <TargetRow
             label="Energy"
             value={calories}
-            target={MACRO_DV.energy}
+            target={dv.energy}
             unit="kcal"
           />
           <TargetRow
             label="Protein"
             value={protein}
-            target={MACRO_DV.protein}
+            target={dv.protein}
             unit="g"
             color={MACRO.protein.color}
           />
           <TargetRow
             label="Carbs"
             value={carbs}
-            target={MACRO_DV.carbs}
+            target={dv.carbs}
             unit="g"
             color={MACRO.carbs.color}
           />
           <TargetRow
             label="Fat"
             value={fat}
-            target={MACRO_DV.fat}
+            target={dv.fat}
             unit="g"
             color={MACRO.fat.color}
           />
