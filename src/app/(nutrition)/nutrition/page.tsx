@@ -4,21 +4,15 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Flame,
-  Plus,
   UtensilsCrossed,
-  Barcode,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Download,
 } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
-import { BrandedFoodSearch } from "@/components/nutrition/branded-food-search";
-import { BarcodeScan } from "@/components/nutrition/barcode-scan";
-import { PhotoLog } from "@/components/nutrition/photo-log";
+import { LogFood } from "@/components/nutrition/log-food";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
-import { TextQuickLog } from "@/components/shared/text-quick-log";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
 import { HydrationCard } from "@/components/nutrition/hydration-card";
 import { cn } from "@/lib/utils/cn";
@@ -26,7 +20,6 @@ import {
   useNutritionDiary,
   useDiaryHistory,
   useDiaryStore,
-  diaryLogCook,
   dayKey,
 } from "@/lib/hooks/use-nutrition-diary";
 import {
@@ -78,7 +71,6 @@ export default function NutritionPage() {
     [cookedDayNutrition],
   );
   const history = useDiaryHistory();
-  const [showBranded, setShowBranded] = useState(false);
 
   // #10 — streak freeze: frozen days bridge the chain (not counted). The
   // header shows the bridged streak; an at-risk chip offers a one-tap save
@@ -287,72 +279,9 @@ export default function NutritionPage() {
           </section>
         )}
 
-        {/* #1 — snap your plate (vision → catalogue match → confirm chip). */}
-        <PhotoLog date={viewedDate} />
-
-        {/* W29 — log a dish by typing / dictating; writes to the viewed day. */}
-        <TextQuickLog date={viewedDate} />
-
-        {/* Quick add — 30-day staples first (stage 4: frequency + recency). */}
-        {history.frequents.length > 0 && (
-          <section>
-            <p className="sous-label mb-1.5">Quick add</p>
-            <StaggerList className="flex flex-wrap gap-2">
-              {history.frequents.map((r) => (
-                <StaggerItem key={r.slug}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      haptic("commit");
-                      // #7 — logs the dish's USUAL portion, not always ×1.
-                      diaryLogCook(r.slug, r.name, r.usual, {
-                        date: viewedDate,
-                      });
-                    }}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
-                  >
-                    <Plus size={12} className="text-[var(--nourish-green)]" />
-                    {r.name}
-                    {r.usual !== 1 && (
-                      <span className="text-[var(--nourish-subtext-faint)]">
-                        ×{r.usual}
-                      </span>
-                    )}
-                  </button>
-                </StaggerItem>
-              ))}
-            </StaggerList>
-          </section>
-        )}
-
-        {/* W21 — log a packaged/branded food (barcode scan is founder-gated). */}
-        <section>
-          <button
-            type="button"
-            onClick={() => setShowBranded((s) => !s)}
-            aria-expanded={showBranded}
-            className="flex w-full items-center gap-2 rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-left"
-          >
-            <Barcode size={15} className="text-[var(--nourish-subtext)]" />
-            <span className="flex-1 text-[13px] font-medium text-[var(--nourish-dark)]">
-              Add a packaged food
-            </span>
-            <ChevronDown
-              size={16}
-              className={cn(
-                "text-[var(--nourish-subtext)] transition-transform",
-                showBranded && "rotate-180",
-              )}
-            />
-          </button>
-          {showBranded && (
-            <div className="mt-2 space-y-2">
-              {/* #14 — scan (BarcodeDetector where available) or type the code. */}
-              <BarcodeScan date={viewedDate} />
-              <BrandedFoodSearch />
-            </div>
-          )}
-        </section>
+        {/* ONE logging surface: type/dictate (dishes + packaged + restaurant,
+            merged), camera that READS text/barcodes, staples when idle. */}
+        <LogFood date={viewedDate} frequents={history.frequents} />
 
         {/* Insights — weekly trend + hydration (nutrition lives on Nutrition). */}
         <WeeklyTrendCard />

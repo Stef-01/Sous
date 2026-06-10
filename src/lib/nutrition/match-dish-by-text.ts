@@ -67,10 +67,25 @@ function kcalFor(id: string): number | null {
     : null;
 }
 
+/** Connectors never name a food — scoring them lets "dal AND rice" reward
+ *  "m-and-u". The multi-match splitter consumes them as separators instead. */
+const STOPWORDS = new Set([
+  "and",
+  "with",
+  "plus",
+  "the",
+  "of",
+  "a",
+  "an",
+  "or",
+]);
+
 export function matchDishesByText(query: string, limit = 5): DishMatch[] {
   const q = query.trim().toLowerCase();
   if (q.length < 2) return [];
-  const tokens = q.split(/\s+/).filter((t) => t.length > 1);
+  const tokens = q
+    .split(/\s+/)
+    .filter((t) => t.length > 1 && !STOPWORDS.has(t));
   const scored = ALL.map((d) => {
     const name = d.name.toLowerCase();
     const nameTokens = name.split(/[^a-z0-9]+/).filter(Boolean);
@@ -78,11 +93,16 @@ export function matchDishesByText(query: string, limit = 5): DishMatch[] {
     if (name === q) score += 100;
     else if (name.includes(q)) score += 50;
     for (const t of tokens) {
-      if (name.includes(t)) {
+      if (nameTokens.includes(t)) {
+        // whole word: "dal" → "dal tadka" (mid-word hits like "and" in
+        // "mandu" no longer outrank real word matches)
         score += 10;
       } else if (nameTokens.some((nt) => nt.startsWith(t))) {
         // prefix: "brocc" → broccoli
         score += 8;
+      } else if (name.includes(t)) {
+        // mid-word substring — weak signal, kept below prefix
+        score += 3;
       } else if (
         t.length >= 4 &&
         nameTokens.some((nt) => editDistanceAtMost1(t, nt))

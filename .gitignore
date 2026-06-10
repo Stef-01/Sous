@@ -62,3 +62,4 @@ canva-asset-sync-*.md
 
 # bulk USDA FDC downloads (build-time only, multi-hundred-MB)
 .cache/
+eng.traineddata

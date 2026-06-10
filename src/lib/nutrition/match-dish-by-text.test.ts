@@ -21,3 +21,21 @@ describe("matchDishesByText (W29)", () => {
     expect(r.length).toBeGreaterThan(0);
   });
 });
+
+describe("connector words and word boundaries (unified log-food fix)", () => {
+  it("does not let 'and' inside 'mandu' outrank real dal/rice matches", () => {
+    const names = matchDishesByText("dal and rice").map((m) =>
+      m.name.toLowerCase(),
+    );
+    expect(names.length).toBeGreaterThan(0);
+    expect(names[0]).not.toBe("mandu");
+    expect(names.some((n) => n.includes("dal") || n.includes("rice"))).toBe(
+      true,
+    );
+  });
+
+  it("still matches a dish whose name IS a stopword-ish token exactly", () => {
+    const names = matchDishesByText("mandu").map((m) => m.name.toLowerCase());
+    expect(names[0]).toContain("mandu");
+  });
+});
