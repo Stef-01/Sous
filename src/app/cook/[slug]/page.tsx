@@ -23,7 +23,6 @@ import {
   PENDING_BREAKDOWN_KEY,
   parsePendingBreakdown,
 } from "@/lib/engine/attach-score-breakdown";
-import { MetaPill } from "@/components/shared/meta-pill";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
@@ -720,13 +719,26 @@ export default function GuidedCookPage({
               the user has voice on AND the recogniser is actually
               listening — keeps header clutter at zero for
               non-voice users. */}
-          {voice.enabled && voice.listening ? (
-            <MetaPill variant="green" size="xs" aria-label="Voice listening">
-              <Mic size={10} aria-hidden /> Voice
-            </MetaPill>
-          ) : (
-            <div className="w-8" />
-          )}
+          {/* #9 — hands-free is a first-class IN-COOK toggle, not a buried
+              setting: tap to enable/disable voice control mid-cook. */}
+          <button
+            type="button"
+            onClick={() => voice.setEnabled(!voice.enabled)}
+            aria-pressed={voice.enabled}
+            aria-label={
+              voice.enabled ? "Turn off voice control" : "Turn on voice control"
+            }
+            className={cn(
+              "flex min-h-[32px] items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors active:scale-95",
+              voice.enabled && voice.listening
+                ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
+                : voice.enabled
+                  ? "bg-neutral-100 text-[var(--nourish-dark)]"
+                  : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
+            )}
+          >
+            <Mic size={10} aria-hidden /> Voice
+          </button>
         </div>
       </header>
 

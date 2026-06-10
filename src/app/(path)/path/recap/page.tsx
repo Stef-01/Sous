@@ -18,6 +18,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { buildAnnualRecap } from "@/lib/recap/annual-recap";
+import { buildWeeklyWrapped } from "@/lib/recap/weekly-wrapped";
+import { useDiaryStore } from "@/lib/hooks/use-nutrition-diary";
 import { cn } from "@/lib/utils/cn";
 
 export default function RecapPage() {
@@ -49,6 +51,13 @@ export default function RecapPage() {
 
   const empty = recap.totalCooks === 0;
 
+  // #8 — this week (cooks + diary), recomputed when either source changes.
+  const diaryStore = useDiaryStore();
+  const wrapped = useMemo(
+    () => buildWeeklyWrapped({ sessions: completedSessions, diary: diaryStore }),
+    [completedSessions, diaryStore],
+  );
+
   return (
     <div className="min-h-full bg-[linear-gradient(180deg,#fffdf8_0%,#faf7f2_45%,#f4efe8_100%)] pb-28">
       <header className="app-header page-x py-3">
@@ -75,6 +84,61 @@ export default function RecapPage() {
       </header>
 
       <main className="mx-auto max-w-md space-y-4 page-x pt-4">
+        {/* #8 — Weekly Wrapped: this week's cooking + nutrition story, from
+            the same sources every other surface reads. Hides cold. */}
+        {wrapped && (
+          <section className="rounded-2xl border border-[var(--nourish-green)]/20 bg-white p-5 shadow-sm">
+            <p className="sous-label">This week</p>
+            <div className="mt-3 grid grid-cols-3 gap-3 text-center">
+              <div>
+                <p className="font-serif text-2xl leading-none text-[var(--nourish-dark)]">
+                  {wrapped.cooks}
+                </p>
+                <p className="mt-1 text-[11px] text-[var(--nourish-subtext)]">
+                  cooks
+                </p>
+              </div>
+              <div>
+                <p className="font-serif text-2xl leading-none text-[var(--nourish-dark)]">
+                  {wrapped.loggedDays}
+                </p>
+                <p className="mt-1 text-[11px] text-[var(--nourish-subtext)]">
+                  days logged
+                </p>
+              </div>
+              <div>
+                <p className="font-serif text-2xl leading-none text-[var(--nourish-dark)]">
+                  {wrapped.avgKcal ?? "—"}
+                </p>
+                <p className="mt-1 text-[11px] text-[var(--nourish-subtext)]">
+                  avg kcal
+                </p>
+              </div>
+            </div>
+            {(wrapped.topCuisine || wrapped.bestProteinDay) && (
+              <p className="mt-3 text-[12.5px] leading-snug text-[var(--nourish-subtext)]">
+                {wrapped.topCuisine && (
+                  <>
+                    Top cuisine:{" "}
+                    <span className="font-semibold text-[var(--nourish-dark)]">
+                      {wrapped.topCuisine}
+                    </span>
+                  </>
+                )}
+                {wrapped.topCuisine && wrapped.bestProteinDay && " · "}
+                {wrapped.bestProteinDay && (
+                  <>
+                    best protein day{" "}
+                    <span className="font-semibold text-[var(--nourish-dark)]">
+                      {wrapped.bestProteinDay.protein_g}g
+                    </span>
+                  </>
+                )}
+              </p>
+            )}
+          </section>
+        )}
+
         {/* Year picker — quiet chip row, only renders when the
             user has multi-year history. */}
         {availableYears.length > 1 && (
