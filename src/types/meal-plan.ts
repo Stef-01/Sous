@@ -119,3 +119,13 @@ export function dayKeyFromDate(date: Date): DayKey {
   if (!Number.isFinite(date.getTime())) return "mon";
   return order[date.getDay()] ?? "mon";
 }
+
+/** Time-of-day → meal slot routing (Today's "current slot"): morning =
+ *  breakfast, midday = lunch, otherwise dinner. */
+export function pickCurrentMeal(now: Date): MealKey {
+  if (!Number.isFinite(now.getTime())) return "dinner";
+  const hour = now.getHours();
+  if (hour < 11) return "breakfast";
+  if (hour < 16) return "lunch";
+  return "dinner";
+}

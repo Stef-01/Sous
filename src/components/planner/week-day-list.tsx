@@ -120,6 +120,12 @@ export function WeekDayList({
           const slug = slotMap[buildSlotKey(dayKey, mk)];
           return slug ? [{ mealKey: mk, dish: lookupDish(slug) }] : [];
         });
+        // Day subtotal — engine-true, only over meals whose vectors pass the
+        // coverage gate (partial sums are marked approximate by the ~).
+        const dayKcal = meals.reduce(
+          (sum, { dish }) => sum + (plannedKcal(dish.slug) ?? 0),
+          0,
+        );
 
         return (
           <div key={dayKey}>
@@ -143,6 +149,11 @@ export function WeekDayList({
                   {isToday && "Today · "}
                   {DAY_NAMES[dayKey]} {date ? ordinal(date.getDate()) : ""}
                 </h2>
+                {dayKcal > 0 && (
+                  <span className="ml-auto text-[11px] font-medium tabular-nums text-[var(--nourish-subtext-faint)]">
+                    ~{Math.round(dayKcal)} kcal
+                  </span>
+                )}
                 <div className="relative">
                   <button
                     type="button"

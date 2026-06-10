@@ -14,7 +14,6 @@ import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
 import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
-import { TodayPlannedSlot } from "@/components/today/today-planned-slot";
 import { QuestCard } from "@/components/today/quest-card";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
 // initial Today bundle does not pay their cost (~10KB combined). Both
@@ -36,7 +35,6 @@ const ProfileSettingsSheet = dynamic(
 );
 import { FriendsStrip } from "@/components/today/friends-strip";
 import { NutritionGoalCard } from "@/components/today/nutrition-goal-card";
-import { TodayEatingCard } from "@/components/today/today-eating-card";
 import { FirstRunCoachmark } from "@/components/today/first-run-coachmark";
 import { TextPrompt } from "@/components/today/text-prompt";
 import { HeadroomHeader } from "@/components/shared/headroom-header";
@@ -588,8 +586,10 @@ function TodayPageContent() {
 
         {/* Contextual surfaces below the hero — kept ONLY where each expresses
             a DISTINCT intent the hero can't: a commitment you made (Tonight),
-            your scheduled plan (TodayPlannedSlot), and who's eating
-            (WhosAtTable). Each is conditional and stays quiet by default.
+            and who's eating (WhosAtTable). Each is conditional and stays
+            quiet by default. The scheduled plan no longer gets its own card —
+            it pins as the FIRST deck card inside QuestCard with a "Planned
+            for today" label (collapse-into-the-hero pattern).
 
             REMOVED as redundant (rule 13 — the QuestCard hero, with its own
             swipe-stack, IS the meal-suggestion surface; don't keep copies):
@@ -597,12 +597,7 @@ function TodayPageContent() {
             to cook" entry points. Earlier removed: welcome line + cook-rhythm +
             weekly-rhythm (cadence = the streak) and the eco stat chip. */}
         <TonightChip mode="banner-only" />
-        <TodayPlannedSlot />
         <WhosAtTable />
-
-        {/* Phase 4 — "your plate today" ring once anything is logged (null until
-            then; the empty state is the first-run invitation on the diary). */}
-        <TodayEatingCard />
 
         {/* Tiny, deliberately unassuming "more options" entry point.
             Everything secondary (tonight commit, cook-for-two, rescue fridge,

@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import {
+  CalendarDays,
   Bookmark,
   ChefHat,
   ChevronDown,
@@ -189,16 +190,19 @@ export default function PathPage() {
           onOpenBadges={openBadges}
         />
 
-        {/* Kitchen utilities FIRST (founder-directed, 2026-06-09): Pantry +
-            Shopping list are the everyday tools — promoted to the top. */}
+        {/* Kitchen WORKFLOW first (founder-directed, 2026-06-09 + -10): the
+            loop the user actually runs — what you have (Pantry) → what you'll
+            cook (Plan) → what you need (Groceries). Plan was previously
+            unreachable from anywhere — the appraisal's biggest catch. */}
         <div className="mx-auto max-w-md page-x pt-4">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {[
               { href: "/path/pantry", icon: Bookmark, label: "Pantry" },
+              { href: "/path/plan/week", icon: CalendarDays, label: "Plan" },
               {
                 href: "/path/shopping-list",
                 icon: ShoppingCart,
-                label: "Shopping list",
+                label: "Groceries",
               },
             ].map(({ href, icon: Icon, label }) => (
               <motion.div
@@ -208,7 +212,7 @@ export default function PathPage() {
               >
                 <Link
                   href={href}
-                  className="flex min-h-[64px] w-full items-center justify-center gap-2 rounded-2xl border border-neutral-200 bg-white text-sm font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="flex min-h-[64px] w-full flex-col items-center justify-center gap-1 rounded-2xl border border-neutral-200 bg-white text-[12px] font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   <Icon size={18} className="text-[var(--nourish-green)]" />
                   {label}
@@ -243,7 +247,7 @@ export default function PathPage() {
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 className="overflow-hidden"
               >
-                <div className="grid grid-cols-3 gap-2 pt-2">
+                <div className="grid grid-cols-2 gap-2 pt-2">
                   {[
                     {
                       href: "/path/favorites",
@@ -264,11 +268,6 @@ export default function PathPage() {
                       href: "/path/eco",
                       icon: Leaf,
                       label: "Eco Mode",
-                    },
-                    {
-                      href: "/path/recap",
-                      icon: Sparkles,
-                      label: "Recap",
                     },
                   ].map(({ href, icon: Icon, label }) => (
                     <motion.div
@@ -370,6 +369,14 @@ export default function PathPage() {
                       openRef={achievementsRef}
                     />
                   )}
+                  {/* Recap lives with reflection, not kitchen tools. */}
+                  <Link
+                    href="/path/recap"
+                    className="flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-2.5 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  >
+                    <Sparkles size={14} />
+                    Weekly recap
+                  </Link>
                 </div>
               </motion.div>
             )}

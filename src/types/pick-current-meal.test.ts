@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pickCurrentMeal } from "./today-planned-slot";
+import { pickCurrentMeal } from "./meal-plan";
 
 describe("pickCurrentMeal", () => {
   it("morning hours → breakfast", () => {

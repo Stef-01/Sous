@@ -12,6 +12,8 @@ import {
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { LogFood } from "@/components/nutrition/log-food";
+import { PetSheet } from "@/components/nutrition/pet-sheet";
+import { PixelDoberman } from "@/components/nutrition/pixel-doberman";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
 import { HydrationCard } from "@/components/nutrition/hydration-card";
@@ -56,6 +58,7 @@ function labelFor(offset: number, d: Date): string {
  */
 export default function NutritionPage() {
   const [dayOffset, setDayOffset] = useState(0);
+  const [petOpen, setPetOpen] = useState(false);
   const viewedDate = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() - dayOffset);
@@ -152,8 +155,20 @@ export default function NutritionPage() {
               <Download size={15} />
             </button>
           )}
+          {/* Easter egg — never introduced anywhere. Those who notice the
+              tiny dog find their day as a Tamagotchi (PetSheet). */}
+          <button
+            type="button"
+            onClick={() => setPetOpen(true)}
+            aria-label="Pixel dog"
+            className="flex h-9 w-7 items-end justify-center pb-0.5 transition-transform hover:-translate-y-0.5 active:scale-90 motion-reduce:transition-none"
+          >
+            <PixelDoberman mood="content" size={20} />
+          </button>
         </div>
       </header>
+
+      <PetSheet open={petOpen} onClose={() => setPetOpen(false)} />
 
       <main className="mx-auto max-w-md page-x space-y-4 pb-28 pt-4">
         {/* Stage 5 — day pager: review or back-fill the last 7 days. */}

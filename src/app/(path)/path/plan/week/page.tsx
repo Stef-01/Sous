@@ -24,7 +24,15 @@ import {
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
 import { summariseSlotMap } from "@/components/planner/week-calendar";
 import { WeekDayList } from "@/components/planner/week-day-list";
-import { isoWeekKey, dayKeyFromDate, type DayKey } from "@/types/meal-plan";
+import { lookupDish } from "@/lib/utils/dish-lookup";
+import {
+  buildSlotKey,
+  dayKeyFromDate,
+  isoWeekKey,
+  type DayKey,
+  type MealKey,
+  type SlotKey,
+} from "@/types/meal-plan";
 
 function startOfWeekMonday(d: Date): Date {
   const x = new Date(d);
@@ -59,14 +67,21 @@ export default function WeekPlanPage() {
   const todayKey: DayKey | null =
     now && offset === 0 ? dayKeyFromDate(now) : null;
 
-  const { slotMap, mounted, clearAll } = useMealPlanWeek(weekKey);
+  const { slotMap, mounted, clearAll, clearSlot, scheduleSlot } =
+    useMealPlanWeek(weekKey);
   const summary = summariseSlotMap(slotMap);
 
   // Adding routes into the swipe planner; a picked slot rides along so the
   // first schedule lands exactly where the user pointed (reference popover).
-  const goPlan = () => router.push("/path/plan");
   const goPlanSlot = (day: DayKey, meal: string) =>
     router.push(`/path/plan?slot=${day}-${meal}`);
+
+  // Tap a planned meal → manage it in place (cook / move / remove) instead of
+  // bouncing back to the swipe planner (mockup-plan roadmap #3).
+  const [manage, setManage] = useState<{
+    slot: SlotKey;
+    slug: string;
+  } | null>(null);
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
@@ -139,8 +154,93 @@ export default function WeekPlanPage() {
             slotMap={slotMap}
             todayKey={todayKey}
             onAddToSlot={goPlanSlot}
-            onTapMeal={goPlan}
+            onTapMeal={(slot, slug) =>
+              setManage({ slot: slot as SlotKey, slug })
+            }
           />
+        )}
+
+        {manage && (
+          <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/30">
+            <button
+              type="button"
+              aria-label="Close"
+              className="flex-1"
+              onClick={() => setManage(null)}
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Manage planned meal"
+              className="rounded-t-3xl bg-[var(--nourish-cream)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+            >
+              <p className="truncate text-[15px] font-semibold text-[var(--nourish-dark)]">
+                {lookupDish(manage.slug).name}
+              </p>
+
+              {/* Move — tap any empty slot. Rows = days, cols = B/L/D. */}
+              <div className="mt-3 space-y-1">
+                {(
+                  ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as DayKey[]
+                ).map((d) => (
+                  <div key={d} className="flex items-center gap-1.5">
+                    <span className="w-9 text-[11px] font-medium uppercase text-[var(--nourish-subtext-faint)]">
+                      {d}
+                    </span>
+                    {(["breakfast", "lunch", "dinner"] as MealKey[]).map(
+                      (m) => {
+                        const key = buildSlotKey(d, m);
+                        const isSelf = key === manage.slot;
+                        const taken = !isSelf && Boolean(slotMap[key]);
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            disabled={taken || isSelf}
+                            aria-label={`Move to ${d} ${m}`}
+                            onClick={() => {
+                              scheduleSlot(key, manage.slug, "swipe-planned");
+                              clearSlot(manage.slot);
+                              setManage(null);
+                            }}
+                            className={
+                              isSelf
+                                ? "h-8 flex-1 rounded-lg bg-[var(--nourish-green)] text-[10px] font-semibold uppercase text-white"
+                                : taken
+                                  ? "h-8 flex-1 rounded-lg border border-neutral-200 bg-neutral-100 text-[10px] uppercase text-neutral-400"
+                                  : "h-8 flex-1 rounded-lg border border-neutral-200 bg-white text-[10px] font-medium uppercase text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50"
+                            }
+                          >
+                            {m[0]}
+                          </button>
+                        );
+                      },
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => router.push(`/cook/${manage.slug}`)}
+                  className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white active:scale-[0.98]"
+                >
+                  Cook now
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearSlot(manage.slot);
+                    setManage(null);
+                  }}
+                  className="flex-1 rounded-xl border border-neutral-200 bg-white py-2.5 text-[13px] font-medium text-[var(--nourish-subtext)] active:scale-[0.98]"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         <div className="flex flex-col gap-2 pt-5">

@@ -13,6 +13,12 @@ import {
   ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
+import {
+  buildSlotKey,
+  dayKeyFromDate,
+  pickCurrentMeal,
+} from "@/types/meal-plan";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry } from "@/lib/hooks/use-pantry";
@@ -180,6 +186,18 @@ export function QuestCard({
     ];
   }, [baseDishes]);
 
+  // Today's planned meal (time-of-day slot) is folded INTO the deck: it pins
+  // to the front and the hero label flips to "Planned for today" — one card,
+  // not a separate banner. Swiping past it is the natural "not tonight".
+  const { slotMap, mounted: planMounted } = useMealPlanWeek();
+  const plannedSlug = useMemo(() => {
+    if (!planMounted) return null;
+    const now = new Date();
+    return (
+      slotMap[buildSlotKey(dayKeyFromDate(now), pickCurrentMeal(now))] ?? null
+    );
+  }, [planMounted, slotMap]);
+
   const questDishes = useMemo(() => {
     const cap =
       filters.cookTime === "any"
@@ -201,8 +219,15 @@ export function QuestCard({
     });
     // Graceful fallback: if the filter combination yields nothing, return
     // the base feed so the user never hits an empty state because of filters.
-    return filtered.length > 0 ? filtered : baseDishes;
+    const result = filtered.length > 0 ? filtered : baseDishes;
+    if (!plannedSlug) return result;
+    const pinned =
+      result.find((d) => d.slug === plannedSlug) ??
+      baseDishes.find((d) => d.slug === plannedSlug);
+    if (!pinned) return result;
+    return [pinned, ...result.filter((d) => d.slug !== pinned.slug)];
   }, [
+    plannedSlug,
     baseDishes,
     filters.cookTime,
     filters.cuisine,
@@ -324,6 +349,11 @@ export function QuestCard({
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
       {previewDish && (
         <MealQueuePreview
+          label={
+            plannedSlug && previewDish?.slug === plannedSlug
+              ? "Planned for today"
+              : undefined
+          }
           dish={previewDish}
           count={queueDishes.length}
           onOpen={() => setQueueOpen(true)}
@@ -365,10 +395,12 @@ function MealQueuePreview({
   dish,
   count,
   onOpen,
+  label,
 }: {
   dish: QuestDish;
   count: number;
   onOpen: () => void;
+  label?: string;
 }) {
   return (
     <motion.div
@@ -406,9 +438,9 @@ function MealQueuePreview({
         <div className="mt-3 space-y-2 px-1">
           <div className="space-y-1">
             <p className="sous-label">
-              {dish.isMeal ? "Dinner idea" : "Side idea"}
+              {label ?? (dish.isMeal ? "Dinner idea" : "Side idea")}
             </p>
-            <h3 className="sous-display text-[var(--nourish-dark)]">
+            <h3 className="font-serif text-[clamp(1.4rem,5.6vw,1.75rem)] leading-[1.12] font-normal [text-wrap:balance] text-[var(--nourish-dark)]">
               {dish.dishName}
             </h3>
           </div>
