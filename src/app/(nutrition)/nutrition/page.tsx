@@ -3,14 +3,11 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  Flame,
   UtensilsCrossed,
   ChevronLeft,
   ChevronRight,
-  Download,
 } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
-import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
@@ -77,16 +74,11 @@ export default function NutritionPage() {
   );
   const history = useDiaryHistory();
 
-  // #10 — streak freeze: frozen days bridge the chain (not counted). The
-  // header shows the bridged streak; an at-risk chip offers a one-tap save
-  // when yesterday broke a ≥3-day run and a freeze is banked.
+  // #10 — streak freeze: the at-risk chip offers a one-tap save when
+  // yesterday broke a ≥3-day run and a freeze is banked. (The streak number
+  // itself lives in the pet room — header stays clean.)
   const { used: frozenDays, spendFreezeOn } = useStreakFreezes();
   const diaryStore = useDiaryStore();
-  const bridgedStreak = loggingStreakWithFreezes(
-    diaryStore,
-    frozenDays,
-    new Date(),
-  );
   const freezesAvailable = availableFreezes(diaryStore, frozenDays, new Date());
   const yesterdayKey = useMemo(() => {
     const d = new Date();
@@ -128,34 +120,6 @@ export default function NutritionPage() {
             <span className="text-[12px] font-medium text-[var(--nourish-subtext)]">
               {kcalLeft} kcal left
             </span>
-          )}
-          {bridgedStreak > 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/15 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-gold)]">
-              <Flame size={13} />
-              {bridgedStreak}-day
-            </span>
-          )}
-          {/* #13 — clinician-shareable CSV (last 7 days, the same composed
-              nutrition the ring shows). Icon-only, subordinate (rule 13). */}
-          {Object.keys(diaryStore).length > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                const csv = buildDiaryCsv(diaryStore, 7);
-                const url = URL.createObjectURL(
-                  new Blob([csv], { type: "text/csv" }),
-                );
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "sous-diary-week.csv";
-                a.click();
-                URL.revokeObjectURL(url);
-              }}
-              aria-label="Export the last 7 days as CSV"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)] active:scale-95"
-            >
-              <Download size={15} />
-            </button>
           )}
           {/* Easter egg — never introduced anywhere. Those who notice the
               tiny dog find their day as a Tamagotchi (PetSheet). */}
