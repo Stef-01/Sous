@@ -21,8 +21,15 @@ import { cn } from "@/lib/utils/cn";
 import {
   useNutritionDiary,
   useDiaryHistory,
+  useDiaryStore,
   diaryLogCook,
+  dayKey,
 } from "@/lib/hooks/use-nutrition-diary";
+import {
+  useStreakFreezes,
+  loggingStreakWithFreezes,
+  availableFreezes,
+} from "@/lib/hooks/streak-freeze";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import { haptic } from "@/lib/motion/haptics";
@@ -60,6 +67,7 @@ export default function NutritionPage() {
 
   const { entries, dayNutrition, cookedDayNutrition } =
     useNutritionDiary(viewedDate);
+  const isToday = dayOffset === 0;
   // #3 — biggest gap + the dishes that close it (memo: catalogue scan).
   const deficitFill = useMemo(
     () => deficitFillFor(cookedDayNutrition),
@@ -68,7 +76,33 @@ export default function NutritionPage() {
   const history = useDiaryHistory();
   const [showBranded, setShowBranded] = useState(false);
 
-  const isToday = dayOffset === 0;
+  // #10 — streak freeze: frozen days bridge the chain (not counted). The
+  // header shows the bridged streak; an at-risk chip offers a one-tap save
+  // when yesterday broke a ≥3-day run and a freeze is banked.
+  const { used: frozenDays, spendFreezeOn } = useStreakFreezes();
+  const diaryStore = useDiaryStore();
+  const bridgedStreak = loggingStreakWithFreezes(
+    diaryStore,
+    frozenDays,
+    new Date(),
+  );
+  const freezesAvailable = availableFreezes(diaryStore, frozenDays, new Date());
+  const yesterdayKey = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return dayKey(d);
+  }, []);
+  const streakAtRisk =
+    isToday &&
+    freezesAvailable > 0 &&
+    !frozenDays.includes(yesterdayKey) &&
+    (diaryStore[yesterdayKey]?.length ?? 0) === 0 &&
+    loggingStreakWithFreezes(
+      diaryStore,
+      [...frozenDays, yesterdayKey],
+      new Date(),
+    ) >= 3;
+
   const consumedKcal = dayNutrition?.calories ?? 0;
   // #6 — "kcal left" counts down from YOUR target once the profile is set.
   const { targets: personalTargets } = usePersonalTargets();
@@ -94,10 +128,10 @@ export default function NutritionPage() {
               {kcalLeft} kcal left
             </span>
           )}
-          {history.streak > 0 && (
+          {bridgedStreak > 0 && (
             <span className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/15 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-gold)]">
               <Flame size={13} />
-              {history.streak}-day
+              {bridgedStreak}-day
             </span>
           )}
         </div>
@@ -139,6 +173,20 @@ export default function NutritionPage() {
             <ChevronRight size={16} />
           </button>
         </div>
+
+        {/* #10 — one-tap streak save when yesterday broke a ≥3-day run. */}
+        {streakAtRisk && (
+          <button
+            type="button"
+            onClick={() => {
+              haptic("success");
+              spendFreezeOn(yesterdayKey);
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-gold)]/40 bg-[var(--nourish-gold)]/10 px-3 py-2.5 text-[12.5px] font-semibold text-[var(--nourish-dark)] transition hover:bg-[var(--nourish-gold)]/15 active:scale-[0.98]"
+          >
+            🧊 Streak at risk — use a freeze ({freezesAvailable} banked)
+          </button>
+        )}
 
         {/* Day ring — the glanceable status */}
         {dayNutrition ? (

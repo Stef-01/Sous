@@ -438,6 +438,12 @@ export function useNutritionWeek(): { mounted: boolean } & WeeklyTrend {
  * useDiaryHistory (W8/W15) — read-only access to the whole diary store for the
  * logging streak + the quick-add recents.
  */
+/** Raw store snapshot (shared, reactive) — for composing cross-cutting reads
+ *  like the freeze-bridged streak without widening every hook. */
+export function useDiaryStore(): Record<string, DiaryEntry[]> {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
 export function useDiaryHistory() {
   const store = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const streak = useMemo(() => loggingStreak(store, new Date()), [store]);

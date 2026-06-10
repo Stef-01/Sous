@@ -42,7 +42,21 @@ describe("deficit-fill suggestions (#3)", () => {
     expect(deficitFillFor(null)).toBeNull();
     // a day at 100% of everything has no <60% deficit
     const full: Record<string, number> = { calories: 2000 };
-    for (const k of ["iron_mg","calcium_mg","potassium_mg","magnesium_mg","vitaminC_mg","vitaminD_mcg","vitaminA_mcg_rae","folate_mcg","vitaminB12_mcg","zinc_mg","omega3_g","fiber_g"]) full[k] = 10000;
+    for (const k of [
+      "iron_mg",
+      "calcium_mg",
+      "potassium_mg",
+      "magnesium_mg",
+      "vitaminC_mg",
+      "vitaminD_mcg",
+      "vitaminA_mcg_rae",
+      "folate_mcg",
+      "vitaminB12_mcg",
+      "zinc_mg",
+      "omega3_g",
+      "fiber_g",
+    ])
+      full[k] = 10000;
     expect(deficitFillFor(N(full))).toBeNull();
   });
 });
