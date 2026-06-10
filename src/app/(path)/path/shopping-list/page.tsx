@@ -20,6 +20,8 @@ import { imageSrc } from "@/lib/image/image-src";
 import { lookupDish } from "@/lib/utils/dish-lookup";
 import { getDishEmoji } from "@/lib/utils/dish-emoji";
 import { cn } from "@/lib/utils/cn";
+import { useUnitPref } from "@/lib/hooks/use-unit-pref";
+import { displayQuantity } from "@/lib/units/display-quantity";
 import { toast } from "@/lib/hooks/use-toast";
 
 /**
@@ -274,6 +276,7 @@ function GroceryRow({
 }) {
   // Reference grammar (Crouton mockups): checkbox LEFT, name left, BOLD
   // quantity right-aligned on the same line, food emoji far right.
+  const { system } = useUnitPref();
   return (
     <li className="flex items-center gap-3 py-3">
       {/* Rounded-square checkbox — LEFT edge, like the reference mockups. */}
@@ -316,7 +319,7 @@ function GroceryRow({
                 : "text-[var(--nourish-dark)]",
             )}
           >
-            {quantity}
+            {displayQuantity(quantity, name, system)}
           </span>
         )}
         <span className="w-7 shrink-0 text-center text-xl" aria-hidden>

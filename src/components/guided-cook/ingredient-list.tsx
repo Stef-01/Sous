@@ -10,6 +10,8 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useUnitPref } from "@/lib/hooks/use-unit-pref";
+import { displayQuantity } from "@/lib/units/display-quantity";
 import { ingredientEmoji } from "@/lib/utils/ingredient-meta";
 import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
@@ -76,6 +78,7 @@ export function IngredientList({
 }: IngredientListProps) {
   const reducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
+  const { system, setSystem } = useUnitPref();
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
   const {
@@ -235,6 +238,36 @@ export function IngredientList({
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             Gather these
           </h2>
+          {/* Unit swap — same preference the profile sheet holds. */}
+          <div
+            role="tablist"
+            aria-label="Units"
+            className="ml-auto inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
+          >
+            {(
+              [
+                ["metric", "g"],
+                ["us", "cups"],
+              ] as const
+            ).map(([sys, label]) => (
+              <button
+                key={sys}
+                type="button"
+                role="tab"
+                aria-selected={system === sys}
+                onClick={() => setSystem(sys)}
+                className={cn(
+                  "rounded-full px-2.5 py-1 transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                  system === sys
+                    ? "bg-[var(--nourish-green)] text-white"
+                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                )}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
           {hasCoalescedView && (
             <div
               role="tablist"
@@ -337,7 +370,11 @@ export function IngredientList({
                           >
                             {item.quantity && (
                               <span className="font-semibold">
-                                {item.quantity}{" "}
+                                {displayQuantity(
+                                  item.quantity,
+                                  item.name,
+                                  system,
+                                )}{" "}
                               </span>
                             )}
                             {item.name}
@@ -532,6 +569,7 @@ function IngredientRow({
   onAskSub: () => void;
   onTogglePantry: () => void;
 }) {
+  const { system } = useUnitPref();
   // AI substitution query  -  fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
     {
@@ -610,7 +648,9 @@ function IngredientRow({
               )}
             >
               {item.quantity && (
-                <span className="font-semibold">{item.quantity} </span>
+                <span className="font-semibold">
+                  {displayQuantity(item.quantity, item.name, system)}{" "}
+                </span>
               )}
               {item.name}
               {item.isOptional && (

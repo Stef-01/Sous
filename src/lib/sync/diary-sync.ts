@@ -35,7 +35,7 @@ export interface SyncEntry {
 }
 
 export interface SyncKv {
-  key: "personal-profile" | "streak-freezes";
+  key: "personal-profile" | "streak-freezes" | "nutrient-goals";
   value: Record<string, unknown>;
 }
 

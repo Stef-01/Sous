@@ -50,6 +50,7 @@ import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
 import { PreferencesSection } from "@/components/shared/preferences-section";
 import { PersonalTargetsSection } from "@/components/shared/personal-targets-section";
+import { GoalPlansSection } from "@/components/shared/goal-plans-section";
 
 interface Props {
   open: boolean;
@@ -143,6 +144,9 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
 
             {/* Personal targets (#6) — drives the ring target bars + kcal-left. */}
             <PersonalTargetsSection />
+
+            {/* Goal plans — stars a nutrient bundle (pins in Key nutrients). */}
+            <GoalPlansSection />
 
             {/* Parent Mode section */}
             <section className="mt-4 rounded-2xl bg-white p-4 border border-neutral-100/80 shadow-sm">

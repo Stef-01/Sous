@@ -27,6 +27,7 @@ import {
   timeOfDayLabel,
 } from "@/lib/intelligence/time-of-day";
 import { classifyManualState } from "@/lib/intelligence/manual-edit-merge";
+import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
 import type { ManualTags, TagWeightMap } from "@/types/preference-profile";
 import { cn } from "@/lib/utils/cn";
@@ -169,6 +170,7 @@ function ChipsBlock({
 export function PreferencesSection() {
   const { profile, confidence, mounted, applyEdit, reset, patternFor } =
     usePreferenceProfile();
+  const { system, setSystem } = useUnitPref();
 
   if (!mounted) {
     return (
@@ -293,6 +295,41 @@ export function PreferencesSection() {
         >
           Reset learned preferences
         </button>
+      </div>
+
+      {/* Units — quantities render in JUST one system everywhere; the
+          ingredient list carries the same swap inline. */}
+      <div className="mt-3 flex items-center justify-between border-t border-neutral-100 pt-3">
+        <span className="text-[13px] font-medium text-[var(--nourish-dark)]">
+          Units
+        </span>
+        <div
+          role="tablist"
+          aria-label="Units"
+          className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
+        >
+          {(
+            [
+              ["metric", "Grams"],
+              ["us", "Cups"],
+            ] as const
+          ).map(([sys, label]) => (
+            <button
+              key={sys}
+              type="button"
+              role="tab"
+              aria-selected={system === sys}
+              onClick={() => setSystem(sys)}
+              className={
+                system === sys
+                  ? "rounded-full bg-[var(--nourish-green)] px-2.5 py-1 text-white"
+                  : "rounded-full px-2.5 py-1 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+              }
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
     </section>
   );

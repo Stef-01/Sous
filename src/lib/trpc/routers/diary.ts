@@ -25,7 +25,7 @@ const entrySchema = z.object({
 });
 
 const kvSchema = z.object({
-  key: z.enum(["personal-profile", "streak-freezes"]),
+  key: z.enum(["personal-profile", "streak-freezes", "nutrient-goals"]),
   value: z.record(z.string(), z.unknown()),
 });
 

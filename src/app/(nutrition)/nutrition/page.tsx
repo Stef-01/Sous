@@ -13,6 +13,7 @@ import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildDiaryCsv } from "@/lib/nutrition/diary-export";
 import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
+import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import { PixelDoberman } from "@/components/nutrition/pixel-doberman";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
@@ -59,6 +60,7 @@ function labelFor(offset: number, d: Date): string {
 export default function NutritionPage() {
   const [dayOffset, setDayOffset] = useState(0);
   const [petOpen, setPetOpen] = useState(false);
+  const { plan: goalPlan } = useNutrientGoals();
   const viewedDate = useMemo(() => {
     const d = new Date();
     d.setDate(d.getDate() - dayOffset);
@@ -292,6 +294,14 @@ export default function NutritionPage() {
               ))}
             </StaggerList>
           </section>
+        )}
+
+        {/* Active goal-plan pattern note (claim-safe, one line, only when
+            the plan carries one). */}
+        {goalPlan?.avoid && (
+          <p className="text-[11px] leading-snug text-[var(--nourish-subtext-faint)]">
+            {goalPlan.label}: {goalPlan.avoid}
+          </p>
         )}
 
         {/* ONE logging surface: type/dictate (dishes + packaged + restaurant,

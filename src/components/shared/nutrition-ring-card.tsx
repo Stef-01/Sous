@@ -10,8 +10,9 @@
  */
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Star, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { proteinQuality } from "@/lib/nutrition/protein-quality";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
@@ -194,15 +195,54 @@ function fmtAmount(v: number): string {
   return v.toFixed(2);
 }
 
-/** A nutrient row: label + a %DV bar, or the value when there's no daily target. */
-function NutrientBar({ row }: { row: NRow }) {
+/** A nutrient row: label + a %DV bar, or the value when there's no daily target.
+ *  `starred` pins a goal glyph; `onStar` (expanded summary only) toggles it. */
+function NutrientBar({
+  row,
+  starred,
+  onStar,
+}: {
+  row: NRow;
+  starred?: boolean;
+  onStar?: () => void;
+}) {
   const p = row.dv ? pct(row.value, row.dv) : null;
   const strong = p != null && p >= 100;
   const good = p != null && p >= 20;
   return (
     <div className="space-y-1">
       <div className="flex items-baseline justify-between gap-2 text-[13px]">
-        <span className="truncate text-[var(--nourish-dark)]">{row.label}</span>
+        <span className="flex min-w-0 items-center gap-1 truncate text-[var(--nourish-dark)]">
+          {onStar ? (
+            <button
+              type="button"
+              onClick={onStar}
+              aria-label={
+                starred ? `Unstar ${row.label}` : `Star ${row.label} as a goal`
+              }
+              aria-pressed={starred}
+              className="shrink-0 active:scale-90 motion-reduce:active:scale-100"
+            >
+              <Star
+                size={11}
+                className={
+                  starred
+                    ? "fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+                    : "text-neutral-300"
+                }
+              />
+            </button>
+          ) : (
+            starred && (
+              <Star
+                size={11}
+                aria-label="Goal nutrient"
+                className="shrink-0 fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+              />
+            )
+          )}
+          <span className="truncate">{row.label}</span>
+        </span>
         <span
           className={cn(
             "shrink-0 font-semibold tabular-nums",
@@ -285,6 +325,7 @@ export function NutritionRingCard({
     carbs: cCal / totalMacroCal,
     fat: fCal / totalMacroCal,
   };
+  const { stars, toggleStar } = useNutrientGoals();
   const rows = buildRows(nutrition, mult);
   // Headline macros live in the ring + Daily targets; exclude them from the
   // micronutrient highlight.
@@ -294,10 +335,16 @@ export function NutritionRingCard({
     "totalCarbs_g",
     "totalFat_g",
   ]);
-  const keyRows = rows
+  // Goal stars pin FIRST in Key nutrients (and force inclusion even when a
+  // starred nutrient wouldn't make the top-4 by %DV — that's the point).
+  const eligible = rows
     .filter((r) => r.dv != null && r.value > 0 && !HEADLINE.has(r.key))
-    .sort((a, b) => pct(b.value, b.dv!) - pct(a.value, a.dv!))
-    .slice(0, 4);
+    .sort((a, b) => pct(b.value, b.dv!) - pct(a.value, a.dv!));
+  const starredRows = eligible.filter((r) => stars.has(r.key));
+  const keyRows = [
+    ...starredRows,
+    ...eligible.filter((r) => !stars.has(r.key)),
+  ].slice(0, Math.max(4, starredRows.length));
   const groupedRows = NUTRIENT_GROUP_ORDER.map((g) => ({
     group: g,
     items: rows.filter((r) => r.group === g),
@@ -404,7 +451,11 @@ export function NutritionRingCard({
           </p>
           <div className="grid grid-cols-2 gap-x-4 gap-y-3">
             {keyRows.map((row) => (
-              <NutrientBar key={row.key} row={row} />
+              <NutrientBar
+                key={row.key}
+                row={row}
+                starred={stars.has(row.key)}
+              />
             ))}
           </div>
         </div>
@@ -453,7 +504,12 @@ export function NutritionRingCard({
                   </p>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                     {items.map((row) => (
-                      <NutrientBar key={row.key} row={row} />
+                      <NutrientBar
+                        key={row.key}
+                        row={row}
+                        starred={stars.has(row.key)}
+                        onStar={() => toggleStar(row.key)}
+                      />
                     ))}
                   </div>
                 </div>
