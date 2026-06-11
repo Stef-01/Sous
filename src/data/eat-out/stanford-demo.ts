@@ -9,6 +9,10 @@
  * This is INDICATIVE demo data for showing the flow — distances are
  * approximate from the Main Quad, menus shift seasonally, and no live
  * hours/availability are claimed (that's the Y7 Places integration).
+ *
+ * heroImage files under public/eat-out/ are pulled from the restaurants'
+ * OWN websites for this PRIVATE prototype only (founder-directed) — they
+ * must not ship in any public or distributed build without permission.
  */
 
 import type { BrandedFood } from "@/lib/nutrition/branded-food";
@@ -43,6 +47,8 @@ export interface DemoVenue {
   price: "$" | "$$" | "$$$";
   /** One-line identity — real reputation, no invented claims. */
   vibe: string;
+  /** Venue hero from the restaurant's own site (private demo only). */
+  heroImage?: string;
   dishes: DemoDish[];
 }
 
@@ -79,6 +85,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 3.9,
     price: "$$",
     vibe: "Michelin Bib Gourmand Pakistani-Indian — the campus favourite.",
+    heroImage: "/eat-out/zareens.jpg",
     dishes: [
       d(
         "zareens-chicken-tikka-masala",
@@ -126,6 +133,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 2.6,
     price: "$$",
     vibe: "Tel-Aviv-style hummus bar; everything tastes of olive oil + lemon.",
+    heroImage: "/eat-out/orens.png",
     dishes: [
       d(
         "orens-falafel-pita",
@@ -219,6 +227,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 1.6,
     price: "$$",
     vibe: "Across from campus — the post-game burger institution.",
+    heroImage: "/eat-out/gotts.jpg",
     dishes: [
       d(
         "gotts-cheeseburger",
@@ -359,6 +368,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 2.6,
     price: "$$$",
     vibe: "Upscale Mexican with a mesquite grill and a serious agave list.",
+    heroImage: "/eat-out/reposado.jpg",
     dishes: [
       d(
         "reposado-enchiladas-mole",

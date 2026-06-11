@@ -213,7 +213,7 @@ export default function EatOutPage() {
             >
               <div className="relative h-44 w-full">
                 <Image
-                  src={v.dishes[0].image}
+                  src={v.heroImage ?? v.dishes[0].image}
                   alt={`${v.dishes[0].name} at ${v.name}`}
                   fill
                   sizes="(max-width: 448px) 100vw, 448px"
@@ -269,7 +269,7 @@ export default function EatOutPage() {
           >
             <div className="relative h-40 w-full">
               <Image
-                src={openVenue.dishes[0].image}
+                src={openVenue.heroImage ?? openVenue.dishes[0].image}
                 alt={openVenue.name}
                 fill
                 sizes="(max-width: 448px) 100vw, 448px"

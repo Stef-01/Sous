@@ -24,6 +24,14 @@ describe("Stanford eat-out demo data", () => {
       }
   });
 
+  it("every venue heroImage (restaurant's own photo) exists on disk", () => {
+    for (const v of STANFORD_VENUES) {
+      if (!v.heroImage) continue;
+      const p = join(process.cwd(), "public", v.heroImage);
+      expect(existsSync(p), `${v.name}: ${v.heroImage}`).toBe(true);
+    }
+  });
+
   it("dish slugs are globally unique; macros are plausible plates", () => {
     const seen = new Set<string>();
     for (const v of STANFORD_VENUES)
