@@ -2,16 +2,23 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { UtensilsCrossed, ChevronLeft, ChevronRight } from "lucide-react";
+import { UtensilsCrossed } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import { PixelDoberman } from "@/components/nutrition/pixel-doberman";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
+import {
+  WeekStrip,
+  CaloriesCard,
+  MacrosCard,
+  DiarySlotCard,
+  bucketBySlot,
+  type MealSlot,
+} from "@/components/nutrition/tracking-cards";
 import { WeeklyTrendCard } from "@/components/nutrition/weekly-trend-card";
 import { HydrationCard } from "@/components/nutrition/hydration-card";
-import { cn } from "@/lib/utils/cn";
 import {
   useNutritionDiary,
   useDiaryHistory,
@@ -26,7 +33,6 @@ import {
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import { haptic } from "@/lib/motion/haptics";
-import { StaggerList, StaggerItem } from "@/components/shared/stagger-list";
 
 /** FDA DV fallback when no personal profile is set (#6). */
 const ENERGY_TARGET_KCAL = 2000;
@@ -93,6 +99,14 @@ export default function NutritionPage() {
     ) >= 3;
 
   const consumedKcal = dayNutrition?.calories ?? 0;
+  const slotted = useMemo(() => bucketBySlot(entries), [entries]);
+  const focusLogFood = () => {
+    const el = document.querySelector<HTMLInputElement>(
+      'input[aria-label="Log food"]',
+    );
+    el?.scrollIntoView({ block: "center", behavior: "smooth" });
+    el?.focus({ preventScroll: true });
+  };
   // #6 — "kcal left" counts down from YOUR target once the profile is set.
   const { targets: personalTargets } = usePersonalTargets();
   const kcalLeft = Math.max(
@@ -133,41 +147,13 @@ export default function NutritionPage() {
       <PetSheet open={petOpen} onClose={() => setPetOpen(false)} />
 
       <main className="mx-auto max-w-md page-x space-y-4 pb-28 pt-4">
-        {/* Stage 5 — day pager: review or back-fill the last 7 days. */}
-        <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => setDayOffset((o) => Math.min(MAX_DAYS_BACK, o + 1))}
-            disabled={dayOffset >= MAX_DAYS_BACK}
-            aria-label="Previous day"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-dark)] transition-colors disabled:opacity-30"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setDayOffset(0)}
-            disabled={isToday}
-            className={cn(
-              "rounded-full px-3 py-1 text-[13px] font-semibold transition-colors",
-              isToday
-                ? "text-[var(--nourish-dark)]"
-                : "bg-neutral-100 text-[var(--nourish-dark)] hover:bg-neutral-200",
-            )}
-            aria-label={isToday ? "Viewing today" : "Jump back to today"}
-          >
-            {labelFor(dayOffset, viewedDate)}
-          </button>
-          <button
-            type="button"
-            onClick={() => setDayOffset((o) => Math.max(0, o - 1))}
-            disabled={isToday}
-            aria-label="Next day"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-dark)] transition-colors disabled:opacity-30"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        {/* Week strip (founder mockup) — real logged-day checks; tap = view. */}
+        <WeekStrip
+          store={diaryStore}
+          dayOffset={dayOffset}
+          onSelect={setDayOffset}
+          maxDaysBack={MAX_DAYS_BACK}
+        />
 
         {/* #10 — one-tap streak save when yesterday broke a ≥3-day run. */}
         {streakAtRisk && (
@@ -182,6 +168,23 @@ export default function NutritionPage() {
             🧊 Streak at risk — use a freeze ({freezesAvailable} banked)
           </button>
         )}
+
+        {/* Calories + macros (founder mockup grammar) — same aggregate +
+            personal targets every other surface reads. */}
+        <CaloriesCard
+          consumed={consumedKcal}
+          target={personalTargets?.kcal ?? ENERGY_TARGET_KCAL}
+        />
+        <MacrosCard
+          carbs={dayNutrition?.totalCarbs_g ?? 0}
+          fat={dayNutrition?.totalFat_g ?? 0}
+          protein={dayNutrition?.protein_g ?? 0}
+          targets={{
+            carbs_g: personalTargets?.carbs_g ?? 275,
+            fat_g: personalTargets?.fat_g ?? 78,
+            protein_g: personalTargets?.protein_g ?? 50,
+          }}
+        />
 
         {/* Day ring — the glanceable status */}
         {dayNutrition ? (
@@ -240,21 +243,23 @@ export default function NutritionPage() {
           </div>
         )}
 
-        {/* Entries — adjust servings in place (stage 3), remove with undo. */}
-        {entries.length > 0 && (
-          <section>
-            <p className="sous-label mb-1.5">
-              {isToday ? "Logged today" : "Logged"}
-            </p>
-            <StaggerList className="space-y-1.5">
-              {entries.map((e) => (
-                <StaggerItem key={e.at}>
-                  <DiaryEntryRow entry={e} date={viewedDate} />
-                </StaggerItem>
+        {/* Diary — meal-slot cards (founder mockup): summary + real C/F/P
+            split per slot, Log focuses the field, tap to expand + edit. */}
+        <section className="space-y-2.5">
+          <p className="sous-label">Diary</p>
+          {(Object.keys(slotted) as MealSlot[]).map((slot) => (
+            <DiarySlotCard
+              key={slot}
+              slot={slot}
+              entries={slotted[slot]}
+              onLog={focusLogFood}
+            >
+              {slotted[slot].map((e) => (
+                <DiaryEntryRow key={e.at} entry={e} date={viewedDate} />
               ))}
-            </StaggerList>
-          </section>
-        )}
+            </DiarySlotCard>
+          ))}
+        </section>
 
         {/* Active goal-plan pattern note (claim-safe, one line, only when
             the plan carries one). */}
