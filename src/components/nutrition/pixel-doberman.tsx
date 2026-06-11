@@ -28,6 +28,8 @@ const COLORS: Record<string, string> = {
   P: "#ef9bb0", // tongue
   E: "#e98b9c", // pink inner ear
   O: "#171310", // 1px contour outline (hero only)
+  C: "#c8333d", // collar (earned at level 3)
+  G: "#e8b73c", // gold collar tag / level-6 collar
 };
 
 /** 15×16 character map, composed per mood. "." = transparent. */
@@ -239,7 +241,14 @@ const HERO_BODY_BOW = [
  *   peckish / content / thriving — ears up
  *   thriving (any pose) or bow (any mood) — tongue out
  */
-export function buildHeroMap(mood: PetMood, pose: "stand" | "bow"): string[] {
+export type PetCollar = "none" | "red" | "gold";
+
+export function buildHeroMap(
+  mood: PetMood,
+  pose: "stand" | "bow",
+  collar: PetCollar = "none",
+  blink = false,
+): string[] {
   const grid: string[][] = Array.from({ length: HERO_H }, () =>
     Array<string>(HERO_W).fill("."),
   );
@@ -264,9 +273,21 @@ export function buildHeroMap(mood: PetMood, pose: "stand" | "bow"): string[] {
     stamp(grid, hx + 8, hy - 1, HERO_EAR_FOLD);
   }
 
-  if (mood === "asleep") stamp(grid, hx + 5, hy + 4, HERO_EYE_CLOSED);
+  if (mood === "asleep" || blink) stamp(grid, hx + 5, hy + 4, HERO_EYE_CLOSED);
   if (mood === "thriving" || pose === "bow") {
     stamp(grid, hx + 11, hy + 9, HERO_TONGUE);
+  }
+
+  // Earned collar (real Path level): a band across the neck join, with a
+  // gold tag at the front. Stamped before shade/outline so it integrates.
+  if (collar !== "none") {
+    const band = collar === "red" ? "C" : "G";
+    const cy = hy + 11; // the neck row of HERO_HEAD
+    for (let x = hx + 4; x <= hx + 11; x++) {
+      if (grid[cy]?.[x] && grid[cy][x] !== ".") grid[cy][x] = band;
+    }
+    if (grid[cy + 1]?.[hx + 11] && grid[cy + 1][hx + 11] !== ".")
+      grid[cy + 1][hx + 11] = collar === "red" ? "G" : "C"; // tag pops
   }
 
   shade(grid);
@@ -277,16 +298,20 @@ export function buildHeroMap(mood: PetMood, pose: "stand" | "bow"): string[] {
 export function PixelDobermanHero({
   mood,
   pose = "stand",
+  collar = "none",
+  blink = false,
   size = 220,
   className,
 }: {
   mood: PetMood;
   pose?: "stand" | "bow";
+  collar?: PetCollar;
+  blink?: boolean;
   /** Rendered width in px (height follows the 28:24 grid). */
   size?: number;
   className?: string;
 }) {
-  const map = buildHeroMap(mood, pose);
+  const map = buildHeroMap(mood, pose, collar, blink);
   const cols = HERO_W;
   const rows = map.length;
   return (

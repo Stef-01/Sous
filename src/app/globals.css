@@ -576,3 +576,22 @@ a,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Pet idle life (round 5) — whole-pixel breathing bob, pixel-art true. */
+@keyframes pet-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+.pet-breathe {
+  animation: pet-breathe 1.8s steps(1, end) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pet-breathe {
+    animation: none;
+  }
+}

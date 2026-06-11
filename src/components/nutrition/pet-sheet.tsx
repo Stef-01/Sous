@@ -18,7 +18,7 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { PixelDoberman, PixelDobermanHero } from "./pixel-doberman";
-import { PetRoom } from "./pet-room";
+import { PetRoom, type Daypart } from "./pet-room";
 import { PixelFrame } from "./pixel-frame";
 import { PixelIcon, type PixelIconName } from "./pixel-icons";
 import { pixelFont } from "@/lib/fonts/pixel-font";
@@ -32,6 +32,7 @@ import {
 } from "@/lib/nutrition/pet-screen-data";
 import {
   aggregateDay,
+  dayKey,
   useNutritionDiary,
   useDiaryStore,
 } from "@/lib/hooks/use-nutrition-diary";
@@ -49,6 +50,7 @@ import {
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { ingredientEmoji } from "@/lib/utils/ingredient-meta";
+import { spotlightForNutrient } from "@/data/content/nutrient-spotlight";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
 import Link from "next/link";
@@ -121,6 +123,25 @@ export function PetSheet({
   const { totalXP } = useXPSystem();
   const { items: pantryItems } = usePantry();
   const [pose, setPose] = useState<"stand" | "bow">("stand");
+  const [blink, setBlink] = useState(false);
+
+  // Idle life: random blinks every few seconds (a big static sprite reads
+  // dead — round-5 research). Skipped while asleep (lids already down).
+  useEffect(() => {
+    if (!open) return;
+    let lid: ReturnType<typeof setTimeout>;
+    const iv = setInterval(
+      () => {
+        setBlink(true);
+        lid = setTimeout(() => setBlink(false), 160);
+      },
+      3500 + Math.random() * 2500,
+    );
+    return () => {
+      clearInterval(iv);
+      clearTimeout(lid);
+    };
+  }, [open]);
 
   // Play-bow is a moment, not a state — it relaxes back on its own.
   useEffect(() => {
@@ -149,6 +170,39 @@ export function PetSheet({
     [store, used],
   );
   const lvl = xpToLevel(totalXP);
+  // Growth stage from the real Path level (goal-gradient, no fake economy):
+  // puppy (smaller) below Lv3; red collar at Lv3; gold collar at Lv6.
+  const collar = lvl.level >= 6 ? "gold" : lvl.level >= 3 ? "red" : "none";
+  const heroSize = lvl.level >= 3 ? 176 : 150;
+
+  // Finch pattern: the pet visibly reacts to the REAL thing you just did.
+  // A meal logged in the last 10 minutes puts its bowl on the rug and Dobe
+  // lights up; the moment self-clears.
+  const [openedAt, setOpenedAt] = useState(0);
+  /* eslint-disable react-hooks/set-state-in-effect -- stamping the open
+     moment once per open is the intent; recency must not drift per render */
+  useEffect(() => {
+    if (open) setOpenedAt(Date.now());
+  }, [open]);
+  /* eslint-enable react-hooks/set-state-in-effect */
+  const recentMeal = useMemo(() => {
+    const last = entries[entries.length - 1];
+    if (!last || !openedAt) return null;
+    const ageMs = openedAt - new Date(last.at).getTime();
+    return ageMs < 10 * 60_000 ? last : null;
+  }, [entries, openedAt]);
+  const [mealAckAt, setMealAckAt] = useState<string | null>(null);
+  useEffect(() => {
+    if (!recentMeal || !open) return;
+    const t = setTimeout(() => setMealAckAt(recentMeal.at), 6000);
+    return () => clearTimeout(t);
+  }, [recentMeal, open]);
+  const showMeal = Boolean(recentMeal) && mealAckAt !== recentMeal?.at;
+
+  // The room lives on your clock (Animal Crossing presence pattern).
+  const hour = new Date().getHours();
+  const daypart: Daypart =
+    hour >= 7 && hour < 17 ? "day" : hour >= 17 && hour < 20 ? "dusk" : "night";
   const feed = useMemo(
     () => activityFeed(entries, glasses),
     [entries, glasses],
@@ -165,6 +219,22 @@ export function PetSheet({
     () => (state.need ? dishesForDeficit(state.need, 2) : []),
     [state.need],
   );
+  // Dobe's reading corner — the existing nutrient-spotlight article matching
+  // the craving, when one exists (contextual education, not a feed).
+  const reading = state.need ? spotlightForNutrient(state.need.key) : null;
+
+  // Weekly ritual (Pokémon-Sleep pattern, earned not nagged): once last week
+  // has ≥3 logged days, the room offers the wrapped — the count varies the
+  // moment, so it never replays identically.
+  const lastWeekDays = useMemo(() => {
+    let n = 0;
+    for (let i = 1; i <= 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      if ((store[dayKey(d)]?.length ?? 0) > 0) n++;
+    }
+    return n;
+  }, [store]);
 
   if (!open || typeof document === "undefined") return null;
 
@@ -289,7 +359,18 @@ export function PetSheet({
 
           {/* The room band shows the ENTIRE 180×120 scene (3:2). Dobe stands
               on the rug inside it; tap = play-bow. */}
-          <PetRoom className="aspect-[3/2] w-full overflow-hidden rounded-xl border-2 border-[#6b4f3f]">
+          <PetRoom
+            daypart={daypart}
+            className="aspect-[3/2] w-full overflow-hidden rounded-xl border-2 border-[#6b4f3f]"
+          >
+            {showMeal && recentMeal && (
+              <span
+                aria-hidden
+                className="absolute bottom-[8%] left-[68%] flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#171310] bg-[#8a6648] text-[16px] shadow-[inset_0_-2px_0_rgba(0,0,0,.4)]"
+              >
+                {ingredientEmoji(recentMeal.name)}
+              </span>
+            )}
             <button
               type="button"
               onClick={play}
@@ -297,16 +378,31 @@ export function PetSheet({
               className="absolute bottom-[3%] left-1/2 -translate-x-1/2 active:scale-95 motion-reduce:active:scale-100"
             >
               <PixelDobermanHero
-                mood={state.mood}
+                mood={showMeal ? "thriving" : state.mood}
                 pose={pose}
-                size={176}
-                className={cn(pose === "bow" && "motion-safe:animate-bounce")}
+                collar={collar}
+                blink={blink}
+                size={heroSize}
+                className={cn(
+                  "pet-breathe",
+                  pose === "bow" && "motion-safe:animate-bounce",
+                )}
               />
             </button>
           </PetRoom>
           <p className="text-center text-[11px] font-bold uppercase tracking-widest text-[#f6efe4] [text-shadow:0_1px_0_rgba(0,0,0,.6)]">
-            {MOOD_LINE[state.mood]}
+            {showMeal && recentMeal
+              ? `Dobe enjoyed the ${recentMeal.name}!`
+              : MOOD_LINE[state.mood]}
           </p>
+          {lastWeekDays >= 3 && (
+            <Link
+              href="/path/recap"
+              className="mx-auto -mt-0.5 rounded-md border border-[#8a6648] bg-[#2e2014]/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#f0d9a0] active:translate-y-[1px]"
+            >
+              {lastWeekDays}-day week — see Dobe&apos;s recap
+            </Link>
+          )}
 
           {/* Health stats — every bar is a real engine value. */}
           <PixelFrame title="Health stats">
@@ -393,6 +489,14 @@ export function PetSheet({
                     {d.name}
                   </Link>
                 ))}
+                {reading && (
+                  <Link
+                    href={`/community/article/${reading.slug}`}
+                    className="rounded-md border border-[#8a6648] bg-[#8a6648]/30 px-2 py-1 text-[10px] font-bold uppercase text-[#f0d9a0] active:translate-y-[1px]"
+                  >
+                    Read why
+                  </Link>
+                )}
               </div>
             </PixelFrame>
           )}

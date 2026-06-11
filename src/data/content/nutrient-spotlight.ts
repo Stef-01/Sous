@@ -93,3 +93,20 @@ export const NUTRIENT_SPOTLIGHT_ARTICLES: Article[] = [
     createdAt: "2026-05-24T09:00:00.000Z",
   },
 ];
+
+/** Deficit-key → spotlight-tag tokens ("omega3_g" → "omega-3"). */
+const KEY_TO_TAG: Record<string, string> = {
+  omega3_g: "omega-3",
+  iron_mg: "iron",
+  fiber_g: "fiber",
+  protein_g: "protein",
+  vitaminC_mg: "vitamin-c",
+};
+
+/** The spotlight article for a nutrient deficit, or null — powers Dobe's
+ *  reading corner (contextual bite-sized education, round-3 research). */
+export function spotlightForNutrient(key: string): Article | null {
+  const tag = KEY_TO_TAG[key];
+  if (!tag) return null;
+  return NUTRIENT_SPOTLIGHT_ARTICLES.find((a) => a.tags.includes(tag)) ?? null;
+}

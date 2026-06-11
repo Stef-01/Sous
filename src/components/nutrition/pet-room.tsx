@@ -158,23 +158,22 @@ const GRAIN: number[][] = [
 ];
 
 // diamond motif anchors on the rug (each renders as a 6×6 pixel diamond)
-const RUG_DIAMONDS: number[][] = [
-  [94, 128],
-  [112, 128],
-  [130, 128],
-  [148, 128],
-  [103, 137],
-  [121, 137],
-  [139, 137],
-];
+
+export type Daypart = "day" | "dusk" | "night";
 
 export function PetRoom({
   className,
   children,
+  daypart = "night",
 }: {
   className?: string;
   children?: ReactNode;
+  /** Real local time drives the window + lamp (Finch/AC presence pattern). */
+  daypart?: Daypart;
 }) {
+  const sky =
+    daypart === "day" ? "#7a9cc8" : daypart === "dusk" ? "#5a4a6e" : C.sky;
+  const lampOn = daypart !== "day";
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <svg
@@ -218,18 +217,40 @@ export function PetRoom({
 
         {/* window: frame, sky, stars, skyline, mullions */}
         <rect x="20" y="18" width="56" height="44" fill={C.frame} />
-        <rect x="24" y="22" width="48" height="36" fill={C.sky} />
-        {STARS.map(([x, y, w, h]) => (
-          <rect
-            key={`s${x}-${y}`}
-            x={x}
-            y={y}
-            width={w}
-            height={h}
-            fill={C.star}
-            opacity="0.9"
-          />
-        ))}
+        <rect x="24" y="22" width="48" height="36" fill={sky} />
+        {daypart === "day" && (
+          <>
+            <rect x="60" y="26" width="6" height="6" fill="#f5e07a" />
+            <rect
+              x="62"
+              y="24"
+              width="2"
+              height="10"
+              fill="#f5e07a"
+              opacity="0.6"
+            />
+            <rect
+              x="58"
+              y="28"
+              width="10"
+              height="2"
+              fill="#f5e07a"
+              opacity="0.6"
+            />
+          </>
+        )}
+        {daypart !== "day" &&
+          STARS.map(([x, y, w, h]) => (
+            <rect
+              key={`s${x}-${y}`}
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              fill={C.star}
+              opacity="0.9"
+            />
+          ))}
         {SKYLINE.map(([x, y, w, h]) => (
           <rect
             key={`b${x}-${y}`}
@@ -240,17 +261,18 @@ export function PetRoom({
             fill={C.skyline}
           />
         ))}
-        {LIT_WINDOWS.map(([x, y, w, h]) => (
-          <rect
-            key={`l${x}-${y}`}
-            x={x}
-            y={y}
-            width={w}
-            height={h}
-            fill={C.litWindow}
-            opacity="0.7"
-          />
-        ))}
+        {daypart !== "day" &&
+          LIT_WINDOWS.map(([x, y, w, h]) => (
+            <rect
+              key={`l${x}-${y}`}
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              fill={C.litWindow}
+              opacity="0.7"
+            />
+          ))}
         <rect x="46" y="22" width="4" height="36" fill={C.frame} />
         <rect x="24" y="38" width="48" height="3" fill={C.frame} />
 
@@ -418,7 +440,7 @@ export function PetRoom({
           width="20"
           height="110"
           fill={C.glow}
-          opacity="0.1"
+          opacity={lampOn ? "0.1" : "0.03"}
         />
         <rect
           x="96"
@@ -426,7 +448,7 @@ export function PetRoom({
           width="48"
           height="110"
           fill={C.glow}
-          opacity="0.06"
+          opacity={lampOn ? "0.06" : "0.02"}
         />
         <rect
           x="82"
@@ -434,7 +456,7 @@ export function PetRoom({
           width="76"
           height="110"
           fill={C.glow}
-          opacity="0.035"
+          opacity={lampOn ? "0.035" : "0.01"}
         />
       </svg>
 

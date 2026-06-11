@@ -119,3 +119,20 @@ describe("buildHeroMap", () => {
     }
   });
 });
+
+describe("collar growth stages (round 1: goal gradient)", () => {
+  it("no collar by default; red/gold bands appear when earned", () => {
+    expect(buildHeroMap("content", "stand").join("")).not.toMatch(/[CG]/);
+    expect(buildHeroMap("content", "stand", "red").join("")).toContain("C");
+    expect(buildHeroMap("content", "stand", "gold").join("")).toContain("G");
+  });
+
+  it("collar never floats — only overwrites body cells", () => {
+    const plain = buildHeroMap("content", "stand").map((r) => r.split(""));
+    const red = buildHeroMap("content", "stand", "red").map((r) => r.split(""));
+    for (let y = 0; y < red.length; y++)
+      for (let x = 0; x < red[0].length; x++)
+        if (red[y][x] === "C" || red[y][x] === "G")
+          expect(plain[y][x]).not.toBe(".");
+  });
+});

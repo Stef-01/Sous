@@ -30,3 +30,17 @@ describe("nutrient-spotlight content (W46)", () => {
     }
   });
 });
+
+describe("spotlightForNutrient (Dobe's reading corner)", () => {
+  it("maps deficit keys to their spotlight article", async () => {
+    const { spotlightForNutrient } = await import("./nutrient-spotlight");
+    expect(spotlightForNutrient("omega3_g")?.slug).toContain("omega-3");
+    expect(spotlightForNutrient("iron_mg")?.tags).toContain("iron");
+    expect(spotlightForNutrient("fiber_g")?.tags).toContain("fiber");
+  });
+
+  it("returns null for nutrients without a spotlight yet", async () => {
+    const { spotlightForNutrient } = await import("./nutrient-spotlight");
+    expect(spotlightForNutrient("magnesium_mg")).toBeNull();
+  });
+});
