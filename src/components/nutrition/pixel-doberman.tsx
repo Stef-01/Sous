@@ -19,12 +19,15 @@ import type { PetMood } from "@/lib/nutrition/pet-state";
 /** Classic black-and-rust Doberman palette. */
 const COLORS: Record<string, string> = {
   K: "#26221f", // coat
-  D: "#121212", // nose
+  H: "#3a342e", // coat highlight (top-edge rim light, hero only)
+  S: "#1c1916", // coat shadow (belly/underside, hero only)
+  D: "#121212", // nose + mouth line
   R: "#b06226", // rust markings
   r: "#cf8345", // rust highlight
   W: "#f6efe4", // eye shine
   P: "#ef9bb0", // tongue
   E: "#e98b9c", // pink inner ear
+  O: "#171310", // 1px contour outline (hero only)
 };
 
 /** 15×16 character map, composed per mood. "." = transparent. */
@@ -58,8 +61,8 @@ function buildMap(mood: PetMood): string[] {
 /* Hero sprite — full-screen Tamagotchi room                                 */
 /* ------------------------------------------------------------------------ */
 
-const HERO_W = 28;
-const HERO_H = 24;
+const HERO_W = 40;
+const HERO_H = 32;
 
 /** Stamp a sprite onto the grid; "." pixels are transparent (no overwrite). */
 function stamp(grid: string[][], ox: number, oy: number, sprite: string[]) {
@@ -76,99 +79,160 @@ function stamp(grid: string[][], ox: number, oy: number, sprite: string[]) {
 }
 
 /**
- * Head block (15×8), facing right. Skull + brow pip (R), open eye (W with K
- * pupil), rust muzzle with 2×2 nose (D) at the front tip, rust chin, and the
- * under-chin/neck line. Stamped at (hx, hy); ears/eye/tongue overlays use the
- * same anchor.
+ * v3 craft passes (sprite quality without quadratic hand-typing):
+ * outline() traces a 1px O contour around the silhouette; shade() adds a
+ * top-edge rim light (K→H, R→r) and a bottom-edge shadow (K→S) per column.
  */
+function outline(grid: string[][]): void {
+  const solid = (y: number, x: number) =>
+    y >= 0 &&
+    y < HERO_H &&
+    x >= 0 &&
+    x < HERO_W &&
+    grid[y][x] !== "." &&
+    grid[y][x] !== "O";
+  for (let y = 0; y < HERO_H; y++)
+    for (let x = 0; x < HERO_W; x++)
+      if (
+        grid[y][x] === "." &&
+        (solid(y - 1, x) ||
+          solid(y + 1, x) ||
+          solid(y, x - 1) ||
+          solid(y, x + 1))
+      )
+        grid[y][x] = "O";
+}
+
+function shade(grid: string[][]): void {
+  for (let x = 0; x < HERO_W; x++) {
+    // rim light: first solid coat/rust cell from the top
+    for (let y = 0; y < HERO_H; y++) {
+      const c = grid[y][x];
+      if (c === "." || c === "O") continue;
+      if (c === "K") grid[y][x] = "H";
+      if (c === "R") grid[y][x] = "r";
+      break;
+    }
+    // shadow: last coat cell from the bottom (legs/belly underside)
+    for (let y = HERO_H - 1; y >= 0; y--) {
+      const c = grid[y][x];
+      if (c === "." || c === "O") continue;
+      if (c === "K") grid[y][x] = "S";
+      break;
+    }
+  }
+}
+
+/** Head v3.1 (19×12): rounded skull, brow pip, eye beside the muzzle root,
+ *  and a snout that PROJECTS past the skull (the spec's defining read). */
 const HERO_HEAD = [
-  "...KKKKKKKK.....", // rounded skull top
-  "..KKKKKKKKKK....",
-  ".KKKKKKKKKKKK...",
-  ".KKKKKKKRKKKK...", // rust brow pip
-  ".KKKKKKKWKKKKK..", // small bright eye
-  ".KKKKKKKKKRRRRD.", // muzzle band → dark nose tip
-  ".KKKKKKKKrRRRDD.",
-  "..KKKKKKKRRRRR..", // rust jaw
-  "...KKKKKKKKK....", // neck
+  "....KKKKKKKK.......",
+  "..KKKKKKKKKKK......",
+  ".KKKKKKKKKKKKK.....",
+  ".KKKKKKRRKKKKK.....",
+  ".KKKKKWWKKKKKK.....",
+  ".KKKKKWDKRRKKK.....",
+  ".KKKKKKKRRRRRRRR...",
+  ".KKKKKKKRRRRRRRRDD.",
+  "..KKKKKKRRRRRRRRDD.",
+  "..KKKKKKKRKKKRRRR..",
+  "...KKKKKKKRRRRR....",
+  "....KKKKKKKKK......",
 ];
 
-/** Pointed ear triangles (5×5), pink inner at the base. The pair lean
- *  outward like the reference (back ear mirrors the front). */
-const HERO_EAR_BACK = ["....K", "...KK", "..KEK", ".KEEK", "KEEEK"];
-const HERO_EAR_FRONT = ["K....", "KK...", "KEK..", "KEEK.", "KEEEK"];
+/** Ear triangles v3 (6×7), pink core, leaning apart like the spec. */
+const HERO_EAR_BACK = [
+  ".....K",
+  "....KK",
+  "...KEK",
+  "..KEEK",
+  ".KEEEK",
+  ".KEEEK",
+  "KEEEEK",
+];
+const HERO_EAR_FRONT = [
+  "K.....",
+  "KK....",
+  "KEK...",
+  "KEEK..",
+  "KEEEK.",
+  "KEEEK.",
+  "KEEEEK",
+];
 
-/** Folded ear nub (5×2) — asleep / hungry. */
+/** Folded ear nub — asleep / hungry. */
 const HERO_EAR_FOLD = [
-  ".KK..", //
-  "KKKK.",
+  ".KKK.", //
+  "KKKKK",
 ];
 
-/** Closed-eye overlay (lid line) for asleep, stamped over the W pixels. */
+/** Closed-eye lid line, stamped over the W pixels when asleep. */
 const HERO_EYE_CLOSED = [
-  "KK", //
-  "rr",
+  "KKK", //
+  "rrr",
 ];
 
-/** Small tongue, hanging below the front of the mouth. */
+/** Tongue inside the open mouth. */
 const HERO_TONGUE = [
-  "P", //
-  "P",
+  "PP", //
+  ".P",
 ];
 
 /**
- * Standing body, stamped at (0, 9): docked tail up at the left, barrel body,
- * rust chest patch, four legs with rust from the knee down.
+ * Standing body v3 (36×20): docked tail up-left, level back, two rust chest
+ * spots (the spec's), longer legs with rust socks, belly tuck.
  */
 const HERO_BODY_STAND = [
-  "...K........................", // tail tip (docked, up)
-  "...KK.......................",
-  "....KK......................",
-  "....KKKKKKKKKK..............", // back line → neck
-  "...KKKKKKKKKKKK.............",
-  "...KKKKKKKKKKKKKRRRK........", // chest patch
-  "...KKKKKKKKKKKKKRRRK........",
-  "...KKKKKKKKKKKKKrrKK........",
-  "....KKKKKKKKKKKKKKKK........",
-  "....KKKKKKKKKKKKKKK.........", // belly
-  "....KK..KK....KK..KK........", // upper legs (coat)
-  "....KK..KK....KK..KK........",
-  "....RR..RR....RR..RR........", // rust from the knee down
-  "....RR..RR....RR..RR........",
-  "....rrr.rrr...rrr.rrr.......", // paws
+  "....KK..............................",
+  "....KKK.............................",
+  "....KKK.............................",
+  "......KKKKKKKKKKKKK.................",
+  ".....KKKKKKKKKKKKKKK................",
+  "....KKKKKKKKKKKKKKKKK...............",
+  "....KKKKKKKKRRKKKKRRK...............",
+  "....KKKKKKKKRRKKKKRRK...............",
+  "....KKKKKKKKKKKKKKKKK...............",
+  "....KKKKKKKKKKKKKKKK................",
+  "....KKKKKKKKKKKKKKKK................",
+  ".....KKKKKKKKKKKKKK.................",
+  ".....KKK..KKK...KKK..KK.............",
+  ".....KKK..KKK...KKK..KK.............",
+  ".....KKK..KKK...KKK..KK.............",
+  ".....RRR..RRR...RRR..RR.............",
+  ".....RRR..RRR...RRR..RR.............",
+  ".....RRR..RRR...RRR..RR.............",
+  ".....rrr..rrr...rrr..rr.............",
+  "....................................",
 ];
 
-/**
- * Play-bow body, stamped at (0, 3): butt and tail high at the left, back
- * sloping down to the lowered shoulders, rear legs tall, front legs stretched
- * forward along the ground.
- */
+/** Play-bow body v3: butt high left, back sloping to lowered shoulders,
+ *  forelegs stretched along the ground. */
 const HERO_BODY_BOW = [
-  "....K.......................", // tail tip (up, butt high)
-  "...KK.......................",
-  "....KK......................",
-  "....KKKKKK..................", // top of raised butt
-  "...KKKKKKKKK................",
-  "...KKKKKKKKKK...............",
-  "...KKKKKKKKKKK..............",
-  "...KKKKKKKKKKK..............", // back slopes into lowered head
-  "...KKKKKKKKKKK..............",
-  "....KKKKKKKKKK..............",
-  "....KKKKKKKKKK..............",
-  "....KKKKKKKKK...............", // belly
-  "....KK..KK..................", // tall rear legs
-  "....KK..KK..................",
-  "....KK..KK..................",
-  "....KK..KK....KRRK..........", // chest patch under lowered shoulders
-  "....KK..KK....KRRK..........",
-  "....RR..RR......KK..........", // rust knee-down; foreleg drops
-  "....RR..RR......RRR.........",
-  "....RR..RR......RRRRRRR.....", // forelegs stretched forward on ground
-  "....rrr.rrr......rrr.rrr....", // rear paws + front paws reaching out
+  ".....KK.............................",
+  ".....KKK............................",
+  "......KK............................",
+  "......KKKKKKK.......................",
+  ".....KKKKKKKKKK.....................",
+  ".....KKKKKKKKKKKK...................",
+  ".....KKKKKKKKKKKKK..................",
+  ".....KKKKKKKKKKKKK..................",
+  ".....KKKKKKKKKKKK...................",
+  "......KKKKKKKKKKK...................",
+  "......KKK..KKKKKK...................",
+  "......KKK..KKKRRKK..................",
+  "......KKK..KKKRRKK..................",
+  "......KKK..KKKKKKK..................",
+  "......RRR..RRR.KKK..................",
+  "......RRR..RRR..KKK.................",
+  "......RRR..RRR...KKKK...............",
+  "......rrr..rrr....RRRRRRR...........",
+  "..................rrrrrrr...........",
+  "....................................",
 ];
 
 /**
- * Hero map (28×24), facing right, composed per mood + pose.
+ * Hero map (40×32), facing right, composed per mood + pose, then shaded and
+ * outlined programmatically.
  *
  *   asleep   — eyes closed (lid line), ears folded
  *   hungry   — ears folded
@@ -180,32 +244,33 @@ export function buildHeroMap(mood: PetMood, pose: "stand" | "bow"): string[] {
     Array<string>(HERO_W).fill("."),
   );
 
-  // Head anchor: bow lowers the head/shoulders by 4 rows.
-  const hx = 13;
-  const hy = pose === "stand" ? 6 : 10;
+  const hx = 18;
+  const hy = pose === "stand" ? 7 : 12;
 
   stamp(
     grid,
     0,
-    pose === "stand" ? 9 : 3,
+    pose === "stand" ? 11 : 7,
     pose === "stand" ? HERO_BODY_STAND : HERO_BODY_BOW,
   );
   stamp(grid, hx, hy, HERO_HEAD);
 
   const earsUp = mood !== "asleep" && mood !== "hungry";
   if (earsUp) {
-    stamp(grid, hx + 1, hy - 5, HERO_EAR_BACK);
-    stamp(grid, hx + 8, hy - 5, HERO_EAR_FRONT);
+    stamp(grid, hx + 1, hy - 6, HERO_EAR_BACK);
+    stamp(grid, hx + 8, hy - 6, HERO_EAR_FRONT);
   } else {
     stamp(grid, hx + 2, hy - 1, HERO_EAR_FOLD);
     stamp(grid, hx + 8, hy - 1, HERO_EAR_FOLD);
   }
 
-  if (mood === "asleep") stamp(grid, hx + 7, hy + 4, HERO_EYE_CLOSED);
+  if (mood === "asleep") stamp(grid, hx + 5, hy + 4, HERO_EYE_CLOSED);
   if (mood === "thriving" || pose === "bow") {
-    stamp(grid, hx + 11, hy + 8, HERO_TONGUE);
+    stamp(grid, hx + 11, hy + 9, HERO_TONGUE);
   }
 
+  shade(grid);
+  outline(grid);
   return grid.map((row) => row.join(""));
 }
 

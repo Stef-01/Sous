@@ -19,6 +19,10 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { PixelDoberman, PixelDobermanHero } from "./pixel-doberman";
 import { PetRoom } from "./pet-room";
+import { PixelFrame } from "./pixel-frame";
+import { PixelIcon, type PixelIconName } from "./pixel-icons";
+import { pixelFont } from "@/lib/fonts/pixel-font";
+import { statTrends, type TrendDirection } from "@/lib/nutrition/pet-trends";
 import { computePetState } from "@/lib/nutrition/pet-state";
 import {
   activityFeed,
@@ -59,63 +63,44 @@ const MOOD_LINE: Record<string, string> = {
   thriving: "Great job! Dobe is thriving!",
 };
 
-/** Mockup-style stat bar: icon · label · pixel track · %. */
+/** Mockup-style stat bar: pixel icon · label · capped track · % · honest
+ *  day-over-day arrow (omitted when yesterday has no data). */
 function StatBar({
   icon,
   label,
   value,
   color,
+  trend,
 }: {
-  icon: string;
+  icon: PixelIconName;
   label: string;
   value: number;
   color: string;
+  trend?: TrendDirection | null;
 }) {
   const p = Math.round(clamp01(value) * 100);
   return (
     <div className="flex items-center gap-2">
-      <span className="w-4 text-center text-[11px]" aria-hidden>
-        {icon}
-      </span>
-      <span className="w-[4.4rem] shrink-0 text-[10px] font-bold uppercase tracking-wider text-[#e8d9b5]">
+      <PixelIcon name={icon} size={13} className="shrink-0" />
+      <span className="w-[4.6rem] shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#e8d9b5]">
         {label}
       </span>
-      <span className="h-2 min-w-0 flex-1 overflow-hidden rounded-[2px] bg-black/40">
+      <span className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-[1px] bg-black/45 shadow-[inset_0_1px_0_rgba(0,0,0,.6)]">
         <span
-          className="block h-full"
+          className="block h-full shadow-[inset_0_-1px_0_rgba(0,0,0,.35),inset_0_1px_0_rgba(255,255,255,.25)]"
           style={{ width: `${p}%`, backgroundColor: color }}
         />
       </span>
-      <span className="w-8 shrink-0 text-right text-[10px] font-bold tabular-nums text-[#f6efe4]">
+      <span className="w-8 shrink-0 text-right text-[11px] font-bold tabular-nums text-[#f6efe4]">
         {p}%
       </span>
-    </div>
-  );
-}
-
-/** Pixel-chrome panel (the mockup's dark wood boxes). */
-function Panel({
-  title,
-  children,
-  className,
-}: {
-  title?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "rounded-lg border-2 border-[#6b4f3f] bg-[#241a12]/92 p-3",
-        className,
-      )}
-    >
-      {title && (
-        <p className="pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[#e8d9b5]">
-          {title}
-        </p>
-      )}
-      {children}
+      <span
+        className="w-3 shrink-0 text-center text-[10px] font-bold"
+        aria-hidden
+      >
+        {trend === "up" && <span className="text-[#7ab648]">▲</span>}
+        {trend === "down" && <span className="text-[#9c8a7a]">▼</span>}
+      </span>
     </div>
   );
 }
@@ -168,6 +153,14 @@ export function PetSheet({
     () => activityFeed(entries, glasses),
     [entries, glasses],
   );
+  const trends = useMemo(
+    () =>
+      statTrends(store, new Date(), {
+        kcal: targets?.kcal ?? 2000,
+        protein_g: targets?.protein_g ?? 50,
+      }),
+    [store, targets],
+  );
   const fillDishes = useMemo(
     () => (state.need ? dishesForDeficit(state.need, 2) : []),
     [state.need],
@@ -200,37 +193,37 @@ export function PetSheet({
   const ACTIONS: Array<{
     key: string;
     label: string;
-    icon: string;
+    icon: PixelIconName;
     bg: string;
     onClick: () => void;
   }> = [
     {
       key: "meal",
       label: "Log meal",
-      icon: "🍗",
-      bg: "#b5651d",
+      icon: "drumstick",
+      bg: "#c06a1e",
       onClick: goLogMeal,
     },
-    { key: "play", label: "Play", icon: "🔴", bg: "#5d8a3c", onClick: play },
+    { key: "play", label: "Play", icon: "ball", bg: "#5d9c3c", onClick: play },
     {
       key: "water",
       label: "Water",
-      icon: "💧",
-      bg: "#3c6e9c",
+      icon: "droplet",
+      bg: "#3c7ab0",
       onClick: logWater,
     },
     {
       key: "cook",
       label: "Cook",
-      icon: "🍳",
-      bg: "#8a5d9c",
+      icon: "pan",
+      bg: "#8a5da8",
       onClick: () => router.push("/today"),
     },
     {
       key: "stats",
       label: "Stats",
-      icon: "📊",
-      bg: "#9c7a2e",
+      icon: "chart",
+      bg: "#b08a2e",
       onClick: onClose,
     },
   ];
@@ -240,13 +233,19 @@ export function PetSheet({
       role="dialog"
       aria-modal="true"
       aria-label="Dobe's room"
-      className="fixed inset-0 z-[80] overflow-y-auto bg-[#1c1620]"
+      className={cn(
+        "fixed inset-0 z-[80] overflow-y-auto bg-[#1c1620]",
+        pixelFont.className,
+      )}
     >
       <div className="min-h-full bg-gradient-to-b from-[#4a3f55] via-[#3a3145] to-[#2a2233]">
         <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-2.5 px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-[max(0.75rem,env(safe-area-inset-top))]">
           {/* Header — name plate (real level/XP) + streak + close. */}
           <div className="flex items-start gap-2">
-            <Panel className="flex flex-1 items-center gap-2.5 py-2">
+            <PixelFrame
+              className="flex-1"
+              contentClassName="flex items-center gap-2.5 py-2"
+            >
               <span className="flex h-9 w-9 items-center justify-center rounded-md border border-[#6b4f3f] bg-black/30">
                 <PixelDoberman mood={state.mood} size={26} />
               </span>
@@ -258,7 +257,7 @@ export function PetSheet({
                   </span>
                 </span>
                 <span className="mt-1 flex items-center gap-1.5">
-                  <span className="h-1.5 w-full max-w-[120px] overflow-hidden rounded-[2px] bg-black/40">
+                  <span className="h-1.5 w-full overflow-hidden rounded-[1px] bg-black/40">
                     <span
                       className="block h-full bg-[#7ab648]"
                       style={{ width: `${(lvl.into / lvl.needed) * 100}%` }}
@@ -269,15 +268,15 @@ export function PetSheet({
                   </span>
                 </span>
               </span>
-            </Panel>
-            <Panel className="px-2.5 py-2 text-center">
-              <span className="block text-[15px] font-bold leading-none text-[#f5a93c]">
-                🔥 {streak}
+            </PixelFrame>
+            <PixelFrame contentClassName="px-2.5 py-2 text-center">
+              <span className="flex items-center justify-center gap-1 text-[15px] font-bold leading-none text-[#f5a93c]">
+                <PixelIcon name="flame" size={13} /> {streak}
               </span>
               <span className="mt-0.5 block text-[8px] font-bold uppercase tracking-wider text-[#e8d9b5]/80">
                 day streak
               </span>
-            </Panel>
+            </PixelFrame>
             <button
               type="button"
               onClick={onClose}
@@ -300,7 +299,7 @@ export function PetSheet({
               <PixelDobermanHero
                 mood={state.mood}
                 pose={pose}
-                size={150}
+                size={176}
                 className={cn(pose === "bow" && "motion-safe:animate-bounce")}
               />
             </button>
@@ -310,59 +309,65 @@ export function PetSheet({
           </p>
 
           {/* Health stats — every bar is a real engine value. */}
-          <Panel title="Health stats">
+          <PixelFrame title="Health stats">
             <div className="space-y-1.5">
               <StatBar
-                icon="⚡"
+                icon="bolt"
                 label="Energy"
                 value={state.fullness}
-                color="#f2c83c"
+                color="#f5c93c"
+                trend={trends.energy}
               />
               <StatBar
-                icon="❤️"
+                icon="heart"
                 label="Mood"
                 value={state.hearts / 5}
-                color="#e85d8a"
+                color="#ef5d8f"
               />
               <StatBar
-                icon="💧"
+                icon="droplet"
                 label="Hydration"
                 value={glasses / HYDRATION_GOAL_GLASSES}
-                color="#4d9de0"
+                color="#48a8f0"
               />
               <StatBar
-                icon="🍗"
+                icon="drumstick"
                 label="Protein"
                 value={state.strength}
-                color="#e88d3c"
+                color="#f08a36"
+                trend={trends.protein}
               />
               <StatBar
-                icon="🌿"
+                icon="leaf"
                 label="Fiber"
                 value={fiberCoverage(agg)}
-                color="#7ab648"
+                color="#7dc24a"
+                trend={trends.fiber}
               />
               <StatBar
-                icon="🛡️"
+                icon="shield"
                 label="Vitamins"
                 value={vitaminCoverage(agg)}
-                color="#9cc24a"
+                color="#a8cf4a"
+                trend={trends.vitamins}
               />
             </div>
-          </Panel>
+          </PixelFrame>
 
           {/* Recent activity — today's actual diary + water. */}
           {feed.length > 0 && (
-            <Panel title="Recent activity">
+            <PixelFrame title="Recent activity">
               <div className="space-y-1.5">
                 {feed.map((row, i) => (
                   <div
                     key={`${row.label}-${i}`}
                     className="flex items-center gap-2 rounded-md bg-black/25 px-2 py-1.5"
                   >
-                    <span className="text-[11px]" aria-hidden>
-                      {row.icon === "water" ? "💧" : "🍗"}
-                    </span>
+                    <PixelIcon
+                      name={row.icon === "water" ? "droplet" : "drumstick"}
+                      size={12}
+                      className="shrink-0"
+                    />
                     <span className="min-w-0 flex-1 truncate text-[11px] font-medium text-[#f6efe4]">
                       {row.label}
                     </span>
@@ -372,12 +377,12 @@ export function PetSheet({
                   </div>
                 ))}
               </div>
-            </Panel>
+            </PixelFrame>
           )}
 
           {/* Craving = the top real deficit, with dishes that close it. */}
           {state.need && fillDishes.length > 0 && (
-            <Panel title={`Craving ${state.need.label}`}>
+            <PixelFrame title={`Craving ${state.need.label}`}>
               <div className="flex flex-wrap gap-1.5">
                 {fillDishes.map((d) => (
                   <Link
@@ -389,7 +394,7 @@ export function PetSheet({
                   </Link>
                 ))}
               </div>
-            </Panel>
+            </PixelFrame>
           )}
 
           {/* Actions — each one is real. */}
@@ -402,9 +407,7 @@ export function PetSheet({
                 className="flex flex-col items-center gap-1 rounded-lg border-2 border-black/30 px-1 py-2 text-[9px] font-bold uppercase tracking-wide text-white shadow-[inset_0_-2px_0_rgba(0,0,0,.3)] active:translate-y-[1px]"
                 style={{ backgroundColor: a.bg }}
               >
-                <span className="text-[15px] leading-none" aria-hidden>
-                  {a.icon}
-                </span>
+                <PixelIcon name={a.icon} size={16} />
                 {a.label}
               </button>
             ))}
@@ -412,7 +415,7 @@ export function PetSheet({
 
           {/* Inventory — the actual pantry. */}
           {pantryItems.length > 0 && (
-            <Panel title="Inventory">
+            <PixelFrame title="Inventory">
               <div className="flex flex-wrap items-center gap-1.5">
                 {pantryItems.slice(0, 8).map((name) => (
                   <span
@@ -429,7 +432,7 @@ export function PetSheet({
                   </span>
                 )}
               </div>
-            </Panel>
+            </PixelFrame>
           )}
         </div>
       </div>

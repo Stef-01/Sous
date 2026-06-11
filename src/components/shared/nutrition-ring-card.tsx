@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
+import { selectKeyNutrientRows } from "@/lib/nutrition/key-nutrient-rows";
 import type { PerServingNutrition } from "@/types/nutrition";
 import { proteinQuality } from "@/lib/nutrition/protein-quality";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
@@ -327,24 +328,10 @@ export function NutritionRingCard({
   };
   const { stars, toggleStar } = useNutrientGoals();
   const rows = buildRows(nutrition, mult);
-  // Headline macros live in the ring + Daily targets; exclude them from the
-  // micronutrient highlight.
-  const HEADLINE = new Set([
-    "calories",
-    "protein_g",
-    "totalCarbs_g",
-    "totalFat_g",
-  ]);
-  // Goal stars pin FIRST in Key nutrients (and force inclusion even when a
-  // starred nutrient wouldn't make the top-4 by %DV — that's the point).
-  const eligible = rows
-    .filter((r) => r.dv != null && r.value > 0 && !HEADLINE.has(r.key))
-    .sort((a, b) => pct(b.value, b.dv!) - pct(a.value, a.dv!));
-  const starredRows = eligible.filter((r) => stars.has(r.key));
-  const keyRows = [
-    ...starredRows,
-    ...eligible.filter((r) => !stars.has(r.key)),
-  ].slice(0, Math.max(4, starredRows.length));
+  // Goal stars ALL pin in Key nutrients — zero-value and never-composed
+  // nutrients included (synthesized at 0; a 0% goal row is the point), the
+  // grid growing past 4 slots as stars accumulate. Pure + unit-tested.
+  const keyRows = selectKeyNutrientRows(rows, stars);
   const groupedRows = NUTRIENT_GROUP_ORDER.map((g) => ({
     group: g,
     items: rows.filter((r) => r.group === g),

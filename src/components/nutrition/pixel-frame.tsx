@@ -24,7 +24,10 @@ export function PixelFrame({
   contentClassName?: string;
 }) {
   return (
-    <div className={cn("bg-[#171310] p-[2px]", className)} style={{ clipPath: NOTCH }}>
+    <div
+      className={cn("bg-[#171310] p-[2px]", className)}
+      style={{ clipPath: NOTCH }}
+    >
       <div className="h-full bg-[#8a6648] p-[2px]" style={{ clipPath: NOTCH }}>
         <div
           className={cn(

@@ -2,11 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import {
-  UtensilsCrossed,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { UtensilsCrossed, ChevronLeft, ChevronRight } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
