@@ -59,6 +59,7 @@ function labelFor(offset: number, d: Date): string {
 export default function NutritionPage() {
   const [dayOffset, setDayOffset] = useState(0);
   const [petOpen, setPetOpen] = useState(false);
+  const [showAllSlots, setShowAllSlots] = useState(false);
   const { plan: goalPlan } = useNutrientGoals();
   const viewedDate = useMemo(() => {
     const d = new Date();
@@ -107,12 +108,8 @@ export default function NutritionPage() {
     el?.scrollIntoView({ block: "center", behavior: "smooth" });
     el?.focus({ preventScroll: true });
   };
-  // #6 — "kcal left" counts down from YOUR target once the profile is set.
+  // #6 — personal Mifflin targets drive the cards once the profile is set.
   const { targets: personalTargets } = usePersonalTargets();
-  const kcalLeft = Math.max(
-    0,
-    Math.round((personalTargets?.kcal ?? ENERGY_TARGET_KCAL) - consumedKcal),
-  );
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
@@ -124,13 +121,6 @@ export default function NutritionPage() {
               Nutrition
             </h1>
           </div>
-          {/* Stage 7 — the tracking glance: what's left today (only when
-              something is logged; complements the ring's consumed-vs-targets). */}
-          {isToday && consumedKcal > 0 && (
-            <span className="text-[12px] font-medium text-[var(--nourish-subtext)]">
-              {kcalLeft} kcal left
-            </span>
-          )}
           {/* Easter egg — never introduced anywhere. Those who notice the
               tiny dog find their day as a Tamagotchi (PetSheet). */}
           <button
@@ -246,13 +236,27 @@ export default function NutritionPage() {
         {/* Diary — meal-slot cards (founder mockup): summary + real C/F/P
             split per slot, Log focuses the field, tap to expand + edit. */}
         <section className="space-y-2.5">
-          <p className="sous-label">Diary</p>
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-[17px] font-bold text-[var(--nourish-dark)]">
+              Diary
+            </h2>
+            {entries.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setShowAllSlots((v) => !v)}
+                className="text-[13px] font-medium text-[var(--nourish-green)]"
+              >
+                {showAllSlots ? "Collapse" : "View all"}
+              </button>
+            )}
+          </div>
           {(Object.keys(slotted) as MealSlot[]).map((slot) => (
             <DiarySlotCard
               key={slot}
               slot={slot}
               entries={slotted[slot]}
               onLog={focusLogFood}
+              forceExpanded={showAllSlots || undefined}
             >
               {slotted[slot].map((e) => (
                 <DiaryEntryRow key={e.at} entry={e} date={viewedDate} />

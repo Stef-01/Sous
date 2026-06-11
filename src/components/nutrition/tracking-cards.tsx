@@ -16,7 +16,13 @@
  */
 
 import { useState, type ReactNode } from "react";
-import { Check, Coffee, Soup, UtensilsCrossed } from "lucide-react";
+import {
+  ArrowLeftRight,
+  Check,
+  Coffee,
+  Soup,
+  UtensilsCrossed,
+} from "lucide-react";
 import { dayKey, type DiaryEntry } from "@/lib/hooks/use-nutrition-diary";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
@@ -110,13 +116,13 @@ export function CaloriesCard({
   const left = Math.max(0, Math.round(target - consumed));
   const pct = Math.min(100, (consumed / target) * 100);
   return (
-    <div className="rounded-2xl border border-neutral-200/70 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
       <p className="text-[13px] font-medium text-[var(--nourish-subtext)]">
         Calories
       </p>
       <div className="mt-1 flex items-baseline justify-between gap-2">
         <p className="text-[var(--nourish-dark)]">
-          <span className="text-[24px] font-bold tabular-nums">
+          <span className="text-[28px] font-extrabold tracking-tight tabular-nums">
             {Math.round(consumed).toLocaleString()} cal
           </span>{" "}
           <span className="text-[14px] font-medium text-[var(--nourish-subtext)]">
@@ -127,7 +133,7 @@ export function CaloriesCard({
           {left.toLocaleString()} left
         </p>
       </div>
-      <div className="mt-2.5 h-2.5 overflow-hidden rounded-full bg-neutral-100">
+      <div className="mt-3 h-3 overflow-hidden rounded-full bg-neutral-100">
         <div
           className="h-full rounded-full bg-[var(--nourish-green)] transition-[width] duration-500"
           style={{ width: `${pct}%` }}
@@ -144,23 +150,26 @@ function MacroCol({
   grams,
   target,
   color,
+  mode,
 }: {
   label: string;
   grams: number;
   target: number;
   color: string;
+  mode: "consumed" | "left";
 }) {
   const pct = target > 0 ? Math.min(100, (grams / target) * 100) : 0;
+  const shown = mode === "left" ? Math.max(0, target - grams) : grams;
   return (
     <div className="min-w-0 flex-1">
       <p className="text-[13px] font-medium text-[var(--nourish-subtext)]">
         {label}
       </p>
       <p className="mt-0.5 whitespace-nowrap text-[15px] font-bold tabular-nums text-[var(--nourish-dark)]">
-        {Math.round(grams)}g
+        {Math.round(shown)}g
         <span className="text-[11px] font-medium text-[var(--nourish-subtext-faint)]">
           {" "}
-          /{Math.round(target)}
+          {mode === "left" ? "left" : `/${Math.round(target)}`}
         </span>
       </p>
       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-neutral-100">
@@ -184,26 +193,39 @@ export function MacrosCard({
   protein: number;
   targets: { carbs_g: number; fat_g: number; protein_g: number };
 }) {
+  // The mockup's ⇄: consumed ⇄ remaining, same stores either way.
+  const [mode, setMode] = useState<"consumed" | "left">("consumed");
   return (
-    <div className="flex gap-3 rounded-2xl border border-neutral-200/70 bg-white p-4 shadow-sm">
+    <div className="relative flex gap-3 rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
       <MacroCol
         label="Carbs"
         grams={carbs}
         target={targets.carbs_g}
         color="#14b8a6"
+        mode={mode}
       />
       <MacroCol
         label="Fat"
         grams={fat}
         target={targets.fat_g}
         color="#9333ea"
+        mode={mode}
       />
       <MacroCol
         label="Protein"
         grams={protein}
         target={targets.protein_g}
         color="#f59e0b"
+        mode={mode}
       />
+      <button
+        type="button"
+        onClick={() => setMode((m) => (m === "consumed" ? "left" : "consumed"))}
+        aria-label={mode === "consumed" ? "Show remaining" : "Show consumed"}
+        className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-100 text-[var(--nourish-subtext)] transition active:scale-90"
+      >
+        <ArrowLeftRight size={12} />
+      </button>
     </div>
   );
 }
@@ -279,15 +301,19 @@ export function DiarySlotCard({
   slot,
   entries,
   onLog,
+  forceExpanded,
   children,
 }: {
   slot: MealSlot;
   entries: DiaryEntry[];
   onLog: () => void;
+  /** "View all" override — when set, wins over the tap state. */
+  forceExpanded?: boolean;
   /** Expanded body — the editable entry rows. */
   children?: ReactNode;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const [tapped, setTapped] = useState(false);
+  const expanded = forceExpanded || tapped;
   const meta = SLOT_META[slot];
   const Icon = meta.icon;
   const summary = slotSummary(entries);
@@ -299,14 +325,14 @@ export function DiarySlotCard({
         : `${entries[0].name} and ${entries.length - 1} more`;
 
   return (
-    <div className="rounded-2xl border border-neutral-200/70 bg-white shadow-sm">
+    <div className="rounded-2xl border border-neutral-200/60 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
       <div className="flex items-center gap-3 p-3.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]">
           <Icon size={16} />
         </span>
         <button
           type="button"
-          onClick={() => entries.length > 0 && setExpanded((e) => !e)}
+          onClick={() => entries.length > 0 && setTapped((e) => !e)}
           aria-expanded={expanded}
           className="min-w-0 flex-1 text-left"
         >

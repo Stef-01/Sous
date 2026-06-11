@@ -61,6 +61,22 @@ export default function EatOutPage() {
   const dishFitsGoals = (dish: DemoDish) =>
     dish.tags.some((t) => goalTags.has(t));
 
+  // Featured bar — every dish across the area, swipeable; goal-fit dishes
+  // lead, then nearest venue. Tap = open that venue's sheet.
+  const featured = useMemo(() => {
+    const all = STANFORD_VENUES.flatMap((venue) =>
+      venue.dishes.map((dish) => ({ dish, venue })),
+    );
+    return all
+      .sort((a, b) => {
+        const af = a.dish.tags.some((t) => goalTags.has(t)) ? 1 : 0;
+        const bf = b.dish.tags.some((t) => goalTags.has(t)) ? 1 : 0;
+        if (af !== bf) return bf - af;
+        return a.venue.distanceKm - b.venue.distanceKm;
+      })
+      .slice(0, 14);
+  }, [goalTags]);
+
   const venues = useMemo(() => {
     let list = [...STANFORD_VENUES].sort((a, b) => a.distanceKm - b.distanceKm);
     if (cuisine) list = list.filter((v) => v.cuisine === cuisine);
@@ -106,6 +122,47 @@ export default function EatOutPage() {
       </header>
 
       <main className="mx-auto max-w-md page-x space-y-4 pb-24 pt-2">
+        {/* Featured dishes — swipe across the whole area's menus. */}
+        <div className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {featured.map(({ dish, venue }) => {
+            const fits = dish.tags.some((t) => goalTags.has(t));
+            return (
+              <button
+                key={dish.slug}
+                type="button"
+                onClick={() => setOpenVenue(venue)}
+                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform active:scale-[0.97] motion-reduce:active:scale-100"
+              >
+                <div className="relative h-24 w-full">
+                  <Image
+                    src={dish.image}
+                    alt={dish.name}
+                    fill
+                    sizes="136px"
+                    className="object-cover"
+                  />
+                  {fits && (
+                    <span className="absolute right-1.5 top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-white/92">
+                      <Star
+                        size={10}
+                        className="fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+                      />
+                    </span>
+                  )}
+                </div>
+                <div className="px-2.5 py-2">
+                  <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
+                    {dish.name}
+                  </p>
+                  <p className="mt-0.5 truncate text-[10.5px] text-[var(--nourish-subtext)]">
+                    ~{dish.kcal} kcal · {venue.name}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
         {/* Filters — cuisines + the goal lens (real starred nutrients). */}
         <div className="-mx-[var(--gutter)] flex gap-1.5 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {goalTags.size > 0 && (
