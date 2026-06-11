@@ -1,272 +1,304 @@
 "use client";
 
 /**
- * /eat-out — Michelin-Guide-style dish-first venue surface
- * (Y5 J, per Sprint J in `docs/YEAR-5-VIBECODE-PLAN.md`).
+ * /eat-out — Stanford-area demo (founder-directed prototype, 2026-06-10).
  *
- * The substrate ships first: 4 venues × 2 dishes = 8 cards in
- * `src/data/eat-out-fixtures.ts`. The intelligence-layer profile
- * boosts dishes whose cuisine + flavor tags overlap the user's
- * inferred + manual preferences.
+ * Photo-led venue list → dish sheet → ONE-TAP LOG into the same diary every
+ * other surface reads (brand = restaurant, estimates marked approximated).
+ * The "Fits goals" filter and per-dish goal badges run off the user's REAL
+ * starred nutrients, so eating out plugs into the same goal loop as cooking.
  *
- * Real Yelp / Google Places API integration is Y7 K; until then
- * the fixtures are clearly badged "Curated picks" so the user
- * never mistakes them for a live local-restaurant search.
- *
- * Surface shape:
- *   - Card stack (one card visible, swipe-back/forward)
- *   - Each card = dish hero + venue meta + "Why here" reveal +
- *     "Save for later" + "Open map link" actions
- *   - Cuisine filter chips above the stack
- *   - Empty state when filter excludes everything
+ * Replaces the Y5 card-stack fixtures (L'Artusi/Noma — wrong continent for a
+ * "near me" surface). Live Places/hours integration remains Y7; this set is
+ * clearly badged as curated demo picks.
  */
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, MapPin, Star, X } from "lucide-react";
 import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  MapPin,
-} from "lucide-react";
-import { EAT_OUT_DISHES, EAT_OUT_VENUES } from "@/data/eat-out-fixtures";
-import { rankEatOut } from "@/lib/eat-out/ranking";
-import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
-import type { EatOutCard } from "@/types/eat-out";
+  STANFORD_VENUES,
+  ALL_CUISINES,
+  demoDishToBrandedFood,
+  type DemoVenue,
+  type DemoDish,
+} from "@/data/eat-out/stanford-demo";
+import { diaryLogBranded } from "@/lib/hooks/use-nutrition-diary";
+import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
+import { toast } from "@/lib/hooks/use-toast";
+import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
 
-const CUISINE_FILTERS: ReadonlyArray<{ id: string | null; label: string }> = [
-  { id: null, label: "For you" },
-  { id: "italian", label: "Italian" },
-  { id: "chinese", label: "Chinese" },
-  { id: "american", label: "American" },
-  { id: "comfort-classic", label: "Tasting" },
-];
+/** Starred nutrient keys → the demo dishes' goal-fit tag vocabulary. */
+const STAR_TO_TAG: Record<string, DemoDish["tags"][number]> = {
+  omega3_g: "omega-3",
+  iron_mg: "iron",
+  fiber_g: "fiber",
+};
+
+function walkOrDrive(km: number): string {
+  if (km <= 3) return `${Math.round(km * 12)} min walk`;
+  return `${Math.max(4, Math.round(km * 2.5))} min drive`;
+}
 
 export default function EatOutPage() {
-  const reducedMotion = useReducedMotion();
-  void reducedMotion;
-  const { merged, mounted } = usePreferenceProfile();
-  const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [index, setIndex] = useState(0);
+  const router = useRouter();
+  const { stars } = useNutrientGoals();
+  const [cuisine, setCuisine] = useState<string | null>(null);
+  const [goalsOnly, setGoalsOnly] = useState(false);
+  const [openVenue, setOpenVenue] = useState<DemoVenue | null>(null);
 
-  const cards = useMemo<EatOutCard[]>(
-    () =>
-      rankEatOut({
-        dishes: EAT_OUT_DISHES,
-        venues: EAT_OUT_VENUES,
-        profile: mounted ? merged : null,
-        cuisineFilter: activeFilter,
-      }),
-    [mounted, merged, activeFilter],
-  );
+  const goalTags = useMemo(() => {
+    const tags = new Set<DemoDish["tags"][number]>();
+    for (const key of stars) {
+      const tag = STAR_TO_TAG[key];
+      if (tag) tags.add(tag);
+    }
+    return tags;
+  }, [stars]);
 
-  // Clamp the index whenever the deck changes (filter switch).
-  const safeIndex = Math.min(index, Math.max(0, cards.length - 1));
-  const card = cards[safeIndex] ?? null;
+  const dishFitsGoals = (dish: DemoDish) =>
+    dish.tags.some((t) => goalTags.has(t));
 
-  const handleNext = () => {
-    if (cards.length === 0) return;
-    setIndex((i) => (i + 1) % cards.length);
-  };
-  const handlePrev = () => {
-    if (cards.length === 0) return;
-    setIndex((i) => (i - 1 + cards.length) % cards.length);
+  const venues = useMemo(() => {
+    let list = [...STANFORD_VENUES].sort((a, b) => a.distanceKm - b.distanceKm);
+    if (cuisine) list = list.filter((v) => v.cuisine === cuisine);
+    if (goalsOnly && goalTags.size > 0)
+      list = list.filter((v) =>
+        v.dishes.some((dd) => dd.tags.some((t) => goalTags.has(t))),
+      );
+    return list;
+  }, [cuisine, goalsOnly, goalTags]);
+
+  const logDish = (dish: DemoDish, venue: DemoVenue) => {
+    haptic("commit");
+    diaryLogBranded(demoDishToBrandedFood(dish, venue), 1);
+    toast.push({
+      variant: "success",
+      title: `Logged ${dish.name}`,
+      body: `${venue.name} · ~${dish.kcal} kcal`,
+      dedupKey: "eat-out-log",
+    });
   };
 
   return (
-    <div className="min-h-dvh bg-[var(--nourish-cream)] pb-28">
-      <header className="app-header page-x py-3">
+    <div className="min-h-dvh bg-[var(--nourish-cream)]">
+      <header className="app-header page-x py-2.5">
         <div className="mx-auto flex max-w-md items-center gap-3">
-          <Link
-            href="/today"
+          <button
+            onClick={() => router.push("/today")}
+            type="button"
             aria-label="Back to Today"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:bg-neutral-50"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
           >
             <ArrowLeft size={18} />
-          </Link>
-          <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--nourish-green)]">
-              Eat Out
-            </p>
-            <h1 className="font-serif text-lg font-semibold leading-tight text-[var(--nourish-dark)]">
-              Curated picks tonight
+          </button>
+          <div className="min-w-0 flex-1">
+            <h1 className="font-serif text-[19px] leading-tight text-[var(--nourish-dark)]">
+              Eat out
             </h1>
+            <p className="flex items-center gap-1 text-[11px] text-[var(--nourish-subtext)]">
+              <MapPin size={10} aria-hidden /> Near Stanford · curated demo
+            </p>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-md space-y-4 page-x pt-4">
-        {/* Cuisine filter chips */}
-        <div
-          role="radiogroup"
-          aria-label="Filter by cuisine"
-          className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <ul className="flex gap-2 whitespace-nowrap">
-            {CUISINE_FILTERS.map((f) => {
-              const active = f.id === activeFilter;
-              return (
-                <li key={f.label}>
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={active}
-                    onClick={() => {
-                      setActiveFilter(f.id);
-                      setIndex(0);
-                    }}
-                    className={cn(
-                      "rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors",
-                      active
-                        ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
-                        : "border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)] hover:bg-neutral-50",
-                    )}
-                  >
-                    {f.label}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        {card ? (
-          <>
-            <p className="px-1 text-[11px] text-[var(--nourish-subtext)]">
-              Card {safeIndex + 1} of {cards.length} ·{" "}
-              <span className="font-semibold text-[var(--nourish-green)]">
-                Curated picks
-              </span>
-              {" — "}live restaurant search is coming soon.
-            </p>
-
-            <AnimatePresence mode="wait">
-              <DishCard key={card.dish.slug} card={card} />
-            </AnimatePresence>
-
-            <div className="flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={handlePrev}
-                aria-label="Previous card"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-neutral-300 disabled:opacity-50"
-                disabled={cards.length <= 1}
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <p className="sous-label" aria-live="polite">
-                Swipe through the deck
-              </p>
-              <button
-                type="button"
-                onClick={handleNext}
-                aria-label="Next card"
-                className="transition flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)] disabled:opacity-50 active:scale-[0.97]"
-                disabled={cards.length <= 1}
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          </>
-        ) : (
-          <section className="rounded-2xl border border-dashed border-neutral-200/80 bg-white/40 p-6 text-center">
-            <p className="font-serif text-base font-semibold text-[var(--nourish-dark)]">
-              Nothing in that cuisine yet.
-            </p>
-            <p className="mt-1.5 text-[12px] leading-snug text-[var(--nourish-subtext)]">
-              The curated set is small — try a different filter, or jump back to
-              &ldquo;For you&rdquo;.
-            </p>
+      <main className="mx-auto max-w-md page-x space-y-4 pb-24 pt-2">
+        {/* Filters — cuisines + the goal lens (real starred nutrients). */}
+        <div className="-mx-[var(--gutter)] flex gap-1.5 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {goalTags.size > 0 && (
             <button
               type="button"
-              onClick={() => setActiveFilter(null)}
-              className="mt-4 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white"
+              onClick={() => setGoalsOnly((g) => !g)}
+              aria-pressed={goalsOnly}
+              className={cn(
+                "inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                goalsOnly
+                  ? "border-[var(--nourish-gold)] bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
+                  : "border-neutral-200 bg-white text-[var(--nourish-dark)]",
+              )}
             >
-              Show everything
-              <ArrowRight size={12} aria-hidden />
+              <Star
+                size={11}
+                className={cn(goalsOnly && "fill-[var(--nourish-gold)]")}
+              />
+              Fits goals
             </button>
-          </section>
-        )}
-      </main>
-    </div>
-  );
-}
-
-function DishCard({ card }: { card: EatOutCard }) {
-  const { dish, venue, score } = card;
-  const isPlaceholder = dish.imageUrl.startsWith("placeholder:");
-  const emoji = isPlaceholder
-    ? dish.imageUrl.slice("placeholder:".length) || "🍽️"
-    : null;
-
-  return (
-    <motion.article
-      key={dish.slug}
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25 }}
-      className="space-y-3 rounded-2xl border border-neutral-100 bg-white p-5 shadow-sm"
-    >
-      {/* Hero */}
-      {emoji ? (
-        <div className="flex h-36 w-full items-center justify-center rounded-xl bg-gradient-to-br from-[var(--nourish-cream)] to-white text-6xl shadow-inner">
-          <span aria-hidden>{emoji}</span>
+          )}
+          {[null, ...ALL_CUISINES].map((c) => (
+            <button
+              key={c ?? "all"}
+              type="button"
+              onClick={() => setCuisine(c)}
+              aria-pressed={cuisine === c}
+              className={cn(
+                "shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors",
+                cuisine === c
+                  ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
+                  : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/50",
+              )}
+            >
+              {c ?? "All"}
+            </button>
+          ))}
         </div>
-      ) : (
-        // eslint-disable-next-line @next/next/no-img-element -- public/ paths or external; avoiding next/image ceremony for the curated stack
-        <img
-          src={dish.imageUrl}
-          alt={dish.name}
-          className="h-36 w-full rounded-xl object-cover shadow-inner"
-        />
+
+        {/* Photo-led venue cards, nearest first. */}
+        <div className="space-y-4">
+          {venues.map((v) => (
+            <button
+              key={v.slug}
+              type="button"
+              onClick={() => setOpenVenue(v)}
+              className="block w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white text-left shadow-sm transition-transform active:scale-[0.99] motion-reduce:active:scale-100"
+            >
+              <div className="relative h-44 w-full">
+                <Image
+                  src={v.dishes[0].image}
+                  alt={`${v.dishes[0].name} at ${v.name}`}
+                  fill
+                  sizes="(max-width: 448px) 100vw, 448px"
+                  className="object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent" />
+                <div className="absolute bottom-3 left-4 right-4">
+                  <h2 className="font-serif text-[20px] font-semibold text-white [text-shadow:0_1px_2px_rgba(0,0,0,.5)]">
+                    {v.name}
+                  </h2>
+                  <p className="text-[12px] font-medium text-white/85">
+                    {v.cuisine} · {v.distanceKm} km ·{" "}
+                    {walkOrDrive(v.distanceKm)} · {v.price}
+                  </p>
+                </div>
+                {goalTags.size > 0 && v.dishes.some(dishFitsGoals) && (
+                  <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-dark)]">
+                    <Star
+                      size={10}
+                      className="fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+                    />
+                    Fits your goals
+                  </span>
+                )}
+              </div>
+              <p className="px-4 py-3 text-[13px] leading-snug text-[var(--nourish-subtext)]">
+                {v.vibe}
+              </p>
+            </button>
+          ))}
+        </div>
+
+        <p className="px-1 text-center text-[10.5px] leading-snug text-[var(--nourish-subtext-faint)]">
+          Curated Stanford-area demo · nutrition is an estimate · menus and
+          hours change — check the restaurant.
+        </p>
+      </main>
+
+      {/* Venue sheet — dishes with macros + one-tap log. */}
+      {openVenue && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/35">
+          <button
+            type="button"
+            aria-label="Close"
+            className="flex-1"
+            onClick={() => setOpenVenue(null)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={openVenue.name}
+            className="max-h-[86dvh] overflow-y-auto rounded-t-3xl bg-[var(--nourish-cream)] pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+          >
+            <div className="relative h-40 w-full">
+              <Image
+                src={openVenue.dishes[0].image}
+                alt={openVenue.name}
+                fill
+                sizes="(max-width: 448px) 100vw, 448px"
+                className="object-cover"
+              />
+              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
+              <button
+                type="button"
+                onClick={() => setOpenVenue(null)}
+                aria-label="Close"
+                className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white"
+              >
+                <X size={16} />
+              </button>
+              <div className="absolute bottom-3 left-4 right-4">
+                <h2 className="font-serif text-[22px] font-semibold text-white [text-shadow:0_1px_2px_rgba(0,0,0,.5)]">
+                  {openVenue.name}
+                </h2>
+                <p className="text-[12px] font-medium text-white/85">
+                  {openVenue.area} · {openVenue.distanceKm} km ·{" "}
+                  {openVenue.price}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2.5 p-4">
+              {openVenue.dishes.map((dish) => {
+                const fits = dishFitsGoals(dish);
+                return (
+                  <div
+                    key={dish.slug}
+                    className="flex gap-3 rounded-2xl border border-neutral-200 bg-white p-3"
+                  >
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
+                      <Image
+                        src={dish.image}
+                        alt={dish.name}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline justify-between gap-2">
+                        <p className="truncate text-[14px] font-semibold text-[var(--nourish-dark)]">
+                          {dish.name}
+                        </p>
+                        <span className="shrink-0 text-[12px] font-medium text-[var(--nourish-subtext)]">
+                          ${dish.priceUsd}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 line-clamp-2 text-[12px] leading-snug text-[var(--nourish-subtext)]">
+                        {dish.blurb}
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        <span className="text-[11px] font-semibold tabular-nums text-[var(--nourish-dark)]">
+                          ~{dish.kcal} kcal
+                        </span>
+                        <span className="text-[11px] tabular-nums text-[var(--nourish-subtext-faint)]">
+                          P{dish.protein_g} · C{dish.carbs_g} · F{dish.fat_g}
+                        </span>
+                        {fits && (
+                          <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-gold)]">
+                            <Star
+                              size={8}
+                              className="fill-[var(--nourish-gold)]"
+                            />
+                            goal fit
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => logDish(dish, openVenue)}
+                      className="self-center rounded-full bg-[var(--nourish-green)] px-3.5 py-2 text-[12px] font-semibold text-white transition active:scale-[0.96]"
+                    >
+                      Log
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       )}
-
-      {/* Title block */}
-      <header className="space-y-0.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--nourish-green)]">
-          {venue.priceTier} · {dish.cuisineFamily}
-        </p>
-        <h2 className="font-serif text-xl font-semibold leading-tight text-[var(--nourish-dark)]">
-          {dish.name}
-        </h2>
-        <p className="flex items-center gap-1 text-[12px] text-[var(--nourish-subtext)]">
-          <MapPin size={11} aria-hidden />
-          <span className="font-semibold text-[var(--nourish-dark)]">
-            {venue.name}
-          </span>
-          <span>·</span>
-          <span>
-            {venue.city}, {venue.country}
-          </span>
-        </p>
-      </header>
-
-      {/* Why here */}
-      <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
-        {dish.whyHere}
-      </p>
-
-      {/* Vibe */}
-      <p className="rounded-lg bg-[var(--nourish-cream)] px-3 py-2 text-[11px] leading-snug text-[var(--nourish-subtext)]">
-        {venue.vibe}
-      </p>
-
-      {/* Score footer */}
-      <footer className="flex items-center justify-between gap-2 border-t border-neutral-100 pt-3 text-[11px] text-[var(--nourish-subtext)]">
-        <span>
-          Match score{" "}
-          <span className="font-semibold tabular-nums text-[var(--nourish-dark)]">
-            {Math.round(score * 100)}%
-          </span>
-        </span>
-        <span>
-          {venue.priceTier} · ${dish.priceUsd}
-        </span>
-      </footer>
-    </motion.article>
+    </div>
   );
 }
