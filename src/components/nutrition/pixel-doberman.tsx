@@ -18,12 +18,12 @@ import type { PetMood } from "@/lib/nutrition/pet-state";
 
 /** Classic black-and-rust Doberman palette. */
 const COLORS: Record<string, string> = {
-  K: "#26221f", // coat
-  H: "#3a342e", // coat highlight (top-edge rim light, hero only)
+  K: "#2b2622", // coat
+  H: "#403931", // coat highlight (top-edge rim light, hero only)
   S: "#1c1916", // coat shadow (belly/underside, hero only)
   D: "#121212", // nose + mouth line
-  R: "#b06226", // rust markings
-  r: "#cf8345", // rust highlight
+  R: "#bd6a26", // rust markings
+  r: "#d98c48", // rust highlight
   W: "#f6efe4", // eye shine
   P: "#ef9bb0", // tongue
   E: "#e98b9c", // pink inner ear
@@ -133,7 +133,7 @@ const HERO_HEAD = [
   ".KKKKKKKKKKKKK.....",
   ".KKKKKKRRKKKKK.....",
   ".KKKKKWWKKKKKK.....",
-  ".KKKKKWDKRRKKK.....",
+  ".KKKKKWDKKKKKK.....",
   ".KKKKKKKRRRRRRRR...",
   ".KKKKKKKRRRRRRRRDD.",
   "..KKKKKKRRRRRRRRDD.",
@@ -197,7 +197,7 @@ const HERO_BODY_STAND = [
   "....KKKKKKKKKKKKKKKK................",
   "....KKKKKKKKKKKKKKKK................",
   ".....KKKKKKKKKKKKKK.................",
-  ".....KKK..KKK...KKK..KK.............",
+  "....KKKK..KKK...KKK..KK.............",
   ".....KKK..KKK...KKK..KK.............",
   ".....KKK..KKK...KKK..KK.............",
   ".....RRR..RRR...RRR..RR.............",

@@ -440,7 +440,7 @@ export function PetRoom({
           width="20"
           height="110"
           fill={C.glow}
-          opacity={lampOn ? "0.1" : "0.03"}
+          opacity={lampOn ? "0.08" : "0.03"}
         />
         <rect
           x="96"

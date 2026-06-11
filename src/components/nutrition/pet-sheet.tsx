@@ -128,7 +128,7 @@ export function PetSheet({
   // Idle life: random blinks every few seconds (a big static sprite reads
   // dead — round-5 research). Skipped while asleep (lids already down).
   useEffect(() => {
-    if (!open) return;
+    if (!open || entries.length === 0) return;
     let lid: ReturnType<typeof setTimeout>;
     const iv = setInterval(
       () => {
@@ -141,7 +141,7 @@ export function PetSheet({
       clearInterval(iv);
       clearTimeout(lid);
     };
-  }, [open]);
+  }, [open, entries.length]);
 
   // Play-bow is a moment, not a state — it relaxes back on its own.
   useEffect(() => {
@@ -183,7 +183,7 @@ export function PetSheet({
      moment once per open is the intent; recency must not drift per render */
   useEffect(() => {
     if (open) setOpenedAt(Date.now());
-  }, [open]);
+  }, [open, entries.length]);
   /* eslint-enable react-hooks/set-state-in-effect */
   const recentMeal = useMemo(() => {
     const last = entries[entries.length - 1];
