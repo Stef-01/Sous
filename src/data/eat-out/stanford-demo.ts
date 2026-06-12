@@ -404,6 +404,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 3.8,
     price: "$$",
     vibe: "Certified Neapolitan oven — the blistered-crust pizza benchmark.",
+    heroImage: "/eat-out/terun.jpg",
     dishes: [
       d(
         "terun-margherita",
