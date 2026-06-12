@@ -14,7 +14,9 @@ describe("NutritionRingCard compact — source contract (R7 prerequisite)", () =
   });
 
   it("gates the nutrient-dense badge behind !compact", () => {
-    expect(SRC).toMatch(/!compact\s*&&\s*isNutrientDense\(nutrition\)/);
+    expect(SRC).toMatch(
+      /!compact\s*&&\s*!microsOnly\s*&&\s*isNutrientDense\(nutrition\)/,
+    );
   });
 
   it("gates the nutrient-dense badge + Daily targets + Key nutrients + Complete summary behind !compact (4 gates)", () => {

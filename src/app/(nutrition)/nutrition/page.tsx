@@ -180,7 +180,7 @@ export default function NutritionPage() {
         {dayNutrition ? (
           <div className="space-y-2">
             <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
-              <NutritionRingCard nutrition={dayNutrition} />
+              <NutritionRingCard nutrition={dayNutrition} microsOnly />
             </div>
             {isToday && deficitFill && (
               <div className="rounded-xl bg-[var(--tier-strong-bg)] px-3 py-2.5">

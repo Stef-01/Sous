@@ -278,6 +278,7 @@ export function NutritionRingCard({
   coverage,
   className,
   compact = false,
+  microsOnly = false,
 }: {
   nutrition: PerServingNutrition;
   /** Servings being made — scales the absolute totals shown so the cook slider
@@ -292,6 +293,10 @@ export function NutritionRingCard({
    *  Skips the Nutrient-dense badge, Daily targets, Key nutrients, and the full
    *  breakdown (the Sous-read glance owns those). Default false = unchanged. */
   compact?: boolean;
+  /** Founder decision 2026-06-11: the Nutrition tab's Calories/Macros cards
+   *  already carry the glance layer — there the card renders ONLY Key
+   *  nutrients + the expandable breakdown (no ring/legend/targets/badge). */
+  microsOnly?: boolean;
 }) {
   const [showAll, setShowAll] = useState(false);
 
@@ -358,24 +363,26 @@ export function NutritionRingCard({
   return (
     <div className={cn("space-y-5", className)}>
       {/* Energy summary — ring + macro legend (totals for the chosen servings). */}
-      <div className="flex items-center gap-4">
-        <MacroRing calories={calories} shares={shares} />
-        <div className="min-w-0 flex-1 space-y-1.5">
-          {legend.map(([k, grams]) => (
-            <p key={k} className="text-[15px]">
-              <span style={{ color: MACRO[k].color }} className="font-medium">
-                {MACRO[k].label} ({Math.round(shares[k] * 100)}%)
-              </span>{" "}
-              <span className="font-semibold text-[var(--nourish-dark)]">
-                {grams.toFixed(1)}g
-              </span>
-            </p>
-          ))}
+      {!microsOnly && (
+        <div className="flex items-center gap-4">
+          <MacroRing calories={calories} shares={shares} />
+          <div className="min-w-0 flex-1 space-y-1.5">
+            {legend.map(([k, grams]) => (
+              <p key={k} className="text-[15px]">
+                <span style={{ color: MACRO[k].color }} className="font-medium">
+                  {MACRO[k].label} ({Math.round(shares[k] * 100)}%)
+                </span>{" "}
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  {grams.toFixed(1)}g
+                </span>
+              </p>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* When making more than one serving, anchor the per-plate number. */}
-      {mult > 1 && (
+      {!microsOnly && mult > 1 && (
         <p className="-mt-2 text-[12px] text-[var(--nourish-subtext)]">
           For {Math.round(mult)} servings ·{" "}
           <span className="font-semibold text-[var(--nourish-dark)]">
@@ -387,7 +394,7 @@ export function NutritionRingCard({
 
       {/* W24: lots of micronutrients per calorie — a quiet quality cue. (Hidden
           in compact/glance mode; the Sous-read facet owns it there.) */}
-      {!compact && isNutrientDense(nutrition) && (
+      {!compact && !microsOnly && isNutrientDense(nutrition) && (
         <span className="inline-flex w-fit rounded-full bg-[var(--tier-strong)]/10 px-2.5 py-1 text-[11px] font-medium text-[var(--tier-strong)]">
           Nutrient-dense
         </span>
@@ -395,7 +402,7 @@ export function NutritionRingCard({
 
       {/* Macronutrient targets — the user's personalised targets when their
           profile is set (#6, Mifflin-based, educational), else FDA DV. */}
-      {!compact && (
+      {!compact && !microsOnly && (
         <div className="space-y-3">
           <p className="sous-label" style={{ color: "var(--data-protein)" }}>
             {personal ? "Your daily targets" : "Daily targets"}
