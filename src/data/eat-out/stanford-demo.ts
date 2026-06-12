@@ -263,6 +263,7 @@ export const STANFORD_VENUES: DemoVenue[] = [
     distanceKm: 2.5,
     price: "$$",
     vibe: "Tokyo's customisable tonkotsu line, transplanted to University Ave.",
+    heroImage: "/eat-out/nagi.jpg",
     dishes: [
       d(
         "nagi-karaage",
