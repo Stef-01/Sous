@@ -2463,5 +2463,16 @@
       "url": "https://cheftu.com/recipelibrary/brownsugarbobacoffee"
     },
     "role": "drink"
+  },
+  {
+    "id": "black-bean-brownies",
+    "name": "Black Bean Brownies",
+    "imageUrl": "/food_images/black-bean-brownies/hero.jpg",
+    "tags": ["dessert", "baked", "chocolate", "high-fiber", "gluten-free"],
+    "description": "Fudgy one-bowl brownies with a black-bean base — rich cacao flavor with the fiber and protein of a legume, none of the flour.",
+    "pairingReason": "a sweet finish that keeps blood sugar steadier than flour-based desserts",
+    "nutritionCategory": "legume",
+    "nourishVerified": false,
+    "role": "side"
   }
 ]

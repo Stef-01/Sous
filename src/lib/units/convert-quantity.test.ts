@@ -86,3 +86,15 @@ describe("normalizeFractionGlyphs", () => {
     expect(normalizeFractionGlyphs("½ teaspoon")).toBe("1/2 teaspoon");
   });
 });
+
+describe("container quantities (black-bean-brownies regression)", () => {
+  it("'1 15-oz can' is packaging — never converted in either direction", () => {
+    expect(
+      convertQuantity("1 15-oz can, rinsed and drained", flour, "us"),
+    ).toBeNull();
+    expect(
+      convertQuantity("1 15-oz can, rinsed and drained", flour, "metric"),
+    ).toBeNull();
+    expect(convertQuantity("2 jars", flour, "metric")).toBeNull();
+  });
+});

@@ -20,6 +20,11 @@ import {
 
 export type UnitSystem = "metric" | "us";
 
+/** Container words — "1 15-oz can" is a unit of PACKAGING, not a measurement
+ *  to convert (the 15-oz describes the can, not the cook's scale). */
+const CONTAINER =
+  /\b(cans?|jars?|packages?|pkgs?|containers?|bottles?|bags?|boxes|box)\b/i;
+
 const VOLUME_UNIT =
   /^(cups?|tbsp|tablespoons?|tsp|teaspoons?|ml|milliliters?|l|liters?)$/i;
 const WEIGHT_UNIT = /^(g|grams?|kg|kilograms?|oz|ounces?|lbs?|pounds?)$/i;
@@ -103,6 +108,7 @@ export function convertQuantity(
   ing: Ingredient | null,
   target: UnitSystem,
 ): string | null {
+  if (CONTAINER.test(quantity)) return null; // packaging, never converted
   const normalized = normalizeFractionGlyphs(quantity);
   const unit = quantityUnit(normalized);
   if (!unit) return null; // countable / descriptive — never touched

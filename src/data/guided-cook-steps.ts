@@ -48,6 +48,159 @@ export interface StaticDishData {
 export const guidedCookData: Record<string, StaticDishData> = {
   ...CHEF_TU_SIDE_FLOWS,
   ...CHEF_TU_SIDE_FLOWS_2,
+  // Folder-per-food image convention (founder, 2026-06-11): each recipe's
+  // photos live in public/food_images/<slug>/ — hero.jpg plus step-N.jpg per
+  // cook step. Brownies ship with the hero; when step photos land, set each
+  // step's imageUrl to "/food_images/black-bean-brownies/step-N.jpg".
+  // Recipe source: founder's blog (Clean Program, recipe by Kaitlyn Noble).
+  "black-bean-brownies": {
+    name: "Black Bean Brownies",
+    slug: "black-bean-brownies",
+    description:
+      "Fudgy one-bowl brownies blended from black beans and raw cacao — no flour, naturally rich, with the fiber and protein dessert usually lacks.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 25,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/black-bean-brownies/hero.jpg",
+    flavorProfile: ["chocolatey", "fudgy", "sweet"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "bbb-black-beans",
+        name: "black beans",
+        quantity: "1 15-oz can, rinsed and drained",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bbb-eggs",
+        name: "eggs",
+        quantity: "2 large",
+        isOptional: false,
+        substitution:
+          "2 tbsp ground flax + 1/4 cup hot water, rested 10 min until gelled",
+      },
+      {
+        id: "bbb-coconut-oil",
+        name: "coconut oil",
+        quantity: "1/4 cup",
+        isOptional: false,
+        substitution: "ghee",
+      },
+      {
+        id: "bbb-vanilla",
+        name: "vanilla extract",
+        quantity: "1 teaspoon",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bbb-cacao",
+        name: "cacao powder",
+        quantity: "1/3 cup",
+        isOptional: false,
+        substitution: "unsweetened cocoa powder",
+      },
+      {
+        id: "bbb-coconut-sugar",
+        name: "coconut sugar",
+        quantity: "3/4 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bbb-baking-powder",
+        name: "baking powder",
+        quantity: "1/2 teaspoon",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bbb-salt",
+        name: "salt",
+        quantity: "1/4 teaspoon",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bbb-chocolate-chips",
+        name: "chocolate chips",
+        quantity: "1/2 cup",
+        isOptional: true,
+        substitution: "stevia- or coconut-sugar-sweetened chips",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Preheat the oven to 350°F. If skipping eggs, stir 2 tbsp ground flax into 1/4 cup hot water and rest 10 minutes until gel-like.",
+        timerSeconds: 600,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "One cup of black beans carries about 15 g protein and 16 g fiber — over half a day's fiber, and the pairing that keeps dessert from spiking blood sugar.",
+        donenessCue: "Flax mixture turns thick and gelled",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add every ingredient except the chocolate chips to a food processor. Blend until completely smooth and creamy, scraping down once.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Under-blending leaves bean flecks — run it a full minute past 'looks done'.",
+        quickHack: null,
+        cuisineFact:
+          "Raw cacao skips roasting and sweetening, keeping its micronutrients intact — it's one of the most antioxidant-dense plant foods, ahead of blueberries and green tea.",
+        donenessCue: "Batter is glossy with zero visible bean pieces",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Fold the chocolate chips in by hand, then grease or parchment-line an 8×8 baking dish.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Blending the chips in melts them away — fold gently for pockets of chocolate.",
+        quickHack:
+          "If beans usually bloat you, regular fiber intake calms that response over time — digestive enzymes help in the meantime.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Pour the batter into the dish and bake for 20-25 minutes.",
+        timerSeconds: 1500,
+        mistakeWarning:
+          "Overbaking dries the fudge out — start checking at 20 minutes.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: "A toothpick in the centre comes out clean",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Let the brownies cool in the dish before cutting — they firm up as they rest.",
+        timerSeconds: 600,
+        mistakeWarning: "Cutting hot brownies smears the crumb",
+        quickHack: null,
+        cuisineFact:
+          "The bean-and-cacao base means steadier blood sugar and meaningful potassium — dessert that supports heart health instead of fighting it.",
+        donenessCue: "Edges pull slightly from the dish and centre is set",
+        imageUrl: null,
+      },
+    ],
+  },
   "caesar-salad": {
     name: "Caesar Salad",
     slug: "caesar-salad",

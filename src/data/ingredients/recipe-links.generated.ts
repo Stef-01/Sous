@@ -238,6 +238,19 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "lemon", grams: 0, isOptional: true },
     ],
   },
+  "black-bean-brownies": {
+    recipeSlug: "black-bean-brownies",
+    servingsPerRecipe: 4,
+    originalLineCount: 9,
+    lines: [
+      { ingredientId: "black-beans", grams: 28.35, isOptional: false },
+      { ingredientId: "egg", grams: 100, isOptional: false },
+      { ingredientId: "coconut-oil", grams: 54.5, isOptional: false },
+      { ingredientId: "brown-sugar", grams: 165, isOptional: false },
+      { ingredientId: "baking-powder", grams: 2.4, isOptional: false },
+      { ingredientId: "table-salt", grams: 1.52, isOptional: false },
+    ],
+  },
   "caesar-salad": {
     recipeSlug: "caesar-salad",
     servingsPerRecipe: 4,
