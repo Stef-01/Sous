@@ -15,6 +15,12 @@ import {
 import { cn } from "@/lib/utils/cn";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
 import {
+  STANFORD_VENUES,
+  demoDishToBrandedFood,
+} from "@/data/eat-out/stanford-demo";
+import { diaryLogBranded } from "@/lib/hooks/use-nutrition-diary";
+import { toast } from "@/lib/hooks/use-toast";
+import {
   buildSlotKey,
   dayKeyFromDate,
   pickCurrentMeal,
@@ -62,6 +68,14 @@ export interface QuestDish {
   ingredientNames: string[];
   hasGuidedCook: boolean;
   isMeal: boolean;
+  /** Present when the card is an eat-out menu item (deck mode toggle) —
+   *  swaps the meta line + primary action (Log instead of Cook). */
+  eatOut?: {
+    venueName: string;
+    distanceKm: number;
+    price: string;
+    kcal: number;
+  };
   isVerified: boolean;
   /** Dish role — drives the Today Filter. Mains are "main"; sides carry their
    *  classified role. */
@@ -190,6 +204,38 @@ export function QuestCard({
   // to the front and the hero label flips to "Planned for today" — one card,
   // not a separate banner. Swiping past it is the natural "not tonight".
   const { slotMap, mounted: planMounted } = useMealPlanWeek();
+
+  // Founder feature (2026-06-11): the SAME condensed deck format can show
+  // eat-out menu content — tap the header chips to switch sources.
+  const [queueMode, setQueueMode] = useState<"cook" | "eat-out">("cook");
+  const eatOutDeck = useMemo<QuestDish[]>(
+    () =>
+      STANFORD_VENUES.flatMap((venue) =>
+        venue.dishes.map((dish) => ({
+          dishName: dish.name,
+          slug: dish.slug,
+          heroImageUrl: dish.image,
+          cookTimeMinutes: 0,
+          cuisineFamily: venue.cuisine,
+          description: dish.blurb,
+          tags: [...dish.tags],
+          ingredientCount: 0,
+          ingredientNames: [],
+          hasGuidedCook: false,
+          isMeal: true,
+          isVerified: false,
+          role: "main" as const,
+          pantryFit: 0,
+          eatOut: {
+            venueName: venue.name,
+            distanceKm: venue.distanceKm,
+            price: venue.price,
+            kcal: dish.kcal,
+          },
+        })),
+      ).sort((a, b) => a.eatOut!.distanceKm - b.eatOut!.distanceKm),
+    [],
+  );
   const plannedSlug = useMemo(() => {
     if (!planMounted) return null;
     const now = new Date();
@@ -199,6 +245,7 @@ export function QuestCard({
   }, [planMounted, slotMap]);
 
   const questDishes = useMemo(() => {
+    if (queueMode === "eat-out") return eatOutDeck;
     const cap =
       filters.cookTime === "any"
         ? Number.POSITIVE_INFINITY
@@ -227,6 +274,8 @@ export function QuestCard({
     if (!pinned) return result;
     return [pinned, ...result.filter((d) => d.slug !== pinned.slug)];
   }, [
+    queueMode,
+    eatOutDeck,
     plannedSlug,
     baseDishes,
     filters.cookTime,
@@ -277,9 +326,31 @@ export function QuestCard({
     );
   }, [previewIndex, questDishes]);
 
+  const eatOutLookup = useMemo(() => {
+    const map = new Map<string, (typeof STANFORD_VENUES)[number]>();
+    for (const venue of STANFORD_VENUES)
+      for (const dish of venue.dishes) map.set(dish.slug, venue);
+    return map;
+  }, []);
+
   const routeDish = useCallback(
     (dish: QuestDish) => {
       setQueueOpen(false);
+
+      if (dish.eatOut) {
+        const venue = eatOutLookup.get(dish.slug);
+        const source = venue?.dishes.find((dd) => dd.slug === dish.slug);
+        if (venue && source) {
+          diaryLogBranded(demoDishToBrandedFood(source, venue), 1);
+          toast.push({
+            variant: "success",
+            title: `Logged ${dish.dishName}`,
+            body: `${venue.name} · ~${source.kcal} kcal`,
+            dedupKey: "queue-eat-out-log",
+          });
+        }
+        return;
+      }
 
       if (dish.hasGuidedCook && !dish.isMeal) {
         router.push(`/cook/${dish.slug}`);
@@ -290,7 +361,7 @@ export function QuestCard({
       if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
       router.push(`/sides?${params.toString()}`);
     },
-    [router],
+    [router, eatOutLookup],
   );
 
   const handleSaveDish = useCallback(
@@ -342,17 +413,48 @@ export function QuestCard({
       {/* Section header + the single faceted Filter entry — a compact text
           dropdown (role / meal type / cuisine / cook time). Session-scoped. */}
       <div className="flex items-center justify-between gap-2 px-1">
-        <h2 className="shrink-0 sous-label">Meal queue</h2>
-        <QuestFilterMenu filters={filters} cuisineOptions={cuisineOptions} />
+        <div
+          role="tablist"
+          aria-label="Queue source"
+          className="flex items-center gap-1"
+        >
+          {(
+            [
+              ["cook", "Meal queue"],
+              ["eat-out", "Eat out"],
+            ] as const
+          ).map(([mode, label]) => (
+            <button
+              key={mode}
+              type="button"
+              role="tab"
+              aria-selected={queueMode === mode}
+              onClick={() => setQueueMode(mode)}
+              className={cn(
+                "sous-label rounded-full px-2 py-1 transition-colors",
+                queueMode === mode
+                  ? "bg-[var(--nourish-green)]/10 !text-[var(--nourish-green)]"
+                  : "opacity-60 hover:opacity-100",
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {queueMode === "cook" && (
+          <QuestFilterMenu filters={filters} cuisineOptions={cuisineOptions} />
+        )}
       </div>
 
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
       {previewDish && (
         <MealQueuePreview
           label={
-            plannedSlug && previewDish?.slug === plannedSlug
-              ? "Planned for today"
-              : undefined
+            queueMode === "eat-out"
+              ? "Near Stanford"
+              : plannedSlug && previewDish?.slug === plannedSlug
+                ? "Planned for today"
+                : undefined
           }
           dish={previewDish}
           count={queueDishes.length}
@@ -446,11 +548,23 @@ function MealQueuePreview({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-[var(--nourish-subtext)]">
-            <span>{dish.cuisineFamily}</span>
-            <span aria-hidden="true">/</span>
-            <span>{dish.cookTimeMinutes} min</span>
-            <span aria-hidden="true">/</span>
-            <span>{dish.ingredientCount} ingredients</span>
+            {dish.eatOut ? (
+              <>
+                <span>{dish.eatOut.venueName}</span>
+                <span aria-hidden="true">/</span>
+                <span>{dish.eatOut.distanceKm} km</span>
+                <span aria-hidden="true">/</span>
+                <span>~{dish.eatOut.kcal} kcal</span>
+              </>
+            ) : (
+              <>
+                <span>{dish.cuisineFamily}</span>
+                <span aria-hidden="true">/</span>
+                <span>{dish.cookTimeMinutes} min</span>
+                <span aria-hidden="true">/</span>
+                <span>{dish.ingredientCount} ingredients</span>
+              </>
+            )}
           </div>
         </div>
       </motion.button>
@@ -668,11 +782,25 @@ function MealSwipeQueueOverlay({
               {activeDish.dishName}
             </h3>
             <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-white/56">
-              <span>{activeDish.cuisineFamily}</span>
-              <span aria-hidden="true">/</span>
-              <span>{activeDish.cookTimeMinutes} min</span>
-              <span aria-hidden="true">/</span>
-              <span>{activeDish.ingredientCount} ingredients</span>
+              {activeDish.eatOut ? (
+                <>
+                  <span>{activeDish.eatOut.venueName}</span>
+                  <span aria-hidden="true">/</span>
+                  <span>{activeDish.eatOut.distanceKm} km</span>
+                  <span aria-hidden="true">/</span>
+                  <span>
+                    ~{activeDish.eatOut.kcal} kcal · {activeDish.eatOut.price}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span>{activeDish.cuisineFamily}</span>
+                  <span aria-hidden="true">/</span>
+                  <span>{activeDish.cookTimeMinutes} min</span>
+                  <span aria-hidden="true">/</span>
+                  <span>{activeDish.ingredientCount} ingredients</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -711,10 +839,14 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={() => swipeTop("right")}
               className="flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88"
-              aria-label={`Cook ${activeDish.dishName}`}
+              aria-label={
+                activeDish.eatOut
+                  ? `Log ${activeDish.dishName}`
+                  : `Cook ${activeDish.dishName}`
+              }
             >
               <ChefHat size={18} strokeWidth={2.2} />
-              <span>Cook</span>
+              <span>{activeDish.eatOut ? "Log it" : "Cook"}</span>
             </button>
           </div>
         </div>
