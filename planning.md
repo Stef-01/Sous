@@ -233,7 +233,14 @@ CLAUDE.md is env-protected — only the founder commits it.
 
 ## 6. Execution queue (next up, in order)
 
-### 6.1 Black bean brownies (READY TO EXECUTE — full spec)
+### 6.1 Black bean brownies — SHIPPED 2026-06-11 (commit 0807de8)
+
+Landed exactly per this spec: folder-per-food images
+(`public/food_images/black-bean-brownies/hero.jpg`; `step-N.jpg` slots
+documented for the founder's incoming step photos), catalog entry, guided
+cook steps, claim-safe health facts with contract test
+(`src/data/black-bean-brownies.test.ts`). Spec retained below for the
+smoothie pipeline to reuse.
 
 Source: founder's blog (Clean Program; recipe + photography Kaitlyn Noble —
 Ledger L4). Hero already committed:
