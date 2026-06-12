@@ -68,6 +68,7 @@ delete entries; mark them `RESOLVED <date>` when worked off.
 | Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                              | hero photo committed by founder                                                 |
 | Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                   | founder supplies images                                                         |
 | IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                      | Manual IG-save drop is the practical route                                      |
+| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **QUEUED — full spec §6.2**; mockups measured into design-kit doc        | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
 
 ## 4. Technical reference — how the whole app works
 
@@ -210,26 +211,31 @@ CLAUDE.md is env-protected — only the founder commits it.
 
 ## 5. Decision log (do NOT relitigate without founder approval)
 
-| ID   | Date       | Decision                                                                                                                                    |
-| ---- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| D-1  | 2026-06-09 | Nutrition is a 4th permanent tab; the diary lives there                                                                                     |
-| D-2  | 2026-06-09 | Cook completion auto-logs the diary (`auto: true`)                                                                                          |
-| D-3  | 2026-06-10 | Four logging surfaces collapsed into ONE LogFood; PhotoLog/TextQuickLog/BarcodeScan/BrandedFoodSearch components DELETED — do not resurrect |
-| D-4  | 2026-06-10 | The camera READS text (OCR); it does not guess (no vision model, no key)                                                                    |
-| D-5  | 2026-06-10 | Matcher: connector stopwords don't score; whole-word > prefix > substring                                                                   |
-| D-6  | 2026-06-10 | Units: countables never convert; conversions use engine density data only                                                                   |
-| D-7  | 2026-06-10 | TodayPlannedSlot + TodayEatingCard DELETED; planned meal pins as first deck card                                                            |
-| D-8  | 2026-06-10 | Path top row = Pantry·Plan·Groceries; Recap under Progression                                                                               |
-| D-9  | 2026-06-10 | Pet: NO decay/guilt, NO coins/gems, NO fake-action buttons; every number traces to a real store                                             |
-| D-10 | 2026-06-10 | Pet growth = real Path level (puppy <3, red collar 3–5, gold 6+)                                                                            |
-| D-11 | 2026-06-10 | Eat-out global fixtures (incl. Noma) replaced by the Stanford demo dataset                                                                  |
-| D-12 | 2026-06-10 | Snack slot NOT added to the 3-meal plan model (founder paused it; revisit only on explicit ask)                                             |
-| D-13 | 2026-06-11 | Nutrition header: no kcal-left, no streak chip, no CSV button (`diary-export.ts` kept as tested lib, UI retired)                            |
-| D-14 | 2026-06-11 | Diary = Breakfast/Lunch/Dinner slot cards (11h/16h), not a flat list                                                                        |
-| D-15 | 2026-06-11 | Nutrition-page ring card is `microsOnly` (no ring/legend/targets; Calories+Macros cards own the glance). Cook pages keep the full ring      |
-| D-16 | 2026-06-11 | MVP stage policy + Deferred Ledger (§1–2): log, don't block                                                                                 |
-| D-17 | 2026-06-10 | Trend arrows honest only: vs yesterday's real aggregate; omitted when yesterday empty; no fake rewards                                      |
-| D-18 | 2026-05-04 | Info button is the floating bottom-center pill — never relocate user-specified UI without approval                                          |
+| ID   | Date       | Decision                                                                                                                                                                                                                                                                     |
+| ---- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-1  | 2026-06-09 | Nutrition is a 4th permanent tab; the diary lives there                                                                                                                                                                                                                      |
+| D-2  | 2026-06-09 | Cook completion auto-logs the diary (`auto: true`)                                                                                                                                                                                                                           |
+| D-3  | 2026-06-10 | Four logging surfaces collapsed into ONE LogFood; PhotoLog/TextQuickLog/BarcodeScan/BrandedFoodSearch components DELETED — do not resurrect                                                                                                                                  |
+| D-4  | 2026-06-10 | The camera READS text (OCR); it does not guess (no vision model, no key)                                                                                                                                                                                                     |
+| D-5  | 2026-06-10 | Matcher: connector stopwords don't score; whole-word > prefix > substring                                                                                                                                                                                                    |
+| D-6  | 2026-06-10 | Units: countables never convert; conversions use engine density data only                                                                                                                                                                                                    |
+| D-7  | 2026-06-10 | TodayPlannedSlot + TodayEatingCard DELETED; planned meal pins as first deck card                                                                                                                                                                                             |
+| D-8  | 2026-06-10 | Path top row = Pantry·Plan·Groceries; Recap under Progression                                                                                                                                                                                                                |
+| D-9  | 2026-06-10 | Pet: NO decay/guilt, NO coins/gems, NO fake-action buttons; every number traces to a real store                                                                                                                                                                              |
+| D-10 | 2026-06-10 | Pet growth = real Path level (puppy <3, red collar 3–5, gold 6+)                                                                                                                                                                                                             |
+| D-11 | 2026-06-10 | Eat-out global fixtures (incl. Noma) replaced by the Stanford demo dataset                                                                                                                                                                                                   |
+| D-12 | 2026-06-10 | Snack slot NOT added to the 3-meal plan model (founder paused it; revisit only on explicit ask)                                                                                                                                                                              |
+| D-13 | 2026-06-11 | Nutrition header: no kcal-left, no streak chip, no CSV button (`diary-export.ts` kept as tested lib, UI retired)                                                                                                                                                             |
+| D-14 | 2026-06-11 | Diary = Breakfast/Lunch/Dinner slot cards (11h/16h), not a flat list                                                                                                                                                                                                         |
+| D-15 | 2026-06-11 | Nutrition-page ring card is `microsOnly` (no ring/legend/targets; Calories+Macros cards own the glance). Cook pages keep the full ring                                                                                                                                       |
+| D-16 | 2026-06-11 | MVP stage policy + Deferred Ledger (§1–2): log, don't block                                                                                                                                                                                                                  |
+| D-17 | 2026-06-10 | Trend arrows honest only: vs yesterday's real aggregate; omitted when yesterday empty; no fake rewards                                                                                                                                                                       |
+| D-18 | 2026-05-04 | Info button is the floating bottom-center pill — never relocate user-specified UI without approval                                                                                                                                                                           |
+| D-19 | 2026-06-11 | Onboarding/survey UI follows the measured mockup grammar (docs/ONBOARDING-SURVEY-DESIGN-KIT.md) but keeps Sous identity: cream theme, nourish-green accent, serif titles — mockup palettes do NOT transfer                                                                   |
+| D-20 | 2026-06-11 | UI emojis are replaced by the inline-SVG food-glyph set where a glyph exists; emoji remains only as final fallback. Pet + achievements exempt (D-9)                                                                                                                          |
+| D-21 | 2026-06-11 | Micro-surveys ("pulses") are coach interactions: one screen, ≤8 s, one-tap skip, ≤1/day, ≥72 h apart, ≤2/week, deterministic scheduling (no Math.random), permanent per-pulse dismiss. Volunteered entry = single "Tune my picks" row in the existing Profile sheet (rule 3) |
+| D-22 | 2026-06-11 | Mirror-summary/survey copy is forward-promise only — NO fabricated social-proof stats (the mockups' "users save 25%" pattern is banned by test)                                                                                                                              |
+| D-23 | 2026-06-11 | Body-data capture (age/height/weight wheels) only behind the macros goal branch, each screen carrying the stored-privately caption; writes the EXISTING personal-targets store, no parallel store                                                                            |
 
 ## 6. Execution queue (next up, in order)
 
@@ -281,7 +287,213 @@ Ledger L4). Hero already committed:
    Tests: catalog validation, step-image disk existence (when present),
    claim safety. Verify `/cook/black-bean-brownies` end-to-end; gate; commit.
 
-### 6.2 Following
+### 6.2 Onboarding, micro-survey & food-glyph overhaul (mockup-driven) — QUEUED 2026-06-11
+
+**Why.** Founder committed 28 reference mockups to `docs/PLANS/IMG_*.PNG`
+(MOB light onboarding; a dark orange-accent calorie app; a navy blue-accent
+MFP-style flow). They were pixel-measured and inventoried in
+`docs/ONBOARDING-SURVEY-DESIGN-KIT.md` (the design-token + per-screen
+geometry reference for everything below). Three things transfer to Sous:
+(1) a reusable survey component grammar far more polished than the current
+coach quiz, (2) an onboarding **narrative arc** (goal → friction → relatable
+statements → tastes → mirror summary) that converts answers into engine
+signals, and (3) **line-art food glyphs replacing UI emojis** (the dark app's
+Dislikes grid is the model). Thesis fit (STRATEGY.md): every captured signal
+sharpens recommendations and raises switching cost; capture stays inside the
+60-second philosophy because pulses are one screen, ≤8 s, skippable in one
+tap.
+
+**Hard constraints carried in.** Rule 3: pulses are coach interactions, not
+settings — the only volunteered entry point is one "Tune my picks" row in the
+EXISTING Profile sheet. Rule 7/11: photo tiles use only existing
+`food_images`/`eat-out` assets; glyphs are inline SVG UI chrome
+(precedent: pet `pixel-icons.tsx`), not dish imagery — the image pipeline is
+untouched. Rule 10: every survey screen pins its CTA with flex `mt-auto`,
+verified at 375×667. Rule 13: option rows are glyph + label only; no
+explanatory paragraphs; "(Recommended)" is inline subtext, never a badge.
+Honesty (D-17 spirit): the mockups fabricate social proof ("MOB users save
+25%") — Sous mirror copy is forward-promise only, enforced by test.
+
+#### W1 — Survey kit (`src/components/survey/`) + types
+
+1. `src/types/survey.ts`: zod discriminated union `SurveyStepSchema` —
+   `single` | `multi` | `likert` | `statements` | `thumbs` | `photo-tiles` |
+   `glyph-grid` | `wheel` | `interstitial` | `mirror`. Each step declares
+   `id`, `title`, optional `subtitle`, options (with `glyph`, `label`,
+   optional `subtext`, optional `recommended`), and a `signals` map (option →
+   preference updates / flags). `SurveyAnswers = Record<stepId, value>`.
+   Infer all TS types from zod (house rule).
+2. Components, all consuming the geometry tokens from the design kit doc
+   (row min-h 64px `--radius-md`, gap 12, margin `--gutter`; selected =
+   `--nourish-green` ring + check disc; CTA h-48 `--radius-pill`
+   `--shadow-cta`):
+   - `survey-shell.tsx` — back chevron + **segmented progress** (one 4px
+     segment per step, gap 4, fill `--nourish-green`, track
+     `--nourish-border`), serif title, 15px subtitle, content slot, pinned
+     footer CTA. Flex column, `mt-auto` footer (rule 10).
+   - `option-row.tsx` (single: radio-right → green check disc on select;
+     supports `subtext` for witty-subtitle and "(Recommended)" patterns) and
+     `check-row.tsx` (multi: 24px rounded checkbox left, supports an
+     exclusive none-option that clears others).
+   - `statement-swipe.tsx` — quote card stack (white, `--radius-lg`,
+     `--shadow-raised`, oversized quote glyph, next-card peek at
+     translateY(12px) scale(.96)); framer-motion drag with rotate; ✗/✓
+     white circles (64px, `--shadow-raised`; `--nourish-evaluate` /
+     `--tier-strong`) for tap fallback; respects `prefers-reduced-motion`
+     (buttons only, no drag).
+   - `thumb-row.tsx` — label + 👍/👎 toggle pair per row (three-state:
+     like / dislike / unset), hairline dividers.
+   - `chip-cloud.tsx` — wrap layout, h-32px pills; optional
+     "Recommended for you" group rendered first with pre-tint.
+   - `photo-tile-grid.tsx` — 2-col, gutter 12, `--radius-sm`, label strip on
+     top (mockup detail), image below; **sources strictly from existing
+     food_images via a static map**; multi or single select.
+   - `glyph-grid.tsx` — 3-col circles (88px, surface fill); selected-dislike
+     = accent ring + slash overlay + struck-through muted label (4557
+     grammar).
+   - `wheel-picker.tsx` — scroll-snap column, 5 visible rows, top/bottom
+     fade masks, center highlight bar; optional unit segmented control
+     (lb/kg, cm/ft-in) that converts in place; emits canonical units.
+   - `interstitial.tsx` (glyph + eyebrow + serif headline + ≤2-line body)
+     and `mirror-summary.tsx` (stacked echo cards: glyph + one-line
+     forward-promise; dark pill CTA).
+   - `survey-runner.tsx` — renders a `SurveyDef` (list of steps), owns
+     answer state, back/skip, conditional branches (`showIf(answers)`), and
+     emits `(answers, computedSignals)` on completion. Onboarding and pulses
+     BOTH run through this one runner.
+3. Tests: zod schema round-trips; runner branch logic; none-option
+   exclusivity; reduced-motion path renders buttons. Axe pass on each
+   component in vitest + jsdom where feasible.
+
+#### W2 — Food glyph system (kills UI emojis)
+
+1. `src/components/icons/food-glyphs.tsx` — single-file registry of inline
+   SVG line glyphs: 24×24 viewBox, stroke 1.75, round caps/joins,
+   `currentColor`. Initial set (~64): 12 cuisines (ramen bowl, taco, pasta
+   swirl, tagine, wok…), ~30 dislike-grade ingredients (broccoli, beets,
+   blue cheese, mushroom, cilantro, olives, shellfish…), ~12 meal/type
+   glyphs (salad, soup, bread, dessert, fish, chicken), ~10 abstract (flame,
+   leaf, clock, piggy-bank, sparkle, lock). Export
+   `<FoodGlyph name size />` + `FOOD_GLYPH_NAMES` const for tests.
+2. `src/lib/utils/dish-glyph.ts` — `getDishGlyph(tags, cuisine)` mirroring
+   `getDishEmoji`'s mapping table; `dish-emoji.ts` stays only as final
+   fallback for names with no glyph.
+3. Swap sites (surgical, this order): coach-quiz/onboarding options →
+   glyphs; `dish-image.tsx` gradient fallback (replace the 4-icon lucide
+   `CUISINE_ICON_MAP` with cuisine glyphs); grocery row far-right emoji →
+   ingredient glyph when one exists (else keep emoji — no regression);
+   `WhosAtTable` and Today chips. Achievements/pet emojis are explicitly
+   OUT of scope (pet is D-9 territory).
+4. Test: every onboarding option key, all 8 cuisines, and every dislike-grid
+   id resolves to a registered glyph (`FOOD_GLYPH_NAMES` completeness test).
+
+#### W3 — Onboarding v2 (rebuilds the coach quiz on the kit)
+
+Narrative arc, ≤90 s, every step skippable, replacing the current 6-question
+modal in `coach-quiz.tsx` (keep `computePreferencesFromAnswers` aggregation
+approach, extend its input space; DELETE the old quiz UI after parity —
+D-3 style, no resurrection):
+
+1. **Goal** (single, glyph rows): hit macro goals / plan my week / super
+   simple recipes / last-minute inspiration / feed my family / live well
+   for longer. Sets `goalKey`; family answer reveals a one-tap Parent Mode
+   age-band follow-up (existing `parentModeAgeBand` plumbing).
+2. **Friction** (multi, none-option): lack of time / tired after work /
+   cooking feels hard / no inspiration / recipes scattered / can't find the
+   right ones. → effort + feature-emphasis flags.
+3. **Statements** (swipe, 4 cards): money / time-wasted-searching /
+   kid-struggle (only if family) / processed-food. → boolean flags.
+4. **Dietary** (photo tiles): None / Veggie / Vegan / Pescatarian →
+   `householdDietaryFlags` (existing engine input).
+5. **Cuisines** (thumbs): the 8 mastery cuisines → ± preference-vector
+   seeds (dislike = negative seed, not just absence).
+6. **Skill** (single w/ witty subtitles): Novice…Advanced → skill gate +
+   initial guided-cook verbosity.
+7. **Numeric branch** (`showIf goalKey === 'macros'`): interstitial
+   ("the next two help us size your day" + lock caption) → age/height/weight
+   wheels (canonical kg/cm, privacy caption on each) → computed-result step:
+   kcal target via existing personal-targets math, "Edit" affordance writes
+   through `use-personal-targets.ts`. No new storage — this IS the existing
+   targets store.
+8. **Mirror summary**: one echo card per captured flag, forward-promise copy
+   (e.g. budget → "Pantry-first picks to keep dinner cheap"; time → "30-min
+   ceilings on weeknights"; kids → "Kid-tested pairings + Parent Mode";
+   processed → "Whole-ingredient recipes float up"). CTA "Pick my first
+   recipes" → Today deck pre-warmed from the new vector.
+
+Persistence: versioned `OnboardingProfileV2` (zod) →
+`localStorage sous-onboarding-v2` + existing `sous-preferences` /
+`sous-effort-tolerance` keys (so the deck works unchanged) +
+`users.preferenceVector` via tRPC when DB present. Each flag also lands as a
+`recordSignal()` entry (kind `onboarding`) in `use-preference-profile.ts` so
+confidence tiers start warm.
+
+#### W4 — Pulse micro-surveys ("randomly triggered or volunteered")
+
+1. `src/data/pulses.ts` — registry of one-screen pulses (each a 1-step
+   `SurveyDef`): post-win statement card ("That felt easier than usual"
+   ✓/✗ → confidence trend feeding coach tone); dislike sweep (glyph grid
+   seeded from ingredients of recently skipped/rerolled recipes); cuisine
+   thumbs refresh (only cuisines with weak signal — confidence-aware);
+   step-pacing thumbs after a cook (→ verbosity pref); budget statement;
+   planning-frequency Likert (Never→Always, gates meal-plan nudge cadence);
+   meal-plan consent (Yes definitely / Open to trying / No thanks — "No"
+   silences plan nudges entirely).
+2. `src/lib/surveys/pulse-scheduler.ts` — shared-store pattern (§4.0),
+   ledger in `localStorage sous-pulse-ledger-v1` (shown/answered/dismissed
+   per pulse + timestamps). Eligibility is **deterministic**: hash of
+   (deviceId, dayKey, pulseId) — SSR-safe, no `Math.random()`. Guardrails:
+   ≤1 pulse/day, ≥72 h between pulses, ≤2/week, quiet for 7 days after
+   onboarding, never mid-cook, per-pulse permanent dismiss, every pulse
+   skippable in one tap. Trigger anchors: win screen close, deck exhaust,
+   plan-week open, 3rd visit of a week.
+3. Volunteered entry: a single "Tune my picks" row in
+   `profile-settings-sheet.tsx` (rule-3-compliant: same sheet, one row)
+   opening the runner with the user's lowest-confidence pulses first.
+4. `src/lib/surveys/apply-survey-signals.ts` — PURE mapper
+   `(answers) → { vectorDeltas, suppressedTags, flags, signals[] }`; the only
+   write path for both onboarding and pulses. Fully unit-tested.
+
+#### W5 — Signal → consumer wiring (the point of all of it)
+
+| Captured              | Stored                            | Consumer                                          | Visible effect                            |
+| --------------------- | --------------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| goalKey               | onboarding profile + goal weights | `dayDeficits` reblend, deck composition           | NutritionGoalCard + ranking tilt          |
+| frictions: time/tired | `sous-effort-tolerance`           | engine prep-burden weight                         | quicker sides rank up; deck sorts by prep |
+| statement: budget     | `budgetSensitive` flag            | pairing pantry-overlap boost; grocery rollup line | cheaper, pantry-first pairings            |
+| statement: searching  | `decisionFatigue` flag            | deck size stays 3; reroll nudges off              | calmer deck                               |
+| statement: kids       | parentProfile enable + ageBand    | existing parent-mode filters                      | kid-safe spice/allergen gates             |
+| statement: processed  | vector boost `whole-foods`        | engine tag weight; Content spotlight order        | whole-ingredient picks float              |
+| dietary tiles         | `householdDietaryFlags`           | `pairing.suggest` (existing param)                | hard filter                               |
+| cuisine thumbs        | ± vector seeds + suppressed       | engine cuisine-fit term                           | likes rank up, dislikes excluded          |
+| skill                 | skill gate + `cook-verbosity` kv  | quest gating; StepCard density                    | shorter/longer step text                  |
+| wheels (age/h/w)      | `use-personal-targets` (existing) | deficits → engine + Nutrition tab                 | sized kcal/macros everywhere              |
+| planning Likert       | `planNudgeCadence`                | TonightChip / plan chip frequency                 | nudges match habit                        |
+| plan consent "No"     | flag                              | suppresses all plan nudges                        | respect the no                            |
+| pulse: pacing         | verbosity pref                    | guided-cook StepCard                              | density adapts                            |
+| pulse: felt-easier    | confidence trend                  | coach tone selection                              | tone matches trajectory                   |
+
+Engine note: suppressed tags must reach `pairing.suggest` as exclusions
+(today manual dislikes live client-side in `use-preference-profile.ts` —
+thread them through the existing `userPreferences` param, no engine schema
+break; add an engine test: suppressed cuisine never appears in top 3).
+
+#### W6 — Copy safety + gates
+
+All survey/mirror strings pass `assertNoMedicalClaim` AND a new
+no-fabricated-stats test (regex ban: `\d+\s*%[^.]*\b(users|cooks|people)\b`)
+in `src/data/onboarding-v2.test.ts`. E2E: onboarding happy path, all-skip
+path, numeric branch, pulse trigger + cooldown (`tests/e2e/onboarding.spec.ts`).
+Live-verify at 375×667 (rule 10) and 430×932. Standard gates per §4.13;
+commit per phase.
+
+**Sequencing & classification.** All six workstreams are AUTO-BUILD (repo +
+npm only; zero founder-gated dependencies). Order: W1 → W2 → W3 → W4 → W5 →
+W6, each independently shippable; W2 can interleave after W1. This
+initiative moves AHEAD of the smoothie-dupes ingestion (founder images not
+yet supplied — that stays founder-gated in §6.3).
+
+### 6.3 Following
 
 - Erewhon smoothie dupes (same pipeline; founder supplies images; re-fetch
   the cleanprogram.com post at execution time).
@@ -298,6 +510,7 @@ Ledger L4). Hero already committed:
 `docs/FOUNDER-UNLOCK-RUNBOOK.md` founder-gated keys ·
 `docs/PRODUCTION-READINESS-PLAN.md` go-live ·
 `docs/MOCKUP-POLISH-PLAN.md` (closed) ·
+`docs/ONBOARDING-SURVEY-DESIGN-KIT.md` measured tokens + inventory for §6.2 ·
 `docs/PET-AESTHETIC-OVERHAUL.md` (executed) ·
 `docs/STAGE-3-LEAN-CONTENT.md` Content spec ·
 `docs/INGREDIENT-NUTRITION-ARCHITECTURE-PLAN.md` registry design.
