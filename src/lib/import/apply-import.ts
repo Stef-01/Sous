@@ -24,13 +24,19 @@ export function toInventoryDrafts(
     const key = normalizePantryName(item.name);
     if (!key) continue;
     if (!byKey.has(key)) names.push(item.name);
-    // Last occurrence wins for quantity/unit/category.
+    // Last occurrence wins for quantity/unit/category + the macro panel.
     byKey.set(key, {
       key,
       name: item.name.trim(),
       quantity: item.quantity,
       unit: item.unit,
       category: item.category,
+      nutrition: {
+        calories: Math.round(item.calories),
+        protein_g: item.protein_g,
+        carbs_g: item.carbs_g,
+        fat_g: item.fat_g,
+      },
     });
   }
   return { drafts: Array.from(byKey.values()), names };

@@ -31,15 +31,15 @@ const SHARED_RULES = `Rules:
 - Put it in a single \`\`\`json code block.
 - Use numbers (not strings) for amounts. Omit a field if you don't know it rather than guessing.`;
 
-const PANTRY_PROMPT = `You are helping me load my kitchen inventory into a cooking app. Convert the list below into JSON.
+const PANTRY_PROMPT = `You are helping me load my kitchen inventory into a cooking app. Convert the list below into JSON, estimating nutrition for each item.
 
 Shape:
 {
   "kind": "pantry",
   "items": [
-    { "name": "olive oil", "quantity": 1, "unit": "bottle", "category": "oils" },
-    { "name": "brown rice", "quantity": 2, "unit": "kg", "category": "grains" },
-    { "name": "eggs", "quantity": 12, "unit": "count" }
+    { "name": "olive oil", "quantity": 1, "unit": "bottle", "category": "oils", "calories": 120, "protein_g": 0, "carbs_g": 0, "fat_g": 14 },
+    { "name": "brown rice", "quantity": 2, "unit": "kg", "category": "grains", "calories": 215, "protein_g": 5, "carbs_g": 45, "fat_g": 2 },
+    { "name": "eggs", "quantity": 12, "unit": "count", "calories": 72, "protein_g": 6, "carbs_g": 0, "fat_g": 5 }
   ]
 }
 
@@ -47,6 +47,7 @@ Field notes:
 - name: the ingredient, lowercase, no brand.
 - quantity + unit: how much I have (e.g. 500 g, 2 cans, 1 bunch, 12 count). Optional.
 - category: a short group like "produce", "dairy", "grains", "spices". Optional.
+- calories, protein_g, carbs_g, fat_g: REQUIRED — your best estimate PER TYPICAL SERVING of the item (a tablespoon of oil, an egg, a cooked cup of rice). Add fiber_g / sugar_g / sodium_mg if you know them.
 
 ${SHARED_RULES}
 
@@ -55,21 +56,22 @@ Here is my pantry:
 PASTE OR TYPE YOUR PANTRY HERE
 """`;
 
-const GROCERIES_PROMPT = `You are helping me log a grocery shop into a cooking app so the items land in my kitchen inventory. Convert the receipt/list below into JSON.
+const GROCERIES_PROMPT = `You are helping me log a grocery shop into a cooking app so the items land in my kitchen inventory. Convert the receipt/list below into JSON, estimating nutrition for each item.
 
 Shape:
 {
   "kind": "groceries",
   "items": [
-    { "name": "chicken thighs", "quantity": 1, "unit": "kg", "category": "meat" },
-    { "name": "spinach", "quantity": 2, "unit": "bunch", "category": "produce" },
-    { "name": "greek yogurt", "quantity": 4, "unit": "cup", "category": "dairy" }
+    { "name": "chicken thighs", "quantity": 1, "unit": "kg", "category": "meat", "calories": 209, "protein_g": 26, "carbs_g": 0, "fat_g": 11 },
+    { "name": "spinach", "quantity": 2, "unit": "bunch", "category": "produce", "calories": 23, "protein_g": 3, "carbs_g": 4, "fat_g": 0 },
+    { "name": "greek yogurt", "quantity": 4, "unit": "cup", "category": "dairy", "calories": 100, "protein_g": 17, "carbs_g": 6, "fat_g": 1 }
   ]
 }
 
 Field notes:
 - Drop store names, prices, taxes, and loyalty lines — keep only food/ingredients.
 - name: lowercase, no brand. quantity + unit + category are optional but helpful.
+- calories, protein_g, carbs_g, fat_g: REQUIRED — your best estimate PER TYPICAL SERVING of the item. Add fiber_g / sugar_g / sodium_mg if you know them.
 
 ${SHARED_RULES}
 
@@ -102,7 +104,7 @@ Shape:
 
 Field notes:
 - One entry per food or dish. Values are PER the number of servings I ate.
-- calories is required; protein_g / carbs_g / fat_g / fiber_g / sugar_g / sodium_mg are optional — include the ones you can reasonably estimate.
+- calories, protein_g, carbs_g and fat_g are REQUIRED (estimate your best); fiber_g / sugar_g / sodium_mg are optional extras.
 - servings defaults to 1. mealType is one of: breakfast, lunch, dinner, snack.
 - date: "today", "yesterday", or YYYY-MM-DD. If unsure, use "today".
 - These are estimates — that's fine, label them as best-effort.

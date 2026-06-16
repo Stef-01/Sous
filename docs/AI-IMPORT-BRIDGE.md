@@ -39,13 +39,18 @@ discriminated union on `kind` so a single paste box routes itself. Numbers are
 coerced (LLMs quote them); unknown keys are stripped (format drift shouldn't
 fail an import).
 
+**Full nutrition (calories + protein/carbs/fat) is required on every row of
+every kind** — pantry and groceries carry per-serving macros too, not just the
+amount. fiber/sugar/sodium/saturated-fat are optional extras.
+
 ```jsonc
-// pantry | groceries
+// pantry | groceries — nutrition is PER TYPICAL SERVING of the item
 { "kind": "pantry", "items": [
-  { "name": "olive oil", "quantity": 1, "unit": "bottle", "category": "oils" }
+  { "name": "olive oil", "quantity": 1, "unit": "bottle", "category": "oils",
+    "calories": 120, "protein_g": 0, "carbs_g": 0, "fat_g": 14 }
 ] }
 
-// nutrition  (only name + calories are required per entry)
+// nutrition — values PER the servings eaten
 { "kind": "nutrition", "date": "today", "entries": [
   { "name": "burrito", "servings": 1, "calories": 650, "protein_g": 35,
     "carbs_g": 70, "fat_g": 24, "fiber_g": 9, "sodium_mg": 980,

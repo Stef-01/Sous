@@ -14,38 +14,53 @@
  *   - groceries — a shop/receipt you just bought (also lands in the inventory)
  *   - nutrition — food you ate, with nutrient info, for the diary
  *
- * Numbers are coerced (LLMs sometimes quote them) and unknown keys are stripped
- * (minor format drift shouldn't fail the import).
+ * Full nutrition is REQUIRED on EVERY row of EVERY kind (founder rule): calories
+ * + protein/carbs/fat are mandatory so every imported item — pantry, groceries,
+ * or food log — carries its macro panel. Common extras (fiber/sugar/sodium/
+ * saturated fat) stay optional. Numbers are coerced (LLMs sometimes quote them)
+ * and unknown keys are stripped (minor format drift shouldn't fail the import).
  */
 
 import { z } from "zod";
 
-/** A quantity-bearing inventory line (pantry + groceries share this). */
+/** Mandatory macro panel — required on every imported row, every kind. */
+const requiredNutrition = {
+  calories: z.coerce.number().nonnegative().max(100000),
+  protein_g: z.coerce.number().nonnegative().max(10000),
+  carbs_g: z.coerce.number().nonnegative().max(10000),
+  fat_g: z.coerce.number().nonnegative().max(10000),
+};
+
+/** Optional label extras, shared by every kind. */
+const optionalNutrition = {
+  fiber_g: z.coerce.number().nonnegative().max(10000).optional(),
+  sugar_g: z.coerce.number().nonnegative().max(10000).optional(),
+  sodium_mg: z.coerce.number().nonnegative().max(1000000).optional(),
+  saturatedFat_g: z.coerce.number().nonnegative().max(10000).optional(),
+};
+
+/** A quantity-bearing inventory line (pantry + groceries share this) — now
+ *  carrying its full nutrition so the inventory knows the macros of what you
+ *  have, not just the amount. Nutrition is PER TYPICAL SERVING of the item. */
 export const InventoryItemImportSchema = z.object({
   name: z.string().trim().min(1).max(120),
   quantity: z.coerce.number().positive().max(100000).optional(),
   unit: z.string().trim().max(24).optional(),
   category: z.string().trim().max(40).optional(),
   note: z.string().trim().max(200).optional(),
+  ...requiredNutrition,
+  ...optionalNutrition,
 });
 export type InventoryItemImport = z.infer<typeof InventoryItemImportSchema>;
 
-/** A logged food with nutrient info. Only `name` + `calories` are required;
- *  macros and the common label fields are optional (defaulted to 0 downstream
- *  so a partial label still logs cleanly). */
+/** A logged food with its nutrition. Values are PER the number of servings. */
 export const NutritionEntryImportSchema = z.object({
   name: z.string().trim().min(1).max(160),
   brand: z.string().trim().max(80).optional(),
   servings: z.coerce.number().positive().max(100).optional(),
-  calories: z.coerce.number().nonnegative().max(100000),
-  protein_g: z.coerce.number().nonnegative().max(10000).optional(),
-  carbs_g: z.coerce.number().nonnegative().max(10000).optional(),
-  fat_g: z.coerce.number().nonnegative().max(10000).optional(),
-  fiber_g: z.coerce.number().nonnegative().max(10000).optional(),
-  sugar_g: z.coerce.number().nonnegative().max(10000).optional(),
-  sodium_mg: z.coerce.number().nonnegative().max(1000000).optional(),
-  saturatedFat_g: z.coerce.number().nonnegative().max(10000).optional(),
   mealType: z.enum(["breakfast", "lunch", "dinner", "snack"]).optional(),
+  ...requiredNutrition,
+  ...optionalNutrition,
 });
 export type NutritionEntryImport = z.infer<typeof NutritionEntryImportSchema>;
 

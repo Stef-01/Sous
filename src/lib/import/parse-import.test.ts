@@ -26,7 +26,7 @@ describe("extractJsonObject", () => {
 describe("parseImportText — pantry / groceries", () => {
   it("parses a clean pantry payload", () => {
     const r = parseImportText(
-      '{ "kind": "pantry", "items": [{ "name": "Olive Oil", "quantity": 1, "unit": "bottle" }] }',
+      '{ "kind": "pantry", "items": [{ "name": "Olive Oil", "quantity": 1, "unit": "bottle", "calories": 120, "protein_g": 0, "carbs_g": 0, "fat_g": 14 }] }',
     );
     expect(r.success).toBe(true);
     if (r.success) {
@@ -37,7 +37,7 @@ describe("parseImportText — pantry / groceries", () => {
 
   it("coerces quoted numbers", () => {
     const r = parseImportText(
-      '```json\n{ "kind": "groceries", "items": [{ "name": "rice", "quantity": "2", "unit": "kg" }] }\n```',
+      '```json\n{ "kind": "groceries", "items": [{ "name": "rice", "quantity": "2", "unit": "kg", "calories": "215", "protein_g": 5, "carbs_g": 45, "fat_g": 2 }] }\n```',
     );
     expect(r.success).toBe(true);
     if (r.success && r.data.kind === "groceries") {
@@ -47,29 +47,40 @@ describe("parseImportText — pantry / groceries", () => {
 
   it("strips unknown keys instead of failing", () => {
     const r = parseImportText(
-      '{ "kind": "pantry", "items": [{ "name": "eggs", "emoji": "🥚", "aisle": 4 }] }',
+      '{ "kind": "pantry", "items": [{ "name": "eggs", "emoji": "🥚", "aisle": 4, "calories": 72, "protein_g": 6, "carbs_g": 0, "fat_g": 5 }] }',
     );
     expect(r.success).toBe(true);
+  });
+
+  it("requires full nutrition on pantry / groceries items too", () => {
+    const r = parseImportText(
+      '{ "kind": "pantry", "items": [{ "name": "eggs", "quantity": 12 }] }',
+    );
+    expect(r.success).toBe(false);
   });
 });
 
 describe("parseImportText — nutrition", () => {
-  it("parses a food-log payload with partial macros", () => {
+  it("parses a food-log payload (required macros, optional extras omitted)", () => {
     const r = parseImportText(
-      '{ "kind": "nutrition", "date": "today", "entries": [{ "name": "burrito", "calories": 650, "protein_g": 30 }] }',
+      '{ "kind": "nutrition", "date": "today", "entries": [{ "name": "burrito", "calories": 650, "protein_g": 30, "carbs_g": 70, "fat_g": 24 }] }',
     );
     expect(r.success).toBe(true);
     if (r.success && r.data.kind === "nutrition") {
       expect(r.data.entries[0].calories).toBe(650);
-      expect(r.data.entries[0].fat_g).toBeUndefined();
+      expect(r.data.entries[0].fiber_g).toBeUndefined(); // optional extra
     }
   });
 
-  it("requires calories on each entry", () => {
-    const r = parseImportText(
+  it("requires the full macro panel on each entry", () => {
+    const missingMacros = parseImportText(
+      '{ "kind": "nutrition", "entries": [{ "name": "mystery", "calories": 200 }] }',
+    );
+    expect(missingMacros.success).toBe(false);
+    const noCalories = parseImportText(
       '{ "kind": "nutrition", "entries": [{ "name": "mystery" }] }',
     );
-    expect(r.success).toBe(false);
+    expect(noCalories.success).toBe(false);
   });
 });
 

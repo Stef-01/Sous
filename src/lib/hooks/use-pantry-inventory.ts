@@ -14,6 +14,14 @@ import { normalizePantryName } from "./use-pantry";
  * as plain functions so the importer can write without a hook.
  */
 
+/** The macro panel imported alongside each inventory line (per quantity). */
+export interface InventoryNutrition {
+  calories: number;
+  protein_g: number;
+  carbs_g: number;
+  fat_g: number;
+}
+
 export interface InventoryItem {
   /** Normalized name — the unique id (matches the pantry set). */
   key: string;
@@ -22,6 +30,8 @@ export interface InventoryItem {
   quantity?: number;
   unit?: string;
   category?: string;
+  /** Macro panel for the item (required on import; older rows may lack it). */
+  nutrition?: InventoryNutrition;
   addedAt: string;
 }
 
@@ -88,6 +98,7 @@ export function addInventoryItems(drafts: InventoryDraft[], at: string): void {
       quantity: d.quantity ?? existing?.quantity,
       unit: d.unit ?? existing?.unit,
       category: d.category ?? existing?.category,
+      nutrition: d.nutrition ?? existing?.nutrition,
       addedAt: existing?.addedAt ?? at,
     });
   }

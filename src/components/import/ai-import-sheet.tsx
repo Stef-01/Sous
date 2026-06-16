@@ -310,18 +310,11 @@ function ImportPreview({
             <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[var(--nourish-dark)]">
               {row.name}
             </span>
-            {isFood ? (
-              <span className="shrink-0 text-[12px] tabular-nums text-[var(--nourish-subtext)]">
-                {Math.round((row as { calories: number }).calories)} kcal
-                {(row as { protein_g?: number }).protein_g != null
-                  ? ` · ${(row as { protein_g?: number }).protein_g}g P`
-                  : ""}
-              </span>
-            ) : (
-              <span className="shrink-0 text-[12px] text-[var(--nourish-subtext)]">
-                {formatQty(row as { quantity?: number; unit?: string })}
-              </span>
-            )}
+            <span className="shrink-0 text-[12px] tabular-nums text-[var(--nourish-subtext)]">
+              {isFood
+                ? `${Math.round((row as { calories: number }).calories)} kcal · ${(row as { protein_g: number }).protein_g}g P`
+                : `${qtyPrefix(row as { quantity?: number; unit?: string })}${Math.round((row as { calories: number }).calories)} kcal`}
+            </span>
           </li>
         ))}
       </ul>
@@ -329,7 +322,11 @@ function ImportPreview({
   );
 }
 
-function formatQty(row: { quantity?: number; unit?: string }): string {
-  if (row.quantity == null) return row.unit ?? "";
-  return `${row.quantity}${row.unit ? ` ${row.unit}` : ""}`;
+/** "2 kg · " prefix for an inventory row (empty when no quantity). */
+function qtyPrefix(row: { quantity?: number; unit?: string }): string {
+  const qty =
+    row.quantity == null
+      ? (row.unit ?? "")
+      : `${row.quantity}${row.unit ? ` ${row.unit}` : ""}`;
+  return qty ? `${qty} · ` : "";
 }

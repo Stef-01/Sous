@@ -8,13 +8,22 @@ import {
 } from "./apply-import";
 import type { ImportPayload } from "@/types/import-bridge";
 
+// Required macro panel, shared by every imported row.
+const nut = { calories: 120, protein_g: 5, carbs_g: 10, fat_g: 4 };
+
 describe("toInventoryDrafts", () => {
-  it("normalizes keys, keeps display names, and collects raw names", () => {
+  it("normalizes keys, keeps display names + nutrition, collects raw names", () => {
     const payload = {
       kind: "pantry",
       items: [
-        { name: "Olive Oil", quantity: 1, unit: "bottle", category: "oils" },
-        { name: "Brown Rice", quantity: 2, unit: "kg" },
+        {
+          name: "Olive Oil",
+          quantity: 1,
+          unit: "bottle",
+          category: "oils",
+          ...nut,
+        },
+        { name: "Brown Rice", quantity: 2, unit: "kg", ...nut },
       ],
     } satisfies Extract<ImportPayload, { kind: "pantry" }>;
     const { drafts, names } = toInventoryDrafts(payload);
@@ -24,6 +33,7 @@ describe("toInventoryDrafts", () => {
       name: "Olive Oil",
       quantity: 1,
       unit: "bottle",
+      nutrition: { calories: 120, protein_g: 5, carbs_g: 10, fat_g: 4 },
     });
     expect(names).toEqual(["Olive Oil", "Brown Rice"]);
   });
@@ -32,8 +42,8 @@ describe("toInventoryDrafts", () => {
     const payload = {
       kind: "groceries",
       items: [
-        { name: "eggs", quantity: 6 },
-        { name: "Eggs", quantity: 12 },
+        { name: "eggs", quantity: 6, ...nut },
+        { name: "Eggs", quantity: 12, ...nut },
       ],
     } satisfies Extract<ImportPayload, { kind: "groceries" }>;
     const { drafts, names } = toInventoryDrafts(payload);
@@ -63,16 +73,18 @@ describe("resolveImportDate", () => {
 });
 
 describe("importedNutrition", () => {
-  const entry = {
-    name: "burrito",
-    calories: 650.4,
-    protein_g: 30,
-    carbs_g: 70,
-    fat_g: 24,
-  };
-
   it("rounds calories and passes macros through", () => {
-    const n = importedNutrition(entry, "off:x", "2026-06-16T00:00:00.000Z");
+    const n = importedNutrition(
+      {
+        name: "burrito",
+        calories: 650.4,
+        protein_g: 30,
+        carbs_g: 70,
+        fat_g: 24,
+      },
+      "off:x",
+      "2026-06-16T00:00:00.000Z",
+    );
     expect(n.calories).toBe(650);
     expect(n.protein_g).toBe(30);
     expect(n.totalCarbs_g).toBe(70);
@@ -80,7 +92,7 @@ describe("importedNutrition", () => {
   });
 
   it("fills every required micro with an honest zero + third-party provenance", () => {
-    const n = importedNutrition({ name: "x", calories: 100 }, "off:x", "T");
+    const n = importedNutrition({ name: "x", ...nut }, "off:x", "T");
     for (const k of [
       "calcium_mg",
       "iron_mg",
@@ -112,8 +124,8 @@ describe("toFoodLogs", () => {
       kind: "nutrition",
       date: "yesterday",
       entries: [
-        { name: "Oatmeal", calories: 300 },
-        { name: "Latte", brand: "Cafe", servings: 2, calories: 120 },
+        { name: "Oatmeal", ...nut },
+        { name: "Latte", brand: "Cafe", servings: 2, ...nut },
       ],
     } satisfies Extract<ImportPayload, { kind: "nutrition" }>;
     const { logs, date } = toFoodLogs(payload, now);

@@ -113,11 +113,18 @@ export default function PantryPage() {
                     </span>
                     {(() => {
                       const inv = invByKey.get(name);
-                      if (!inv?.quantity && !inv?.unit) return null;
+                      const qty =
+                        inv?.quantity != null || inv?.unit
+                          ? `${inv?.quantity ?? ""}${inv?.unit ? ` ${inv.unit}` : ""}`.trim()
+                          : null;
+                      const kcal = inv?.nutrition
+                        ? `${inv.nutrition.calories} kcal`
+                        : null;
+                      const label = [qty, kcal].filter(Boolean).join(" · ");
+                      if (!label) return null;
                       return (
                         <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/[0.08] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--nourish-green)]">
-                          {inv.quantity ?? ""}
-                          {inv.unit ? ` ${inv.unit}` : ""}
+                          {label}
                         </span>
                       );
                     })()}
