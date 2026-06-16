@@ -68,7 +68,7 @@ delete entries; mark them `RESOLVED <date>` when worked off.
 | Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                              | hero photo committed by founder                                                 |
 | Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                   | founder supplies images                                                         |
 | IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                      | Manual IG-save drop is the practical route                                      |
-| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W1 kit + W2 glyphs SHIPPED (d830f49, f71ebb5)**; W3–W6 queued — §6.2   | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
+| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W1–W3 SHIPPED (a233776, d830f49, f71ebb5)**; W4–W6 queued — §6.2       | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
 
 ## 4. Technical reference — how the whole app works
 
@@ -405,7 +405,23 @@ below is retained for reference.
 4. Test: every onboarding option key, all 8 cuisines, and every dislike-grid
    id resolves to a registered glyph (`FOOD_GLYPH_NAMES` completeness test).
 
-#### W3 — Onboarding v2 (rebuilds the coach quiz on the kit)
+#### W3 — Onboarding v2 (rebuilds the coach quiz on the kit) — SHIPPED 2026-06-16 (commit a233776)
+
+Shipped: the narrative arc on the W1 runner (goal → parent-age branch →
+friction → statements → family statement → dietary → cuisines → skill → macro
+numeric branch → personalised mirror). `src/data/onboarding-v2.ts` (def +
+8 mastery cuisines), `OnboardingProfileV2` (zod), `apply-onboarding.ts` (pure
+mapper → profile + preference vector + parent band + macro PersonalProfile +
+kcal + mirror cards) and `onboarding-flow.tsx` (two-phase). Today mounts it in
+place of the now-deleted coach-quiz UI (the data/aggregator stay for
+recap/rhythm). Cuisine/flavor seeds warm the deck immediately via the
+preference vector; dietary/skill/flags are captured for W5. Also fixed a
+runner bug (consecutive same-kind steps reused one instance — now keyed by
+step id). Both branches browser-verified; 14 new tests. NOTE vs the spec
+below: `recordSignal(kind:onboarding)` warming is deferred to W5 (the existing
+SignalKind enum has no onboarding kind — W5 owns signal→consumer wiring), and
+the numeric branch adds a `sex` step (Mifflin-St Jeor needs it). The original
+spec is retained for reference.
 
 Narrative arc, ≤90 s, every step skippable, replacing the current 6-question
 modal in `coach-quiz.tsx` (keep `computePreferencesFromAnswers` aggregation
@@ -507,8 +523,8 @@ commit per phase.
 
 **Sequencing & classification.** All six workstreams are AUTO-BUILD (repo +
 npm only; zero founder-gated dependencies). Order: W1 → W2 → W3 → W4 → W5 →
-W6, each independently shippable; W2 can interleave after W1. **W1 + W2 are
-SHIPPED (d830f49, f71ebb5); W3 (onboarding v2 on the kit) is next.** This
+W6, each independently shippable; W2 can interleave after W1. **W1–W3 are
+SHIPPED (a233776, d830f49, f71ebb5); W4 (pulse micro-surveys) is next.** This
 initiative moves AHEAD of the smoothie-dupes ingestion (founder images not
 yet supplied — that stays founder-gated in §6.3).
 
