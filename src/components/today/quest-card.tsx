@@ -28,6 +28,8 @@ import {
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
+import { usePantryMode } from "@/lib/hooks/use-pantry-mode";
+import { prioritizeByPantry } from "@/lib/pantry/staples";
 import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
@@ -168,6 +170,13 @@ export function QuestCard({
   const reducedMotion = useReducedMotion();
   void reducedMotion;
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
+  // Pantry Mode (Feature C): when on, recipes makeable within the tolerance
+  // float to the top of the deck. Normalised pantry set, shared with the fit calc.
+  const pantryMode = usePantryMode();
+  const pantrySetNorm = useMemo(
+    () => new Set((pantryMounted ? pantryItems : []).map(normalizePantryName)),
+    [pantryItems, pantryMounted],
+  );
   const progression = useDifficultyProgression(cookSessions ?? []);
   // Quest filters: role / meal-type / cuisine / cook-time. Session-scoped so
   // they never become permanent settings — they reset at app close.
@@ -318,7 +327,13 @@ export function QuestCard({
     });
     // Graceful fallback: if the filter combination yields nothing, return
     // the base feed so the user never hits an empty state because of filters.
-    const result = filtered.length > 0 ? filtered : baseDishes;
+    const baseResult = filtered.length > 0 ? filtered : baseDishes;
+    // Pantry Mode (Feature C): float recipes makeable within the tolerance to
+    // the top (staples ignored). Only when on AND there's a pantry to anchor to.
+    const result =
+      pantryMode.enabled && pantrySetNorm.size > 0
+        ? prioritizeByPantry(baseResult, pantrySetNorm, pantryMode.tolerance)
+        : baseResult;
     if (!plannedSlug) return result;
     const pinned =
       result.find((d) => d.slug === plannedSlug) ??
@@ -335,6 +350,9 @@ export function QuestCard({
     filters.role,
     filters.mealType,
     filters.source,
+    pantryMode.enabled,
+    pantryMode.tolerance,
+    pantrySetNorm,
   ]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [queueOpen, setQueueOpen] = useState(false);

@@ -49,6 +49,7 @@ import { NutritionEvidencePanel } from "@/components/shared/nutrition-evidence-p
 import { AyurvedicModeSection } from "@/components/shared/ayurvedic-mode-section";
 import type { AgeBand } from "@/types/nutrition";
 import { EcoModeToggle } from "@/components/shared/eco-mode-toggle";
+import { PantryModeSection } from "@/components/shared/pantry-mode-section";
 import { PreferencesSection } from "@/components/shared/preferences-section";
 import { PersonalTargetsSection } from "@/components/shared/personal-targets-section";
 import { GoalPlansSection } from "@/components/shared/goal-plans-section";
@@ -254,6 +255,10 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
                 never-shame copy. Toggle is the same shape as Parent
                 Mode for visual consistency. */}
             <EcoModeToggle />
+
+            {/* Pantry Mode — anchor recommendations to the pantry + tolerance
+                slider (Feature C, founder-requested rule-3 extension). */}
+            <PantryModeSection />
 
             <AyurvedicModeSection />
 
