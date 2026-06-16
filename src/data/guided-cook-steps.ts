@@ -55,8 +55,10 @@ export const guidedCookData: Record<string, StaticDishData> = {
   ...STEFAN_SIDE_FLOWS,
   // Folder-per-food image convention (founder, 2026-06-11): each recipe's
   // photos live in public/food_images/<slug>/ — hero.jpg plus step-N.jpg per
-  // cook step. Brownies ship with the hero; when step photos land, set each
-  // step's imageUrl to "/food_images/black-bean-brownies/step-N.jpg".
+  // cook step. Brownie step photos are mapped to their action (SOP §2, by the
+  // descriptive source filenames): step 1 ingredients/mise, step 2 blended
+  // batter, step 3 (fold chips) photoless, step 4 batter in the lined dish,
+  // step 5 the cut slab; hero is the finished stack.
   // Recipe source: founder's blog (Clean Program, recipe by Kaitlyn Noble).
   "black-bean-brownies": {
     name: "Black Bean Brownies",
@@ -176,7 +178,8 @@ export const guidedCookData: Record<string, StaticDishData> = {
           "If beans usually bloat you, regular fiber intake calms that response over time — digestive enzymes help in the meantime.",
         cuisineFact: null,
         donenessCue: null,
-        imageUrl: "/food_images/black-bean-brownies/step-3.jpg",
+        // Photoless: folding the chips in has no distinct shot in the export.
+        imageUrl: null,
       },
       {
         phase: "cook",
