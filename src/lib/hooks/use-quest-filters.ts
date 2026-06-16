@@ -4,13 +4,12 @@ import { useCallback, useEffect, useState } from "react";
 import { coerceSourceFacets, type SourceFacet } from "@/lib/utils/dish-source";
 
 export type CookTimeFilter = "any" | "15" | "20" | "30" | "45" | "60";
-export type CuisineFilter = string; // "any" | normalized cuisine family
-export type MealTypeFilter = "any" | "breakfast" | "lunch" | "dinner";
+export type CuisineFilter = string; // normalized cuisine family key
+export type MealTypeFilter = "breakfast" | "lunch" | "dinner";
 export type DishRoleFilter = "main" | "side" | "drink" | "snack";
 export type { SourceFacet } from "@/lib/utils/dish-source";
 
 const MEAL_TYPES: ReadonlySet<MealTypeFilter> = new Set([
-  "any",
   "breakfast",
   "lunch",
   "dinner",
@@ -26,34 +25,72 @@ const STORAGE_KEY = "sous-quest-filters-v1";
 
 export interface QuestFilterState {
   cookTime: CookTimeFilter;
-  cuisine: CuisineFilter;
-  mealType: MealTypeFilter;
-  role: DishRoleFilter;
+  /** Multi-select cuisine families (empty = any cuisine). */
+  cuisines: CuisineFilter[];
+  /** Multi-select meal times / dayparts (empty = any time). Constrains mains. */
+  mealTypes: MealTypeFilter[];
+  /** Multi-select dish roles (empty = all roles). Defaults to mains-only. */
+  roles: DishRoleFilter[];
   /** Multi-select provenance / verified-badge facets (empty = any source). */
   source: SourceFacet[];
 }
 
 const DEFAULT_STATE: QuestFilterState = {
   cookTime: "any",
-  cuisine: "any",
-  mealType: "any",
-  role: "main",
+  cuisines: [],
+  mealTypes: [],
+  roles: ["main"],
   source: [],
 };
+
+/** Pure: toggle a value in/out of a string array (multi-select). */
+export function toggleInArray<T extends string>(current: T[], value: T): T[] {
+  return current.includes(value)
+    ? current.filter((v) => v !== value)
+    : [...current, value];
+}
+
+/** Back-compat alias — source uses the same generic toggle. */
+export const toggleSourceFacet = toggleInArray<SourceFacet>;
+
+/** Coerce one legacy single-select value (incl. "any") into an array. */
+function coerceLegacyToArray<T extends string>(
+  value: unknown,
+  valid: ReadonlySet<T>,
+): T[] {
+  if (Array.isArray(value))
+    return value.filter((v): v is T => valid.has(v as T));
+  if (typeof value === "string" && value !== "any" && valid.has(value as T)) {
+    return [value as T];
+  }
+  return [];
+}
+
+/** Coerce free-text cuisine (legacy single string / "any") into an array. */
+function coerceCuisines(value: unknown): CuisineFilter[] {
+  if (Array.isArray(value))
+    return value.filter((v): v is string => typeof v === "string");
+  if (typeof value === "string" && value !== "any") return [value];
+  return [];
+}
 
 /** Coerce arbitrary parsed storage into a valid state — missing or corrupt /
  *  older-version values fall back to defaults. Pure; exported for tests. */
 export function coerceQuestFilterState(parsed: unknown): QuestFilterState {
-  const p = (parsed ?? {}) as Partial<QuestFilterState>;
+  const p = (parsed ?? {}) as Record<string, unknown>;
+  const roles = coerceLegacyToArray<DishRoleFilter>(
+    p.roles ?? p.role,
+    DISH_ROLES,
+  );
   return {
     cookTime: (p.cookTime as CookTimeFilter) ?? DEFAULT_STATE.cookTime,
-    cuisine: typeof p.cuisine === "string" ? p.cuisine : DEFAULT_STATE.cuisine,
-    mealType: MEAL_TYPES.has(p.mealType as MealTypeFilter)
-      ? (p.mealType as MealTypeFilter)
-      : DEFAULT_STATE.mealType,
-    role: DISH_ROLES.has(p.role as DishRoleFilter)
-      ? (p.role as DishRoleFilter)
-      : DEFAULT_STATE.role,
+    cuisines: coerceCuisines(p.cuisines ?? p.cuisine),
+    mealTypes: coerceLegacyToArray<MealTypeFilter>(
+      p.mealTypes ?? p.mealType,
+      MEAL_TYPES,
+    ),
+    // Empty roles after coercion → fall back to the mains-first default.
+    roles: roles.length > 0 ? roles : [...DEFAULT_STATE.roles],
     source: coerceSourceFacets(p.source),
   };
 }
@@ -85,22 +122,15 @@ export function cookTimeCapMinutes(filter: CookTimeFilter): number {
   return Number.parseInt(filter, 10);
 }
 
-/** Pure helper: toggle a source facet in/out of the selection. Exported for tests. */
-export function toggleSourceFacet(
-  current: SourceFacet[],
-  facet: SourceFacet,
-): SourceFacet[] {
-  return current.includes(facet)
-    ? current.filter((f) => f !== facet)
-    : [...current, facet];
-}
-
 /**
  * useQuestFilters  -  session-scoped filter state for the Today quest card.
  *
  * Persists in sessionStorage so filters survive navigation within a tab but
  * reset fresh when the user closes and reopens the app. Matches the Sous
  * philosophy that preferences are a felt-sense, not a settings page.
+ *
+ * Role / cuisine / meal-time / source are all MULTI-SELECT (OR semantics, empty
+ * = any). Cook time stays single-select (a ceiling, not a set).
  */
 export function useQuestFilters() {
   const [state, setState] = useState<QuestFilterState>(DEFAULT_STATE);
@@ -112,54 +142,64 @@ export function useQuestFilters() {
     setMounted(true);
   }, []);
 
-  const setCookTime = useCallback((cookTime: CookTimeFilter) => {
-    setState((prev) => {
-      const next = { ...prev, cookTime };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const update = useCallback(
+    (mut: (prev: QuestFilterState) => QuestFilterState) => {
+      setState((prev) => {
+        const next = mut(prev);
+        persistState(next);
+        return next;
+      });
+    },
+    [],
+  );
 
-  const setCuisine = useCallback((cuisine: CuisineFilter) => {
-    setState((prev) => {
-      const next = { ...prev, cuisine };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const setCookTime = useCallback(
+    (cookTime: CookTimeFilter) => update((p) => ({ ...p, cookTime })),
+    [update],
+  );
 
-  const setMealType = useCallback((mealType: MealTypeFilter) => {
-    setState((prev) => {
-      const next = { ...prev, mealType };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const toggleRole = useCallback(
+    (role: DishRoleFilter) =>
+      update((p) => ({ ...p, roles: toggleInArray(p.roles, role) })),
+    [update],
+  );
+  const clearRoles = useCallback(
+    () => update((p) => ({ ...p, roles: [] })),
+    [update],
+  );
 
-  const setRole = useCallback((role: DishRoleFilter) => {
-    setState((prev) => {
-      const next = { ...prev, role };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const toggleCuisine = useCallback(
+    (cuisine: CuisineFilter) =>
+      update((p) => ({ ...p, cuisines: toggleInArray(p.cuisines, cuisine) })),
+    [update],
+  );
+  const clearCuisines = useCallback(
+    () => update((p) => ({ ...p, cuisines: [] })),
+    [update],
+  );
 
-  /** Tick / untick a single source facet (multi-select). */
-  const toggleSource = useCallback((facet: SourceFacet) => {
-    setState((prev) => {
-      const next = { ...prev, source: toggleSourceFacet(prev.source, facet) };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const toggleMealType = useCallback(
+    (mealType: MealTypeFilter) =>
+      update((p) => ({
+        ...p,
+        mealTypes: toggleInArray(p.mealTypes, mealType),
+      })),
+    [update],
+  );
+  const clearMealTypes = useCallback(
+    () => update((p) => ({ ...p, mealTypes: [] })),
+    [update],
+  );
 
-  const clearSource = useCallback(() => {
-    setState((prev) => {
-      const next = { ...prev, source: [] };
-      persistState(next);
-      return next;
-    });
-  }, []);
+  const toggleSource = useCallback(
+    (facet: SourceFacet) =>
+      update((p) => ({ ...p, source: toggleInArray(p.source, facet) })),
+    [update],
+  );
+  const clearSource = useCallback(
+    () => update((p) => ({ ...p, source: [] })),
+    [update],
+  );
 
   const reset = useCallback(() => {
     persistState(DEFAULT_STATE);
@@ -174,22 +214,30 @@ export function useQuestFilters() {
     mounted,
     activeFilterCount,
     setCookTime,
-    setCuisine,
-    setMealType,
-    setRole,
+    toggleRole,
+    clearRoles,
+    toggleCuisine,
+    clearCuisines,
+    toggleMealType,
+    clearMealTypes,
     toggleSource,
     clearSource,
     reset,
   };
 }
 
+/** True when roles differ from the mains-only default. */
+function rolesAreDefault(roles: DishRoleFilter[]): boolean {
+  return roles.length === 1 && roles[0] === "main";
+}
+
 /** Pure helper: count of non-default facets in a state. Exported for tests. */
 export function countActiveFilters(state: QuestFilterState): number {
   return (
     (state.cookTime !== "any" ? 1 : 0) +
-    (state.cuisine !== "any" ? 1 : 0) +
-    (state.mealType !== "any" ? 1 : 0) +
-    (state.role !== "main" ? 1 : 0) +
+    (state.cuisines.length > 0 ? 1 : 0) +
+    (state.mealTypes.length > 0 ? 1 : 0) +
+    (!rolesAreDefault(state.roles) ? 1 : 0) +
     (state.source.length > 0 ? 1 : 0)
   );
 }

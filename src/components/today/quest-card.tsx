@@ -196,10 +196,15 @@ export function QuestCard({
   // → the role-specific catalogue feed (same quest shell, rule 4).
   const baseDishes = useMemo(() => {
     const pantry = pantryMounted ? pantryItems : undefined;
-    // Main → the full quest pool, but kept to actual mains (the pool mixes in a
-    // few sides; the role filter makes "Main" mean mains). Side/Drink/Snack →
-    // the role-specific feed.
-    if (filters.role === "main") {
+    // Multi-select roles (empty = all). Mains come from the full quest pool;
+    // side/drink/snack each come from their role-specific catalogue feed. The
+    // union is concatenated so any combination of roles can share one deck.
+    const activeRoles =
+      filters.roles.length > 0
+        ? filters.roles
+        : (["main", "side", "drink", "snack"] as const);
+    const deck: QuestDish[] = [];
+    if (activeRoles.includes("main")) {
       const mains = buildQuestDishes(
         userPreferences,
         cookHistory,
@@ -216,16 +221,20 @@ export function QuestCard({
           pantrySet,
         ),
       }));
-      return [...customWithFit, ...mains];
+      deck.push(...customWithFit, ...mains);
     }
-    return buildRoleQuestDishes(filters.role, pantry);
+    for (const r of ["side", "drink", "snack"] as const) {
+      if (activeRoles.includes(r))
+        deck.push(...buildRoleQuestDishes(r, pantry));
+    }
+    return deck;
   }, [
     userPreferences,
     cookHistory,
     pantryItems,
     pantryMounted,
     progression,
-    filters.role,
+    filters.roles,
     customDishes,
   ]);
 
@@ -242,14 +251,12 @@ export function QuestCard({
     const alpha = Array.from(seen.entries()).sort((a, b) =>
       a[1].localeCompare(b[1]),
     );
-    return [
-      { value: "any", label: "Any cuisine", pillLabel: "Cuisine" },
-      ...alpha.map(([key, label]) => ({
-        value: key,
-        label,
-        pillLabel: label,
-      })),
-    ];
+    // Multi-select: no "Any" option — an empty selection already means any.
+    return alpha.map(([key, label]) => ({
+      value: key,
+      label,
+      pillLabel: label,
+    }));
   }, [baseDishes]);
 
   // Source options are derived from the live feed so the menu only ever offers
@@ -310,19 +317,22 @@ export function QuestCard({
       filters.cookTime === "any"
         ? Number.POSITIVE_INFINITY
         : Number.parseInt(filters.cookTime, 10);
-    const cuisineKey = filters.cuisine.toLowerCase();
-    // Meal type only applies to mains (sides aren't daypart-bound).
-    const dayType =
-      filters.role === "main" && filters.mealType !== "any"
-        ? filters.mealType
-        : null;
     const filtered = baseDishes.filter((d) => {
       if (d.cookTimeMinutes > cap) return false;
-      if (filters.cuisine !== "any") {
-        if (d.cuisineFamily.toLowerCase() !== cuisineKey) return false;
+      // Multi-select cuisine (OR; empty = any).
+      if (
+        filters.cuisines.length > 0 &&
+        !filters.cuisines.includes(d.cuisineFamily.toLowerCase())
+      ) {
+        return false;
       }
       if (!matchesSourceFilters(d, filters.source)) return false;
-      if (dayType && !(d.dayparts ?? []).includes(dayType)) return false;
+      // Multi-select meal time (OR; empty = any). Only constrains mains —
+      // sides/drinks/snacks aren't daypart-bound, so they always pass.
+      if (filters.mealTypes.length > 0 && d.role === "main") {
+        const dp = d.dayparts ?? [];
+        if (!filters.mealTypes.some((mt) => dp.includes(mt))) return false;
+      }
       return true;
     });
     // Graceful fallback: if the filter combination yields nothing, return
@@ -346,9 +356,9 @@ export function QuestCard({
     plannedSlug,
     baseDishes,
     filters.cookTime,
-    filters.cuisine,
-    filters.role,
-    filters.mealType,
+    filters.cuisines,
+    filters.roles,
+    filters.mealTypes,
     filters.source,
     pantryMode.enabled,
     pantryMode.tolerance,
@@ -362,10 +372,10 @@ export function QuestCard({
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset preview position on filter change
     setPreviewIndex(0);
   }, [
-    filters.role,
-    filters.cuisine,
+    filters.roles,
+    filters.cuisines,
     filters.cookTime,
-    filters.mealType,
+    filters.mealTypes,
     filters.source,
   ]);
   const { saveDish, isDishSaved } = useSavedDishes();

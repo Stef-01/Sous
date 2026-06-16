@@ -21,7 +21,6 @@ const ROLE_OPTIONS: FilterOption<DishRoleFilter>[] = [
   { value: "snack", label: "Snack" },
 ];
 const MEAL_TYPE_OPTIONS: FilterOption<MealTypeFilter>[] = [
-  { value: "any", label: "Any time" },
   { value: "breakfast", label: "Breakfast" },
   { value: "lunch", label: "Lunch" },
   { value: "dinner", label: "Dinner" },
@@ -42,10 +41,10 @@ const labelFor = <T extends string>(
   value: string,
 ): string => options.find((o) => o.value === value)?.label ?? value;
 
-/** Summary text for the multi-select Source row. */
-function sourceSummary(
-  selected: SourceFacet[],
-  options: FilterOption<SourceFacet>[],
+/** Summary text for a multi-select row: null (none), the single label, or "N selected". */
+function multiSummary(
+  selected: ReadonlyArray<string>,
+  options: FilterOption<string>[],
 ): string | null {
   if (selected.length === 0) return null;
   if (selected.length === 1) {
@@ -54,12 +53,27 @@ function sourceSummary(
   return `${selected.length} selected`;
 }
 
+interface Row {
+  key: CategoryKey;
+  rowLabel: string;
+  /** Right-aligned summary on the category list. */
+  summary: string | null;
+  options: FilterOption<string>[];
+  /** Multi-select rows toggle in place; single-select rows apply + close. */
+  multi: boolean;
+  isSelected: (value: string) => boolean;
+  onSelect: (value: string) => void;
+  /** Multi-select only — number selected + the clear action. */
+  selectedCount?: number;
+  onClear?: () => void;
+}
+
 /**
  * QuestFilterMenu (Today Filter) — a minimal TEXT dropdown in the same family as
  * FilterDropdown. The "Filter" pill opens a compact category list; tapping a
- * category drills into its options. Most categories are single-select (tap →
- * apply + back to the list); the Source category is MULTI-SELECT (checkboxes
- * that toggle in place without collapsing the panel).
+ * category drills into its options. Cook time is single-select (tap → apply +
+ * back). Role, Meal type, Cuisine and Source are MULTI-SELECT (checkboxes that
+ * toggle in place without collapsing the panel; empty = any).
  */
 export function QuestFilterMenu({
   filters,
@@ -101,47 +115,58 @@ export function QuestFilterMenu({
   }, [open, category, close]);
 
   const active = filters.activeFilterCount > 0;
+  // Meal type only constrains mains, so the row only appears when mains are in
+  // scope (selected, or "all roles" via an empty selection).
+  const mainsInScope =
+    filters.roles.length === 0 || filters.roles.includes("main");
 
-  // The category rows. Meal type only applies to mains (sides aren't daypart-bound).
-  const rows: {
-    key: CategoryKey;
-    rowLabel: string;
-    value: string | null;
-    options: FilterOption<string>[];
-    /** Multi-select rows toggle in place; single-select rows apply + close. */
-    multi?: boolean;
-    onSelect: (v: string) => void;
-  }[] = [
+  const rows: Row[] = [
     {
       key: "role",
-      rowLabel: labelFor(ROLE_OPTIONS, filters.role),
-      value: null,
-      options: ROLE_OPTIONS,
-      onSelect: (v) => filters.setRole(v as DishRoleFilter),
+      rowLabel: "Role",
+      summary: multiSummary(filters.roles, ROLE_OPTIONS),
+      options: ROLE_OPTIONS as FilterOption<string>[],
+      multi: true,
+      isSelected: (v) => filters.roles.includes(v as DishRoleFilter),
+      onSelect: (v) => filters.toggleRole(v as DishRoleFilter),
+      selectedCount: filters.roles.length,
+      onClear: filters.clearRoles,
     },
-    ...(filters.role === "main"
+    ...(mainsInScope
       ? [
           {
             key: "mealType" as const,
             rowLabel: "Meal type",
-            value: labelFor(MEAL_TYPE_OPTIONS, filters.mealType),
+            summary: multiSummary(filters.mealTypes, MEAL_TYPE_OPTIONS),
             options: MEAL_TYPE_OPTIONS as FilterOption<string>[],
-            onSelect: (v: string) => filters.setMealType(v as MealTypeFilter),
+            multi: true,
+            isSelected: (v: string) =>
+              filters.mealTypes.includes(v as MealTypeFilter),
+            onSelect: (v: string) =>
+              filters.toggleMealType(v as MealTypeFilter),
+            selectedCount: filters.mealTypes.length,
+            onClear: filters.clearMealTypes,
           },
         ]
       : []),
     {
       key: "cuisine",
       rowLabel: "Cuisine",
-      value: labelFor(cuisineOptions, filters.cuisine),
+      summary: multiSummary(filters.cuisines, cuisineOptions),
       options: cuisineOptions,
-      onSelect: (v) => filters.setCuisine(v),
+      multi: true,
+      isSelected: (v) => filters.cuisines.includes(v),
+      onSelect: (v) => filters.toggleCuisine(v),
+      selectedCount: filters.cuisines.length,
+      onClear: filters.clearCuisines,
     },
     {
       key: "cookTime",
       rowLabel: "Cook time",
-      value: labelFor(COOK_TIME_OPTIONS, filters.cookTime),
+      summary: labelFor(COOK_TIME_OPTIONS, filters.cookTime),
       options: COOK_TIME_OPTIONS as FilterOption<string>[],
+      multi: false,
+      isSelected: (v) => filters.cookTime === v,
       onSelect: (v) => filters.setCookTime(v as CookTimeFilter),
     },
     // Source is multi-select and only shown when the live feed carries two or
@@ -152,10 +177,14 @@ export function QuestFilterMenu({
           {
             key: "source" as const,
             rowLabel: "Source",
-            value: sourceSummary(filters.source, sourceOptions),
+            summary: multiSummary(filters.source, sourceOptions),
             options: sourceOptions as FilterOption<string>[],
             multi: true,
+            isSelected: (v: string) =>
+              filters.source.includes(v as SourceFacet),
             onSelect: (v: string) => filters.toggleSource(v as SourceFacet),
+            selectedCount: filters.source.length,
+            onClear: filters.clearSource,
           },
         ]
       : []),
@@ -202,7 +231,7 @@ export function QuestFilterMenu({
                   >
                     <span className="font-medium">{r.rowLabel}</span>
                     <span className="flex items-center gap-1 text-[var(--nourish-subtext)]">
-                      {r.value && <span>{r.value}</span>}
+                      {r.summary && <span>{r.summary}</span>}
                       <ChevronRight size={13} strokeWidth={2.2} />
                     </span>
                   </button>
@@ -238,16 +267,7 @@ export function QuestFilterMenu({
               </button>
               <ul className="max-h-[240px] overflow-y-auto py-1">
                 {activeRow.options.map((opt) => {
-                  const current = activeRow.multi
-                    ? filters.source.includes(opt.value as SourceFacet)
-                    : (activeRow.key === "role" &&
-                        filters.role === opt.value) ||
-                      (activeRow.key === "mealType" &&
-                        filters.mealType === opt.value) ||
-                      (activeRow.key === "cuisine" &&
-                        filters.cuisine === opt.value) ||
-                      (activeRow.key === "cookTime" &&
-                        filters.cookTime === opt.value);
+                  const current = activeRow.isSelected(opt.value);
                   return (
                     <li key={opt.value}>
                       <button
@@ -284,17 +304,19 @@ export function QuestFilterMenu({
                     </li>
                   );
                 })}
-                {activeRow.multi && filters.source.length > 0 && (
-                  <li className="mt-1 border-t border-[var(--nourish-border)]">
-                    <button
-                      type="button"
-                      onClick={() => filters.clearSource()}
-                      className="w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
-                    >
-                      Clear sources
-                    </button>
-                  </li>
-                )}
+                {activeRow.multi &&
+                  activeRow.onClear &&
+                  (activeRow.selectedCount ?? 0) > 0 && (
+                    <li className="mt-1 border-t border-[var(--nourish-border)]">
+                      <button
+                        type="button"
+                        onClick={() => activeRow.onClear?.()}
+                        className="w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
+                      >
+                        Clear
+                      </button>
+                    </li>
+                  )}
               </ul>
             </div>
           )}

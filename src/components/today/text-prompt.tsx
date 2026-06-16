@@ -81,7 +81,7 @@ function getCuisineFromTags(tags: string[]): string {
 
 interface FilterApplyOptions {
   cookTime: CookTimeFilter;
-  cuisine: CuisineFilter;
+  cuisines: CuisineFilter[];
 }
 
 function matchesFilters(
@@ -90,8 +90,11 @@ function matchesFilters(
   isMeal: boolean,
   filters: FilterApplyOptions,
 ): boolean {
-  if (filters.cuisine !== "any") {
-    if (cuisine.toLowerCase() !== filters.cuisine.toLowerCase()) return false;
+  if (
+    filters.cuisines.length > 0 &&
+    !filters.cuisines.includes(cuisine.toLowerCase())
+  ) {
+    return false;
   }
   if (filters.cookTime !== "any") {
     const cap = cookTimeCapMinutes(filters.cookTime);
@@ -216,7 +219,7 @@ export function TextPrompt({
       setLocalResults(
         searchLocal(text, {
           cookTime: questFilters.cookTime,
-          cuisine: questFilters.cuisine,
+          cuisines: questFilters.cuisines,
         }),
       );
       setHasSearched(true);
@@ -226,7 +229,7 @@ export function TextPrompt({
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
     };
-  }, [text, questFilters.cookTime, questFilters.cuisine]);
+  }, [text, questFilters.cookTime, questFilters.cuisines]);
 
   // Derive empty state outside effect to avoid synchronous setState in effects
   const effectiveResults = text.trim() ? localResults : [];
@@ -271,11 +274,11 @@ export function TextPrompt({
     if (questFilters.cookTime !== "any") {
       parts.push(`≤${questFilters.cookTime} min`);
     }
-    if (questFilters.cuisine !== "any") {
-      const label =
-        questFilters.cuisine.charAt(0).toUpperCase() +
-        questFilters.cuisine.slice(1);
-      parts.push(label);
+    if (questFilters.cuisines.length === 1) {
+      const c = questFilters.cuisines[0];
+      parts.push(c.charAt(0).toUpperCase() + c.slice(1));
+    } else if (questFilters.cuisines.length > 1) {
+      parts.push(`${questFilters.cuisines.length} cuisines`);
     }
     return parts.length > 0 ? parts.join(" · ") : null;
   })();
