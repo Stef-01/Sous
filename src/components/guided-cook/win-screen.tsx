@@ -11,6 +11,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useDeviceId } from "@/lib/hooks/use-device-id";
 import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
 import { confidenceCoachLine } from "@/lib/engine/coach-encouragement";
+import { setPendingAnchor } from "@/lib/surveys/pulse-anchor-bridge";
 import { uploadCookPhoto } from "@/lib/storage/upload-cook-photo";
 import {
   Star,
@@ -662,7 +663,12 @@ export function WinScreen({
               Photo / Note / Again all live in the subordinate chip row below,
               so nothing competes with the primary action. (rule 2) */}
           <motion.button
-            onClick={onBackToday}
+            onClick={() => {
+              // §6.2 win-close anchor — surfaces a post-cook pulse (felt-easier
+              // / pacing) when the user lands back on Today.
+              setPendingAnchor("win-close");
+              onBackToday();
+            }}
             whileTap={{ scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition shadow-sm shadow-[var(--nourish-green)]/20 active:scale-[0.97]"

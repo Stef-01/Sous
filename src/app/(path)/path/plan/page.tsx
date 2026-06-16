@@ -34,6 +34,7 @@ import {
   type SlotKey,
 } from "@/types/meal-plan";
 import { cn } from "@/lib/utils/cn";
+import { AnchorPulseHost } from "@/components/surveys/anchor-pulse-host";
 
 interface DishShapePatternJSON {
   requiredAny: string[][];
@@ -169,6 +170,8 @@ export default function SwipePlannerPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-24">
+      {/* §6.2 "plan-open" pulse anchor — a calm, eligible-only micro-survey. */}
+      <AnchorPulseHost anchor="plan-open" />
       <header className="app-header sticky top-0 z-10 page-x py-3">
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link

@@ -82,7 +82,8 @@ import {
   getDeviceId,
   markPulseShown,
 } from "@/lib/surveys/pulse-scheduler";
-import type { PulseDef } from "@/data/pulses";
+import type { PulseDef, PulseAnchor } from "@/data/pulses";
+import { takePendingAnchor } from "@/lib/surveys/pulse-anchor-bridge";
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
@@ -266,8 +267,11 @@ function TodayPageContent() {
     pulseCheckedRef.current = true;
     const id = setTimeout(() => {
       const now = new Date().toISOString();
+      // A pending anchor (e.g. "win-close" stashed by the Win screen on the way
+      // back to Today) takes priority over the ambient "visit" anchor.
+      const anchor: PulseAnchor = takePendingAnchor() ?? "visit";
       const pulse = selectEligiblePulse(
-        "visit",
+        anchor,
         pulseLedger,
         now,
         getDeviceId(),
@@ -279,6 +283,26 @@ function TodayPageContent() {
     }, 1600);
     return () => clearTimeout(id);
   }, [pulseLedgerMounted, quizDone, showCoachQuiz, activePulse, pulseLedger]);
+
+  // Fire a pulse at an explicit app moment (e.g. deck exhausted). Same calm
+  // guardrails as the visit anchor — the scheduler enforces cooldowns.
+  const triggerAnchorPulse = useCallback(
+    (anchor: PulseAnchor) => {
+      if (!quizDone || showCoachQuiz || activePulse) return;
+      const now = new Date().toISOString();
+      const pulse = selectEligiblePulse(
+        anchor,
+        pulseLedger,
+        now,
+        getDeviceId(),
+      );
+      if (pulse) {
+        markPulseShown(pulse.id, now);
+        setActivePulse(pulse);
+      }
+    },
+    [quizDone, showCoachQuiz, activePulse, pulseLedger],
+  );
 
   // Auto-open search with sides for a dish (from mission screen "Select sides to pair")
   const selectSidesParam = searchParams.get("selectSides");
@@ -639,6 +663,7 @@ function TodayPageContent() {
           userPreferences={effectivePreferences}
           cookHistory={stats}
           cookSessions={completedSessions}
+          onDeckExhausted={() => triggerAnchorPulse("deck-exhaust")}
         />
 
         {/* Contextual surfaces below the hero — kept ONLY where each expresses

@@ -160,12 +160,16 @@ export function QuestCard({
   userPreferences,
   cookHistory,
   cookSessions,
+  onDeckExhausted,
 }: {
   userPreferences?: Record<string, number>;
   cookHistory?: { cuisinesCovered: string[]; completedCooks: number };
   /** Completed cook sessions, used to compute the "Because you cooked X"
    *  rationale. Silent when empty or below the 5-cook threshold. */
   cookSessions?: CookSessionRecord[];
+  /** Fired when the user swipes through the whole browse deck (§6.2 the
+   *  "deck-exhaust" pulse anchor). */
+  onDeckExhausted?: () => void;
 }) {
   const reducedMotion = useReducedMotion();
   void reducedMotion;
@@ -357,7 +361,6 @@ export function QuestCard({
     baseDishes,
     filters.cookTime,
     filters.cuisines,
-    filters.roles,
     filters.mealTypes,
     filters.source,
     pantryMode.enabled,
@@ -577,6 +580,7 @@ export function QuestCard({
             onClose={() => setQueueOpen(false)}
             onSaveDish={handleSaveDish}
             onCookDish={routeDish}
+            onDeckExhausted={onDeckExhausted}
           />
         )}
       </AnimatePresence>
@@ -669,15 +673,19 @@ function MealSwipeQueueOverlay({
   onClose,
   onSaveDish,
   onCookDish,
+  onDeckExhausted,
 }: {
   dishes: QuestDish[];
   isDishSaved: (slug: string) => boolean;
   onClose: () => void;
   onSaveDish: (dish: QuestDish) => void;
   onCookDish: (dish: QuestDish) => void;
+  onDeckExhausted?: () => void;
 }) {
   const [unswiped, setUnswiped] = useState<QuestDish[]>(() => dishes);
   const [dismissed, setDismissed] = useState<QuestDish[]>([]);
+  // §6.2 deck-exhaust anchor — fire onDeckExhausted once per browse session.
+  const exhaustedRef = useRef(false);
   const { profile: careProfile } = useCareProfile();
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
@@ -691,6 +699,7 @@ function MealSwipeQueueOverlay({
     setDismissed([]);
     setExitDirection(null);
     setInitialTotal(dishes.length);
+    exhaustedRef.current = false;
   }, [dishes]);
 
   useEffect(() => {
@@ -705,6 +714,13 @@ function MealSwipeQueueOverlay({
 
   const healthPanel = useMealHealthPanel();
   const activeDish = unswiped[0] ?? null;
+  // Fire once when the user has swiped the whole deck (deck-exhaust anchor).
+  useEffect(() => {
+    if (unswiped.length === 0 && initialTotal > 0 && !exhaustedRef.current) {
+      exhaustedRef.current = true;
+      onDeckExhausted?.();
+    }
+  }, [unswiped.length, initialTotal, onDeckExhausted]);
   const seenCount = dismissed.length;
   const progress = initialTotal
     ? Math.min(1, (seenCount + (activeDish ? 1 : 0)) / initialTotal)
