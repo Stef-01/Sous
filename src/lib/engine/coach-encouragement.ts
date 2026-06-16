@@ -193,3 +193,13 @@ function getDaysSince(isoDate: string): number {
   if (!Number.isFinite(then)) return 0;
   return (Date.now() - then) / (1000 * 60 * 60 * 24);
 }
+
+/**
+ * W5: a short, peer-level affirmation for the win screen, shown when the
+ * "that felt easier than I expected" pulse signal is set — the coach tone
+ * tracking a rising confidence trajectory. Returns null when the signal is
+ * unset, so the win screen stays at its default neutral tone. Pure + claim-safe.
+ */
+export function confidenceCoachLine(feltEasier: boolean): string | null {
+  return feltEasier ? "You're hitting your stride." : null;
+}

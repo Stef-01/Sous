@@ -18,6 +18,10 @@ const PREFERENCES_KEY = "sous-preferences";
 const EFFORT_KEY = "sous-effort-tolerance";
 const FLAGS_KEY = "sous-signal-flags-v1";
 
+/** Same-tab change event so the W5 `useSignalFlags` store refreshes the moment
+ *  a pulse/onboarding writes flags, without waiting for a remount. */
+export const SIGNAL_FLAGS_EVENT = "sous:signal-flags";
+
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
   try {
@@ -82,6 +86,9 @@ export function persistSurveySignals(signals: AggregatedSignals): void {
   if (Object.keys(signals.flags).length > 0) {
     const prev = getSignalFlags();
     writeJson(FLAGS_KEY, { ...prev, ...signals.flags });
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event(SIGNAL_FLAGS_EVENT));
+    }
   }
 }
 

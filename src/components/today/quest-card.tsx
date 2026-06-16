@@ -45,6 +45,7 @@ import {
 import { QuestFilterMenu } from "./quest-filter-menu";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
+import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
 import {
   therapeuticsActive,
@@ -104,6 +105,9 @@ export interface QuestDish {
 const SWIPE_THRESHOLD = 100;
 const SWIPE_VELOCITY_THRESHOLD = 600;
 const QUEUE_SIZE = 18;
+/** W5: a "searching / decision fatigue" signal trims the swipe queue to a
+ *  shorter, calmer deck — less to weigh up (mirrors the onboarding promise). */
+const CALM_QUEUE_SIZE = 6;
 
 export function decideSwipe(
   offsetX: number,
@@ -176,6 +180,9 @@ export function QuestCard({
     () => drafts.map(userRecipeToQuestDish),
     [drafts],
   );
+  // W5: trim the swipe queue when the decision-fatigue signal is set.
+  const calmDeck = useSignalFlag("decisionFatigue");
+  const queueSize = calmDeck ? CALM_QUEUE_SIZE : QUEUE_SIZE;
   // The role facet rewires the feed: Main → the full quest pool; Side/Drink/Snack
   // → the role-specific catalogue feed (same quest shell, rule 4).
   const baseDishes = useMemo(() => {
@@ -374,9 +381,9 @@ export function QuestCard({
     const start = previewIndex % questDishes.length;
     return [...questDishes.slice(start), ...questDishes.slice(0, start)].slice(
       0,
-      QUEUE_SIZE,
+      queueSize,
     );
-  }, [previewIndex, questDishes]);
+  }, [previewIndex, questDishes, queueSize]);
 
   const eatOutLookup = useMemo(() => {
     const map = new Map<string, (typeof STANFORD_VENUES)[number]>();

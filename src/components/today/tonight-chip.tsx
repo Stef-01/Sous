@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Moon, Check, X } from "lucide-react";
 import { useCookIntention } from "@/lib/hooks/use-cook-intention";
+import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
 import { cn } from "@/lib/utils/cn";
 
 interface TonightChipProps {
@@ -32,6 +33,10 @@ interface TonightChipProps {
  */
 export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
   const reducedMotion = useReducedMotion();
+  // W5: if the user opted out of plan nudges (planning pulse "never" / plan
+  // consent "no"), suppress the commit invitation. An already-set intention
+  // still shows its affirmation banner — that's state, not a nudge.
+  const planNudgesOff = useSignalFlag("planNudgesOff");
   const { intention, mounted, commit, clear } = useCookIntention();
   const [expanded, setExpanded] = useState(false);
   const [value, setValue] = useState("");
@@ -106,6 +111,8 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
   }
 
   if (mode === "banner-only") return null;
+  // No active intention + nudges opted out → render nothing (respect the "no").
+  if (planNudgesOff) return null;
 
   return (
     <AnimatePresence initial={false} mode="wait">

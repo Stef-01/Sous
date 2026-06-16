@@ -7,6 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Image as ImageIcon,
+  Lightbulb,
   MessageCircleQuestion,
   Send,
   Volume2,
@@ -30,6 +31,10 @@ import {
   type SpiceTolerance,
 } from "@/lib/parent-mode/spice-rewrite";
 import { resolveVisualStepImage } from "@/lib/cook/resolve-visual-step-image";
+import {
+  useSignalFlags,
+  stepDensityFromFlags,
+} from "@/lib/hooks/use-signal-flags";
 import type { AttentionPointer } from "@/lib/cook/attention-pointer";
 import { AttentionPointerOverlay } from "./attention-pointer-overlay";
 
@@ -107,6 +112,9 @@ export function StepCard({
   dishSlug,
 }: StepCardProps) {
   const reducedMotion = useReducedMotion();
+  // W5: the pacing pulse tunes step density — `terse` drops the soft chips
+  // (quick hack + cuisine fact), `verbose` shows the hack inline (no tap).
+  const density = stepDensityFromFlags(useSignalFlags());
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -424,17 +432,31 @@ export function StepCard({
           />
         )}
 
-        {quickHack && (
-          <HackChip
-            hack={quickHack}
-            isExpanded={expandedChip === "hack"}
-            onToggle={() =>
-              onToggleChip(expandedChip === "hack" ? null : "hack")
-            }
-          />
-        )}
+        {/* W5 pacing density: `terse` hides the hack; `verbose` shows it inline
+            (no tap); default keeps the collapsible chip. */}
+        {quickHack &&
+          density !== "terse" &&
+          (density === "verbose" ? (
+            <p className="flex items-start gap-1.5 text-sm text-[var(--nourish-subtext)]">
+              <Lightbulb
+                size={15}
+                className="mt-0.5 shrink-0 text-[var(--nourish-green)]"
+                strokeWidth={2}
+              />
+              <span className="select-text">{quickHack}</span>
+            </p>
+          ) : (
+            <HackChip
+              hack={quickHack}
+              isExpanded={expandedChip === "hack"}
+              onToggle={() =>
+                onToggleChip(expandedChip === "hack" ? null : "hack")
+              }
+            />
+          ))}
 
-        {cuisineFact && (
+        {/* `terse` also drops the cuisine fact (a nice-to-have, not guidance). */}
+        {cuisineFact && density !== "terse" && (
           <FactChip
             fact={cuisineFact}
             isExpanded={expandedChip === "fact"}

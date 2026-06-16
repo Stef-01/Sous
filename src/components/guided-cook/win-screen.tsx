@@ -9,6 +9,8 @@ import {
 } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useDeviceId } from "@/lib/hooks/use-device-id";
+import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
+import { confidenceCoachLine } from "@/lib/engine/coach-encouragement";
 import { uploadCookPhoto } from "@/lib/storage/upload-cook-photo";
 import {
   Star,
@@ -284,6 +286,10 @@ export function WinScreen({
   });
   const headline = winMessage.data?.headline ?? milestone.headline;
   const message = winMessage.data?.message ?? milestone.message;
+  // W5: a peer-level affirmation when the "felt easier than expected" pulse
+  // signal is set — coach tone tracking the confidence trajectory. Null (no
+  // line) until that signal exists.
+  const confidenceLine = confidenceCoachLine(useSignalFlag("feltEasier"));
 
   const reflection = trpc.ai.generateReflection.useQuery(
     {
@@ -438,6 +444,11 @@ export function WinScreen({
           <p className="text-[var(--nourish-subtext)] text-sm leading-relaxed">
             {message}
           </p>
+          {confidenceLine && (
+            <p className="text-sm font-medium text-[var(--nourish-green)]">
+              {confidenceLine}
+            </p>
+          )}
           {/* Eco Mode savings line — renders only when Eco Mode is
               on AND savings are positive. (Y5 D, audit P0 #2.) */}
           <WinEcoSavingsLine />

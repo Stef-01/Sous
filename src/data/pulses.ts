@@ -76,18 +76,26 @@ export const PULSES: PulseDef[] = [
           id: "pacing",
           title: "Were the steps the right pace?",
           options: [
+            // Each option sets BOTH keys so the latest answer fully determines
+            // the density (flags accumulate by key — a lone {verbose:true} would
+            // never clear an earlier {terse:true}).
             {
               value: "more-detail",
               label: "I wanted more detail",
               glyph: "bread",
-              signals: { flags: { verbose: true } },
+              signals: { flags: { verbose: true, terse: false } },
             },
-            { value: "just-right", label: "Just right", glyph: "salad" },
+            {
+              value: "just-right",
+              label: "Just right",
+              glyph: "salad",
+              signals: { flags: { verbose: false, terse: false } },
+            },
             {
               value: "too-much",
               label: "Too hand-holdy",
               glyph: "flame",
-              signals: { flags: { terse: true } },
+              signals: { flags: { terse: true, verbose: false } },
             },
           ],
         },

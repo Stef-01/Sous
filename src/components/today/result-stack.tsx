@@ -32,6 +32,7 @@ import {
   NUTRITION_COVERAGE_FLOOR,
 } from "@/lib/engine/dish-nutrition";
 import { trpc } from "@/lib/trpc/client";
+import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
 
 export interface SideResult {
   id: string;
@@ -105,6 +106,9 @@ export function ResultStack({
   dayDeficits,
 }: ResultStackProps) {
   const reducedMotion = useReducedMotion();
+  // W5: a "searching / decision fatigue" signal calms the plate — the
+  // "Reroll all" nudge is hidden so there's no invitation to keep re-deciding.
+  const calmDeck = useSignalFlag("decisionFatigue");
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -283,23 +287,30 @@ export function ResultStack({
             </span>
           </p>
         </div>
-        <motion.button
-          onClick={onReroll}
-          disabled={isRerolling}
-          whileTap={reducedMotion || isRerolling ? undefined : { scale: 0.96 }}
-          transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className={cn(
-            "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
-            "border border-neutral-200 text-[var(--nourish-subtext)]",
-            "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-            "disabled:opacity-50 transition-colors duration-200",
-          )}
-          type="button"
-        >
-          <RefreshCw size={14} className={isRerolling ? "animate-spin" : ""} />
-          Reroll all
-        </motion.button>
+        {!calmDeck && (
+          <motion.button
+            onClick={onReroll}
+            disabled={isRerolling}
+            whileTap={
+              reducedMotion || isRerolling ? undefined : { scale: 0.96 }
+            }
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className={cn(
+              "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
+              "border border-neutral-200 text-[var(--nourish-subtext)]",
+              "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+              "disabled:opacity-50 transition-colors duration-200",
+            )}
+            type="button"
+          >
+            <RefreshCw
+              size={14}
+              className={isRerolling ? "animate-spin" : ""}
+            />
+            Reroll all
+          </motion.button>
+        )}
       </div>
 
       <div className="space-y-3">
