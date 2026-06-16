@@ -51,24 +51,24 @@ delete entries; mark them `RESOLVED <date>` when worked off.
 
 ## 3. Critical appraisal — everything requested in this chat window
 
-| Request                                                               | Shipped state                                                            | Honest caveats                                                                  |
-| --------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| 10-phase UI overhaul + recursive improvement rounds                   | Done, committed                                                          | —                                                                               |
-| Mediterranean misclassification RCA + 20-food verify                  | Done; classification tests in suite                                      | —                                                                               |
-| Path restructure + Nutrition 4th tab + auto-log on cook completion    | Done; tabs Today·Path·Nutrition·Content                                  | CLAUDE.md 3-tab wording needs founder commit (file env-protected)               |
-| 13/15 tracking features (calendar + Apple Health deferred by founder) | Done + 5× verify loops each                                              | photo-log later replaced by OCR camera (D-3/D-4)                                |
-| Supabase cross-device diary sync                                      | Done; outbox/tombstones/idempotent upserts; verified vs live DB via MCP  | No local DATABASE_URL (designed degradation); kv adopt fill-empty-only          |
-| Mockup-parity grocery + meal plan (Crouton refs)                      | Done: row grammar, slot popover, day kcal, move grid, Plan entry on Path | Snack slot deliberately absent (D-12)                                           |
-| Unified "Log food" (type/voice/OCR/barcode/staples)                   | Done; OCR proven end-to-end in Node (GREEK YOGURT fixture)               | In-browser shutter verified to frame-grab boundary (headless can't fake camera) |
-| Unit swap g ⇄ cups                                                    | Done; engine-true; 11 tests                                              | Countables never convert (D-6)                                                  |
-| Goal stars + plans                                                    | Done; pinning RCA fixed (zero/absent synthesize at 0%; overflow grid)    | Copy bound by claim contract                                                    |
-| Pixel-Doberman Tamagotchi (full-screen, all-real)                     | Done; 5 spec rounds + 5 research rounds                                  | Coins/decay/fake buttons rejected (D-9)                                         |
-| Eat-out Stanford demo (Zareen's + 12 more, loggable, goal-fit)        | Done; 6 venues wear own-site photos; featured swipe bar                  | Photos = Ledger L1/L2; 7 venues on matched repo photos                          |
-| MacroFactor tracking layer (week strip/cards/slots)                   | Done; ⇄ mode; View all; redundancy cut via ring `microsOnly` (D-15)      | —                                                                               |
-| Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                              | hero photo committed by founder                                                 |
-| Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                   | founder supplies images                                                         |
-| IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                      | Manual IG-save drop is the practical route                                      |
-| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W1–W3 SHIPPED (a233776, d830f49, f71ebb5)**; W4–W6 queued — §6.2       | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
+| Request                                                               | Shipped state                                                                      | Honest caveats                                                                  |
+| --------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| 10-phase UI overhaul + recursive improvement rounds                   | Done, committed                                                                    | —                                                                               |
+| Mediterranean misclassification RCA + 20-food verify                  | Done; classification tests in suite                                                | —                                                                               |
+| Path restructure + Nutrition 4th tab + auto-log on cook completion    | Done; tabs Today·Path·Nutrition·Content                                            | CLAUDE.md 3-tab wording needs founder commit (file env-protected)               |
+| 13/15 tracking features (calendar + Apple Health deferred by founder) | Done + 5× verify loops each                                                        | photo-log later replaced by OCR camera (D-3/D-4)                                |
+| Supabase cross-device diary sync                                      | Done; outbox/tombstones/idempotent upserts; verified vs live DB via MCP            | No local DATABASE_URL (designed degradation); kv adopt fill-empty-only          |
+| Mockup-parity grocery + meal plan (Crouton refs)                      | Done: row grammar, slot popover, day kcal, move grid, Plan entry on Path           | Snack slot deliberately absent (D-12)                                           |
+| Unified "Log food" (type/voice/OCR/barcode/staples)                   | Done; OCR proven end-to-end in Node (GREEK YOGURT fixture)                         | In-browser shutter verified to frame-grab boundary (headless can't fake camera) |
+| Unit swap g ⇄ cups                                                    | Done; engine-true; 11 tests                                                        | Countables never convert (D-6)                                                  |
+| Goal stars + plans                                                    | Done; pinning RCA fixed (zero/absent synthesize at 0%; overflow grid)              | Copy bound by claim contract                                                    |
+| Pixel-Doberman Tamagotchi (full-screen, all-real)                     | Done; 5 spec rounds + 5 research rounds                                            | Coins/decay/fake buttons rejected (D-9)                                         |
+| Eat-out Stanford demo (Zareen's + 12 more, loggable, goal-fit)        | Done; 6 venues wear own-site photos; featured swipe bar                            | Photos = Ledger L1/L2; 7 venues on matched repo photos                          |
+| MacroFactor tracking layer (week strip/cards/slots)                   | Done; ⇄ mode; View all; redundancy cut via ring `microsOnly` (D-15)                | —                                                                               |
+| Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                                        | hero photo committed by founder                                                 |
+| Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                             | founder supplies images                                                         |
+| IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                                | Manual IG-save drop is the practical route                                      |
+| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W1–W6 SHIPPED** (W4 f72e9a5, W5 8276cf5, W6 9412d70); W5 flag-consumers continue | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
 
 ## 4. Technical reference — how the whole app works
 
@@ -462,7 +462,17 @@ Persistence: versioned `OnboardingProfileV2` (zod) →
 `recordSignal()` entry (kind `onboarding`) in `use-preference-profile.ts` so
 confidence tiers start warm.
 
-#### W4 — Pulse micro-surveys ("randomly triggered or volunteered")
+#### W4 — Pulse micro-surveys ("randomly triggered or volunteered") — SHIPPED 2026-06-16 (commit f72e9a5)
+
+Shipped: 7 one-screen pulses on the W1 runner (`src/data/pulses.ts`), a
+deterministic shared-store scheduler (`pulse-scheduler.ts` — hash-based
+eligibility, ≤1/day · ≥72h · ≤2/week · 7-day post-onboarding quiet · per-pulse
+dismiss), the unified write path (`apply-survey-signals.ts` → preferences /
+effort / `sous-signal-flags-v1` / suppressed seeds), `PulseHost`, a "visit"
+auto-trigger on Today, and the volunteered "Tune my picks" row in the Profile
+sheet (rule 3). 32 tests. NOTE: anchors win-close/deck-exhaust/plan-open are
+defined on the pulses + reachable via "Tune my picks"; wiring each app moment
+is a thin follow-up. Original spec retained below.
 
 1. `src/data/pulses.ts` — registry of one-screen pulses (each a 1-step
    `SurveyDef`): post-win statement card ("That felt easier than usual"
@@ -488,7 +498,16 @@ confidence tiers start warm.
    `(answers) → { vectorDeltas, suppressedTags, flags, signals[] }`; the only
    write path for both onboarding and pulses. Fully unit-tested.
 
-#### W5 — Signal → consumer wiring (the point of all of it)
+#### W5 — Signal → consumer wiring (the point of all of it) — PARTIAL: suppression SHIPPED (commit 8276cf5)
+
+Shipped the headline row: a survey/pulse dislike (≤ −0.9 preference seed) is a
+HARD exclusion in `pairing-engine.suggestSides` (schema-preserving), so a
+disliked cuisine never reaches top-N — covers the "cuisine thumbs / dislikes →
+excluded" + "suppressed tags reach pairing.suggest" rows, with engine tests.
+CONTINUATION: the flag-consumer rows (decisionFatigue→calmer deck,
+budgetSensitive→pantry boost, planNudgesOff→quiet plan nudges, pacing→StepCard
+verbosity, felt-easier→coach tone) read `sous-signal-flags-v1` and remain to be
+wired into their surfaces. Original table retained below.
 
 | Captured              | Stored                            | Consumer                                          | Visible effect                            |
 | --------------------- | --------------------------------- | ------------------------------------------------- | ----------------------------------------- |
@@ -512,7 +531,13 @@ Engine note: suppressed tags must reach `pairing.suggest` as exclusions
 thread them through the existing `userPreferences` param, no engine schema
 break; add an engine test: suppressed cuisine never appears in top 3).
 
-#### W6 — Copy safety + gates
+#### W6 — Copy safety + gates — SHIPPED 2026-06-16 (commit 9412d70)
+
+Shipped the unified copy-safety gate (`src/data/survey-copy-safety.test.ts`):
+every onboarding / pulse / mirror-template / import-prompt string passes
+`assertNoMedicalClaim` + the no-fabricated-stats ban (D-22), in one sweep. The
+Playwright e2e (onboarding happy/all-skip/numeric/pulse-cooldown) remains the
+one piece not yet automated. Original spec retained below.
 
 All survey/mirror strings pass `assertNoMedicalClaim` AND a new
 no-fabricated-stats test (regex ban: `\d+\s*%[^.]*\b(users|cooks|people)\b`)
@@ -523,10 +548,12 @@ commit per phase.
 
 **Sequencing & classification.** All six workstreams are AUTO-BUILD (repo +
 npm only; zero founder-gated dependencies). Order: W1 → W2 → W3 → W4 → W5 →
-W6, each independently shippable; W2 can interleave after W1. **W1–W3 are
-SHIPPED (a233776, d830f49, f71ebb5); W4 (pulse micro-surveys) is next.** This
-initiative moves AHEAD of the smoothie-dupes ingestion (founder images not
-yet supplied — that stays founder-gated in §6.3).
+W6, each independently shippable; W2 can interleave after W1. **W1–W4 + W6 are
+SHIPPED; W5 is partial (suppression shipped, flag-consumers remain).** Open
+follow-ups: W5 flag→surface wiring, pulse app-moment anchors
+(win-close/deck-exhaust/plan-open), and the W6 Playwright e2e. This initiative
+moved AHEAD of the smoothie-dupes ingestion (founder recipe+nutrition not yet
+supplied — founder-gated in §6.3).
 
 ### 6.3 Following
 
