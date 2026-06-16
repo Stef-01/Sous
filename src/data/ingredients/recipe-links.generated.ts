@@ -250,6 +250,31 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "table-salt", grams: 1.52, isOptional: false },
     ],
   },
+  "turmeric-crush-smoothie": {
+    recipeSlug: "turmeric-crush-smoothie",
+    servingsPerRecipe: 1,
+    originalLineCount: 9,
+    lines: [
+      { ingredientId: "mango", grams: 123.75, isOptional: false },
+      { ingredientId: "carrot", grams: 61, isOptional: false },
+      { ingredientId: "lemon-juice", grams: 30.5, isOptional: false },
+      { ingredientId: "ginger", grams: 0, isOptional: false },
+      { ingredientId: "turmeric", grams: 2.5, isOptional: false },
+      { ingredientId: "water", grams: 237, isOptional: false },
+      { ingredientId: "beet", grams: 17, isOptional: false },
+    ],
+  },
+  "coconut-cloud-smoothie": {
+    recipeSlug: "coconut-cloud-smoothie",
+    servingsPerRecipe: 1,
+    originalLineCount: 7,
+    lines: [
+      { ingredientId: "almonds", grams: 107.25, isOptional: false },
+      { ingredientId: "coconut", grams: 20, isOptional: false },
+      { ingredientId: "almonds", grams: 8.94, isOptional: false },
+      { ingredientId: "avocado", grams: 50.25, isOptional: false },
+    ],
+  },
   "black-bean-brownies": {
     recipeSlug: "black-bean-brownies",
     servingsPerRecipe: 4,

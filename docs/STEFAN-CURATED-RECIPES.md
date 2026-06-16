@@ -5,19 +5,23 @@ filter changes that went with it (commits `a561ffe`…`3e5ca24`).
 
 ## What shipped
 
-**Three real recipes** were ingested from the founder's structured exports
-(Simply Scratch), each with full guided-cook steps, full per-serving nutrition,
-and a **real photo on every step**:
+**Five real recipes** were ingested from the founder's structured exports
+(Simply Scratch) and a published Erewhon-dupe source (Clean Program), each with
+full guided-cook steps, full per-serving nutrition, and a **real photo on every
+step** (bar one intentional photo-less blend step):
 
-| Slug                              | Type            | Step images                  |
-| --------------------------------- | --------------- | ---------------------------- |
-| `honey-glazed-salmon-mango-salsa` | main (American) | manifest-mapped (roles)      |
-| `cheesy-beef-enchiladas-verde`    | main (Mexican)  | capture-order (DSC sequence) |
-| `air-fryer-edamame`               | side (Japanese) | manifest-mapped (roles)      |
+| Slug                              | Type             | Step images                  |
+| --------------------------------- | ---------------- | ---------------------------- |
+| `honey-glazed-salmon-mango-salsa` | main (American)  | manifest-mapped (roles)      |
+| `cheesy-beef-enchiladas-verde`    | main (Mexican)   | capture-order (DSC sequence) |
+| `air-fryer-edamame`               | side (Japanese)  | manifest-mapped (roles)      |
+| `turmeric-crush-smoothie`         | drink (American) | visual-inspection mapping    |
+| `coconut-cloud-smoothie`          | drink (American) | visual-inspection mapping    |
 
 Plus the provided **Black Bean Brownie** photos were wired onto its five
-existing steps. All four are tagged **Stefan (curated)** via
-`STEFAN_CURATED_SLUGS` in `src/lib/utils/dish-source.ts`.
+existing steps. All six are tagged **Stefan (curated)** via
+`STEFAN_CURATED_SLUGS` in `src/lib/utils/dish-source.ts`. The two smoothies are
+`role: "drink"` sides (like `thai-iced-tea`), cookable at `/cook/<slug>`.
 
 - Catalogue entries: `src/data/meals.json` / `src/data/sides.json` (with
   `source: { creator: "Stefan", url }`).
@@ -31,7 +35,12 @@ existing steps. All four are tagged **Stefan (curated)** via
 with labelled roles (Hero / Prep step / Cooking step), so their mapping is
 exact. The enchiladas export has no manifest — its photos are mapped by the
 shoot's DSC capture order (≈ process order), so it's a close best-effort, not a
-labelled mapping.
+labelled mapping. The two smoothies ship generic `unnamed (n).jpg` files with
+**no manifest and no capture order**, so each photo was mapped to its step by
+**visual inspection** of the contents (mise → process → finished) per SOP §2,
+then re-verified by walking the running cook flow. The instruction prose is
+original, written from the published ingredient list + method (facts only); the
+per-serving nutrition is a manual estimate (the source states none).
 
 ## Source taxonomy (multi-select)
 
@@ -49,11 +58,12 @@ collide with a catalogue slug.
 
 ## Deferred (needs founder input — rule 12)
 
-- **Erewhon smoothie dupes** (`Tumeric Erewhon`, `Blue Coconut Erewhon` folders):
-  image-only, no recipe text or nutrition in the export. The "full nutrition
-  required" rule forbids fabricating it, so these are NOT ingested. To add them,
-  supply the recipe (ingredients + steps) and per-serving nutrition, or approve
-  sourcing a real published dupe recipe.
+- **Erewhon smoothie dupes** — ✅ DONE. The `Tumeric Erewhon` / `Blue Coconut
+Erewhon` folders were image-only, so the real published dupe recipes were
+  sourced (Clean Program: Turmeric Crush + Coconut Cloud), ingredients + method
+  written in original prose, per-serving nutrition estimated, and the provided
+  photos mapped to steps by visual inspection. Shipped as the two `drink` sides
+  above.
 - **Paste-bridge "recipe" kind:** the import sheet covers pantry / groceries /
   food log. A fourth "recipe" kind (paste an AI-generated recipe → a custom
   creation) is a natural extension; it needs a nutrition-storage path for user

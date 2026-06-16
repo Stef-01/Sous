@@ -2489,5 +2489,35 @@
       "url": "https://www.simplyscratch.com/air-fryer-edamame/"
     },
     "role": "side"
+  },
+  {
+    "id": "turmeric-crush-smoothie",
+    "name": "Turmeric Crush Smoothie",
+    "imageUrl": "/food_images/turmeric-crush-smoothie/hero.jpg",
+    "tags": ["smoothie", "drink", "american", "turmeric", "sweet", "tangy"],
+    "description": "A bright, golden blend of mango, pineapple, carrot and fresh turmeric poured over a swirl of beet juice — an at-home take on Erewhon's Turmeric Crush.",
+    "pairingReason": "a vitamin-packed golden smoothie for breakfast or a post-workout refresh",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Stefan",
+      "url": "https://www.cleanprogram.com/blogs/recipes/erewhon-smoothie-dupes-3-clean-copycats-of-popular-recipes"
+    },
+    "role": "drink"
+  },
+  {
+    "id": "coconut-cloud-smoothie",
+    "name": "Coconut Cloud Smoothie",
+    "imageUrl": "/food_images/coconut-cloud-smoothie/hero.jpg",
+    "tags": ["smoothie", "drink", "american", "coconut", "creamy", "sweet"],
+    "description": "A creamy pineapple-and-coconut smoothie marbled with blue spirulina and topped with whipped coconut cream — a plant-based Erewhon Coconut Cloud dupe.",
+    "pairingReason": "a rich, dessert-like blue smoothie for a filling breakfast or sweet pick-me-up",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Stefan",
+      "url": "https://www.cleanprogram.com/blogs/recipes/erewhon-smoothie-dupes-3-clean-copycats-of-popular-recipes"
+    },
+    "role": "drink"
   }
 ]

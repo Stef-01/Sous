@@ -27,6 +27,11 @@ export const DISH_SERVINGS: Record<string, number> = {
   "tortilla-chips": 6,
   // Single- / small-portion items.
   "baked-potato": 2,
+  // Single-glass drinks — one smoothie is one serving (matches the source +
+  // the per-recipe nutrition seed). Without this they'd inherit the side
+  // default of 4 and the slider/diary would scale a single drink ×4.
+  "turmeric-crush-smoothie": 1,
+  "coconut-cloud-smoothie": 1,
   // Snack / dumpling platters that stretch further.
   "bao-buns": 6,
   churros: 6,

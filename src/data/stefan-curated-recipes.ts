@@ -8,11 +8,17 @@
  *   - honey-glazed-salmon-mango-salsa — simplyscratch.com (Laurie McNamara)
  *   - cheesy-beef-enchiladas-verde     — simplyscratch.com (Laurie McNamara)
  *   - air-fryer-edamame                — simplyscratch.com (Laurie McNamara)
+ *   - turmeric-crush-smoothie          — cleanprogram.com (Erewhon dupe)
+ *   - coconut-cloud-smoothie           — cleanprogram.com (Erewhon dupe)
  *
  * Step→image mapping for the two manifest-backed exports (salmon, edamame) is
  * exact (roles in image-manifest.csv); for the enchiladas it follows the
  * shoot's capture order (DSC sequence ≈ process order), so it's a close
- * best-effort rather than a labelled mapping.
+ * best-effort rather than a labelled mapping. The two smoothie exports ship as
+ * generic "unnamed (n).jpg" with NO manifest and NO capture order, so each
+ * photo was mapped to its step by VISUAL INSPECTION of the contents (mise →
+ * process → finished) per SOP §2; the instruction prose is original, written
+ * from the published ingredient list + method (facts only).
  */
 import type { StaticDishData } from "./guided-cook-steps";
 
@@ -557,6 +563,316 @@ export const STEFAN_SIDE_FLOWS: Record<string, StaticDishData> = {
           "Salted edamame in the pod is the classic Japanese izakaya snack — squeeze the beans straight from the pod into your mouth.",
         donenessCue: null,
         imageUrl: "/food_images/air-fryer-edamame/step-4.jpg",
+      },
+    ],
+  },
+
+  "turmeric-crush-smoothie": {
+    name: "Turmeric Crush Smoothie",
+    slug: "turmeric-crush-smoothie",
+    description:
+      "A bright, golden blend of mango, pineapple, carrot and fresh turmeric poured over a ribbon of beet juice — an at-home copy of Erewhon's Turmeric Crush, for a fraction of the price.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/turmeric-crush-smoothie/hero.jpg",
+    flavorProfile: ["sweet", "tangy", "earthy", "fresh"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "tcs-mango",
+        name: "Frozen mango",
+        quantity: "3/4 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tcs-pineapple",
+        name: "Fresh pineapple",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: "Frozen pineapple works too",
+      },
+      {
+        id: "tcs-carrot",
+        name: "Carrot, roughly chopped",
+        quantity: "1 large",
+        isOptional: false,
+        substitution: "2 tbsp carrot juice",
+      },
+      {
+        id: "tcs-lemon",
+        name: "Lemon juice",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tcs-ginger",
+        name: "Fresh ginger",
+        quantity: "1 inch knob",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tcs-turmeric",
+        name: "Ground turmeric",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: "1 inch fresh turmeric root",
+      },
+      {
+        id: "tcs-pepper",
+        name: "Black pepper",
+        quantity: "small pinch",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tcs-protein",
+        name: "Vanilla protein shake mix",
+        quantity: "1 scoop",
+        isOptional: true,
+        substitution: "Any vanilla plant protein, or leave out",
+      },
+      {
+        id: "tcs-ice",
+        name: "Ice",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "tcs-beet",
+        name: "Beet juice, for the swirl",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Set everything out: the frozen mango, pineapple, carrot, lemon juice, ginger, turmeric, pepper, your scoop of protein and the ice. Keep the beet juice separate — it goes in last, straight into the glass.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "A pinch of black pepper is the traditional partner to turmeric — tiny, but worth adding.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/turmeric-crush-smoothie/step-1.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Add the chopped carrot, mango, pineapple, lemon juice, ginger, turmeric, pepper, protein scoop and ice to the blender.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Put the softer fruit and liquid near the blades and the ice on top so everything pulls down evenly.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/turmeric-crush-smoothie/step-2.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Blend on high until completely smooth and pourable, about 45 to 60 seconds. Add a splash of water if your blender struggles.",
+        timerSeconds: 60,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "No fruit chunks remain — the smoothie is an even, thick orange and pours in a smooth ribbon.",
+        imageUrl: "/food_images/turmeric-crush-smoothie/step-3.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Pour the beet juice into a serving glass, then tip and turn the glass so the juice streaks up the sides for that two-tone Erewhon look.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Chill the glass first so the beet juice clings to the sides instead of sliding straight back down.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/turmeric-crush-smoothie/step-4.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Pour the smoothie gently into the centre of the glass so the beet streaks stay put, and drink it straight away while it's cold and thick.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "Erewhon's grab-and-go smoothies run $17–20 a cup — this one costs a few dollars to make at home.",
+        donenessCue: null,
+        imageUrl: "/food_images/turmeric-crush-smoothie/step-5.jpg",
+      },
+    ],
+  },
+
+  "coconut-cloud-smoothie": {
+    name: "Coconut Cloud Smoothie",
+    slug: "coconut-cloud-smoothie",
+    description:
+      "A dreamy pineapple-and-coconut smoothie marbled with blue spirulina and crowned with whipped coconut cream — a plant-based copy of Erewhon's blue Coconut Cloud.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 0,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/coconut-cloud-smoothie/hero.jpg",
+    flavorProfile: ["sweet", "creamy", "tropical", "nutty"],
+    temperature: "cold",
+    ingredients: [
+      {
+        id: "ccs-pineapple",
+        name: "Pineapple",
+        quantity: "1 cup",
+        isOptional: false,
+        substitution: "Frozen for a thicker, colder blend",
+      },
+      {
+        id: "ccs-almondmilk",
+        name: "Unsweetened almond milk",
+        quantity: "3/4 cup",
+        isOptional: false,
+        substitution: "Any unsweetened plant milk",
+      },
+      {
+        id: "ccs-coconutcream",
+        name: "Canned coconut cream, chilled overnight",
+        quantity: "1/4 cup",
+        isOptional: false,
+        substitution: "The firm top of a chilled can of full-fat coconut milk",
+      },
+      {
+        id: "ccs-almondbutter",
+        name: "Almond butter",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: "Cashew butter",
+      },
+      {
+        id: "ccs-avocado",
+        name: "Avocado",
+        quantity: "1/4 large",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ccs-protein",
+        name: "Vanilla protein shake mix",
+        quantity: "1 scoop",
+        isOptional: true,
+        substitution: "Any vanilla plant protein, or leave out",
+      },
+      {
+        id: "ccs-spirulina",
+        name: "Blue spirulina, plus extra to sprinkle",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Chill the can of coconut cream overnight so the firm cream sets above the watery liquid. When you're ready to blend, set out the pineapple, almond milk, almond butter, avocado, protein scoop and blue spirulina.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Skip the overnight chill and the cream won't whip — it stays runny and won't cling to the glass.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-1.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Open the chilled can without shaking it and scoop just the solid white cream off the top into a bowl, leaving the thin liquid behind.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Save the leftover coconut water from the can to loosen the smoothie later if it's too thick.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-2.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Whisk the coconut cream until it's light and fluffy, like soft whipped cream. Set most of it aside for lining and topping the glass — you'll blend in just a spoonful.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: "The cream holds soft peaks and looks glossy and smooth.",
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-3.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Add the pineapple, almond milk, almond butter, avocado, protein scoop, blue spirulina and one tablespoon of the whipped cream to the blender, and blend until completely smooth.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Start with a teaspoon of spirulina and add more — it's intensely coloured and a little goes a long way.",
+        cuisineFact: null,
+        donenessCue:
+          "An even, pale-blue, creamy pour with no avocado or pineapple bits left.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Spoon a couple of tablespoons of the whipped coconut cream into the bottom of a tall glass and smear it up the inside walls with the back of a spoon.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-5.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 6,
+        instruction:
+          "Dust a little extra blue spirulina over the cream, then pour the smoothie slowly down the middle so it streaks through the cream as it fills the glass.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack:
+          "Pour slowly against the back of a spoon to keep the blue marbling crisp.",
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-6.jpg",
+      },
+      {
+        phase: "cook",
+        stepNumber: 7,
+        instruction:
+          "Finish with a last spoonful of whipped coconut cream on top and a pinch of spirulina, add a straw, and drink it cold.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "The blue comes from spirulina extract — the same pigment Erewhon uses to give the Coconut Cloud its sky-blue swirl.",
+        donenessCue: null,
+        imageUrl: "/food_images/coconut-cloud-smoothie/step-7.jpg",
       },
     ],
   },

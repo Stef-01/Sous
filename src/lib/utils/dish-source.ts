@@ -37,6 +37,8 @@ export const STEFAN_CURATED_SLUGS: ReadonlySet<string> = new Set([
   "honey-glazed-salmon-mango-salsa",
   "air-fryer-edamame",
   "black-bean-brownies",
+  "turmeric-crush-smoothie",
+  "coconut-cloud-smoothie",
 ]);
 
 /**
