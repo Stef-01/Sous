@@ -49,6 +49,11 @@ import {
   useQuestFilters,
   type DishRoleFilter,
 } from "@/lib/hooks/use-quest-filters";
+import {
+  buildSourceOptions,
+  matchesSourceFilter,
+  type SourceFilter,
+} from "@/lib/utils/dish-source";
 import type { Daypart } from "@/types";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { useDifficultyProgression } from "@/lib/hooks/use-difficulty-progression";
@@ -200,6 +205,14 @@ export function QuestCard({
     ];
   }, [baseDishes]);
 
+  // Source options are derived from the live feed so the menu only ever offers
+  // a provenance that actually has results (e.g. Chef Tu appears only in the
+  // sides feed). Honest by construction — see buildSourceOptions.
+  const sourceOptions = useMemo<FilterOption<SourceFilter>[]>(
+    () => buildSourceOptions(baseDishes),
+    [baseDishes],
+  );
+
   // Today's planned meal (time-of-day slot) is folded INTO the deck: it pins
   // to the front and the hero label flips to "Planned for today" — one card,
   // not a separate banner. Swiping past it is the natural "not tonight".
@@ -261,6 +274,7 @@ export function QuestCard({
       if (filters.cuisine !== "any") {
         if (d.cuisineFamily.toLowerCase() !== cuisineKey) return false;
       }
+      if (!matchesSourceFilter(d, filters.source)) return false;
       if (dayType && !(d.dayparts ?? []).includes(dayType)) return false;
       return true;
     });
@@ -282,6 +296,7 @@ export function QuestCard({
     filters.cuisine,
     filters.role,
     filters.mealType,
+    filters.source,
   ]);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [queueOpen, setQueueOpen] = useState(false);
@@ -290,7 +305,13 @@ export function QuestCard({
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset preview position on filter change
     setPreviewIndex(0);
-  }, [filters.role, filters.cuisine, filters.cookTime, filters.mealType]);
+  }, [
+    filters.role,
+    filters.cuisine,
+    filters.cookTime,
+    filters.mealType,
+    filters.source,
+  ]);
   const { saveDish, isDishSaved } = useSavedDishes();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
@@ -442,7 +463,11 @@ export function QuestCard({
           ))}
         </div>
         {queueMode === "cook" && (
-          <QuestFilterMenu filters={filters} cuisineOptions={cuisineOptions} />
+          <QuestFilterMenu
+            filters={filters}
+            cuisineOptions={cuisineOptions}
+            sourceOptions={sourceOptions}
+          />
         )}
       </div>
 

@@ -11,6 +11,7 @@ const DEFAULT: QuestFilterState = {
   cuisine: "any",
   mealType: "any",
   role: "main",
+  source: "any",
 };
 
 describe("countActiveFilters (Today Filter — Phase B)", () => {
@@ -23,14 +24,16 @@ describe("countActiveFilters (Today Filter — Phase B)", () => {
     expect(countActiveFilters({ ...DEFAULT, mealType: "breakfast" })).toBe(1);
     expect(countActiveFilters({ ...DEFAULT, role: "side" })).toBe(1);
     expect(countActiveFilters({ ...DEFAULT, cookTime: "30" })).toBe(1);
+    expect(countActiveFilters({ ...DEFAULT, source: "chef-tu" })).toBe(1);
     expect(
       countActiveFilters({
         cookTime: "30",
         cuisine: "thai",
         mealType: "dinner",
         role: "drink",
+        source: "nourish-verified",
       }),
-    ).toBe(4);
+    ).toBe(5);
   });
 
   it("treats role 'main' + mealType 'any' as the no-op defaults", () => {
@@ -51,6 +54,7 @@ describe("coerceQuestFilterState — back-compat / corruption guard", () => {
       cuisine: "italian",
       mealType: "any",
       role: "main",
+      source: "any",
     });
   });
 
@@ -64,8 +68,19 @@ describe("coerceQuestFilterState — back-compat / corruption guard", () => {
         cuisine: "any",
         mealType: "lunch",
         role: "side",
+        source: "any",
       },
     );
+  });
+
+  it("preserves a valid source and rejects a junk one", () => {
+    expect(coerceQuestFilterState({ source: "chef-tu" }).source).toBe(
+      "chef-tu",
+    );
+    expect(coerceQuestFilterState({ source: "nourish-verified" }).source).toBe(
+      "nourish-verified",
+    );
+    expect(coerceQuestFilterState({ source: "bogus" }).source).toBe("any");
   });
 });
 

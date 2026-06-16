@@ -1,11 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { isSourceFilter, type SourceFilter } from "@/lib/utils/dish-source";
 
 export type CookTimeFilter = "any" | "15" | "20" | "30" | "45" | "60";
 export type CuisineFilter = string; // "any" | normalized cuisine family
 export type MealTypeFilter = "any" | "breakfast" | "lunch" | "dinner";
 export type DishRoleFilter = "main" | "side" | "drink" | "snack";
+export type { SourceFilter } from "@/lib/utils/dish-source";
 
 const MEAL_TYPES: ReadonlySet<MealTypeFilter> = new Set([
   "any",
@@ -27,6 +29,8 @@ export interface QuestFilterState {
   cuisine: CuisineFilter;
   mealType: MealTypeFilter;
   role: DishRoleFilter;
+  /** Provenance / verified-badge facet (Chef Tu, Nourish Verified, …). */
+  source: SourceFilter;
 }
 
 const DEFAULT_STATE: QuestFilterState = {
@@ -34,6 +38,7 @@ const DEFAULT_STATE: QuestFilterState = {
   cuisine: "any",
   mealType: "any",
   role: "main",
+  source: "any",
 };
 
 /** Coerce arbitrary parsed storage into a valid state — missing or corrupt /
@@ -49,6 +54,7 @@ export function coerceQuestFilterState(parsed: unknown): QuestFilterState {
     role: DISH_ROLES.has(p.role as DishRoleFilter)
       ? (p.role as DishRoleFilter)
       : DEFAULT_STATE.role,
+    source: isSourceFilter(p.source) ? p.source : DEFAULT_STATE.source,
   };
 }
 
@@ -128,6 +134,14 @@ export function useQuestFilters() {
     });
   }, []);
 
+  const setSource = useCallback((source: SourceFilter) => {
+    setState((prev) => {
+      const next = { ...prev, source };
+      persistState(next);
+      return next;
+    });
+  }, []);
+
   const reset = useCallback(() => {
     persistState(DEFAULT_STATE);
     setState(DEFAULT_STATE);
@@ -144,6 +158,7 @@ export function useQuestFilters() {
     setCuisine,
     setMealType,
     setRole,
+    setSource,
     reset,
   };
 }
@@ -154,6 +169,7 @@ export function countActiveFilters(state: QuestFilterState): number {
     (state.cookTime !== "any" ? 1 : 0) +
     (state.cuisine !== "any" ? 1 : 0) +
     (state.mealType !== "any" ? 1 : 0) +
-    (state.role !== "main" ? 1 : 0)
+    (state.role !== "main" ? 1 : 0) +
+    (state.source !== "any" ? 1 : 0)
   );
 }

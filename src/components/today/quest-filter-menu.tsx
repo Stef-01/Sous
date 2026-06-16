@@ -10,6 +10,7 @@ import type {
   DishRoleFilter,
   CookTimeFilter,
 } from "@/lib/hooks/use-quest-filters";
+import type { SourceFilter } from "@/lib/utils/dish-source";
 
 type Filters = ReturnType<typeof useQuestFilters>;
 
@@ -34,7 +35,7 @@ const COOK_TIME_OPTIONS: FilterOption<CookTimeFilter>[] = [
   { value: "60", label: "≤ 60 min" },
 ];
 
-type CategoryKey = "role" | "mealType" | "cuisine" | "cookTime";
+type CategoryKey = "role" | "mealType" | "cuisine" | "cookTime" | "source";
 
 const labelFor = <T extends string>(
   options: FilterOption<T>[],
@@ -50,9 +51,13 @@ const labelFor = <T extends string>(
 export function QuestFilterMenu({
   filters,
   cuisineOptions,
+  sourceOptions,
 }: {
   filters: Filters;
   cuisineOptions: FilterOption<string>[];
+  /** Honest, role-aware source options (built from the live feed). The Source
+   *  row is hidden entirely when only "Any" is available. */
+  sourceOptions: FilterOption<SourceFilter>[];
 }) {
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState<CategoryKey | null>(null);
@@ -125,6 +130,20 @@ export function QuestFilterMenu({
       options: COOK_TIME_OPTIONS as FilterOption<string>[],
       onSelect: (v) => filters.setCookTime(v as CookTimeFilter),
     },
+    // Source is only meaningful when the live feed actually carries more than
+    // one provenance — buildSourceOptions returns just "Any" otherwise, and we
+    // drop the row so the menu never offers a dead facet.
+    ...(sourceOptions.length > 1
+      ? [
+          {
+            key: "source" as const,
+            rowLabel: "Source",
+            value: labelFor(sourceOptions, filters.source),
+            options: sourceOptions as FilterOption<string>[],
+            onSelect: (v: string) => filters.setSource(v as SourceFilter),
+          },
+        ]
+      : []),
   ];
 
   const activeRow = category ? rows.find((r) => r.key === category) : null;
@@ -208,7 +227,9 @@ export function QuestFilterMenu({
                     (activeRow.key === "cuisine" &&
                       filters.cuisine === opt.value) ||
                     (activeRow.key === "cookTime" &&
-                      filters.cookTime === opt.value);
+                      filters.cookTime === opt.value) ||
+                    (activeRow.key === "source" &&
+                      filters.source === opt.value);
                   return (
                     <li key={opt.value}>
                       <button
