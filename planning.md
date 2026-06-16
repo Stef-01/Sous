@@ -556,12 +556,16 @@ commit per phase.
 **Sequencing & classification.** All six workstreams are AUTO-BUILD (repo +
 npm only; zero founder-gated dependencies). Order: W1 → W2 → W3 → W4 → W5 →
 W6, each independently shippable; W2 can interleave after W1. **W1–W6 are all
-SHIPPED** (W5 flag-consumers landed in a85a69e + 86edec2). Remaining follow-ups:
-pulse app-moment anchors (win-close/deck-exhaust/plan-open are defined on the
-pulses but the today-page auto-trigger only fires the "visit" anchor today) and
-the W6 Playwright e2e. The Erewhon smoothie-dupes ingestion (once founder-gated
-in §6.3) is now DONE — the real Clean Program dupe recipes were sourced and
-ingested as two Stefan-curated `drink` sides with per-step photos + nutrition.
+SHIPPED + all follow-ups closed.** The pulse app-moment anchors
+(win-close/deck-exhaust/plan-open) now fire alongside "visit" (commit fc8c9f8):
+the Win screen stashes a one-shot anchor on the way back to Today, the browse
+deck fires deck-exhaust on swipe-through, and a reusable `AnchorPulseHost` fires
+plan-open on `/path/plan` — all gated by the same scheduler cooldowns. Playwright
+journey coverage for the new Today-deck features (multi-select filters, side
+search, skip-sides) lives in `e2e/today-filters-features.spec.ts`. The Erewhon
+smoothie-dupes ingestion is DONE (Clean Program dupes → two Stefan-curated
+`drink` sides), and the black-bean-brownie step photos were re-mapped to match
+each step (SOP §7 crosscheck; commit 45d0a75).
 
 ### 6.3 Following
 
