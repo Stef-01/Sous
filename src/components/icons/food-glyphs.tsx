@@ -224,6 +224,12 @@ export const FOOD_GLYPHS: Record<FoodGlyphName, GlyphPart[]> = {
  *  and any glyph-grid survey step). */
 export const FOOD_GLYPH_NAMES = Object.keys(FOOD_GLYPHS) as FoodGlyphName[];
 
+/** Narrow an arbitrary string (e.g. a survey option's `glyph`) to a registered
+ *  glyph name. Lets callers render `<FoodGlyph>` only when the name is valid. */
+export function isFoodGlyphName(value: unknown): value is FoodGlyphName {
+  return typeof value === "string" && value in FOOD_GLYPHS;
+}
+
 export interface FoodGlyphProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
   name: FoodGlyphName;
   /** Square px size. Default 24 (the native viewBox). */
