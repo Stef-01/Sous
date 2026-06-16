@@ -50,9 +50,9 @@ import {
   type DishRoleFilter,
 } from "@/lib/hooks/use-quest-filters";
 import {
-  buildSourceOptions,
-  matchesSourceFilter,
-  type SourceFilter,
+  buildSourceFacetOptions,
+  matchesSourceFilters,
+  type SourceFacet,
 } from "@/lib/utils/dish-source";
 import type { Daypart } from "@/types";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -208,8 +208,8 @@ export function QuestCard({
   // Source options are derived from the live feed so the menu only ever offers
   // a provenance that actually has results (e.g. Chef Tu appears only in the
   // sides feed). Honest by construction — see buildSourceOptions.
-  const sourceOptions = useMemo<FilterOption<SourceFilter>[]>(
-    () => buildSourceOptions(baseDishes),
+  const sourceOptions = useMemo<FilterOption<SourceFacet>[]>(
+    () => buildSourceFacetOptions(baseDishes),
     [baseDishes],
   );
 
@@ -274,7 +274,7 @@ export function QuestCard({
       if (filters.cuisine !== "any") {
         if (d.cuisineFamily.toLowerCase() !== cuisineKey) return false;
       }
-      if (!matchesSourceFilter(d, filters.source)) return false;
+      if (!matchesSourceFilters(d, filters.source)) return false;
       if (dayType && !(d.dayparts ?? []).includes(dayType)) return false;
       return true;
     });

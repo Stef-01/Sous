@@ -1,123 +1,124 @@
 import { describe, expect, it } from "vitest";
 import {
-  buildSourceOptions,
+  buildSourceFacetOptions,
+  coerceSourceFacets,
   getRecipeSource,
-  isSourceFilter,
-  matchesSourceFilter,
-  type SourceFilter,
+  isSourceFacet,
+  matchesSourceFilters,
+  type SourceFacet,
 } from "./dish-source";
 
 describe("getRecipeSource", () => {
-  it("maps the tu- slug convention to Chef Tu", () => {
-    expect(getRecipeSource("tu-garlic-noodles")).toBe("chef-tu");
-    expect(getRecipeSource("tu-goi-ga")).toBe("chef-tu");
+  it("maps Stefan-curated slugs", () => {
+    expect(getRecipeSource("cheesy-beef-enchiladas-verde")).toBe("stefan");
+    expect(getRecipeSource("air-fryer-edamame")).toBe("stefan");
+    expect(getRecipeSource("black-bean-brownies")).toBe("stefan");
   });
 
-  it("maps enumerated Clean Program recipes", () => {
-    expect(getRecipeSource("black-bean-brownies")).toBe("clean-program");
+  it("maps the tu- slug convention to Chef Tu", () => {
+    expect(getRecipeSource("tu-garlic-noodles")).toBe("chef-tu");
+  });
+
+  it("maps the custom- convention to user creations", () => {
+    expect(getRecipeSource("custom-my-pasta")).toBe("custom");
   });
 
   it("treats everything else as a first-party Sous original", () => {
     expect(getRecipeSource("butter-chicken")).toBe("original");
     expect(getRecipeSource("caesar-salad")).toBe("original");
-    // a dish whose name merely contains 'tu' is NOT Chef Tu (prefix-only)
+    // prefix-only — a name merely containing 'tu' is NOT Chef Tu
     expect(getRecipeSource("tofu-bhurji")).toBe("original");
-    expect(getRecipeSource("status-quo")).toBe("original");
+    expect(getRecipeSource("accustom")).toBe("original");
   });
 });
 
-describe("matchesSourceFilter", () => {
+describe("matchesSourceFilters (multi-select, OR semantics)", () => {
+  const stefanMain = {
+    slug: "honey-glazed-salmon-mango-salsa",
+    isVerified: false,
+  };
   const chefTu = { slug: "tu-goi-ga", isVerified: false };
-  const verifiedMain = { slug: "butter-chicken", isVerified: true };
+  const verifiedOriginal = { slug: "butter-chicken", isVerified: true };
   const plainOriginal = { slug: "caesar-salad", isVerified: false };
-  const cleanProgram = { slug: "black-bean-brownies", isVerified: false };
 
-  it("'any' passes every dish", () => {
-    for (const d of [chefTu, verifiedMain, plainOriginal, cleanProgram]) {
-      expect(matchesSourceFilter(d, "any")).toBe(true);
+  it("empty selection passes every dish", () => {
+    for (const d of [stefanMain, chefTu, verifiedOriginal, plainOriginal]) {
+      expect(matchesSourceFilters(d, [])).toBe(true);
     }
   });
 
-  it("'nourish-verified' keys off the badge, not provenance", () => {
-    expect(matchesSourceFilter(verifiedMain, "nourish-verified")).toBe(true);
-    expect(matchesSourceFilter(plainOriginal, "nourish-verified")).toBe(false);
-    // a verified Chef Tu recipe would match the verified filter too
-    expect(
-      matchesSourceFilter(
-        { slug: "tu-goi-ga", isVerified: true },
-        "nourish-verified",
-      ),
-    ).toBe(true);
+  it("matches a dish satisfying ANY ticked facet", () => {
+    expect(matchesSourceFilters(stefanMain, ["stefan", "chef-tu"])).toBe(true);
+    expect(matchesSourceFilters(chefTu, ["stefan", "chef-tu"])).toBe(true);
+    expect(matchesSourceFilters(plainOriginal, ["stefan", "chef-tu"])).toBe(
+      false,
+    );
   });
 
-  it("provenance filters select only their source", () => {
-    expect(matchesSourceFilter(chefTu, "chef-tu")).toBe(true);
-    expect(matchesSourceFilter(verifiedMain, "chef-tu")).toBe(false);
-    expect(matchesSourceFilter(cleanProgram, "clean-program")).toBe(true);
-    expect(matchesSourceFilter(chefTu, "clean-program")).toBe(false);
-    expect(matchesSourceFilter(plainOriginal, "original")).toBe(true);
-    expect(matchesSourceFilter(chefTu, "original")).toBe(false);
+  it("nourish-verified keys off the badge, not provenance", () => {
+    expect(matchesSourceFilters(verifiedOriginal, ["nourish-verified"])).toBe(
+      true,
+    );
+    expect(matchesSourceFilters(plainOriginal, ["nourish-verified"])).toBe(
+      false,
+    );
+    // verified OR stefan — a verified original matches via the badge
+    expect(
+      matchesSourceFilters(verifiedOriginal, ["stefan", "nourish-verified"]),
+    ).toBe(true);
   });
 });
 
-describe("buildSourceOptions — honest, role-aware options", () => {
-  it("a mains feed offers Verified + Original but not Chef Tu / Clean Program", () => {
+describe("buildSourceFacetOptions — honest, role-aware (no 'any')", () => {
+  it("offers verified + stefan + original for a mixed mains feed", () => {
     const mains = [
-      { slug: "butter-chicken", isVerified: true },
-      { slug: "caesar-salad", isVerified: false },
+      { slug: "honey-glazed-salmon-mango-salsa", isVerified: false }, // stefan
+      { slug: "butter-chicken", isVerified: true }, // verified original
+      { slug: "caesar-salad", isVerified: false }, // original
     ];
-    const values = buildSourceOptions(mains).map((o) => o.value);
-    expect(values).toEqual(["any", "nourish-verified", "original"]);
+    const values = buildSourceFacetOptions(mains).map((o) => o.value);
+    expect(values).toEqual(["nourish-verified", "stefan", "original"]);
   });
 
-  it("a sides feed with Chef Tu + Clean Program offers them", () => {
-    const sides = [
-      { slug: "tu-goi-ga", isVerified: false },
-      { slug: "black-bean-brownies", isVerified: false },
-      { slug: "naan-bread", isVerified: true },
-    ];
-    const values = buildSourceOptions(sides).map((o) => o.value);
-    expect(values).toEqual([
-      "any",
-      "nourish-verified",
+  it("never offers a facet with zero results", () => {
+    const onlyOriginals = [{ slug: "caesar-salad", isVerified: false }];
+    const values = buildSourceFacetOptions(onlyOriginals).map((o) => o.value);
+    expect(values).toEqual(["original"]);
+  });
+});
+
+describe("coerceSourceFacets — legacy + corruption guard", () => {
+  it("accepts a valid facet array", () => {
+    expect(coerceSourceFacets(["stefan", "chef-tu"])).toEqual([
+      "stefan",
       "chef-tu",
-      "clean-program",
-      "original",
     ]);
   });
 
-  it("always offers 'any' first, even for an empty feed", () => {
-    const opts = buildSourceOptions([]);
-    expect(opts).toHaveLength(1);
-    expect(opts[0]).toMatchObject({ value: "any", pillLabel: "Source" });
+  it("drops junk from an array", () => {
+    expect(coerceSourceFacets(["stefan", "bogus", 3])).toEqual(["stefan"]);
   });
 
-  it("never offers a source with zero results (the no-empty-state guarantee)", () => {
-    const onlyOriginals = [{ slug: "caesar-salad", isVerified: false }];
-    const values = buildSourceOptions(onlyOriginals).map((o) => o.value);
-    expect(values).not.toContain("chef-tu");
-    expect(values).not.toContain("nourish-verified");
-    expect(values).toEqual(["any", "original"]);
+  it("migrates the legacy single-select shape", () => {
+    expect(coerceSourceFacets("any")).toEqual([]);
+    expect(coerceSourceFacets("chef-tu")).toEqual(["chef-tu"]);
+    expect(coerceSourceFacets("bogus")).toEqual([]);
+    expect(coerceSourceFacets(undefined)).toEqual([]);
   });
 });
 
-describe("isSourceFilter — persistence guard", () => {
-  it("accepts every valid filter value", () => {
-    const all: SourceFilter[] = [
-      "any",
+describe("isSourceFacet", () => {
+  it("accepts every facet and rejects junk", () => {
+    const all: SourceFacet[] = [
       "nourish-verified",
+      "stefan",
       "chef-tu",
       "clean-program",
+      "custom",
       "original",
     ];
-    for (const v of all) expect(isSourceFilter(v)).toBe(true);
-  });
-
-  it("rejects junk / legacy values", () => {
-    expect(isSourceFilter("community")).toBe(false);
-    expect(isSourceFilter("")).toBe(false);
-    expect(isSourceFilter(null)).toBe(false);
-    expect(isSourceFilter(undefined)).toBe(false);
-    expect(isSourceFilter(3)).toBe(false);
+    for (const v of all) expect(isSourceFacet(v)).toBe(true);
+    expect(isSourceFacet("any")).toBe(false);
+    expect(isSourceFacet(null)).toBe(false);
   });
 });

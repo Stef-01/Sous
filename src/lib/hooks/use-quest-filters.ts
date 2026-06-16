@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { isSourceFilter, type SourceFilter } from "@/lib/utils/dish-source";
+import { coerceSourceFacets, type SourceFacet } from "@/lib/utils/dish-source";
 
 export type CookTimeFilter = "any" | "15" | "20" | "30" | "45" | "60";
 export type CuisineFilter = string; // "any" | normalized cuisine family
 export type MealTypeFilter = "any" | "breakfast" | "lunch" | "dinner";
 export type DishRoleFilter = "main" | "side" | "drink" | "snack";
-export type { SourceFilter } from "@/lib/utils/dish-source";
+export type { SourceFacet } from "@/lib/utils/dish-source";
 
 const MEAL_TYPES: ReadonlySet<MealTypeFilter> = new Set([
   "any",
@@ -29,8 +29,8 @@ export interface QuestFilterState {
   cuisine: CuisineFilter;
   mealType: MealTypeFilter;
   role: DishRoleFilter;
-  /** Provenance / verified-badge facet (Chef Tu, Nourish Verified, …). */
-  source: SourceFilter;
+  /** Multi-select provenance / verified-badge facets (empty = any source). */
+  source: SourceFacet[];
 }
 
 const DEFAULT_STATE: QuestFilterState = {
@@ -38,7 +38,7 @@ const DEFAULT_STATE: QuestFilterState = {
   cuisine: "any",
   mealType: "any",
   role: "main",
-  source: "any",
+  source: [],
 };
 
 /** Coerce arbitrary parsed storage into a valid state — missing or corrupt /
@@ -54,7 +54,7 @@ export function coerceQuestFilterState(parsed: unknown): QuestFilterState {
     role: DISH_ROLES.has(p.role as DishRoleFilter)
       ? (p.role as DishRoleFilter)
       : DEFAULT_STATE.role,
-    source: isSourceFilter(p.source) ? p.source : DEFAULT_STATE.source,
+    source: coerceSourceFacets(p.source),
   };
 }
 
@@ -83,6 +83,16 @@ function persistState(state: QuestFilterState): void {
 export function cookTimeCapMinutes(filter: CookTimeFilter): number {
   if (filter === "any") return Number.POSITIVE_INFINITY;
   return Number.parseInt(filter, 10);
+}
+
+/** Pure helper: toggle a source facet in/out of the selection. Exported for tests. */
+export function toggleSourceFacet(
+  current: SourceFacet[],
+  facet: SourceFacet,
+): SourceFacet[] {
+  return current.includes(facet)
+    ? current.filter((f) => f !== facet)
+    : [...current, facet];
 }
 
 /**
@@ -134,9 +144,18 @@ export function useQuestFilters() {
     });
   }, []);
 
-  const setSource = useCallback((source: SourceFilter) => {
+  /** Tick / untick a single source facet (multi-select). */
+  const toggleSource = useCallback((facet: SourceFacet) => {
     setState((prev) => {
-      const next = { ...prev, source };
+      const next = { ...prev, source: toggleSourceFacet(prev.source, facet) };
+      persistState(next);
+      return next;
+    });
+  }, []);
+
+  const clearSource = useCallback(() => {
+    setState((prev) => {
+      const next = { ...prev, source: [] };
       persistState(next);
       return next;
     });
@@ -158,7 +177,8 @@ export function useQuestFilters() {
     setCuisine,
     setMealType,
     setRole,
-    setSource,
+    toggleSource,
+    clearSource,
     reset,
   };
 }
@@ -170,6 +190,6 @@ export function countActiveFilters(state: QuestFilterState): number {
     (state.cuisine !== "any" ? 1 : 0) +
     (state.mealType !== "any" ? 1 : 0) +
     (state.role !== "main" ? 1 : 0) +
-    (state.source !== "any" ? 1 : 0)
+    (state.source.length > 0 ? 1 : 0)
   );
 }
