@@ -68,7 +68,7 @@ delete entries; mark them `RESOLVED <date>` when worked off.
 | Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                              | hero photo committed by founder                                                 |
 | Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                   | founder supplies images                                                         |
 | IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                      | Manual IG-save drop is the practical route                                      |
-| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W2 glyphs SHIPPED (f71ebb5)**; W1/W3–W6 queued — full spec §6.2        | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
+| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W1 kit + W2 glyphs SHIPPED (d830f49, f71ebb5)**; W3–W6 queued — §6.2   | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
 
 ## 4. Technical reference — how the whole app works
 
@@ -314,7 +314,16 @@ explanatory paragraphs; "(Recommended)" is inline subtext, never a badge.
 Honesty (D-17 spirit): the mockups fabricate social proof ("MOB users save
 25%") — Sous mirror copy is forward-promise only, enforced by test.
 
-#### W1 — Survey kit (`src/components/survey/`) + types
+#### W1 — Survey kit (`src/components/survey/`) + types — SHIPPED 2026-06-16 (commit d830f49)
+
+Shipped the full kit: zod-sourced `SurveyStepSchema` (11 step kinds), all
+components (survey-shell, option/check rows, statement-swipe, thumb-row,
+chip-cloud, photo-tile-grid, glyph-grid, wheel-picker, interstitial,
+mirror-summary), the `survey-runner` (answers + back/skip + `showIf`
+branches → emits `(answers, signals)`), the pure `compute-survey-signals`
+aggregator, and pure `survey-logic` helpers. Added a `chips` step kind so the
+chip-cloud component has a matching kind. Every kind was browser-verified at
+390×844; 37 unit tests. The original spec below is retained for reference.
 
 1. `src/types/survey.ts`: zod discriminated union `SurveyStepSchema` —
    `single` | `multi` | `likert` | `statements` | `thumbs` | `photo-tiles` |
@@ -498,7 +507,8 @@ commit per phase.
 
 **Sequencing & classification.** All six workstreams are AUTO-BUILD (repo +
 npm only; zero founder-gated dependencies). Order: W1 → W2 → W3 → W4 → W5 →
-W6, each independently shippable; W2 can interleave after W1. This
+W6, each independently shippable; W2 can interleave after W1. **W1 + W2 are
+SHIPPED (d830f49, f71ebb5); W3 (onboarding v2 on the kit) is next.** This
 initiative moves AHEAD of the smoothie-dupes ingestion (founder images not
 yet supplied — that stays founder-gated in §6.3).
 
