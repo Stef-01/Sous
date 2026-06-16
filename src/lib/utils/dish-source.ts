@@ -61,6 +61,19 @@ export function getRecipeSource(slug: string): RecipeSource {
   return "original";
 }
 
+/** A dish for source purposes — provenance is its explicit `source` when set
+ *  (e.g. injected user creations), otherwise derived from the slug. */
+export interface SourceDish {
+  slug: string;
+  isVerified: boolean;
+  source?: RecipeSource;
+}
+
+/** The provenance of a dish: an explicit `source` wins over slug derivation. */
+export function dishSource(dish: SourceDish): RecipeSource {
+  return dish.source ?? getRecipeSource(dish.slug);
+}
+
 /**
  * Pure predicate: does a dish satisfy the active multi-select Source filter? An
  * empty selection passes everything. Otherwise the dish matches if it satisfies
@@ -68,11 +81,11 @@ export function getRecipeSource(slug: string): RecipeSource {
  * other facet keys off provenance).
  */
 export function matchesSourceFilters(
-  dish: { slug: string; isVerified: boolean },
+  dish: SourceDish,
   selected: ReadonlyArray<SourceFacet>,
 ): boolean {
   if (selected.length === 0) return true;
-  const source = getRecipeSource(dish.slug);
+  const source = dishSource(dish);
   return selected.some((facet) =>
     facet === "nourish-verified" ? dish.isVerified : source === facet,
   );
@@ -125,12 +138,12 @@ export function coerceSourceFacets(value: unknown): SourceFacet[] {
  * user is never handed a filter that would yield nothing.
  */
 export function buildSourceFacetOptions(
-  dishes: ReadonlyArray<{ slug: string; isVerified: boolean }>,
+  dishes: ReadonlyArray<SourceDish>,
 ): FilterOption<SourceFacet>[] {
   const present = new Set<SourceFacet>();
   for (const d of dishes) {
     if (d.isVerified) present.add("nourish-verified");
-    present.add(getRecipeSource(d.slug));
+    present.add(dishSource(d));
   }
   return SOURCE_FACET_ORDER.filter((s) => present.has(s)).map((s) => ({
     value: s,

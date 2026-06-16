@@ -69,6 +69,28 @@ describe("matchesSourceFilters (multi-select, OR semantics)", () => {
   });
 });
 
+describe("explicit source (injected user creations)", () => {
+  const custom = {
+    slug: "my-weeknight-pasta",
+    isVerified: false,
+    source: "custom" as const,
+  };
+
+  it("an explicit source wins over slug derivation", () => {
+    // slug alone would derive "original"; the explicit source makes it custom.
+    expect(matchesSourceFilters(custom, ["custom"])).toBe(true);
+    expect(matchesSourceFilters(custom, ["original"])).toBe(false);
+  });
+
+  it("surfaces the custom facet in honest options", () => {
+    const values = buildSourceFacetOptions([
+      custom,
+      { slug: "caesar-salad", isVerified: false },
+    ]).map((o) => o.value);
+    expect(values).toEqual(["custom", "original"]);
+  });
+});
+
 describe("buildSourceFacetOptions — honest, role-aware (no 'any')", () => {
   it("offers verified + stefan + original for a mixed mains feed", () => {
     const mains = [

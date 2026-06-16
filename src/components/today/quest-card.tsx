@@ -39,6 +39,8 @@ import {
 } from "./meal-swipe-queue-cards";
 import { buildQuestDishes, buildRoleQuestDishes } from "./quest-pool";
 import { QuestFilterMenu } from "./quest-filter-menu";
+import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
 import { useCareProfile } from "@/lib/hooks/use-care-profile";
 import {
   therapeuticsActive,
@@ -53,6 +55,7 @@ import {
   buildSourceFacetOptions,
   matchesSourceFilters,
   type SourceFacet,
+  type RecipeSource,
 } from "@/lib/utils/dish-source";
 import type { Daypart } from "@/types";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
@@ -82,6 +85,9 @@ export interface QuestDish {
     kcal: number;
   };
   isVerified: boolean;
+  /** Explicit provenance — set for injected user creations ("custom"); when
+   *  absent, the Source filter derives it from the slug. */
+  source?: RecipeSource;
   /** Dish role — drives the Today Filter. Mains are "main"; sides carry their
    *  classified role. */
   role: DishRoleFilter;
@@ -158,6 +164,14 @@ export function QuestCard({
   // Quest filters: role / meal-type / cuisine / cook-time. Session-scoped so
   // they never become permanent settings — they reset at app close.
   const filters = useQuestFilters();
+  // The user's own creations (authored or pasted) surface in the deck tagged
+  // "custom" and cook through the same shell. They're mains, so they ride the
+  // Main feed only.
+  const { drafts } = useRecipeDrafts();
+  const customDishes = useMemo(
+    () => drafts.map(userRecipeToQuestDish),
+    [drafts],
+  );
   // The role facet rewires the feed: Main → the full quest pool; Side/Drink/Snack
   // → the role-specific catalogue feed (same quest shell, rule 4).
   const baseDishes = useMemo(() => {
@@ -165,14 +179,17 @@ export function QuestCard({
     // Main → the full quest pool, but kept to actual mains (the pool mixes in a
     // few sides; the role filter makes "Main" mean mains). Side/Drink/Snack →
     // the role-specific feed.
-    return filters.role === "main"
-      ? buildQuestDishes(
-          userPreferences,
-          cookHistory,
-          pantry,
-          progression,
-        ).filter((d) => d.role === "main")
-      : buildRoleQuestDishes(filters.role, pantry);
+    if (filters.role === "main") {
+      const mains = buildQuestDishes(
+        userPreferences,
+        cookHistory,
+        pantry,
+        progression,
+      ).filter((d) => d.role === "main");
+      // Your creations lead the deck so they're easy to find.
+      return [...customDishes, ...mains];
+    }
+    return buildRoleQuestDishes(filters.role, pantry);
   }, [
     userPreferences,
     cookHistory,
@@ -180,6 +197,7 @@ export function QuestCard({
     pantryMounted,
     progression,
     filters.role,
+    customDishes,
   ]);
 
   // Build the cuisine option list from the actual dish index so we never
