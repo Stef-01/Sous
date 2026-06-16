@@ -68,7 +68,7 @@ delete entries; mark them `RESOLVED <date>` when worked off.
 | Black bean brownies ingestion                                         | **QUEUED — full spec §6.1**                                              | hero photo committed by founder                                                 |
 | Erewhon smoothie dupes ingestion                                      | Queued behind brownies                                                   | founder supplies images                                                         |
 | IG/Toast sweep for remaining venue photos                             | Attempted; DoorDash/IG/Evvia wall headless browsers                      | Manual IG-save drop is the practical route                                      |
-| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **QUEUED — full spec §6.2**; mockups measured into design-kit doc        | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
+| Mockup-driven onboarding/survey/glyph overhaul (28 imgs, docs/PLANS)  | **W2 glyphs SHIPPED (f71ebb5)**; W1/W3–W6 queued — full spec §6.2        | Copy must stay claim-safe + stat-free (D-22); engine wiring is the value        |
 
 ## 4. Technical reference — how the whole app works
 
@@ -365,7 +365,16 @@ Honesty (D-17 spirit): the mockups fabricate social proof ("MOB users save
    exclusivity; reduced-motion path renders buttons. Axe pass on each
    component in vitest + jsdom where feasible.
 
-#### W2 — Food glyph system (kills UI emojis)
+#### W2 — Food glyph system (kills UI emojis) — SHIPPED 2026-06-16 (commit f71ebb5)
+
+Shipped a 19-glyph registry (10 cuisines + 9 dish-type/protein) — standard
+shapes vendor lucide ISC path data, cuisine-specifics (sushi/taco/takeout/pho/
+noodles/curry/rice/bread) authored in the same grammar and visually verified.
+Swapped: dish-image cuisine fallback (10 cuisines → distinct glyphs, was 4
+reused lucide icons), planner week list, grocery card, journey thumbnail. The
+coach-quiz option emojis stay until W3 rebuilds that surface (no throwaway).
+48 new tests (registry integrity + mapping completeness). The original spec
+below is retained for reference.
 
 1. `src/components/icons/food-glyphs.tsx` — single-file registry of inline
    SVG line glyphs: 24×24 viewBox, stroke 1.75, round caps/joins,
