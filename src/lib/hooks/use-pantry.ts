@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
 /**
  * Pantry  -  a lightweight, local-first set of ingredient names the user
@@ -9,35 +9,91 @@ import { useCallback, useEffect, useMemo, useState } from "react";
  *
  * This is the quiet ledger the landing page alludes to: the longer you
  * cook, the more your pantry graph knows about you.
+ *
+ * Shared-store pattern (module snapshot + listener set + useSyncExternalStore)
+ * so every consumer stays in sync live — e.g. the AI import sheet adds names
+ * and the open Pantry page reflects them immediately, no reload.
  */
 
 const PANTRY_KEY = "sous-pantry-v1";
 const MAX_PANTRY_SIZE = 200;
+const EMPTY: string[] = [];
 
 export function normalizePantryName(raw: string): string {
   return raw.toLowerCase().trim().replace(/\s+/g, " ").replace(/[.,]/g, "");
 }
 
-function readPantry(): string[] {
-  if (typeof window === "undefined") return [];
+let snapshot: string[] | undefined;
+const listeners = new Set<() => void>();
+
+function read(): string[] {
+  if (typeof window === "undefined") return EMPTY;
   try {
     const raw = window.localStorage.getItem(PANTRY_KEY);
-    if (!raw) return [];
+    if (!raw) return EMPTY;
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
+    if (!Array.isArray(parsed)) return EMPTY;
     return parsed.filter((v): v is string => typeof v === "string");
   } catch {
-    return [];
+    return EMPTY;
   }
 }
 
-function writePantry(items: string[]): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(PANTRY_KEY, JSON.stringify(items));
-  } catch {
-    // ignore quota errors
+function getSnapshot(): string[] {
+  if (snapshot === undefined) snapshot = read();
+  return snapshot;
+}
+
+function getServerSnapshot(): string[] {
+  return EMPTY;
+}
+
+function subscribe(cb: () => void): () => void {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+
+function commit(next: string[]): void {
+  snapshot = next;
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(PANTRY_KEY, JSON.stringify(next));
+    } catch {
+      // ignore quota errors
+    }
   }
+  listeners.forEach((l) => l());
+}
+
+/** Module-level mutators — usable without a hook (e.g. from the importer). */
+export function pantryAdd(name: string): void {
+  const normalized = normalizePantryName(name);
+  if (!normalized) return;
+  const prev = getSnapshot();
+  if (prev.includes(normalized)) return;
+  commit([...prev, normalized].slice(-MAX_PANTRY_SIZE));
+}
+
+export function pantryRemove(name: string): void {
+  const normalized = normalizePantryName(name);
+  const prev = getSnapshot();
+  if (!prev.includes(normalized)) return;
+  commit(prev.filter((n) => n !== normalized));
+}
+
+export function pantryToggle(name: string): void {
+  const normalized = normalizePantryName(name);
+  if (!normalized) return;
+  const prev = getSnapshot();
+  commit(
+    prev.includes(normalized)
+      ? prev.filter((n) => n !== normalized)
+      : [...prev, normalized].slice(-MAX_PANTRY_SIZE),
+  );
+}
+
+export function pantryClear(): void {
+  commit([]);
 }
 
 export interface UsePantryResult {
@@ -56,70 +112,27 @@ export interface UsePantryResult {
 }
 
 export function usePantry(): UsePantryResult {
-  const [items, setItems] = useState<string[]>([]);
+  const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [mounted, setMounted] = useState(false);
-
-  /* eslint-disable react-hooks/set-state-in-effect -- hydration guard: must read localStorage after mount */
-  useEffect(() => {
-    setItems(readPantry());
-    setMounted(true);
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard: flip mounted once after first client render
+  useEffect(() => setMounted(true), []);
 
   const set = useMemo(() => new Set(items), [items]);
 
-  const has = useCallback(
-    (name: string) => set.has(normalizePantryName(name)),
+  const has = useMemo(
+    () => (name: string) => set.has(normalizePantryName(name)),
     [set],
   );
-
-  const add = useCallback((name: string) => {
-    const normalized = normalizePantryName(name);
-    if (!normalized) return;
-    setItems((prev) => {
-      if (prev.includes(normalized)) return prev;
-      const next = [...prev, normalized].slice(-MAX_PANTRY_SIZE);
-      writePantry(next);
-      return next;
-    });
-  }, []);
-
-  const remove = useCallback((name: string) => {
-    const normalized = normalizePantryName(name);
-    setItems((prev) => {
-      if (!prev.includes(normalized)) return prev;
-      const next = prev.filter((n) => n !== normalized);
-      writePantry(next);
-      return next;
-    });
-  }, []);
-
-  const toggle = useCallback((name: string) => {
-    const normalized = normalizePantryName(name);
-    if (!normalized) return;
-    setItems((prev) => {
-      const next = prev.includes(normalized)
-        ? prev.filter((n) => n !== normalized)
-        : [...prev, normalized].slice(-MAX_PANTRY_SIZE);
-      writePantry(next);
-      return next;
-    });
-  }, []);
-
-  const clear = useCallback(() => {
-    setItems([]);
-    writePantry([]);
-  }, []);
 
   return {
     items,
     set,
     mounted,
     has,
-    add,
-    remove,
-    toggle,
-    clear,
+    add: pantryAdd,
+    remove: pantryRemove,
+    toggle: pantryToggle,
+    clear: pantryClear,
     size: items.length,
   };
 }

@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { UtensilsCrossed } from "lucide-react";
+import { UtensilsCrossed, Sparkles } from "lucide-react";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
+import { AiImportSheet } from "@/components/import/ai-import-sheet";
 import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
@@ -60,6 +61,7 @@ export default function NutritionPage() {
   const [dayOffset, setDayOffset] = useState(0);
   const [petOpen, setPetOpen] = useState(false);
   const [showAllSlots, setShowAllSlots] = useState(false);
+  const [showImport, setShowImport] = useState(false);
   const { plan: goalPlan } = useNutrientGoals();
   const viewedDate = useMemo(() => {
     const d = new Date();
@@ -277,10 +279,28 @@ export default function NutritionPage() {
             merged), camera that READS text/barcodes, staples when idle. */}
         <LogFood date={viewedDate} frequents={history.frequents} />
 
+        {/* Bulk-log a whole day's meals via the AI paste bridge. */}
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowImport(true)}
+            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full px-3 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)]"
+          >
+            <Sparkles size={13} aria-hidden />
+            Import a day from ChatGPT
+          </button>
+        </div>
+
         {/* Insights — weekly trend + hydration (nutrition lives on Nutrition). */}
         <WeeklyTrendCard />
         <HydrationCard />
       </main>
+
+      <AiImportSheet
+        open={showImport}
+        onClose={() => setShowImport(false)}
+        initialKind="nutrition"
+      />
     </div>
   );
 }

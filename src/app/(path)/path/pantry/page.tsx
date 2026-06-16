@@ -1,9 +1,12 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { usePantryInventory } from "@/lib/hooks/use-pantry-inventory";
+import { AiImportSheet } from "@/components/import/ai-import-sheet";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { GLIDE, RM } from "@/lib/utils/motion";
@@ -19,6 +22,14 @@ export default function PantryPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { items, mounted, remove, clear, size } = usePantry();
+  const inventory = usePantryInventory();
+  const [showImport, setShowImport] = useState(false);
+
+  // Quantity lookup — pantry names are normalized, matching the inventory key.
+  const invByKey = useMemo(
+    () => new Map(inventory.items.map((it) => [it.key, it])),
+    [inventory.items],
+  );
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
@@ -37,8 +48,16 @@ export default function PantryPage() {
           <h1 className="font-serif text-lg font-semibold text-[var(--nourish-dark)]">
             Pantry
           </h1>
+          <button
+            onClick={() => setShowImport(true)}
+            type="button"
+            className="ml-auto inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.06] px-3 text-[12px] font-semibold text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/12"
+          >
+            <Sparkles size={13} aria-hidden />
+            Import
+          </button>
           {size > 0 && (
-            <span className="ml-auto text-xs text-[var(--nourish-subtext)]">
+            <span className="text-xs text-[var(--nourish-subtext)]">
               {size} item{size !== 1 ? "s" : ""}
             </span>
           )}
@@ -89,11 +108,24 @@ export default function PantryPage() {
                       className="shrink-0 text-[var(--nourish-green)]"
                       fill="currentColor"
                     />
-                    <span className="flex-1 text-sm capitalize text-[var(--nourish-dark)]">
-                      {name}
+                    <span className="flex-1 truncate text-sm capitalize text-[var(--nourish-dark)]">
+                      {invByKey.get(name)?.name ?? name}
                     </span>
+                    {(() => {
+                      const inv = invByKey.get(name);
+                      if (!inv?.quantity && !inv?.unit) return null;
+                      return (
+                        <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/[0.08] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--nourish-green)]">
+                          {inv.quantity ?? ""}
+                          {inv.unit ? ` ${inv.unit}` : ""}
+                        </span>
+                      );
+                    })()}
                     <button
-                      onClick={() => remove(name)}
+                      onClick={() => {
+                        remove(name);
+                        inventory.remove(name);
+                      }}
                       className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
                       type="button"
                       aria-label={`Remove ${name} from pantry`}
@@ -114,6 +146,7 @@ export default function PantryPage() {
                       window.confirm("Clear your whole pantry?")
                     ) {
                       clear();
+                      inventory.clear();
                     }
                   }}
                   className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
@@ -126,6 +159,12 @@ export default function PantryPage() {
           </>
         )}
       </main>
+
+      <AiImportSheet
+        open={showImport}
+        onClose={() => setShowImport(false)}
+        initialKind="pantry"
+      />
     </div>
   );
 }
