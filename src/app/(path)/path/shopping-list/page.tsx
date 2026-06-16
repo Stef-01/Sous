@@ -18,7 +18,7 @@ import {
 } from "@/lib/utils/ingredient-meta";
 import { imageSrc } from "@/lib/image/image-src";
 import { lookupDish } from "@/lib/utils/dish-lookup";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import { DishGlyph } from "@/components/icons/food-glyphs";
 import { cn } from "@/lib/utils/cn";
 import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { displayQuantity } from "@/lib/units/display-quantity";
@@ -369,11 +369,8 @@ function RecipeChip({
             className="object-cover"
           />
         ) : (
-          <div
-            className="flex h-full w-full items-center justify-center text-3xl"
-            aria-hidden
-          >
-            {getDishEmoji(tags, cuisine ?? "")}
+          <div className="flex h-full w-full items-center justify-center text-3xl text-[var(--nourish-green)]">
+            <DishGlyph tags={tags} cuisine={cuisine ?? ""} size={40} />
           </div>
         )}
         <button

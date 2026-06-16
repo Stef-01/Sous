@@ -2,15 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import {
-  UtensilsCrossed,
-  Flame,
-  Fish,
-  Leaf,
-  CookingPot,
-  type LucideIcon,
-} from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { FoodGlyph } from "@/components/icons/food-glyphs";
+import { getCuisineGlyph } from "@/lib/utils/dish-glyph";
 import type { QuestDish } from "./quest-card";
 import { recipeCreditShort } from "@/lib/utils/recipe-credit";
 
@@ -54,24 +48,18 @@ export function cuisineAccent(
   return g?.match(/#[0-9a-fA-F]{6}/)?.[0] ?? null;
 }
 
-const CUISINE_ICON_MAP: Record<string, LucideIcon> = {
-  japanese: Fish,
-  korean: Flame,
-  thai: Leaf,
-  chinese: CookingPot,
-  vietnamese: Leaf,
-  filipino: CookingPot,
-  indian: Flame,
-  italian: UtensilsCrossed,
-  mexican: Flame,
-  mediterranean: Leaf,
-};
-
 function CuisineFallbackIcon({ cuisine }: { cuisine: string }) {
-  const Icon = CUISINE_ICON_MAP[cuisine.toLowerCase()] ?? UtensilsCrossed;
+  // Distinct line-art glyph per cuisine (planning.md §6.2 W2), replacing the
+  // old four-lucide-icon map that reused the same icon across many cuisines.
+  const glyph = getCuisineGlyph(cuisine) ?? "utensils";
   return (
     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
-      <Icon size={32} className="text-white" strokeWidth={1.5} />
+      <FoodGlyph
+        name={glyph}
+        size={32}
+        strokeWidth={1.6}
+        className="text-white"
+      />
     </div>
   );
 }

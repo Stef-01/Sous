@@ -16,7 +16,7 @@ import { useState } from "react";
 import { Moon, Plus, Sun, Sunrise } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { imageSrc } from "@/lib/image/image-src";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import { DishGlyph } from "@/components/icons/food-glyphs";
 import { lookupDish, type DishRef } from "@/lib/utils/dish-lookup";
 import { recipeCreditShort } from "@/lib/utils/recipe-credit";
 import {
@@ -86,11 +86,8 @@ function PlanThumb({ dish }: { dish: DishRef }) {
     );
   }
   return (
-    <div
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--nourish-green)]/[0.08] text-xl"
-      aria-hidden
-    >
-      {getDishEmoji(dish.tags, dish.cuisine ?? "")}
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--nourish-green)]/[0.08] text-xl text-[var(--nourish-green)]">
+      <DishGlyph tags={dish.tags} cuisine={dish.cuisine ?? ""} size={24} />
     </div>
   );
 }

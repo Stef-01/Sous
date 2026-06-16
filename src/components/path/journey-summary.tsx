@@ -9,7 +9,7 @@ import type {
   CookStats,
   CookSessionRecord,
 } from "@/lib/hooks/use-cook-sessions";
-import { getDishEmoji } from "@/lib/utils/dish-emoji";
+import { DishGlyph } from "@/components/icons/food-glyphs";
 
 interface JourneySummaryProps {
   stats: CookStats;
@@ -181,7 +181,6 @@ export const JourneySummary = memo(function JourneySummary({
       {recent.length > 0 && (
         <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 scrollbar-hide">
           {recent.map((session) => {
-            const emoji = getDishEmoji([], session.cuisineFamily ?? "");
             const hue = hashToHue(session.sessionId);
             return (
               <Link
@@ -201,13 +200,16 @@ export const JourneySummary = memo(function JourneySummary({
                     />
                   ) : (
                     <div
-                      className="flex h-full w-full items-center justify-center text-lg"
+                      className="flex h-full w-full items-center justify-center text-lg text-[var(--nourish-dark)]/70"
                       style={{
                         background: `linear-gradient(135deg, hsl(${hue} 45% 92%) 0%, hsl(${(hue + 30) % 360} 40% 86%) 100%)`,
                       }}
-                      aria-hidden
                     >
-                      {emoji}
+                      <DishGlyph
+                        tags={[]}
+                        cuisine={session.cuisineFamily ?? ""}
+                        size={22}
+                      />
                     </div>
                   )}
                 </div>
