@@ -86,7 +86,10 @@ export function persistSurveySignals(signals: AggregatedSignals): void {
   if (Object.keys(signals.flags).length > 0) {
     const prev = getSignalFlags();
     writeJson(FLAGS_KEY, { ...prev, ...signals.flags });
-    if (typeof window !== "undefined") {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.dispatchEvent === "function"
+    ) {
       window.dispatchEvent(new Event(SIGNAL_FLAGS_EVENT));
     }
   }

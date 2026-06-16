@@ -109,6 +109,8 @@ export function ResultStack({
   // W5: a "searching / decision fatigue" signal calms the plate — the
   // "Reroll all" nudge is hidden so there's no invitation to keep re-deciding.
   const calmDeck = useSignalFlag("decisionFatigue");
+  // W5: budget signal boosts pantry-reuse on rerolls too, matching the deck.
+  const budgetSensitive = useSignalFlag("budgetSensitive");
   const [showEvaluate, setShowEvaluate] = useState(false);
   const [sides, setSides] = useState<SideResult[]>(initialSides);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(
@@ -162,6 +164,7 @@ export function ResultStack({
       pantryOnHand,
       recentCookSlugs,
       dayDeficits,
+      budgetSensitive: budgetSensitive || undefined,
     },
     {
       enabled: rerollingIndex !== null,

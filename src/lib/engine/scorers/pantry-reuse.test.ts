@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   scorePantryReuse,
   PANTRY_REUSE_WEIGHT,
+  BUDGET_PANTRY_REUSE_WEIGHT,
   type PantryReuseContext,
 } from "./pantry-reuse";
 import { suggestSides } from "../pairing-engine";
@@ -157,5 +158,40 @@ describe("suggestSides pantry reblend", () => {
     const expectedBetaTotal =
       (1 - PANTRY_REUSE_WEIGHT) * b0.beta.totalScore + PANTRY_REUSE_WEIGHT * 1;
     expect(b1.beta.totalScore).toBeCloseTo(expectedBetaTotal, 6);
+  });
+
+  it("budget weight (W5) boosts a fully-reused side more than the default", () => {
+    const base = suggestSides(main, candidates);
+    const mk = (weight?: number): PantryReuseContext => ({
+      onHand: new Set(["chickpeas", "parsley"]),
+      ingredientsBySlug: new Map<string, readonly string[]>([
+        ["beta", ["chickpeas", "parsley"]], // 100% on hand → pantryReuse 1
+        ["alpha", ["bacon", "cream"]], // 0% on hand → pantryReuse 0
+      ]),
+      ...(weight !== undefined ? { weight } : {}),
+    });
+    const call = (ctx: PantryReuseContext) =>
+      suggestSides(main, candidates, undefined, undefined, 3, undefined, ctx);
+    const dflt = call(mk());
+    const boosted = call(mk(BUDGET_PANTRY_REUSE_WEIGHT));
+    expect(base.success && dflt.success && boosted.success).toBe(true);
+    if (!base.success || !dflt.success || !boosted.success) return;
+
+    const beta = (r: typeof boosted) =>
+      r.success
+        ? r.data.sides.find((s) => s.sideDish.slug === "beta")!.totalScore
+        : 0;
+    const b0 = base.data.sides.find(
+      (s) => s.sideDish.slug === "beta",
+    )!.totalScore;
+    // base < default-weight < budget-weight — the boost ranks pantry reuse higher.
+    expect(beta(dflt)).toBeGreaterThan(b0);
+    expect(beta(boosted)).toBeGreaterThan(beta(dflt));
+    // exact reblend math at the boosted weight (beta is 100% reused → reuse=1).
+    const expected =
+      (1 - BUDGET_PANTRY_REUSE_WEIGHT) * b0 + BUDGET_PANTRY_REUSE_WEIGHT * 1;
+    expect(beta(boosted)).toBeCloseTo(expected, 6);
+    // and the boost is strictly larger than the default weight.
+    expect(BUDGET_PANTRY_REUSE_WEIGHT).toBeGreaterThan(PANTRY_REUSE_WEIGHT);
   });
 });

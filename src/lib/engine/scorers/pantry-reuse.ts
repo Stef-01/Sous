@@ -25,6 +25,14 @@ import { STAPLE_BLOCKLIST } from "../ingredient-reuse";
  */
 export const PANTRY_REUSE_WEIGHT = 0.08;
 
+/**
+ * Boosted pantry-reuse weight for budget-sensitive users (W5 signal). Still
+ * below the taste dimensions (0.22), so it tilts toward pantry-first, lower-
+ * grocery-spend sides without overriding taste. Applied only when the user
+ * signalled budget sensitivity AND has something on hand.
+ */
+export const BUDGET_PANTRY_REUSE_WEIGHT = 0.18;
+
 /** Lowercase + trim a single ingredient name for set membership. */
 export function normalizeIngredientName(name: string): string {
   return name.trim().toLowerCase();
@@ -79,4 +87,7 @@ export function scorePantryReuse(
 export interface PantryReuseContext {
   onHand: ReadonlySet<string>;
   ingredientsBySlug: ReadonlyMap<string, readonly string[]>;
+  /** Override the reblend weight (W5: budget-sensitive users get the boosted
+   *  weight). Defaults to PANTRY_REUSE_WEIGHT when omitted. */
+  weight?: number;
 }

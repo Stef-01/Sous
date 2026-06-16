@@ -145,7 +145,9 @@ function reblendPantryReuse(
   ranked: ScoredCandidate[],
   ctx: PantryReuseContext,
 ): ScoredCandidate[] {
-  const wP = PANTRY_REUSE_WEIGHT;
+  // W5: budget-sensitive users supply a boosted weight via the context; default
+  // to the standard tie-breaker weight otherwise.
+  const wP = ctx.weight ?? PANTRY_REUSE_WEIGHT;
   const blended = ranked.map((c) => {
     const ingredients = ctx.ingredientsBySlug.get(c.sideDish.slug) ?? [];
     const p = scorePantryReuse(ctx.onHand, ingredients);

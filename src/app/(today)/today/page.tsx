@@ -87,6 +87,7 @@ import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
 import { usePantry } from "@/lib/hooks/use-pantry";
+import { useSignalFlag } from "@/lib/hooks/use-signal-flags";
 import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
 import { deficitWeightMap } from "@/lib/nutrition/deficits";
 import { WhosAtTable } from "@/components/today/whos-at-table";
@@ -188,6 +189,10 @@ function TodayPageContent() {
   // avoids an impure Date.now() in render) as the "recent" proxy; precision
   // isn't critical since the reuse signal rides at a low weight.
   const { items: pantryItems } = usePantry();
+  // W5: budget-sensitivity signal → boosted pantry-reuse weight (cheaper,
+  // pantry-first pairings). Passed only when set so the default path is
+  // byte-identical for everyone else.
+  const budgetSensitive = useSignalFlag("budgetSensitive");
   const recentCookSlugs = useMemo(() => {
     const newestFirst = completedSessions
       .filter((s) => s.completedAt && s.recipeSlug)
@@ -331,6 +336,9 @@ function TodayPageContent() {
       recentCookSlugs: recentCookSlugs.length > 0 ? recentCookSlugs : undefined,
       // W29 deficiency-fill: nudge gap-closing sides up when cooks are logged.
       dayDeficits,
+      // W5 budget signal — omitted unless set, so the query key (and ranking)
+      // is unchanged for non-budget users.
+      budgetSensitive: budgetSensitive || undefined,
     },
     {
       enabled:

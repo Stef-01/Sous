@@ -7,7 +7,10 @@ import {
   getAvailableMealCookSlugs,
   guidedCookData,
 } from "@/data/guided-cook-steps";
-import { normalizeIngredientName } from "@/lib/engine/scorers/pantry-reuse";
+import {
+  normalizeIngredientName,
+  BUDGET_PANTRY_REUSE_WEIGHT,
+} from "@/lib/engine/scorers/pantry-reuse";
 import type { PantryReuseContext } from "@/lib/engine/scorers/pantry-reuse";
 import type { DeficiencyContext } from "@/lib/engine/scorers/deficiency-fill";
 import { resolveMealSlug } from "@/data/index";
@@ -155,6 +158,7 @@ function getIngredientsBySlug(): Map<string, readonly string[]> {
 function buildPantryContext(
   pantryOnHand: string[] | undefined,
   recentCookSlugs: string[] | undefined,
+  budgetSensitive?: boolean,
 ): PantryReuseContext | undefined {
   const ingredientsBySlug = getIngredientsBySlug();
   const onHand = new Set<string>();
@@ -166,7 +170,13 @@ function buildPantryContext(
     for (const ing of ingredientsBySlug.get(slug) ?? []) onHand.add(ing);
   }
   if (onHand.size === 0) return undefined;
-  return { onHand, ingredientsBySlug };
+  // W5: a budget-sensitive signal boosts the pantry-reuse weight so pantry-
+  // first (cheaper) sides rank higher. Omitted otherwise → default weight.
+  return {
+    onHand,
+    ingredientsBySlug,
+    ...(budgetSensitive ? { weight: BUDGET_PANTRY_REUSE_WEIGHT } : {}),
+  };
 }
 
 /**
@@ -220,6 +230,10 @@ export const pairingRouter = router({
          *  server expands them to ingredient names (likely still in the
          *  fridge) and folds them into the on-hand set. */
         recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
+        /** W5 — the budget-sensitivity signal. When true (and something is on
+         *  hand), the pantry-reuse reblend uses the boosted weight so pantry-
+         *  first, lower-spend sides rank higher. */
+        budgetSensitive: z.boolean().optional(),
         /** W29 deficiency-fill — the day's nutrient gaps (nutrient key →
          *  deficit weight 0..1) from the user's diary. Sides that best close
          *  the gaps are nudged up. Absent/empty → byte-identical ranking. */
@@ -280,6 +294,7 @@ export const pairingRouter = router({
       const pantry = buildPantryContext(
         input.pantryOnHand,
         input.recentCookSlugs,
+        input.budgetSensitive,
       );
 
       // W29: deficiency-fill context (undefined when nothing is logged today →
@@ -363,6 +378,7 @@ export const pairingRouter = router({
         pantryOnHand: z.array(z.string().max(80)).max(200).optional(),
         recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
         dayDeficits: z.record(z.number().min(0).max(1)).optional(),
+        budgetSensitive: z.boolean().optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -400,7 +416,11 @@ export const pairingRouter = router({
         input.userWeights,
         1,
         undefined,
-        buildPantryContext(input.pantryOnHand, input.recentCookSlugs),
+        buildPantryContext(
+          input.pantryOnHand,
+          input.recentCookSlugs,
+          input.budgetSensitive,
+        ),
         buildDeficiencyContext(input.dayDeficits),
       );
 

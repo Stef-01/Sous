@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { getEncouragement, type CoachContext } from "./coach-encouragement";
+import {
+  getEncouragement,
+  confidenceCoachLine,
+  type CoachContext,
+} from "./coach-encouragement";
+import { assertNoMedicalClaim } from "@/lib/therapeutics/claim-contract";
 
 describe("coach-encouragement", () => {
   const baseContext: CoachContext = {
@@ -82,5 +87,21 @@ describe("coach-encouragement", () => {
       currentStreak: 3,
     });
     expect(result!.trigger).toBe("first-cook");
+  });
+});
+
+describe("confidenceCoachLine (W5 felt-easier tone)", () => {
+  it("returns a peer-level affirmation when the signal is set", () => {
+    const line = confidenceCoachLine(true);
+    expect(line).toBeTruthy();
+    expect(typeof line).toBe("string");
+  });
+
+  it("returns null when the signal is unset (default neutral tone)", () => {
+    expect(confidenceCoachLine(false)).toBeNull();
+  });
+
+  it("is claim-safe (no cure/treat/etc.)", () => {
+    expect(assertNoMedicalClaim(confidenceCoachLine(true)!).ok).toBe(true);
   });
 });
