@@ -32,6 +32,11 @@ export const DISH_SERVINGS: Record<string, number> = {
   // default of 4 and the slider/diary would scale a single drink ×4.
   "turmeric-crush-smoothie": 1,
   "coconut-cloud-smoothie": 1,
+  // Air-fryer edamame yields 5 (0.75-cup) servings per the Simply Scratch
+  // source (simplyscratch.com/air-fryer-edamame); its per-recipe nutrition seed
+  // is the source's per-serving label verbatim. Without this override the link
+  // base would default to 4 and disagree with the seed's authored 5.
+  "air-fryer-edamame": 5,
   // Snack / dumpling platters that stretch further.
   "bao-buns": 6,
   churros: 6,

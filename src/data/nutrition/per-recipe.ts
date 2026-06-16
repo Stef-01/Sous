@@ -37,6 +37,10 @@ function seed(
   // passes through, not just the core required set.
   return {
     recipeSlug: slug,
+    // Must equal the dish's ingredient-link serving base (DISH_SERVINGS /
+    // meal-ingredients), else the slider/diary and these per-serving macros are
+    // keyed to different yields. recipe-links.test.ts enforces link == seed for
+    // every dish that has both; the 4 default is only safe for a yield-4 dish.
     servingsPerRecipe: servingsPerRecipe ?? 4,
     provenance: "manual-estimate",
     confidence: "approximated",
@@ -47,7 +51,10 @@ function seed(
 
 const ENTRIES: PerServingNutrition[] = [
   // Salmon: high in omega-3, vitamin D, vitamin B12, protein.
+  // Yield 2 (one fillet/serving) per the meal-ingredients source; 380 kcal is a
+  // full-fillet portion, so the macros are already per-serving — no rescale.
   seed("grilled-salmon", {
+    servingsPerRecipe: 2,
     calories: 380,
     calcium_mg: 30,
     iron_mg: 1.2,
@@ -105,7 +112,10 @@ const ENTRIES: PerServingNutrition[] = [
 
   // Pasta carbonara: protein + B12 from egg + cured pork; not a
   // micronutrient star but realistic.
+  // Yield 2 (100 g dry pasta/serving) per the meal-ingredients source; 620 kcal
+  // is a full plate, so the macros are already per-serving — no rescale.
   seed("pasta-carbonara", {
+    servingsPerRecipe: 2,
     calories: 620,
     calcium_mg: 180,
     iron_mg: 3.0,
@@ -144,7 +154,10 @@ const ENTRIES: PerServingNutrition[] = [
   }),
 
   // Mattar paneer: calcium from paneer, iron + fiber from peas.
+  // Yield 3 (~67 g paneer/serving) per the meal-ingredients source; 360 kcal is
+  // a full portion, so the macros are already per-serving — no rescale.
   seed("mattar-paneer", {
+    servingsPerRecipe: 3,
     calories: 360,
     calcium_mg: 280,
     iron_mg: 3.2,
@@ -164,7 +177,10 @@ const ENTRIES: PerServingNutrition[] = [
 
   // Bibimbap: vegetable + egg + rice; fiber, vitamin A from
   // sautéed greens, iron from beef + spinach.
+  // Yield 2 (one bowl/serving) per the meal-ingredients source; 540 kcal is a
+  // full bowl, so the macros are already per-serving — no rescale.
   seed("bibimbap", {
+    servingsPerRecipe: 2,
     calories: 540,
     calcium_mg: 110,
     iron_mg: 4.0,
@@ -183,7 +199,10 @@ const ENTRIES: PerServingNutrition[] = [
   }),
 
   // Falafel wrap: fiber from chickpeas + greens, magnesium + iron.
+  // Yield 2 (one wrap/serving) per the meal-ingredients source; 420 kcal is a
+  // full wrap, so the macros are already per-serving — no rescale.
   seed("falafel-wrap", {
+    servingsPerRecipe: 2,
     calories: 420,
     calcium_mg: 130,
     iron_mg: 4.2,

@@ -34,11 +34,29 @@ describe("recipe ingredient links", () => {
     expect(full.length).toBeGreaterThanOrEqual(28);
   });
 
-  // B1 regression — single-serving drinks. The cook page uses the LINK's
-  // servingsPerRecipe as the base for the serving slider + diary log + scaling.
-  // A single-glass smoothie that inherits the side default (4) would open the
-  // slider at 4 and log 4 drinks. Each single-serving recipe needs a
-  // DISH_SERVINGS override so its link base is 1 and matches its nutrition seed.
+  // The cook page uses the LINK's servingsPerRecipe as the base for the serving
+  // slider + diary log + ingredient scaling, while the NutrientSpotlight reads
+  // the per-recipe nutrition SEED's per-serving macros. If the two disagree on
+  // the serving base, those macros are keyed to a different yield than the
+  // slider/diary — a single drink scaled ×4, or a per-fillet macro labelled as
+  // a quarter-recipe. This guard keeps every dish that has BOTH a link and a
+  // seed on one serving base. (Generalizes the single-serving-drinks regression
+  // below; enabled once the 6 divergent dishes were reconciled.)
+  it("link and seed agree on the serving base for every dish with both", () => {
+    for (const [slug, link] of Object.entries(RECIPE_LINKS)) {
+      const seed = getPerServingNutrition(slug);
+      if (!seed) continue; // not every dish has a hand-authored nutrition seed
+      expect(
+        seed.servingsPerRecipe,
+        `${slug}: link base ${link.servingsPerRecipe} ≠ seed base ${seed.servingsPerRecipe}`,
+      ).toBe(link.servingsPerRecipe);
+    }
+  });
+
+  // B1 regression — single-serving drinks. A single-glass smoothie that
+  // inherits the side default (4) would open the slider at 4 and log 4 drinks.
+  // The invariant above proves link == seed; this pins the absolute base to 1 so
+  // a both-sides regression to 4 (override removed AND seed bumped) still fails.
   it("single-serving drinks have a serving base of 1 (link and seed)", () => {
     const SINGLE_SERVING = [
       "turmeric-crush-smoothie",

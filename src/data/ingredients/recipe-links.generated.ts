@@ -240,7 +240,7 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
   },
   "air-fryer-edamame": {
     recipeSlug: "air-fryer-edamame",
-    servingsPerRecipe: 4,
+    servingsPerRecipe: 5,
     originalLineCount: 5,
     lines: [
       { ingredientId: "edamame", grams: 566.99, isOptional: false },
