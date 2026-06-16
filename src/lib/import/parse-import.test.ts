@@ -72,11 +72,14 @@ describe("parseImportText — nutrition", () => {
     }
   });
 
-  it("requires the full macro panel on each entry", () => {
+  it("requires the full macro panel on each entry (with a friendly message)", () => {
     const missingMacros = parseImportText(
       '{ "kind": "nutrition", "entries": [{ "name": "mystery", "calories": 200 }] }',
     );
     expect(missingMacros.success).toBe(false);
+    if (!missingMacros.success) {
+      expect(missingMacros.error).toMatch(/calories \+ protein\/carbs\/fat/i);
+    }
     const noCalories = parseImportText(
       '{ "kind": "nutrition", "entries": [{ "name": "mystery" }] }',
     );

@@ -185,20 +185,26 @@ export default function GuidedCookPage({
   // tRPC payload so the rest of the page is unconditional.
   // CLAUDE.md rule 4: every recipe goes through the same Quest shell.
   const { drafts: userDrafts, mounted: userDraftsMounted } = useRecipeDrafts();
+  // A `custom-` route is unambiguously a user creation — strip the prefix and
+  // PREFER the draft so it never resolves to a catalog recipe of the same name.
+  const isCustomRoute = slug.startsWith("custom-");
+  const draftSlug = isCustomRoute ? slug.replace(/^custom-/, "") : slug;
   const data = useMemo(() => {
+    const fromDrafts = findUserRecipeBySlug(userDrafts, draftSlug);
+    if (isCustomRoute && fromDrafts) return adaptUserRecipeForCook(fromDrafts);
     if (tRPCData?.dish) return tRPCData;
-    const fromDrafts = findUserRecipeBySlug(userDrafts, slug);
     if (fromDrafts) return adaptUserRecipeForCook(fromDrafts);
     return tRPCData;
-  }, [tRPCData, userDrafts, slug]);
+  }, [tRPCData, userDrafts, draftSlug, isCustomRoute]);
 
   // Cuisine family for this dish (side, meal, or user recipe).
   const cuisine = useMemo(() => {
+    const userRecipe = findUserRecipeBySlug(userDrafts, draftSlug);
+    if (isCustomRoute && userRecipe) return userRecipe.cuisineFamily;
     const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
     if (staticData?.cuisineFamily) return staticData.cuisineFamily;
-    const userRecipe = findUserRecipeBySlug(userDrafts, slug);
     return userRecipe?.cuisineFamily ?? "unknown";
-  }, [slug, userDrafts]);
+  }, [slug, draftSlug, isCustomRoute, userDrafts]);
 
   // Start session on mount (once data is available). Y2 W6:
   // also attach the engine score breakdown stashed by the

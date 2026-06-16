@@ -27,7 +27,7 @@ import {
 } from "@/types/meal-plan";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
-import { usePantry } from "@/lib/hooks/use-pantry";
+import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
 import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
@@ -37,7 +37,11 @@ import {
   QueueComplete,
   QUEUE_EXIT_MS,
 } from "./meal-swipe-queue-cards";
-import { buildQuestDishes, buildRoleQuestDishes } from "./quest-pool";
+import {
+  buildQuestDishes,
+  buildRoleQuestDishes,
+  computePantryFit,
+} from "./quest-pool";
 import { QuestFilterMenu } from "./quest-filter-menu";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
@@ -186,8 +190,17 @@ export function QuestCard({
         pantry,
         progression,
       ).filter((d) => d.role === "main");
-      // Your creations lead the deck so they're easy to find.
-      return [...customDishes, ...mains];
+      // Score the injected creations' pantry fit too (buildQuestDishes only
+      // does it for the catalog pool). Your creations lead the deck.
+      const pantrySet = new Set(pantry ?? []);
+      const customWithFit = customDishes.map((d) => ({
+        ...d,
+        pantryFit: computePantryFit(
+          d.ingredientNames.map(normalizePantryName),
+          pantrySet,
+        ),
+      }));
+      return [...customWithFit, ...mains];
     }
     return buildRoleQuestDishes(filters.role, pantry);
   }, [
@@ -225,7 +238,7 @@ export function QuestCard({
 
   // Source options are derived from the live feed so the menu only ever offers
   // a provenance that actually has results (e.g. Chef Tu appears only in the
-  // sides feed). Honest by construction — see buildSourceOptions.
+  // sides feed). Honest by construction — see buildSourceFacetOptions.
   const sourceOptions = useMemo<FilterOption<SourceFacet>[]>(
     () => buildSourceFacetOptions(baseDishes),
     [baseDishes],

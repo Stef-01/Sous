@@ -48,6 +48,11 @@ function friendlyZodError(error: ZodError): string {
   if (issue.code === "too_small" && (path === "items" || path === "entries")) {
     return "The list was empty — there was nothing to import.";
   }
+  // A missing required macro is now the most common content error.
+  const lastKey = String(issue.path[issue.path.length - 1] ?? "");
+  if (["calories", "protein_g", "carbs_g", "fat_g"].includes(lastKey)) {
+    return "Each item needs calories + protein/carbs/fat — ask the assistant to estimate any it left out.";
+  }
   return path
     ? `Something's off near "${path}": ${issue.message.toLowerCase()}.`
     : issue.message;

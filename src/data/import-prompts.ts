@@ -29,7 +29,8 @@ export interface ImportPromptDef {
 const SHARED_RULES = `Rules:
 - Reply with ONE JSON object and nothing else — no commentary, no explanation.
 - Put it in a single \`\`\`json code block.
-- Use numbers (not strings) for amounts. Omit a field if you don't know it rather than guessing.`;
+- Use numbers (not strings) for amounts.
+- calories, protein_g, carbs_g and fat_g are REQUIRED on every item — always include them as a best estimate (a rough guess is fine; never omit them). Only OPTIONAL fields (unit, category, fiber_g, sugar_g, sodium_mg) may be left out when unknown.`;
 
 const PANTRY_PROMPT = `You are helping me load my kitchen inventory into a cooking app. Convert the list below into JSON, estimating nutrition for each item.
 
