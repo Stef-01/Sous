@@ -1,5 +1,32 @@
 import { describe, expect, it } from "vitest";
-import { computePetState, type PetInputs } from "./pet-state";
+import { computePetState, seasonFromMonth, type PetInputs } from "./pet-state";
+
+describe("seasonFromMonth (pet room seasonal accent)", () => {
+  it("maps each 0-indexed month to the right meteorological season", () => {
+    const expected = [
+      "winter", // Jan
+      "winter", // Feb
+      "spring", // Mar
+      "spring", // Apr
+      "spring", // May
+      "summer", // Jun
+      "summer", // Jul
+      "summer", // Aug
+      "autumn", // Sep
+      "autumn", // Oct
+      "autumn", // Nov
+      "winter", // Dec
+    ] as const;
+    expected.forEach((s, m) => expect(seasonFromMonth(m)).toBe(s));
+  });
+
+  it("wraps out-of-range / negative months safely", () => {
+    expect(seasonFromMonth(12)).toBe("winter"); // → Jan
+    expect(seasonFromMonth(-1)).toBe("winter"); // → Dec
+    expect(seasonFromMonth(14)).toBe("spring"); // → Mar
+    expect(seasonFromMonth(5.9)).toBe("summer"); // truncates to Jun
+  });
+});
 
 const base: PetInputs = {
   loggedCount: 0,

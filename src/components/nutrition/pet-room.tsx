@@ -14,6 +14,15 @@
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
+import type { Season } from "@/lib/nutrition/pet-state";
+
+/** Seasonal accent for the windowsill bloom (spring blossom → winter snow). */
+const SEASON_BLOOM: Record<Season, string> = {
+  spring: "#e98b9c", // pink blossom
+  summer: "#f5c97a", // sunflower gold
+  autumn: "#b5651d", // orange
+  winter: "#f6efe4", // snow-white
+};
 
 const C = {
   wall: "#4a3f55",
@@ -165,15 +174,19 @@ export function PetRoom({
   className,
   children,
   daypart = "night",
+  season = "summer",
 }: {
   className?: string;
   children?: ReactNode;
   /** Real local time drives the window + lamp (Finch/AC presence pattern). */
   daypart?: Daypart;
+  /** Real local month drives the windowsill bloom (a quiet seasonal accent). */
+  season?: Season;
 }) {
   const sky =
     daypart === "day" ? "#7a9cc8" : daypart === "dusk" ? "#5a4a6e" : C.sky;
   const lampOn = daypart !== "day";
+  const bloom = SEASON_BLOOM[season];
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <svg
@@ -276,11 +289,11 @@ export function PetRoom({
         <rect x="46" y="22" width="4" height="36" fill={C.frame} />
         <rect x="24" y="38" width="48" height="3" fill={C.frame} />
 
-        {/* sill + tiny flower pot */}
+        {/* sill + tiny flower pot — the bloom shifts with the season */}
         <rect x="16" y="62" width="64" height="3" fill={C.frame} />
         <rect x="64" y="58" width="5" height="4" fill={C.pot} />
         <rect x="66" y="55" width="1" height="3" fill={C.leaf} />
-        <rect x="64" y="52" width="5" height="3" fill={C.heart} />
+        <rect x="64" y="52" width="5" height="3" fill={bloom} />
         <rect x="66" y="53" width="1" height="1" fill={C.glow} />
 
         {/* curtains: rod + two drapes with darker folds */}

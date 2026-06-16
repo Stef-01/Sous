@@ -248,6 +248,7 @@ export function buildHeroMap(
   pose: "stand" | "bow",
   collar: PetCollar = "none",
   blink = false,
+  earFlick = false,
 ): string[] {
   const grid: string[][] = Array.from({ length: HERO_H }, () =>
     Array<string>(HERO_W).fill("."),
@@ -267,7 +268,12 @@ export function buildHeroMap(
   const earsUp = mood !== "asleep" && mood !== "hungry";
   if (earsUp) {
     stamp(grid, hx + 1, hy - 6, HERO_EAR_BACK);
-    stamp(grid, hx + 8, hy - 6, HERO_EAR_FRONT);
+    // Second idle animation: the front ear flicks down for a beat, then back up.
+    if (earFlick) {
+      stamp(grid, hx + 8, hy - 1, HERO_EAR_FOLD);
+    } else {
+      stamp(grid, hx + 8, hy - 6, HERO_EAR_FRONT);
+    }
   } else {
     stamp(grid, hx + 2, hy - 1, HERO_EAR_FOLD);
     stamp(grid, hx + 8, hy - 1, HERO_EAR_FOLD);
@@ -300,6 +306,7 @@ export function PixelDobermanHero({
   pose = "stand",
   collar = "none",
   blink = false,
+  earFlick = false,
   size = 220,
   className,
 }: {
@@ -307,11 +314,13 @@ export function PixelDobermanHero({
   pose?: "stand" | "bow";
   collar?: PetCollar;
   blink?: boolean;
+  /** Second idle animation — the front ear flicks down briefly. */
+  earFlick?: boolean;
   /** Rendered width in px (height follows the 28:24 grid). */
   size?: number;
   className?: string;
 }) {
-  const map = buildHeroMap(mood, pose, collar, blink);
+  const map = buildHeroMap(mood, pose, collar, blink, earFlick);
   const cols = HERO_W;
   const rows = map.length;
   return (

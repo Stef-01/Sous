@@ -118,6 +118,27 @@ describe("buildHeroMap", () => {
       }
     }
   });
+
+  it("earFlick (2nd idle): folds the front ear — differs from rest, still valid", () => {
+    for (const mood of ["peckish", "content", "thriving"] as PetMood[]) {
+      const rest = buildHeroMap(mood, "stand", "none", false, false);
+      const flick = buildHeroMap(mood, "stand", "none", false, true);
+      expect(flick.join("\n")).not.toBe(rest.join("\n"));
+      expect(flick.length).toBe(32);
+      for (const row of flick) {
+        expect(row.length).toBe(40);
+        for (const ch of row) expect(PALETTE.has(ch)).toBe(true);
+      }
+    }
+  });
+
+  it("earFlick is a no-op when the ears are already folded (asleep/hungry)", () => {
+    for (const mood of ["asleep", "hungry"] as PetMood[]) {
+      expect(buildHeroMap(mood, "stand", "none", false, true).join("\n")).toBe(
+        buildHeroMap(mood, "stand", "none", false, false).join("\n"),
+      );
+    }
+  });
 });
 
 describe("collar growth stages (round 1: goal gradient)", () => {

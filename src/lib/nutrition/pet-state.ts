@@ -36,6 +36,20 @@ export interface PetState {
   need: DeficitItem | null;
 }
 
+export type Season = "spring" | "summer" | "autumn" | "winter";
+
+/**
+ * Northern-hemisphere meteorological season from a 0-indexed month (0 = Jan).
+ * Drives the pet room's seasonal windowsill accent. Pure + wrap-safe.
+ */
+export function seasonFromMonth(month: number): Season {
+  const m = ((Math.trunc(month) % 12) + 12) % 12;
+  if (m === 11 || m <= 1) return "winter"; // Dec, Jan, Feb
+  if (m <= 4) return "spring"; // Mar, Apr, May
+  if (m <= 7) return "summer"; // Jun, Jul, Aug
+  return "autumn"; // Sep, Oct, Nov
+}
+
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
 export function computePetState(i: PetInputs): PetState {

@@ -23,7 +23,7 @@ import { PixelFrame } from "./pixel-frame";
 import { PixelIcon, type PixelIconName } from "./pixel-icons";
 import { pixelFont } from "@/lib/fonts/pixel-font";
 import { statTrends, type TrendDirection } from "@/lib/nutrition/pet-trends";
-import { computePetState } from "@/lib/nutrition/pet-state";
+import { computePetState, seasonFromMonth } from "@/lib/nutrition/pet-state";
 import {
   activityFeed,
   vitaminCoverage,
@@ -124,6 +124,7 @@ export function PetSheet({
   const { items: pantryItems } = usePantry();
   const [pose, setPose] = useState<"stand" | "bow">("stand");
   const [blink, setBlink] = useState(false);
+  const [earFlick, setEarFlick] = useState(false);
 
   // Idle life: random blinks every few seconds (a big static sprite reads
   // dead — round-5 research). Skipped while asleep (lids already down).
@@ -140,6 +141,24 @@ export function PetSheet({
     return () => {
       clearInterval(iv);
       clearTimeout(lid);
+    };
+  }, [open, entries.length]);
+
+  // Second idle animation: an occasional ear flick, offset from blinks so the
+  // sprite never reads static. Skipped while asleep (ears already folded).
+  useEffect(() => {
+    if (!open || entries.length === 0) return;
+    let down: ReturnType<typeof setTimeout>;
+    const iv = setInterval(
+      () => {
+        setEarFlick(true);
+        down = setTimeout(() => setEarFlick(false), 220);
+      },
+      6000 + Math.random() * 4000,
+    );
+    return () => {
+      clearInterval(iv);
+      clearTimeout(down);
     };
   }, [open, entries.length]);
 
@@ -200,9 +219,11 @@ export function PetSheet({
   const showMeal = Boolean(recentMeal) && mealAckAt !== recentMeal?.at;
 
   // The room lives on your clock (Animal Crossing presence pattern).
-  const hour = new Date().getHours();
+  const now = new Date();
+  const hour = now.getHours();
   const daypart: Daypart =
     hour >= 7 && hour < 17 ? "day" : hour >= 17 && hour < 20 ? "dusk" : "night";
+  const season = seasonFromMonth(now.getMonth());
   const feed = useMemo(
     () => activityFeed(entries, glasses),
     [entries, glasses],
@@ -361,6 +382,7 @@ export function PetSheet({
               on the rug inside it; tap = play-bow. */}
           <PetRoom
             daypart={daypart}
+            season={season}
             className="aspect-[3/2] w-full overflow-hidden rounded-xl border-2 border-[#6b4f3f]"
           >
             {showMeal && recentMeal && (
@@ -382,6 +404,7 @@ export function PetSheet({
                 pose={pose}
                 collar={collar}
                 blink={blink}
+                earFlick={earFlick}
                 size={heroSize}
                 className={cn(
                   "pet-breathe",
