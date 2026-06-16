@@ -521,3 +521,52 @@ describe("suggestSides (integration)", () => {
     }
   });
 });
+
+describe("suppression screen (W5) — disliked cuisines never reach top-N", () => {
+  it("excludes a strongly-suppressed cuisine (≤ −0.9) from the results", () => {
+    // naan + raita are indian; tabbouleh is mediterranean.
+    const result = suggestSides(
+      chickenMain,
+      [tabbouleh, naan, raita],
+      { indian: -1 },
+      undefined,
+      3,
+    );
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const slugs = result.data.sides.map((s) => s.sideDish.slug);
+      expect(slugs).not.toContain("naan-bread");
+      expect(slugs).not.toContain("raita");
+      expect(slugs).toContain("tabbouleh");
+    }
+  });
+
+  it("a soft-negative preference (−0.5) still down-ranks but does NOT exclude", () => {
+    const result = suggestSides(
+      chickenMain,
+      [tabbouleh, naan, raita],
+      { indian: -0.5 },
+      undefined,
+      3,
+    );
+    expect(result.success).toBe(true);
+    if (result.success) {
+      const slugs = result.data.sides.map((s) => s.sideDish.slug);
+      // not hard-excluded — indian sides may still appear
+      expect(slugs.length).toBeGreaterThan(0);
+      expect(slugs).toContain("tabbouleh");
+    }
+  });
+
+  it("falls back to the full feed rather than returning nothing when all are suppressed", () => {
+    const result = suggestSides(
+      chickenMain,
+      [naan, raita],
+      { indian: -1 },
+      undefined,
+      3,
+    );
+    expect(result.success).toBe(true); // no dead feed
+    if (result.success) expect(result.data.sides.length).toBeGreaterThan(0);
+  });
+});

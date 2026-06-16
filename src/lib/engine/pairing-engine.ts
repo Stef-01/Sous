@@ -215,6 +215,27 @@ function reblendDeficiency(
  * @param pantry - Optional pantry/recent-cook reuse context (W1). When its
  *   `onHand` set is non-empty, sides reusing on-hand ingredients are nudged up.
  */
+/** A preference at or below this weight is a hard suppression (a disliked
+ *  cuisine/tag from a survey), not just a soft down-rank. */
+export const SUPPRESSION_THRESHOLD = -0.9;
+
+/** True when any of the candidate's features carries a suppressed preference. */
+function isSuppressed(
+  c: SideDishCandidate,
+  prefs: Record<string, number>,
+): boolean {
+  const features = [
+    c.cuisineFamily,
+    ...(c.flavorProfile ?? []),
+    ...(c.tags ?? []),
+    c.nutritionCategory ?? "",
+    c.temperature,
+  ].filter(Boolean);
+  return features.some(
+    (f) => (prefs[String(f).toLowerCase()] ?? 0) <= SUPPRESSION_THRESHOLD,
+  );
+}
+
 export function suggestSides(
   main: MainDishIntent,
   candidates: SideDishCandidate[],
@@ -242,6 +263,16 @@ export function suggestSides(
     };
   }
 
+  // Suppression screen (W5): strongly-negative preferences (≤ −0.9, e.g. a
+  // cuisine disliked in onboarding/a pulse) hard-exclude a candidate so it
+  // never reaches the top-N. Falls back to `feasible` if suppression would
+  // empty the pool, so the user never hits a dead feed.
+  const screened =
+    userPreferences && Object.keys(userPreferences).length > 0
+      ? feasible.filter((c) => !isSuppressed(c, userPreferences))
+      : feasible;
+  const pool = screened.length > 0 ? screened : feasible;
+
   const mergedWeights = { ...DEFAULT_WEIGHTS, ...weights };
 
   // Build the recency map once per request (single localStorage read) rather
@@ -254,7 +285,7 @@ export function suggestSides(
   // Score and rank all candidates
   const ranked = rankCandidates(
     main,
-    feasible,
+    pool,
     scorers,
     mergedWeights,
     userPreferences,
