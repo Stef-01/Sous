@@ -82,9 +82,16 @@ function buildMirrorCards(opts: {
   const { goalKey, flags, dietary, kcalTarget } = opts;
   const cards: { glyph: string; text: string }[] = [];
 
-  // Lead with the goal, then the "hard" personalisations (kcal target, dietary)
-  // so they survive the 5-card cap, then the softer flag promises.
+  // Lead with the goal, then the strongest personalisations (the kid/Parent
+  // Mode confirmation for families, the kcal target, dietary) so they survive
+  // the 5-card cap, then the softer flag promises.
   if (GOAL_CARD[goalKey]) cards.push(GOAL_CARD[goalKey]);
+  if (flags.kidStruggle) {
+    cards.push({
+      glyph: "soup",
+      text: "Kid-friendly pairings, with Parent Mode on",
+    });
+  }
   if (kcalTarget) {
     cards.push({
       glyph: "beef",
@@ -119,12 +126,6 @@ function buildMirrorCards(opts: {
     cards.push({
       glyph: "salad",
       text: "Whole-ingredient recipes float to the top",
-    });
-  }
-  if (flags.kidStruggle) {
-    cards.push({
-      glyph: "soup",
-      text: "Kid-friendly pairings, with Parent Mode on",
     });
   }
   if (cards.length === 0) {
