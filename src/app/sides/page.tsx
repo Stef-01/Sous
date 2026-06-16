@@ -253,6 +253,14 @@ function SidesPageContent() {
                 sides={pairingQuery.data.sides}
                 onCookThis={handleCookThis}
                 onCookSelected={handleCookSelected}
+                onCookMainAlone={(() => {
+                  const qd = pairingQuery.data;
+                  const slug =
+                    qd && "resolvedMealSlug" in qd
+                      ? (qd.resolvedMealSlug as string | null)
+                      : null;
+                  return slug ? () => router.push(`/cook/${slug}`) : undefined;
+                })()}
                 onReroll={handleReroll}
                 isRerolling={pairingQuery.isFetching}
               />

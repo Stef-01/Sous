@@ -862,6 +862,18 @@ function TodayPageContent() {
                       handleCookThis(guidedSides[0] ?? sides[0]);
                     }
                   }}
+                  onCookMainAlone={(() => {
+                    const qd = pairingQuery.data;
+                    const slug =
+                      qd && "resolvedMealSlug" in qd
+                        ? (qd.resolvedMealSlug as string | null)
+                        : null;
+                    if (!slug) return undefined;
+                    return () => {
+                      setShowSearch(false);
+                      router.push(`/cook/${slug}`);
+                    };
+                  })()}
                   onReroll={handleReroll}
                   isRerolling={pairingQuery.isFetching}
                   pantryOnHand={

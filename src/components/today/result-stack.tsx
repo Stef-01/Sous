@@ -55,6 +55,9 @@ interface ResultStackProps {
   sides: SideResult[];
   onCookThis: (side: SideResult) => void;
   onCookSelected?: (sides: SideResult[]) => void;
+  /** Cook the main on its own (skip sides). Provided only when the main has a
+   *  guided cook of its own — surfaces a "Skip sides" affordance. */
+  onCookMainAlone?: () => void;
   onReroll: () => void;
   isRerolling?: boolean;
   /** W1/W29 context so a rerolled side honours the same pantry + deficiency
@@ -99,6 +102,7 @@ export function ResultStack({
   sides: initialSides,
   onCookThis,
   onCookSelected,
+  onCookMainAlone,
   onReroll,
   isRerolling,
   pantryOnHand,
@@ -382,6 +386,17 @@ export function ResultStack({
                 : `Cook plate with ${selectedSides.length} sides`}
           </span>
         </motion.button>
+        {/* Skip sides — cook the main on its own. Only when the main is itself
+            cookable (a guided-cook flow exists for it). */}
+        {onCookMainAlone && (
+          <button
+            type="button"
+            onClick={onCookMainAlone}
+            className="mx-auto flex min-h-[44px] items-center justify-center px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 rounded-full"
+          >
+            Skip sides — cook it on its own
+          </button>
+        )}
       </div>
 
       {/* Evaluate sheet */}
