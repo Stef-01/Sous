@@ -11,6 +11,7 @@ import {
   Gamepad2,
   Sparkles,
   Utensils,
+  Salad,
 } from "lucide-react";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { CookForTwoChip } from "@/components/today/cook-for-two-chip";
@@ -23,6 +24,7 @@ interface MoreOptionsSheetProps {
   onPlayGame?: () => void;
   onPersonalize?: () => void;
   onEatOut?: () => void;
+  onFindSide?: () => void;
 }
 
 /**
@@ -41,6 +43,7 @@ export function MoreOptionsSheet({
   onPlayGame,
   onPersonalize,
   onEatOut,
+  onFindSide,
 }: MoreOptionsSheetProps) {
   const reducedMotion = useReducedMotion();
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -144,6 +147,16 @@ export function MoreOptionsSheet({
                       label="Eat out tonight"
                       onClick={() => {
                         onEatOut();
+                        onClose();
+                      }}
+                    />
+                  )}
+                  {onFindSide && (
+                    <SheetActionButton
+                      icon={Salad}
+                      label="Find a side"
+                      onClick={() => {
+                        onFindSide();
                         onClose();
                       }}
                     />

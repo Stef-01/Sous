@@ -692,6 +692,7 @@ function TodayPageContent() {
         onPlayGame={() => router.push("/games")}
         onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
         onEatOut={() => router.push("/eat-out")}
+        onFindSide={() => router.push("/sides")}
       />
 
       {/* Profile & settings — opened by tapping the owl mascot. Holds the

@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Search, ChefHat } from "lucide-react";
 import { trpc } from "@/lib/trpc/client";
 import { ResultStack, type SideResult } from "@/components/today/result-stack";
+import { SideSearch } from "@/components/today/side-search";
 import { useTherapeuticDietaryFlags } from "@/lib/hooks/use-therapeutic-flags";
 
 export default function SidesPage() {
@@ -137,13 +138,9 @@ function SidesPageContent() {
     [handleCookThis, pairingQuery.data, router],
   );
 
-  // Navigating during render causes "Cannot update during rendering" warnings;
-  // punt to an effect instead. See AUDIT-2026-04-17 P1-7.
-  useEffect(() => {
-    if (!mainDish) router.replace("/today");
-  }, [mainDish, router]);
-
-  if (!mainDish) return null;
+  // No `?main` → the minimalist "find a side" search (Feature B). With a main →
+  // the side-pairing flow below.
+  if (!mainDish) return <SideSearch />;
 
   const isLoading = pairingQuery.isLoading || pairingQuery.isFetching;
 

@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { router, rateLimitedProcedure } from "@/lib/trpc/server";
+import {
+  router,
+  rateLimitedProcedure,
+  publicProcedure,
+} from "@/lib/trpc/server";
 import { parseCraving } from "@/lib/ai/craving-parser";
 import { suggestSides } from "@/lib/engine/pairing-engine";
 import {
@@ -459,4 +463,24 @@ export const pairingRouter = router({
         },
       };
     }),
+
+  /**
+   * Lightweight list of every side in the catalogue, for the minimalist side
+   * search (no main required). Returned once and filtered client-side so search
+   * stays instant. Static read-only data → publicProcedure, no rate limit.
+   */
+  listSides: publicProcedure.query(() => {
+    const cookSlugs = new Set(getAvailableCookSlugs());
+    return getCandidates()
+      .map((c) => ({
+        slug: c.slug,
+        name: c.name,
+        tags: c.tags,
+        cuisineFamily: c.cuisineFamily,
+        imageUrl:
+          existingSides.find((es) => es.id === c.slug)?.imageUrl ?? null,
+        hasGuidedCook: cookSlugs.has(c.slug),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }),
 });
