@@ -2069,5 +2069,58 @@
       "url": "https://cheftu.com/recipelibrary/thitheoquay"
     },
     "dayparts": ["lunch", "dinner"]
+  },
+  {
+    "id": "honey-glazed-salmon-mango-salsa",
+    "name": "Honey Glazed Salmon with Mango Salsa",
+    "aliases": [
+      "honey glazed salmon",
+      "salmon mango salsa",
+      "glazed salmon",
+      "salmon",
+      "mango salsa salmon"
+    ],
+    "heroImageUrl": "/food_images/honey-glazed-salmon-mango-salsa/hero.jpg",
+    "sidePool": [
+      "air-fryer-edamame",
+      "basmati-rice",
+      "steamed-broccoli",
+      "seaweed-salad"
+    ],
+    "cuisine": "American",
+    "description": "Seasoned salmon brushed with a quick honey–sriracha glaze and broiled until it flakes, finished with a bright, fresh mango salsa. A fast weeknight main over any rice you like.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Stefan",
+      "url": "https://www.simplyscratch.com/honey-glazed-salmon-with-mango-salsa/"
+    },
+    "dayparts": ["lunch", "dinner"]
+  },
+  {
+    "id": "cheesy-beef-enchiladas-verde",
+    "name": "Cheesy Beef Enchiladas Verde",
+    "aliases": [
+      "beef enchiladas",
+      "enchiladas verde",
+      "cheesy enchiladas",
+      "enchiladas",
+      "salsa verde enchiladas"
+    ],
+    "heroImageUrl": "/food_images/cheesy-beef-enchiladas-verde/hero.jpg",
+    "sidePool": [
+      "mexican-rice",
+      "refried-beans",
+      "guacamole",
+      "pico-de-gallo",
+      "elote"
+    ],
+    "cuisine": "Mexican",
+    "description": "Seasoned ground beef tossed in a creamy salsa-verde sauce, rolled into flour tortillas, smothered in more sauce and Monterey Jack, and baked until melty and golden.",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Stefan",
+      "url": "https://www.simplyscratch.com/cheesy-beef-enchiladas-verde/"
+    },
+    "dayparts": ["lunch", "dinner"]
   }
 ]

@@ -2474,5 +2474,20 @@
     "nutritionCategory": "legume",
     "nourishVerified": false,
     "role": "side"
+  },
+  {
+    "id": "air-fryer-edamame",
+    "name": "Air Fryer Edamame",
+    "imageUrl": "/food_images/air-fryer-edamame/hero.jpg",
+    "tags": ["edamame", "japanese", "snack", "high-protein", "air-fryer"],
+    "description": "Frozen edamame tossed with toasted sesame oil, soy and garlic, then air-fried until the edges are golden — a fast, high-fiber, complete-protein nibble.",
+    "pairingReason": "a quick plant-protein bite that rounds out Asian and grilled mains",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "source": {
+      "creator": "Stefan",
+      "url": "https://www.simplyscratch.com/air-fryer-edamame/"
+    },
+    "role": "side"
   }
 ]

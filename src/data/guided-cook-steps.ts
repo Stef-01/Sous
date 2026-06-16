@@ -9,6 +9,10 @@ import {
   CHEF_TU_SIDE_FLOWS_2,
   CHEF_TU_MEAL_FLOWS_2,
 } from "./chef-tu-cook-steps-2";
+import {
+  STEFAN_SIDE_FLOWS,
+  STEFAN_MEAL_FLOWS,
+} from "./stefan-curated-recipes";
 
 export interface StaticCookStep {
   phase: "cook";
@@ -48,6 +52,7 @@ export interface StaticDishData {
 export const guidedCookData: Record<string, StaticDishData> = {
   ...CHEF_TU_SIDE_FLOWS,
   ...CHEF_TU_SIDE_FLOWS_2,
+  ...STEFAN_SIDE_FLOWS,
   // Folder-per-food image convention (founder, 2026-06-11): each recipe's
   // photos live in public/food_images/<slug>/ — hero.jpg plus step-N.jpg per
   // cook step. Brownies ship with the hero; when step photos land, set each
@@ -143,7 +148,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
         cuisineFact:
           "One cup of black beans carries about 15 g protein and 16 g fiber — over half a day's fiber, and the pairing that keeps dessert from spiking blood sugar.",
         donenessCue: "Flax mixture turns thick and gelled",
-        imageUrl: null,
+        imageUrl: "/food_images/black-bean-brownies/step-1.jpg",
       },
       {
         phase: "cook",
@@ -157,7 +162,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
         cuisineFact:
           "Raw cacao skips roasting and sweetening, keeping its micronutrients intact — it's one of the most antioxidant-dense plant foods, ahead of blueberries and green tea.",
         donenessCue: "Batter is glossy with zero visible bean pieces",
-        imageUrl: null,
+        imageUrl: "/food_images/black-bean-brownies/step-2.jpg",
       },
       {
         phase: "cook",
@@ -171,7 +176,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
           "If beans usually bloat you, regular fiber intake calms that response over time — digestive enzymes help in the meantime.",
         cuisineFact: null,
         donenessCue: null,
-        imageUrl: null,
+        imageUrl: "/food_images/black-bean-brownies/step-3.jpg",
       },
       {
         phase: "cook",
@@ -184,7 +189,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
         quickHack: null,
         cuisineFact: null,
         donenessCue: "A toothpick in the centre comes out clean",
-        imageUrl: null,
+        imageUrl: "/food_images/black-bean-brownies/step-4.jpg",
       },
       {
         phase: "cook",
@@ -197,7 +202,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
         cuisineFact:
           "The bean-and-cacao base means steadier blood sugar and meaningful potassium — dessert that supports heart health instead of fighting it.",
         donenessCue: "Edges pull slightly from the dish and centre is set",
-        imageUrl: null,
+        imageUrl: "/food_images/black-bean-brownies/step-5.jpg",
       },
     ],
   },
@@ -15440,6 +15445,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
 export const guidedCookMeals: Record<string, StaticDishData> = {
   ...CHEF_TU_MEAL_FLOWS,
   ...CHEF_TU_MEAL_FLOWS_2,
+  ...STEFAN_MEAL_FLOWS,
   "masoor-dal": {
     name: "Masoor Dal",
     slug: "masoor-dal",
