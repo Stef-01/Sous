@@ -71,6 +71,18 @@ const OnboardingFlow = dynamic(() =>
     (m) => m.OnboardingFlow,
   ),
 );
+// W4: pulse micro-surveys (lazy — only mounts when a pulse surfaces).
+const PulseHost = dynamic(() =>
+  import("@/components/surveys/pulse-host").then((m) => m.PulseHost),
+);
+import {
+  usePulseLedger,
+  selectEligiblePulse,
+  volunteeredPulses,
+  getDeviceId,
+  markPulseShown,
+} from "@/lib/surveys/pulse-scheduler";
+import type { PulseDef } from "@/data/pulses";
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useUserWeights } from "@/lib/hooks/use-user-weights";
@@ -125,6 +137,10 @@ function TodayPageContent() {
   const [showCoachQuiz, setShowCoachQuiz] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
+  // W4 — a surfaced pulse micro-survey (auto-triggered or volunteered).
+  const { ledger: pulseLedger, mounted: pulseLedgerMounted } = usePulseLedger();
+  const [activePulse, setActivePulse] = useState<PulseDef | null>(null);
+  const pulseCheckedRef = useRef(false);
   const [mainDishQuery, setMainDishQuery] = useState("");
   const [rerollSeed, setRerollSeed] = useState(0);
   const [resetKey, setResetKey] = useState(0);
@@ -234,6 +250,30 @@ function TodayPageContent() {
       // localStorage unavailable
     }
   }, []);
+
+  // W4 — surface an eligible "visit" pulse once per mount, never while
+  // onboarding is up/pending. Cooldowns + the 7-day post-onboarding quiet
+  // window are enforced by the scheduler, so this stays calm by default.
+  useEffect(() => {
+    if (pulseCheckedRef.current) return;
+    if (!pulseLedgerMounted || !quizDone || showCoachQuiz || activePulse)
+      return;
+    pulseCheckedRef.current = true;
+    const id = setTimeout(() => {
+      const now = new Date().toISOString();
+      const pulse = selectEligiblePulse(
+        "visit",
+        pulseLedger,
+        now,
+        getDeviceId(),
+      );
+      if (pulse) {
+        markPulseShown(pulse.id, now);
+        setActivePulse(pulse);
+      }
+    }, 1600);
+    return () => clearTimeout(id);
+  }, [pulseLedgerMounted, quizDone, showCoachQuiz, activePulse, pulseLedger]);
 
   // Auto-open search with sides for a dish (from mission screen "Select sides to pair")
   const selectSidesParam = searchParams.get("selectSides");
@@ -439,6 +479,17 @@ function TodayPageContent() {
     handleTextSubmit("simple side with basic pantry ingredients");
   }, [handleTextSubmit]);
 
+  // Volunteered pulse entry ("Tune my picks" in the Profile sheet) — open the
+  // user's lowest-signal pulse first, bypassing the auto-trigger cooldowns.
+  const handleTunePicks = useCallback(() => {
+    setShowProfileSettings(false);
+    const pulse = volunteeredPulses(pulseLedger)[0] ?? null;
+    if (pulse) {
+      markPulseShown(pulse.id, new Date().toISOString());
+      setActivePulse(pulse);
+    }
+  }, [pulseLedger]);
+
   // OnboardingFlow owns all persistence (preferences, effort, profile, parent
   // mode, targets); Today just adopts the warmed deck inputs and closes.
   const handleOnboardingComplete = useCallback(
@@ -640,7 +691,15 @@ function TodayPageContent() {
       <ProfileSettingsSheet
         open={showProfileSettings}
         onClose={() => setShowProfileSettings(false)}
+        onTunePicks={handleTunePicks}
       />
+
+      {/* W4 — a surfaced pulse micro-survey (auto-triggered or volunteered). */}
+      <AnimatePresence>
+        {activePulse && (
+          <PulseHost pulse={activePulse} onClose={() => setActivePulse(null)} />
+        )}
+      </AnimatePresence>
 
       {/* Search popout  -  slides up from bottom */}
       <SearchPopout isOpen={showSearch} onClose={handleCloseSearch}>

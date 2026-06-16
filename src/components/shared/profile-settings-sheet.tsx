@@ -26,6 +26,7 @@ import {
   HeartPulse,
   Mic,
   RotateCcw,
+  Sparkles,
   UserRound,
   X,
 } from "lucide-react";
@@ -55,6 +56,8 @@ import { GoalPlansSection } from "@/components/shared/goal-plans-section";
 interface Props {
   open: boolean;
   onClose: () => void;
+  /** Volunteered pulse entry — opens a quick "tune my picks" micro-survey. */
+  onTunePicks?: () => void;
 }
 
 const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
@@ -65,7 +68,7 @@ const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
   { id: "mix", label: "Mixed", help: "More than one age" },
 ];
 
-export function ProfileSettingsSheet({ open, onClose }: Props) {
+export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
   const { profile, toggle, setAgeBand } = useParentMode();
   const voicePref = useVoiceCookPref();
   const visualPref = useVisualModePref();
@@ -356,6 +359,40 @@ export function ProfileSettingsSheet({ open, onClose }: Props) {
                 </button>
               </div>
             </section>
+
+            {/* Tune my picks — the volunteered entry to the pulse micro-surveys
+                (W4). One row, this sheet only (rule 3). */}
+            {onTunePicks && (
+              <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic();
+                    onTunePicks();
+                  }}
+                  className="flex w-full items-center gap-3 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                  >
+                    <Sparkles size={16} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <SectionKicker as="p" size="10px">
+                      Tune my picks
+                    </SectionKicker>
+                    <span className="mt-0.5 block text-[13px] leading-snug text-[var(--nourish-dark)]">
+                      A quick question or two to sharpen your suggestions.
+                    </span>
+                  </span>
+                  <ChevronDown
+                    size={16}
+                    className="-rotate-90 text-[var(--nourish-subtext)]"
+                  />
+                </button>
+              </section>
+            )}
 
             {/* Demo reset (Y5 D, audit P1 #23). Quiet text link so
                 it's discoverable but doesn't compete with primary

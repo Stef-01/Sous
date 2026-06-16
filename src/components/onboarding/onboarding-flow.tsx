@@ -13,6 +13,7 @@ import {
   type OnboardingResult,
 } from "@/lib/onboarding/apply-onboarding";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { recordOnboardingDone } from "@/lib/surveys/pulse-scheduler";
 import type { AggregatedSignals } from "@/lib/surveys/compute-survey-signals";
 import type { SurveyAnswers } from "@/types/survey";
 
@@ -49,6 +50,8 @@ export function OnboardingFlow({
         new Date().toISOString(),
       );
       persistOnboardingResult(r);
+      // Start the 7-day quiet window before any pulse surfaces.
+      recordOnboardingDone(new Date().toISOString());
       // Parent Mode is a hook write — only turn it on when a kids age band
       // was chosen (null / undefined leave it untouched).
       if (r.parentModeAgeBand) {
