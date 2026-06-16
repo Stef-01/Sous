@@ -65,8 +65,11 @@ const CorrectionChips = dynamic(
   { ssr: false },
 );
 
-const CoachQuiz = dynamic(() =>
-  import("@/components/shared/coach-quiz").then((m) => m.CoachQuiz),
+// W3: the narrative onboarding flow replaces the old coach-quiz modal.
+const OnboardingFlow = dynamic(() =>
+  import("@/components/onboarding/onboarding-flow").then(
+    (m) => m.OnboardingFlow,
+  ),
 );
 import { trpc } from "@/lib/trpc/client";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
@@ -81,7 +84,7 @@ import { TherapeuticEvidence } from "@/components/today/therapeutic-evidence";
 import { track } from "@/lib/analytics";
 import { usePullToRefresh } from "@/lib/hooks/use-pull-to-refresh";
 import { blendPreferences, useTasteBlend } from "@/lib/hooks/use-taste-blend";
-import type { CoachQuizResult } from "@/data/coach-quiz";
+import type { OnboardingCompletion } from "@/components/onboarding/onboarding-flow";
 
 type ViewState =
   | { type: "idle" }
@@ -436,22 +439,17 @@ function TodayPageContent() {
     handleTextSubmit("simple side with basic pantry ingredients");
   }, [handleTextSubmit]);
 
-  const handleCoachQuizComplete = useCallback((result: CoachQuizResult) => {
-    try {
-      localStorage.setItem(
-        "sous-preferences",
-        JSON.stringify(result.preferences),
-      );
-      localStorage.setItem("sous-effort-tolerance", result.effortTolerance);
-      localStorage.setItem("sous-coach-quiz-done", "true");
-    } catch {
-      // localStorage unavailable
-    }
-    setUserPreferences(result.preferences);
-    setEffortTolerance(result.effortTolerance);
-    setQuizDone(true);
-    setShowCoachQuiz(false);
-  }, []);
+  // OnboardingFlow owns all persistence (preferences, effort, profile, parent
+  // mode, targets); Today just adopts the warmed deck inputs and closes.
+  const handleOnboardingComplete = useCallback(
+    (completion: OnboardingCompletion) => {
+      setUserPreferences(completion.preferences);
+      setEffortTolerance(completion.effortTolerance);
+      setQuizDone(true);
+      setShowCoachQuiz(false);
+    },
+    [],
+  );
 
   // ── Render ────────────────────────────────────────────
 
@@ -864,23 +862,17 @@ function TodayPageContent() {
         )}
       </SearchPopout>
 
-      {/* Coach onboarding quiz  -  full-screen overlay */}
+      {/* W3 onboarding — full-screen overlay. OnboardingFlow marks itself done
+          (localStorage) on both skip and finish, so the closed state here only
+          updates in-memory flags. */}
       <AnimatePresence>
         {showCoachQuiz && (
-          <CoachQuiz
+          <OnboardingFlow
             onClose={() => {
-              // Mark as done even if closed early so it doesn't re-appear.
-              // Also set component state so "Personalize" hides immediately
-              // (the deferred localStorage effect only runs once on mount).
-              try {
-                localStorage.setItem("sous-coach-quiz-done", "true");
-              } catch {
-                // localStorage unavailable
-              }
               setQuizDone(true);
               setShowCoachQuiz(false);
             }}
-            onComplete={handleCoachQuizComplete}
+            onComplete={handleOnboardingComplete}
           />
         )}
       </AnimatePresence>

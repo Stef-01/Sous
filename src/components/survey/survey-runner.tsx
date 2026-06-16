@@ -107,7 +107,9 @@ export function SurveyRunner({
       secondaryLabel={showSkip ? "Skip" : undefined}
       onSecondary={showSkip ? goNext : undefined}
     >
-      <StepBody step={step} value={value} setAnswer={setAnswer} />
+      {/* key by step id so each step is a fresh subtree — critical for the
+          wheel (its scroll/centre state must reset between age/height/weight). */}
+      <StepBody key={step.id} step={step} value={value} setAnswer={setAnswer} />
     </SurveyShell>
   );
 }

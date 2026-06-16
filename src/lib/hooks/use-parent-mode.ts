@@ -11,7 +11,7 @@
  *
  * Plumbing only — no UI. UI lives in:
  *   src/components/today/parent-toggle-chip.tsx
- *   src/components/shared/coach-quiz.tsx (extension)
+ *   src/components/onboarding/onboarding-flow.tsx (family branch sets the band)
  *
  * The pure helpers (PARENT_MODE_STORAGE_KEY, parseStoredProfile,
  * DEFAULT_PARENT_PROFILE) are exported so use-parent-mode.test.ts can
