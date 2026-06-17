@@ -17,7 +17,7 @@
  * object-shape gate, validate against schema before adoption).
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import {
   parseUserRecipeJson,
   serialiseUserRecipe,
@@ -108,49 +108,103 @@ export function roundTripRecipe(raw: string): UserRecipe | null {
   return result.ok ? result.recipe : null;
 }
 
-export function useRecipeDrafts() {
-  const [drafts, setDrafts] = useState<UserRecipe[]>([]);
-  const [mounted, setMounted] = useState(false);
+// ── Shared module store ─────────────────────────────────────
+// Originally each useRecipeDrafts() call held its own useState, so every mount
+// (the Today deck's quest card, /path/recipes, the cook page, the editor) had
+// an INDEPENDENT copy of the list — an import or edit on one surface didn't
+// appear on the others until a full reload. This is a single module-level store
+// read through useSyncExternalStore: every mount shares ONE array and re-renders
+// together, and a `storage` listener adopts writes from other tabs (a clinician
+// with the app open twice). The pure helpers above remain the only logic; this
+// is just the shared-subscription shell around them.
 
-  /* eslint-disable react-hooks/set-state-in-effect -- legitimate: hydrate from localStorage on mount */
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      setMounted(true);
-      return;
-    }
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      setDrafts(parseStoredRecipeDrafts(raw));
-    } catch {
-      setDrafts([]);
-    }
-    setMounted(true);
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
+type DraftsSnapshot = { drafts: UserRecipe[]; hydrated: boolean };
+
+let storeDrafts: UserRecipe[] = [];
+let storeHydrated = false;
+// Cached snapshot — its reference only changes when the store actually changes,
+// which is what useSyncExternalStore requires to avoid an infinite render loop.
+let snapshot: DraftsSnapshot = { drafts: storeDrafts, hydrated: storeHydrated };
+const SERVER_SNAPSHOT: DraftsSnapshot = { drafts: [], hydrated: false };
+const listeners = new Set<() => void>();
+
+function rebuildSnapshot() {
+  snapshot = { drafts: storeDrafts, hydrated: storeHydrated };
+}
+
+function emit() {
+  for (const listener of listeners) listener();
+}
+
+function onStorageEvent(e: StorageEvent) {
+  if (e.key !== STORAGE_KEY) return;
+  // Another tab wrote the list — adopt it. Don't re-persist (that tab already
+  // did; re-persisting would echo the event back and forth).
+  storeDrafts = parseStoredRecipeDrafts(e.newValue);
+  rebuildSnapshot();
+  emit();
+}
+
+function ensureHydrated() {
+  if (storeHydrated || typeof window === "undefined") return;
+  try {
+    storeDrafts = parseStoredRecipeDrafts(localStorage.getItem(STORAGE_KEY));
+  } catch {
+    storeDrafts = [];
+  }
+  storeHydrated = true;
+  rebuildSnapshot();
+  window.addEventListener("storage", onStorageEvent);
+  emit();
+}
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  ensureHydrated(); // first subscriber reads localStorage; later ones no-op
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot(): DraftsSnapshot {
+  return snapshot;
+}
+
+function getServerSnapshot(): DraftsSnapshot {
+  return SERVER_SNAPSHOT;
+}
+
+/** The single mutation path for the shared store: replace the list, persist to
+ *  localStorage, notify every subscriber. Reads `storeDrafts` at call time so
+ *  it never operates on a stale closure. */
+function commitDrafts(next: UserRecipe[]) {
+  storeDrafts = next;
+  persist(next);
+  rebuildSnapshot();
+  emit();
+}
+
+export function useRecipeDrafts() {
+  const { drafts, hydrated } = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const upsert = useCallback((recipe: UserRecipe) => {
-    setDrafts((prev) => {
-      const next = upsertRecipe(prev, recipe);
-      persist(next);
-      return next;
-    });
-    // Write-through to Supabase (best-effort; localStorage is the
-    // optimistic source of truth).
+    commitDrafts(upsertRecipe(storeDrafts, recipe));
+    // Write-through to Supabase (best-effort; localStorage is the optimistic
+    // source of truth).
     persistRecipeUpsert(recipe);
   }, []);
 
   const remove = useCallback((id: string) => {
-    setDrafts((prev) => {
-      const next = removeRecipeById(prev, id);
-      persist(next);
-      return next;
-    });
+    commitDrafts(removeRecipeById(storeDrafts, id));
     persistRecipeRemove(id);
   }, []);
 
   const clear = useCallback(() => {
-    persist([]);
-    setDrafts([]);
+    commitDrafts([]);
   }, []);
 
   const getById = useCallback(
@@ -158,5 +212,7 @@ export function useRecipeDrafts() {
     [drafts],
   );
 
-  return { drafts, mounted, upsert, remove, clear, getById };
+  // `mounted` kept as the public name (call sites gate render on it) — it now
+  // means "the shared store has hydrated from localStorage".
+  return { drafts, mounted: hydrated, upsert, remove, clear, getById };
 }
