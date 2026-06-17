@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * ProfileSettingsSheet — bottom-sheet opened by tapping the owl mascot
+ * ProfileSettingsSheet — bottom-sheet opened by tapping the Doberman mascot
  * in the top-right of the Today header.
  *
  * Stage-2 W9 amendment to CLAUDE.md rule 3 ("no settings pages"): a

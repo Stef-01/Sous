@@ -12,7 +12,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SearchX, MoreHorizontal } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
-import { OwlAvatar, CravingSearchBar } from "@/components/today/bird-mascot";
+import { DobermanAvatar, CravingSearchBar } from "@/components/today/mascot";
+import { mascotMood, type MascotMood } from "@/components/today/mascot-mood";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
@@ -160,6 +161,15 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats, completedSessions } = useCookSessions();
+  // W22 — the header Doberman's expression reflects the day. Computed
+  // client-side (mounted-gated) so the time-of-day input never mismatches SSR.
+  const [mascotExpression, setMascotExpression] = useState<MascotMood>("idle");
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only time-of-day sync (avoids hydration mismatch)
+    setMascotExpression(
+      mascotMood({ hour: new Date().getHours(), streak: stats.currentStreak }),
+    );
+  }, [stats.currentStreak]);
   // W30 pairing-engine V2: trained weight vector from cook
   // history. Cold-start (< 5 cooks) returns the same DEFAULT_WEIGHTS
   // the engine already uses, so this is invisible to new users
@@ -544,10 +554,10 @@ function TodayPageContent() {
       animate={{ opacity: 1 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
     >
-      {/* Pull-to-refresh indicator — W22b animation #8: bird-mascot
+      {/* Pull-to-refresh indicator — W22b animation #8: Doberman-mascot
           eyelid blink replaces the bare chevron. Eyes close as the
           pull approaches threshold; on trigger they open wide. The
-          owl is the same glyph as the header mascot — visual continuity. */}
+          Doberman is the same glyph as the header mascot — visual continuity. */}
       {pullState.pulling && (
         <div
           className="flex items-center justify-center overflow-hidden transition-[height] duration-150"
@@ -564,59 +574,69 @@ function TodayPageContent() {
               fill="none"
               aria-hidden
             >
+              {/* Doberman head — same glyph family as the header mascot. */}
+              {/* Cropped ears */}
+              <path d="M22 16 L25 2 L30 15 Z" fill="#2b2622" />
+              <path d="M42 16 L39 2 L34 15 Z" fill="#2b2622" />
               {/* Head */}
-              <circle cx="32" cy="26" r="14" fill="var(--nourish-green)" />
-              {/* Eye whites */}
-              <circle cx="26" cy="24" r="3.5" fill="white" />
-              <circle cx="38" cy="24" r="3.5" fill="white" />
+              <path
+                d="M21 17 C21 11 27 9 32 9 C37 9 43 11 43 17 L41 28 C39 36 36 39 32 40 C28 39 25 36 23 28 Z"
+                fill="#2b2622"
+              />
+              {/* Rust eyebrow dots */}
+              <ellipse cx="27" cy="17.6" rx="2.3" ry="1.4" fill="#bd6a26" />
+              <ellipse cx="37" cy="17.6" rx="2.3" ry="1.4" fill="#bd6a26" />
+              {/* Amber eyes */}
+              <ellipse cx="27" cy="22" rx="2.6" ry="3" fill="#f3c98a" />
+              <ellipse cx="37" cy="22" rx="2.6" ry="3" fill="#f3c98a" />
               {/* Pupils — open when triggered, otherwise scale by progress */}
               <circle
                 cx="27"
-                cy="23.5"
+                cy="22.4"
                 r={
                   pullState.triggered
-                    ? 1.8
-                    : 1.8 * (1 - pullState.progress * 0.6)
+                    ? 1.4
+                    : 1.4 * (1 - pullState.progress * 0.6)
                 }
-                fill="#0D0D0D"
+                fill="#1a1714"
                 style={{ transition: "r 0.12s ease" }}
               />
               <circle
-                cx="39"
-                cy="23.5"
+                cx="37"
+                cy="22.4"
                 r={
                   pullState.triggered
-                    ? 1.8
-                    : 1.8 * (1 - pullState.progress * 0.6)
+                    ? 1.4
+                    : 1.4 * (1 - pullState.progress * 0.6)
                 }
-                fill="#0D0D0D"
+                fill="#1a1714"
                 style={{ transition: "r 0.12s ease" }}
               />
-              {/* Eyelids that drop down with the pull progress */}
+              {/* Eyelids (coat) drop down with the pull progress */}
               <rect
-                x="22.5"
-                y={20.5 + pullState.progress * 4}
-                width="7"
-                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                x="24.2"
+                y={19 + pullState.progress * 3}
+                width="5.6"
+                height={pullState.triggered ? 0 : 3 * pullState.progress}
                 rx="1"
-                fill="var(--nourish-green)"
+                fill="#2b2622"
                 style={{ transition: "height 0.12s ease" }}
               />
               <rect
-                x="34.5"
-                y={20.5 + pullState.progress * 4}
-                width="7"
-                height={pullState.triggered ? 0 : 4 * pullState.progress}
+                x="34.2"
+                y={19 + pullState.progress * 3}
+                width="5.6"
+                height={pullState.triggered ? 0 : 3 * pullState.progress}
                 rx="1"
-                fill="var(--nourish-green)"
+                fill="#2b2622"
                 style={{ transition: "height 0.12s ease" }}
               />
-              {/* Beak */}
-              <path d="M30 29 L32 33 L34 29" fill="var(--nourish-gold)" />
-              {/* Chef hat */}
-              <ellipse cx="32" cy="14" rx="11" ry="4.5" fill="white" />
-              <rect x="25" y="9" width="14" height="7" rx="2" fill="white" />
-              <circle cx="32" cy="8" r="3.5" fill="white" />
+              {/* Tan muzzle + nose */}
+              <path
+                d="M28 28 C29 26.5 35 26.5 36 28 L34.8 35 C33.5 37.5 30.5 37.5 29.2 35 Z"
+                fill="#bd6a26"
+              />
+              <ellipse cx="32" cy="31" rx="2.2" ry="1.6" fill="#121212" />
             </svg>
             {pullState.triggered ? "Release to refresh" : "Pull to refresh"}
           </div>
@@ -640,8 +660,11 @@ function TodayPageContent() {
               </h1>
               <StreakCounter streak={stats.currentStreak} />
             </div>
-            {/* Owl mascot  -  profile entry point. */}
-            <OwlAvatar onClick={() => setShowProfileSettings(true)} />
+            {/* Doberman mascot  -  profile entry point. */}
+            <DobermanAvatar
+              mood={mascotExpression}
+              onClick={() => setShowProfileSettings(true)}
+            />
           </div>
         </header>
       </HeadroomHeader>
@@ -720,7 +743,7 @@ function TodayPageContent() {
         onFindSide={() => router.push("/sides")}
       />
 
-      {/* Profile & settings — opened by tapping the owl mascot. Holds the
+      {/* Profile & settings — opened by tapping the Doberman mascot. Holds the
           Parent Mode toggle + age band picker. NOT a tab. */}
       <ProfileSettingsSheet
         open={showProfileSettings}
