@@ -37,6 +37,7 @@ import { LogItButton } from "@/components/shared/log-it-button";
 import { DietaryProfile } from "@/components/shared/dietary-profile";
 import {
   getDishNutrition,
+  getDishPerServing,
   getDishCompositionGrams,
   getDishIngredientIds,
   NUTRITION_COVERAGE_FLOOR,
@@ -125,6 +126,18 @@ export function MealHealthPanel({
     !!perServing && massedCoverage >= NUTRITION_COVERAGE_FLOOR;
   const ingredientIds = getDishIngredientIds(slug);
 
+  // Decision-point macros — SEED-FIRST + coverage-gated (display-grade or
+  // honestly hidden), so accurate per-serving calories/macros reach the Info
+  // sheet the user opens to decide whether to cook. Before this they were gated
+  // behind the composed path and missing for ~every dish (incl. the 13 seeded
+  // ones with hand-authored numbers). The deeper composed views below stay.
+  const { perServing: glanceServing, coverage: glanceCoverage } =
+    getDishPerServing(slug);
+  // A hand-authored seed (coverage 1) is the accurate source — show its macro
+  // pill and suppress the composed ring below (whose ingredient-math estimate
+  // would otherwise contradict it). Non-seeded dishes keep the composed ring.
+  const isSeedGlance = !!glanceServing && glanceCoverage >= 1;
+
   // Phase 10 — the reading lens (default everyday). It gates only the OPTIONAL
   // layers; the status badge + hedge render regardless, and the AyurvedicDishNote
   // auto-respects it via the now-derived useAyurvedicMode (lens === "ayurvedic").
@@ -190,7 +203,7 @@ export function MealHealthPanel({
       <IngredientsToCheck slug={slug} />
       <DietaryProfile slug={slug} />
 
-      {hasNutrition && (
+      {hasNutrition && !isSeedGlance && (
         <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
           <NutritionRingCard
             nutrition={perServing}
@@ -222,6 +235,34 @@ export function MealHealthPanel({
         )}
       </div>
 
+      {/* Decision-point macro glance — accurate calories + P/C/F at the top of
+          the Info sheet, so the user can weigh nutrition BEFORE committing to
+          cook (rule 13: one compact row, no prose). */}
+      {isSeedGlance && (
+        <div className="flex items-center gap-3 rounded-2xl bg-[var(--nourish-cream)]/60 px-4 py-2.5">
+          <span className="tabular-nums text-[16px] font-semibold text-[var(--nourish-dark)]">
+            {Math.round(glanceServing.calories ?? 0)}
+            <span className="ml-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]">
+              cal
+            </span>
+          </span>
+          <span className="text-[11px] text-[var(--nourish-subtext-faint)]">
+            / serving
+          </span>
+          <span className="ml-auto flex items-center gap-2.5 tabular-nums text-[12px] font-semibold">
+            <span style={{ color: "var(--data-protein)" }}>
+              {Math.round(glanceServing.protein_g ?? 0)}g P
+            </span>
+            <span style={{ color: "var(--data-carb)" }}>
+              {Math.round(glanceServing.totalCarbs_g ?? 0)}g C
+            </span>
+            <span style={{ color: "var(--data-fat)" }}>
+              {Math.round(glanceServing.totalFat_g ?? 0)}g F
+            </span>
+          </span>
+        </div>
+      )}
+
       {hasNutrition && (
         <SousReadCard
           nutrition={perServing}
@@ -230,7 +271,7 @@ export function MealHealthPanel({
         />
       )}
 
-      {hasNutrition && (
+      {hasNutrition && !isSeedGlance && (
         <div className="rounded-2xl bg-[var(--nourish-cream)]/50 p-4">
           <NutritionRingCard
             nutrition={perServing}
