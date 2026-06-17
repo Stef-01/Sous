@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Check, ChevronRight, ShoppingCart, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { SPRING } from "@/lib/motion/tokens";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
@@ -188,16 +190,18 @@ export default function ShoppingListPage() {
                   {category}
                 </p>
                 <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
-                  {list.map((item) => (
-                    <GroceryRow
-                      key={item.key}
-                      name={item.name}
-                      quantity={item.quantity}
-                      bought={false}
-                      onToggle={() => toggleBought(item.key)}
-                      onRemove={() => remove(item.key)}
-                    />
-                  ))}
+                  <AnimatePresence initial={false}>
+                    {list.map((item) => (
+                      <GroceryRow
+                        key={item.key}
+                        name={item.name}
+                        quantity={item.quantity}
+                        bought={false}
+                        onToggle={() => toggleBought(item.key)}
+                        onRemove={() => remove(item.key)}
+                      />
+                    ))}
+                  </AnimatePresence>
                 </ul>
               </section>
             ))}
@@ -212,16 +216,18 @@ export default function ShoppingListPage() {
                   In the cart ({boughtItems.length})
                 </p>
                 <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
-                  {boughtItems.map((item) => (
-                    <GroceryRow
-                      key={item.key}
-                      name={item.name}
-                      quantity={item.quantity}
-                      bought
-                      onToggle={() => toggleBought(item.key)}
-                      onRemove={() => remove(item.key)}
-                    />
-                  ))}
+                  <AnimatePresence initial={false}>
+                    {boughtItems.map((item) => (
+                      <GroceryRow
+                        key={item.key}
+                        name={item.name}
+                        quantity={item.quantity}
+                        bought
+                        onToggle={() => toggleBought(item.key)}
+                        onRemove={() => remove(item.key)}
+                      />
+                    ))}
+                  </AnimatePresence>
                 </ul>
               </section>
             )}
@@ -277,8 +283,16 @@ function GroceryRow({
   // Reference grammar (Crouton mockups): checkbox LEFT, name left, BOLD
   // quantity right-aligned on the same line, food emoji far right.
   const { system } = useUnitPref();
+  const reducedMotion = useReducedMotion();
   return (
-    <li className="flex items-center gap-3 py-3">
+    <motion.li
+      layout={reducedMotion ? false : "position"}
+      initial={reducedMotion ? false : { opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 12 }}
+      transition={reducedMotion ? { duration: 0 } : SPRING.soft}
+      className="flex items-center gap-3 py-3"
+    >
       {/* Rounded-square checkbox — LEFT edge, like the reference mockups. */}
       <button
         onClick={onToggle}
@@ -335,7 +349,7 @@ function GroceryRow({
       >
         <X size={14} />
       </button>
-    </li>
+    </motion.li>
   );
 }
 

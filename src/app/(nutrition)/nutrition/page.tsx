@@ -9,6 +9,7 @@ import { LogFood } from "@/components/nutrition/log-food";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import { PixelDoberman } from "@/components/nutrition/pixel-doberman";
+import { AnimatePresence, useReducedMotion } from "framer-motion";
 import { DiaryEntryRow } from "@/components/nutrition/diary-entry-row";
 import {
   WeekStrip,
@@ -58,6 +59,9 @@ function labelFor(offset: number, d: Date): string {
  * for most users this page is read-mostly — the ring fills itself.
  */
 export default function NutritionPage() {
+  // Diary rows FLIP-animate add/remove; under reduced motion we skip the
+  // AnimatePresence so there are no enter/exit transitions at all (W10).
+  const reducedMotion = useReducedMotion();
   const [dayOffset, setDayOffset] = useState(0);
   const [petOpen, setPetOpen] = useState(false);
   const [showAllSlots, setShowAllSlots] = useState(false);
@@ -260,9 +264,17 @@ export default function NutritionPage() {
               onLog={focusLogFood}
               forceExpanded={showAllSlots || undefined}
             >
-              {slotted[slot].map((e) => (
-                <DiaryEntryRow key={e.at} entry={e} date={viewedDate} />
-              ))}
+              {reducedMotion ? (
+                slotted[slot].map((e) => (
+                  <DiaryEntryRow key={e.at} entry={e} date={viewedDate} />
+                ))
+              ) : (
+                <AnimatePresence initial={false}>
+                  {slotted[slot].map((e) => (
+                    <DiaryEntryRow key={e.at} entry={e} date={viewedDate} />
+                  ))}
+                </AnimatePresence>
+              )}
             </DiarySlotCard>
           ))}
         </section>

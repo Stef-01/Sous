@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Minus, Plus, X } from "lucide-react";
 import {
   diaryRemoveEntry,
@@ -9,6 +10,7 @@ import {
   type DiaryEntry,
 } from "@/lib/hooks/use-nutrition-diary";
 import { haptic } from "@/lib/motion/haptics";
+import { SPRING } from "@/lib/motion/tokens";
 import { toast } from "@/lib/hooks/use-toast";
 import { cn } from "@/lib/utils/cn";
 
@@ -33,6 +35,7 @@ export function DiaryEntryRow({
   date: Date;
 }) {
   const [editing, setEditing] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   const step = (delta: number) => {
     const next = Math.max(0.5, Math.round((entry.servings + delta) * 2) / 2);
@@ -43,7 +46,14 @@ export function DiaryEntryRow({
   };
 
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-white px-3 py-2.5">
+    <motion.div
+      layout={reducedMotion ? false : "position"}
+      initial={reducedMotion ? false : { opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 12 }}
+      transition={reducedMotion ? { duration: 0 } : SPRING.soft}
+      className="flex items-center gap-2 rounded-xl border border-neutral-200/70 bg-white px-3 py-2.5"
+    >
       <span className="min-w-0 flex-1 text-[13px] text-[var(--nourish-dark)]">
         <span className="font-semibold">{entry.name}</span>
         {entry.brand && (
@@ -121,6 +131,6 @@ export function DiaryEntryRow({
       >
         <X size={15} />
       </button>
-    </div>
+    </motion.div>
   );
 }
