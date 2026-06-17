@@ -82,6 +82,11 @@
   --text-title-lh: 1.15;
   --text-h2: 1.25rem;
   --text-label: 0.6875rem;
+  /* Display tracking (E6) — negative letter-spacing tightens the large serif
+     for an editorial, premium feel (small text + uppercase labels keep their
+     default / positive tracking). */
+  --tracking-display: -0.021em;
+  --tracking-title: -0.014em;
 
   /* Motion — durations + easings (corpus: ux-guidelines.csv · Animation,
      150–300ms, ease-out for entrances). Tokenized so components stop
@@ -236,6 +241,7 @@
   font-family: var(--font-serif);
   font-size: var(--text-display);
   line-height: var(--text-display-lh);
+  letter-spacing: var(--tracking-display);
   font-weight: 400;
   text-wrap: balance;
 }
@@ -243,12 +249,14 @@
   font-family: var(--font-serif);
   font-size: var(--text-title);
   line-height: var(--text-title-lh);
+  letter-spacing: var(--tracking-title);
   font-weight: 400;
   text-wrap: balance;
 }
 .sous-h2 {
   font-size: var(--text-h2);
   line-height: 1.25;
+  letter-spacing: -0.01em;
   font-weight: 600;
 }
 .sous-label {
