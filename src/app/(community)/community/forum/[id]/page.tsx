@@ -184,7 +184,7 @@ export default function ForumThreadPage({
 
       {/* OP card. Card-treatment makes the hierarchy obvious so replies
           read as responses rather than peers. */}
-      <article className="mx-4 mt-3 space-y-3 rounded-2xl border border-neutral-200/70 bg-white p-4 shadow-sm">
+      <article className="mx-4 mt-3 space-y-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
         <div className="flex items-start justify-between gap-3">
           <span className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--nourish-green)]">
             Original post · #{thread.topTag}
@@ -347,7 +347,7 @@ function ReplyCard({
         "rounded-2xl p-3",
         reply.isDraft
           ? "border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5"
-          : "border border-neutral-100/80 bg-white shadow-sm",
+          : "bg-white shadow-[var(--shadow-card)]",
         nested && "rounded-xl",
       )}
     >

@@ -104,7 +104,7 @@ export const JourneySummary = memo(function JourneySummary({
       className={
         bare
           ? "space-y-4"
-          : "rounded-2xl border border-neutral-100 bg-white p-5 space-y-4"
+          : "rounded-2xl bg-white p-5 space-y-4 shadow-[var(--shadow-card)]"
       }
     >
       <div className="flex items-center justify-between">

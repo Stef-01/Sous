@@ -57,7 +57,7 @@ export default function ResearchBriefPage({
       </div>
 
       <div className="space-y-4 px-5 pt-5">
-        <div className="rounded-2xl bg-white p-4 shadow-sm border border-neutral-100/80">
+        <div className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
           <p className="sous-label">Takeaway</p>
           <p className="mt-1.5 text-[15px] font-medium leading-[1.6] text-[var(--nourish-dark)]">
             {brief.takeaway}

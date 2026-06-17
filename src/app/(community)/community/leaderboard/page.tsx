@@ -263,7 +263,7 @@ function LeaderboardList({
     );
   }
   return (
-    <section className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+    <section className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
       <p className="sous-label">{title}</p>
       <ol className="mt-2 space-y-1">
         {rows.map((row) => {

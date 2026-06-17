@@ -148,7 +148,7 @@ export default function ArticleDetailPage({
               <li key={rel.id}>
                 <Link
                   href={`/community/article/${rel.slug}`}
-                  className="block rounded-2xl border border-neutral-100/80 bg-white p-3 text-sm font-semibold text-[var(--nourish-dark)] shadow-sm hover:shadow-md transition-shadow"
+                  className="block rounded-2xl bg-white p-3 shadow-[var(--shadow-card)] text-sm font-semibold text-[var(--nourish-dark)] hover:shadow-[var(--shadow-raised)] transition-shadow"
                 >
                   {rel.title}
                   <span className="block pt-0.5 text-[11px] font-normal text-[var(--nourish-subtext)]">

@@ -147,7 +147,7 @@ export function AiImportSheet({
             animate={{ y: 0, opacity: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative z-10 flex max-h-[92vh] w-full max-w-md flex-col rounded-t-3xl bg-[var(--nourish-cream)] shadow-2xl sm:m-4 sm:rounded-3xl"
+            className="relative z-10 flex max-h-[92vh] w-full max-w-md flex-col rounded-t-3xl bg-[var(--nourish-cream)] shadow-[var(--shadow-raised)] sm:m-4 sm:rounded-3xl"
           >
             <div className="px-5 pt-4">
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />

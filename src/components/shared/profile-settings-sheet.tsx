@@ -87,7 +87,7 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
         <Drawer.Overlay className="fixed inset-0 z-[59] bg-black/30 backdrop-blur-[2px]" />
         <Drawer.Content
           aria-label="Profile and settings"
-          className="fixed inset-x-0 bottom-0 z-[60] mx-auto flex h-auto max-h-[92dvh] max-w-md flex-col rounded-t-3xl bg-[var(--nourish-cream)] shadow-2xl outline-none sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
+          className="fixed inset-x-0 bottom-0 z-[60] mx-auto flex h-auto max-h-[92dvh] max-w-md flex-col rounded-t-3xl bg-[var(--nourish-cream)] shadow-[var(--shadow-raised)] outline-none sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:rounded-3xl"
         >
           {/* Sticky header — drag handle + title + close.
               Stays fixed while the body scrolls. */}

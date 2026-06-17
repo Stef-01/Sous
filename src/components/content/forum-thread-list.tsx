@@ -43,7 +43,7 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
           <li key={thread.id}>
             <Link
               href={`/community/forum/${thread.id}`}
-              className="group flex items-start gap-3 rounded-2xl border border-neutral-100/80 bg-white p-3 transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group flex items-start gap-3 rounded-2xl bg-white shadow-[var(--shadow-card)] p-3 transition-colors hover:shadow-[var(--shadow-raised)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             >
               <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]">
                 <MessageSquare size={16} />

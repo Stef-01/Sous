@@ -49,7 +49,7 @@ export default function JoinPodPage() {
       </header>
 
       <main className="mx-auto max-w-md space-y-4 page-x pt-4">
-        <section className="space-y-3 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+        <section className="space-y-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
           <SectionKicker as="p" size="10px">
             Enter the 6-character invite code
           </SectionKicker>

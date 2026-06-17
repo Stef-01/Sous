@@ -90,7 +90,7 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
       className={
         bare
           ? "space-y-3"
-          : "rounded-2xl border border-neutral-100 bg-white p-4 space-y-3"
+          : "rounded-2xl bg-white p-4 space-y-3 shadow-[var(--shadow-card)]"
       }
     >
       <div className="flex items-center justify-between">

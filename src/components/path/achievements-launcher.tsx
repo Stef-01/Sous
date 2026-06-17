@@ -108,7 +108,7 @@ export function AchievementsLauncher({
               role="dialog"
               aria-modal="true"
               aria-labelledby="achievements-sheet-title"
-              className="relative z-10 max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-2xl border border-neutral-200 bg-[var(--nourish-cream)] shadow-2xl"
+              className="relative z-10 max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-2xl bg-[var(--nourish-cream)] shadow-[var(--shadow-raised)]"
               initial={{ y: 24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 16, opacity: 0 }}

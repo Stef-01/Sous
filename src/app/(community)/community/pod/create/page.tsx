@@ -140,7 +140,7 @@ export default function CreatePodPage() {
         className="mx-auto max-w-md space-y-6 page-x pt-4"
       >
         {/* Basics */}
-        <section className="space-y-3 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+        <section className="space-y-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
           <SectionKicker as="p" size="10px">
             Basics
           </SectionKicker>
@@ -166,7 +166,7 @@ export default function CreatePodPage() {
         </section>
 
         {/* Members */}
-        <section className="space-y-3 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+        <section className="space-y-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between">
             <SectionKicker as="p" size="10px">
               Members ({members.length} / 8)

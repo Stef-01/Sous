@@ -649,7 +649,7 @@ function TodayPageContent() {
           / Apple Music / NYT Cooking pattern. The bottom tab bar
           stays sticky so navigation isn't lost when the top hides. */}
       <HeadroomHeader>
-        <header className="page-x border-b border-[var(--nourish-border-soft)] bg-white py-2.5">
+        <header className="page-x bg-white shadow-[var(--shadow-header)] py-2.5">
           <div className="mx-auto flex max-w-md items-center justify-between">
             {/* Brand + the ONE cadence signal: the streak flame. The old
                 "Day 4 of cooking" welcome line was a second copy of the same
@@ -832,7 +832,7 @@ function TodayPageContent() {
                   {[0, 1, 2].map((i) => (
                     <div
                       key={i}
-                      className="flex items-center gap-3 rounded-xl border border-neutral-100 bg-white p-3"
+                      className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[var(--shadow-card)]"
                       style={{ animationDelay: `${i * 150}ms` }}
                     >
                       <div className="h-14 w-14 shrink-0 rounded-lg shimmer" />
@@ -850,7 +850,7 @@ function TodayPageContent() {
             {view.type === "results" &&
               pairingQuery.data?.success &&
               pairingQuery.data.sides.length === 0 && (
-                <div className="rounded-xl border border-neutral-100 bg-white p-6 text-center space-y-3">
+                <div className="rounded-xl bg-white p-6 text-center space-y-3 shadow-[var(--shadow-card)]">
                   <SearchX
                     size={28}
                     className="text-[var(--nourish-subtext)] mx-auto"

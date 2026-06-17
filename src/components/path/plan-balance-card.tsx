@@ -41,7 +41,7 @@ export function PlanBalanceCard() {
   if (!b.hasProtein) missing.push("a protein");
 
   return (
-    <section className="space-y-3 rounded-2xl border border-[var(--nourish-border-strong)] bg-white p-4">
+    <section className="space-y-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
       <div className="flex items-baseline justify-between gap-2">
         <p className="sous-label">Plan balance</p>
         <span className="text-[12px] text-[var(--nourish-subtext)]">

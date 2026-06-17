@@ -109,7 +109,7 @@ export default function AdminPage() {
             {queue.map((recipe) => (
               <li
                 key={recipe.id}
-                className="rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm"
+                className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]"
               >
                 <SectionKicker as="p" size="10px">
                   {recipe.cuisineFamily}
