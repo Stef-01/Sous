@@ -29,6 +29,7 @@ import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
 import { usePantryMode } from "@/lib/hooks/use-pantry-mode";
+import { useDeckProgress } from "@/lib/hooks/use-deck-progress";
 import { prioritizeByPantry } from "@/lib/pantry/staples";
 import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
@@ -370,6 +371,42 @@ export function QuestCard({
   const [previewIndex, setPreviewIndex] = useState(0);
   const [queueOpen, setQueueOpen] = useState(false);
 
+  // Deck progress — persist which dishes were swiped so leaving Today and
+  // coming back continues where the user left off instead of resetting to the
+  // first (already-swiped) dish. Scoped to the day + the filters/mode that
+  // define the deck; pantry reordering is intentionally excluded because the
+  // seen set is slug-keyed (order-independent). See use-deck-progress for RCA.
+  const deckHash = useMemo(
+    () =>
+      JSON.stringify([
+        queueMode,
+        filters.roles,
+        filters.cuisines,
+        filters.cookTime,
+        filters.mealTypes,
+        filters.source,
+      ]),
+    [
+      queueMode,
+      filters.roles,
+      filters.cuisines,
+      filters.cookTime,
+      filters.mealTypes,
+      filters.source,
+    ],
+  );
+  const {
+    seen: seenSlugs,
+    markSeen: consumeDish,
+    reset: resetDeckProgress,
+  } = useDeckProgress(deckHash);
+  // Bumped on "start over" so the overlay remounts with the full (unseen) deck.
+  const [deckResetNonce, setDeckResetNonce] = useState(0);
+  const handleResetProgress = useCallback(() => {
+    resetDeckProgress();
+    setDeckResetNonce((n) => n + 1);
+  }, [resetDeckProgress]);
+
   // When a filter changes the feed, snap the preview back to the first dish.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reset preview position on filter change
@@ -403,18 +440,24 @@ export function QuestCard({
     return id;
   }, []);
 
-  const previewDish = questDishes.length
-    ? questDishes[previewIndex % questDishes.length]
+  // The live deck = today's dishes minus the ones already swiped (persisted).
+  const remainingDishes = useMemo(
+    () => questDishes.filter((d) => !seenSlugs.has(d.slug)),
+    [questDishes, seenSlugs],
+  );
+
+  const previewDish = remainingDishes.length
+    ? remainingDishes[previewIndex % remainingDishes.length]
     : null;
 
   const queueDishes = useMemo(() => {
-    if (questDishes.length === 0) return [];
-    const start = previewIndex % questDishes.length;
-    return [...questDishes.slice(start), ...questDishes.slice(0, start)].slice(
-      0,
-      queueSize,
-    );
-  }, [previewIndex, questDishes, queueSize]);
+    if (remainingDishes.length === 0) return [];
+    const start = previewIndex % remainingDishes.length;
+    return [
+      ...remainingDishes.slice(start),
+      ...remainingDishes.slice(0, start),
+    ].slice(0, queueSize);
+  }, [previewIndex, remainingDishes, queueSize]);
 
   const eatOutLookup = useMemo(() => {
     const map = new Map<string, (typeof STANFORD_VENUES)[number]>();
@@ -541,7 +584,7 @@ export function QuestCard({
       </div>
 
       {/* Card stack container  -  minHeight 460 pushes action chips below fold at 375×667 */}
-      {previewDish && (
+      {previewDish ? (
         <MealQueuePreview
           label={
             queueMode === "eat-out"
@@ -554,6 +597,23 @@ export function QuestCard({
           count={queueDishes.length}
           onOpen={() => setQueueOpen(true)}
         />
+      ) : (
+        questDishes.length > 0 && (
+          /* Swiped the whole deck for the day — offer a clean reset rather than
+             a dead end (the overlay's QueueComplete handles in-deck exhaustion). */
+          <div className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-neutral-200 bg-white px-6 py-10 text-center">
+            <p className="text-sm font-medium text-[var(--nourish-subtext)]">
+              You&apos;ve browsed today&apos;s deck.
+            </p>
+            <button
+              type="button"
+              onClick={handleResetProgress}
+              className="rounded-full bg-[var(--nourish-green)] px-4 py-2 text-sm font-semibold text-white transition-transform active:scale-[0.98]"
+            >
+              Start over
+            </button>
+          </div>
+        )
       )}
 
       <AnimatePresence>
@@ -575,12 +635,15 @@ export function QuestCard({
       <AnimatePresence>
         {queueOpen && (
           <MealSwipeQueueOverlay
+            key={deckResetNonce}
             dishes={queueDishes}
             isDishSaved={isDishSaved}
             onClose={() => setQueueOpen(false)}
             onSaveDish={handleSaveDish}
             onCookDish={routeDish}
             onDeckExhausted={onDeckExhausted}
+            onConsume={consumeDish}
+            onResetProgress={handleResetProgress}
           />
         )}
       </AnimatePresence>
@@ -674,6 +737,8 @@ function MealSwipeQueueOverlay({
   onSaveDish,
   onCookDish,
   onDeckExhausted,
+  onConsume,
+  onResetProgress,
 }: {
   dishes: QuestDish[];
   isDishSaved: (slug: string) => boolean;
@@ -681,6 +746,11 @@ function MealSwipeQueueOverlay({
   onSaveDish: (dish: QuestDish) => void;
   onCookDish: (dish: QuestDish) => void;
   onDeckExhausted?: () => void;
+  /** Persist a swiped dish so it doesn't reappear on return (day-scoped). */
+  onConsume?: (slug: string) => void;
+  /** Clear the persisted deck progress; the parent remounts us with the full
+   *  deck (so "start over" restores everything, not the seen-filtered subset). */
+  onResetProgress?: () => void;
 }) {
   const [unswiped, setUnswiped] = useState<QuestDish[]>(() => dishes);
   const [dismissed, setDismissed] = useState<QuestDish[]>([]);
@@ -695,12 +765,18 @@ function MealSwipeQueueOverlay({
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const resetDeck = useCallback(() => {
+    if (onResetProgress) {
+      // Clears persisted progress; the parent bumps a key so we remount with
+      // the full, unfiltered deck. No need to touch local state — we unmount.
+      onResetProgress();
+      return;
+    }
     setUnswiped(dishes);
     setDismissed([]);
     setExitDirection(null);
     setInitialTotal(dishes.length);
     exhaustedRef.current = false;
-  }, [dishes]);
+  }, [dishes, onResetProgress]);
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -737,6 +813,8 @@ function MealSwipeQueueOverlay({
         setUnswiped((prev) =>
           prev[0]?.slug === dishToMove.slug ? prev.slice(1) : prev,
         );
+        // Persist the swipe so this dish doesn't reappear on return (day-scoped).
+        onConsume?.(dishToMove.slug);
         if (direction === "right") {
           onCookDish(dishToMove);
         } else {
@@ -746,7 +824,7 @@ function MealSwipeQueueOverlay({
       }, QUEUE_EXIT_MS);
       timersRef.current.push(id);
     },
-    [activeDish, exitDirection, haptic, onCookDish],
+    [activeDish, exitDirection, haptic, onCookDish, onConsume],
   );
 
   const saveActive = useCallback(() => {
