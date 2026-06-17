@@ -77,6 +77,9 @@ export const userRecipes = pgTable("user_recipes", {
   nourishApprovedAt: timestamp("nourish_approved_at"),
   nourishApprovedBy: text("nourish_approved_by"),
   authorDisplayName: text("author_display_name"),
+  // Optional "where it came from" tags chosen on import (e.g. "ChatGPT").
+  // Nullable — old rows + non-import authoring leave it unset.
+  sourceTags: jsonb("source_tags").$type<string[]>(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

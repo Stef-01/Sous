@@ -165,7 +165,24 @@ export const userRecipeSchema = z.object({
   /** Author display name for community recipes. Surfaced on the
    *  recipe card so the recipient knows who shared it. */
   authorDisplayName: z.string().max(40).nullable().optional(),
+
+  /** Free-text "where did this come from" categorisation, chosen on
+   *  the UI when authoring/importing (e.g. "ChatGPT", "Cookbook",
+   *  "Family"). Distinct from `source` (the provenance/approval
+   *  enum). Optional + additive — old payloads parse without it. */
+  sourceTags: z.array(z.string().min(1).max(40)).max(8).optional(),
 });
+
+/** The source-category vocabulary the authoring/import UI offers as
+ *  quick-pick chips (free-text is also allowed). */
+export const RECIPE_SOURCE_TAGS = [
+  "ChatGPT",
+  "Cookbook",
+  "Website",
+  "Family",
+  "Restaurant copycat",
+  "Improvised",
+] as const;
 
 export type UserRecipe = z.infer<typeof userRecipeSchema>;
 export type UserIngredient = z.infer<typeof userIngredientSchema>;

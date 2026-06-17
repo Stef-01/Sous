@@ -143,3 +143,56 @@ export function buildAutogenPrompt(userInput: string): AutogenPromptBundle {
     schema: autogenResponseSchema,
   };
 }
+
+/**
+ * Self-contained, copy-paste prompt for the NO-API paste-bridge: the user
+ * copies this into ChatGPT/Claude, replaces the bracketed line with their
+ * recipe (a name, a pasted URL's text, or a rough description), and pastes the
+ * JSON reply back into Sous. Encodes the same contract as `autogenResponseSchema`
+ * so `parseRecipeAutogenJson` accepts the reply. A stable constant the UI copies.
+ */
+export const RECIPE_PASTE_PROMPT = `\
+You are a recipe-authoring assistant for the cooking app Sous. I'll describe a \
+recipe; reply with a SINGLE JSON object and NOTHING else — no prose, no markdown \
+code fence. Match this exact shape and field names:
+
+{
+  "title": "short evocative name, 2-5 words",
+  "dishName": "the canonical dish name",
+  "cuisineFamily": "one of: ${KNOWN_CUISINES.join(" | ")}",
+  "temperature": "one of: ${KNOWN_TEMPERATURES.join(" | ")}",
+  "skillLevel": "one of: ${KNOWN_SKILL_LEVELS.join(" | ")}",
+  "description": "1-2 sentence blurb for the recipe's intro screen",
+  "prepTimeMinutes": 10,
+  "cookTimeMinutes": 25,
+  "serves": 4,
+  "flavorProfile": ["1-4 short tags like spicy, bright, creamy"],
+  "ingredients": [
+    { "name": "ingredient", "quantity": "2 cans", "isOptional": false }
+  ],
+  "steps": [
+    {
+      "instruction": "one clear single action",
+      "timerSeconds": 30,
+      "donenessCue": "until golden (or null)",
+      "mistakeWarning": "a pitfall (or null)"
+    }
+  ]
+}
+
+Rules:
+- cuisineFamily, temperature, skillLevel MUST be one of the listed values.
+- Estimate times conservatively; a weeknight "intermediate" recipe should total \
+under ~60 minutes.
+- Number steps in cooking order; one action per step.
+- timerSeconds: a number when the step has a definite duration, else null. \
+Never invent a timer.
+- donenessCue: a sensory finish-line ("until fragrant") or null.
+- mistakeWarning: only for a real pitfall (burning garlic, breaking an \
+emulsion) or null.
+- Parse quantities as "2 cans" / "1 tbsp" (not "two cans").
+- Never invent ingredients I didn't mention.
+- Output ONLY the JSON object.
+
+My recipe: [REPLACE THIS LINE with a dish name, a pasted recipe/URL text, or a \
+rough description — e.g. "chana masala, bloom the spices first"]`;

@@ -216,5 +216,6 @@ export function commitDraft(
     nourishApprovedAt: draft.nourishApprovedAt ?? null,
     nourishApprovedBy: draft.nourishApprovedBy ?? null,
     authorDisplayName: draft.authorDisplayName ?? null,
+    sourceTags: draft.sourceTags,
   };
 }

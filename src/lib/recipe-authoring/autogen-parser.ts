@@ -8,7 +8,7 @@
  * Pure / dependency-free — testable without making LLM calls.
  */
 
-import type { AutogenResponse } from "./autogen-prompt";
+import { autogenResponseSchema, type AutogenResponse } from "./autogen-prompt";
 import { SCHEMA_VERSION } from "@/types/user-recipe";
 import type { RecipeDraft } from "./recipe-draft";
 
@@ -134,3 +134,57 @@ export const STUB_AUTOGEN_RESPONSE: AutogenResponse = {
     },
   ],
 };
+
+/** Result of parsing pasted ChatGPT JSON — discriminated for callers. */
+export type ParseRecipeAutogenResult =
+  | { ok: true; draft: RecipeDraft }
+  | { ok: false; reason: string };
+
+/** Peel a ```json … ``` fence (models often wrap the output) + any prose the
+ *  model added before/after the JSON object, returning just the {...} body. */
+export function stripJsonFence(raw: string): string {
+  const s = raw.trim();
+  const fenced = s.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  const body = fenced ? fenced[1].trim() : s;
+  // If there's leading/trailing prose, grab the outermost brace span.
+  const first = body.indexOf("{");
+  const last = body.lastIndexOf("}");
+  return first !== -1 && last > first ? body.slice(first, last + 1) : body;
+}
+
+/**
+ * Parse a raw JSON string from the ChatGPT paste-bridge into a RecipeDraft —
+ * the no-API mirror of the recipeAutogen tRPC procedure. Validates against
+ * `autogenResponseSchema` (the contract the paste-prompt asks for), then adapts
+ * to a draft ready for `commitDraft`. Tolerant of code fences + surrounding
+ * prose. Returns a friendly reason on failure (shown in the import sheet).
+ */
+export function parseRecipeAutogenJson(
+  raw: string | null | undefined,
+): ParseRecipeAutogenResult {
+  if (!raw || !raw.trim()) {
+    return { ok: false, reason: "Paste the JSON the assistant returned." };
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(stripJsonFence(raw));
+  } catch {
+    return {
+      ok: false,
+      reason: "That isn't valid JSON — copy the whole reply, braces included.",
+    };
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    return { ok: false, reason: "Expected a single recipe object." };
+  }
+  const result = autogenResponseSchema.safeParse(parsed);
+  if (!result.success) {
+    const issue = result.error.issues[0];
+    const path = issue?.path.join(".") || "recipe";
+    return {
+      ok: false,
+      reason: `${path}: ${issue?.message ?? "didn't match the recipe shape"}`,
+    };
+  }
+  return { ok: true, draft: adaptAutogenToDraft(result.data) };
+}

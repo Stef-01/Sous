@@ -86,6 +86,7 @@ describe("user_recipes ↔ userRecipeSchema parity", () => {
       "nourishApprovedAt",
       "nourishApprovedBy",
       "authorDisplayName",
+      "sourceTags",
     ].sort();
     // Every Zod key must exist in drizzleColumns. Note the
     // reverse isn't required — Drizzle has ownerId in addition.

@@ -12,18 +12,21 @@
  * W52 per the runbook.
  */
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
   ChefHat,
+  ClipboardPaste,
   Pencil,
   Play,
   Plus,
   Share2,
   Sparkles,
 } from "lucide-react";
+import { RecipeAiImportSheet } from "@/components/recipe-authoring/recipe-ai-import-sheet";
 import { buildSharePayload } from "@/lib/share/cook-deeplink";
 import { toast } from "@/lib/hooks/use-toast";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
@@ -40,6 +43,7 @@ import { SectionKicker } from "@/components/shared/section-kicker";
 export default function MyRecipesPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
+  const [showImport, setShowImport] = useState(false);
   const { drafts, mounted } = useRecipeDrafts();
   // W47 source filter — chip row drives both the templates row
   // (treated as nourish-verified) and the user-drafts list.
@@ -81,6 +85,14 @@ export default function MyRecipesPage() {
             >
               <Sparkles size={11} aria-hidden /> Quick
             </Link>
+            <button
+              type="button"
+              onClick={() => setShowImport(true)}
+              className="inline-flex items-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              title="Paste JSON from ChatGPT to author a recipe instantly"
+            >
+              <ClipboardPaste size={11} aria-hidden /> Paste
+            </button>
             <Link
               href="/path/recipes/new"
               className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
@@ -137,6 +149,18 @@ export default function MyRecipesPage() {
                   {recipe.ingredients.length} ingredients ·{" "}
                   {recipe.steps.length} steps · serves {recipe.serves}
                 </p>
+                {recipe.sourceTags && recipe.sourceTags.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {recipe.sourceTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-[var(--nourish-green)]/[0.08] px-2 py-0.5 text-[10px] font-medium text-[var(--nourish-green)]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 {/* Y3 W29: pantry-coverage glance. Lights up
                     once pantry hydrates; hidden on cold start
                     so the recipe card doesn't flash. */}
@@ -242,6 +266,11 @@ export default function MyRecipesPage() {
           </ul>
         )}
       </main>
+
+      <RecipeAiImportSheet
+        open={showImport}
+        onClose={() => setShowImport(false)}
+      />
     </motion.div>
   );
 }
