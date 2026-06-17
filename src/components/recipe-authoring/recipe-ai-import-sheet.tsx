@@ -284,26 +284,58 @@ function RecipePreview({
 }) {
   return (
     <div>
-      <p className="sous-label mb-2">Preview</p>
-      <div className="rounded-lg bg-white p-3 shadow-[var(--ring-hairline)]">
-        <p className="font-serif text-[15px] text-[var(--nourish-dark)]">
-          {draft.title}
-        </p>
-        <p className="mt-0.5 text-[12px] text-[var(--nourish-subtext)]">
-          {draft.cuisineFamily} ·{" "}
-          {draft.prepTimeMinutes + draft.cookTimeMinutes} min · serves{" "}
-          {draft.serves}
-        </p>
-        <p className="mt-2 text-[12px] text-[var(--nourish-subtext)]">
-          <span className="font-semibold text-[var(--nourish-dark)]">
-            {draft.ingredients.length}
-          </span>{" "}
-          ingredients ·{" "}
-          <span className="font-semibold text-[var(--nourish-dark)]">
-            {draft.steps.length}
-          </span>{" "}
-          steps
-        </p>
+      {/* Review the FULL parsed recipe before it lands in the cookable library —
+          the accuracy gate (a mis-parsed "2 cans"→"2 cups" is visible here). */}
+      <p className="sous-label mb-2">Review before adding</p>
+      <div className="space-y-3 rounded-lg bg-white p-3 shadow-[var(--ring-hairline)]">
+        <div>
+          <p className="font-serif text-[15px] text-[var(--nourish-dark)]">
+            {draft.title}
+          </p>
+          <p className="mt-0.5 text-[12px] text-[var(--nourish-subtext)]">
+            {draft.cuisineFamily} ·{" "}
+            {draft.prepTimeMinutes + draft.cookTimeMinutes} min · serves{" "}
+            {draft.serves}
+          </p>
+        </div>
+
+        <div>
+          <p className="sous-label mb-1">
+            Ingredients · {draft.ingredients.length}
+          </p>
+          <ul className="space-y-0.5 text-[12.5px] text-[var(--nourish-dark)]">
+            {draft.ingredients.map((ing, i) => (
+              <li key={i} className="flex items-baseline justify-between gap-2">
+                <span className="min-w-0 truncate">
+                  {ing.name}
+                  {ing.isOptional && (
+                    <span className="text-[var(--nourish-subtext-faint)]">
+                      {" "}
+                      · optional
+                    </span>
+                  )}
+                </span>
+                <span className="shrink-0 tabular-nums text-[var(--nourish-subtext)]">
+                  {ing.quantity}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <p className="sous-label mb-1">Steps · {draft.steps.length}</p>
+          <ol className="space-y-1.5 text-[12.5px] leading-snug text-[var(--nourish-subtext)]">
+            {draft.steps.map((s, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="shrink-0 font-semibold text-[var(--nourish-green)]">
+                  {i + 1}
+                </span>
+                <span>{s.instruction}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </div>
   );

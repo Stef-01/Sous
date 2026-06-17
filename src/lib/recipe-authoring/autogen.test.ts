@@ -63,9 +63,11 @@ describe("autogenResponseSchema", () => {
     );
   });
 
-  it("rejects unknown cuisineFamily", () => {
+  it("coerces an unknown cuisineFamily to 'other' (so a real Greek/etc. recipe still imports)", () => {
     const bogus = { ...STUB_AUTOGEN_RESPONSE, cuisineFamily: "atlantean" };
-    expect(autogenResponseSchema.safeParse(bogus).success).toBe(false);
+    const r = autogenResponseSchema.safeParse(bogus);
+    expect(r.success).toBe(true);
+    if (r.success) expect(r.data.cuisineFamily).toBe("other");
   });
 
   it("rejects out-of-range prepTimeMinutes", () => {

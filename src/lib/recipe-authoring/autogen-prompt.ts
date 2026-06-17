@@ -29,6 +29,7 @@ export const KNOWN_CUISINES = [
   "korean",
   "vietnamese",
   "comfort-classic",
+  "other",
 ] as const;
 
 export const KNOWN_TEMPERATURES = ["hot", "cold", "room-temp"] as const;
@@ -44,9 +45,11 @@ export const KNOWN_SKILL_LEVELS = [
 export const autogenResponseSchema = z.object({
   title: z.string().min(1).max(120),
   dishName: z.string().min(1).max(120),
-  cuisineFamily: z.enum(KNOWN_CUISINES),
-  temperature: z.enum(KNOWN_TEMPERATURES),
-  skillLevel: z.enum(KNOWN_SKILL_LEVELS),
+  // .catch salvages a real-world reply that picks an out-of-vocab value (e.g.
+  // a Greek recipe → cuisineFamily "greek") instead of failing the whole import.
+  cuisineFamily: z.enum(KNOWN_CUISINES).catch("other"),
+  temperature: z.enum(KNOWN_TEMPERATURES).catch("hot"),
+  skillLevel: z.enum(KNOWN_SKILL_LEVELS).catch("beginner"),
   description: z.string().min(1).max(800),
   prepTimeMinutes: z.number().int().min(0).max(480),
   cookTimeMinutes: z.number().int().min(0).max(480),

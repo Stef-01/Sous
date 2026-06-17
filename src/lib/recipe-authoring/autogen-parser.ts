@@ -152,6 +152,16 @@ export function stripJsonFence(raw: string): string {
   return first !== -1 && last > first ? body.slice(first, last + 1) : body;
 }
 
+/** Repair the two most common copy-from-rendered-HTML artifacts that make
+ *  `JSON.parse` choke: curly/smart quotes and trailing commas. Conservative —
+ *  only touches quotes + comma-before-close, never restructures. */
+export function lenientJson(s: string): string {
+  return s
+    .replace(/[“”]/g, '"') // “ ” → "
+    .replace(/[‘’]/g, "'") // ‘ ’ → '
+    .replace(/,(\s*[}\]])/g, "$1"); // trailing comma before } or ]
+}
+
 /**
  * Parse a raw JSON string from the ChatGPT paste-bridge into a RecipeDraft —
  * the no-API mirror of the recipeAutogen tRPC procedure. Validates against
@@ -165,10 +175,19 @@ export function parseRecipeAutogenJson(
   if (!raw || !raw.trim()) {
     return { ok: false, reason: "Paste the JSON the assistant returned." };
   }
+  const body = stripJsonFence(raw);
   let parsed: unknown;
   try {
-    parsed = JSON.parse(stripJsonFence(raw));
+    parsed = JSON.parse(lenientJson(body));
   } catch {
+    // Pasted more than one recipe (an array, or two objects) — the brace span
+    // becomes "{…},{…}" / "[…]" and JSON.parse chokes. Give a targeted hint.
+    if (body.startsWith("[") || /\}\s*,\s*\{/.test(body)) {
+      return {
+        ok: false,
+        reason: "Looks like more than one recipe — paste just one.",
+      };
+    }
     return {
       ok: false,
       reason: "That isn't valid JSON — copy the whole reply, braces included.",
