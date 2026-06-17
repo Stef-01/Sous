@@ -3,7 +3,8 @@
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import { haptic, type HapticPattern } from "@/lib/motion/haptics";
-import { SPRING } from "@/lib/motion/tokens";
+import { SPRING, TAP_SCALE } from "@/lib/motion/tokens";
+import { cn } from "@/lib/utils/cn";
 
 /**
  * Pressable (W4) — the standard tap target: a consistent press-scale + a haptic
@@ -33,14 +34,14 @@ export function Pressable({
       type={type}
       disabled={disabled}
       aria-label={ariaLabel}
-      whileTap={reduced || disabled ? undefined : { scale: 0.96 }}
+      whileTap={reduced || disabled ? undefined : { scale: TAP_SCALE }}
       transition={SPRING.snappy}
       onClick={() => {
         if (disabled) return;
         haptic(feedback);
         onClick?.();
       }}
-      className={className}
+      className={cn(disabled && "cursor-not-allowed opacity-50", className)}
     >
       {children}
     </motion.button>

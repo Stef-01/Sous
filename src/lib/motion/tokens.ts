@@ -31,6 +31,12 @@ export const SPRING: Record<"soft" | "snappy" | "gentle", Transition> = {
   gentle: { type: "spring", stiffness: 180, damping: 26 },
 };
 
+/** Tactile press-scale (E4). `TAP_SCALE` is the standard for buttons + cards;
+ *  `TAP_SCALE_SM` is the tighter delta small chips/icon buttons use (a bigger
+ *  delta reads as responsive on a small target). Press, never pop. */
+export const TAP_SCALE = 0.98;
+export const TAP_SCALE_SM = 0.94;
+
 /** A tasteful default entrance transition. */
 export const ENTRANCE: Transition = { duration: DURATION.base, ease: EASE.out };
 

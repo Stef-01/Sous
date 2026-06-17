@@ -3,6 +3,8 @@ import {
   DURATION,
   EASE,
   SPRING,
+  TAP_SCALE,
+  TAP_SCALE_SM,
   motionTransition,
   staggerChildren,
   premiumEntrance,
@@ -53,5 +55,11 @@ describe("motion tokens (W1)", () => {
     const reduced = premiumEntrance(true);
     expect(reduced.initial).toBe(false); // no blur, no movement
     expect(reduced.transition).toEqual({ duration: 0 });
+  });
+
+  it("exposes the tactile press-scale standard (E4)", () => {
+    expect(TAP_SCALE).toBe(0.98);
+    expect(TAP_SCALE).toBeGreaterThan(0.9); // a press, never a pop
+    expect(TAP_SCALE_SM).toBeLessThan(TAP_SCALE); // chips/icons go tighter
   });
 });

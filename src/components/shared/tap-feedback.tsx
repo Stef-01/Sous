@@ -22,6 +22,7 @@
 import type { ReactNode } from "react";
 import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { SPRING } from "@/styles/motion";
+import { TAP_SCALE, TAP_SCALE_SM } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils/cn";
 
 export type TapFeedbackVariant = "primary" | "secondary" | "tap-only";
@@ -47,7 +48,7 @@ export function TapFeedback({
   ...rest
 }: TapFeedbackProps) {
   const reducedMotion = useReducedMotion();
-  const tapScale = reducedMotion ? 1 : variant === "primary" ? 0.97 : 0.96;
+  const tapScale = reducedMotion ? 1 : TAP_SCALE;
 
   return (
     <motion.button
@@ -92,7 +93,7 @@ export function ChipFeedback({
 
   return (
     <motion.button
-      whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+      whileTap={reducedMotion ? undefined : { scale: TAP_SCALE_SM }}
       transition={SPRING.snappy}
       type="button"
       aria-pressed={active}

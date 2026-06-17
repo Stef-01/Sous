@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { EASE } from "@/lib/motion/tokens";
 import {
   cookGlossary,
   glossaryRegexSource,
@@ -68,6 +69,7 @@ export function Glossify({
 
 function GlossTerm({ entry, raw }: { entry: GlossaryEntry; raw: string }) {
   const [open, setOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
   return (
     <span
       className="relative inline cursor-help"
@@ -88,11 +90,27 @@ function GlossTerm({ entry, raw }: { entry: GlossaryEntry; raw: string }) {
         {open && (
           <motion.span
             role="note"
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 2 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-            className="absolute left-1/2 top-full z-30 mt-2 block w-[min(80vw,280px)] -translate-x-1/2 rounded-xl border border-neutral-200 bg-white px-3 py-2 text-[13px] font-normal leading-relaxed text-[var(--nourish-dark)] shadow-[0_10px_28px_rgba(15,20,28,0.12)]"
+            initial={
+              reducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 4, filter: "blur(2px)" }
+            }
+            animate={
+              reducedMotion
+                ? { opacity: 1 }
+                : { opacity: 1, y: 0, filter: "blur(0px)" }
+            }
+            exit={
+              reducedMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 2, filter: "blur(1px)" }
+            }
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { duration: 0.18, ease: EASE.out }
+            }
+            className="absolute left-1/2 top-full z-30 mt-2 block w-[min(80vw,280px)] -translate-x-1/2 rounded-xl bg-white px-3 py-2 text-[13px] font-normal leading-relaxed text-[var(--nourish-dark)] shadow-[var(--shadow-raised)]"
           >
             <span className="mb-0.5 block text-[12px] font-semibold uppercase tracking-wide text-[var(--nourish-green)]">
               {entry.term}
