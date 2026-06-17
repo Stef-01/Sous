@@ -22,8 +22,15 @@ import {
   ChevronRight,
   MoreHorizontal,
   RotateCcw,
+  ShoppingCart,
 } from "lucide-react";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
+import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
+import {
+  useShoppingList,
+  type ShoppingAddition,
+} from "@/lib/hooks/use-shopping-list";
+import { getCookSummary, getMealCookSummary } from "@/data/guided-cook-summary";
 import { summariseSlotMap } from "@/components/planner/week-calendar";
 import { WeekDayList } from "@/components/planner/week-day-list";
 import { PlanAddSheet } from "@/components/planner/plan-add-sheet";
@@ -73,6 +80,42 @@ export default function WeekPlanPage() {
   const { slotMap, mounted, clearAll, clearSlot, scheduleSlot } =
     useMealPlanWeek(weekKey);
   const summary = summariseSlotMap(slotMap);
+
+  // "Shop this week" — turn the planned slots into groceries: resolve each
+  // recipe's ingredients, drop anything already in the pantry, and push the
+  // remainder onto the shopping list. Closes the plan→groceries gap (the
+  // aggregator existed but nothing fed it).
+  const { items: pantryItems } = usePantry();
+  const { addMany } = useShoppingList();
+  // null = not yet run for this week; number = ingredients added on last run.
+  const [shopAdded, setShopAdded] = useState<number | null>(null);
+
+  const handleShopWeek = () => {
+    const pantrySet = new Set(pantryItems.map(normalizePantryName));
+    const seen = new Set<string>();
+    const additions: ShoppingAddition[] = [];
+    // slotMap is Record<slotKey, recipeSlug> — the value IS the slug.
+    for (const slug of Object.values(slotMap)) {
+      const ingredients =
+        getCookSummary(slug)?.ingredientNames ??
+        getMealCookSummary(slug)?.ingredientNames ??
+        [];
+      if (ingredients.length === 0) continue; // custom/free-text meals
+      const recipeName = lookupDish(slug).name;
+      for (const ing of ingredients) {
+        const key = normalizePantryName(ing);
+        if (!key || pantrySet.has(key) || seen.has(key)) continue;
+        seen.add(key);
+        additions.push({
+          name: ing,
+          sourceRecipeSlug: slug,
+          sourceRecipeName: recipeName,
+        });
+      }
+    }
+    if (additions.length > 0) addMany(additions);
+    setShopAdded(additions.length);
+  };
 
   // Empty-slot add → a search-to-add sheet (search the catalog or type a custom
   // meal), instead of being stuck bouncing to the swipe planner. The cards stay
@@ -125,7 +168,10 @@ export default function WeekPlanPage() {
         <div className="flex items-center justify-between py-1.5">
           <button
             type="button"
-            onClick={() => setOffset((o) => o - 1)}
+            onClick={() => {
+              setOffset((o) => o - 1);
+              setShopAdded(null);
+            }}
             aria-label="Previous week"
             className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
           >
@@ -136,7 +182,10 @@ export default function WeekPlanPage() {
           </p>
           <button
             type="button"
-            onClick={() => setOffset((o) => o + 1)}
+            onClick={() => {
+              setOffset((o) => o + 1);
+              setShopAdded(null);
+            }}
             aria-label="Next week"
             className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
           >
@@ -290,6 +339,29 @@ export default function WeekPlanPage() {
           >
             Add more cooks
           </Link>
+          {summary.filled > 0 &&
+            (shopAdded === null ? (
+              <button
+                type="button"
+                onClick={handleShopWeek}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
+              >
+                <ShoppingCart size={15} aria-hidden />
+                Shop this week
+              </button>
+            ) : shopAdded === 0 ? (
+              <p className="flex w-full items-center justify-center gap-2 py-3 text-sm font-medium text-[var(--nourish-subtext)]">
+                Everything’s already in your pantry ✓
+              </p>
+            ) : (
+              <Link
+                href="/path/shopping-list"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
+              >
+                <ShoppingCart size={15} aria-hidden />
+                {shopAdded} added — view shopping list
+              </Link>
+            ))}
           {summary.filled > 0 && (
             <button
               type="button"
