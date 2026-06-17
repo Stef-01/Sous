@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { PhysicsSlider } from "@/components/shared/physics-slider";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import {
@@ -96,15 +97,15 @@ export function PantryModeSection() {
                 {toleranceLabel}
               </span>
             </div>
-            <input
-              type="range"
+            <PhysicsSlider
+              value={mode.tolerance}
               min={PANTRY_TOLERANCE_MIN}
               max={PANTRY_TOLERANCE_MAX}
               step={1}
-              value={mode.tolerance}
-              onChange={(e) => setPantryTolerance(Number(e.target.value))}
-              aria-label="How many extra ingredients to allow"
-              className="mt-2 w-full accent-[var(--nourish-green)]"
+              onChange={setPantryTolerance}
+              ariaLabel="How many extra ingredients to allow"
+              formatValue={(v) => (v === 0 ? "exact" : `up to ${v} extra`)}
+              className="mt-2"
             />
             <div className="flex justify-between text-[10px] text-[var(--nourish-subtext-faint)]">
               <span>Exact</span>
