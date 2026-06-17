@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
+import { premiumEntrance } from "@/lib/motion/tokens";
 import type { MascotMood } from "./mascot-mood";
 
 /* Black-and-rust Doberman palette — matches the Tamagotchi pet (pixel-doberman). */
@@ -213,12 +214,9 @@ export function DobermanAvatar({
  * The primary action on the Today page. Inviting and prominent.
  */
 export function CravingSearchBar({ onClick }: { onClick: () => void }) {
+  const reducedMotion = useReducedMotion();
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.1 }}
-    >
+    <motion.div {...premiumEntrance(reducedMotion)}>
       <motion.button
         onClick={onClick}
         whileTap={{ scale: 0.98 }}

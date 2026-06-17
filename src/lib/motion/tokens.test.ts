@@ -5,6 +5,7 @@ import {
   SPRING,
   motionTransition,
   staggerChildren,
+  premiumEntrance,
 } from "./tokens";
 
 describe("motion tokens (W1)", () => {
@@ -36,5 +37,21 @@ describe("motion tokens (W1)", () => {
   it("disables stagger under reduced motion", () => {
     expect(staggerChildren(true).staggerChildren).toBe(0);
     expect(staggerChildren(false).staggerChildren).toBeGreaterThan(0);
+  });
+
+  it("premiumEntrance blurs in for focal surfaces (E3)", () => {
+    const full = premiumEntrance(false);
+    expect(full.initial).toMatchObject({ opacity: 0, filter: "blur(2px)" });
+    expect(full.animate).toMatchObject({ opacity: 1, filter: "blur(0px)" });
+    expect(full.transition).toEqual({
+      duration: DURATION.slow,
+      ease: EASE.out,
+    });
+  });
+
+  it("premiumEntrance collapses to a plain fade under reduced motion", () => {
+    const reduced = premiumEntrance(true);
+    expect(reduced.initial).toBe(false); // no blur, no movement
+    expect(reduced.transition).toEqual({ duration: 0 });
   });
 });

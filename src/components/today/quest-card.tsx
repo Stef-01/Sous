@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { premiumEntrance } from "@/lib/motion/tokens";
 import {
   X,
   Heart,
@@ -662,13 +663,9 @@ function MealQueuePreview({
   onOpen: () => void;
   label?: string;
 }) {
+  const reducedMotion = useReducedMotion();
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25 }}
-      className="space-y-3"
-    >
+    <motion.div {...premiumEntrance(reducedMotion)} className="space-y-3">
       <motion.button
         type="button"
         onClick={onOpen}

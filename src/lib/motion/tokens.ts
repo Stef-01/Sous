@@ -5,7 +5,7 @@
  * to instant under `prefers-reduced-motion` via `motionTransition`.
  */
 
-import type { Transition } from "framer-motion";
+import type { TargetAndTransition, Transition } from "framer-motion";
 
 /** Seconds (Framer uses seconds; CSS uses ms — kept in lockstep). */
 export const DURATION = {
@@ -50,4 +50,34 @@ export function staggerChildren(reducedMotion: boolean | null, step = 0.04) {
   return reducedMotion
     ? { staggerChildren: 0 }
     : { staggerChildren: step, delayChildren: 0.02 };
+}
+
+/**
+ * Premium focal entrance (E3) — fade + 6px rise + a 2px blur clearing on the
+ * house ease. The framer mirror of the `--entrance-premium` CSS keyframe, for
+ * surfaces already driven by framer `initial/animate`. Spread onto a motion
+ * element: `<motion.div {...premiumEntrance(reducedMotion)} />`.
+ *
+ * FOCAL surfaces ONLY — hero, sheet/modal content, single card reveals. NEVER a
+ * long list or large surface (animating `filter: blur` is GPU-expensive; this
+ * tensions rule 9, so the scope guard is the rule). Collapses to a plain fade
+ * under reduced motion (no blur, no movement, instant).
+ */
+export function premiumEntrance(reducedMotion: boolean | null): {
+  initial: TargetAndTransition | false;
+  animate: TargetAndTransition;
+  transition: Transition;
+} {
+  if (reducedMotion) {
+    return {
+      initial: false,
+      animate: { opacity: 1 },
+      transition: { duration: 0 },
+    };
+  }
+  return {
+    initial: { opacity: 0, y: 6, filter: "blur(2px)" },
+    animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+    transition: { duration: DURATION.slow, ease: EASE.out },
+  };
 }
