@@ -4,6 +4,7 @@ import {
   diaryLogCook,
   diaryUpdateServings,
   diaryRemoveEntry,
+  diaryRemoveBatch,
   dayKey,
   type DiaryEntry,
 } from "./use-nutrition-diary";
@@ -104,5 +105,62 @@ describe("store actions — stage 3 update-servings + stage 5 date-aware", () =>
       window.localStorage.getItem("sous-nutrition-diary-v1") ?? "{}",
     );
     expect((after[dayKey(yesterday)] ?? []).length).toBe(yEntries.length - 1);
+  });
+
+  // P0: combined cook logged N dishes but Undo removed only the main, orphaning
+  // the sides. diaryRemoveBatch un-logs the whole session.
+  // (The diary store is a module singleton whose in-memory snapshot accumulates
+  // across tests, so assertions filter by a unique batchId rather than absolute
+  // store length.)
+  const batchCount = (id: string) =>
+    todayEntries().filter((e: DiaryEntry) => e.batchId === id).length;
+
+  it("diaryRemoveBatch removes every dish sharing a batchId", () => {
+    diaryLogCook("main", "Main", 1, { auto: true, batchId: "b-rm" });
+    diaryLogCook("side-a", "Side A", 1, { auto: true, batchId: "b-rm" });
+    diaryLogCook("side-b", "Side B", 1, { auto: true, batchId: "b-rm" });
+    expect(batchCount("b-rm")).toBe(3);
+    const removed = diaryRemoveBatch("b-rm");
+    expect(removed.length).toBe(3);
+    expect(batchCount("b-rm")).toBe(0);
+  });
+
+  it("diaryRemoveBatch leaves non-batch + other-batch entries untouched", () => {
+    diaryLogCook("plain", "Plain", 1); // no batchId
+    diaryLogCook("s1-dish", "S1", 1, { auto: true, batchId: "b-keep-1" });
+    diaryLogCook("s2-dish", "S2", 1, { auto: true, batchId: "b-keep-2" });
+    diaryRemoveBatch("b-keep-1");
+    const slugs = todayEntries().map((e: DiaryEntry) => e.slug);
+    expect(slugs).toContain("plain");
+    expect(slugs).toContain("s2-dish");
+    expect(slugs).not.toContain("s1-dish");
+  });
+
+  it("diaryRemoveBatch with an unknown id is a no-op", () => {
+    diaryLogCook("a", "A", 1, { auto: true, batchId: "b-noop" });
+    diaryLogCook("b", "B", 1, { auto: true, batchId: "b-noop" });
+    const before = todayEntries().length;
+    expect(diaryRemoveBatch("nope")).toEqual([]);
+    expect(todayEntries().length).toBe(before);
+  });
+
+  it("diaryRemoveBatch spans days (cross-midnight session)", () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    diaryLogCook("today-dish", "Today", 1, { auto: true, batchId: "b-span" });
+    diaryLogCook("yday-dish", "Yday", 1, {
+      auto: true,
+      batchId: "b-span",
+      date: yesterday,
+    });
+    const removed = diaryRemoveBatch("b-span");
+    expect(removed.length).toBe(2);
+    const store = JSON.parse(
+      window.localStorage.getItem("sous-nutrition-diary-v1") ?? "{}",
+    );
+    const leftWithBatch = Object.values(store)
+      .flat()
+      .filter((e) => (e as DiaryEntry).batchId === "b-span");
+    expect(leftWithBatch.length).toBe(0);
   });
 });

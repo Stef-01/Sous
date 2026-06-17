@@ -54,6 +54,10 @@ export interface DiaryEntry {
   /** True when the entry was written automatically on cook completion (so the
    *  win screen can offer a quiet undo and the diary can label it). */
   auto?: boolean;
+  /** Combined-cook session id shared by every dish auto-logged in one multi-dish
+   *  cook, so the win-screen Undo removes the whole batch (main + sides), not
+   *  just the main. Absent for single cooks + manual logs. */
+  batchId?: string;
 }
 
 const KEY = "sous-nutrition-diary-v1";
@@ -319,7 +323,12 @@ export function diaryLogCook(
   slug: string,
   name: string,
   servings: number,
-  opts?: { auto?: boolean; date?: Date; nutrition?: PerServingNutrition },
+  opts?: {
+    auto?: boolean;
+    date?: Date;
+    nutrition?: PerServingNutrition;
+    batchId?: string;
+  },
 ): void {
   const key = dayKey(opts?.date ?? new Date());
   const prev = getSnapshot();
@@ -330,6 +339,7 @@ export function diaryLogCook(
     at: new Date().toISOString(),
     ...(opts?.auto ? { auto: true } : {}),
     ...(opts?.nutrition ? { nutrition: opts.nutrition } : {}),
+    ...(opts?.batchId ? { batchId: opts.batchId } : {}),
   };
   const next: Store = { ...prev, [key]: [...(prev[key] ?? []), entry] };
   commit(next);
@@ -427,6 +437,40 @@ export function diaryRemoveEntry(at: string, date: Date = new Date()): void {
       deleted: true,
     });
   }
+}
+
+/** Remove every entry sharing a combined-cook `batchId`, across whichever day(s)
+ *  they landed on. The win-screen Undo uses this so a multi-dish cook un-logs
+ *  ALL its dishes (main + sides), not just the main — the sides were previously
+ *  orphaned in the diary, silently inflating the day's rollup. Returns the
+ *  removed entries (so a caller could offer a restore). No-op for an unknown id. */
+export function diaryRemoveBatch(batchId: string): DiaryEntry[] {
+  if (!batchId) return [];
+  const prev = getSnapshot();
+  const removed: DiaryEntry[] = [];
+  const next: Store = {};
+  for (const [day, entries] of Object.entries(prev)) {
+    const kept: DiaryEntry[] = [];
+    for (const e of entries) {
+      if (e.batchId === batchId) removed.push(e);
+      else kept.push(e);
+    }
+    next[day] = kept;
+  }
+  if (removed.length === 0) return [];
+  commit(next);
+  for (const e of removed) {
+    // Tombstone each so other devices converge instead of resurrecting.
+    enqueueEntrySync({
+      day: dayKey(new Date(e.at)),
+      at: e.at,
+      slug: e.slug,
+      name: e.name,
+      servings: e.servings,
+      deleted: true,
+    });
+  }
+  return removed;
 }
 
 /** W25 — undo: re-insert a removed entry exactly (preserves branded nutrition). */

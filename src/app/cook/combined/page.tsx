@@ -116,6 +116,12 @@ function CombinedCookContent() {
     dismissLevelUp();
   }, [levelUpPending, levelTitle, dismissLevelUp]);
   const sessionIdRef = useRef<string | null>(null);
+  // Render-safe mirror of the session id, used as the auto-log batchId so the
+  // win-screen Undo removes the whole combined batch. Set in the completion
+  // handler (reading the ref directly during render is disallowed).
+  const [autoLogBatchId, setAutoLogBatchId] = useState<string | undefined>(
+    undefined,
+  );
   /** Matches single-cook StepCard: back navigation reverses slide direction. */
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
   // Guard against rapid double-tap on the "Next step" button
@@ -381,6 +387,8 @@ function CombinedCookContent() {
         // One signal per cooked dish in this combined session.
         // Pull cuisine + flavor + ingredients from `orderedDishes`
         // — the cook-store `dishes` array carries only thin entries.
+        const batchId = sessionIdRef.current ?? undefined;
+        setAutoLogBatchId(batchId);
         for (const od of orderedDishes) {
           recordPreferenceSignal({
             kind: "cooked",
@@ -392,8 +400,13 @@ function CombinedCookContent() {
           });
           // Auto-log each finished dish into the nutrition diary
           // (founder-directed, 2026-06-09). One serving per dish — the
-          // combined cook has no per-dish serving slider.
-          diaryLogCook(od.dish.slug, od.dish.name, 1, { auto: true });
+          // combined cook has no per-dish serving slider. All dishes share the
+          // session id as a batchId so the win-screen Undo removes them together
+          // (else the sides orphan in the diary).
+          diaryLogCook(od.dish.slug, od.dish.name, 1, {
+            auto: true,
+            batchId,
+          });
         }
         completeCookPhase();
       }
@@ -794,6 +807,7 @@ function CombinedCookContent() {
                   : (orderedDishes[0]?.dish.name ?? "")
               }
               dishSlug={mainDish?.slug ?? orderedDishes[0]?.dish.slug}
+              autoLogBatchId={autoLogBatchId}
               sideDishes={orderedDishes.map((d) => d.dish.name)}
               cuisineFamily={mainDish?.cuisineFamily ?? ""}
               isFirstCook={winMeta.streak === 1}
