@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Microscope } from "lucide-react";
 import type { ResearchBrief } from "@/types/content";
 import { BookmarkButton } from "./bookmark-button";
+import { SampleTag } from "./sample-tag";
 
 interface Props {
   brief: ResearchBrief;
@@ -49,6 +50,7 @@ export function ResearchBriefCard({ brief }: Props) {
         <p className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--nourish-green)]">
           <Microscope size={12} />
           {brief.labName}
+          {brief.isPlaceholder && <SampleTag />}
         </p>
         <h3 className="font-serif text-[17px] leading-tight text-[var(--nourish-dark)] line-clamp-2">
           {brief.title}

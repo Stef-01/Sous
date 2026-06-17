@@ -43,8 +43,22 @@ describe("slotSummary", () => {
     expect(s!.p).toBe(26); // 100/390
   });
 
-  it("null when no entry carries nutrition (no fake splits)", () => {
+  it("null when no entry carries nutrition AND the slug doesn't resolve", () => {
     const bare = { ...entry(8, 0), nutrition: undefined } as DiaryEntry;
     expect(slotSummary([bare])).toBeNull();
+  });
+
+  it("resolves a cooked seeded dish with no embedded nutrition (seed-first)", () => {
+    // The auto-log path writes catalog dishes WITHOUT an embedded vector — the
+    // slot card must still show their macros (seeded butter-chicken = 520 kcal).
+    const cooked = {
+      slug: "butter-chicken",
+      name: "Butter Chicken",
+      servings: 1,
+      at: new Date(2026, 5, 11, 19, 0).toISOString(),
+    } as unknown as DiaryEntry;
+    const s = slotSummary([cooked]);
+    expect(s).not.toBeNull();
+    expect(s!.kcal).toBe(520);
   });
 });

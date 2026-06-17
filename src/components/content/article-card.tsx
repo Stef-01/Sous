@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Article } from "@/types/content";
 import { getExpertById } from "@/data/content";
 import { BookmarkButton } from "./bookmark-button";
+import { SampleTag } from "./sample-tag";
 
 interface Props {
   article: Article;
@@ -42,7 +43,8 @@ export function ArticleCard({ article, variant = "default" }: Props) {
             {article.title}
           </p>
           <p className="text-[11px] text-[var(--nourish-subtext)]">
-            {author?.name ?? "Sous editorial"} · {article.readMinutes} min
+            {author?.name ?? "Sous editorial"}
+            {author?.isPlaceholder && <SampleTag />} · {article.readMinutes} min
           </p>
         </div>
         <BookmarkButton kind="articles" id={article.id} label={article.title} />
@@ -80,7 +82,9 @@ export function ArticleCard({ article, variant = "default" }: Props) {
           {article.title}
         </h3>
         <p className="mt-auto pt-1.5 text-[11px] text-[var(--nourish-subtext)]">
-          {author?.name ?? "Sous editorial"} · {article.readMinutes} min read
+          {author?.name ?? "Sous editorial"}
+          {author?.isPlaceholder && <SampleTag />} · {article.readMinutes} min
+          read
         </p>
       </div>
     </Link>

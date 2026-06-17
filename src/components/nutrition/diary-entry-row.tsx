@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronsUpDown, Minus, Plus, X } from "lucide-react";
 import {
@@ -36,6 +36,20 @@ export function DiaryEntryRow({
 }) {
   const [editing, setEditing] = useState(false);
   const reducedMotion = useReducedMotion();
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Auto-quiet (the design note's promise): tapping anywhere outside this row
+  // closes the open stepper, so stray ±controls don't linger across the diary.
+  useEffect(() => {
+    if (!editing) return;
+    const onDown = (e: PointerEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
+        setEditing(false);
+      }
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [editing]);
 
   const step = (delta: number) => {
     const next = Math.max(0.5, Math.round((entry.servings + delta) * 2) / 2);
@@ -47,6 +61,7 @@ export function DiaryEntryRow({
 
   return (
     <motion.div
+      ref={rootRef}
       layout={reducedMotion ? false : "position"}
       initial={reducedMotion ? false : { opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}

@@ -24,6 +24,10 @@ import {
   UtensilsCrossed,
 } from "lucide-react";
 import { dayKey, type DiaryEntry } from "@/lib/hooks/use-nutrition-diary";
+import {
+  getDishPerServing,
+  NUTRITION_COVERAGE_FLOOR,
+} from "@/lib/engine/dish-nutrition";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
 
@@ -265,14 +269,22 @@ export function slotSummary(entries: ReadonlyArray<DiaryEntry>): {
   let pG = 0;
   let any = false;
   for (const e of entries) {
-    const n = e.nutrition as
+    // Embedded nutrition (branded / user recipes) first; otherwise resolve the
+    // catalog dish seed-first + coverage-gated, exactly like aggregateDay — so a
+    // cooked seeded dish (no embedded vector) still shows its per-slot macros.
+    let n = e.nutrition as
       | {
           calories?: number;
           totalCarbs_g?: number;
           totalFat_g?: number;
           protein_g?: number;
         }
-      | undefined;
+      | undefined
+      | null;
+    if (!n) {
+      const { perServing, coverage } = getDishPerServing(e.slug);
+      if (perServing && coverage >= NUTRITION_COVERAGE_FLOOR) n = perServing;
+    }
     if (!n || typeof n.calories !== "number") continue;
     any = true;
     kcal += n.calories * e.servings;

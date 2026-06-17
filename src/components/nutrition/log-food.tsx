@@ -451,6 +451,17 @@ export function LogFood({
           </ul>
         )}
 
+      {/* No-match state — the most common failure moment for a logger. */}
+      {showResults &&
+        !searching &&
+        locals.length === 0 &&
+        branded.length === 0 && (
+          <p className="mt-2 rounded-xl bg-white px-3 py-3 text-[12.5px] leading-snug text-[var(--nourish-subtext)] shadow-[var(--ring-hairline)]">
+            No matches for &ldquo;{q.trim()}&rdquo;. Tap the camera to read a
+            label, or check the spelling.
+          </p>
+        )}
+
       {/* Empty field → your staples (usual portions), one tight row. */}
       {!showResults && frequents.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-2">

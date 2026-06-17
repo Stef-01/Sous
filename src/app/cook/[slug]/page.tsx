@@ -324,7 +324,9 @@ export default function GuidedCookPage({
       // Auto-log the finished cook into the nutrition diary (founder-directed,
       // 2026-06-09) — the win screen shows a quiet "logged" line with undo.
       // Runs once per completion (event handler, double-tap guarded above).
-      const userRecipe = findUserRecipeBySlug(userDrafts, slug);
+      // draftSlug (custom- prefix stripped) — raw slug never matches a draft,
+      // so a user recipe would auto-log with no nutrition vector.
+      const userRecipe = findUserRecipeBySlug(userDrafts, draftSlug);
       // Per-serving nutrition divides by the recipe's NATURAL yield (catalogue
       // base, or a user recipe's `serves`) — not by portions eaten — so one
       // logged serving equals one real portion.
@@ -369,6 +371,7 @@ export default function GuidedCookPage({
     cuisine,
     recordPreferenceSignal,
     userDrafts,
+    draftSlug,
   ]);
 
   const handleToggleChip = useCallback(

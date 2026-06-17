@@ -10,6 +10,7 @@ import { getArticleBySlug, getExpertById, ARTICLES } from "@/data/content";
 import { BackLink } from "@/components/content/back-link";
 import { BookmarkButton } from "@/components/content/bookmark-button";
 import { ExpertAvatar } from "@/components/content/expert-avatar";
+import { SampleTag } from "@/components/content/sample-tag";
 import { ContentDisclaimer } from "@/components/content/content-disclaimer";
 import { SourceAttribution } from "@/components/shared/source-attribution";
 
@@ -63,8 +64,9 @@ export default function ArticleDetailPage({
             <span>
               <span className="font-semibold text-[var(--nourish-dark)]">
                 {author.name}
-              </span>{" "}
-              · {author.credential} · {article.readMinutes} min read
+              </span>
+              {author.isPlaceholder && <SampleTag />} · {author.credential} ·{" "}
+              {article.readMinutes} min read
             </span>
           </Link>
         )}

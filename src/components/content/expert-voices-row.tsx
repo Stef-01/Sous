@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { ExpertVoice } from "@/types/content";
 import { ExpertAvatar } from "./expert-avatar";
+import { SampleTag } from "./sample-tag";
 
 interface Props {
   experts: ExpertVoice[];
@@ -40,6 +41,7 @@ export function ExpertVoicesRow({ experts }: Props) {
               </p>
               <p className="text-[10px] leading-tight text-[var(--nourish-subtext)] line-clamp-1">
                 {expert.credential}
+                {expert.isPlaceholder && <SampleTag />}
               </p>
             </Link>
           </li>
