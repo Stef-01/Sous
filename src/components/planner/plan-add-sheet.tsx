@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { Plus, Search } from "lucide-react";
+import { sheetMotion } from "@/lib/motion/sheet";
 import { searchDishes, customDishSlug } from "@/lib/utils/dish-lookup";
 import { parseSlotKey, type SlotKey } from "@/types/meal-plan";
 
@@ -41,6 +43,7 @@ export function PlanAddSheet({
   const exact = results.some(
     (r) => r.name.toLowerCase() === trimmed.toLowerCase(),
   );
+  const reducedMotion = useReducedMotion();
 
   const submitTop = () => {
     const pick = results[0]?.slug ?? (trimmed ? customDishSlug(trimmed) : null);
@@ -48,14 +51,21 @@ export function PlanAddSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/30">
+    <motion.div
+      className="fixed inset-0 z-50 flex flex-col justify-end bg-black/30"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.18 }}
+    >
       <button
         type="button"
         aria-label="Close"
         className="flex-1"
         onClick={onClose}
       />
-      <div
+      <motion.div
+        {...sheetMotion(reducedMotion)}
         role="dialog"
         aria-modal="true"
         aria-label="Add a meal to the plan"
@@ -140,7 +150,7 @@ export function PlanAddSheet({
             Browse ideas instead →
           </button>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -26,8 +26,8 @@ Legend: ✅ handled · ◐ partial · — not applicable · ✗ gap to fill
 
 | Component                         | idle | hover | pressed |      loading      |  disabled   |                    empty                    | error |   success   |
 | --------------------------------- | :--: | :---: | :-----: | :---------------: | :---------: | :-----------------------------------------: | :---: | :---------: |
-| `Pressable`                       |  ✅  |  ✅   |   ✅    |         ✗         |     ✅      |                      —                      |   —   |      —      |
-| `TapFeedback` (primary/secondary) |  ✅  |  ✅   |   ✅    |         ✗         |      ◐      |                      —                      |   —   |      —      |
+| `Pressable`                       |  ✅  |  ✅   |   ✅    |   ✅ (spinner)    |     ✅      |                      —                      |   —   |      —      |
+| `TapFeedback` (primary/secondary) |  ✅  |  ✅   |   ✅    |   ✅ (spinner)    |     ✅      |                      —                      |   —   |      —      |
 | `ChipFeedback`                    |  ✅  |  ✅   |   ✅    |         —         |      ◐      |                      —                      |   —   | ✅ (active) |
 | Craving search bar                |  ✅  |  ✅   |   ✅    | ✅ (loading view) |      —      |                      —                      |   ◐   |      —      |
 | Meal deck / swipe queue           |  ✅  |  ✅   |   ✅    |        ✅         |      —      | ✅ (QueueComplete / "browsed today's deck") |   —   |  ✅ (cook)  |
@@ -39,13 +39,18 @@ Legend: ✅ handled · ◐ partial · — not applicable · ✗ gap to fill
 | Win screen                        |  ✅  |  ✅   |   ✅    |         —         |      —      |                      —                      |   —   |     ✅      |
 | Skeleton loaders (`shimmer`)      |  —   |   —   |    —    |        ✅         |      —      |                      —                      |   —   |      —      |
 
-## Open gaps (next E4 passes)
+## Resolved (E4 follow-up)
 
-- **Loading states** are the weakest column: `Pressable` / `TapFeedback` have no
-  built-in spinner/disabled-while-pending state — submit buttons hand-roll it.
-  Add an optional `loading` prop to the primitives (spinner + auto-disable).
-- **Error states** beyond toast are ad-hoc (e.g. craving parse failure). Define
-  a shared inline error treatment.
+- **Loading** — `Pressable` + `TapFeedback` now take a `loading` prop: a spinner
+  replaces the label, the button auto-disables, and `aria-busy` is set. Pending
+  states no longer hand-rolled.
+- **Inline error** — shared `InlineError` (`role="alert"`, rose line + icon) for
+  field/action failures, distinct from transient toasts.
+
+## Open gaps (next passes)
+
+- Adopt `loading` on the actual submit buttons (pod create/join, AI-import) and
+  `InlineError` on their fields — the primitives now support it; wiring is per
+  call-site.
 - The matrix above is the components touched/verified through E4; extend it to
-  the remaining Path + Content interactive components as those screens get the
-  E2 sweep.
+  the remaining Path + Content interactive components.

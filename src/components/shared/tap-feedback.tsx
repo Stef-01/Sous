@@ -21,6 +21,7 @@
 
 import type { ReactNode } from "react";
 import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
+import { Loader2 } from "lucide-react";
 import { SPRING } from "@/styles/motion";
 import { TAP_SCALE, TAP_SCALE_SM } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils/cn";
@@ -36,6 +37,8 @@ interface TapFeedbackProps extends Omit<
    *  effect without any visual styling — for callers that
    *  bring their own classes. */
   variant?: TapFeedbackVariant;
+  /** Pending state — shows a spinner, auto-disables, sets aria-busy. */
+  loading?: boolean;
   children: ReactNode;
 }
 
@@ -43,28 +46,39 @@ interface TapFeedbackProps extends Omit<
  *  spring + reduced-motion gate. */
 export function TapFeedback({
   variant = "tap-only",
+  loading,
+  disabled,
   className,
   children,
   ...rest
 }: TapFeedbackProps) {
   const reducedMotion = useReducedMotion();
-  const tapScale = reducedMotion ? 1 : TAP_SCALE;
+  const inert = loading || disabled;
+  const tapScale = reducedMotion || inert ? 1 : TAP_SCALE;
 
   return (
     <motion.button
-      whileTap={{ scale: tapScale }}
+      whileTap={inert ? undefined : { scale: tapScale }}
       transition={SPRING.snappy}
       type="button"
+      disabled={inert}
+      aria-busy={loading || undefined}
       className={cn(
         variant === "primary" &&
           "rounded-xl bg-[var(--nourish-green)] px-5 py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)]",
         variant === "secondary" &&
           "rounded-xl border border-[var(--nourish-border-strong)] bg-white px-5 py-3 text-sm font-medium text-[var(--nourish-dark)] transition-colors hover:bg-neutral-50",
+        inert && "cursor-not-allowed",
+        disabled && "opacity-50",
         className,
       )}
       {...rest}
     >
-      {children}
+      {loading ? (
+        <Loader2 className="mx-auto h-4 w-4 animate-spin" aria-hidden />
+      ) : (
+        children
+      )}
     </motion.button>
   );
 }
