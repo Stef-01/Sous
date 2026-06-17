@@ -463,9 +463,10 @@ function CombinedCookContent() {
             expandedChip: null,
           });
         } else if (currentDishIndex > 0) {
-          // At first step of a subsequent dish  -  can't go back to previous dish easily
-          // Go back to grab instead
-          setPhase("grab");
+          // At the first step of a later dish  -  step back into the PREVIOUS
+          // dish's last step (continuous Back), not all the way out to Grab.
+          setStepDirection(-1);
+          useCookStore.getState().prevDish();
         } else {
           // First step of first dish  -  go back to grab or mission
           if (allIngredients.length > 0) {

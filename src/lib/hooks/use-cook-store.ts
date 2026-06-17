@@ -45,6 +45,7 @@ interface CookStore {
   nextStep: () => void;
   prevStep: () => void;
   nextDish: () => boolean; // returns true if there's another dish, false if all done
+  prevDish: () => boolean; // step back into the previous dish's last step; false if on the first
   toggleChip: (chip: ChipType) => void;
   /** Add a new timer. Label helps the user identify which dish/step it belongs
    *  to when multiple timers are running. If a timer with the same label is
@@ -125,6 +126,25 @@ export const useCookStore = create<CookStore>((set, get) => ({
         // told to start can legitimately outlive the dish boundary (that's the
         // whole point of the parallel-cook hint). Only drop finished ones so a
         // stale "Done!" flash doesn't bleed into the next dish.
+        timers: timers.filter((t) => t.completedAt === null),
+      });
+      return true;
+    }
+    return false;
+  },
+
+  prevDish: () => {
+    const { currentDishIndex, dishes, timers } = get();
+    if (currentDishIndex > 0) {
+      const prevIdx = currentDishIndex - 1;
+      const prevTotal = dishes[prevIdx].totalSteps;
+      set({
+        currentDishIndex: prevIdx,
+        // Land on the previous dish's LAST step (not its first) so Back walks
+        // backward continuously instead of dumping the user out to Grab.
+        currentStepIndex: Math.max(0, prevTotal - 1),
+        totalSteps: prevTotal,
+        expandedChip: null,
         timers: timers.filter((t) => t.completedAt === null),
       });
       return true;

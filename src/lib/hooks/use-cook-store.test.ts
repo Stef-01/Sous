@@ -139,4 +139,19 @@ describe("useCookStore timers", () => {
       vi.useRealTimers();
     }
   });
+
+  it("prevDish steps back into the previous dish's last step", () => {
+    useCookStore.getState().startCombinedSession([
+      { slug: "a", name: "A", totalSteps: 3 },
+      { slug: "b", name: "B", totalSteps: 2 },
+    ]);
+    // already on the first dish → nothing to go back to
+    expect(useCookStore.getState().prevDish()).toBe(false);
+    useCookStore.getState().nextDish(); // → dish b, step 0
+    expect(useCookStore.getState().currentDishIndex).toBe(1);
+    expect(useCookStore.getState().prevDish()).toBe(true); // → dish a, last step
+    expect(useCookStore.getState().currentDishIndex).toBe(0);
+    expect(useCookStore.getState().currentStepIndex).toBe(2); // a.totalSteps - 1
+    expect(useCookStore.getState().totalSteps).toBe(3);
+  });
 });
