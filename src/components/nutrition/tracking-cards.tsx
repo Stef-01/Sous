@@ -116,7 +116,7 @@ export function CaloriesCard({
   const left = Math.max(0, Math.round(target - consumed));
   const pct = Math.min(100, (consumed / target) * 100);
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
+    <div className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
       <p className="text-[13px] font-medium text-[var(--nourish-subtext)]">
         Calories
       </p>
@@ -196,7 +196,7 @@ export function MacrosCard({
   // The mockup's ⇄: consumed ⇄ remaining, same stores either way.
   const [mode, setMode] = useState<"consumed" | "left">("consumed");
   return (
-    <div className="relative flex gap-3 rounded-2xl border border-neutral-200/60 bg-white p-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
+    <div className="relative flex gap-3 rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
       <MacroCol
         label="Carbs"
         grams={carbs}
@@ -325,7 +325,7 @@ export function DiarySlotCard({
         : `${entries[0].name} and ${entries.length - 1} more`;
 
   return (
-    <div className="rounded-2xl border border-neutral-200/60 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_-14px_rgba(0,0,0,0.14)]">
+    <div className="rounded-2xl bg-white shadow-[var(--shadow-card)]">
       <div className="flex items-center gap-3 p-3.5">
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]">
           <Icon size={16} />

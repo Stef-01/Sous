@@ -14,6 +14,10 @@ const RADIUS: Record<Radius, string> = {
  * cards read as a single family across the app. Replaces ad-hoc
  * `rounded-[22px]/[26px]/2xl` + per-component padding.
  * (planning.md overhaul, acceptance criterion G3)
+ *
+ * Depth is the layered `--shadow-card` stack whose first layer is a 0.5px
+ * hairline ring (Track E1) — so no explicit border (border + ring = the blocky
+ * double-edge Track E removes).
  */
 export function Card({
   children,
@@ -31,7 +35,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "border border-[var(--nourish-border)] bg-white shadow-[var(--shadow-card)]",
+        "bg-white shadow-[var(--shadow-card)]",
         padded && "p-[var(--card-pad)]",
         className,
       )}

@@ -185,7 +185,7 @@ export default function NutritionPage() {
         {/* Day ring — the glanceable status */}
         {dayNutrition ? (
           <div className="space-y-2">
-            <div className="rounded-2xl border border-neutral-200/80 bg-white p-4">
+            <div className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
               <NutritionRingCard nutrition={dayNutrition} microsOnly />
             </div>
             {isToday && deficitFill && (

@@ -519,7 +519,7 @@ export function QuestCard({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 25 }}
-          className="flex flex-col items-center gap-4 rounded-2xl border border-neutral-200/60 bg-white p-8 text-center"
+          className="flex flex-col items-center gap-4 rounded-2xl bg-white p-8 text-center shadow-[var(--shadow-card)]"
         >
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
             <UtensilsCrossed
@@ -601,7 +601,7 @@ export function QuestCard({
         questDishes.length > 0 && (
           /* Swiped the whole deck for the day — offer a clean reset rather than
              a dead end (the overlay's QueueComplete handles in-deck exhaustion). */
-          <div className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] border border-neutral-200 bg-white px-6 py-10 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-[var(--radius-lg)] bg-white px-6 py-10 text-center shadow-[var(--shadow-card)]">
             <p className="text-sm font-medium text-[var(--nourish-subtext)]">
               You&apos;ve browsed today&apos;s deck.
             </p>
@@ -684,7 +684,7 @@ function MealQueuePreview({
             aria-hidden
             className="absolute -inset-x-1 -bottom-1.5 top-2 -z-10 rounded-[var(--radius-lg)] border border-neutral-200 bg-neutral-100 [transform:rotate(-1.5deg)]"
           />
-          <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] border border-neutral-200 bg-white">
+          <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] bg-white shadow-[var(--shadow-card)]">
             <DishImage dish={dish} priority fit="cover" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-3">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/92 px-3.5 py-1.5 text-[12px] font-semibold text-neutral-900 shadow-sm transition-colors group-hover:bg-white">
