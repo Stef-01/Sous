@@ -21,7 +21,7 @@ fix. Tick as shipped.
 
 ## P1 — real friction (next loops)
 
-- [ ] **Plan never feeds the shopping list** — no path turns a planned week into groceries; the aggregator (`use-shopping-list.ts`) is built for it. Add "Shop this week" on `plan/week/page.tsx` (walk `slotMap` → ingredients → diff pantry → `addMany`).
+- [x] **Plan never feeds the shopping list** (`9882cc1`) — "Shop this week" on `plan/week/page.tsx` walks `slotMap` → resolves ingredients → diffs pantry → `addMany` with recipe provenance; button → "{n} added — view shopping list". Verified: a Hiyayakko week → 7 items on `/path/shopping-list`.
 - [x] **Swipe planner empty on first run** (`0bac543`) — closed alongside the P0 dead-meals fix: `minCoverage: 0` means the discovery planner is no longer coverage-gated, so a sparse/empty pantry still fills the pool (ranked by recency/rotation/ease).
 - [ ] **Deck "Cook" on a main opens a side-picker, not cooking** — the verb lies (routes to `/sides`). Relabel main action to "Plan / Build plate", reserve "Cook" for the straight-to-`/cook` path. `quest-card.tsx`, `meal-swipe-queue-cards.tsx:165`.
 - [ ] **Search-result logging is always ×1** — doesn't use `lastServingsFor` "usual" portion (the idle chips do). `log-food.tsx:221`.
