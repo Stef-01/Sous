@@ -14,10 +14,14 @@ export const DURATION = {
   slow: 0.3,
 } as const;
 
-/** Cubic-bezier control points, matching --ease-out / --ease-in. */
+/** Cubic-bezier control points, mirroring the --ease-* CSS tokens (E1). */
 export const EASE = {
   out: [0.22, 1, 0.36, 1] as const,
   in: [0.4, 0, 1, 1] as const,
+  inOut: [0.66, 0, 0.34, 1] as const,
+  /** Overshoot — badges / pops / counters ONLY. As a default it reads juvenile,
+   *  not premium; keep it off lists, sheets, and primary transitions. */
+  spring: [0.35, 1.55, 0.65, 1] as const,
 };
 
 /** Named spring configs — pick by feel, never re-tune inline. */
