@@ -569,13 +569,20 @@ each step (SOP §7 crosscheck; commit 45d0a75).
 
 ### 6.3 Following
 
-- Erewhon smoothie dupes (same pipeline; founder supplies images; re-fetch
-  the cleanprogram.com post at execution time).
-- Remaining eat-out hero photos: founder saves from Instagram →
-  `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring (the disk
-  test auto-verifies).
-- Pet: optional second idle animation (ear flick/tail sway); seasonal rooms.
-- Guided-cook coverage for flowless dishes; Playwright journey suite.
+- Erewhon smoothie dupes — ✅ DONE (Clean Program dupes → two Stefan-curated
+  `drink` sides with per-step photos + nutrition).
+- Pet: second idle animation + seasonal rooms — ✅ DONE (ear-flick pose +
+  `seasonFromMonth` windowsill accent; commit 7b7810a).
+- Playwright journey suite — STARTED: the new Today-deck features
+  (multi-select filters, side search, skip-sides) are covered in
+  `e2e/today-filters-features.spec.ts`; broaden to onboarding next.
+- **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
+  Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
+  (the disk test auto-verifies).
+- Guided-cook coverage for flowless dishes — needs REAL recipe sources
+  (rule 7: no invented recipes), so founder-supplied or sourced exports only.
+- Done alongside: black-bean-brownie step photos re-mapped (45d0a75); the
+  ingredient-meta grocery classifier de-bugged + tested (1e49abb).
 
 ## 7. Docs index
 
