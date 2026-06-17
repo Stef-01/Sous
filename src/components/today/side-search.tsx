@@ -126,7 +126,7 @@ export function SideSearch() {
             ))}
           </div>
         ) : results.length === 0 ? (
-          <div className="rounded-xl border border-neutral-100 bg-white p-6 text-center">
+          <div className="rounded-xl bg-white p-6 text-center shadow-[var(--shadow-card)]">
             <Search
               size={26}
               className="mx-auto mb-2 text-[var(--nourish-subtext)]"

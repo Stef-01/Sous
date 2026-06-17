@@ -309,7 +309,7 @@ export function IngredientList({
         </div>
 
         {viewMode === "station" && hasCoalescedView ? (
-          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]">
             {prepGroups.map((group) => (
               <div key={group.station}>
                 <h3 className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2">
@@ -393,7 +393,7 @@ export function IngredientList({
             ))}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+          <div className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]">
             {effectiveSections.map((section, sectionIdx) => {
               const sectionStartIdx = sectionStartIndices[sectionIdx];
 

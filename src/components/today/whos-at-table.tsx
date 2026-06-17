@@ -53,7 +53,7 @@ export function WhosAtTable() {
       initial={reducedMotion ? false : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
-      className="space-y-2 rounded-2xl border border-neutral-100/80 bg-white p-3 shadow-sm"
+      className="space-y-2 rounded-2xl bg-white p-3 shadow-[var(--shadow-card)]"
       aria-label="Who's at the table"
     >
       <div className="flex items-center justify-between">

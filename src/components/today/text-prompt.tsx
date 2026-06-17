@@ -459,7 +459,7 @@ export function TextPrompt({
                   <div className="space-y-3">
                     {literalHits.length > 0 && (
                       <div>
-                        <div className="rounded-xl border border-neutral-100 bg-white overflow-hidden divide-y divide-neutral-50">
+                        <div className="rounded-xl bg-white overflow-hidden divide-y divide-neutral-50 shadow-[var(--shadow-card)]">
                           {literalShown.map((result, idx) => (
                             <ResultRow
                               key={result.name}
