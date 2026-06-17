@@ -17,12 +17,8 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Sparkles, X, Check } from "lucide-react";
-import dishShapePatternsRaw from "@/data/dish-shape-patterns.json";
-import {
-  buildSwipeCardPool,
-  type PoolCandidate,
-  type SwipeCard,
-} from "@/lib/planner/swipe-pool";
+import { catalogCandidates } from "@/lib/planner/plan-candidates";
+import { buildSwipeCardPool, type SwipeCard } from "@/lib/planner/swipe-pool";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
@@ -35,37 +31,6 @@ import {
 } from "@/types/meal-plan";
 import { cn } from "@/lib/utils/cn";
 import { AnchorPulseHost } from "@/components/surveys/anchor-pulse-host";
-
-interface DishShapePatternJSON {
-  requiredAny: string[][];
-  dishName: string;
-  dishType: string;
-  prepTimeMinutes: number;
-  pairingExplanation: string;
-}
-
-const PATTERNS = dishShapePatternsRaw as DishShapePatternJSON[];
-
-/** Pure: convert the dish-shape catalog into PoolCandidate
- *  shapes so the W25 helper can rank them. V1 stub —
- *  real seed-catalog wiring lands at a follow-up. */
-function patternsToCandidates(
-  patterns: ReadonlyArray<DishShapePatternJSON>,
-): PoolCandidate[] {
-  return patterns.map((p) => ({
-    recipeSlug: p.dishName.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-    title: p.dishName,
-    cuisineFamily: "varied",
-    // Use the FIRST candidate from each requiredAny slot as
-    // the canonical ingredient. Pantry-coverage matching uses
-    // the bidirectional substring helper so partial matches
-    // still land coverage.
-    ingredients: p.requiredAny.map((slot) => slot[0] ?? "").filter(Boolean),
-    prepTimeMinutes: p.prepTimeMinutes,
-    dietaryFlags: [],
-    source: "seed",
-  }));
-}
 
 /** Pure: which day-meal slots remain unfilled in the week's
  *  scheduled list? Returns an ordered list (Mon→Sun, breakfast→
@@ -115,7 +80,7 @@ export default function SwipePlannerPage() {
     if (!pantryMounted) return [];
     void twistVersion; // re-derive on twist requests
     return buildSwipeCardPool({
-      candidates: patternsToCandidates(PATTERNS),
+      candidates: catalogCandidates(pantryItems),
       pantry: pantryItems,
       dietaryUnion: [],
       recentCooks: sessions
@@ -126,11 +91,12 @@ export default function SwipePlannerPage() {
           completedAt: s.completedAt!,
         })),
       now: new Date(),
-      // Drop the coverage floor for V1 since the dish-shape
-      // patterns use generic ingredient names that may not
-      // perfectly match user pantries until W18 expansion +
-      // canonical-ingredient mapping land.
-      minCoverage: 0.4,
+      // No coverage floor: the planner is a weekly-discovery surface, not a
+      // cook-now-from-pantry one. Real catalog dishes carry full ingredient
+      // lists, so a coverage gate would empty the planner for a sparse pantry
+      // (the old "empty on first run" bug). Cards still carry pantryCoverage for
+      // display; ranking is by recency / rotation / ease of prep.
+      minCoverage: 0,
     });
   }, [pantryItems, pantryMounted, sessions, twistVersion]);
 
