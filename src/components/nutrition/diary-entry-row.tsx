@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Minus, Plus, X } from "lucide-react";
+import { ChevronsUpDown, Minus, Plus, X } from "lucide-react";
 import {
   diaryRemoveEntry,
   diaryRestoreEntry,
@@ -101,13 +101,14 @@ export function DiaryEntryRow({
           onClick={() => setEditing(true)}
           aria-label={`Adjust ${entry.name} servings (currently ${entry.servings})`}
           className={cn(
-            "shrink-0 rounded-full px-2 py-1 text-[12px] font-medium transition-colors",
+            "flex shrink-0 items-center gap-0.5 rounded-full py-1 pl-2 pr-1.5 text-[12px] font-medium transition-colors",
             entry.servings !== 1
               ? "bg-neutral-100 text-[var(--nourish-dark)]"
-              : "text-[var(--nourish-subtext-faint)] hover:bg-neutral-100",
+              : "bg-neutral-100/70 text-[var(--nourish-subtext)] hover:bg-neutral-100",
           )}
         >
           ×{entry.servings}
+          <ChevronsUpDown size={11} className="opacity-50" aria-hidden />
         </button>
       )}
 

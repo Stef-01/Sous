@@ -323,33 +323,33 @@ export default function GuidedCookPage({
       });
       // Auto-log the finished cook into the nutrition diary (founder-directed,
       // 2026-06-09) — the win screen shows a quiet "logged" line with undo.
-      // Carries the serving slider's batch size (same recipe-link base the
-      // render uses), consistent with the manual Log-it button. Runs once per
-      // completion (event handler, double-tap guarded above).
-      const loggedServings =
-        servingsOverride ??
+      // Runs once per completion (event handler, double-tap guarded above).
+      const userRecipe = findUserRecipeBySlug(userDrafts, slug);
+      // Per-serving nutrition divides by the recipe's NATURAL yield (catalogue
+      // base, or a user recipe's `serves`) — not by portions eaten — so one
+      // logged serving equals one real portion.
+      const recipeYield =
         getRecipeLink(slug)?.servingsPerRecipe ??
+        userRecipe?.serves ??
         FALLBACK_SERVINGS;
       // #5 — a USER recipe has no catalogue vector, so compose one through the
       // registry (names→aliases, quantities→grams via density/piece data) and
       // embed it on the entry (the branded-food pattern) — the diary ring then
       // counts user-recipe cooks with REAL math, coverage-gated at 50%.
-      const userRecipe = findUserRecipeBySlug(userDrafts, slug);
       const userNutrition =
         !getRecipeLink(slug) && userRecipe
-          ? computeUserRecipeNutrition(userRecipe.ingredients, loggedServings)
+          ? computeUserRecipeNutrition(userRecipe.ingredients, recipeYield)
           : null;
-      diaryLogCook(
-        slug,
-        staticData?.name ?? userRecipe?.title ?? slug,
-        loggedServings,
-        {
-          auto: true,
-          ...(userNutrition && userNutrition.coverage >= 0.5
-            ? { nutrition: userNutrition.perServing }
-            : {}),
-        },
-      );
+      // Default the diary entry to ONE serving eaten (founder-directed
+      // 2026-06-17): log a portion, then bump it on the nutrition page for how
+      // much you actually ate. Combined cook already logs 1 per dish — this
+      // aligns the single-dish cook with that.
+      diaryLogCook(slug, staticData?.name ?? userRecipe?.title ?? slug, 1, {
+        auto: true,
+        ...(userNutrition && userNutrition.coverage >= 0.5
+          ? { nutrition: userNutrition.perServing }
+          : {}),
+      });
       completeCookPhase();
     } else {
       useCookStore.setState({
@@ -368,7 +368,6 @@ export default function GuidedCookPage({
     awardXP,
     cuisine,
     recordPreferenceSignal,
-    servingsOverride,
     userDrafts,
   ]);
 
