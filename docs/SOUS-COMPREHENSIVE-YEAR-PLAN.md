@@ -77,7 +77,7 @@ The 10 rules are motion- and shadow-heavy. "Extremely premium / not blocky" also
 
 ### Track E sequence (all [AB] — repo + CSS only)
 
-- **E1 — Token completion + guards.** Add `--ease-spring`, `--ease-in-out`, `--entrance-premium`, and re-tuned 2–8% shadow stacks with a hairline-ring layer (light + dark). Extend the lint/tests to ban raw `cubic-bezier(`, inline `ease`, and single-layer card shadows. One PR; the whole UI snaps to rhythm.
+- **E1 — Token completion + guards. ✅ SHIPPED 2026-06-17 (`09cba66`).** Added `--ease-in-out` + overshoot `--ease-spring` (CSS + `EASE` JS mirror), re-tuned `--shadow-card/raised` to layered ≤8% stacks led by a `0 0 0 0.5px` hairline ring (light) and softened the heavy dark stack to a white-ring "lighter surface" elevation, new standalone `--ring-hairline`, and the `--entrance-premium` keyframe/utility (fade + 6px rise + 2px blur, reduced-motion-gated). Guards: `tokens.test` extended + new `easing-guard.test` (bans raw `cubic-bezier(` in main UI; asserts the E1 token set + the layered card shadow ship). _Deferred to the E2/E4 sweep:_ banning Tailwind's inline `ease-*` utility classes (a large existing-usage migration) and a component-scan for one-off single-layer shadows. Verified in-browser.
 - **E2 — Shadow/hairline sweep.** Migrate focal surfaces (cards, sheets, modals, hero, header, result stack) from `border`→hairline-ring stack; hover animates the stack (movement/opacity only). Dividers stay cheap.
 - **E3 — Entrance system.** Route hero/sheet/modal/card-reveal entrances through `--entrance-premium`; lists stay fade+rise (no blur).
 - **E4 — Tactile + state pass.** Standardize press → 0.98, tooltips lift+blur; ship the state-coverage checklist + skeleton/disabled/loading/success for the top ~12 components.
