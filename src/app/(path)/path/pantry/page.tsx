@@ -7,6 +7,7 @@ import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { usePantryInventory } from "@/lib/hooks/use-pantry-inventory";
 import { AiImportSheet } from "@/components/import/ai-import-sheet";
+import { PantryAddSearch } from "@/components/path/pantry-add-search";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { GLIDE, RM } from "@/lib/utils/motion";
@@ -71,97 +72,103 @@ export default function PantryPage() {
             <div className="rounded-xl bg-neutral-100 h-12" />
             <div className="rounded-xl bg-neutral-100 h-12" />
           </div>
-        ) : items.length === 0 ? (
-          <EmptyStateCTA
-            icon={Bookmark}
-            iconSize={24}
-            primary="Nothing stashed yet."
-            helper="Bookmark ingredients while you cook."
-            cta={{ label: "Find something to cook" }}
-            href="/today"
-          />
         ) : (
           <>
-            <MetaPill variant="green" className="mb-3">
-              <Sparkles size={11} aria-hidden />
-              <span>Auto-applied to your next cook&rsquo;s Grab screen.</span>
-            </MetaPill>
+            <PantryAddSearch />
 
-            <ul className="space-y-1.5">
-              <AnimatePresence initial={false}>
-                {items.map((name) => (
-                  <motion.li
-                    key={name}
-                    layout={!reducedMotion}
-                    initial={
-                      reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }
-                    }
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={
-                      reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
-                    }
-                    transition={reducedMotion ? RM : GLIDE}
-                    className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
-                  >
-                    <Bookmark
-                      size={14}
-                      className="shrink-0 text-[var(--nourish-green)]"
-                      fill="currentColor"
-                    />
-                    <span className="flex-1 truncate text-sm capitalize text-[var(--nourish-dark)]">
-                      {invByKey.get(name)?.name ?? name}
-                    </span>
-                    {(() => {
-                      const inv = invByKey.get(name);
-                      const qty =
-                        inv?.quantity != null || inv?.unit
-                          ? `${inv?.quantity ?? ""}${inv?.unit ? ` ${inv.unit}` : ""}`.trim()
-                          : null;
-                      const kcal = inv?.nutrition
-                        ? `${inv.nutrition.calories} kcal`
-                        : null;
-                      const label = [qty, kcal].filter(Boolean).join(" · ");
-                      if (!label) return null;
-                      return (
-                        <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/[0.08] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--nourish-green)]">
-                          {label}
+            {items.length === 0 ? (
+              <EmptyStateCTA
+                icon={Bookmark}
+                iconSize={24}
+                primary="Nothing stashed yet."
+                helper="Search above, or bookmark ingredients while you cook."
+                cta={{ label: "Find something to cook" }}
+                href="/today"
+              />
+            ) : (
+              <>
+                <MetaPill variant="green" className="mb-3">
+                  <Sparkles size={11} aria-hidden />
+                  <span>
+                    Auto-applied to your next cook&rsquo;s Grab screen.
+                  </span>
+                </MetaPill>
+
+                <ul className="space-y-1.5">
+                  <AnimatePresence initial={false}>
+                    {items.map((name) => (
+                      <motion.li
+                        key={name}
+                        layout={!reducedMotion}
+                        initial={
+                          reducedMotion ? { opacity: 0 } : { opacity: 0, y: 4 }
+                        }
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={
+                          reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
+                        }
+                        transition={reducedMotion ? RM : GLIDE}
+                        className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
+                      >
+                        <Bookmark
+                          size={14}
+                          className="shrink-0 text-[var(--nourish-green)]"
+                          fill="currentColor"
+                        />
+                        <span className="flex-1 truncate text-sm capitalize text-[var(--nourish-dark)]">
+                          {invByKey.get(name)?.name ?? name}
                         </span>
-                      );
-                    })()}
-                    <button
-                      onClick={() => {
-                        remove(name);
-                        inventory.remove(name);
-                      }}
-                      className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
-                      type="button"
-                      aria-label={`Remove ${name} from pantry`}
-                    >
-                      <X size={14} />
-                    </button>
-                  </motion.li>
-                ))}
-              </AnimatePresence>
-            </ul>
+                        {(() => {
+                          const inv = invByKey.get(name);
+                          const qty =
+                            inv?.quantity != null || inv?.unit
+                              ? `${inv?.quantity ?? ""}${inv?.unit ? ` ${inv.unit}` : ""}`.trim()
+                              : null;
+                          const kcal = inv?.nutrition
+                            ? `${inv.nutrition.calories} kcal`
+                            : null;
+                          const label = [qty, kcal].filter(Boolean).join(" · ");
+                          if (!label) return null;
+                          return (
+                            <span className="shrink-0 rounded-full bg-[var(--nourish-green)]/[0.08] px-2 py-0.5 text-[11px] font-medium tabular-nums text-[var(--nourish-green)]">
+                              {label}
+                            </span>
+                          );
+                        })()}
+                        <button
+                          onClick={() => {
+                            remove(name);
+                            inventory.remove(name);
+                          }}
+                          className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+                          type="button"
+                          aria-label={`Remove ${name} from pantry`}
+                        >
+                          <X size={14} />
+                        </button>
+                      </motion.li>
+                    ))}
+                  </AnimatePresence>
+                </ul>
 
-            {items.length > 0 && (
-              <div className="mt-6 flex justify-center">
-                <button
-                  onClick={() => {
-                    if (
-                      typeof window !== "undefined" &&
-                      window.confirm("Clear your whole pantry?")
-                    ) {
-                      clear();
-                      inventory.clear();
-                    }
-                  }}
-                  className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
-                  type="button"
-                >
-                  Clear pantry
-                </button>
-              </div>
+                <div className="mt-6 flex justify-center">
+                  <button
+                    onClick={() => {
+                      if (
+                        typeof window !== "undefined" &&
+                        window.confirm("Clear your whole pantry?")
+                      ) {
+                        clear();
+                        inventory.clear();
+                      }
+                    }}
+                    className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
+                    type="button"
+                  >
+                    Clear pantry
+                  </button>
+                </div>
+              </>
             )}
           </>
         )}
