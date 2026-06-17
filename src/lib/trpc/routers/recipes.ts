@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure } from "@/lib/trpc/server";
-import { userRecipeSchema } from "@/types/user-recipe";
+import { userRecipeSchema, type UserRecipe } from "@/types/user-recipe";
 
 /**
  * Custom-recipes write path (Supabase-backed) — Stage D of
@@ -50,6 +50,7 @@ export const recipesRouter = router({
           nourishApprovedAt: toDate(input.nourishApprovedAt),
           nourishApprovedBy: input.nourishApprovedBy ?? null,
           authorDisplayName: input.authorDisplayName ?? null,
+          sourceTags: input.sourceTags ?? null,
           updatedAt: new Date(),
         };
 
@@ -110,4 +111,53 @@ export const recipesRouter = router({
       return { recipes: [] };
     }
   }),
+
+  /**
+   * Cross-owner read for the multi-clinician initial stage (see
+   * docs/MULTI-CLINICIAN-RECIPES-PLAN.md). Returns recipes across ALL owners in
+   * the trusted testing cohort so clinicians can see each other's work, with
+   * timestamps normalized to ISO strings so the rows match `userRecipeSchema`
+   * (db.select returns Date objects). Dormant when no DB is configured (→ []).
+   *
+   * Stage-2 hardening will gate this on `source` (community/nourish-verified)
+   * once real auth lands; for the closed testing cohort, all rows are returned.
+   */
+  listVisible: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.db) return { recipes: [] as UserRecipe[] };
+    try {
+      const { desc } = await import("drizzle-orm");
+      const { userRecipes } = await import("@/lib/db/y2-tables");
+      const db = ctx.db as import("@/lib/db").Database;
+      const rows = await db
+        .select()
+        .from(userRecipes)
+        .orderBy(desc(userRecipes.updatedAt))
+        .limit(500);
+      return { recipes: rows.map(rowToUserRecipe) };
+    } catch (err) {
+      console.warn("recipe listVisible failed:", err);
+      return { recipes: [] as UserRecipe[] };
+    }
+  }),
+
+  /** Health probe — surfaces whether the server DB is actually wired, so a
+   *  misconfigured Vercel deploy (no POSTGRES_URL) is obvious rather than a
+   *  silent local-only fallback (Risk R1 in the plan). */
+  health: publicProcedure.query(({ ctx }) => ({ dbConnected: !!ctx.db })),
 });
+
+const toIso = (v: unknown): string | null =>
+  v instanceof Date ? v.toISOString() : ((v as string | null) ?? null);
+
+/** Normalize a Drizzle user_recipes row to the ISO-string UserRecipe shape the
+ *  UI consumes (Date timestamps → ISO; ownerId dropped). */
+function rowToUserRecipe(row: Record<string, unknown>): UserRecipe {
+  // Spread the row + override the Date columns with ISO strings. ownerId rides
+  // along as a harmless extra field the typed UI ignores.
+  return {
+    ...row,
+    createdAt: toIso(row.createdAt) ?? new Date(0).toISOString(),
+    updatedAt: toIso(row.updatedAt) ?? new Date(0).toISOString(),
+    nourishApprovedAt: toIso(row.nourishApprovedAt),
+  } as unknown as UserRecipe;
+}
