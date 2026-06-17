@@ -21,7 +21,7 @@
 import { useCallback, useMemo, useSyncExternalStore } from "react";
 import type { PerServingNutrition } from "@/types/nutrition";
 import {
-  getDishNutrition,
+  getDishPerServing,
   NUTRITION_COVERAGE_FLOOR,
 } from "@/lib/engine/dish-nutrition";
 import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
@@ -167,8 +167,12 @@ export function aggregateDay(
     // from the registry, coverage-gated.
     let per: PerServingNutrition | null = e.nutrition ?? null;
     if (!per) {
-      const { perServing, massedCoverage } = getDishNutrition(e.slug);
-      if (perServing && massedCoverage >= NUTRITION_COVERAGE_FLOOR) {
+      // Seed-first (see getDishPerServing): the hand-authored seed is accurate
+      // and complete, whereas the composed path silently drops ingredient lines
+      // it can't resolve (e.g. the Coconut smoothie composes only 4 of 7, so it
+      // falls under the floor and would otherwise contribute nothing).
+      const { perServing, coverage } = getDishPerServing(e.slug);
+      if (perServing && coverage >= NUTRITION_COVERAGE_FLOOR) {
         per = perServing;
       }
     }

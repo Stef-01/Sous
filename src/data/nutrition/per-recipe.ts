@@ -56,6 +56,9 @@ const ENTRIES: PerServingNutrition[] = [
   seed("grilled-salmon", {
     servingsPerRecipe: 2,
     calories: 380,
+    protein_g: 34,
+    totalCarbs_g: 2,
+    totalFat_g: 26,
     calcium_mg: 30,
     iron_mg: 1.2,
     vitaminD_mcg: 14,
@@ -75,6 +78,9 @@ const ENTRIES: PerServingNutrition[] = [
   // Masoor dal: high in fiber, iron, folate-adjacent.
   seed("masoor-dal", {
     calories: 245,
+    protein_g: 16,
+    totalCarbs_g: 38,
+    totalFat_g: 3,
     calcium_mg: 70,
     iron_mg: 4.5,
     vitaminD_mcg: 0,
@@ -94,6 +100,9 @@ const ENTRIES: PerServingNutrition[] = [
   // Butter chicken: calcium from cream/yogurt, B12 + zinc from chicken.
   seed("butter-chicken", {
     calories: 520,
+    protein_g: 32,
+    totalCarbs_g: 18,
+    totalFat_g: 36,
     calcium_mg: 160,
     iron_mg: 2.2,
     vitaminD_mcg: 1.5,
@@ -117,6 +126,9 @@ const ENTRIES: PerServingNutrition[] = [
   seed("pasta-carbonara", {
     servingsPerRecipe: 2,
     calories: 620,
+    protein_g: 25,
+    totalCarbs_g: 66,
+    totalFat_g: 28,
     calcium_mg: 180,
     iron_mg: 3.0,
     vitaminD_mcg: 1.2,
@@ -137,6 +149,9 @@ const ENTRIES: PerServingNutrition[] = [
   // higher iron from spices and tomato.
   seed("chicken-tikka-masala", {
     calories: 480,
+    protein_g: 32,
+    totalCarbs_g: 16,
+    totalFat_g: 32,
     calcium_mg: 130,
     iron_mg: 2.8,
     vitaminD_mcg: 1.0,
@@ -159,6 +174,9 @@ const ENTRIES: PerServingNutrition[] = [
   seed("mattar-paneer", {
     servingsPerRecipe: 3,
     calories: 360,
+    protein_g: 16,
+    totalCarbs_g: 24,
+    totalFat_g: 22,
     calcium_mg: 280,
     iron_mg: 3.2,
     vitaminD_mcg: 0.5,
@@ -182,6 +200,9 @@ const ENTRIES: PerServingNutrition[] = [
   seed("bibimbap", {
     servingsPerRecipe: 2,
     calories: 540,
+    protein_g: 24,
+    totalCarbs_g: 70,
+    totalFat_g: 18,
     calcium_mg: 110,
     iron_mg: 4.0,
     vitaminD_mcg: 1.0,
@@ -204,6 +225,9 @@ const ENTRIES: PerServingNutrition[] = [
   seed("falafel-wrap", {
     servingsPerRecipe: 2,
     calories: 420,
+    protein_g: 14,
+    totalCarbs_g: 50,
+    totalFat_g: 18,
     calcium_mg: 130,
     iron_mg: 4.2,
     vitaminD_mcg: 0,
@@ -381,4 +405,9 @@ export function getPerServingNutrition(
 /** Number of recipes currently covered. Used by the W18 perf dashboard. */
 export function nutritionCoverageCount(): number {
   return ENTRIES.length;
+}
+
+/** All seeded per-serving entries (read-only) — for tests / data audits. */
+export function allSeededNutrition(): readonly PerServingNutrition[] {
+  return ENTRIES;
 }

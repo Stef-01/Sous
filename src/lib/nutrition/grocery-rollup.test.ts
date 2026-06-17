@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { groceryNutritionRollup } from "./grocery-rollup";
 import {
-  getDishNutrition,
+  getDishPerServing,
   NUTRITION_COVERAGE_FLOOR,
 } from "@/lib/engine/dish-nutrition";
 
 const isCovered = (slug: string) => {
-  const r = getDishNutrition(slug);
-  return !!r.perServing && r.massedCoverage >= NUTRITION_COVERAGE_FLOOR;
+  const r = getDishPerServing(slug);
+  return !!r.perServing && r.coverage >= NUTRITION_COVERAGE_FLOOR;
 };
 
 describe("groceryNutritionRollup (W33)", () => {
@@ -34,7 +34,7 @@ describe("groceryNutritionRollup (W33)", () => {
     expect(roll.excludedCount).toBe(1);
 
     const expectedCal = covered.reduce(
-      (acc, s) => acc + (getDishNutrition(s).perServing!.calories ?? 0),
+      (acc, s) => acc + (getDishPerServing(s).perServing!.calories ?? 0),
       0,
     );
     expect(roll.calories).toBe(Math.round(expectedCal));

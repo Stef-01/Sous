@@ -43,6 +43,25 @@ describe("aggregateDay", () => {
     if (mixed && g) expect(mixed.calories).toBeCloseTo(g.calories, 0);
   });
 
+  it("prefers the hand-authored seed for seeded dishes (the Erewhon smoothies)", () => {
+    // The Coconut smoothie composes only 4 of 7 ingredients (under the coverage
+    // floor), so without the seed it would silently contribute nothing. The
+    // accurate seed is 640 kcal; the Turmeric smoothie seed is 330 kcal.
+    expect(aggregateDay([entry("coconut-cloud-smoothie", 1)])?.calories).toBe(
+      640,
+    );
+    expect(aggregateDay([entry("turmeric-crush-smoothie", 1)])?.calories).toBe(
+      330,
+    );
+  });
+
+  it("scales the seed by servings (how much you actually ate)", () => {
+    // pasta-carbonara seed = 620 kcal/serving.
+    expect(aggregateDay([entry("pasta-carbonara", 1)])?.calories).toBe(620);
+    expect(aggregateDay([entry("pasta-carbonara", 0.5)])?.calories).toBe(310);
+    expect(aggregateDay([entry("pasta-carbonara", 2)])?.calories).toBe(1240);
+  });
+
   it("uses a branded entry's embedded nutrition (W20), scaled by servings", () => {
     const branded = {
       slug: "off:123",

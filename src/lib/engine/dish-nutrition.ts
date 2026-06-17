@@ -16,6 +16,7 @@
 import type { PerServingNutrition } from "@/types/nutrition";
 import type { FoodGroup, TherapeuticClass } from "@/types/ingredient";
 import { getRecipeLink } from "@/data/ingredients/recipe-links";
+import { getPerServingNutrition } from "@/data/nutrition/per-recipe";
 import { INGREDIENTS, getIngredient } from "@/data/ingredients";
 import {
   composeRecipeNutrition,
@@ -73,6 +74,27 @@ export function getDishNutrition(
     massedLines: massed,
     totalLines: link.originalLineCount,
   };
+}
+
+/**
+ * Display-grade per-serving nutrition for the LOGGING + PLANNING surfaces (the
+ * diary totals, the grocery rollup). Prefers the hand-authored seed — accurate
+ * and complete — and falls back to the composed path (coverage reported) for
+ * unseeded dishes. This is deliberately distinct from getDishNutrition: that
+ * returns the raw composed signal the health engine reasons over (food groups,
+ * whole-food composition), which must NOT silently switch to the seed.
+ *
+ * A seed is fully trusted, so coverage is 1 — it always clears the floor.
+ */
+export function getDishPerServing(slug: string | undefined): {
+  perServing: PerServingNutrition | null;
+  coverage: number;
+} {
+  if (!slug) return { perServing: null, coverage: 0 };
+  const seed = getPerServingNutrition(slug);
+  if (seed) return { perServing: seed, coverage: 1 };
+  const { perServing, massedCoverage } = getDishNutrition(slug);
+  return { perServing, coverage: massedCoverage };
 }
 
 /** The set of canonical ingredient ids resolved for a dish — used by the

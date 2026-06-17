@@ -10,7 +10,7 @@
  */
 
 import {
-  getDishNutrition,
+  getDishPerServing,
   NUTRITION_COVERAGE_FLOOR,
 } from "@/lib/engine/dish-nutrition";
 
@@ -34,8 +34,8 @@ export function groceryNutritionRollup(
   const sum = { calories: 0, protein_g: 0, carbs_g: 0, fat_g: 0, fiber_g: 0 };
 
   for (const slug of recipeSlugs) {
-    const { perServing, massedCoverage } = getDishNutrition(slug);
-    if (!perServing || massedCoverage < NUTRITION_COVERAGE_FLOOR) {
+    const { perServing, coverage } = getDishPerServing(slug);
+    if (!perServing || coverage < NUTRITION_COVERAGE_FLOOR) {
       excludedCount++;
       continue;
     }
