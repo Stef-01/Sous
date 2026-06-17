@@ -93,10 +93,96 @@ function DobeEyes({ mood }: { mood: MascotMood }) {
 }
 
 /**
- * DobermanAvatar — the Sous chef mascot in the Today header (replaces the owl).
- * A clean black-and-rust Doberman head with cropped ears, rust "eyebrow" dots,
- * a tan muzzle, and a tiny chef toque. Tappable (opens Profile & Settings); the
- * head idles with a gentle, MOOD-driven motion (W22).
+ * DobermanGlyph — the Sous chef Doberman head as a standalone SVG (no button):
+ * cropped ears, rust "eyebrow" dots, a sleek tan snout, a tiny chef toque. Idles
+ * with a gentle, MOOD-driven motion (W22, reduced-motion gated). Used by the
+ * header avatar AND the first-run coachmark.
+ */
+export function DobermanGlyph({
+  mood = "idle",
+  size = 26,
+}: {
+  mood?: MascotMood;
+  size?: number;
+}) {
+  const reducedMotion = useReducedMotion();
+  const m = MOOD_ANIM[mood];
+  return (
+    <motion.svg
+      animate={reducedMotion ? undefined : m.animate}
+      transition={
+        reducedMotion
+          ? undefined
+          : {
+              duration: m.duration,
+              repeat: Infinity,
+              repeatDelay: m.repeatDelay,
+              ease: "easeInOut",
+            }
+      }
+      style={{ transformOrigin: "32px 30px" }}
+      width={size}
+      height={(size * 58) / 64}
+      viewBox="0 0 64 58"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {/* Cropped ears (the Doberman signature), standing tall */}
+      <path d="M21 21 L24 3 L29 19 Z" fill={COAT} />
+      <path d="M43 21 L40 3 L35 19 Z" fill={COAT} />
+      <path d="M24 8 L25.5 16 L27.6 17 Z" fill={INNER_EAR} opacity="0.55" />
+      <path d="M40 8 L38.5 16 L36.4 17 Z" fill={INNER_EAR} opacity="0.55" />
+
+      {/* Head — broad crown tapering to the muzzle */}
+      <path
+        d="M20 23 C20 16 26 14 32 14 C38 14 44 16 44 23 L42 35 C40 45 36 49 32 50 C28 49 24 45 22 35 Z"
+        fill={COAT}
+      />
+      {/* top-edge rim light */}
+      <path
+        d="M26 14 C38 14 44 16 44 23 L43.4 25 C43 17.6 38 16.4 32 16.4 C26 16.4 21 17.6 20.6 25 L20 23 C20 16 26 14 26 14 Z"
+        fill={COAT_HL}
+      />
+
+      {/* Rust "eyebrow" dots */}
+      <ellipse cx="26.5" cy="23.2" rx="2.4" ry="1.5" fill={RUST} />
+      <ellipse cx="37.5" cy="23.2" rx="2.4" ry="1.5" fill={RUST} />
+
+      {/* Eyes — recompose per mood */}
+      <DobeEyes mood={mood} />
+
+      {/* Tan muzzle — a sleek, narrow Doberman snout */}
+      <path
+        d="M28.5 34 C29.5 32.5 34.5 32.5 35.5 34 L34.2 41.5 C33.2 43.8 30.8 43.8 29.8 41.5 Z"
+        fill={RUST}
+      />
+      <path
+        d="M30 35.2 C30.9 34.2 33.1 34.2 34 35.2 L33.1 40 C32.4 41.6 31.6 41.6 30.9 40 Z"
+        fill={RUST_HL}
+      />
+
+      {/* Nose + (happy) tongue */}
+      <ellipse cx="32" cy="37.8" rx="2" ry="1.5" fill={NOSE} />
+      <circle cx="31.2" cy="37.2" r="0.5" fill="#fff" opacity="0.5" />
+      {mood === "happy" && (
+        <path d="M30.6 41.5 Q32 44.5 33.4 41.5 Z" fill={TONGUE} />
+      )}
+
+      {/* Tiny puffy chef toque on the crown (Sous-chef brand) */}
+      <ellipse cx="32" cy="13" rx="5.4" ry="1.9" fill="#fff" />
+      <path
+        d="M27.5 12.5 C26.5 7.5 30 6 32 6 C34 6 37.5 7.5 36.5 12.5 Z"
+        fill="#fff"
+      />
+    </motion.svg>
+  );
+}
+
+/**
+ * DobermanAvatar — the header mascot BUTTON (opens Profile & Settings), wrapping
+ * the mood-driven DobermanGlyph. Replaces the old owl.
  */
 export function DobermanAvatar({
   onClick,
@@ -108,8 +194,6 @@ export function DobermanAvatar({
   /** Bounded coach expression (W22). Defaults to the gentle idle tilt. */
   mood?: MascotMood;
 }) {
-  const reducedMotion = useReducedMotion();
-  const m = MOOD_ANIM[mood];
   return (
     <motion.button
       onClick={onClick}
@@ -119,75 +203,7 @@ export function DobermanAvatar({
       type="button"
       aria-label={ariaLabel}
     >
-      <motion.svg
-        animate={reducedMotion ? undefined : m.animate}
-        transition={
-          reducedMotion
-            ? undefined
-            : {
-                duration: m.duration,
-                repeat: Infinity,
-                repeatDelay: m.repeatDelay,
-                ease: "easeInOut",
-              }
-        }
-        style={{ transformOrigin: "32px 30px" }}
-        width="26"
-        height="24"
-        viewBox="0 0 64 58"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        focusable="false"
-      >
-        {/* Cropped ears (the Doberman signature), standing tall */}
-        <path d="M21 21 L24 3 L29 19 Z" fill={COAT} />
-        <path d="M43 21 L40 3 L35 19 Z" fill={COAT} />
-        <path d="M24 8 L25.5 16 L27.6 17 Z" fill={INNER_EAR} opacity="0.55" />
-        <path d="M40 8 L38.5 16 L36.4 17 Z" fill={INNER_EAR} opacity="0.55" />
-
-        {/* Head — broad crown tapering to the muzzle */}
-        <path
-          d="M20 23 C20 16 26 14 32 14 C38 14 44 16 44 23 L42 35 C40 45 36 49 32 50 C28 49 24 45 22 35 Z"
-          fill={COAT}
-        />
-        {/* top-edge rim light */}
-        <path
-          d="M26 14 C38 14 44 16 44 23 L43.4 25 C43 17.6 38 16.4 32 16.4 C26 16.4 21 17.6 20.6 25 L20 23 C20 16 26 14 26 14 Z"
-          fill={COAT_HL}
-        />
-
-        {/* Rust "eyebrow" dots */}
-        <ellipse cx="26.5" cy="23.2" rx="2.4" ry="1.5" fill={RUST} />
-        <ellipse cx="37.5" cy="23.2" rx="2.4" ry="1.5" fill={RUST} />
-
-        {/* Eyes — recompose per mood */}
-        <DobeEyes mood={mood} />
-
-        {/* Tan muzzle — a sleek, narrow Doberman snout */}
-        <path
-          d="M28.5 34 C29.5 32.5 34.5 32.5 35.5 34 L34.2 41.5 C33.2 43.8 30.8 43.8 29.8 41.5 Z"
-          fill={RUST}
-        />
-        <path
-          d="M30 35.2 C30.9 34.2 33.1 34.2 34 35.2 L33.1 40 C32.4 41.6 31.6 41.6 30.9 40 Z"
-          fill={RUST_HL}
-        />
-
-        {/* Nose + (happy) tongue */}
-        <ellipse cx="32" cy="37.8" rx="2" ry="1.5" fill={NOSE} />
-        <circle cx="31.2" cy="37.2" r="0.5" fill="#fff" opacity="0.5" />
-        {mood === "happy" && (
-          <path d="M30.6 41.5 Q32 44.5 33.4 41.5 Z" fill={TONGUE} />
-        )}
-
-        {/* Tiny puffy chef toque on the crown (Sous-chef brand) */}
-        <ellipse cx="32" cy="13" rx="5.4" ry="1.9" fill="#fff" />
-        <path
-          d="M27.5 12.5 C26.5 7.5 30 6 32 6 C34 6 37.5 7.5 36.5 12.5 Z"
-          fill="#fff"
-        />
-      </motion.svg>
+      <DobermanGlyph mood={mood} />
     </motion.button>
   );
 }

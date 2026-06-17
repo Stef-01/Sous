@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUp, X } from "lucide-react";
+import { X } from "lucide-react";
 import { isFirstRunSeen, markFirstRunSeen } from "@/lib/engagement/first-run";
+import { DobermanGlyph } from "@/components/today/mascot";
 
 /**
  * Phase 4 — first-run coachmark. One dismissible, self-clearing line under the
@@ -29,7 +30,9 @@ export function FirstRunCoachmark() {
 
   return (
     <div className="flex items-center gap-2 rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-green)]">
-      <ArrowUp size={13} aria-hidden />
+      <span className="-my-1 shrink-0" aria-hidden>
+        <DobermanGlyph mood="happy" size={26} />
+      </span>
       <span className="flex-1">Search a craving to cook your first dish</span>
       <button
         type="button"
