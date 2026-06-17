@@ -16,7 +16,6 @@ import { toast } from "@/lib/hooks/use-toast";
 import { RECIPE_PASTE_PROMPT } from "@/lib/recipe-authoring/autogen-prompt";
 import { parseRecipeAutogenJson } from "@/lib/recipe-authoring/autogen-parser";
 import { commitDraft } from "@/lib/recipe-authoring/recipe-draft";
-import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { RECIPE_SOURCE_TAGS, type UserRecipe } from "@/types/user-recipe";
 
 /**
@@ -30,17 +29,19 @@ import { RECIPE_SOURCE_TAGS, type UserRecipe } from "@/types/user-recipe";
 export function RecipeAiImportSheet({
   open,
   onClose,
-  onImported,
+  onImport,
 }: {
   open: boolean;
   onClose: () => void;
-  onImported?: (recipe: UserRecipe) => void;
+  /** Persist the committed recipe through the PARENT's recipe-drafts store
+   *  instance — so the parent surface (the recipes list) updates reactively.
+   *  (useRecipeDrafts is per-instance state, not a shared store.) */
+  onImport: (recipe: UserRecipe) => void;
 }) {
   const reducedMotion = useReducedMotion();
   const sheetRef = useRef<HTMLDivElement>(null);
   useBodyScrollLock(open);
   useFocusTrap(open, sheetRef);
-  const { upsert } = useRecipeDrafts();
 
   const [paste, setPaste] = useState("");
   const [copied, setCopied] = useState(false);
@@ -96,7 +97,7 @@ export function RecipeAiImportSheet({
       ...parsed.draft,
       sourceTags: sourceTags.length ? sourceTags : undefined,
     });
-    upsert(recipe);
+    onImport(recipe);
     toast.push({
       variant: "success",
       title: `Added "${recipe.title}" to your recipes`,
@@ -104,9 +105,8 @@ export function RecipeAiImportSheet({
       emoji: "📖",
       dedupKey: "recipe-import",
     });
-    onImported?.(recipe);
     onClose();
-  }, [parsed, sourceTags, upsert, onImported, onClose]);
+  }, [parsed, sourceTags, onImport, onClose]);
 
   return (
     <AnimatePresence>

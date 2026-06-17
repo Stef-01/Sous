@@ -44,7 +44,7 @@ export default function MyRecipesPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const [showImport, setShowImport] = useState(false);
-  const { drafts, mounted } = useRecipeDrafts();
+  const { drafts, mounted, upsert } = useRecipeDrafts();
   // W47 source filter — chip row drives both the templates row
   // (treated as nourish-verified) and the user-drafts list.
   const { filter } = useRecipeFilter();
@@ -270,6 +270,7 @@ export default function MyRecipesPage() {
       <RecipeAiImportSheet
         open={showImport}
         onClose={() => setShowImport(false)}
+        onImport={upsert}
       />
     </motion.div>
   );
