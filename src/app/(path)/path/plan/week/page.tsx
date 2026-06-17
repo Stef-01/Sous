@@ -24,7 +24,8 @@ import {
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
 import { summariseSlotMap } from "@/components/planner/week-calendar";
 import { WeekDayList } from "@/components/planner/week-day-list";
-import { lookupDish } from "@/lib/utils/dish-lookup";
+import { PlanAddSheet } from "@/components/planner/plan-add-sheet";
+import { lookupDish, isCustomDishSlug } from "@/lib/utils/dish-lookup";
 import {
   buildSlotKey,
   dayKeyFromDate,
@@ -71,10 +72,12 @@ export default function WeekPlanPage() {
     useMealPlanWeek(weekKey);
   const summary = summariseSlotMap(slotMap);
 
-  // Adding routes into the swipe planner; a picked slot rides along so the
-  // first schedule lands exactly where the user pointed (reference popover).
-  const goPlanSlot = (day: DayKey, meal: string) =>
-    router.push(`/path/plan?slot=${day}-${meal}`);
+  // Empty-slot add → a search-to-add sheet (search the catalog or type a custom
+  // meal), instead of being stuck bouncing to the swipe planner. The cards stay
+  // one tap away via the sheet's "Browse ideas" escape hatch.
+  const [addSlot, setAddSlot] = useState<SlotKey | null>(null);
+  const openAddSheet = (day: DayKey, meal: string) =>
+    setAddSlot(buildSlotKey(day, meal as MealKey));
 
   // Tap a planned meal → manage it in place (cook / move / remove) instead of
   // bouncing back to the swipe planner (mockup-plan roadmap #3).
@@ -153,7 +156,7 @@ export default function WeekPlanPage() {
             weekDates={weekDates}
             slotMap={slotMap}
             todayKey={todayKey}
-            onAddToSlot={goPlanSlot}
+            onAddToSlot={openAddSheet}
             onTapMeal={(slot, slug) =>
               setManage({ slot: slot as SlotKey, slug })
             }
@@ -221,13 +224,16 @@ export default function WeekPlanPage() {
               </div>
 
               <div className="mt-3 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => router.push(`/cook/${manage.slug}`)}
-                  className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white active:scale-[0.98]"
-                >
-                  Cook now
-                </button>
+                {/* Custom free-text meals have no guided recipe to cook. */}
+                {!isCustomDishSlug(manage.slug) && (
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/cook/${manage.slug}`)}
+                    className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white active:scale-[0.98]"
+                  >
+                    Cook now
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => {
@@ -241,6 +247,18 @@ export default function WeekPlanPage() {
               </div>
             </div>
           </div>
+        )}
+
+        {addSlot && (
+          <PlanAddSheet
+            slot={addSlot}
+            onPick={(slug) => {
+              scheduleSlot(addSlot, slug, "manual");
+              setAddSlot(null);
+            }}
+            onClose={() => setAddSlot(null)}
+            onBrowseCards={() => router.push(`/path/plan?slot=${addSlot}`)}
+          />
         )}
 
         <div className="flex flex-col gap-2 pt-5">
