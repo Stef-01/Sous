@@ -11,6 +11,10 @@
 >   herb still earns its place with a meta-analysis or multiple RCTs, but the bar
 >   now admits the moderate/emerging tier (with honest labels), not just the top 5.
 > - **Track D — Nutrient backbone:** the remaining data/coverage/intelligence work.
+> - **Track E — Premium polish (added 2026-06-17):** make every chrome surface read
+>   exceptionally premium/modern/soft — easing, layered shadow + hairline ring,
+>   blur entrances, physics inputs, type/color/spacing. Critical appraisal +
+>   sequence in §0.5.
 
 ---
 
@@ -31,6 +35,57 @@
 6. **AUTO-BUILD [AB] vs FOUNDER-GATED [FG]** (rule 12): sequence AB first; for FG
    weeks, ship the abstraction/stub now so integration is one config edit later.
 7. **Always commit to main and push.** No worktrees, no feature branches.
+8. **Premium-polish bar (Track E, added 2026-06-17):** every chrome surface must
+   read premium/modern/soft — never blocky, archaic, or "an-LLM-built-this."
+   Default easing is BANNED; depth is layered light + a hairline ring, not a
+   1px border; focal entrances blur in; presses are felt; all of it collapses
+   under reduced motion. The system + sequence is §0.5.
+
+---
+
+## 0.5 Premium visual polish — Track E (founder taste pass, 2026-06-17)
+
+> **Goal:** make the chrome read _exceptionally_ premium and modern — soft, not
+> blocky; tactile, not flat. Polish is consistency × a hundred tiny decisions,
+> never a prompt ("make it premium" gets you nothing). Below: a critical
+> appraisal of the founder's 10-rule manifesto **against the codebase as it
+> actually stands today**, what to finish/adapt/add, then the AB-first sequence.
+
+### Critical appraisal — what we already do · adapt · add
+
+| #   | Rule                                         | Verdict, grounded in the current code                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| --- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Ban default ease; house easing set           | **PARTIAL — finish it.** `globals.css` already ships `--ease-out: cubic-bezier(0.22,1,0.36,1)` (≡ the founder's `--ease-smooth`) and `motion/tokens.ts` mirrors it — good. MISSING: the overshoot `--ease-spring: cubic-bezier(0.35,1.55,0.65,1)` and the symmetric `--ease-in-out: cubic-bezier(0.66,0,0.34,1)`. Add both. **Caveat the manifesto undersells:** overshoot is for badges/pops/counters ONLY — make it the default and it reads juvenile, not premium. |
+| 2   | Tokens before components                     | **STRONG — keep + tighten.** Tokens + `radius-guard.test.ts` + `tokens.test.ts` + `motion.test.ts` already enforce a shared vocabulary; this is why the UI isn't full of one-off 13px radii. Action: extend the guards to also ban raw `cubic-bezier(`, inline `ease`/`ease-in-out`, and single-layer card shadows.                                                                                                                                                   |
+| 3   | Real physics for draggables                  | **GAP exactly where it matters.** The swipe deck already tracks velocity (`decideSwipe`), but the Pantry-Mode tolerance slider — and any new slider — is a native `<input type=range>` (dead, "web input"). Adapt: one `PhysicsSlider` primitive (momentum on release + soft rubber-band bounds). Apply ONLY to true drag surfaces; don't physics-ify taps.                                                                                                           |
+| 4   | Magnetic snap points                         | **Adopt narrowly.** Only where values are meaningful (slider integer stops, serving-size presets). Two-zone pull-in/release + a label flash on catch.                                                                                                                                                                                                                                                                                                                 |
+| 5   | Entrances blur in                            | **Adopt — focal only.** We have no `blur` in the entrance tokens today. Add `--entrance-premium` (opacity 0→1, translateY 6→0, `blur(2px)`→0, `--dur-slow` on `--ease-out`). **Hard rule reconciling with rule 9:** blur entrances on hero/sheet/modal/card-reveal ONLY — never list items (GPU-expensive).                                                                                                                                                           |
+| 6   | Layered shadow + hairline ring, NOT a border | **THE BIGGEST GAP.** 92 component files use `border border-…` — the #1 hand-rolled tell the manifesto itself names. We do have layered `--shadow-card/raised/cta`, but the dark stack is heavy (0.4/0.3 opacity — the manifesto's own "heavy = cheap"). Action: re-tune every shadow token to 2–8% opacity + a `0 0 0 0.5px` hairline-ring layer (light + dark), then sweep focal surfaces border→ring. Keep cheap 1px dividers inside dense lists.                   |
+| 7   | Tactile press (scale 0.98)                   | **STRONG — keep.** `pressable.tsx` / `tap-feedback.tsx` + `whileTap` are everywhere already. Minor: standardize on 0.98 (a few use 0.96); ensure tooltips lift + blur in, never pop.                                                                                                                                                                                                                                                                                  |
+| 8   | grid-rows reveal + FLIP                      | **MOSTLY DONE.** FLIP shipped today (diary + shopping list, `0414114`); Framer `height:"auto"` measures real height (no `max-height:9999px` hack anywhere). Add the CSS `grid-template-rows:0fr→1fr` utility for the few non-Framer reveals.                                                                                                                                                                                                                          |
+| 9   | Reduced-motion + 60fps                       | **EXEMPLARY — protect it.** `motionTransition` gate + the `reduced-motion-gate` lint rule + a reduced-motion e2e already exist. This rule directly TENSIONS rules 5 & 6 (blur + shadow stacks are heavy); the sequence below resolves it by scoping both to focal surfaces only and never to long lists.                                                                                                                                                              |
+| 10  | State-driven design                          | **Adopt as an audit.** Treat every interactive component as idle/hover/pressed/loading/disabled/empty/error/success — not a picture. Ship a state-coverage checklist + the missing skeleton/disabled/loading/success states for the top components.                                                                                                                                                                                                                   |
+
+### What the manifesto OMITS (and "premium" still needs)
+
+The 10 rules are motion- and shadow-heavy. "Extremely premium / not blocky" also needs:
+
+- **Typography rhythm** — a real type scale (size/weight/line-height + negative letter-spacing on display), optical alignment. After shadows, the single fastest premium jump.
+- **Color depth** — premium ≠ flat fills: subtle tints, _layered_ surfaces (in dark mode elevation = a lighter surface, not a heavier shadow), restrained gradients, AA+ contrast.
+- **Spacing rhythm** — an 8pt-ish scale + generous whitespace; "blocky" is usually cramped + hard-edged.
+- **The pixel-art exception (this codebase specifically):** the Tamagotchi pet + the header Doberman are _deliberately_ pixel/retro charm. Premium-ify the CHROME (cards, type, nav, sheets); keep the mascots crisp-pixel. Don't smooth the pet, don't pixelate the chrome.
+
+### Track E sequence (all [AB] — repo + CSS only)
+
+- **E1 — Token completion + guards.** Add `--ease-spring`, `--ease-in-out`, `--entrance-premium`, and re-tuned 2–8% shadow stacks with a hairline-ring layer (light + dark). Extend the lint/tests to ban raw `cubic-bezier(`, inline `ease`, and single-layer card shadows. One PR; the whole UI snaps to rhythm.
+- **E2 — Shadow/hairline sweep.** Migrate focal surfaces (cards, sheets, modals, hero, header, result stack) from `border`→hairline-ring stack; hover animates the stack (movement/opacity only). Dividers stay cheap.
+- **E3 — Entrance system.** Route hero/sheet/modal/card-reveal entrances through `--entrance-premium`; lists stay fade+rise (no blur).
+- **E4 — Tactile + state pass.** Standardize press → 0.98, tooltips lift+blur; ship the state-coverage checklist + skeleton/disabled/loading/success for the top ~12 components.
+- **E5 — Physics inputs.** `PhysicsSlider` (momentum + rubber-band + snap + label flash) → Pantry-Mode tolerance, serving-size, future sliders.
+- **E6 — Typography + color + spacing.** Type-scale tokens + display tracking; layered-surface dark mode; an 8pt spacing audit; gradient/tint restraint.
+- **E7 — 60fps + reduced-motion regression sweep.** Profile the blur/shadow surfaces; confirm every E-track animation collapses to instant under reduced motion (extend the e2e).
+
+Each E-week ships the standard 3-round loop + green gates. **Never** animate blur or a shadow stack across a long list or large surface (rule 9).
 
 ---
 
