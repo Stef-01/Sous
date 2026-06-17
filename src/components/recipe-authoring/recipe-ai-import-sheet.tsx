@@ -297,6 +297,18 @@ function RecipePreview({
             {draft.prepTimeMinutes + draft.cookTimeMinutes} min · serves{" "}
             {draft.serves}
           </p>
+          {draft.dietaryFlags.length > 0 && (
+            <div className="mt-1.5 flex flex-wrap gap-1">
+              {draft.dietaryFlags.map((flag) => (
+                <span
+                  key={flag}
+                  className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-green)]"
+                >
+                  {flag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         <div>

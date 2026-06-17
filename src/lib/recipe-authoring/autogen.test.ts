@@ -165,7 +165,7 @@ describe("adaptAutogenToDraft", () => {
     }
   });
 
-  it("nulls out fields the LLM doesn't author (quickHack, cuisineFact, imageUrl, attentionPointers)", () => {
+  it("nulls out optional fields the reply omits (quickHack, cuisineFact) + always imageUrl/attentionPointers", () => {
     const draft = adaptAutogenToDraft(STUB_AUTOGEN_RESPONSE);
     for (const step of draft.steps) {
       expect(step.quickHack).toBe(null);
@@ -173,6 +173,32 @@ describe("adaptAutogenToDraft", () => {
       expect(step.imageUrl).toBe(null);
       expect(step.attentionPointers).toBe(null);
     }
+  });
+
+  it("captures dietaryFlags + per-step quickHack/cuisineFact when the reply includes them", () => {
+    const parsed = autogenResponseSchema.parse({
+      ...STUB_AUTOGEN_RESPONSE,
+      dietaryFlags: ["vegan", "gluten-free"],
+      steps: STUB_AUTOGEN_RESPONSE.steps.map((s, i) =>
+        i === 0
+          ? {
+              ...s,
+              quickHack: "Bloom the spices in oil first.",
+              cuisineFact: "Chana masala is a Punjabi staple.",
+            }
+          : s,
+      ),
+    });
+    const draft = adaptAutogenToDraft(parsed);
+    expect(draft.dietaryFlags).toEqual(["vegan", "gluten-free"]);
+    expect(draft.steps[0].quickHack).toBe("Bloom the spices in oil first.");
+    expect(draft.steps[0].cuisineFact).toBe(
+      "Chana masala is a Punjabi staple.",
+    );
+    // a step without them still nulls cleanly
+    expect(draft.steps[1].quickHack).toBe(null);
+    // and the whole thing still commits to a schema-valid recipe
+    expect(userRecipeSchema.safeParse(commitDraft(draft)).success).toBe(true);
   });
 
   it("defaults source to 'user' (autogen is the user's authorship)", () => {

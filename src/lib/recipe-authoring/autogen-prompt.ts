@@ -55,6 +55,9 @@ export const autogenResponseSchema = z.object({
   cookTimeMinutes: z.number().int().min(0).max(480),
   serves: z.number().int().min(1).max(20),
   flavorProfile: z.array(z.string().min(1).max(40)).max(10),
+  // Load-bearing for filtering + Parent Mode allergen safety; the model infers
+  // it reliably from the ingredients. Optional so older replies still parse.
+  dietaryFlags: z.array(z.string().min(1).max(40)).max(10).optional(),
   ingredients: z
     .array(
       z.object({
@@ -72,6 +75,10 @@ export const autogenResponseSchema = z.object({
         timerSeconds: z.number().int().min(1).max(7200).nullable(),
         donenessCue: z.string().max(400).nullable(),
         mistakeWarning: z.string().max(400).nullable(),
+        // The "cooking fluency" texture Sous sells (hack + fact chips). Cheap
+        // for the model; optional + nullable so older replies still parse.
+        quickHack: z.string().max(400).nullable().optional(),
+        cuisineFact: z.string().max(400).nullable().optional(),
       }),
     )
     .min(1)
@@ -170,6 +177,7 @@ code fence. Match this exact shape and field names:
   "cookTimeMinutes": 25,
   "serves": 4,
   "flavorProfile": ["1-4 short tags like spicy, bright, creamy"],
+  "dietaryFlags": ["infer from ingredients: vegetarian, vegan, gluten-free, dairy-free, nut-free — [] if none apply"],
   "ingredients": [
     { "name": "ingredient", "quantity": "2 cans", "isOptional": false }
   ],
@@ -178,7 +186,9 @@ code fence. Match this exact shape and field names:
       "instruction": "one clear single action",
       "timerSeconds": 30,
       "donenessCue": "until golden (or null)",
-      "mistakeWarning": "a pitfall (or null)"
+      "mistakeWarning": "a pitfall (or null)",
+      "quickHack": "a pro shortcut for this step (or null)",
+      "cuisineFact": "a one-line cultural/culinary fact (or null)"
     }
   ]
 }
