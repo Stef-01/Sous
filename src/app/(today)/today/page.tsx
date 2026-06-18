@@ -10,10 +10,9 @@ import {
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { SearchX, MoreHorizontal } from "lucide-react";
+import { SearchX, MoreHorizontal, Settings } from "lucide-react";
 import { StreakCounter } from "@/components/today/streak-counter";
-import { DobermanAvatar, CravingSearchBar } from "@/components/today/mascot";
-import { mascotMood, type MascotMood } from "@/components/today/mascot-mood";
+import { CravingSearchBar } from "@/components/today/mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
@@ -161,42 +160,6 @@ function TodayPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { stats, completedSessions } = useCookSessions();
-  // W22 — the header Doberman's expression reflects the day. Computed
-  // client-side (mounted-gated) so the time-of-day input never mismatches SSR.
-  const [mascotExpression, setMascotExpression] = useState<MascotMood>("idle");
-  useEffect(() => {
-    // R6 — the header Dobe reacts to REAL cooking. Derive cooked-today +
-    // cooks-this-week from the completed-session history (client-only, so the
-    // time-of-day inputs never mismatch SSR).
-    const now = new Date();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    ).getTime();
-    const weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000;
-    let cooksThisWeek = 0;
-    let cookedToday = false;
-    for (const s of completedSessions) {
-      if (!s.completedAt) continue;
-      const t = new Date(s.completedAt).getTime();
-      if (t >= weekAgo) cooksThisWeek += 1;
-      if (t >= startOfToday) cookedToday = true;
-    }
-    const hour = now.getHours();
-    // A gentle dinner-window nudge perks the Dobe alert when nothing's cooked yet.
-    const nudge = !cookedToday && hour >= 16 && hour < 22;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only time-of-day sync (avoids hydration mismatch)
-    setMascotExpression(
-      mascotMood({
-        hour,
-        streak: stats.currentStreak,
-        cooksThisWeek,
-        cookedToday,
-        nudge,
-      }),
-    );
-  }, [stats.currentStreak, completedSessions]);
   // W30 pairing-engine V2: trained weight vector from cook
   // history. Cold-start (< 5 cooks) returns the same DEFAULT_WEIGHTS
   // the engine already uses, so this is invisible to new users
@@ -701,11 +664,17 @@ function TodayPageContent() {
               </h1>
               <StreakCounter streak={stats.currentStreak} />
             </div>
-            {/* Doberman mascot  -  profile entry point. */}
-            <DobermanAvatar
-              mood={mascotExpression}
+            {/* Profile & settings entry — a plain settings icon (founder,
+                2026-06-18; replaced the Doberman header avatar). Opens the same
+                Profile & Settings sheet (rule 3's sanctioned settings surface). */}
+            <button
+              type="button"
               onClick={() => setShowProfileSettings(true)}
-            />
+              aria-label="Open profile and settings"
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 hover:text-[var(--nourish-dark)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            >
+              <Settings size={20} strokeWidth={1.9} />
+            </button>
           </div>
         </header>
       </HeadroomHeader>
