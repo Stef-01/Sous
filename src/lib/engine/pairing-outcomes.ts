@@ -68,6 +68,60 @@ export function makeSuggestionId(batchId: string, rank: number): string {
   return `${batchId}:${rank}`;
 }
 
+/** A small, fast, non-cryptographic hash (djb2) of the normalized main-dish
+ *  intent — so the corpus can group same-main queries WITHOUT storing the raw
+ *  text (the analytics PII rule). Not reversible, not security-grade; just a
+ *  stable bucket key. */
+export function hashIntent(main: string): string {
+  const s = main.trim().toLowerCase();
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+
+/** The data a caller has at a suggestion slot, before stamping an outcome. */
+export interface OutcomeInput {
+  batchId: string;
+  rank: number;
+  deviceId: string;
+  mainDishIntentHash: string;
+  recipeSlug: string;
+  cuisineFamily: string;
+  totalScore: number;
+  dimensions: PairingDimensions;
+}
+
+/** Pure builder — turn slot data + a transition into an append-ready row. */
+export function buildOutcome(
+  input: OutcomeInput,
+  outcome: PairingOutcomeKind,
+  at: string,
+  extra?: {
+    rating?: number | null;
+    favorite?: boolean;
+    feedback?: string | null;
+  },
+): PairingOutcome {
+  return {
+    suggestionId: makeSuggestionId(input.batchId, input.rank),
+    batchId: input.batchId,
+    deviceId: input.deviceId,
+    recipeSlug: input.recipeSlug,
+    mainDishIntentHash: input.mainDishIntentHash,
+    cuisineFamily: input.cuisineFamily,
+    rank: input.rank,
+    shownAt: at,
+    totalScore: input.totalScore,
+    dimensions: input.dimensions,
+    outcome,
+    outcomeAt: outcome === "shown" ? null : at,
+    rating: extra?.rating ?? null,
+    favorite: extra?.favorite ?? false,
+    feedback: extra?.feedback ?? null,
+    schemaVersion: PAIRING_OUTCOMES_SCHEMA_VERSION,
+  };
+}
+
 const DIM_KEYS: (keyof PairingDimensions)[] = [
   "cuisineFit",
   "flavorContrast",

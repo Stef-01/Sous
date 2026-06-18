@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronDown,
@@ -18,6 +18,12 @@ import {
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import type { ScoreBreakdown } from "@/lib/engine/types";
+import {
+  buildOutcome,
+  hashIntent,
+  recordOutcomeLocal,
+} from "@/lib/engine/pairing-outcomes";
+import { useDeviceId } from "@/lib/hooks/use-device-id";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
@@ -135,6 +141,7 @@ export function ResultStack({
   // Sync when parent provides new sides (full reroll)
   const sidesKey = initialSides.map((s) => s.id).join(",");
   const [lastSidesKey, setLastSidesKey] = useState(sidesKey);
+
   /* eslint-disable react-hooks/set-state-in-effect -- sync parent prop change into local state */
   useEffect(() => {
     if (sidesKey !== lastSidesKey) {
@@ -145,6 +152,86 @@ export function ResultStack({
     }
   }, [sidesKey, lastSidesKey, initialSides]);
   /* eslint-enable react-hooks/set-state-in-effect */
+
+  // ── Moat data flywheel: capture the (shown → picked) tuple as an append-only
+  // corpus (pairing-outcomes). Accumulates locally now; the cohort accept-rate it
+  // feeds back into the engine stays a no-op until there's cross-user volume (the
+  // impression floor). Fire-and-forget, never blocks the result render.
+  const deviceId = useDeviceId();
+  const batchIdRef = useRef("");
+  const slotRankRef = useRef<Map<string, number>>(new Map());
+  const dimsOf = useCallback(
+    (s: SideResult) => ({
+      cuisineFit: s.scores.cuisineFit,
+      flavorContrast: s.scores.flavorContrast,
+      nutritionBalance: s.scores.nutritionBalance,
+      prepBurden: s.scores.prepBurden,
+      temperature: s.scores.temperature,
+      preference: s.scores.preference,
+    }),
+    [],
+  );
+  const capturedKeyRef = useRef("");
+  useEffect(() => {
+    // Fire once per new batch — the ref guard de-dupes re-renders of the same
+    // result set, so no exhaustive-deps disable is needed.
+    if (initialSides.length === 0 || capturedKeyRef.current === sidesKey)
+      return;
+    capturedKeyRef.current = sidesKey;
+    const batchId = `${hashIntent(mainDish)}-${Date.now().toString(36)}`;
+    const mainHash = hashIntent(mainDish);
+    const at = new Date().toISOString();
+    const ranks = new Map<string, number>();
+    initialSides.forEach((side, rank) => {
+      ranks.set(side.slug, rank);
+      recordOutcomeLocal(
+        buildOutcome(
+          {
+            batchId,
+            rank,
+            deviceId,
+            mainDishIntentHash: mainHash,
+            recipeSlug: side.slug,
+            cuisineFamily: side.cuisineFamily,
+            totalScore: side.totalScore,
+            dimensions: dimsOf(side),
+          },
+          "shown",
+          at,
+        ),
+      );
+    });
+    batchIdRef.current = batchId;
+    slotRankRef.current = ranks;
+  }, [sidesKey, initialSides, mainDish, deviceId, dimsOf]);
+  const recordPick = useCallback(
+    (picked: SideResult[]) => {
+      const batchId = batchIdRef.current;
+      if (!batchId) return;
+      const mainHash = hashIntent(mainDish);
+      const at = new Date().toISOString();
+      const ranks = slotRankRef.current;
+      for (const side of picked) {
+        recordOutcomeLocal(
+          buildOutcome(
+            {
+              batchId,
+              rank: ranks.get(side.slug) ?? 0,
+              deviceId,
+              mainDishIntentHash: mainHash,
+              recipeSlug: side.slug,
+              cuisineFamily: side.cuisineFamily,
+              totalScore: side.totalScore,
+              dimensions: dimsOf(side),
+            },
+            "picked",
+            at,
+          ),
+        );
+      }
+    },
+    [mainDish, deviceId, dimsOf],
+  );
 
   const selectedSides = useMemo(
     () => sides.filter((s) => selectedIds.has(s.id)),
@@ -275,6 +362,7 @@ export function ResultStack({
 
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
+    recordPick(selectedSides);
 
     if (onCookSelected && selectedSides.length > 1) {
       onCookSelected(selectedSides);
@@ -284,7 +372,7 @@ export function ResultStack({
       // Fallback: cook first selected
       onCookThis(selectedSides[0]);
     }
-  }, [selectedSides, onCookSelected, onCookThis]);
+  }, [selectedSides, onCookSelected, onCookThis, recordPick]);
 
   return (
     <motion.div
@@ -353,7 +441,10 @@ export function ResultStack({
               isRerolling={rerollingIndex === idx}
               onToggleSelect={() => toggleSelect(side.id)}
               onRerollSide={() => handleRerollSide(idx)}
-              onCookThis={() => onCookThis(side)}
+              onCookThis={() => {
+                recordPick([side]);
+                onCookThis(side);
+              }}
             />
           </motion.div>
         ))}

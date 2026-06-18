@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   appendOutcome,
+  buildOutcome,
+  hashIntent,
   makeSuggestionId,
   outcomesToCsv,
   outcomesToNdjson,
   parseStoredOutcomes,
   PAIRING_OUTCOMES_SCHEMA_VERSION,
+  type OutcomeInput,
   type PairingOutcome,
 } from "./pairing-outcomes";
 
@@ -41,6 +44,54 @@ function row(over: Partial<PairingOutcome> = {}): PairingOutcome {
 describe("makeSuggestionId", () => {
   it("joins batch + rank into the stable key", () => {
     expect(makeSuggestionId("b1", 2)).toBe("b1:2");
+  });
+});
+
+describe("hashIntent", () => {
+  it("is stable + case/whitespace-insensitive, and not the raw text (no PII)", () => {
+    expect(hashIntent("Chicken Tacos")).toBe(hashIntent("  chicken tacos "));
+    expect(hashIntent("chicken tacos")).not.toContain("chicken");
+    expect(hashIntent("a")).not.toBe(hashIntent("b"));
+  });
+});
+
+describe("buildOutcome", () => {
+  const input: OutcomeInput = {
+    batchId: "b1",
+    rank: 1,
+    deviceId: "dev",
+    mainDishIntentHash: "h",
+    recipeSlug: "guacamole",
+    cuisineFamily: "mexican",
+    totalScore: 0.8,
+    dimensions: {
+      cuisineFit: 0.9,
+      flavorContrast: 0.7,
+      nutritionBalance: 0.5,
+      prepBurden: 0.6,
+      temperature: 0.5,
+      preference: 0.4,
+    },
+  };
+
+  it("derives the suggestionId and leaves outcomeAt null only for `shown`", () => {
+    const shown = buildOutcome(input, "shown", "2026-06-18T00:00:00.000Z");
+    expect(shown.suggestionId).toBe("b1:1");
+    expect(shown.outcomeAt).toBeNull();
+    const picked = buildOutcome(input, "picked", "2026-06-18T00:01:00.000Z");
+    expect(picked.suggestionId).toBe("b1:1"); // same slot → joins to the shown row
+    expect(picked.outcomeAt).toBe("2026-06-18T00:01:00.000Z");
+  });
+
+  it("carries rating/favorite/feedback on a `rated` row", () => {
+    const rated = buildOutcome(input, "rated", "t", {
+      rating: 5,
+      favorite: true,
+      feedback: "loved it",
+    });
+    expect(rated.rating).toBe(5);
+    expect(rated.favorite).toBe(true);
+    expect(rated.feedback).toBe("loved it");
   });
 });
 
