@@ -73,8 +73,20 @@ initial stage — we sidestep it with a trusted-cohort read + a typed author nam
 > **Status (2026-06-18):** the full **add → publish → (Community filter) see it**
 > loop is wired + locally verified (publish flips source; the recipe shows under
 > the Community filter; the offline pill flags that peer-sync needs the server).
-> The cross-clinician half ("another clinician sees it") is the ONE remaining
-> founder step below.
+>
+> **Update (2026-06-18, founder connected Supabase):** cross-clinician sharing
+> was STILL broken despite `POSTGRES_URL` being set — and silently. Root cause:
+> the `source_tags` migration (Stage 1 below) was **never applied to the live
+> DB**, so every `recipes.upsert` threw `42703: column "source_tags" does not
+exist`, the three-layer error-swallow (router catch → fire-and-forget
+> write-through → UI ignores `persisted`) hid it, and the live `user_recipes`
+> table sat at **0 rows** while the UI said "published." Verified against the live
+> Supabase project (`bkkjtmvyayieyeeshbim`). **Fixed:** applied
+> `alter table public.user_recipes add column if not exists source_tags jsonb;`
+> (the repo migration `20260617000001`) to the live DB, proved an insert+read
+> round-trip, and **hardened the router so a configured-but-broken DB now throws
+> loudly (→ reportError) instead of swallowing** — this class of drift will never
+> be silent again. Cross-clinician sharing is now LIVE.
 
 ### Stage 1 — FOUNDER-GATED (one config edit, then 0a–0f light up)
 

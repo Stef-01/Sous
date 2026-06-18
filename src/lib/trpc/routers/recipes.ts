@@ -66,8 +66,14 @@ export const recipesRouter = router({
 
         return { persisted: true as const };
       } catch (err) {
-        console.warn("recipe upsert failed, staying local:", err);
-        return { persisted: false as const };
+        // ctx.db is present here (the !ctx.db no-op already returned above), so a
+        // throw is a REAL persistence failure — e.g. schema drift. Surface it
+        // loudly (→ 500 → reportError/Sentry) instead of swallowing it as if the
+        // DB were merely absent. Swallowing this is exactly what hid the missing
+        // `source_tags` column and left user_recipes empty during the clinician
+        // test while the UI cheerfully said "published."
+        console.error("recipe upsert failed against a live DB:", err);
+        throw err;
       }
     }),
 
@@ -89,8 +95,9 @@ export const recipesRouter = router({
           );
         return { persisted: true as const };
       } catch (err) {
-        console.warn("recipe remove failed, staying local:", err);
-        return { persisted: false as const };
+        // Same reasoning as upsert: a live DB that throws is a real failure.
+        console.error("recipe remove failed against a live DB:", err);
+        throw err;
       }
     }),
 
@@ -107,7 +114,7 @@ export const recipesRouter = router({
         .orderBy(desc(userRecipes.updatedAt));
       return { recipes: rows };
     } catch (err) {
-      console.warn("recipe list failed:", err);
+      console.error("recipe listMine failed:", err);
       return { recipes: [] };
     }
   }),
@@ -138,7 +145,7 @@ export const recipesRouter = router({
         .limit(500);
       return { recipes: rows.map(rowToUserRecipe) };
     } catch (err) {
-      console.warn("recipe listVisible failed:", err);
+      console.error("recipe listVisible failed:", err);
       return { recipes: [] as UserRecipe[] };
     }
   }),
