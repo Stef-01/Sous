@@ -96,6 +96,11 @@ export function pantryClear(): void {
   commit([]);
 }
 
+/** Restore a full name list — undo for pantryClear. */
+export function pantryRestore(names: string[]): void {
+  commit(names.slice(-MAX_PANTRY_SIZE));
+}
+
 export interface UsePantryResult {
   /** Normalized ingredient names currently in the pantry. */
   items: string[];
@@ -108,6 +113,7 @@ export interface UsePantryResult {
   remove: (name: string) => void;
   toggle: (name: string) => void;
   clear: () => void;
+  restore: (names: string[]) => void;
   size: number;
 }
 
@@ -133,6 +139,7 @@ export function usePantry(): UsePantryResult {
     remove: pantryRemove,
     toggle: pantryToggle,
     clear: pantryClear,
+    restore: pantryRestore,
     size: items.length,
   };
 }

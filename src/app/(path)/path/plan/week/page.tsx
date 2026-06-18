@@ -30,6 +30,7 @@ import {
   useShoppingList,
   type ShoppingAddition,
 } from "@/lib/hooks/use-shopping-list";
+import { toast } from "@/lib/hooks/use-toast";
 import { getCookSummary, getMealCookSummary } from "@/data/guided-cook-summary";
 import { summariseSlotMap } from "@/components/planner/week-calendar";
 import { WeekDayList } from "@/components/planner/week-day-list";
@@ -77,8 +78,15 @@ export default function WeekPlanPage() {
   const todayKey: DayKey | null =
     now && offset === 0 ? dayKeyFromDate(now) : null;
 
-  const { slotMap, mounted, clearAll, clearSlot, scheduleSlot } =
-    useMealPlanWeek(weekKey);
+  const {
+    slotMap,
+    mounted,
+    clearAll,
+    clearSlot,
+    scheduleSlot,
+    week,
+    restoreAll,
+  } = useMealPlanWeek(weekKey);
   const summary = summariseSlotMap(slotMap);
 
   // "Shop this week" — turn the planned slots into groceries: resolve each
@@ -117,6 +125,21 @@ export default function WeekPlanPage() {
     setShopAdded(additions.length);
   };
 
+  // Clear the week with an in-app toast-undo instead of a blocking
+  // window.confirm. Capture the slots before clearing so Undo restores them.
+  const handleClearWeek = () => {
+    const snapshot = week.scheduled;
+    if (snapshot.length === 0) return;
+    clearAll();
+    setShopAdded(null); // the "Shop this week" state is now stale
+    toast.push({
+      variant: "info",
+      title: "Cleared the week",
+      dedupKey: "clear-week",
+      action: { label: "Undo", onClick: () => restoreAll(snapshot) },
+    });
+  };
+
   // Empty-slot add → a search-to-add sheet (search the catalog or type a custom
   // meal), instead of being stuck bouncing to the swipe planner. The cards stay
   // one tap away via the sheet's "Browse ideas" escape hatch.
@@ -153,9 +176,7 @@ export default function WeekPlanPage() {
           {summary.filled > 0 && (
             <button
               type="button"
-              onClick={() => {
-                if (confirm("Clear this week's plan?")) clearAll();
-              }}
+              onClick={handleClearWeek}
               aria-label="Clear this week's plan"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
             >
@@ -365,9 +386,7 @@ export default function WeekPlanPage() {
           {summary.filled > 0 && (
             <button
               type="button"
-              onClick={() => {
-                if (confirm("Clear the whole week's plan?")) clearAll();
-              }}
+              onClick={handleClearWeek}
               className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] transition hover:bg-neutral-50"
             >
               <RotateCcw size={14} aria-hidden />

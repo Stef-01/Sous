@@ -75,6 +75,8 @@ export interface UseMealPlanWeekResult {
   clearSlot: (slot: SlotKey) => void;
   /** Wipe all slots for the current week. */
   clearAll: () => void;
+  /** Restore a captured slot list (undo for clearAll). */
+  restoreAll: (scheduled: MealPlanSlot[]) => void;
 }
 
 /** React hook: load + persist the meal plan for the given
@@ -173,6 +175,31 @@ export function useMealPlanWeek(
     persistClearMealPlanWeek({ weekKey });
   }, [persist, weekKey]);
 
+  /** Restore a previously-captured slot list — undo for clearAll. Replays each
+   *  slot through the write-through so the server converges. */
+  const restoreAll = useCallback(
+    (scheduled: MealPlanSlot[]) => {
+      setWeek((prev) => {
+        const next: MealPlanWeek = {
+          ...prev,
+          scheduled,
+          updatedAt: new Date().toISOString(),
+        };
+        persist(next);
+        return next;
+      });
+      for (const s of scheduled) {
+        persistMealPlanSlot({
+          weekKey,
+          slot: s.slot,
+          recipeSlug: s.recipeSlug,
+          source: s.source,
+        });
+      }
+    },
+    [persist, weekKey],
+  );
+
   const slotMap: Record<string, string> = {};
   for (const s of week.scheduled) {
     slotMap[s.slot] = s.recipeSlug;
@@ -186,5 +213,6 @@ export function useMealPlanWeek(
     scheduleSlot,
     clearSlot,
     clearAll,
+    restoreAll,
   };
 }

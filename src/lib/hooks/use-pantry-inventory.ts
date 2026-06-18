@@ -115,6 +115,12 @@ export function clearInventory(): void {
   commit([]);
 }
 
+/** Restore a full inventory snapshot — undo for clearInventory. Exact re-set
+ *  (bypasses the merge in addInventoryItems). */
+export function restoreInventory(items: InventoryItem[]): void {
+  commit(items.slice(-MAX_ITEMS));
+}
+
 export function usePantryInventory() {
   const items = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [mounted, setMounted] = useState(false);
@@ -128,5 +134,6 @@ export function usePantryInventory() {
     addMany: addInventoryItems,
     remove: removeInventoryItem,
     clear: clearInventory,
+    restore: restoreInventory,
   };
 }

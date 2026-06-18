@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Bookmark, Sparkles, X } from "lucide-react";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { usePantryInventory } from "@/lib/hooks/use-pantry-inventory";
+import { toast } from "@/lib/hooks/use-toast";
 import { AiImportSheet } from "@/components/import/ai-import-sheet";
 import { PantryAddSearch } from "@/components/path/pantry-add-search";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
@@ -22,7 +23,7 @@ import { GLIDE, RM } from "@/lib/utils/motion";
 export default function PantryPage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
-  const { items, mounted, remove, clear, size } = usePantry();
+  const { items, mounted, remove, clear, size, restore } = usePantry();
   const inventory = usePantryInventory();
   const [showImport, setShowImport] = useState(false);
 
@@ -154,13 +155,23 @@ export default function PantryPage() {
                 <div className="mt-6 flex justify-center">
                   <button
                     onClick={() => {
-                      if (
-                        typeof window !== "undefined" &&
-                        window.confirm("Clear your whole pantry?")
-                      ) {
-                        clear();
-                        inventory.clear();
-                      }
+                      const nameSnapshot = items;
+                      const invSnapshot = inventory.items;
+                      if (nameSnapshot.length === 0) return;
+                      clear();
+                      inventory.clear();
+                      toast.push({
+                        variant: "info",
+                        title: "Cleared your pantry",
+                        dedupKey: "clear-pantry",
+                        action: {
+                          label: "Undo",
+                          onClick: () => {
+                            restore(nameSnapshot);
+                            inventory.restore(invSnapshot);
+                          },
+                        },
+                      });
                     }}
                     className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
                     type="button"

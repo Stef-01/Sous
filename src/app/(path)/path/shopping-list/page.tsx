@@ -42,6 +42,7 @@ export default function ShoppingListPage() {
     toggleBought,
     remove,
     clear,
+    restore,
     clearBought,
   } = useShoppingList();
   const { add: addToPantry } = usePantry();
@@ -246,12 +247,18 @@ export default function ShoppingListPage() {
               <div className="flex justify-center">
                 <button
                   onClick={() => {
-                    if (
-                      typeof window !== "undefined" &&
-                      window.confirm("Clear the whole list?")
-                    ) {
-                      clear();
-                    }
+                    const snapshot = items;
+                    if (snapshot.length === 0) return;
+                    clear();
+                    toast.push({
+                      variant: "info",
+                      title: "Cleared the list",
+                      dedupKey: "clear-shopping",
+                      action: {
+                        label: "Undo",
+                        onClick: () => restore(snapshot),
+                      },
+                    });
                   }}
                   className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
                   type="button"

@@ -92,6 +92,7 @@ export interface UseShoppingListResult {
   remove: (key: string) => void;
   toggleBought: (key: string) => void;
   clear: () => void;
+  restore: (snapshot: ShoppingItem[]) => void;
   clearBought: () => void;
 }
 
@@ -237,6 +238,13 @@ export function useShoppingList(): UseShoppingListResult {
     writeState([]);
   }, []);
 
+  /** Restore a full snapshot — undo for clear. */
+  const restore = useCallback((snapshot: ShoppingItem[]) => {
+    const next = snapshot.slice(-MAX_ITEMS);
+    setItems(next);
+    writeState(next);
+  }, []);
+
   const clearBought = useCallback(() => {
     setItems((prev) => {
       if (!prev.some((i) => i.bought)) return prev;
@@ -257,6 +265,7 @@ export function useShoppingList(): UseShoppingListResult {
     remove,
     toggleBought,
     clear,
+    restore,
     clearBought,
   };
 }
