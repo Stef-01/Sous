@@ -165,11 +165,38 @@ function TodayPageContent() {
   // client-side (mounted-gated) so the time-of-day input never mismatches SSR.
   const [mascotExpression, setMascotExpression] = useState<MascotMood>("idle");
   useEffect(() => {
+    // R6 — the header Dobe reacts to REAL cooking. Derive cooked-today +
+    // cooks-this-week from the completed-session history (client-only, so the
+    // time-of-day inputs never mismatch SSR).
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    ).getTime();
+    const weekAgo = now.getTime() - 7 * 24 * 60 * 60 * 1000;
+    let cooksThisWeek = 0;
+    let cookedToday = false;
+    for (const s of completedSessions) {
+      if (!s.completedAt) continue;
+      const t = new Date(s.completedAt).getTime();
+      if (t >= weekAgo) cooksThisWeek += 1;
+      if (t >= startOfToday) cookedToday = true;
+    }
+    const hour = now.getHours();
+    // A gentle dinner-window nudge perks the Dobe alert when nothing's cooked yet.
+    const nudge = !cookedToday && hour >= 16 && hour < 22;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- client-only time-of-day sync (avoids hydration mismatch)
     setMascotExpression(
-      mascotMood({ hour: new Date().getHours(), streak: stats.currentStreak }),
+      mascotMood({
+        hour,
+        streak: stats.currentStreak,
+        cooksThisWeek,
+        cookedToday,
+        nudge,
+      }),
     );
-  }, [stats.currentStreak]);
+  }, [stats.currentStreak, completedSessions]);
   // W30 pairing-engine V2: trained weight vector from cook
   // history. Cold-start (< 5 cooks) returns the same DEFAULT_WEIGHTS
   // the engine already uses, so this is invisible to new users

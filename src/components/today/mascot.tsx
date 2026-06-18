@@ -2,7 +2,8 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Search } from "lucide-react";
-import { premiumEntrance } from "@/lib/motion/tokens";
+import { premiumEntrance, SPRING } from "@/lib/motion/tokens";
+import { haptic } from "@/lib/motion/haptics";
 import type { MascotMood } from "./mascot-mood";
 
 /* Black-and-rust Doberman palette — matches the Tamagotchi pet (pixel-doberman). */
@@ -37,11 +38,19 @@ const MOOD_ANIM: Record<
     duration: 0.9,
     repeatDelay: 3,
   },
+  // proud (cooked today): a slow, confident chest-up sway — dignified, not the
+  // quick excited wiggle of "happy". Distinct positive beat (R6).
+  proud: {
+    animate: { rotate: [0, 2, 0, -2, 0], y: [0, -2.5, 0, -1, 0] },
+    duration: 2.4,
+    repeatDelay: 1.4,
+  },
 };
 
 /** Eyes recompose per mood; everything else (ears/head/muzzle/toque) is constant. */
 function DobeEyes({ mood }: { mood: MascotMood }) {
-  if (mood === "happy") {
+  // proud shares happy's content upward-arc eyes (the sway + no tongue set it apart).
+  if (mood === "happy" || mood === "proud") {
     return (
       <>
         <path
@@ -197,9 +206,14 @@ export function DobermanAvatar({
 }) {
   return (
     <motion.button
-      onClick={onClick}
-      whileTap={{ scale: 0.85 }}
-      transition={{ type: "spring", stiffness: 400, damping: 15 }}
+      onClick={() => {
+        // The dog acknowledges your touch (haptic + a happy squish) as it opens
+        // the profile sheet — rule 3's sanctioned settings entry stays intact (R6).
+        haptic("select");
+        onClick();
+      }}
+      whileTap={{ scale: 0.9, rotate: -3 }}
+      transition={SPRING.snappy}
       className="flex h-[124px] w-[124px] items-center justify-center rounded-full border border-[var(--nourish-green)]/15 bg-[var(--nourish-green)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       type="button"
       aria-label={ariaLabel}
@@ -222,7 +236,7 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
       <motion.button
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        transition={SPRING.snappy}
         className="group flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left shadow-[var(--shadow-card)] transition-shadow duration-200
                    hover:shadow-[var(--shadow-raised)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         type="button"
