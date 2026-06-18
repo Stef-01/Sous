@@ -13,6 +13,7 @@ import {
   STEFAN_SIDE_FLOWS,
   STEFAN_MEAL_FLOWS,
 } from "./stefan-curated-recipes";
+import { POPULAR_MEAL_FLOWS } from "./popular-meal-flows";
 
 export interface StaticCookStep {
   phase: "cook";
@@ -15449,6 +15450,7 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
   ...CHEF_TU_MEAL_FLOWS,
   ...CHEF_TU_MEAL_FLOWS_2,
   ...STEFAN_MEAL_FLOWS,
+  ...POPULAR_MEAL_FLOWS,
   "masoor-dal": {
     name: "Masoor Dal",
     slug: "masoor-dal",
