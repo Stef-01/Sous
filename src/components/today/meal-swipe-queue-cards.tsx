@@ -24,6 +24,7 @@ import { Check, ChefHat, RotateCcw, X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { haptic } from "@/lib/motion/haptics";
 import { DishImage } from "./dish-image";
+import { primaryActionLabel } from "./quest-pool";
 import type { QuestDish } from "./quest-card";
 
 export const FULLSCREEN_SWIPE_THRESHOLD = 110;
@@ -162,7 +163,7 @@ export function FullscreenSwipeCard({
               className="absolute left-4 top-4 z-10 inline-flex -rotate-12 items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-neutral-950 shadow-lg"
             >
               <ChefHat size={15} strokeWidth={2.4} />
-              Cook
+              {primaryActionLabel(dish)}
             </motion.span>
             <motion.span
               aria-hidden

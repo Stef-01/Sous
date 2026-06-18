@@ -17,6 +17,26 @@ import {
 import { sides, meals } from "@/data";
 import type { QuestDish } from "./quest-card";
 
+/** A dish goes STRAIGHT to the guided cook only when it has cook steps AND
+ *  isn't a main — mains route to /sides first to build a plate. This mirrors
+ *  the routing in quest-card's `routeDish`, so the deck's action LABEL can never
+ *  drift from where the button actually sends you. */
+export function goesStraightToCook(
+  dish: Pick<QuestDish, "hasGuidedCook" | "isMeal">,
+): boolean {
+  return dish.hasGuidedCook && !dish.isMeal;
+}
+
+/** The deck's primary swipe-action label. Eat-out logs; a straight-to-cook dish
+ *  cooks; everything else (mains, and no-cook sides) builds a plate via /sides —
+ *  so "Cook" never lies about opening the side-picker. */
+export function primaryActionLabel(
+  dish: Pick<QuestDish, "hasGuidedCook" | "isMeal" | "eatOut">,
+): "Log it" | "Cook" | "Build plate" {
+  if (dish.eatOut) return "Log it";
+  return goesStraightToCook(dish) ? "Cook" : "Build plate";
+}
+
 /** Build up to 3 descriptive tags for a meal from cuisine + description.
  *  Used by buildQuestDishes when assembling the candidate pool. */
 function buildMealTags(

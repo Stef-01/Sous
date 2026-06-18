@@ -45,6 +45,8 @@ import {
   buildQuestDishes,
   buildRoleQuestDishes,
   computePantryFit,
+  goesStraightToCook,
+  primaryActionLabel,
 } from "./quest-pool";
 import { QuestFilterMenu } from "./quest-filter-menu";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
@@ -486,7 +488,7 @@ export function QuestCard({
         return;
       }
 
-      if (dish.hasGuidedCook && !dish.isMeal) {
+      if (goesStraightToCook(dish)) {
         router.push(`/cook/${dish.slug}`);
         return;
       }
@@ -1024,11 +1026,13 @@ function MealSwipeQueueOverlay({
               aria-label={
                 activeDish.eatOut
                   ? `Log ${activeDish.dishName}`
-                  : `Cook ${activeDish.dishName}`
+                  : goesStraightToCook(activeDish)
+                    ? `Cook ${activeDish.dishName}`
+                    : `Build a plate around ${activeDish.dishName}`
               }
             >
               <ChefHat size={18} strokeWidth={2.2} />
-              <span>{activeDish.eatOut ? "Log it" : "Cook"}</span>
+              <span>{primaryActionLabel(activeDish)}</span>
             </button>
           </div>
         </div>
