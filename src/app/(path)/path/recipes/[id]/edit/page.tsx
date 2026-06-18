@@ -57,9 +57,9 @@ export default function EditRecipePage({
     );
     toast.push({
       variant: "success",
-      title: `"${r.title}" submitted for verification`,
-      body: "An admin will review it for the Nourish ✓ tag.",
-      dedupKey: `submit-${r.id}`,
+      title: `"${r.title}" published to the community`,
+      body: "Other clinicians can see it now. An admin may add a Nourish ✓ badge.",
+      dedupKey: `publish-${r.id}`,
     });
   };
 
@@ -105,17 +105,18 @@ export default function EditRecipePage({
                 onClick={() => handleSubmitForReview(recipe)}
                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--nourish-green)]/30 bg-white py-2.5 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
               >
-                <Send size={14} aria-hidden /> Submit for Nourish verification
+                <Send size={14} aria-hidden /> Publish to community
               </button>
               <p className="mt-1.5 px-1 text-[11px] text-[var(--nourish-subtext)]">
-                An admin will review this recipe and add a Nourish ✓ tag if
-                it&apos;s a fit. Until then it stays private to you.
+                Shares this recipe with the clinician community so others can
+                cook it. An admin may add a Nourish ✓ badge after review.
               </p>
             </div>
           )}
           {recipe.source === "community" && (
             <p className="mx-auto mt-2 max-w-md page-x text-[11px] text-[var(--nourish-subtext)]">
-              This recipe is awaiting admin review for the Nourish ✓ tag.
+              Published to the community — visible to other clinicians. Awaiting
+              admin review for the Nourish ✓ badge.
             </p>
           )}
           {recipe.source === "nourish-verified" && (

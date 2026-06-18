@@ -119,18 +119,21 @@ export const recipesRouter = router({
    * timestamps normalized to ISO strings so the rows match `userRecipeSchema`
    * (db.select returns Date objects). Dormant when no DB is configured (→ []).
    *
-   * Stage-2 hardening will gate this on `source` (community/nourish-verified)
-   * once real auth lands; for the closed testing cohort, all rows are returned.
+   * Only PUBLISHED recipes cross owners: source ∈ {community, nourish-verified}.
+   * Private "user" drafts are NEVER returned — a clinician's unpublished draft
+   * must not leak to peers (privacy). `nourish-verified` layers a quality badge
+   * on top; for the closed cohort, `community` (submitted) is already visible.
    */
   listVisible: publicProcedure.query(async ({ ctx }) => {
     if (!ctx.db) return { recipes: [] as UserRecipe[] };
     try {
-      const { desc } = await import("drizzle-orm");
+      const { desc, inArray } = await import("drizzle-orm");
       const { userRecipes } = await import("@/lib/db/y2-tables");
       const db = ctx.db as import("@/lib/db").Database;
       const rows = await db
         .select()
         .from(userRecipes)
+        .where(inArray(userRecipes.source, ["community", "nourish-verified"]))
         .orderBy(desc(userRecipes.updatedAt))
         .limit(500);
       return { recipes: rows.map(rowToUserRecipe) };
@@ -150,12 +153,13 @@ const toIso = (v: unknown): string | null =>
   v instanceof Date ? v.toISOString() : ((v as string | null) ?? null);
 
 /** Normalize a Drizzle user_recipes row to the ISO-string UserRecipe shape the
- *  UI consumes (Date timestamps → ISO; ownerId dropped). */
+ *  UI consumes (Date timestamps → ISO; ownerId dropped so the random device-id
+ *  never leaks to peers). */
 function rowToUserRecipe(row: Record<string, unknown>): UserRecipe {
-  // Spread the row + override the Date columns with ISO strings. ownerId rides
-  // along as a harmless extra field the typed UI ignores.
+  const { ownerId: _ownerId, ...rest } = row;
+  void _ownerId;
   return {
-    ...row,
+    ...rest,
     createdAt: toIso(row.createdAt) ?? new Date(0).toISOString(),
     updatedAt: toIso(row.updatedAt) ?? new Date(0).toISOString(),
     nourishApprovedAt: toIso(row.nourishApprovedAt),

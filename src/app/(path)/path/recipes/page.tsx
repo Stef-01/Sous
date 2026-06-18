@@ -30,6 +30,10 @@ import { RecipeAiImportSheet } from "@/components/recipe-authoring/recipe-ai-imp
 import { buildSharePayload } from "@/lib/share/cook-deeplink";
 import { toast } from "@/lib/hooks/use-toast";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import {
+  useServerRecipes,
+  mergeRecipeLists,
+} from "@/lib/recipe-authoring/use-server-recipes";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { computePantryCoverage } from "@/lib/engine/pantry-coverage";
 import { RECIPE_TEMPLATES } from "@/lib/recipe-authoring/templates";
@@ -45,11 +49,22 @@ export default function MyRecipesPage() {
   const reducedMotion = useReducedMotion();
   const [showImport, setShowImport] = useState(false);
   const { drafts, mounted, upsert } = useRecipeDrafts();
+  // Multi-clinician read (0d): published recipes from the whole cohort. Dormant
+  // ([] + dbConnected false) until POSTGRES_URL is set on Vercel (FG-1).
+  const { serverRecipes, dbConnected } = useServerRecipes();
+  // Merge the author's local drafts with cohort-published recipes (server wins
+  // on id). Locally this is just the drafts; once the DB is wired, peers'
+  // "community"/"nourish-verified" recipes appear under the Community filter.
+  const allRecipes = mergeRecipeLists(drafts, serverRecipes);
   // W47 source filter — chip row drives both the templates row
   // (treated as nourish-verified) and the user-drafts list.
   const { filter } = useRecipeFilter();
-  const filteredDrafts = drafts.filter((d) =>
+  const filteredDrafts = allRecipes.filter((d) =>
     matchesRecipeFilter(d.source, filter),
+  );
+  // Has the author published anything that needs the server to reach peers?
+  const hasPublished = drafts.some(
+    (d) => d.source === "community" || d.source === "nourish-verified",
   );
   // Y3 W29 polish: per-recipe pantry-coverage glance. Pure
   // computation per render; no extra round-trips. The pantry
@@ -107,6 +122,16 @@ export default function MyRecipesPage() {
         {/* W47 source-filter chip row — pivots both the templates
             row (Nourish-verified) and the user-drafts list. */}
         <RecipeFilterChips className="px-1" />
+
+        {/* Community-sync status — only when the author has published something
+            that can't yet reach peers because the server DB isn't wired (FG-1).
+            Surfaces the silent-failure risk (R1) instead of pretending to sync. */}
+        {hasPublished && !dbConnected && (
+          <p className="mx-1 mt-2 rounded-lg bg-amber-50 px-3 py-1.5 text-[11px] text-amber-800">
+            Community sharing is offline — published recipes stay on this device
+            until the server is connected (POSTGRES_URL).
+          </p>
+        )}
 
         {/* W43 templates — visible whenever the filter accepts
             Nourish-verified recipes (i.e. "all" or "nourish-

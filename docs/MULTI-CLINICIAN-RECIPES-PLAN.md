@@ -58,14 +58,23 @@ initial stage — we sidestep it with a trusted-cohort read + a typed author nam
 
 ### Stage 0 — AUTO-BUILD now (no founder creds needed; ships dormant)
 
-| #   | Change                                                                                                                                                                                     | File                                             | Status              |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ | ------------------- |
-| 0a  | `source_tags` migration (fix the drift)                                                                                                                                                    | `supabase/migrations/<ts>_add_source_tags.sql`   | **shipped this PR** |
-| 0b  | Write `sourceTags` in `recipes.upsert`                                                                                                                                                     | `src/lib/trpc/routers/recipes.ts`                | **shipped this PR** |
-| 0c  | `recipes.listVisible` — cross-owner read (all cohort recipes), timestamps normalized to ISO so they match `userRecipeSchema`                                                               | `src/lib/trpc/routers/recipes.ts`                | **shipped this PR** |
-| 0d  | `useServerRecipes` hook — TanStack Query → `listVisible`; merges server rows with local drafts (server wins on id; local-only drafts kept). Dormant when DB absent (`listVisible` → `[]`). | `src/lib/recipe-authoring/use-server-recipes.ts` | NEXT (spec below)   |
-| 0e  | Merge server recipes into `/path/recipes` + show `authorDisplayName` on each card                                                                                                          | `src/app/(path)/path/recipes/page.tsx`           | NEXT                |
-| 0f  | Capture the clinician's name once (a "Your name" field, stored in localStorage) and stamp `authorDisplayName` on every authored/imported recipe                                            | import sheet + `recipe-form`                     | NEXT                |
+| #   | Change                                                                                                                                                                            | File                                             | Status                            |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | --------------------------------- |
+| 0a  | `source_tags` migration (fix the drift)                                                                                                                                           | `supabase/migrations/<ts>_add_source_tags.sql`   | **shipped this PR**               |
+| 0b  | Write `sourceTags` in `recipes.upsert`                                                                                                                                            | `src/lib/trpc/routers/recipes.ts`                | **shipped this PR**               |
+| 0c  | `recipes.listVisible` — cross-owner read (all cohort recipes), timestamps normalized to ISO so they match `userRecipeSchema`                                                      | `src/lib/trpc/routers/recipes.ts`                | **shipped this PR**               |
+| 0d  | `useServerRecipes` hook — TanStack Query → `listVisible` + `health`; pure `mergeRecipeLists` (server wins on id; local-only kept; sorted). Dormant when DB absent.                | `src/lib/recipe-authoring/use-server-recipes.ts` | **✅ shipped + 4 tests**          |
+| 0e  | Merge server recipes into `/path/recipes` so the "Community" filter shows peers' published recipes; offline health pill (R1) when published-but-no-DB.                            | `src/app/(path)/path/recipes/page.tsx`           | **✅ shipped**                    |
+| 0g  | Real **"Publish to community"** action (was the mislabeled "Submit for Nourish verification") — sets `source="community"`, fires the write-through; copy fixed.                   | `…/recipes/[id]/edit/page.tsx`                   | **✅ shipped**                    |
+| 0h  | **Privacy fix**: `listVisible` now returns ONLY `source ∈ {community, nourish-verified}` (never private `user` drafts), and drops the `ownerId`/device-id leak.                   | `src/lib/trpc/routers/recipes.ts`                | **✅ shipped**                    |
+| 0f  | Capture the clinician's name once (`authorDisplayName`) and stamp it on every authored/imported recipe (today falls back to "A community cook").                                  | import sheet + `recipe-form`                     | NEXT (nice-to-have)               |
+| 0A7 | A "From the community" section on the Content tab reading `listVisible` (the higher-fidelity "see it in Community"; `/path/recipes` Community filter already satisfies the core). | `src/app/(community)/community/page.tsx`         | NEXT (ties to community redesign) |
+
+> **Status (2026-06-18):** the full **add → publish → (Community filter) see it**
+> loop is wired + locally verified (publish flips source; the recipe shows under
+> the Community filter; the offline pill flags that peer-sync needs the server).
+> The cross-clinician half ("another clinician sees it") is the ONE remaining
+> founder step below.
 
 ### Stage 1 — FOUNDER-GATED (one config edit, then 0a–0f light up)
 
