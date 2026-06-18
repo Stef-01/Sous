@@ -32,7 +32,7 @@ fix. Tick as shipped.
 ## P2 — polish / cohesion
 
 - [x] Extract one `<SettingToggle>` primitive (`85a6065`) — all 6 toggles now share one canonical switch (48×28 / 24px knob, CSS-transform, reduced-motion-free).
-- [x] **Pantry manual-add qty/kcal pill (`<pending>`)** — LEVELLED UP per founder decision: the manual add takes an optional quantity (e.g. "2 kg"); manual items now show the same qty/kcal pill as AI-imported. kcal is computed HONESTLY from the registry per-100g density for mass/volume units (omitted otherwise — never fabricated, per the nutrition-integrity rule). Verified: "Rice noodles" + "2 kg" → "2 kg · 7280 kcal".
+- [x] **Pantry manual-add qty/kcal pill (`0de293b`)** — LEVELLED UP per founder decision: the manual add takes an optional quantity (e.g. "2 kg"); manual items now show the same qty/kcal pill as AI-imported. kcal is computed HONESTLY from the registry per-100g density for mass/volume units (omitted otherwise — never fabricated, per the nutrition-integrity rule). Verified: "Rice noodles" + "2 kg" → "2 kg · 7280 kcal".
 - [x] Pantry Mode invisible from the Pantry page (`952f094`) — tappable status line on the pantry page.
 - [x] "Browse N meals" meaningless cap (`952f094`) — dropped the number → "Browse meals".
 - [x] Stale Path loading skeleton (`9ed53d7`) — rewritten to trace the current collapsed layout.
