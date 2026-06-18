@@ -442,6 +442,7 @@ function ResultCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   // AI-enhanced pairing explanation  -  fires when expanded
   const aiExplanation = trpc.ai.explainPairing.useQuery(
@@ -461,10 +462,12 @@ function ResultCard({
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, y: 12 }}
+      layout={reducedMotion ? false : "position"}
+      initial={reducedMotion ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: rank * 0.08, duration: 0.3 }}
+      transition={
+        reducedMotion ? { duration: 0 } : { delay: rank * 0.08, duration: 0.3 }
+      }
       className={cn(
         "overflow-hidden rounded-[var(--radius-lg)] border bg-white transition-colors duration-200",
         selected ? "border-[var(--nourish-green)]/45" : "border-neutral-200/80",

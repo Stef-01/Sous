@@ -107,9 +107,9 @@ export function MissionScreen({
         {/* Eyebrow caps — the canonical .sous-label role (was an ad-hoc
             text-[10px] caps that drifted off the type scale). */}
         <motion.p
-          initial={{ opacity: 0, y: 4 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.08 }}
+          transition={reducedMotion ? { duration: 0 } : { delay: 0.08 }}
           className="sous-label"
         >
           {cuisineFamily ? `${cuisineFamily} · ` : ""}
@@ -120,14 +120,13 @@ export function MissionScreen({
             font-serif text-2xl). line-clamp 2 keeps the CTA above the
             fold on 375px viewports. */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 25,
-            delay: 0.1,
-          }}
+          transition={
+            reducedMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 260, damping: 25, delay: 0.1 }
+          }
           className="sous-title line-clamp-2 text-[var(--nourish-dark)]"
         >
           {dishName}
@@ -144,14 +143,18 @@ export function MissionScreen({
             {flavorProfile.map((flavor, idx) => (
               <motion.span
                 key={flavor}
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20,
-                  delay: 0.15 + idx * 0.05,
-                }}
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                        delay: 0.15 + idx * 0.05,
+                      }
+                }
                 className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
               >
                 {flavor}
@@ -166,9 +169,13 @@ export function MissionScreen({
 
       {/* Description  -  clamped to 3 lines so CTA is never pushed off-screen */}
       <motion.p
-        initial={{ opacity: 0, y: 8 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.2 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.16 }
+        }
         className="text-sm text-[var(--nourish-subtext)] leading-relaxed line-clamp-3"
       >
         {description}
