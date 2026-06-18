@@ -129,6 +129,13 @@ export function PetSheet({
   const [pose, setPose] = useState<"stand" | "bow">("stand");
   const [blink, setBlink] = useState(false);
   const [earFlick, setEarFlick] = useState(false);
+  // Fetch mini-game (R9): tap to toss the ball, Dobe fetches it back; a catch
+  // counter builds with a "good fetch!" beat every 5. Pure joy — it awards NO
+  // XP, so it never games the level/cosmetics economy (those stay earned by
+  // cooking). Session-scoped; the counter resets when the room closes.
+  const [catches, setCatches] = useState(0);
+  const [tossing, setTossing] = useState(false);
+  const [praise, setPraise] = useState(false);
 
   // Idle life: random blinks every few seconds (a big static sprite reads
   // dead — round-5 research). Skipped while asleep (lids already down).
@@ -173,6 +180,33 @@ export function PetSheet({
     return () => clearTimeout(t);
   }, [pose]);
 
+  // A "good fetch!" beat every 5 catches.
+  useEffect(() => {
+    if (catches === 0 || catches % 5 !== 0) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- transient milestone flash
+    setPraise(true);
+    const t = setTimeout(() => setPraise(false), 1300);
+    return () => clearTimeout(t);
+  }, [catches]);
+
+  // A toss in flight lands a catch when the ball's arc completes (instant under
+  // reduced motion). The timer lives here so it auto-cleans on unmount / retoss.
+  useEffect(() => {
+    if (!tossing) return;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const land = setTimeout(
+      () => {
+        setTossing(false);
+        setCatches((c) => c + 1);
+        haptic("success");
+      },
+      reduce ? 0 : 820,
+    );
+    return () => clearTimeout(land);
+  }, [tossing]);
+
   const agg = useMemo(() => aggregateDay(entries), [entries]);
   const state = useMemo(() => {
     const kcal = typeof agg?.calories === "number" ? agg.calories : null;
@@ -203,12 +237,12 @@ export function PetSheet({
   // A meal logged in the last 10 minutes puts its bowl on the rug and Dobe
   // lights up; the moment self-clears.
   const [openedAt, setOpenedAt] = useState(0);
-  /* eslint-disable react-hooks/set-state-in-effect -- stamping the open
-     moment once per open is the intent; recency must not drift per render */
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- stamp the open moment once per open
     if (open) setOpenedAt(Date.now());
   }, [open, entries.length]);
-  /* eslint-enable react-hooks/set-state-in-effect */
+
   const recentMeal = useMemo(() => {
     const last = entries[entries.length - 1];
     if (!last || !openedAt) return null;
@@ -264,8 +298,13 @@ export function PetSheet({
 
   if (!open || typeof document === "undefined") return null;
 
-  const play = () => {
-    haptic("success");
+  const toss = () => {
+    if (tossing) return;
+    haptic("select");
+    setTossing(true);
+    // Excited fetch stance (auto-relaxes). The catch lands in the `tossing`
+    // effect below — the timer lives there so it cleans up on unmount/retoss
+    // and `toss` stays a pure state-setter (no ref read in the render path).
     setPose("bow");
   };
 
@@ -300,7 +339,7 @@ export function PetSheet({
       bg: "#c06a1e",
       onClick: goLogMeal,
     },
-    { key: "play", label: "Play", icon: "ball", bg: "#5d9c3c", onClick: play },
+    { key: "play", label: "Fetch", icon: "ball", bg: "#5d9c3c", onClick: toss },
     {
       key: "water",
       label: "Water",
@@ -400,8 +439,8 @@ export function PetSheet({
             )}
             <button
               type="button"
-              onClick={play}
-              aria-label="Play with Dobe"
+              onClick={toss}
+              aria-label="Play fetch with Dobe"
               className="absolute bottom-[3%] left-1/2 -translate-x-1/2 active:scale-95 motion-reduce:active:scale-100"
             >
               <PixelDobermanHero
@@ -418,6 +457,27 @@ export function PetSheet({
                 )}
               />
             </button>
+
+            {/* Fetch ball — arcs out and bounces back to Dobe on each toss (R9).
+                Mount/unmount restarts the CSS arc; the catch lands via the toss
+                timer. */}
+            {tossing && (
+              <span
+                aria-hidden
+                className="fetch-ball absolute bottom-[22%] left-1/2 h-3 w-3 rounded-full border-2 border-[#171310] bg-[#c8333d]"
+              />
+            )}
+            {/* Catch counter — appears once you've played. */}
+            {catches > 0 && (
+              <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full border-2 border-[#6b4f3f] bg-[#241a12]/85 px-2 py-0.5 text-[10px] font-bold text-[#e8d9b5]">
+                🎾 {catches}
+              </div>
+            )}
+            {praise && (
+              <div className="absolute left-1/2 top-3 -translate-x-1/2 rounded-full border-2 border-[#6b4f3f] bg-[#241a12]/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-[#e8d9b5]">
+                Good fetch!
+              </div>
+            )}
           </PetRoom>
           <p className="text-center text-[11px] font-bold uppercase tracking-widest text-[#f6efe4] [text-shadow:0_1px_0_rgba(0,0,0,.6)]">
             {showMeal && recentMeal
