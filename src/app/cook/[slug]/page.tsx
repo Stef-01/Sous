@@ -24,6 +24,7 @@ import {
   parsePendingBreakdown,
 } from "@/lib/engine/attach-score-breakdown";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
+import { PhaseShell } from "@/components/guided-cook/phase-shell";
 import { MissionScreen } from "@/components/guided-cook/mission-screen";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import { ServingSlider } from "@/components/guided-cook/serving-slider";
@@ -773,22 +774,23 @@ export default function GuidedCookPage({
       <main className="mx-auto max-w-md page-x py-6">
         <AnimatePresence mode="popLayout">
           {currentPhase === "mission" && (
-            <MissionScreen
-              key="mission"
-              dishName={dish.name}
-              description={dish.description}
-              flavorProfile={dish.flavorProfile as string[]}
-              prepTimeMinutes={dish.prepTimeMinutes}
-              cookTimeMinutes={dish.cookTimeMinutes}
-              heroImageUrl={dish.heroImageUrl}
-              hasIngredients={ingredients.length > 0}
-              dishSlug={dish.slug}
-              onStart={handleMissionStart}
-            />
+            <PhaseShell key="mission">
+              <MissionScreen
+                dishName={dish.name}
+                description={dish.description}
+                flavorProfile={dish.flavorProfile as string[]}
+                prepTimeMinutes={dish.prepTimeMinutes}
+                cookTimeMinutes={dish.cookTimeMinutes}
+                heroImageUrl={dish.heroImageUrl}
+                hasIngredients={ingredients.length > 0}
+                dishSlug={dish.slug}
+                onStart={handleMissionStart}
+              />
+            </PhaseShell>
           )}
 
           {currentPhase === "grab" && (
-            <div key="grab" className="space-y-3">
+            <PhaseShell key="grab" className="space-y-3">
               <CookWatchlist
                 dishSlug={dish.slug}
                 steps={cookSteps.map((s: unknown) => s as StaticCookStep)}
@@ -824,14 +826,12 @@ export default function GuidedCookPage({
                 onReady={handleGrabReady}
                 onSelectSides={handleSelectSides}
               />
-            </div>
+            </PhaseShell>
           )}
 
           {currentPhase === "cook" && !currentCookStep && (
-            <motion.div
+            <PhaseShell
               key="cook-empty"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
               className="flex flex-col items-center gap-5 py-12 text-center"
             >
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
@@ -857,7 +857,7 @@ export default function GuidedCookPage({
               >
                 Back to Today
               </button>
-            </motion.div>
+            </PhaseShell>
           )}
 
           {currentPhase === "cook" && currentCookStep && (
@@ -892,36 +892,37 @@ export default function GuidedCookPage({
           )}
 
           {currentPhase === "win" && (
-            <WinScreen
-              key="win"
-              dishName={dish.name}
-              dishSlug={slug}
-              sideDishes={mainDishInput ? [mainDishInput] : []}
-              cuisineFamily={cuisine}
-              isFirstCook={winMeta.streak === 1}
-              streak={winMeta.streak}
-              totalSteps={cookSteps.length}
-              pathJustUnlocked={winMeta.pathJustUnlocked}
-              saved={winMeta.saved}
-              skillProgress={winMeta.skillProgress}
-              onRate={handleRate}
-              onFeedback={handleFeedback}
-              onAddPhoto={handleAddPhoto}
-              onAddNote={handleAddNote}
-              onSave={handleSave}
-              onCookAgain={handleCookAgain}
-              onBackToday={handleBackToday}
-              podChallenge={
-                podSlotActive && currentPod
-                  ? {
-                      podName: currentPod.name,
-                      computedScore: podComputedScore,
-                      alreadySubmitted: existingPodSubmission !== null,
-                      onSubmit: handlePodSubmit,
-                    }
-                  : null
-              }
-            />
+            <PhaseShell key="win">
+              <WinScreen
+                dishName={dish.name}
+                dishSlug={slug}
+                sideDishes={mainDishInput ? [mainDishInput] : []}
+                cuisineFamily={cuisine}
+                isFirstCook={winMeta.streak === 1}
+                streak={winMeta.streak}
+                totalSteps={cookSteps.length}
+                pathJustUnlocked={winMeta.pathJustUnlocked}
+                saved={winMeta.saved}
+                skillProgress={winMeta.skillProgress}
+                onRate={handleRate}
+                onFeedback={handleFeedback}
+                onAddPhoto={handleAddPhoto}
+                onAddNote={handleAddNote}
+                onSave={handleSave}
+                onCookAgain={handleCookAgain}
+                onBackToday={handleBackToday}
+                podChallenge={
+                  podSlotActive && currentPod
+                    ? {
+                        podName: currentPod.name,
+                        computedScore: podComputedScore,
+                        alreadySubmitted: existingPodSubmission !== null,
+                        onSubmit: handlePodSubmit,
+                      }
+                    : null
+                }
+              />
+            </PhaseShell>
           )}
         </AnimatePresence>
       </main>
