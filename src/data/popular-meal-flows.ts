@@ -494,4 +494,450 @@ export const POPULAR_MEAL_FLOWS: Record<string, StaticDishData> = {
       },
     ],
   },
+
+  "grilled-salmon": {
+    name: "Grilled Salmon",
+    slug: "grilled-salmon",
+    description:
+      "A perfectly seared salmon fillet with a golden, slightly crispy skin and a tender, flaky interior, seasoned simply with lemon, herbs, and a hint of garlic.",
+    cuisineFamily: "american",
+    prepTimeMinutes: 5,
+    cookTimeMinutes: 12,
+    skillLevel: "beginner",
+    heroImageUrl: "/food_images/grilled_salmon.png",
+    flavorProfile: ["savory", "fresh", "buttery"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "gs-1",
+        name: "Salmon fillets, skin-on",
+        quantity: "2 (about 170 g each)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-2",
+        name: "Olive oil",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: "Any high-smoke-point oil",
+      },
+      {
+        id: "gs-3",
+        name: "Salt + black pepper",
+        quantity: "to season",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-4",
+        name: "Lemon",
+        quantity: "1",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "gs-5",
+        name: "Butter",
+        quantity: "1 tbsp",
+        isOptional: true,
+        substitution: null,
+      },
+      {
+        id: "gs-6",
+        name: "Garlic + fresh dill or parsley",
+        quantity: "1 clove + a few sprigs",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Pat the salmon completely dry on both sides and season with salt and pepper. Let it sit about 15 minutes to take the fridge chill off.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Bone-dry skin is the whole game — surface moisture steams instead of crisping and makes the fillet stick to the pan.",
+        quickHack: null,
+        cuisineFact:
+          "Starting closer to room temperature lets the fish cook evenly instead of overdoing the outside before the center warms.",
+        donenessCue: "The surface is dry to the touch, not glistening.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Heat a stainless or cast-iron pan over medium-high, add the oil, and let it get hot.",
+        timerSeconds: 150,
+        mistakeWarning:
+          "The pan must be properly hot before the fish goes in — a cool pan guarantees sticking and pale, soft skin.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "A drop of water flicked in sizzles and evaporates almost immediately.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Lay the fillets in SKIN-SIDE DOWN, pressing gently for a few seconds so the skin stays flat. Sear undisturbed — this is about 80% of the cook.",
+        timerSeconds: 420,
+        mistakeWarning:
+          "Don't move it. The skin crisps and releases itself when it's ready; poking and lifting tears it and stops the crust forming.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "The flesh turns opaque from the bottom up to about 80% of the way; the skin is crisp and lifts cleanly.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Flip and give the top a brief 15-30 second kiss. Add the butter, garlic, and a squeeze of lemon and spoon it over to baste.",
+        timerSeconds: 30,
+        mistakeWarning:
+          "The second side is a finish, not a full sear — overcooking it dries the fillet out.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Internal 125°F for tender, still-pink medium; up to 145°F if you like it firm and opaque.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Rest the salmon skin-side UP and finish with herbs and a little more lemon.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Plate it skin-up — resting flesh-down traps steam and sogs the crisp skin you just worked for.",
+        quickHack: null,
+        cuisineFact:
+          "Salmon keeps cooking off the heat, so pull it a couple of degrees early and let carryover finish it.",
+        donenessCue: "It flakes gently when nudged with a fork.",
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "basil-chicken": {
+    name: "Pad Kra Pao (Thai Basil Chicken)",
+    slug: "basil-chicken",
+    description:
+      "Minced chicken stir-fried with holy basil, garlic, chili, and soy-oyster sauce, served over rice with a crispy fried egg on top.",
+    cuisineFamily: "thai",
+    prepTimeMinutes: 10,
+    cookTimeMinutes: 10,
+    skillLevel: "beginner",
+    heroImageUrl: null,
+    flavorProfile: ["savory", "spicy", "aromatic"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "bc-1",
+        name: "Ground chicken",
+        quantity: "450 g",
+        isOptional: false,
+        substitution: "Ground pork is equally traditional",
+      },
+      {
+        id: "bc-2",
+        name: "Holy basil (bai krapow)",
+        quantity: "1 packed cup",
+        isOptional: false,
+        substitution: "Thai basil (skip sweet Italian basil)",
+      },
+      {
+        id: "bc-3",
+        name: "Garlic",
+        quantity: "5 cloves",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-4",
+        name: "Thai bird's-eye chilies",
+        quantity: "2-4, to taste",
+        isOptional: false,
+        substitution: "Any hot fresh chili",
+      },
+      {
+        id: "bc-5",
+        name: "Fish sauce",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-6",
+        name: "Oyster sauce",
+        quantity: "1 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-7",
+        name: "Dark (or sweet) soy sauce",
+        quantity: "2 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-8",
+        name: "Sugar",
+        quantity: "1 tsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-9",
+        name: "Neutral oil",
+        quantity: "2 tbsp",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "bc-10",
+        name: "Eggs + jasmine rice",
+        quantity: "to serve",
+        isOptional: true,
+        substitution: null,
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Pound the garlic and chilies into a rough paste (or chop them fine). In a small bowl, stir together the fish sauce, oyster sauce, dark soy, and sugar.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Holy basil (bai krapow) is the real thing — peppery and a little spicy. Thai basil is the common stand-in; sweet Italian basil is wrong for this dish.",
+        quickHack: null,
+        cuisineFact:
+          "Pad kra pao is so beloved it's often called Thailand's unofficial national fast dish.",
+        donenessCue: "A coarse, fragrant garlic-chili paste.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Optional but classic: fry an egg in hot oil until the white is blistered and lacy-crisp at the edges and the yolk still runs. Set aside.",
+        timerSeconds: 120,
+        mistakeWarning:
+          "Keep the oil hot so the white crisps — the contrast of shattery edges against a runny yolk is the whole point.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: "Bubbled, golden, crispy edges; the yolk still jiggly.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction:
+          "Heat the oil in a wok or skillet over high heat. Stir-fry the garlic-chili paste for about 30 seconds until fragrant.",
+        timerSeconds: 30,
+        mistakeWarning:
+          "High and fast — this is a flash stir-fry. Low heat stews the aromatics instead of releasing them.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: "Garlic sizzling and intensely aromatic, not browned.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Add the ground chicken and stir-fry, breaking it up, until just cooked through. Pour in the sauce and toss to coat and glaze.",
+        timerSeconds: 240,
+        mistakeWarning:
+          "Don't crowd the pan or the chicken steams grey — keep it moving over high heat so it sears.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Chicken cooked through and the sauce reduced to a glaze that clings to the meat.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Turn OFF the heat, then fold in the holy basil — it wilts in about 5 seconds from the residual heat.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Add the basil at the very end, off the heat. Overcooked basil turns dark, bitter, and loses its perfume.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: "Basil just wilted and glossy, still vivid green.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 6,
+        instruction:
+          "Serve over jasmine rice, topped with the crispy fried egg.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
+
+  "chicken-katsu": {
+    name: "Chicken Katsu",
+    slug: "chicken-katsu",
+    description:
+      "A crispy panko-breaded chicken cutlet deep-fried to a golden crunch, served with tangy tonkatsu sauce and shredded cabbage.",
+    cuisineFamily: "japanese",
+    prepTimeMinutes: 15,
+    cookTimeMinutes: 12,
+    skillLevel: "intermediate",
+    heroImageUrl: null,
+    flavorProfile: ["savory", "crispy", "umami"],
+    temperature: "hot",
+    ingredients: [
+      {
+        id: "ck-1",
+        name: "Chicken thighs or breasts",
+        quantity: "500 g (2-4 pieces)",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ck-2",
+        name: "Salt + black pepper",
+        quantity: "to season",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ck-3",
+        name: "All-purpose flour",
+        quantity: "1/2 cup",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ck-4",
+        name: "Eggs, beaten",
+        quantity: "2",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ck-5",
+        name: "Panko breadcrumbs",
+        quantity: "1.5 cups",
+        isOptional: false,
+        substitution: "Japanese large-flake panko is crispiest",
+      },
+      {
+        id: "ck-6",
+        name: "Neutral frying oil",
+        quantity: "about 1 inch in the pan",
+        isOptional: false,
+        substitution: null,
+      },
+      {
+        id: "ck-7",
+        name: "Tonkatsu sauce, shredded cabbage + rice",
+        quantity: "to serve",
+        isOptional: false,
+        substitution: "Worcestershire + ketchup + soy + sugar for the sauce",
+      },
+    ],
+    steps: [
+      {
+        phase: "cook",
+        stepNumber: 1,
+        instruction:
+          "Butterfly and pound the chicken to an even 1/4-1/2 inch thickness. Season both sides with salt and pepper.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Even thickness is everything — a fat end is still raw when the thin end is already overdone.",
+        quickHack: null,
+        cuisineFact:
+          "'Katsu' comes from katsuretsu, Japan's adaptation of the European breaded cutlet.",
+        donenessCue: "A uniform cutlet roughly 1 cm thick.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 2,
+        instruction:
+          "Set up a dredging line: flour, beaten egg, then panko. Coat each cutlet flour → egg → panko, pressing the panko on firmly.",
+        timerSeconds: null,
+        mistakeWarning:
+          "Let the egg drip off before the panko, and press the crumbs on — too much egg makes the whole crust slide off in the oil.",
+        quickHack:
+          "Large-flake Japanese panko fries up airier and crunchier than fine breadcrumbs.",
+        cuisineFact: null,
+        donenessCue: "An even, fully-coated cutlet with no bare patches.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 3,
+        instruction: "Heat about 1 inch of oil to 340°F / 170°C.",
+        timerSeconds: 300,
+        mistakeWarning:
+          "Too cool and the crust drinks oil and turns greasy; too hot and it browns before the chicken cooks through.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "A pinch of panko dropped in sizzles steadily and floats to the top.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 4,
+        instruction:
+          "Fry one cutlet at a time, about 1.5-3 minutes per side, turning once, until deep golden. Skim stray crumbs from the oil between batches.",
+        timerSeconds: 240,
+        mistakeWarning:
+          "Don't crowd the oil — frying one at a time keeps the temperature up so the crust stays crisp.",
+        quickHack: null,
+        cuisineFact: null,
+        donenessCue:
+          "Deep golden-brown and crisp all over; 74°C / 165°F internal.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 5,
+        instruction:
+          "Drain on a wire rack and rest 2 minutes, then slice crosswise into strips.",
+        timerSeconds: 120,
+        mistakeWarning:
+          "Rest on a rack, not paper towel — paper traps steam and softens the bottom crust you just fried.",
+        quickHack:
+          "Slice with a sharp knife in clean strokes so you don't crush the crust.",
+        cuisineFact: null,
+        donenessCue: "Shatteringly crisp; the juices run clear.",
+        imageUrl: null,
+      },
+      {
+        phase: "cook",
+        stepNumber: 6,
+        instruction:
+          "Serve with tonkatsu sauce, a generous pile of finely shredded raw cabbage, and rice.",
+        timerSeconds: null,
+        mistakeWarning: null,
+        quickHack: null,
+        cuisineFact:
+          "The mountain of shredded cabbage is traditional — its cool crunch cuts the richness of the fry.",
+        donenessCue: null,
+        imageUrl: null,
+      },
+    ],
+  },
 };
