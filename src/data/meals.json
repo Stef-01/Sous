@@ -2122,5 +2122,26 @@
       "url": "https://www.simplyscratch.com/cheesy-beef-enchiladas-verde/"
     },
     "dayparts": ["lunch", "dinner"]
+  },
+  {
+    "id": "viral-hot-honey-beef-taco-bowls",
+    "name": "Viral Hot Honey Beef Taco Bowls",
+    "aliases": [
+      "hot honey beef taco bowl",
+      "beef taco bowl",
+      "taco bowl",
+      "hot honey beef bowl"
+    ],
+    "sidePool": [
+      "guacamole",
+      "pico-de-gallo",
+      "mexican-rice",
+      "elote",
+      "refried-beans"
+    ],
+    "cuisine": "Mexican",
+    "description": "A high-protein deconstructed taco bowl — lean beef with taco spices, air-fried sweet potato, a creamy avocado-yogurt base, and a quick hot-honey drizzle.",
+    "nourishVerified": false,
+    "dayparts": ["lunch", "dinner"]
   }
 ]

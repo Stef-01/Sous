@@ -2519,5 +2519,41 @@
       "url": "https://www.cleanprogram.com/blogs/recipes/erewhon-smoothie-dupes-3-clean-copycats-of-popular-recipes"
     },
     "role": "drink"
+  },
+  {
+    "id": "viral-caramelized-sweet-potatoes",
+    "name": "Viral Caramelized Sweet Potatoes",
+    "tags": [
+      "side",
+      "american",
+      "roasted",
+      "sweet",
+      "savory",
+      "vegetarian",
+      "viral"
+    ],
+    "description": "Sweet potatoes roasted cut-side down until the flat faces caramelize into a deep, candy-sweet golden crust — the no-flip viral method.",
+    "pairingReason": "a caramelized, naturally sweet vegetable side that goes with almost any protein",
+    "nutritionCategory": "carb",
+    "nourishVerified": false,
+    "role": "side"
+  },
+  {
+    "id": "scoopable-matcha-pistachio-chia-pudding",
+    "name": "Scoopable Matcha Pistachio Chia Pudding",
+    "tags": [
+      "dessert",
+      "pudding",
+      "matcha",
+      "sweet",
+      "nutty",
+      "viral",
+      "no-cook"
+    ],
+    "description": "A vibrant jade chia pudding on a blended pistachio-matcha milk base, thickened with Greek yogurt and chilled until thick enough to scoop like ice cream.",
+    "pairingReason": "a high-protein, scoopable dessert or breakfast pudding",
+    "nutritionCategory": "protein",
+    "nourishVerified": false,
+    "role": "snack"
   }
 ]

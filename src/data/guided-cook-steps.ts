@@ -14,6 +14,7 @@ import {
   STEFAN_MEAL_FLOWS,
 } from "./stefan-curated-recipes";
 import { POPULAR_MEAL_FLOWS } from "./popular-meal-flows";
+import { VIRAL_SIDE_FLOWS, VIRAL_MEAL_FLOWS } from "./viral-recipe-flows";
 
 export interface StaticCookStep {
   phase: "cook";
@@ -54,6 +55,7 @@ export const guidedCookData: Record<string, StaticDishData> = {
   ...CHEF_TU_SIDE_FLOWS,
   ...CHEF_TU_SIDE_FLOWS_2,
   ...STEFAN_SIDE_FLOWS,
+  ...VIRAL_SIDE_FLOWS,
   // Folder-per-food image convention (founder, 2026-06-11): each recipe's
   // photos live in public/food_images/<slug>/ — hero.jpg plus step-N.jpg per
   // cook step. Brownie step photos are mapped to their action (SOP §2, by the
@@ -15451,6 +15453,7 @@ export const guidedCookMeals: Record<string, StaticDishData> = {
   ...CHEF_TU_MEAL_FLOWS_2,
   ...STEFAN_MEAL_FLOWS,
   ...POPULAR_MEAL_FLOWS,
+  ...VIRAL_MEAL_FLOWS,
   "masoor-dal": {
     name: "Masoor Dal",
     slug: "masoor-dal",

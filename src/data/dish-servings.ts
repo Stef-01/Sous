@@ -37,6 +37,9 @@ export const DISH_SERVINGS: Record<string, number> = {
   // is the source's per-serving label verbatim. Without this override the link
   // base would default to 4 and disagree with the seed's authored 5.
   "air-fryer-edamame": 5,
+  // Viral recipes (founder-provided 2026-06-18) — yields match their seeds.
+  "viral-caramelized-sweet-potatoes": 4,
+  "scoopable-matcha-pistachio-chia-pudding": 2,
   // Snack / dumpling platters that stretch further.
   "bao-buns": 6,
   churros: 6,
