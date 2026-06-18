@@ -390,28 +390,31 @@ export function ResultStack({
             </span>
           </p>
         </div>
+        {/* Reroll-all is a rare action (each card has its own reroll), so it's
+            demoted to a quiet icon-only affordance in the corner — present for
+            the user who wants a whole-new deck, invisible to everyone else
+            (rule 13). The 44px hit area keeps it tappable despite the small glyph. */}
         {!calmDeck && (
           <motion.button
             onClick={onReroll}
             disabled={isRerolling}
-            whileTap={
-              reducedMotion || isRerolling ? undefined : { scale: 0.96 }
-            }
+            whileTap={reducedMotion || isRerolling ? undefined : { scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium",
-              "border border-neutral-200 text-[var(--nourish-subtext)]",
-              "hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg",
+              "text-[var(--nourish-subtext-faint)]",
+              "hover:bg-neutral-100 hover:text-[var(--nourish-green)]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
               "disabled:opacity-50 transition-colors duration-200",
             )}
             type="button"
+            aria-label="Reroll all sides"
+            title="Reroll all sides"
           >
             <RefreshCw
-              size={14}
+              size={15}
               className={isRerolling ? "animate-spin" : ""}
             />
-            Reroll all
           </motion.button>
         )}
       </div>

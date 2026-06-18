@@ -17,26 +17,31 @@ interface PhaseIndicatorProps {
 
 /**
  * Phase Indicator  -  visual progress through Mission → Grab → Cook → Win.
- * Shows four circles, filled up to and including the current phase.
+ * Just dots, no word: four small pips with the current phase elongated into a
+ * subtle "you are here" pill. The phase name lives in the aria-label so the
+ * header stays nearly weightless (rule 6 / rule 13).
  */
 export function PhaseIndicator({ currentPhase }: PhaseIndicatorProps) {
   const currentIndex = PHASES.findIndex((p) => p.id === currentPhase);
 
   return (
-    <div className="flex items-center gap-1.5">
-      <span className="mr-1 text-sm font-medium text-[var(--nourish-dark)] capitalize">
-        {currentPhase}
-      </span>
+    <div
+      className="flex items-center gap-1"
+      role="img"
+      aria-label={`${PHASES[currentIndex]?.label ?? currentPhase} — step ${currentIndex + 1} of ${PHASES.length}`}
+    >
       {PHASES.map((phase, idx) => (
         <div
           key={phase.id}
+          aria-hidden
           className={cn(
-            "h-2.5 w-2.5 rounded-full transition-colors duration-300",
-            idx <= currentIndex
-              ? "bg-[var(--nourish-green)]"
-              : "bg-neutral-200",
+            "h-1.5 rounded-full transition-all duration-300",
+            idx === currentIndex
+              ? "w-3.5 bg-[var(--nourish-green)]"
+              : idx < currentIndex
+                ? "w-1.5 bg-[var(--nourish-green)]"
+                : "w-1.5 bg-neutral-200",
           )}
-          aria-label={`${phase.label}: ${idx <= currentIndex ? "complete" : "upcoming"}`}
         />
       ))}
     </div>

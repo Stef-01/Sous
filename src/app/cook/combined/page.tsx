@@ -11,12 +11,7 @@ import {
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowLeft,
-  ChefHat,
-  ChevronRight,
-  UtensilsCrossed,
-} from "lucide-react";
+import { ArrowLeft, ChefHat, UtensilsCrossed } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
@@ -150,10 +145,6 @@ function CombinedCookContent() {
     completeSession: completeCookPhase,
     reset,
   } = useCookStore();
-
-  // Transition state between dishes
-  const [showTransition, setShowTransition] = useState(false);
-  const [completedDishName, setCompletedDishName] = useState("");
 
   // Fetch combined data
   const { data, isLoading, error } = trpc.cook.getCombinedSteps.useQuery(
@@ -341,13 +332,13 @@ function CombinedCookContent() {
 
     if (currentStepIndex >= currentCookSteps.length - 1) {
       // Completed the current dish's cook steps
-      const justCompletedName = currentDish?.dish.name ?? "";
       const isLastDish = currentDishIndex >= dishes.length - 1;
 
       if (!isLastDish) {
-        // Show transition card BEFORE advancing dish (defer nextDish to continue handler)
-        setCompletedDishName(justCompletedName);
-        setShowTransition(true);
+        // Advance straight to the next dish — no per-dish "done" interstitial
+        // (founder-directed 2026-06-18: the celebration screen between dishes
+        // was distracting; the single end-of-plate Win is the only payoff).
+        nextDish();
       } else {
         // All dishes done  -  go to win screen
         if (sessionIdRef.current) {
@@ -421,7 +412,7 @@ function CombinedCookContent() {
     currentCookSteps.length,
     currentDishIndex,
     dishes,
-    currentDish,
+    nextDish,
     completeCookPhase,
     completeSession,
     recordSkillCook,
@@ -430,12 +421,6 @@ function CombinedCookContent() {
     orderedDishes,
     recordPreferenceSignal,
   ]);
-
-  const handleTransitionContinue = useCallback(() => {
-    setStepDirection(1);
-    nextDish(); // Advance to the next dish in the store
-    setShowTransition(false);
-  }, [nextDish]);
 
   const handleToggleChip = useCallback(
     (chip: string | null) => {
@@ -465,10 +450,6 @@ function CombinedCookContent() {
         setPhase("mission");
         break;
       case "cook":
-        if (showTransition) {
-          setShowTransition(false);
-          return;
-        }
         if (currentStepIndex > 0) {
           setStepDirection(-1);
           useCookStore.setState({
@@ -497,7 +478,6 @@ function CombinedCookContent() {
     currentPhase,
     currentStepIndex,
     currentDishIndex,
-    showTransition,
     handleBackToday,
     setPhase,
     allIngredients,
@@ -678,123 +658,98 @@ function CombinedCookContent() {
           )}
 
           {/* COOK  -  Empty steps guard */}
-          {currentPhase === "cook" &&
-            !showTransition &&
-            !currentCookStep &&
-            currentDish && (
-              <motion.div
-                key="cook-empty"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex flex-col items-center gap-5 py-12 text-center"
+          {currentPhase === "cook" && !currentCookStep && currentDish && (
+            <motion.div
+              key="cook-empty"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex flex-col items-center gap-5 py-12 text-center"
+            >
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+                <ChefHat
+                  size={24}
+                  className="text-[var(--nourish-green)]"
+                  strokeWidth={1.8}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-sm font-semibold text-[var(--nourish-dark)]">
+                  Steps coming soon
+                </p>
+                <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
+                  Guided cook steps for {currentDish.dish.name} aren&apos;t
+                  available yet.
+                </p>
+              </div>
+              <button
+                onClick={handleBackToday}
+                className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
+                type="button"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
-                  <ChefHat
-                    size={24}
-                    className="text-[var(--nourish-green)]"
-                    strokeWidth={1.8}
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-                    Steps coming soon
-                  </p>
-                  <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
-                    Guided cook steps for {currentDish.dish.name} aren&apos;t
-                    available yet.
-                  </p>
-                </div>
-                <button
-                  onClick={handleBackToday}
-                  className="rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
-                  type="button"
-                >
-                  Back to Today
-                </button>
-              </motion.div>
-            )}
+                Back to Today
+              </button>
+            </motion.div>
+          )}
 
           {/* COOK  -  Step-by-step, one dish at a time */}
-          {currentPhase === "cook" &&
-            !showTransition &&
-            currentCookStep &&
-            currentDish && (
-              <motion.div
-                key={`cook-${currentDishIndex}-${currentStepIndex}`}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ type: "spring", stiffness: 260, damping: 25 }}
-              >
-                {/* Timer stack  -  parallel-lane pills for every running
+          {currentPhase === "cook" && currentCookStep && currentDish && (
+            <motion.div
+              key={`cook-${currentDishIndex}-${currentStepIndex}`}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            >
+              {/* Timer stack  -  parallel-lane pills for every running
                     timer. Hidden when nothing is running. */}
-                <TimerStack />
+              <TimerStack />
 
-                {/* W29 dual-track step-progress strip — only renders
+              {/* W29 dual-track step-progress strip — only renders
                     when there are 2+ dishes. Replaces the standalone
                     "current dish label" row by including the active
                     name (highlighted) plus every other dish's
                     progress. */}
-                <DishProgressStrip
-                  dishes={dishProgressInputs}
-                  activeDishIndex={currentDishIndex}
-                  activeStepIndex={currentStepIndex}
-                  className="mb-3"
-                />
+              <DishProgressStrip
+                dishes={dishProgressInputs}
+                activeDishIndex={currentDishIndex}
+                activeStepIndex={currentStepIndex}
+                className="mb-3"
+              />
 
-                {/* Parallel cooking hint from sequencer */}
-                <ParallelHintBanner hint={currentParallelHint} />
-                <StepCard
-                  stepNumber={currentStepIndex + 1}
-                  totalSteps={currentCookSteps.length}
-                  instruction={currentCookStep.instruction}
-                  recipeName={currentDish.dish.name}
-                  previousStep={
-                    currentCookSteps[currentStepIndex - 1]?.instruction
-                  }
-                  nextStep={currentCookSteps[currentStepIndex + 1]?.instruction}
-                  ingredients={currentDish.ingredients.map(
-                    (i: { name: string }) => i.name,
-                  )}
-                  timerSeconds={currentCookStep.timerSeconds}
-                  mistakeWarning={currentCookStep.mistakeWarning}
-                  quickHack={currentCookStep.quickHack}
-                  cuisineFact={currentCookStep.cuisineFact}
-                  donenessCue={currentCookStep.donenessCue}
-                  imageUrl={currentCookStep.imageUrl}
-                  expandedChip={expandedChip}
-                  onToggleChip={handleToggleChip}
-                  onStartTimer={handleStartTimer}
-                  onNext={handleNext}
-                  onPrev={handleBack}
-                  isFirst={currentStepIndex === 0 && currentDishIndex === 0}
-                  isLast={
-                    currentStepIndex === currentCookSteps.length - 1 &&
-                    currentDishIndex === dishes.length - 1
-                  }
-                  dishSlug={currentDish.dish.slug}
-                  direction={stepDirection}
-                />
-              </motion.div>
-            )}
-
-          {/* TRANSITION  -  Between dishes. We show the NEXT dish's position
-              in the plate (index+2) because the user has just finished
-              dish `currentDishIndex + 1` and is about to start the next.
-              See AUDIT-2026-04-17 P1-3. */}
-          {currentPhase === "cook" && showTransition && (
-            <DishTransitionCard
-              key="transition"
-              completedDishName={completedDishName}
-              nextDishName={
-                orderedDishes[currentDishIndex + 1]?.dish.name ??
-                currentDish?.dish.name ??
-                ""
-              }
-              currentDishNumber={currentDishIndex + 2}
-              totalDishes={dishes.length}
-              onContinue={handleTransitionContinue}
-            />
+              {/* Parallel cooking hint from sequencer */}
+              <ParallelHintBanner hint={currentParallelHint} />
+              <StepCard
+                stepNumber={currentStepIndex + 1}
+                totalSteps={currentCookSteps.length}
+                instruction={currentCookStep.instruction}
+                recipeName={currentDish.dish.name}
+                previousStep={
+                  currentCookSteps[currentStepIndex - 1]?.instruction
+                }
+                nextStep={currentCookSteps[currentStepIndex + 1]?.instruction}
+                ingredients={currentDish.ingredients.map(
+                  (i: { name: string }) => i.name,
+                )}
+                timerSeconds={currentCookStep.timerSeconds}
+                mistakeWarning={currentCookStep.mistakeWarning}
+                quickHack={currentCookStep.quickHack}
+                cuisineFact={currentCookStep.cuisineFact}
+                donenessCue={currentCookStep.donenessCue}
+                imageUrl={currentCookStep.imageUrl}
+                expandedChip={expandedChip}
+                onToggleChip={handleToggleChip}
+                onStartTimer={handleStartTimer}
+                onNext={handleNext}
+                onPrev={handleBack}
+                isFirst={currentStepIndex === 0 && currentDishIndex === 0}
+                isLast={
+                  currentStepIndex === currentCookSteps.length - 1 &&
+                  currentDishIndex === dishes.length - 1
+                }
+                dishSlug={currentDish.dish.slug}
+                direction={stepDirection}
+              />
+            </motion.div>
           )}
 
           {/* WIN  -  Celebrate the full plate */}
@@ -1053,101 +1008,6 @@ function CombinedMissionScreen({
       >
         <BigHandsToggle />
       </motion.div>
-    </motion.div>
-  );
-}
-
-// ── Dish Transition Card ─────────────────────────
-
-function DishTransitionCard({
-  completedDishName,
-  nextDishName,
-  currentDishNumber,
-  totalDishes,
-  onContinue,
-}: {
-  completedDishName: string;
-  nextDishName: string;
-  currentDishNumber: number;
-  totalDishes: number;
-  onContinue: () => void;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 260, damping: 25 }}
-      className="flex flex-col items-center gap-6 py-8 text-center"
-    >
-      {/* Completed check */}
-      <motion.div
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 12, delay: 0.1 }}
-        className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--nourish-green)]/10"
-      >
-        <ChefHat size={28} className="text-[var(--nourish-green)]" />
-      </motion.div>
-
-      <div className="space-y-2">
-        <motion.h2
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 25,
-            delay: 0.15,
-          }}
-          className="font-serif text-xl text-[var(--nourish-dark)]"
-        >
-          {completedDishName} done!
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 25,
-            delay: 0.2,
-          }}
-          className="text-sm text-[var(--nourish-subtext)]"
-        >
-          Up next · dish {currentDishNumber} of {totalDishes}
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 25,
-            delay: 0.25,
-          }}
-          className="font-serif text-lg font-medium text-[var(--nourish-dark)]"
-        >
-          {nextDishName}
-        </motion.p>
-      </div>
-
-      <motion.button
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
-        whileTap={{ scale: 0.96 }}
-        onClick={onContinue}
-        className={cn(
-          "flex items-center gap-2 rounded-xl px-8 py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200",
-        )}
-        type="button"
-      >
-        Continue cooking
-        <ChevronRight size={16} />
-      </motion.button>
     </motion.div>
   );
 }

@@ -8,21 +8,17 @@ import {
   ChevronRight,
   Image as ImageIcon,
   Lightbulb,
-  MessageCircleQuestion,
   Send,
   Volume2,
   VolumeX,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { TimerChip } from "./timer-chip";
-import { MistakeChip } from "./mistake-chip";
-import { HackChip } from "./hack-chip";
-import { FactChip } from "./fact-chip";
+import { StepHelpRow } from "./step-help-row";
 import { Glossify } from "./glossify";
 import { SpiceSlider } from "./spice-slider";
 import { ComponentSplitToggle } from "./component-split-toggle";
 import { trpc } from "@/lib/trpc/client";
-import { useBigHands } from "@/lib/hooks/use-big-hands";
 import { useParentMode } from "@/lib/hooks/use-parent-mode";
 import { useSpiceTolerance } from "@/lib/hooks/use-spice-tolerance";
 import {
@@ -75,7 +71,7 @@ interface StepCardProps {
   onPrev: () => void;
   isFirst: boolean;
   isLast: boolean;
-  /** Slug of the dish being cooked. When set, the MistakeChip's per-dish
+  /** Slug of the dish being cooked. When set, the mistake helper's per-dish
    *  suppression affordance is enabled. */
   dishSlug?: string;
 }
@@ -118,7 +114,6 @@ export function StepCard({
   const [showQA, setShowQA] = useState(false);
   const [question, setQuestion] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const bigHands = useBigHands();
   const { profile: parentProfile } = useParentMode();
   const { tolerance: householdSpice, setTolerance: setHouseholdSpice } =
     useSpiceTolerance();
@@ -210,9 +205,6 @@ export function StepCard({
     });
   };
 
-  // Clamp so a misconfigured step list (totalSteps === 0) never yields NaN.
-  const progress = totalSteps > 0 ? stepNumber / totalSteps : 0;
-
   // W22 / W27: visual-mode resolves which image to render. Step
   // image wins; dish hero is the visually-related fallback;
   // otherwise we render a textual placeholder.
@@ -237,51 +229,49 @@ export function StepCard({
       }
       className="flex flex-col gap-5"
     >
-      {/* Step counter + progress bar + read-aloud */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between">
-          <motion.p
-            key={`step-label-${stepNumber}`}
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 18,
-              delay: 0.05,
-            }}
-            className="text-sm font-semibold text-[var(--nourish-subtext)]"
-          >
-            Step {stepNumber} of {totalSteps}
-          </motion.p>
-          {!mounted ? null : hasSpeechSynthesis ? (
-            <motion.button
-              onClick={handleReadAloud}
-              whileTap={{ scale: 0.92 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+      {/* Step progress — just dots (rule 13). The current step is an elongated
+          pip; the "X of Y" count lives in the aria-label so the row stays
+          weightless. Read-aloud stays pinned to the right. */}
+      <div className="flex items-center justify-between gap-3">
+        <div
+          className="flex flex-1 flex-wrap items-center gap-1"
+          role="img"
+          aria-label={`Step ${stepNumber} of ${totalSteps}`}
+        >
+          {Array.from({ length: totalSteps }).map((_, idx) => (
+            <span
+              key={idx}
+              aria-hidden
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-lg text-xs font-medium transition-colors",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                isSpeaking
-                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-                  : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
+                "h-1.5 rounded-full transition-all duration-300",
+                idx === stepNumber - 1
+                  ? "w-4 bg-[var(--nourish-green)]"
+                  : idx < stepNumber - 1
+                    ? "w-1.5 bg-[var(--nourish-green)]"
+                    : "w-1.5 bg-neutral-200",
               )}
-              type="button"
-              aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
-              title="Hands-free: tap once to play, again to stop, a third tap to replay"
-            >
-              {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </motion.button>
-          ) : null}
+            />
+          ))}
         </div>
-        <div className="h-1 w-full rounded-full bg-neutral-100 overflow-hidden">
-          <motion.div
-            className="h-full rounded-full bg-[var(--nourish-green)]"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress * 100}%` }}
-            transition={{ type: "spring", stiffness: 200, damping: 25 }}
-          />
-        </div>
+        {!mounted ? null : hasSpeechSynthesis ? (
+          <motion.button
+            onClick={handleReadAloud}
+            whileTap={{ scale: 0.92 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            className={cn(
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-medium transition-colors",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+              isSpeaking
+                ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                : "text-[var(--nourish-subtext)] hover:bg-neutral-100",
+            )}
+            type="button"
+            aria-label={isSpeaking ? "Stop reading aloud" : "Read step aloud"}
+            title="Hands-free: tap once to play, again to stop, a third tap to replay"
+          >
+            {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </motion.button>
+        ) : null}
       </div>
 
       {/* Step image (optional). Layout depends on visualMode:
@@ -420,71 +410,49 @@ export function StepCard({
           />
         )}
 
-        {mistakeWarning && (
-          <MistakeChip
-            warning={mistakeWarning}
-            isExpanded={expandedChip === "mistake"}
-            onToggle={() =>
-              onToggleChip(expandedChip === "mistake" ? null : "mistake")
-            }
-            dishSlug={dishSlug}
-            stepNumber={stepNumber}
-          />
-        )}
-
-        {/* W5 pacing density: `terse` hides the hack; `verbose` shows it inline
-            (no tap); default keeps the collapsible chip. */}
-        {quickHack &&
-          density !== "terse" &&
-          (density === "verbose" ? (
-            <p className="flex items-start gap-1.5 text-sm text-[var(--nourish-subtext)]">
-              <Lightbulb
-                size={15}
-                className="mt-0.5 shrink-0 text-[var(--nourish-green)]"
-                strokeWidth={2}
-              />
-              <span className="select-text">{quickHack}</span>
-            </p>
-          ) : (
-            <HackChip
-              hack={quickHack}
-              isExpanded={expandedChip === "hack"}
-              onToggle={() =>
-                onToggleChip(expandedChip === "hack" ? null : "hack")
-              }
+        {/* W5 pacing density: `terse` hides the hack; `verbose` shows it
+            inline as a paragraph (no tap). The default density routes it
+            through the icon row below. */}
+        {quickHack && density === "verbose" && (
+          <p className="flex items-start gap-1.5 text-sm text-[var(--nourish-subtext)]">
+            <Lightbulb
+              size={15}
+              className="mt-0.5 shrink-0 text-[var(--nourish-green)]"
+              strokeWidth={2}
             />
-          ))}
-
-        {/* `terse` also drops the cuisine fact (a nice-to-have, not guidance). */}
-        {cuisineFact && density !== "terse" && (
-          <FactChip
-            fact={cuisineFact}
-            isExpanded={expandedChip === "fact"}
-            onToggle={() =>
-              onToggleChip(expandedChip === "fact" ? null : "fact")
-            }
-          />
+            <span className="select-text">{quickHack}</span>
+          </p>
         )}
-      </div>
 
-      {/* Cook Q&A  -  bounded AI question */}
-      <div className="space-y-2">
-        <motion.button
-          onClick={() => setShowQA(!showQA)}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className={cn(
-            "flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium",
-            "border transition duration-150",
-            showQA
-              ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
-              : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
-          )}
-          type="button"
-        >
-          <MessageCircleQuestion size={14} />
-          Ask about this step
-        </motion.button>
+        {/* Per-step helpers as a tidy icon row (rule 13): common mistake /
+            quick hack / cuisine fact / ask. Tapping an icon expands its
+            content below; the Ask icon opens the Q&A panel underneath. */}
+        <StepHelpRow
+          mistakeWarning={mistakeWarning}
+          quickHack={
+            density === "terse" || density === "verbose" ? null : quickHack
+          }
+          cuisineFact={density === "terse" ? null : cuisineFact}
+          expandedChip={
+            expandedChip === "mistake" ||
+            expandedChip === "hack" ||
+            expandedChip === "fact"
+              ? expandedChip
+              : null
+          }
+          onToggleChip={(chip) => {
+            onToggleChip(chip);
+            if (chip) setShowQA(false);
+          }}
+          askActive={showQA}
+          onToggleAsk={() => {
+            const next = !showQA;
+            setShowQA(next);
+            if (next) onToggleChip(null);
+          }}
+          dishSlug={dishSlug}
+          stepNumber={stepNumber}
+        />
 
         <AnimatePresence>
           {showQA && (
@@ -579,18 +547,7 @@ export function StepCard({
 
         <motion.button
           data-cook-nav
-          onClick={(event) => {
-            // If the tap lands within ~24px of either horizontal edge of
-            // the button, assume the user is reaching  -  record it so the
-            // big-hands nudge can surface after 3 near-misses.
-            const rect = event.currentTarget.getBoundingClientRect();
-            const fromLeft = event.clientX - rect.left;
-            const fromRight = rect.right - event.clientX;
-            if (fromLeft < 24 || fromRight < 24) {
-              bigHands.registerEdgeTap();
-            }
-            onNext();
-          }}
+          onClick={onNext}
           whileTap={{ scale: 0.96 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
@@ -613,36 +570,6 @@ export function StepCard({
           )}
         </motion.button>
       </div>
-
-      {/* Big-hands nudge  -  quietly appears after the user has mis-tapped
-          near the edge of the Next button three times. Single tap accepts. */}
-      {bigHands.shouldNudge && (
-        <motion.div
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.22 }}
-          className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.07] px-3 py-2"
-        >
-          <p className="min-w-0 flex-1 text-[12px] text-[var(--nourish-dark)]">
-            Tapping feels tight? Try bigger controls for the rest of this cook.
-          </p>
-          <button
-            type="button"
-            onClick={() => bigHands.setEnabled(true)}
-            className="shrink-0 rounded-full bg-[var(--nourish-green)] px-3 py-1 text-[11px] font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-          >
-            Bigger
-          </button>
-          <button
-            type="button"
-            onClick={bigHands.dismissNudge}
-            aria-label="Dismiss suggestion"
-            className="shrink-0 rounded-full px-2 py-1 text-[11px] font-medium text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
-          >
-            Not now
-          </button>
-        </motion.div>
-      )}
     </motion.div>
   );
 }
