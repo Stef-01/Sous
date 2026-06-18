@@ -430,19 +430,30 @@ export function WinScreen({
       >
         {/* ── Hero celebration header ── */}
         <motion.div
-          initial={{ scale: 0.85, opacity: 0 }}
+          initial={prefersReducedMotion ? false : { scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{
-            delay: 0.15,
-            type: "spring",
-            stiffness: 200,
-            damping: 12,
-          }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : { delay: 0.12, type: "spring", stiffness: 240, damping: 20 }
+          }
           className="space-y-1.5"
         >
+          {/* One confident settle (a "stamp"), not a 5-swing wobble — the tokens
+              warn overshoot reads juvenile as a default; an earned win gets a
+              single pop + slight tilt. Reduced-motion shows the icon at rest. */}
           <motion.div
-            animate={{ rotate: [0, -12, 12, -12, 12, 0], scale: [1, 1.15, 1] }}
-            transition={{ delay: 0.35, duration: 0.7, ease: "easeInOut" }}
+            initial={
+              prefersReducedMotion
+                ? false
+                : { scale: 0.4, rotate: -8, opacity: 0 }
+            }
+            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { delay: 0.26, type: "spring", stiffness: 340, damping: 16 }
+            }
             className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
           >
             {milestone.icon}
@@ -475,7 +486,7 @@ export function WinScreen({
               delay: 0.35,
               type: "spring",
               stiffness: 200,
-              damping: 12,
+              damping: 18,
             }}
             className="flex flex-wrap items-center justify-center gap-2"
           >
@@ -499,7 +510,7 @@ export function WinScreen({
                     delay: 0.45 + i * 0.08,
                     type: "spring",
                     stiffness: 300,
-                    damping: 12,
+                    damping: 18,
                   }}
                   className={cn(
                     "rounded-full px-3 py-1.5 text-sm font-medium",
@@ -529,7 +540,7 @@ export function WinScreen({
               delay: 0.5,
               type: "spring",
               stiffness: 200,
-              damping: 12,
+              damping: 18,
             }}
             className="rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 py-3"
           >
@@ -567,11 +578,15 @@ export function WinScreen({
               <motion.button
                 key={star}
                 onClick={() => handleRate(star)}
-                whileTap={{ scale: 1.3, rotate: -15 }}
-                animate={star <= rating ? { scale: [1, 1.2, 1] } : {}}
+                whileTap={prefersReducedMotion ? undefined : { scale: 1.18 }}
+                animate={
+                  !prefersReducedMotion && star <= rating
+                    ? { scale: [1, 1.16, 1] }
+                    : {}
+                }
                 transition={{
-                  duration: 0.3,
-                  ease: "easeInOut",
+                  duration: 0.28,
+                  ease: "easeOut",
                   delay: star <= rating ? idx * 0.05 : 0,
                 }}
                 className="flex items-center justify-center min-h-11 min-w-11"
@@ -678,7 +693,7 @@ export function WinScreen({
               onBackToday();
             }}
             whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition shadow-sm shadow-[var(--nourish-green)]/20 active:scale-[0.97]"
             type="button"
           >
@@ -752,7 +767,7 @@ export function WinScreen({
             onClick={onSave}
             disabled={saved}
             whileTap={saved ? undefined : { scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className={cn(
               "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
               saved
@@ -773,7 +788,7 @@ export function WinScreen({
             onClick={() => photoInputRef.current?.click()}
             disabled={photoAdded}
             whileTap={photoAdded ? undefined : { scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className={cn(
               "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
               photoAdded
@@ -792,7 +807,7 @@ export function WinScreen({
           <motion.button
             onClick={() => setShowNote(!showNote)}
             whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
             type="button"
             aria-label={showNote ? "Hide note" : "Add a cook note"}
@@ -805,7 +820,7 @@ export function WinScreen({
           <motion.button
             onClick={onCookAgain}
             whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
             type="button"
           >
@@ -816,7 +831,7 @@ export function WinScreen({
             <motion.button
               onClick={handleSendGift}
               whileTap={{ scale: 0.92 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              transition={{ type: "spring", stiffness: 400, damping: 28 }}
               className={cn(
                 "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
                 giftSent
@@ -940,7 +955,7 @@ export function WinScreen({
           <motion.button
             onClick={() => setShowReflection(!showReflection)}
             whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            transition={{ type: "spring", stiffness: 400, damping: 28 }}
             className={cn(
               "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition duration-150",
               showReflection
