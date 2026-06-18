@@ -97,23 +97,23 @@ Every week below is classified **AUTO-BUILD** (everything needed lives in this r
 
 ## 5. Progress log
 
-| Week | Deliverable                              | Moat        | Status                      | Commit                                                |
-| ---- | ---------------------------------------- | ----------- | --------------------------- | ----------------------------------------------------- |
-| W1   | Pantry-aware reranker                    | Data×Engine | ✅ done                     | `252a51f`                                             |
-| W2   | Time/season context rerankers            | Engine      | ✅ done                     | `18c220a`                                             |
-| W3   | Explainable per-dimension why            | Engine      | ⏭️ skipped                  | founder: low value (users don't want the scorer math) |
-| W4   | V3 preference-trainer hardening          | Data        | ✅ V2 already live · V3 cut | eval: V3 −3.6…−5.3pp vs V2                            |
-| W5–6 | Guided-cook coverage growth              | Content     | —                           | —                                                     |
-| W7–8 | Voice-cook pilot (Feature B)             | Content     | —                           | —                                                     |
-| W9   | Streak freeze (earned)                   | Behavioral  | —                           | —                                                     |
-| W10  | Win celebration variants + micro-lesson  | Behavioral  | —                           | —                                                     |
-| W11  | Cook-replay-with-improvement             | Behavioral  | —                           | —                                                     |
-| W12  | Silent progressive difficulty            | Data×Engine | —                           | —                                                     |
-| W13  | Card + kicker primitives                 | Craft       | —                           | —                                                     |
-| W14  | Caption/spacing/motion consistency       | Craft       | —                           | —                                                     |
-| W15  | Test depth (E2E + golden + a11y)         | Reliability | —                           | —                                                     |
-| W16  | Performance pass                         | Reliability | —                           | —                                                     |
-| W17  | Cook Together local core + realtime stub | Network     | —                           | —                                                     |
-| W18  | Group-challenge depth + gifting          | Network     | —                           | —                                                     |
-| W19  | Founder-gated integration prep           | Rails       | —                           | —                                                     |
-| W20  | Hardening + retro                        | Reliability | —                           | —                                                     |
+| Week | Deliverable                              | Moat        | Status                      | Commit                                                             |
+| ---- | ---------------------------------------- | ----------- | --------------------------- | ------------------------------------------------------------------ |
+| W1   | Pantry-aware reranker                    | Data×Engine | ✅ done                     | `252a51f`                                                          |
+| W2   | Time/season context rerankers            | Engine      | ✅ done                     | `18c220a`                                                          |
+| W3   | Explainable per-dimension why            | Engine      | ⏭️ skipped                  | founder: low value (users don't want the scorer math)              |
+| W4   | V3 preference-trainer hardening          | Data        | ✅ V2 already live · V3 cut | eval: V3 −3.6…−5.3pp vs V2                                         |
+| W5–6 | Guided-cook coverage growth              | Content     | 🔄 in progress              | `de56484` (+3 meals: carbonara/tikka-masala/burger, 28→31, 29→32%) |
+| W7–8 | Voice-cook pilot (Feature B)             | Content     | —                           | —                                                                  |
+| W9   | Streak freeze (earned)                   | Behavioral  | —                           | —                                                                  |
+| W10  | Win celebration variants + micro-lesson  | Behavioral  | —                           | —                                                                  |
+| W11  | Cook-replay-with-improvement             | Behavioral  | —                           | —                                                                  |
+| W12  | Silent progressive difficulty            | Data×Engine | —                           | —                                                                  |
+| W13  | Card + kicker primitives                 | Craft       | —                           | —                                                                  |
+| W14  | Caption/spacing/motion consistency       | Craft       | —                           | —                                                                  |
+| W15  | Test depth (E2E + golden + a11y)         | Reliability | —                           | —                                                                  |
+| W16  | Performance pass                         | Reliability | —                           | —                                                                  |
+| W17  | Cook Together local core + realtime stub | Network     | —                           | —                                                                  |
+| W18  | Group-challenge depth + gifting          | Network     | —                           | —                                                                  |
+| W19  | Founder-gated integration prep           | Rails       | —                           | —                                                                  |
+| W20  | Hardening + retro                        | Reliability | —                           | —                                                                  |
