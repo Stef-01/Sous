@@ -8,7 +8,12 @@ import {
 } from "@/lib/nutrition/match-dish-by-text";
 import { extractFoodQuery } from "@/lib/nutrition/extract-food-query";
 import type { BrandedFood } from "@/lib/nutrition/branded-food";
-import { diaryLogBranded, diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
+import {
+  diaryLogBranded,
+  diaryLogCook,
+  lastServingsFor,
+  useDiaryStore,
+} from "@/lib/hooks/use-nutrition-diary";
 import { haptic } from "@/lib/motion/haptics";
 import { toast } from "@/lib/hooks/use-toast";
 
@@ -63,6 +68,15 @@ export interface FrequentChip {
   usual: number;
 }
 
+/** kcal label for a branded food — qualifies with "/ 100 g" when the serving
+ *  size was the 100 g fallback (OFF had no real label serving), so a guessed
+ *  portion isn't presented as fact. */
+function brandedKcalLabel(f: BrandedFood): string {
+  return `${Math.round(f.nutrition.calories)} kcal${
+    f.servingIsFallback ? " / 100 g" : ""
+  }`;
+}
+
 export function LogFood({
   date,
   frequents = [],
@@ -80,6 +94,7 @@ export function LogFood({
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const SR = getSpeechRecognition();
+  const diaryStore = useDiaryStore();
 
   const locals = matchDishesByText(q);
   const multi = matchMultipleByText(q);
@@ -341,7 +356,7 @@ export function LogFood({
             {typeof foundProduct.nutrition.calories === "number" && (
               <span className="text-[var(--nourish-subtext)]">
                 {" "}
-                · {Math.round(foundProduct.nutrition.calories)} kcal
+                · {brandedKcalLabel(foundProduct)}
               </span>
             )}
           </span>
@@ -398,7 +413,9 @@ export function LogFood({
               <li key={m.id}>
                 <button
                   type="button"
-                  onClick={() => logLocal(m.id, m.name)}
+                  onClick={() =>
+                    logLocal(m.id, m.name, lastServingsFor(diaryStore, m.id))
+                  }
                   className="flex w-full items-center gap-2.5 rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-left transition-colors hover:border-[var(--nourish-green)]/50"
                 >
                   <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[var(--nourish-dark)]">
@@ -433,7 +450,7 @@ export function LogFood({
                     )}
                   </span>
                   <span className="shrink-0 text-[12px] text-[var(--nourish-subtext-faint)]">
-                    {Math.round(f.nutrition.calories)} kcal
+                    {brandedKcalLabel(f)}
                   </span>
                   <Plus
                     size={14}

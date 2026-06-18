@@ -18,19 +18,28 @@ export interface BrandedFood {
   brand: string | null;
   /** Grams in one serving (parsed from serving_size, default 100). */
   servingSizeG: number;
+  /** True when servingSizeG is the 100 g FALLBACK (OFF had no usable
+   *  serving_size) rather than a real label serving — the UI then qualifies the
+   *  numbers as "/ 100 g" instead of presenting a guessed portion as fact. */
+  servingIsFallback?: boolean;
   /** Nutrition for ONE serving. */
   nutrition: PerServingNutrition;
 }
 
-/** Parse OFF's free-text serving_size ("110g", "1 cup (240 ml)") → grams. */
-export function parseServingGrams(raw: unknown): number {
-  if (typeof raw !== "string") return 100;
-  const m = raw.match(/([\d.]+)\s*(g|gram|ml)/i);
-  if (m) {
-    const n = Number(m[1]);
-    if (Number.isFinite(n) && n > 0) return n;
+/** Parse OFF's free-text serving_size ("110g", "1 cup (240 ml)") → grams.
+ *  `fallback` is true when nothing parseable was found and 100 g was assumed. */
+export function parseServingGrams(raw: unknown): {
+  grams: number;
+  fallback: boolean;
+} {
+  if (typeof raw === "string") {
+    const m = raw.match(/([\d.]+)\s*(g|gram|ml)/i);
+    if (m) {
+      const n = Number(m[1]);
+      if (Number.isFinite(n) && n > 0) return { grams: n, fallback: false };
+    }
   }
-  return 100;
+  return { grams: 100, fallback: true };
 }
 
 const num = (v: unknown): number =>
@@ -88,7 +97,8 @@ export function mapOffProduct(p: Record<string, unknown>): BrandedFood | null {
   if (!barcode || !name) return null;
   // Require at least calories to be useful.
   if (num(nutriments["energy-kcal_100g"]) <= 0) return null;
-  const servingSizeG = parseServingGrams(p["serving_size"]);
+  const { grams: servingSizeG, fallback: servingIsFallback } =
+    parseServingGrams(p["serving_size"]);
   return {
     barcode,
     name,
@@ -97,6 +107,7 @@ export function mapOffProduct(p: Record<string, unknown>): BrandedFood | null {
         ? p["brands"].split(",")[0].trim()
         : null,
     servingSizeG,
+    servingIsFallback,
     nutrition: brandedNutrition(nutriments, servingSizeG, barcode),
   };
 }

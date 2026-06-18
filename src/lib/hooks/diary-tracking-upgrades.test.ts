@@ -5,6 +5,7 @@ import {
   diaryUpdateServings,
   diaryRemoveEntry,
   diaryRemoveBatch,
+  lastServingsFor,
   dayKey,
   type DiaryEntry,
 } from "./use-nutrition-diary";
@@ -60,6 +61,29 @@ describe("frequentDishes — stage 4 quick-add ranking", () => {
     };
     expect(frequentDishes(store, 6, NOW).map((d) => d.slug)).toEqual(["dish"]);
     expect(frequentDishes(store, 0, NOW)).toEqual([]);
+  });
+});
+
+// Pure — the "usual portion" the search-result logging now reuses (so a
+// habitual ×0.5 lunch logs ×0.5, not ×1). APP-FRICTION-AUDIT P1.
+describe("lastServingsFor", () => {
+  it("returns the most recent entry's servings for a slug", () => {
+    const store = {
+      [back(0)]: [{ ...entry("dal", "2026-06-09T12:00:00Z"), servings: 2 }],
+    };
+    expect(lastServingsFor(store, "dal")).toBe(2);
+  });
+
+  it("returns 1 for a never-logged slug", () => {
+    expect(lastServingsFor({}, "unknown")).toBe(1);
+  });
+
+  it("prefers the newest day when a slug was logged on multiple days", () => {
+    const store = {
+      [back(2)]: [{ ...entry("x", "2026-06-07T10:00:00Z"), servings: 3 }],
+      [back(0)]: [{ ...entry("x", "2026-06-09T10:00:00Z"), servings: 0.5 }],
+    };
+    expect(lastServingsFor(store, "x")).toBe(0.5);
   });
 });
 
