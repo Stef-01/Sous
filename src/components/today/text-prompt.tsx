@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect, useId, useRef } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+} from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Search,
@@ -23,6 +30,8 @@ import {
   type CookTimeFilter,
   type CuisineFilter,
 } from "@/lib/hooks/use-quest-filters";
+import { QuestFilterMenu } from "./quest-filter-menu";
+import type { FilterOption } from "@/components/shared/filter-dropdown";
 
 interface LocalResultAxes {
   label: string;
@@ -211,6 +220,25 @@ export function TextPrompt({
     useCravingHistory();
   const questFilters = useQuestFilters();
 
+  // Cuisine options for the inline filter menu, from the static catalog so we
+  // never offer a cuisine with zero dishes. value = lowercased key, since
+  // matchesFilters compares cuisine.toLowerCase() against filters.cuisines.
+  const cuisineOptions = useMemo<FilterOption<string>[]>(() => {
+    const seen = new Map<string, string>();
+    for (const meal of meals) {
+      const key = meal.cuisine.toLowerCase();
+      if (!seen.has(key)) seen.set(key, meal.cuisine);
+    }
+    for (const side of sides) {
+      const label = getCuisineFromTags(side.tags);
+      const key = label.toLowerCase();
+      if (!seen.has(key)) seen.set(key, label);
+    }
+    return Array.from(seen.entries())
+      .sort((a, b) => a[1].localeCompare(b[1]))
+      .map(([value, label]) => ({ value, label, pillLabel: label }));
+  }, []);
+
   // Debounced local catalog search
   useEffect(() => {
     if (!text.trim()) return;
@@ -268,23 +296,6 @@ export function TextPrompt({
   const showHistory =
     !text && isFocused && historyEntries.length > 0 && !isLoading;
   const showSuggestions = !text && !showHistory && suggestions.length > 0;
-
-  const activeFilterLabel = (() => {
-    const parts: string[] = [];
-    if (questFilters.cookTime !== "any") {
-      parts.push(`≤${questFilters.cookTime} min`);
-    }
-    if (questFilters.cuisines.length === 1) {
-      const c = questFilters.cuisines[0];
-      parts.push(c.charAt(0).toUpperCase() + c.slice(1));
-    } else if (questFilters.cuisines.length > 1) {
-      parts.push(`${questFilters.cuisines.length} cuisines`);
-    }
-    return parts.length > 0 ? parts.join(" · ") : null;
-  })();
-  const clearFilters = useCallback(() => {
-    questFilters.reset();
-  }, [questFilters]);
 
   return (
     <div className="space-y-3">
@@ -423,23 +434,16 @@ export function TextPrompt({
             transition={{ duration: 0.15 }}
             className="space-y-2"
           >
-            {activeFilterLabel && (
-              <button
-                onClick={clearFilters}
-                type="button"
-                className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full",
-                  "border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5",
-                  "px-3 py-1 text-[11px] font-medium text-[var(--nourish-green)]",
-                  "hover:bg-[var(--nourish-green)]/10 transition-colors",
-                )}
-                aria-label="Clear active filters"
-              >
-                <span>Filters on: {activeFilterLabel}</span>
-                <span aria-hidden className="text-[var(--nourish-green)]/70">
-                  ✕ clear
-                </span>
-              </button>
+            {questFilters.activeFilterCount > 0 && (
+              <div className="flex justify-start">
+                {/* The active filter opens the editable menu (not clear-only) —
+                    adjust cuisine/cook-time, or Reset inside the menu. */}
+                <QuestFilterMenu
+                  filters={questFilters}
+                  cuisineOptions={cuisineOptions}
+                  sourceOptions={[]}
+                />
+              </div>
             )}
             {effectiveResults.length > 0 ? (
               (() => {
