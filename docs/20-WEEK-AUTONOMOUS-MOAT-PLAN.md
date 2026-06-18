@@ -55,7 +55,7 @@ Every week below is classified **AUTO-BUILD** (everything needed lives in this r
 
 - **W1 · Pantry-aware reranker** _(Data + Engine)_ — promote ingredient-overlap from a _hint_ (`matchIngredientReuse`) into the ranking itself: sides sharing pantry staples with recent cooks score higher (§6.5, §2.1). Deterministic scorer/post-rank reorder, weight below taste; zero-pantry users get byte-identical results. Unit + golden tests.
 - **W2 · Context rerankers** _(Engine)_ — time-of-day + season reweighting (§6.2): lighter/simpler late-night, warming dishes in winter, all from the device clock + a deterministic season map. Weather stays an opt-in Open-Meteo _adapter stub_ (free, no account) — not required.
-- **W3 · Explainable per-dimension "why"** _(Engine trust)_ — surface the 6-scorer breakdown behind the existing "Why?" expander (progressive disclosure, rule that it stays below the hero). "Acidity cuts the richness · uses your cilantro · 20 min" — transparent, not black-box (§2.4).
+- **W3 · Explainable per-dimension "why"** _(Engine trust)_ — ⏭️ **SKIPPED (founder, 2026-06-18):** low value — users don't want the scorer math behind a "why" expander; the short one-line explanation already shipped is enough. Effort redirected to higher-impact weeks.
 - **W4 · V3 preference-trainer hardening** _(Data)_ — finish the learned weight-vector from cook history (prepped per scout): cold-start = DEFAULT_WEIGHTS (invisible to new users), sharpens silently after ~5 cooks. Golden test: 0-history user is byte-identical to V2.
 
 ### PHASE 2 (W5–W8) — CONTENT moat: guided-cook depth + voice
@@ -97,23 +97,23 @@ Every week below is classified **AUTO-BUILD** (everything needed lives in this r
 
 ## 5. Progress log
 
-| Week | Deliverable                              | Moat        | Status  | Commit    |
-| ---- | ---------------------------------------- | ----------- | ------- | --------- |
-| W1   | Pantry-aware reranker                    | Data×Engine | ✅ done | `252a51f` |
-| W2   | Time/season context rerankers            | Engine      | ✅ done | `18c220a` |
-| W3   | Explainable per-dimension why            | Engine      | —       | —         |
-| W4   | V3 preference-trainer hardening          | Data        | —       | —         |
-| W5–6 | Guided-cook coverage growth              | Content     | —       | —         |
-| W7–8 | Voice-cook pilot (Feature B)             | Content     | —       | —         |
-| W9   | Streak freeze (earned)                   | Behavioral  | —       | —         |
-| W10  | Win celebration variants + micro-lesson  | Behavioral  | —       | —         |
-| W11  | Cook-replay-with-improvement             | Behavioral  | —       | —         |
-| W12  | Silent progressive difficulty            | Data×Engine | —       | —         |
-| W13  | Card + kicker primitives                 | Craft       | —       | —         |
-| W14  | Caption/spacing/motion consistency       | Craft       | —       | —         |
-| W15  | Test depth (E2E + golden + a11y)         | Reliability | —       | —         |
-| W16  | Performance pass                         | Reliability | —       | —         |
-| W17  | Cook Together local core + realtime stub | Network     | —       | —         |
-| W18  | Group-challenge depth + gifting          | Network     | —       | —         |
-| W19  | Founder-gated integration prep           | Rails       | —       | —         |
-| W20  | Hardening + retro                        | Reliability | —       | —         |
+| Week | Deliverable                              | Moat        | Status     | Commit                                                |
+| ---- | ---------------------------------------- | ----------- | ---------- | ----------------------------------------------------- |
+| W1   | Pantry-aware reranker                    | Data×Engine | ✅ done    | `252a51f`                                             |
+| W2   | Time/season context rerankers            | Engine      | ✅ done    | `18c220a`                                             |
+| W3   | Explainable per-dimension why            | Engine      | ⏭️ skipped | founder: low value (users don't want the scorer math) |
+| W4   | V3 preference-trainer hardening          | Data        | —          | —                                                     |
+| W5–6 | Guided-cook coverage growth              | Content     | —          | —                                                     |
+| W7–8 | Voice-cook pilot (Feature B)             | Content     | —          | —                                                     |
+| W9   | Streak freeze (earned)                   | Behavioral  | —          | —                                                     |
+| W10  | Win celebration variants + micro-lesson  | Behavioral  | —          | —                                                     |
+| W11  | Cook-replay-with-improvement             | Behavioral  | —          | —                                                     |
+| W12  | Silent progressive difficulty            | Data×Engine | —          | —                                                     |
+| W13  | Card + kicker primitives                 | Craft       | —          | —                                                     |
+| W14  | Caption/spacing/motion consistency       | Craft       | —          | —                                                     |
+| W15  | Test depth (E2E + golden + a11y)         | Reliability | —          | —                                                     |
+| W16  | Performance pass                         | Reliability | —          | —                                                     |
+| W17  | Cook Together local core + realtime stub | Network     | —          | —                                                     |
+| W18  | Group-challenge depth + gifting          | Network     | —          | —                                                     |
+| W19  | Founder-gated integration prep           | Rails       | —          | —                                                     |
+| W20  | Hardening + retro                        | Reliability | —          | —                                                     |
