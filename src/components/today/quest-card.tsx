@@ -913,7 +913,12 @@ function MealSwipeQueueOverlay({
           <QueueComplete onReset={resetDeck} onClose={onClose} />
         )}
 
-        {activeDish && therapeuticsActive() && (
+        {/* Nutrition Info sheet — ALWAYS available (decoupled from
+            therapeuticsActive: the nutrition preview is a core feature and must
+            never disappear when the clinician therapeutic layer is off — that
+            coupling was the recurring regression). The therapeutic evidence
+            layer inside stays flag-gated via `showTherapeutic`. */}
+        {activeDish && (
           <MealHealthSheet
             key={activeDish.slug}
             dishName={activeDish.dishName}
@@ -923,6 +928,7 @@ function MealSwipeQueueOverlay({
             conditions={careProfile.conditions}
             reviewed={registryIsClinicianApproved()}
             clinicianReview={clinicianReviewMode()}
+            showTherapeutic={therapeuticsActive()}
             isOpen={healthPanel.isOpen}
             onClose={healthPanel.close}
             onDragEnd={healthPanel.onDragEnd}
@@ -940,7 +946,7 @@ function MealSwipeQueueOverlay({
           {/* Floating Info button — anchored just above the recipe name, over the
               photo, so it can never be occluded by this bar. Reveals the health
               sheet. Hidden while the sheet is open. */}
-          {therapeuticsActive() && !healthPanel.isOpen && (
+          {!healthPanel.isOpen && (
             <button
               type="button"
               onClick={healthPanel.open}

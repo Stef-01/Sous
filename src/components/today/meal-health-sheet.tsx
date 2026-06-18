@@ -31,6 +31,9 @@ interface Props {
   reviewed: boolean;
   /** clinicianReviewMode() — personalization visible, badged for evaluation. */
   clinicianReview?: boolean;
+  /** therapeuticsActive() — gates ONLY the therapeutic evidence layer inside the
+   *  panel. Nutrition always shows regardless, so the preview never disappears. */
+  showTherapeutic?: boolean;
   /** Controlled open state (owned by the queue overlay). */
   isOpen: boolean;
   onClose: () => void;
@@ -45,6 +48,7 @@ export function MealHealthSheet({
   conditions,
   reviewed,
   clinicianReview,
+  showTherapeutic = true,
   isOpen,
   onClose,
   onDragEnd,
@@ -92,6 +96,7 @@ export function MealHealthSheet({
                 conditions={conditions}
                 reviewed={reviewed}
                 clinicianReview={clinicianReview}
+                showTherapeutic={showTherapeutic}
               />
             </div>
           </motion.div>

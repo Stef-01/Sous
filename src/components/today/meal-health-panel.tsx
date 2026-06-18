@@ -75,6 +75,10 @@ export interface MealHealthPanelProps {
   /** clinicianReviewMode() — shows personalization for clinician evaluation,
    *  badged "Clinician review" (unreviewed), never "Reviewed". */
   clinicianReview?: boolean;
+  /** therapeuticsActive() — when false, the panel is NUTRITION ONLY: the
+   *  therapeutic evidence deep-dive + the review-status framing are hidden, but
+   *  the macro glance / Sous-read / ring / log always render. Default true. */
+  showTherapeutic?: boolean;
   className?: string;
 }
 
@@ -86,6 +90,7 @@ export function MealHealthPanel({
   conditions,
   reviewed,
   clinicianReview = false,
+  showTherapeutic = true,
   className,
 }: MealHealthPanelProps) {
   const [showEvidence, setShowEvidence] = useState(false);
@@ -226,7 +231,7 @@ export function MealHealthPanel({
       {/* GLANCE — ambient honesty + the review-status pill (R1: glance-visible). */}
       <div className="flex flex-wrap items-center gap-2">
         <HonestyChip />
-        {!reviewed && (
+        {showTherapeutic && !reviewed && (
           <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-medium text-[var(--nourish-subtext)]">
             {clinicianReview
               ? "Clinician review · unreviewed"
@@ -295,26 +300,30 @@ export function MealHealthPanel({
         </div>
       )}
 
-      {/* DEEP-DIVE — clinical evidence + full nutrition, one tap away. */}
-      <div className="border-t border-[var(--nourish-border)] pt-1">
-        <button
-          type="button"
-          onClick={() => setShowEvidence((s) => !s)}
-          aria-expanded={showEvidence}
-          className="flex w-full items-center justify-between py-2 text-[13px] font-semibold text-[var(--nourish-dark)]"
-        >
-          Evidence &amp; full nutrition
-          <ChevronDown
-            size={16}
-            className={cn(
-              "text-[var(--nourish-subtext)] transition-transform",
-              showEvidence && "rotate-180",
-            )}
-            aria-hidden
-          />
-        </button>
-        {showEvidence && <div className="mt-2">{evidenceBlock}</div>}
-      </div>
+      {/* DEEP-DIVE — therapeutic evidence + full nutrition. Gated by the
+          therapeutics flag; when off, the panel above is the full (nutrition)
+          experience and this clinician layer is hidden. */}
+      {showTherapeutic && (
+        <div className="border-t border-[var(--nourish-border)] pt-1">
+          <button
+            type="button"
+            onClick={() => setShowEvidence((s) => !s)}
+            aria-expanded={showEvidence}
+            className="flex w-full items-center justify-between py-2 text-[13px] font-semibold text-[var(--nourish-dark)]"
+          >
+            Evidence &amp; full nutrition
+            <ChevronDown
+              size={16}
+              className={cn(
+                "text-[var(--nourish-subtext)] transition-transform",
+                showEvidence && "rotate-180",
+              )}
+              aria-hidden
+            />
+          </button>
+          {showEvidence && <div className="mt-2">{evidenceBlock}</div>}
+        </div>
+      )}
     </section>
   );
 }

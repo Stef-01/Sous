@@ -200,11 +200,13 @@ export function DobermanAvatar({
       onClick={onClick}
       whileTap={{ scale: 0.85 }}
       transition={{ type: "spring", stiffness: 400, damping: 15 }}
-      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--nourish-green)]/15 bg-[var(--nourish-green)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      className="flex h-[124px] w-[124px] items-center justify-center rounded-full border border-[var(--nourish-green)]/15 bg-[var(--nourish-green)]/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       type="button"
       aria-label={ariaLabel}
     >
-      <DobermanGlyph mood={mood} />
+      {/* 280% bigger (founder, 2026-06-18) — the Doberman is the brand mascot;
+          make it a prominent presence in the header, not a tiny corner icon. */}
+      <DobermanGlyph mood={mood} size={72} />
     </motion.button>
   );
 }
