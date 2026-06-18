@@ -38,8 +38,11 @@ export const DISH_SERVINGS: Record<string, number> = {
   // base would default to 4 and disagree with the seed's authored 5.
   "air-fryer-edamame": 5,
   // Viral recipes (founder-provided 2026-06-18) — yields match their seeds.
+  // (taco bowls is a single-serving meal with no MEAL_INGREDIENTS list, so the
+  // link generator reads its base here too.)
   "viral-caramelized-sweet-potatoes": 4,
   "scoopable-matcha-pistachio-chia-pudding": 2,
+  "viral-hot-honey-beef-taco-bowls": 1,
   // Snack / dumpling platters that stretch further.
   "bao-buns": 6,
   churros: 6,

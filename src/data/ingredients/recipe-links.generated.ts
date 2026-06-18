@@ -275,6 +275,29 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "avocado", grams: 50.25, isOptional: false },
     ],
   },
+  "viral-caramelized-sweet-potatoes": {
+    recipeSlug: "viral-caramelized-sweet-potatoes",
+    servingsPerRecipe: 4,
+    originalLineCount: 6,
+    lines: [
+      { ingredientId: "sweet-potato", grams: 260, isOptional: false },
+      { ingredientId: "olive-oil", grams: 13.5, isOptional: false },
+      { ingredientId: "garlic", grams: 2.83, isOptional: false },
+      { ingredientId: "table-salt", grams: 6.08, isOptional: false },
+      { ingredientId: "black-pepper", grams: 1.2, isOptional: false },
+      { ingredientId: "paprika", grams: 2.25, isOptional: false },
+    ],
+  },
+  "scoopable-matcha-pistachio-chia-pudding": {
+    recipeSlug: "scoopable-matcha-pistachio-chia-pudding",
+    servingsPerRecipe: 2,
+    originalLineCount: 7,
+    lines: [
+      { ingredientId: "chia-seeds", grams: 56, isOptional: false },
+      { ingredientId: "greek-yogurt", grams: 183.75, isOptional: false },
+      { ingredientId: "milk", grams: 244, isOptional: false },
+    ],
+  },
   "black-bean-brownies": {
     recipeSlug: "black-bean-brownies",
     servingsPerRecipe: 4,
@@ -3683,6 +3706,23 @@ export const RECIPE_LINKS: Record<string, RecipeIngredientLink> = {
       { ingredientId: "heavy-cream", grams: 119, isOptional: false },
       { ingredientId: "cilantro", grams: 4, isOptional: false },
       { ingredientId: "tortilla", grams: 240, isOptional: false },
+    ],
+  },
+  "viral-hot-honey-beef-taco-bowls": {
+    recipeSlug: "viral-hot-honey-beef-taco-bowls",
+    servingsPerRecipe: 1,
+    originalLineCount: 10,
+    lines: [
+      { ingredientId: "ground-beef", grams: 150, isOptional: false },
+      { ingredientId: "sweet-potato", grams: 200, isOptional: false },
+      { ingredientId: "avocado", grams: 60, isOptional: false },
+      { ingredientId: "greek-yogurt", grams: 0, isOptional: false },
+      { ingredientId: "honey", grams: 21.19, isOptional: false },
+      { ingredientId: "sriracha", grams: 4.79, isOptional: false },
+      { ingredientId: "tomato", grams: 3.75, isOptional: false },
+      { ingredientId: "cayenne", grams: 0.94, isOptional: false },
+      { ingredientId: "sweet-potato", grams: 2.77, isOptional: false },
+      { ingredientId: "lime-juice", grams: 0, isOptional: true },
     ],
   },
   "chicken-adobo": {
