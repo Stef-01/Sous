@@ -12,9 +12,10 @@
  *
  * Provenance: glyphs marked `(lucide)` vendor path data from lucide-react
  * (v0.460.0, ISC license — https://lucide.dev) so the standard shapes match a
- * battle-tested icon set; the cuisine-specific glyphs lucide lacks (sushi,
- * taco, takeout, pho, noodles, curry, rice, bread) are authored here in the
- * same grammar. Each glyph is visually verified at render size.
+ * battle-tested icon set; the cuisine- and dish-type glyphs lucide lacks (sushi,
+ * taco, takeout, pho, noodles, curry, rice, bread, pizza, burger, bowl,
+ * dumpling) are authored here in the same grammar. Each glyph is visually
+ * verified at render size.
  */
 
 import type { SVGProps } from "react";
@@ -42,7 +43,12 @@ export type FoodGlyphName =
   | "pasta"
   | "taco"
   | "rice"
-  | "bread";
+  | "bread"
+  // dish-type (authored) — give image-less Western + bowl dishes their own read
+  | "pizza"
+  | "burger"
+  | "bowl"
+  | "dumpling";
 
 /** A primitive SVG element: [tag, attributes]. Mirrors lucide's data shape so
  *  vendored glyphs can be pasted verbatim and the renderer stays trivial. */
@@ -217,6 +223,38 @@ export const FOOD_GLYPHS: Record<FoodGlyphName, GlyphPart[]> = {
       "M4 14a8 5 0 0 1 16 0v.6a1.6 1.6 0 0 1-1.6 1.6H5.6A1.6 1.6 0 0 1 4 14.6Z",
     ),
     p("M8.6 11.4 7.4 13.6M12 11 10.8 13.6M15.4 11.4 14.2 13.6"),
+  ],
+
+  /** Pizza slice — crust dome over a wedge with three pepperoni. (pizza) */
+  pizza: [
+    p("M4 8h16l-7.18 12.02a1 1 0 0 1-1.64 0Z"),
+    p("M4 8a8.5 3.4 0 0 1 16 0"),
+    ["circle", { cx: 10, cy: 11.2, r: 0.9 }],
+    ["circle", { cx: 13.6, cy: 11.6, r: 0.9 }],
+    ["circle", { cx: 12, cy: 14.6, r: 0.9 }],
+  ],
+
+  /** Stacked burger — top bun, patty, lettuce wave, bottom bun. (burger) */
+  burger: [
+    p("M5 10a7 3.4 0 0 1 14 0Z"),
+    p("M4.6 12.6h14.8"),
+    p("M5.4 15q2 1.2 4.2 0 2.2-1.2 4.2 0 2 1.2 4 0"),
+    p("M5 17a7 2.6 0 0 0 14 0"),
+  ],
+
+  /** Grain / poke bowl — the shared bowl with three toppings. (bowl) */
+  bowl: [
+    ...BOWL,
+    ["circle", { cx: 9, cy: 14, r: 1.2 }],
+    ["circle", { cx: 12.4, cy: 14.4, r: 1.2 }],
+    ["circle", { cx: 15.4, cy: 13.6, r: 1 }],
+  ],
+
+  /** Pleated half-moon dumpling. (dumpling / gyoza / potsticker) */
+  dumpling: [
+    p("M5 15.5a7 5.2 0 0 1 14 0Z"),
+    p("M5 15.5h14"),
+    p("M8 15.5v-2.3M11 15.5v-3M14 15.5v-2.3"),
   ],
 };
 

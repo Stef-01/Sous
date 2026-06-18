@@ -25,12 +25,20 @@ const CUISINE_GLYPHS: Readonly<Record<string, FoodGlyphName>> = {
   italian: "pasta",
   mexican: "taco",
   mediterranean: "salad",
+  american: "burger",
 };
 
-/** Dish-type tag groups → glyph, in `getDishEmoji` order (first match wins). */
+/** Dish-type tag groups → glyph (first match wins). Specific dish shapes
+ *  (pizza/burger/taco/dumpling/bowl) lead so a typed dish gets its own read
+ *  before the broad ingredient buckets. */
 const TYPE_GLYPH_RULES: ReadonlyArray<
   readonly [readonly string[], FoodGlyphName]
 > = [
+  [["pizza"], "pizza"],
+  [["burger", "cheeseburger", "patty", "slider"], "burger"],
+  [["taco", "tacos", "quesadilla"], "taco"],
+  [["dumpling", "dumplings", "gyoza", "potsticker", "wonton"], "dumpling"],
+  [["bowl", "poke", "grain bowl", "buddha bowl"], "bowl"],
   [["salad", "fresh", "raw", "green", "greens"], "salad"],
   [["soup", "broth", "stew"], "soup"],
   [["rice", "fried rice"], "rice"],
@@ -48,20 +56,18 @@ export function getCuisineGlyph(cuisine: string): FoodGlyphName | null {
   return CUISINE_GLYPHS[cuisine.trim().toLowerCase()] ?? null;
 }
 
-/** The best glyph for a dish: cuisine first (matches `getDishEmoji`), then dish
- *  type, else `null`. */
+/** The best glyph for a dish: dish TYPE first (so two dishes in the same cuisine
+ *  look distinct — a grilled fish reads as fish, not the cuisine default), then
+ *  the cuisine glyph as a fallback, else `null`. */
 export function getDishGlyph(
   tags: string[],
   cuisine: string,
 ): FoodGlyphName | null {
-  const cuisineGlyph = getCuisineGlyph(cuisine);
-  if (cuisineGlyph) return cuisineGlyph;
-
   const lower = tags.map((t) => t.toLowerCase());
   for (const [keys, glyph] of TYPE_GLYPH_RULES) {
     if (lower.some((t) => keys.includes(t))) return glyph;
   }
-  return null;
+  return getCuisineGlyph(cuisine);
 }
 
 /** Exposed for the completeness test (every value must be a registered glyph). */

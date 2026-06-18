@@ -11,8 +11,8 @@ describe("FOOD_GLYPHS registry", () => {
     );
   });
 
-  it("registers the full W2 set", () => {
-    expect(FOOD_GLYPH_NAMES.length).toBeGreaterThanOrEqual(19);
+  it("registers the full set (W2 + the dish-type additions)", () => {
+    expect(FOOD_GLYPH_NAMES.length).toBeGreaterThanOrEqual(23);
   });
 
   describe.each(FOOD_GLYPH_NAMES)("%s", (name) => {

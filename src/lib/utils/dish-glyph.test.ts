@@ -28,15 +28,20 @@ describe("getCuisineGlyph", () => {
   });
 });
 
-describe("getDishGlyph precedence (mirrors getDishEmoji)", () => {
-  it("cuisine wins over dish-type tags", () => {
-    // getDishEmoji returns the cuisine emoji before the type emoji; the glyph
-    // mapping must keep that order.
-    expect(getDishGlyph(["soup"], "italian")).toBe("pasta");
-    expect(getDishGlyph(["grilled", "beef"], "thai")).toBe("noodles");
+describe("getDishGlyph precedence (dish-type first, cuisine fallback)", () => {
+  it("dish-type tags win over the cuisine default (variety within a cuisine)", () => {
+    expect(getDishGlyph(["soup"], "italian")).toBe("soup");
+    expect(getDishGlyph(["grilled", "beef"], "thai")).toBe("flame");
+    expect(getDishGlyph(["pizza"], "american")).toBe("pizza");
   });
 
-  it("falls back to dish type when the cuisine is unknown", () => {
+  it("falls back to the cuisine glyph when no dish-type tag matches", () => {
+    expect(getDishGlyph(["savory", "rich"], "italian")).toBe("pasta");
+    expect(getDishGlyph([], "vietnamese")).toBe("pho");
+    expect(getDishGlyph(["mystery"], "american")).toBe("burger");
+  });
+
+  it("uses dish type when the cuisine is unknown", () => {
     expect(getDishGlyph(["soup"], "")).toBe("soup");
     expect(getDishGlyph(["grilled"], "fusion")).toBe("flame");
     expect(getDishGlyph(["seafood"], "")).toBe("fish");
@@ -46,7 +51,7 @@ describe("getDishGlyph precedence (mirrors getDishEmoji)", () => {
     expect(getDishGlyph(["DESSERT"], "")).toBe("dessert");
   });
 
-  it("returns null when nothing matches", () => {
+  it("returns null when nothing matches and the cuisine is unmapped", () => {
     expect(getDishGlyph(["mystery"], "")).toBeNull();
     expect(getDishGlyph([], "")).toBeNull();
   });

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils/cn";
 import { FoodGlyph } from "@/components/icons/food-glyphs";
-import { getCuisineGlyph } from "@/lib/utils/dish-glyph";
+import { getDishGlyph } from "@/lib/utils/dish-glyph";
 import type { QuestDish } from "./quest-card";
 import { recipeCreditShort } from "@/lib/utils/recipe-credit";
 
@@ -29,6 +29,7 @@ const CUISINE_GRADIENTS: Record<string, string> = {
   mexican: "linear-gradient(135deg, #00b894 0%, #f1f1f1 50%, #d63031 100%)",
   mediterranean:
     "linear-gradient(135deg, #0984e3 0%, #74b9ff 40%, #ffeaa7 100%)",
+  american: "linear-gradient(135deg, #b23b3b 0%, #efe9dd 50%, #2e5a8c 100%)",
 };
 
 function getCuisineGradient(cuisine: string): string {
@@ -48,10 +49,16 @@ export function cuisineAccent(
   return g?.match(/#[0-9a-fA-F]{6}/)?.[0] ?? null;
 }
 
-function CuisineFallbackIcon({ cuisine }: { cuisine: string }) {
-  // Distinct line-art glyph per cuisine (planning.md §6.2 W2), replacing the
-  // old four-lucide-icon map that reused the same icon across many cuisines.
-  const glyph = getCuisineGlyph(cuisine) ?? "utensils";
+function CuisineFallbackIcon({
+  cuisine,
+  tags,
+}: {
+  cuisine: string;
+  tags: string[];
+}) {
+  // The dish's OWN glyph (type-first, cuisine as fallback) so two image-less
+  // dishes in the same cuisine look distinct — not all "pho". Falls to utensils.
+  const glyph = getDishGlyph(tags, cuisine) ?? "utensils";
   return (
     <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
       <FoodGlyph
@@ -84,7 +91,7 @@ export function DishImage({
         className="absolute inset-0 flex flex-col items-center justify-center gap-4"
         style={{ background: getCuisineGradient(dish.cuisineFamily) }}
       >
-        <CuisineFallbackIcon cuisine={dish.cuisineFamily} />
+        <CuisineFallbackIcon cuisine={dish.cuisineFamily} tags={dish.tags} />
         <span className="max-w-[18rem] px-8 text-center text-lg font-semibold text-white/90">
           {dish.dishName}
         </span>
