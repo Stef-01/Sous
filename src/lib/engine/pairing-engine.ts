@@ -32,6 +32,11 @@ import {
   DEFICIENCY_FILL_WEIGHT,
   type DeficiencyContext,
 } from "./scorers/deficiency-fill";
+import {
+  scoreContextFit,
+  CONTEXT_FIT_WEIGHT,
+  type ContextFitContext,
+} from "./scorers/context-fit";
 import { getDishNutrition, NUTRITION_COVERAGE_FLOOR } from "./dish-nutrition";
 import {
   therapeuticsActive,
@@ -206,6 +211,39 @@ function reblendDeficiency(
 }
 
 /**
+ * Re-blend a base ranking with context-fit (W2 — time-of-day + season). Same
+ * shape as the pantry/deficiency reblends: scale the base by (1 − wC), add the
+ * gentle context signal at wC, as a post-rank pass. Caller supplies the context
+ * only when it has the client's local clock, so this never runs on the default
+ * path → byte-identical rankings. Applied after pantry/deficiency but before
+ * therapeutic, so clinician fit still dominates when active.
+ */
+function reblendContextFit(
+  ranked: ScoredCandidate[],
+  ctx: ContextFitContext,
+): ScoredCandidate[] {
+  const wC = CONTEXT_FIT_WEIGHT;
+  const blended = ranked.map((c) => {
+    const cf = scoreContextFit(c.sideDish, ctx);
+    return {
+      ...c,
+      scores: { ...c.scores, contextFit: cf },
+      totalScore: (1 - wC) * c.totalScore + wC * cf,
+    };
+  });
+  blended.sort((a, b) => {
+    const diff = b.totalScore - a.totalScore;
+    if (Math.abs(diff) > 0.001) return diff;
+    return a.sideDish.slug < b.sideDish.slug
+      ? -1
+      : a.sideDish.slug > b.sideDish.slug
+        ? 1
+        : 0;
+  });
+  return blended;
+}
+
+/**
  * Main entry point: suggest the top 3 side dishes for a main dish.
  *
  * @param main - Parsed main dish intent (from craving parser or photo recognition)
@@ -247,6 +285,7 @@ export function suggestSides(
   therapeutic?: TherapeuticContext,
   pantry?: PantryReuseContext,
   deficiency?: DeficiencyContext,
+  context?: ContextFitContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -304,6 +343,15 @@ export function suggestSides(
   // nutrient gaps. No-op on the default path → byte-identical rankings.
   if (deficiency && deficiency.deficits.size > 0) {
     finalRanked = reblendDeficiency(finalRanked, deficiency);
+  }
+
+  // Context-fit reblend (W2 — time-of-day + season): only when the caller
+  // supplied the client's local clock. No-op on the default path →
+  // byte-identical rankings. NB: the live `seasonal` base scorer carries the
+  // bulk of season; this adds the missing time-of-day signal + a light season
+  // nudge (kept gentle so the two don't double-count). See scorers/context-fit.
+  if (context) {
+    finalRanked = reblendContextFit(finalRanked, context);
   }
 
   // Therapeutic re-blend = PERSONALIZATION → clinician-only (G1), stricter than

@@ -225,6 +225,16 @@ function TodayPageContent() {
     return rec;
   }, [cookedDayNutrition]);
 
+  // W2 context-fit: the client's local clock (hour + month), captured ONCE at
+  // mount via a lazy initializer — the one legitimate impure Date read, kept
+  // out of render (react-compiler) like the week-view's slot read. Feeds the
+  // pairing query so late-night/morning favor lighter sides + season nudges
+  // temperature; it never renders, so hydration is unaffected.
+  const [localClock] = useState(() => {
+    const d = new Date();
+    return { hour: d.getHours(), month: d.getMonth() };
+  });
+
   const { pullState, setRef: setPullRef } = usePullToRefresh({
     onRefresh: () => setQuestKey((k) => k + 1),
     disabled: showSearch,
@@ -373,6 +383,10 @@ function TodayPageContent() {
       // W5 budget signal — omitted unless set, so the query key (and ranking)
       // is unchanged for non-budget users.
       budgetSensitive: budgetSensitive || undefined,
+      // W2 context-fit: local clock → late-night/morning favor lighter sides,
+      // season nudges temperature.
+      localHour: localClock.hour,
+      localMonth: localClock.month,
     },
     {
       enabled:
@@ -932,6 +946,8 @@ function TodayPageContent() {
                     recentCookSlugs.length > 0 ? recentCookSlugs : undefined
                   }
                   dayDeficits={dayDeficits}
+                  localHour={localClock.hour}
+                  localMonth={localClock.month}
                 />
               )}
 

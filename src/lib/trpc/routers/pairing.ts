@@ -17,6 +17,7 @@ import {
 } from "@/lib/engine/scorers/pantry-reuse";
 import type { PantryReuseContext } from "@/lib/engine/scorers/pantry-reuse";
 import type { DeficiencyContext } from "@/lib/engine/scorers/deficiency-fill";
+import type { ContextFitContext } from "@/lib/engine/scorers/context-fit";
 import { resolveMealSlug } from "@/data/index";
 import type { SideDishCandidate } from "@/lib/engine/types";
 import {
@@ -199,6 +200,20 @@ function buildDeficiencyContext(
   return deficits.size > 0 ? { deficits } : undefined;
 }
 
+/**
+ * W2: build the context-fit context from the client's local clock. Returns
+ * `undefined` when the client didn't send the clock, so the engine skips the
+ * reblend and rankings stay byte-identical. Primitives only (no Date) keep the
+ * tRPC contract clean + the engine pure.
+ */
+function buildContextFitContext(
+  localHour: number | undefined,
+  localMonth: number | undefined,
+): ContextFitContext | undefined {
+  if (localHour == null || localMonth == null) return undefined;
+  return { hour: localHour, month: localMonth };
+}
+
 export const pairingRouter = router({
   // Craving parse calls Claude — bucket suggest + rerollSide together so a
   // single device can't burn the AI budget. Generous for real use, caps abuse.
@@ -242,6 +257,11 @@ export const pairingRouter = router({
          *  deficit weight 0..1) from the user's diary. Sides that best close
          *  the gaps are nudged up. Absent/empty → byte-identical ranking. */
         dayDeficits: z.record(z.number().min(0).max(1)).optional(),
+        /** W2 context-fit — the client's local clock (hour 0-23, month 0-11).
+         *  Late-night/morning favor lighter/simpler sides; winter→warm,
+         *  summer→cold. Both absent → byte-identical ranking. */
+        localHour: z.number().int().min(0).max(23).optional(),
+        localMonth: z.number().int().min(0).max(11).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -314,6 +334,7 @@ export const pairingRouter = router({
         undefined,
         pantry,
         deficiency,
+        buildContextFitContext(input.localHour, input.localMonth),
       );
 
       if (!result.success) {
@@ -383,6 +404,8 @@ export const pairingRouter = router({
         recentCookSlugs: z.array(z.string().max(120)).max(50).optional(),
         dayDeficits: z.record(z.number().min(0).max(1)).optional(),
         budgetSensitive: z.boolean().optional(),
+        localHour: z.number().int().min(0).max(23).optional(),
+        localMonth: z.number().int().min(0).max(11).optional(),
       }),
     )
     .query(async ({ input }) => {
@@ -426,6 +449,7 @@ export const pairingRouter = router({
           input.budgetSensitive,
         ),
         buildDeficiencyContext(input.dayDeficits),
+        buildContextFitContext(input.localHour, input.localMonth),
       );
 
       if (!result.success || result.data.sides.length === 0) {

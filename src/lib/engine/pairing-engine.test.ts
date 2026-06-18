@@ -488,6 +488,51 @@ describe("suggestSides (integration)", () => {
     }
   });
 
+  it("context reblend is byte-identical when absent (W2 golden)", () => {
+    // No context arg leaves the ranking untouched — same guarantee as the
+    // pantry/deficiency goldens.
+    const base = suggestSides(chickenMain, allCandidates);
+    const noCtx = suggestSides(
+      chickenMain,
+      allCandidates,
+      undefined,
+      undefined,
+      3,
+      undefined,
+      undefined,
+      undefined,
+      undefined, // context
+    );
+    expect(noCtx).toEqual(base);
+  });
+
+  it("context reblend (active) tags every side with contextFit (W2)", () => {
+    const base = suggestSides(chickenMain, allCandidates);
+    const withCtx = suggestSides(
+      chickenMain,
+      allCandidates,
+      undefined,
+      undefined,
+      3,
+      undefined,
+      undefined,
+      undefined,
+      { hour: 23, month: 0 }, // late-night, winter
+    );
+    expect(base.success && withCtx.success).toBe(true);
+    if (base.success && withCtx.success) {
+      // Default path never sets contextFit; the active path sets it on every side.
+      expect(
+        base.data.sides.every((s) => s.scores.contextFit === undefined),
+      ).toBe(true);
+      expect(
+        withCtx.data.sides.every(
+          (s) => typeof s.scores.contextFit === "number",
+        ),
+      ).toBe(true);
+    }
+  });
+
   it("scores raita highly for butter chicken (cooling contrast + same cuisine)", () => {
     const result = suggestSides(chickenMain, allCandidates);
     if (result.success) {

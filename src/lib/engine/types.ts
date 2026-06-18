@@ -55,6 +55,9 @@ export interface ScoreBreakdown {
   /** Deficiency-fill (W29). Only set when the caller supplies the day's nutrient
    *  deficits; absent on the default (nothing-logged) path. */
   deficiencyFill?: number;
+  /** Context-fit (W2 — time-of-day + season). Only set when the caller supplies
+   *  the local clock; absent on the default path. */
+  contextFit?: number;
 }
 
 export interface ScoredCandidate {
@@ -73,13 +76,13 @@ export interface Scorer {
   ): number;
 }
 
-/** The 8 base weight dimensions, all required. `therapeuticFit`, `pantryReuse`
- *  and `deficiencyFill` are excluded — they are post-rank reblend dimensions,
- *  not base ranker weights. */
+/** The 8 base weight dimensions, all required. `therapeuticFit`, `pantryReuse`,
+ *  `deficiencyFill` and `contextFit` are excluded — they are post-rank reblend
+ *  dimensions, not base ranker weights. */
 export type BaseWeights = Record<
   Exclude<
     keyof ScoreBreakdown,
-    "therapeuticFit" | "pantryReuse" | "deficiencyFill"
+    "therapeuticFit" | "pantryReuse" | "deficiencyFill" | "contextFit"
   >,
   number
 >;

@@ -65,6 +65,10 @@ interface ResultStackProps {
   pantryOnHand?: string[];
   recentCookSlugs?: string[];
   dayDeficits?: Record<string, number>;
+  /** W2 context-fit — local clock so a rerolled side honours the same
+   *  time-of-day + season nudge as the original plate. */
+  localHour?: number;
+  localMonth?: number;
 }
 
 export function buildSideMetaLine(input: {
@@ -108,6 +112,8 @@ export function ResultStack({
   pantryOnHand,
   recentCookSlugs,
   dayDeficits,
+  localHour,
+  localMonth,
 }: ResultStackProps) {
   const reducedMotion = useReducedMotion();
   // W5: a "searching / decision fatigue" signal calms the plate — the
@@ -168,6 +174,8 @@ export function ResultStack({
       pantryOnHand,
       recentCookSlugs,
       dayDeficits,
+      localHour,
+      localMonth,
       budgetSensitive: budgetSensitive || undefined,
     },
     {

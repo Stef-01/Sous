@@ -61,6 +61,13 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "fills a nutrient gap from today",
     mid: "helps round out today's nutrition",
   },
+  // Context-fit (W2 — time-of-day + season). Surfaces the contextual reason
+  // when a side suits the moment (lighter late at night, warming in winter).
+  // Only reached when the client's local clock was supplied to the engine.
+  contextFit: {
+    high: "right for the time of day",
+    mid: "suits the season",
+  },
 };
 
 /**
