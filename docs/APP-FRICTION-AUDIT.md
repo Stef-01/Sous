@@ -31,14 +31,14 @@ fix. Tick as shipped.
 
 ## P2 — polish / cohesion
 
-- [ ] Extract one `<SettingToggle>` primitive (6 toggles drift: spring vs CSS, off-color, knob travel).
-- [ ] Pantry manual-add writes no inventory (qty/kcal pill asymmetry vs AI import).
-- [ ] Pantry Mode invisible from the Pantry page (add a status line/link).
-- [ ] "Browse 18 meals" count is a meaningless cap (~281 dishes) — show remaining or drop the number.
-- [ ] Stale Path loading skeleton depicts the old layout → layout-shift flash.
-- [ ] Replace raw `window.confirm` (week/pantry/shopping clears) with the in-app toast-undo.
-- [ ] Content "Watch" nav pill silently route-changes while siblings scroll.
-- [ ] Two "Eat out" entry points with different interaction models.
+- [x] Extract one `<SettingToggle>` primitive (`85a6065`) — all 6 toggles now share one canonical switch (48×28 / 24px knob, CSS-transform, reduced-motion-free).
+- [ ] **Pantry manual-add writes no inventory (qty/kcal pill asymmetry).** Awaiting founder decision: the engine never reads pantry qty/kcal (display-only), so the appraisal recommends LEVELLING DOWN — drop the AI-import qty/kcal pill so both add-paths render identically (vs levelling up: a heavier manual-add form, rule-13 cost). Either removes/changes founder-built display → founder's call.
+- [x] Pantry Mode invisible from the Pantry page (`952f094`) — tappable status line on the pantry page.
+- [x] "Browse N meals" meaningless cap (`952f094`) — dropped the number → "Browse meals".
+- [x] Stale Path loading skeleton (`9ed53d7`) — rewritten to trace the current collapsed layout.
+- [x] Replace raw `window.confirm` with in-app toast-undo (`4542f56`) — week/pantry/shopping, all with restore.
+- [x] Content "Watch" nav pill route-change (`9ed53d7`) — now scrolls to the rail like its siblings; reels feed still reachable.
+- [ ] **Two "Eat out" entry points with different interaction models.** Awaiting founder decision: deck tab (swipe-to-log) vs `/eat-out` page (browse→sheet→tap-log) — BOTH founder-directed within a week of each other. Appraisal recommends Option 1 (drop the deck tab, keep the page) under rules 1/2/6, but the inverse is defensible → founder's call.
 
 ## Confirmed excellent (do not regress)
 
