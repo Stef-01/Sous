@@ -35,13 +35,21 @@ export function FullscreenSwipeCard({
   stackIndex,
   isTop,
   exitDirection,
+  exitX = 0,
+  exitDurationS = QUEUE_EXIT_MS / 1000,
   onSwipe,
 }: {
   dish: QuestDish;
   stackIndex: number;
   isTop: boolean;
   exitDirection: "left" | "right" | null;
-  onSwipe: (direction: "left" | "right") => void;
+  /** Signed px the card flies on exit. The overlay velocity-boosts this so a
+   *  hard fling rockets off-screen and a gentle release drifts (R3). */
+  exitX?: number;
+  /** Exit duration (s) — shorter for a fast fling, capped at QUEUE_EXIT_MS so
+   *  the deck-advance timeout always outlasts the animation. */
+  exitDurationS?: number;
+  onSwipe: (direction: "left" | "right", velocityX?: number) => void;
 }) {
   const reducedMotion = useReducedMotion();
   const x = useMotionValue(0);
@@ -81,7 +89,7 @@ export function FullscreenSwipeCard({
     const strongVelocity = Math.abs(info.velocity.x) > 650;
     const farEnough = Math.abs(info.offset.x) > FULLSCREEN_SWIPE_THRESHOLD;
     if (farEnough || (strongVelocity && Math.abs(info.offset.x) > 42)) {
-      onSwipe(info.offset.x > 0 ? "right" : "left");
+      onSwipe(info.offset.x > 0 ? "right" : "left", info.velocity.x);
     }
   };
 
@@ -117,12 +125,7 @@ export function FullscreenSwipeCard({
         reducedMotion
           ? { opacity: 0, transition: { duration: QUEUE_EXIT_MS / 1000 } }
           : {
-              x:
-                exitDirection === "right"
-                  ? 420
-                  : exitDirection === "left"
-                    ? -420
-                    : 0,
+              x: exitX,
               rotate:
                 exitDirection === "right"
                   ? 18
@@ -130,7 +133,9 @@ export function FullscreenSwipeCard({
                     ? -18
                     : 0,
               opacity: 0,
-              transition: { duration: QUEUE_EXIT_MS / 1000, ease: "easeIn" },
+              // easeOut, not easeIn: a flung card is already moving fast at
+              // release, so it should coast off-screen, not pause-then-accelerate.
+              transition: { duration: exitDurationS, ease: "easeOut" },
             }
       }
       transition={

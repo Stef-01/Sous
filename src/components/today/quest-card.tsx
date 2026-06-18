@@ -753,9 +753,12 @@ function MealSwipeQueueOverlay({
   // §6.2 deck-exhaust anchor — fire onDeckExhausted once per browse session.
   const exhaustedRef = useRef(false);
   const { profile: careProfile } = useCareProfile();
+  const reducedMotion = useReducedMotion();
   const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(
     null,
   );
+  // Fling velocity captured at release — drives a velocity-matched card exit (R3).
+  const [exitVelocity, setExitVelocity] = useState(0);
   const [initialTotal, setInitialTotal] = useState(() => dishes.length);
   const haptic = useHaptic();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -770,6 +773,7 @@ function MealSwipeQueueOverlay({
     setUnswiped(dishes);
     setDismissed([]);
     setExitDirection(null);
+    setExitVelocity(0);
     setInitialTotal(dishes.length);
     exhaustedRef.current = false;
   }, [dishes, onResetProgress]);
@@ -799,9 +803,10 @@ function MealSwipeQueueOverlay({
     : 1;
 
   const swipeTop = useCallback(
-    (direction: "left" | "right") => {
+    (direction: "left" | "right", velocityX = 0) => {
       if (!activeDish || exitDirection) return;
       haptic();
+      setExitVelocity(velocityX);
       setExitDirection(direction);
 
       const dishToMove = activeDish;
@@ -816,6 +821,7 @@ function MealSwipeQueueOverlay({
         } else {
           setDismissed((prev) => [dishToMove, ...prev]);
           setExitDirection(null);
+          setExitVelocity(0);
         }
       }, QUEUE_EXIT_MS);
       timersRef.current.push(id);
@@ -854,6 +860,17 @@ function MealSwipeQueueOverlay({
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [activeDish, onClose, saveActive, swipeTop]);
+
+  // Velocity-matched exit (R3): distance grows with the fling (up to ~520px) and
+  // duration shrinks (down to 150ms), so a hard fling rockets the card off-screen
+  // while a gentle release drifts. Clamped under QUEUE_EXIT_MS so the deck-advance
+  // timeout always outlasts the animation.
+  const exitX = exitDistanceFor(exitDirection, exitVelocity);
+  const exitDurationS = Math.max(
+    0.15,
+    QUEUE_EXIT_MS / 1000 -
+      (Math.min(Math.abs(exitVelocity), 2200) / 2200) * 0.09,
+  );
 
   return (
     <motion.div
@@ -897,18 +914,34 @@ function MealSwipeQueueOverlay({
 
       <div className="relative min-h-0 flex-1">
         {activeDish ? (
-          <AnimatePresence mode="popLayout">
-            {unswiped.slice(0, 3).map((dish, index) => (
-              <FullscreenSwipeCard
-                key={`${dish.slug}-${index}`}
-                dish={dish}
-                stackIndex={index}
-                isTop={index === 0}
-                exitDirection={index === 0 ? exitDirection : null}
-                onSwipe={swipeTop}
-              />
-            ))}
-          </AnimatePresence>
+          <motion.div
+            className="absolute inset-0"
+            style={{ transformOrigin: "center 42%" }}
+            initial={reducedMotion ? false : { scale: 0.93 }}
+            animate={{ scale: 1 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 28 }
+            }
+          >
+            <AnimatePresence mode="popLayout">
+              {unswiped.slice(0, 3).map((dish, index) => (
+                <FullscreenSwipeCard
+                  key={`${dish.slug}-${index}`}
+                  dish={dish}
+                  stackIndex={index}
+                  isTop={index === 0}
+                  exitDirection={index === 0 ? exitDirection : null}
+                  exitX={index === 0 ? exitX : 0}
+                  exitDurationS={
+                    index === 0 ? exitDurationS : QUEUE_EXIT_MS / 1000
+                  }
+                  onSwipe={swipeTop}
+                />
+              ))}
+            </AnimatePresence>
+          </motion.div>
         ) : (
           <QueueComplete onReset={resetDeck} onClose={onClose} />
         )}
