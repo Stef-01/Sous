@@ -180,6 +180,10 @@ const HERO_TONGUE = [
   ".P",
 ];
 
+/** Chef's toque (earned cosmetic, R8) — two puffs over a band, off-white. Sits
+ *  on the crown between the ears. Stamped before shade/outline so it integrates. */
+const HERO_TOQUE = [".WW.WW.", "WWWWWWW", "WWWWWWW", ".WWWWW."];
+
 /**
  * Standing body v3 (36×20): docked tail up-left, level back, two rust chest
  * spots (the spec's), longer legs with rust socks, belly tuck.
@@ -243,12 +247,28 @@ const HERO_BODY_BOW = [
  */
 export type PetCollar = "none" | "red" | "gold";
 
+/** Earned cosmetics by Path level (goal-gradient, no purchases, R8): a chef's
+ *  toque once you're cooking regularly (Lv2 ≈ a few cooks in), then a red collar
+ *  at Lv3 and a gold one at Lv6. Pure so it's identical wherever Dobe appears
+ *  (the pet room, the win screen) and unit-testable. */
+export interface PetCosmetics {
+  collar: PetCollar;
+  toque: boolean;
+}
+export function cosmeticsForLevel(level: number): PetCosmetics {
+  return {
+    collar: level >= 6 ? "gold" : level >= 3 ? "red" : "none",
+    toque: level >= 2,
+  };
+}
+
 export function buildHeroMap(
   mood: PetMood,
   pose: "stand" | "bow",
   collar: PetCollar = "none",
   blink = false,
   earFlick = false,
+  toque = false,
 ): string[] {
   const grid: string[][] = Array.from({ length: HERO_H }, () =>
     Array<string>(HERO_W).fill("."),
@@ -279,6 +299,10 @@ export function buildHeroMap(
     stamp(grid, hx + 8, hy - 1, HERO_EAR_FOLD);
   }
 
+  // Chef's toque on the crown (earned cosmetic) — stamped after the ears so it
+  // sits on top, before shade/outline so it gets a contour like everything else.
+  if (toque) stamp(grid, hx + 3, hy - 3, HERO_TOQUE);
+
   if (mood === "asleep" || blink) stamp(grid, hx + 5, hy + 4, HERO_EYE_CLOSED);
   if (mood === "thriving" || pose === "bow") {
     stamp(grid, hx + 11, hy + 9, HERO_TONGUE);
@@ -307,6 +331,7 @@ export function PixelDobermanHero({
   collar = "none",
   blink = false,
   earFlick = false,
+  toque = false,
   size = 220,
   className,
 }: {
@@ -316,11 +341,13 @@ export function PixelDobermanHero({
   blink?: boolean;
   /** Second idle animation — the front ear flicks down briefly. */
   earFlick?: boolean;
+  /** Earned chef's toque on the crown (R8). */
+  toque?: boolean;
   /** Rendered width in px (height follows the 28:24 grid). */
   size?: number;
   className?: string;
 }) {
-  const map = buildHeroMap(mood, pose, collar, blink, earFlick);
+  const map = buildHeroMap(mood, pose, collar, blink, earFlick, toque);
   const cols = HERO_W;
   const rows = map.length;
   return (

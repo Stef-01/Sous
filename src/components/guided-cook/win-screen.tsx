@@ -50,7 +50,7 @@ import {
 import { cuisineAccent } from "@/components/today/dish-image";
 import {
   PixelDobermanHero,
-  type PetCollar,
+  cosmeticsForLevel,
 } from "@/components/nutrition/pixel-doberman";
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
@@ -1085,7 +1085,7 @@ function WinDobermanReaction({
   reducedMotion: boolean | null;
 }) {
   const { level } = useXPSystem();
-  const collar: PetCollar = level >= 6 ? "gold" : level >= 3 ? "red" : "none";
+  const { collar, toque } = cosmeticsForLevel(level);
   // Tapping the celebrating dog opens its room (R7) — a high-traffic, on-thesis
   // entry to the otherwise-buried companion, right when you've just cooked.
   const [petOpen, setPetOpen] = useState(false);
@@ -1128,6 +1128,7 @@ function WinDobermanReaction({
             mood="thriving"
             pose="bow"
             collar={collar}
+            toque={toque}
             size={108}
           />
         </motion.div>

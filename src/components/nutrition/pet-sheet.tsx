@@ -17,7 +17,11 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
-import { PixelDoberman, PixelDobermanHero } from "./pixel-doberman";
+import {
+  PixelDoberman,
+  PixelDobermanHero,
+  cosmeticsForLevel,
+} from "./pixel-doberman";
 import { PetRoom, type Daypart } from "./pet-room";
 import { PixelFrame } from "./pixel-frame";
 import { PixelIcon, type PixelIconName } from "./pixel-icons";
@@ -189,9 +193,10 @@ export function PetSheet({
     [store, used],
   );
   const lvl = xpToLevel(totalXP);
-  // Growth stage from the real Path level (goal-gradient, no fake economy):
-  // puppy (smaller) below Lv3; red collar at Lv3; gold collar at Lv6.
-  const collar = lvl.level >= 6 ? "gold" : lvl.level >= 3 ? "red" : "none";
+  // Earned cosmetics from the real Path level (goal-gradient, no fake economy):
+  // a chef's toque at Lv2, a red collar at Lv3, a gold one at Lv6. The puppy
+  // also grows (smaller below Lv3).
+  const cosmetics = cosmeticsForLevel(lvl.level);
   const heroSize = lvl.level >= 3 ? 176 : 150;
 
   // Finch pattern: the pet visibly reacts to the REAL thing you just did.
@@ -402,9 +407,10 @@ export function PetSheet({
               <PixelDobermanHero
                 mood={showMeal ? "thriving" : state.mood}
                 pose={pose}
-                collar={collar}
+                collar={cosmetics.collar}
                 blink={blink}
                 earFlick={earFlick}
+                toque={cosmetics.toque}
                 size={heroSize}
                 className={cn(
                   "pet-breathe",

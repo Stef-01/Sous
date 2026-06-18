@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildHeroMap } from "./pixel-doberman";
+import { buildHeroMap, cosmeticsForLevel } from "./pixel-doberman";
 import type { PetMood } from "@/lib/nutrition/pet-state";
 
 const MOODS: PetMood[] = ["asleep", "hungry", "peckish", "content", "thriving"];
@@ -155,5 +155,22 @@ describe("collar growth stages (round 1: goal gradient)", () => {
       for (let x = 0; x < red[0].length; x++)
         if (red[y][x] === "C" || red[y][x] === "G")
           expect(plain[y][x]).not.toBe(".");
+  });
+});
+
+describe("cosmeticsForLevel + toque (R8 earned wardrobe)", () => {
+  it("toque at Lv2, red collar at Lv3, gold at Lv6 (goal gradient)", () => {
+    expect(cosmeticsForLevel(1)).toEqual({ collar: "none", toque: false });
+    expect(cosmeticsForLevel(2)).toEqual({ collar: "none", toque: true });
+    expect(cosmeticsForLevel(3)).toEqual({ collar: "red", toque: true });
+    expect(cosmeticsForLevel(6)).toEqual({ collar: "gold", toque: true });
+  });
+
+  it("toque adds crown pixels and keeps the grid valid (40x32)", () => {
+    const bare = buildHeroMap("content", "stand", "none", false, false, false);
+    const hatted = buildHeroMap("content", "stand", "none", false, false, true);
+    expect(hatted.join("\n")).not.toBe(bare.join("\n"));
+    expect(hatted.length).toBe(32);
+    for (const row of hatted) expect(row.length).toBe(40);
   });
 });
