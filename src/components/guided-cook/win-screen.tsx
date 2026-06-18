@@ -48,6 +48,11 @@ import {
   SparkleBurst,
 } from "@/components/guided-cook/win-celebration-effects";
 import { cuisineAccent } from "@/components/today/dish-image";
+import {
+  PixelDobermanHero,
+  type PetCollar,
+} from "@/components/nutrition/pixel-doberman";
+import { useXPSystem } from "@/lib/hooks/use-xp-system";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -439,25 +444,12 @@ export function WinScreen({
           }
           className="space-y-1.5"
         >
-          {/* One confident settle (a "stamp"), not a 5-swing wobble — the tokens
-              warn overshoot reads juvenile as a default; an earned win gets a
-              single pop + slight tilt. Reduced-motion shows the icon at rest. */}
-          <motion.div
-            initial={
-              prefersReducedMotion
-                ? false
-                : { scale: 0.4, rotate: -8, opacity: 0 }
-            }
-            animate={{ scale: 1, rotate: 0, opacity: 1 }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : { delay: 0.26, type: "spring", stiffness: 340, damping: 16 }
-            }
-            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10"
-          >
-            {milestone.icon}
-          </motion.div>
+          {/* The Doberman reacts to YOUR cook — the brand mascot is the universal
+              win celebration, closing the cook→reward loop at the moment it lands
+              (R5). It wears its earned collar (red @ Lv3, gold @ Lv6), surfacing
+              the otherwise-invisible XP progression. The milestone meaning lives
+              in the headline below. */}
+          <WinDobermanReaction reducedMotion={prefersReducedMotion} />
           <h1 className="font-serif text-2xl font-bold text-[var(--nourish-dark)] leading-snug">
             {headline}
           </h1>
@@ -1070,6 +1062,63 @@ export function WinScreen({
         </div>
       </motion.div>
     </div>
+  );
+}
+
+/**
+ * WinDobermanReaction (R5) — the brand Doberman celebrates YOUR cook, right at
+ * the win. Closes the cook→reward loop the recon flagged: completing a cook
+ * silently awarded XP (level → collar) that the user never saw. Now the mascot
+ * springs up in a play-bow, tongue out, wearing the collar its current Path
+ * level has earned (red @ Lv3, gold @ Lv6) — the reward made visible.
+ *
+ * Reuses the existing PixelDobermanHero sprite (no new assets, rule 7). The +25
+ * XP for this cook is awarded by the cook page before the win phase renders, so
+ * `level` here already reflects it; the cook page's own "Level N" toast still
+ * carries the number, so this stays a pure, wordless celebration (rule 13).
+ */
+function WinDobermanReaction({
+  reducedMotion,
+}: {
+  reducedMotion: boolean | null;
+}) {
+  const { level } = useXPSystem();
+  const collar: PetCollar = level >= 6 ? "gold" : level >= 3 ? "red" : "none";
+  return (
+    <motion.div
+      initial={reducedMotion ? false : { scale: 0.5, y: 14, opacity: 0 }}
+      animate={{ scale: 1, y: 0, opacity: 1 }}
+      transition={
+        reducedMotion
+          ? { duration: 0 }
+          : { delay: 0.2, type: "spring", stiffness: 320, damping: 17 }
+      }
+      className="mx-auto w-fit"
+    >
+      {/* A gentle, perpetual happy bob once it has settled — a living companion,
+          not a static badge. Reduced-motion holds it still. */}
+      <motion.div
+        animate={reducedMotion ? undefined : { y: [0, -3, 0] }}
+        transition={
+          reducedMotion
+            ? undefined
+            : {
+                duration: 1.7,
+                repeat: Infinity,
+                repeatDelay: 0.7,
+                ease: "easeInOut",
+                delay: 0.7,
+              }
+        }
+      >
+        <PixelDobermanHero
+          mood="thriving"
+          pose="bow"
+          collar={collar}
+          size={108}
+        />
+      </motion.div>
+    </motion.div>
   );
 }
 
