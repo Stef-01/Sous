@@ -52,7 +52,9 @@ import {
   PixelDobermanHero,
   type PetCollar,
 } from "@/components/nutrition/pixel-doberman";
+import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
+import { haptic } from "@/lib/motion/haptics";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -1084,41 +1086,54 @@ function WinDobermanReaction({
 }) {
   const { level } = useXPSystem();
   const collar: PetCollar = level >= 6 ? "gold" : level >= 3 ? "red" : "none";
+  // Tapping the celebrating dog opens its room (R7) — a high-traffic, on-thesis
+  // entry to the otherwise-buried companion, right when you've just cooked.
+  const [petOpen, setPetOpen] = useState(false);
   return (
-    <motion.div
-      initial={reducedMotion ? false : { scale: 0.5, y: 14, opacity: 0 }}
-      animate={{ scale: 1, y: 0, opacity: 1 }}
-      transition={
-        reducedMotion
-          ? { duration: 0 }
-          : { delay: 0.2, type: "spring", stiffness: 320, damping: 17 }
-      }
-      className="mx-auto w-fit"
-    >
-      {/* A gentle, perpetual happy bob once it has settled — a living companion,
-          not a static badge. Reduced-motion holds it still. */}
-      <motion.div
-        animate={reducedMotion ? undefined : { y: [0, -3, 0] }}
+    <>
+      <motion.button
+        type="button"
+        onClick={() => {
+          haptic("select");
+          setPetOpen(true);
+        }}
+        aria-label="Visit Dobe, your kitchen companion"
+        initial={reducedMotion ? false : { scale: 0.5, y: 14, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        whileTap={reducedMotion ? undefined : { scale: 0.94 }}
         transition={
           reducedMotion
-            ? undefined
-            : {
-                duration: 1.7,
-                repeat: Infinity,
-                repeatDelay: 0.7,
-                ease: "easeInOut",
-                delay: 0.7,
-              }
+            ? { duration: 0 }
+            : { delay: 0.2, type: "spring", stiffness: 320, damping: 17 }
         }
+        className="mx-auto block w-fit rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
-        <PixelDobermanHero
-          mood="thriving"
-          pose="bow"
-          collar={collar}
-          size={108}
-        />
-      </motion.div>
-    </motion.div>
+        {/* A gentle, perpetual happy bob once it has settled — a living
+            companion, not a static badge. Reduced-motion holds it still. */}
+        <motion.div
+          animate={reducedMotion ? undefined : { y: [0, -3, 0] }}
+          transition={
+            reducedMotion
+              ? undefined
+              : {
+                  duration: 1.7,
+                  repeat: Infinity,
+                  repeatDelay: 0.7,
+                  ease: "easeInOut",
+                  delay: 0.7,
+                }
+          }
+        >
+          <PixelDobermanHero
+            mood="thriving"
+            pose="bow"
+            collar={collar}
+            size={108}
+          />
+        </motion.div>
+      </motion.button>
+      <PetSheet open={petOpen} onClose={() => setPetOpen(false)} />
+    </>
   );
 }
 

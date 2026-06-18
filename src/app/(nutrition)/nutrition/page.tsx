@@ -127,15 +127,24 @@ export default function NutritionPage() {
               Nutrition
             </h1>
           </div>
-          {/* Easter egg — never introduced anywhere. Those who notice the
-              tiny dog find their day as a Tamagotchi (PetSheet). */}
+          {/* Dobe — your kitchen companion. Promoted from a hidden Easter egg
+              to a labeled, tappable entry (R7): your day shows up as the dog's
+              mood, hearts, and level inside the Tamagotchi room. */}
           <button
             type="button"
-            onClick={() => setPetOpen(true)}
-            aria-label="Pixel dog"
-            className="flex h-9 w-7 items-end justify-center pb-0.5 transition-transform hover:-translate-y-0.5 active:scale-90 motion-reduce:transition-none"
+            onClick={() => {
+              haptic("select");
+              setPetOpen(true);
+            }}
+            aria-label="Visit Dobe, your kitchen companion"
+            className="group flex items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/20 bg-white px-2.5 py-1 shadow-[var(--shadow-card)] transition hover:border-[var(--nourish-green)]/40 active:scale-95 motion-reduce:transition-none"
           >
-            <PixelDoberman mood="content" size={20} />
+            <span className="pet-breathe block">
+              <PixelDoberman mood="content" size={24} />
+            </span>
+            <span className="text-[11px] font-semibold text-[var(--nourish-green)]">
+              Dobe
+            </span>
           </button>
         </div>
       </header>
