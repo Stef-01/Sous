@@ -9,6 +9,10 @@ import { usePantryInventory } from "@/lib/hooks/use-pantry-inventory";
 import { toast } from "@/lib/hooks/use-toast";
 import { AiImportSheet } from "@/components/import/ai-import-sheet";
 import { PantryAddSearch } from "@/components/path/pantry-add-search";
+import {
+  usePantryMode,
+  setPantryModeEnabled,
+} from "@/lib/hooks/use-pantry-mode";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { MetaPill } from "@/components/shared/meta-pill";
 import { GLIDE, RM } from "@/lib/utils/motion";
@@ -25,6 +29,7 @@ export default function PantryPage() {
   const reducedMotion = useReducedMotion();
   const { items, mounted, remove, clear, size, restore } = usePantry();
   const inventory = usePantryInventory();
+  const pantryMode = usePantryMode();
   const [showImport, setShowImport] = useState(false);
 
   // Quantity lookup — pantry names are normalized, matching the inventory key.
@@ -76,6 +81,40 @@ export default function PantryPage() {
         ) : (
           <>
             <PantryAddSearch />
+
+            {/* Pantry Mode was invisible here — surface its state + let the user
+                flip it from the pantry's own page (the full control + tolerance
+                slider stays in the Profile sheet). */}
+            <button
+              type="button"
+              onClick={() => setPantryModeEnabled(!pantryMode.enabled)}
+              aria-pressed={pantryMode.enabled}
+              className={
+                "mt-3 flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-[12px] transition-colors " +
+                (pantryMode.enabled
+                  ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.06]"
+                  : "border-neutral-200 bg-white hover:bg-neutral-50")
+              }
+            >
+              <Sparkles
+                size={13}
+                aria-hidden
+                className={
+                  pantryMode.enabled
+                    ? "text-[var(--nourish-green)]"
+                    : "text-[var(--nourish-subtext)]"
+                }
+              />
+              <span className="font-semibold text-[var(--nourish-dark)]">
+                Pantry Mode {pantryMode.enabled ? "on" : "off"}
+              </span>
+              <span className="text-[var(--nourish-subtext)]">
+                ·{" "}
+                {pantryMode.enabled
+                  ? "makeable meals float to the top"
+                  : "tap to prioritise makeable meals"}
+              </span>
+            </button>
 
             {items.length === 0 ? (
               <EmptyStateCTA

@@ -597,7 +597,6 @@ export function QuestCard({
                 : undefined
           }
           dish={previewDish}
-          count={queueDishes.length}
           onOpen={() => setQueueOpen(true)}
         />
       ) : (
@@ -656,12 +655,10 @@ export function QuestCard({
 
 function MealQueuePreview({
   dish,
-  count,
   onOpen,
   label,
 }: {
   dish: QuestDish;
-  count: number;
   onOpen: () => void;
   label?: string;
 }) {
@@ -674,7 +671,7 @@ function MealQueuePreview({
         whileTap={{ scale: 0.985 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
         className="group w-full text-left"
-        aria-label={`Browse ${count} meals, starting with ${dish.dishName}`}
+        aria-label={`Browse meals, starting with ${dish.dishName}`}
       >
         {/* Phase 5 — the whole card is the door to the deck: a "Browse N meals"
             pill + a 2px card-peek telegraph a swipeable deck (no orphan circle). */}
@@ -688,7 +685,7 @@ function MealQueuePreview({
             <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-3">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/92 px-3.5 py-1.5 text-[12px] font-semibold text-neutral-900 shadow-sm transition-colors group-hover:bg-white">
                 <Layers size={14} strokeWidth={2} aria-hidden />
-                Browse {count} meals
+                Browse meals
               </span>
             </div>
           </div>
