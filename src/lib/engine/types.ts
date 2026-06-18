@@ -58,6 +58,9 @@ export interface ScoreBreakdown {
   /** Context-fit (W2 — time-of-day + season). Only set when the caller supplies
    *  the local clock; absent on the default path. */
   contextFit?: number;
+  /** Cohort accept-rate (the moat data flywheel). Only set when the caller
+   *  supplies the cross-user accept aggregate; absent on the default path. */
+  cohortAccept?: number;
 }
 
 export interface ScoredCandidate {
@@ -77,12 +80,16 @@ export interface Scorer {
 }
 
 /** The 8 base weight dimensions, all required. `therapeuticFit`, `pantryReuse`,
- *  `deficiencyFill` and `contextFit` are excluded — they are post-rank reblend
- *  dimensions, not base ranker weights. */
+ *  `deficiencyFill`, `contextFit` and `cohortAccept` are excluded — they are
+ *  post-rank reblend dimensions, not base ranker weights. */
 export type BaseWeights = Record<
   Exclude<
     keyof ScoreBreakdown,
-    "therapeuticFit" | "pantryReuse" | "deficiencyFill" | "contextFit"
+    | "therapeuticFit"
+    | "pantryReuse"
+    | "deficiencyFill"
+    | "contextFit"
+    | "cohortAccept"
   >,
   number
 >;

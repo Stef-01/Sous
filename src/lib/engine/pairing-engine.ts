@@ -37,6 +37,11 @@ import {
   CONTEXT_FIT_WEIGHT,
   type ContextFitContext,
 } from "./scorers/context-fit";
+import {
+  scoreCohortAccept,
+  COHORT_ACCEPT_WEIGHT,
+  type CohortAcceptContext,
+} from "./scorers/cohort-accept-rate";
 import { getDishNutrition, NUTRITION_COVERAGE_FLOOR } from "./dish-nutrition";
 import {
   therapeuticsActive,
@@ -255,6 +260,39 @@ function reblendContextFit(
  * @param pantry - Optional pantry/recent-cook reuse context (W1). When its
  *   `onHand` set is non-empty, sides reusing on-hand ingredients are nudged up.
  */
+/**
+ * Cohort accept-rate reblend (the moat data flywheel, R3 — see
+ * pairing-outcomes.ts). Same gated, post-rank shape as the other 4 reblends:
+ * scale the base by (1−wC), add the cross-user accept signal at wC. Below the
+ * impression floor the signal equals the base (zero nudge), so cold slugs aren't
+ * penalized. The caller supplies the cohort only when an aggregate exists, so
+ * this never runs on the default path → byte-identical rankings.
+ */
+function reblendCohortAccept(
+  ranked: ScoredCandidate[],
+  ctx: CohortAcceptContext,
+): ScoredCandidate[] {
+  const wC = COHORT_ACCEPT_WEIGHT;
+  const blended = ranked.map((c) => {
+    const a = scoreCohortAccept(c.sideDish.slug, ctx, c.totalScore);
+    return {
+      ...c,
+      scores: { ...c.scores, cohortAccept: a },
+      totalScore: (1 - wC) * c.totalScore + wC * a,
+    };
+  });
+  blended.sort((a, b) => {
+    const diff = b.totalScore - a.totalScore;
+    if (Math.abs(diff) > 0.001) return diff;
+    return a.sideDish.slug < b.sideDish.slug
+      ? -1
+      : a.sideDish.slug > b.sideDish.slug
+        ? 1
+        : 0;
+  });
+  return blended;
+}
+
 /** A preference at or below this weight is a hard suppression (a disliked
  *  cuisine/tag from a survey), not just a soft down-rank. */
 export const SUPPRESSION_THRESHOLD = -0.9;
@@ -286,6 +324,7 @@ export function suggestSides(
   pantry?: PantryReuseContext,
   deficiency?: DeficiencyContext,
   context?: ContextFitContext,
+  cohort?: CohortAcceptContext,
 ): SuggestSidesResult {
   if (candidates.length === 0) {
     return { success: false, error: "No side dish candidates available" };
@@ -352,6 +391,14 @@ export function suggestSides(
   // nudge (kept gentle so the two don't double-count). See scorers/context-fit.
   if (context) {
     finalRanked = reblendContextFit(finalRanked, context);
+  }
+
+  // Cohort accept-rate reblend (the moat data flywheel): only when the caller
+  // supplied a cross-user accept aggregate. No-op on the default path →
+  // byte-identical rankings. A genuinely-loved side drifts up a slot; the
+  // gentle weight + impression floor mean it can never hijack the plate.
+  if (cohort && cohort.acceptRateBySlug.size > 0) {
+    finalRanked = reblendCohortAccept(finalRanked, cohort);
   }
 
   // Therapeutic re-blend = PERSONALIZATION → clinician-only (G1), stricter than

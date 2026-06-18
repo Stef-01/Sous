@@ -68,6 +68,13 @@ const DIMENSION_PHRASES: Record<DimensionKey, Record<string, string>> = {
     high: "right for the time of day",
     mid: "suits the season",
   },
+  // Cohort accept-rate (the moat data flywheel). Surfaces the social-proof
+  // reason when a side is one people genuinely pick and cook. Only reached when
+  // the cross-user accept aggregate was supplied to the engine.
+  cohortAccept: {
+    high: "a side people love and keep cooking",
+    mid: "a popular pick with others",
+  },
 };
 
 /**
