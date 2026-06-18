@@ -32,13 +32,13 @@ fix. Tick as shipped.
 ## P2 — polish / cohesion
 
 - [x] Extract one `<SettingToggle>` primitive (`85a6065`) — all 6 toggles now share one canonical switch (48×28 / 24px knob, CSS-transform, reduced-motion-free).
-- [ ] **Pantry manual-add writes no inventory (qty/kcal pill asymmetry).** Awaiting founder decision: the engine never reads pantry qty/kcal (display-only), so the appraisal recommends LEVELLING DOWN — drop the AI-import qty/kcal pill so both add-paths render identically (vs levelling up: a heavier manual-add form, rule-13 cost). Either removes/changes founder-built display → founder's call.
+- [x] **Pantry manual-add qty/kcal pill (`<pending>`)** — LEVELLED UP per founder decision: the manual add takes an optional quantity (e.g. "2 kg"); manual items now show the same qty/kcal pill as AI-imported. kcal is computed HONESTLY from the registry per-100g density for mass/volume units (omitted otherwise — never fabricated, per the nutrition-integrity rule). Verified: "Rice noodles" + "2 kg" → "2 kg · 7280 kcal".
 - [x] Pantry Mode invisible from the Pantry page (`952f094`) — tappable status line on the pantry page.
 - [x] "Browse N meals" meaningless cap (`952f094`) — dropped the number → "Browse meals".
 - [x] Stale Path loading skeleton (`9ed53d7`) — rewritten to trace the current collapsed layout.
 - [x] Replace raw `window.confirm` with in-app toast-undo (`4542f56`) — week/pantry/shopping, all with restore.
 - [x] Content "Watch" nav pill route-change (`9ed53d7`) — now scrolls to the rail like its siblings; reels feed still reachable.
-- [ ] **Two "Eat out" entry points with different interaction models.** Awaiting founder decision: deck tab (swipe-to-log) vs `/eat-out` page (browse→sheet→tap-log) — BOTH founder-directed within a week of each other. Appraisal recommends Option 1 (drop the deck tab, keep the page) under rules 1/2/6, but the inverse is defensible → founder's call.
+- [x] **Two "Eat out" entry points** — KEPT BOTH per founder decision (intentional, not friction): the Today-deck swipe-to-log tab + the `/eat-out` browse page are deliberate parallel models. No change. (Closed as won't-fix.)
 
 ## Confirmed excellent (do not regress)
 
