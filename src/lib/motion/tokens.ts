@@ -24,12 +24,14 @@ export const EASE = {
   spring: [0.35, 1.55, 0.65, 1] as const,
 };
 
-/** Named spring configs — pick by feel, never re-tune inline. */
-export const SPRING: Record<"soft" | "snappy" | "gentle", Transition> = {
+/** Named spring configs — pick by feel, never re-tune inline.
+ *  `as const satisfies` keeps `stiffness`/`damping` as concrete numbers (so
+ *  callers can compare them) while still validating each is a real Transition. */
+export const SPRING = {
   soft: { type: "spring", stiffness: 260, damping: 30 },
   snappy: { type: "spring", stiffness: 400, damping: 28 },
   gentle: { type: "spring", stiffness: 180, damping: 26 },
-};
+} as const satisfies Record<"soft" | "snappy" | "gentle", Transition>;
 
 /** Tactile press-scale (E4). `TAP_SCALE` is the standard for buttons + cards;
  *  `TAP_SCALE_SM` is the tighter delta small chips/icon buttons use (a bigger

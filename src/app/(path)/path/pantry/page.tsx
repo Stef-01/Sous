@@ -15,7 +15,7 @@ import {
 } from "@/lib/hooks/use-pantry-mode";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { MetaPill } from "@/components/shared/meta-pill";
-import { GLIDE, RM } from "@/lib/utils/motion";
+import { SPRING, motionTransition } from "@/lib/motion/tokens";
 
 /**
  * Pantry  -  the quiet ledger. Ingredients you've marked as "I have this".
@@ -147,7 +147,10 @@ export default function PantryPage() {
                         exit={
                           reducedMotion ? { opacity: 0 } : { opacity: 0, x: 40 }
                         }
-                        transition={reducedMotion ? RM : GLIDE}
+                        transition={motionTransition(
+                          SPRING.soft,
+                          reducedMotion,
+                        )}
                         className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-3 py-2.5"
                       >
                         <Bookmark

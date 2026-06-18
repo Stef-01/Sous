@@ -52,21 +52,31 @@ Typed accessor: `color('brandPrimary')` from `src/styles/tokens.ts` returns `var
 
 ### 1.2 Motion tokens
 
-Defined in `src/styles/motion.ts`.
+**Source of truth: `src/lib/motion/tokens.ts`** (the canonical framer/JS
+physics). Mirrors the CSS `--dur-*` / `--ease-*` set in `globals.css`. New
+animated surfaces import springs, durations, the press scale, and the
+reduced-motion helpers from here — never hand-roll a spring inline.
 
-Duration scale (5 tiers, seconds):
+- **Springs** (`SPRING`): `soft` (260/30 — entrances, sheets), `snappy`
+  (400/28 — taps, chips), `gentle` (180/26 — large/slow slides). Pick by feel;
+  never re-tune inline.
+- **Durations** (`DURATION`, seconds): `fast` 0.15, `base` 0.22, `slow` 0.30.
+- **Easings** (`EASE`): `out` (house decelerate), `in` (exits), `inOut`,
+  `spring` (overshoot — badges/pops/counters ONLY; reads juvenile as a default).
+- **Press scale**: `TAP_SCALE` 0.98 (buttons/cards), `TAP_SCALE_SM` 0.94 (chips).
+- **Helpers**: `motionTransition(t, reduced)` (collapses to instant under
+  reduced-motion — the single guard every surface routes through),
+  `staggerChildren(reduced, step)`, `premiumEntrance(reduced)` (fade + 6px rise
+  - 2px blur clear; FOCAL surfaces only).
 
-- `instant: 0.06` — tap feedback, hover transitions.
-- `fast: 0.12` — chip toggles, accordion expand.
-- `normal: 0.18` — card-appear, sheet-slide.
-- `slow: 0.32` — celebrations, hero reveals.
-- `slower: 0.6` — page transitions, full-screen takeovers.
+The shared primitives `<Pressable>` and `<TapFeedback>`/`<ChipFeedback>` already
+consume these — prefer them over re-rolling `whileTap` per component.
 
-Easing tokens (5 named cubic-beziers): `standard`, `decelerate`, `accelerate`, `linear`, `sharp`.
-
-Spring tokens (3 framer-motion configs): `standard` (260/25), `snappy` (400/15), `gentle` (200/30).
-
-Reduced-motion gate: `withReducedMotion(duration, prefersReducedMotion)` returns 0 when the user's OS preference is set.
+**Extended scale: `src/styles/motion.ts`.** Adds a finer 5-tier duration ramp
+(`instant` 0.06 → `slower` 0.6) and 5 named easings (`standard`, `decelerate`,
+`accelerate`, `linear`, `sharp`) with typed accessors (`duration()`, `easing()`,
+`spring()`) and `withReducedMotion()`. Its `SPRING` is **re-exported from the
+canonical tokens** (one definition, no drift).
 
 ### 1.3 Typography
 

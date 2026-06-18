@@ -22,8 +22,7 @@
 import type { ReactNode } from "react";
 import { motion, useReducedMotion, type HTMLMotionProps } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { SPRING } from "@/styles/motion";
-import { TAP_SCALE, TAP_SCALE_SM } from "@/lib/motion/tokens";
+import { SPRING, TAP_SCALE, TAP_SCALE_SM } from "@/lib/motion/tokens";
 import { cn } from "@/lib/utils/cn";
 
 export type TapFeedbackVariant = "primary" | "secondary" | "tap-only";

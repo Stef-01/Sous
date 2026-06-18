@@ -12,8 +12,11 @@
  * hook: when reduced-motion is set, callers pass duration: 0
  * (or call `withReducedMotion(token, prefersReducedMotion)`).
  *
- * Pure / dependency-free.
+ * Duration + easing scale is pure; `SPRING` is re-exported from the
+ * canonical `@/lib/motion/tokens` so there is one definition app-wide.
  */
+
+import { SPRING as MOTION_SPRING } from "@/lib/motion/tokens";
 
 /** ── Duration tokens (seconds) ─────────────────────────────
  *  Five-tier scale tuned for the Sous cadence:
@@ -54,15 +57,19 @@ export const EASING = {
 export type EasingToken = keyof typeof EASING;
 
 /** ── Spring tokens — framer-motion spring configs ─────────
- *  Three named springs. Used for card-appear + tap-feedback +
- *  sheet-slide where physics-feel beats curve-feel. */
+ *  Re-exported from the canonical `@/lib/motion/tokens` so there is
+ *  exactly ONE definition of the app's spring physics — no drift, no
+ *  three-different-`snappy` problem. This module remains the home of
+ *  the EXTENDED duration/easing scale above (5 tiers / 5 easings);
+ *  the springs themselves live in the motion-tokens source of truth.
+ *  Keys are kept (`standard`/`snappy`/`gentle`) for API stability. */
 export const SPRING = {
-  /** Default page-element spring. */
-  standard: { type: "spring", stiffness: 260, damping: 25 } as const,
-  /** Tighter spring for chip-tap + button-press. */
-  snappy: { type: "spring", stiffness: 400, damping: 15 } as const,
-  /** Softer spring for sheet-slide + drawer-open. */
-  gentle: { type: "spring", stiffness: 200, damping: 30 } as const,
+  /** Default page-element spring (canonical `soft`, 260/30). */
+  standard: MOTION_SPRING.soft,
+  /** Tighter spring for chip-tap + button-press (canonical `snappy`, 400/28). */
+  snappy: MOTION_SPRING.snappy,
+  /** Softer spring for sheet-slide + drawer-open (canonical `gentle`, 180/26). */
+  gentle: MOTION_SPRING.gentle,
 } as const;
 
 export type SpringToken = keyof typeof SPRING;
