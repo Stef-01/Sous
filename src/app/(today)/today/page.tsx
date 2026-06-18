@@ -881,6 +881,11 @@ function TodayPageContent() {
               pairingQuery.data.sides.length > 0 && (
                 <ResultStack
                   mainDish={view.mainDish}
+                  mainSlug={
+                    "resolvedMealSlug" in pairingQuery.data
+                      ? (pairingQuery.data.resolvedMealSlug as string | null)
+                      : null
+                  }
                   sides={pairingQuery.data.sides}
                   onCookThis={handleCookThis}
                   onCookSelected={(sides) => {

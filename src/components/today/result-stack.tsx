@@ -27,6 +27,7 @@ import { useDeviceId } from "@/lib/hooks/use-device-id";
 import { evaluatePlate } from "@/lib/engine/plate-evaluation";
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { EvaluateSheet } from "@/components/results/EvaluateSheet";
+import type { PlateNutritionInput } from "@/lib/nutrition/plate-nutrition";
 import { PlateRing } from "@/components/today/plate-ring";
 import { CreatorByline } from "@/components/shared/creator-byline";
 import { NutritionRingCard } from "@/components/shared/nutrition-ring-card";
@@ -58,6 +59,9 @@ export interface SideResult {
 
 interface ResultStackProps {
   mainDish: string;
+  /** Resolved slug of the main — drives the combined per-serving nutrition view
+   *  in the plate-check sheet (the name alone can't resolve nutrition). */
+  mainSlug?: string | null;
   sides: SideResult[];
   onCookThis: (side: SideResult) => void;
   onCookSelected?: (sides: SideResult[]) => void;
@@ -109,6 +113,7 @@ export function nutritionScoreToStars(score: number): number {
  */
 export function ResultStack({
   mainDish,
+  mainSlug,
   sides: initialSides,
   onCookThis,
   onCookSelected,
@@ -360,6 +365,19 @@ export function ResultStack({
     return evaluatePlate({ meal, sides: sideDishes });
   }, [mainDish, selectedSides]);
 
+  // The plate's dishes (a serving each) for the combined nutrition view — the
+  // main first, then the picked sides in selection order.
+  const plateItems = useMemo<PlateNutritionInput[]>(() => {
+    const items: PlateNutritionInput[] = [];
+    if (mainSlug) {
+      items.push({ name: mainDish, slug: mainSlug, role: "main" });
+    }
+    for (const s of selectedSides) {
+      items.push({ name: s.name, slug: s.slug, role: "side" });
+    }
+    return items;
+  }, [mainSlug, mainDish, selectedSides]);
+
   const handleCookSelected = useCallback(() => {
     if (selectedSides.length === 0) return;
     recordPick(selectedSides);
@@ -507,6 +525,7 @@ export function ResultStack({
           evaluation={evaluation}
           mainDish={mainDish}
           sideDishes={selectedSides.map((s) => s.name)}
+          plateItems={plateItems}
           open={showEvaluate}
           onClose={() => setShowEvaluate(false)}
         />

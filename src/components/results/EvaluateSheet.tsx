@@ -12,11 +12,15 @@ import {
 import type { PlateEvaluation } from "@/lib/engine/plate-evaluation";
 import { trpc } from "@/lib/trpc/client";
 import { track } from "@/lib/analytics";
+import { PlateNutrition } from "@/components/results/plate-nutrition";
+import type { PlateNutritionInput } from "@/lib/nutrition/plate-nutrition";
 
 interface EvaluateSheetProps {
   evaluation: PlateEvaluation;
   mainDish?: string;
   sideDishes?: string[];
+  /** Main + picked sides (name + slug) for the combined per-serving nutrition. */
+  plateItems?: PlateNutritionInput[];
   open: boolean;
   onClose: () => void;
   onFinishPlate?: () => void;
@@ -33,6 +37,7 @@ export function EvaluateSheet({
   evaluation,
   mainDish = "",
   sideDishes = [],
+  plateItems = [],
   open,
   onClose,
   onFinishPlate,
@@ -185,6 +190,9 @@ export function EvaluateSheet({
                     />
                   </div>
                 </div>
+
+                {/* Combined per-serving nutrition (main + each picked side) */}
+                <PlateNutrition items={plateItems} />
 
                 {/* Already working  -  strengths first */}
                 {evaluation.alreadyWorking.length > 0 && (
