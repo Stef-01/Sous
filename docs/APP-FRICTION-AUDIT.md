@@ -23,11 +23,11 @@ fix. Tick as shipped.
 
 - [x] **Plan never feeds the shopping list** (`9882cc1`) — "Shop this week" on `plan/week/page.tsx` walks `slotMap` → resolves ingredients → diffs pantry → `addMany` with recipe provenance; button → "{n} added — view shopping list". Verified: a Hiyayakko week → 7 items on `/path/shopping-list`.
 - [x] **Swipe planner empty on first run** (`0bac543`) — closed alongside the P0 dead-meals fix: `minCoverage: 0` means the discovery planner is no longer coverage-gated, so a sparse/empty pantry still fills the pool (ranked by recency/rotation/ease).
-- [ ] **Deck "Cook" on a main opens a side-picker, not cooking** — the verb lies (routes to `/sides`). Relabel main action to "Plan / Build plate", reserve "Cook" for the straight-to-`/cook` path. `quest-card.tsx`, `meal-swipe-queue-cards.tsx:165`.
-- [ ] **Search-result logging is always ×1** — doesn't use `lastServingsFor` "usual" portion (the idle chips do). `log-food.tsx:221`.
-- [ ] **Branded 100 g default shown as fact** — label "per 100 g" when the serving was the fallback. `branded-food.ts`, `log-food.tsx:341`.
-- [ ] **Craving search shows the active filter but can't edit it** (clear-only) — make the chip open `QuestFilterMenu`. `text-prompt.tsx:272`.
-- [ ] **Three orphaned Path subpages** (`/path/cuisines`, `/path/llm-spend`, `/path/charity-spend`) — add entry points or delete.
+- [x] **Deck "Cook" on a main opens a side-picker, not cooking** (`649cf33`) — shared `primaryActionLabel`/`goesStraightToCook` helpers: mains read "Build plate" (→ /sides), guided sides keep "Cook" (→ /cook), eat-out "Log it". Label can't drift from the route; 7 unit tests pin it.
+- [x] **Search-result logging is always ×1** (`19a7a86`) — search rows now log `lastServingsFor(diaryStore, slug)` like the idle chips. Verified: a dish previously logged ×2 re-logs ×2.
+- [x] **Branded 100 g default shown as fact** (`19a7a86`) — `parseServingGrams` reports the fallback; `BrandedFood.servingIsFallback` threads through `mapOffProduct`; the kcal label reads "NNN kcal / 100 g" only when the serving was the 100 g guess.
+- [x] **Craving search shows the active filter but can't edit it** (`c98892f`) — the clear-only chip is now the editable `QuestFilterMenu` (adjust cuisine/cook-time/role, or Reset). Verified in-browser + 4 filter e2e pass on chromium.
+- [ ] **Three orphaned Path subpages** (`/path/cuisines`, `/path/llm-spend`, `/path/charity-spend`) — add entry points or delete. **Awaiting founder decision** (delete-vs-keep is a product call): cuisines is a real but skill-tree-redundant feature; llm-spend + charity-spend are internal founder dashboards (rule 3 forbids them as user surfaces; the strategy report orders the charity system cut).
 
 ## P2 — polish / cohesion
 
