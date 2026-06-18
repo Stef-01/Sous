@@ -1,8 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { cn } from "@/lib/utils/cn";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { SettingToggle } from "@/components/ui/setting-toggle";
 import { PhysicsSlider } from "@/components/shared/physics-slider";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry } from "@/lib/hooks/use-pantry";
@@ -47,35 +47,14 @@ export function PantryModeSection() {
             the top.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
+        <SettingToggle
+          checked={mode.enabled}
+          onChange={() => {
             haptic();
             setPantryModeEnabled(!mode.enabled);
           }}
-          role="switch"
-          aria-checked={mode.enabled}
-          aria-label={
-            mode.enabled ? "Turn Pantry Mode off" : "Turn Pantry Mode on"
-          }
-          className={cn(
-            "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors",
-            mode.enabled ? "bg-[var(--nourish-green)]" : "bg-neutral-200",
-          )}
-        >
-          <motion.span
-            layout={!reducedMotion}
-            transition={
-              reducedMotion
-                ? { duration: 0.12 }
-                : { type: "spring", stiffness: 500, damping: 30 }
-            }
-            className={cn(
-              "inline-block h-5 w-5 rounded-full bg-white shadow",
-              mode.enabled ? "ml-6" : "ml-1",
-            )}
-          />
-        </button>
+          label={mode.enabled ? "Turn Pantry Mode off" : "Turn Pantry Mode on"}
+        />
       </div>
 
       <AnimatePresence initial={false}>

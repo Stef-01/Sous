@@ -10,16 +10,14 @@
  * + the carbon-math substrate.
  */
 
-import { motion, useReducedMotion } from "framer-motion";
 import { Leaf } from "lucide-react";
 import { useEcoMode } from "@/lib/hooks/use-eco-mode";
-import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { SettingToggle } from "@/components/ui/setting-toggle";
 
 export function EcoModeToggle() {
   const { profile, toggle, mounted } = useEcoMode();
-  const reducedMotion = useReducedMotion();
   const haptic = useHaptic();
 
   // The hook already gates `mounted` behind a hydration-safe
@@ -50,35 +48,14 @@ export function EcoModeToggle() {
             </p>
           )}
         </div>
-        <button
-          type="button"
-          onClick={() => {
+        <SettingToggle
+          checked={profile.enabled}
+          onChange={() => {
             haptic();
             toggle();
           }}
-          role="switch"
-          aria-checked={profile.enabled}
-          aria-label={
-            profile.enabled ? "Turn Eco Mode off" : "Turn Eco Mode on"
-          }
-          className={cn(
-            "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors",
-            profile.enabled ? "bg-[var(--nourish-green)]" : "bg-neutral-200",
-          )}
-        >
-          <motion.span
-            layout={!reducedMotion}
-            transition={
-              reducedMotion
-                ? { duration: 0.12 }
-                : { type: "spring", stiffness: 500, damping: 30 }
-            }
-            className={cn(
-              "inline-block h-5 w-5 rounded-full bg-white shadow",
-              profile.enabled ? "ml-6" : "ml-1",
-            )}
-          />
-        </button>
+          label={profile.enabled ? "Turn Eco Mode off" : "Turn Eco Mode on"}
+        />
       </div>
     </section>
   );

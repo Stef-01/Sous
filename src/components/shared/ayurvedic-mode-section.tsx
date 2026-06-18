@@ -11,6 +11,7 @@ import {
   type EvidenceStrength,
 } from "@/data/ayurvedic-evidence";
 import { cn } from "@/lib/utils/cn";
+import { SettingToggle } from "@/components/ui/setting-toggle";
 import {
   EvidenceTierBadge,
   strengthToTier,
@@ -52,24 +53,7 @@ export function AyurvedicModeSection() {
             only ones with modern clinical evidence. No dosha typing.
           </p>
         </div>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={on}
-          aria-label="Ayurvedic lens"
-          onClick={toggle}
-          className={cn(
-            "relative h-7 w-12 shrink-0 rounded-full transition-colors",
-            on ? "bg-[var(--nourish-green)]" : "bg-neutral-300",
-          )}
-        >
-          <span
-            className={cn(
-              "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform",
-              on ? "translate-x-[22px]" : "translate-x-0.5",
-            )}
-          />
-        </button>
+        <SettingToggle checked={on} onChange={toggle} label="Ayurvedic lens" />
       </div>
 
       <button

@@ -44,6 +44,7 @@ import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
+import { SettingToggle } from "@/components/ui/setting-toggle";
 import { FilterDropdown } from "@/components/shared/filter-dropdown";
 import { NutritionEvidencePanel } from "@/components/shared/nutrition-evidence-panel";
 import { AyurvedicModeSection } from "@/components/shared/ayurvedic-mode-section";
@@ -164,39 +165,18 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
                     enjoy — no cooking twice.
                   </p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
+                <SettingToggle
+                  checked={profile.enabled}
+                  onChange={() => {
                     haptic();
                     toggle();
                   }}
-                  role="switch"
-                  aria-checked={profile.enabled}
-                  aria-label={
+                  label={
                     profile.enabled
                       ? "Turn Parent Mode off"
                       : "Turn Parent Mode on"
                   }
-                  className={cn(
-                    "relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors",
-                    profile.enabled
-                      ? "bg-[var(--nourish-green)]"
-                      : "bg-neutral-200",
-                  )}
-                >
-                  <motion.span
-                    layout={!reducedMotion}
-                    transition={
-                      reducedMotion
-                        ? { duration: 0.12 }
-                        : { type: "spring", stiffness: 500, damping: 30 }
-                    }
-                    className={cn(
-                      "inline-block h-5 w-5 rounded-full bg-white shadow",
-                      profile.enabled ? "ml-6" : "ml-1",
-                    )}
-                  />
-                </button>
+                />
               </div>
 
               <AnimatePresence initial={false}>
@@ -290,28 +270,14 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={voicePref.enabled}
-                  onClick={() => {
+                <SettingToggle
+                  checked={voicePref.enabled}
+                  onChange={(next) => {
                     haptic();
-                    voicePref.setEnabled(!voicePref.enabled);
+                    voicePref.setEnabled(next);
                   }}
-                  className={cn(
-                    "relative h-7 w-12 shrink-0 rounded-full transition-colors",
-                    voicePref.enabled
-                      ? "bg-[var(--nourish-green)]"
-                      : "bg-neutral-200",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
-                      voicePref.enabled ? "translate-x-5" : "translate-x-0.5",
-                    )}
-                  />
-                </button>
+                  label="Voice cook"
+                />
               </div>
             </section>
 
@@ -340,28 +306,14 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={visualPref.enabled}
-                  onClick={() => {
+                <SettingToggle
+                  checked={visualPref.enabled}
+                  onChange={(next) => {
                     haptic();
-                    visualPref.setEnabled(!visualPref.enabled);
+                    visualPref.setEnabled(next);
                   }}
-                  className={cn(
-                    "relative h-7 w-12 shrink-0 rounded-full transition-colors",
-                    visualPref.enabled
-                      ? "bg-[var(--nourish-green)]"
-                      : "bg-neutral-200",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-transform",
-                      visualPref.enabled ? "translate-x-5" : "translate-x-0.5",
-                    )}
-                  />
-                </button>
+                  label="Visual mode"
+                />
               </div>
             </section>
 
