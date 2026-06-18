@@ -141,31 +141,46 @@ export default function PathPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-dvh bg-[var(--nourish-cream)]">
-        {/* Header skeleton */}
-        <header className="app-header page-x py-3">
-          <div className="mx-auto max-w-md flex items-center justify-between">
-            <div className="h-5 w-20 rounded shimmer" />
-            <div className="flex gap-3">
+      <div className="min-h-dvh bg-[var(--nourish-cream)]" aria-hidden>
+        {/* Header skeleton — mirror PathHeader's two rows (title + level ring)
+            at the real pt-3 pb-2.5, so the header height matches and nothing
+            below jumps on hydrate. */}
+        <header className="app-header page-x pt-3 pb-2.5">
+          <div className="mx-auto max-w-md space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="h-5 w-24 rounded shimmer" />
               <div className="h-5 w-12 rounded-full shimmer" />
-              <div className="h-5 w-12 rounded-full shimmer" />
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-full shimmer" />
+              <div className="space-y-1.5">
+                <div className="h-3 w-14 rounded shimmer" />
+                <div className="h-3 w-20 rounded shimmer" />
+              </div>
             </div>
           </div>
         </header>
-        {/* Stats cards skeleton */}
-        <div className="mx-auto max-w-md page-x pt-4 space-y-3">
-          <div className="h-16 rounded-2xl shimmer" />
-          <div className="h-16 rounded-2xl shimmer" />
+
+        {/* Kitchen workflow — the 3-col grid of tiles (Pantry/Plan/Groceries),
+            then the collapsed "Your kitchen" toggle row. */}
+        <div className="mx-auto max-w-md page-x pt-4">
+          <div className="grid grid-cols-3 gap-2">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-16 rounded-2xl shimmer" />
+            ))}
+          </div>
+          <div className="mt-3 flex min-h-[44px] items-center">
+            <div className="h-4 w-28 rounded shimmer" />
+          </div>
         </div>
-        {/* Skill tree nodes skeleton  -  alternating offsets to mimic real layout */}
-        <div className="mx-auto max-w-md page-x pt-8 pb-8">
-          {["mx-auto", "ml-auto mr-12", "mx-auto", "ml-12", "mx-auto"].map(
-            (cls, i) => (
-              <div key={i} className={`flex ${i > 0 ? "mt-8" : ""}`}>
-                <div className={`w-16 h-16 rounded-full shimmer ${cls}`} />
-              </div>
-            ),
-          )}
+
+        {/* Progression collapsed toggle row. The skill tree lives BEHIND this
+            collapsed section by default, so the skeleton must NOT paint nodes
+            (that ~450px column was the layout-shift flash). */}
+        <div className="mx-auto max-w-md page-x pb-24 pt-6">
+          <div className="flex min-h-[44px] items-center">
+            <div className="h-4 w-28 rounded shimmer" />
+          </div>
         </div>
       </div>
     );

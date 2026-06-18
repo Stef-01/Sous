@@ -151,11 +151,15 @@ export default function CommunityPage() {
           <ChevronRight size={14} className="shrink-0" aria-hidden />
         </Link>
 
-        <ReelsRail
-          reels={sortedReels}
-          onSelect={(reel) => router.push(`/community/reels?start=${reel.id}`)}
-          onSeeAll={() => router.push("/community/reels")}
-        />
+        <div id="watch" className="scroll-mt-24">
+          <ReelsRail
+            reels={sortedReels}
+            onSelect={(reel) =>
+              router.push(`/community/reels?start=${reel.id}`)
+            }
+            onSeeAll={() => router.push("/community/reels")}
+          />
+        </div>
 
         <section
           id="learn"
@@ -224,12 +228,13 @@ function CommunitySectionNav() {
       aria-label="Community sections"
       className="flex items-center justify-between border-y border-[var(--nourish-border)] py-2 text-[13px] font-medium"
     >
-      <Link
-        href="/community/reels"
-        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      <button
+        type="button"
+        onClick={() => scrollTo("watch")}
+        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
       >
         Watch
-      </Link>
+      </button>
       <button
         type="button"
         onClick={() => scrollTo("learn")}
