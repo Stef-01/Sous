@@ -100,7 +100,7 @@ Every week below is classified **AUTO-BUILD** (everything needed lives in this r
 | Week | Deliverable                              | Moat        | Status  | Commit    |
 | ---- | ---------------------------------------- | ----------- | ------- | --------- |
 | W1   | Pantry-aware reranker                    | Data×Engine | ✅ done | `252a51f` |
-| W2   | Time/season context rerankers            | Engine      | —       | —         |
+| W2   | Time/season context rerankers            | Engine      | ✅ done | `18c220a` |
 | W3   | Explainable per-dimension why            | Engine      | —       | —         |
 | W4   | V3 preference-trainer hardening          | Data        | —       | —         |
 | W5–6 | Guided-cook coverage growth              | Content     | —       | —         |
