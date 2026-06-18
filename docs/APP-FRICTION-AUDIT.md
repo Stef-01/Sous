@@ -27,7 +27,7 @@ fix. Tick as shipped.
 - [x] **Search-result logging is always ×1** (`19a7a86`) — search rows now log `lastServingsFor(diaryStore, slug)` like the idle chips. Verified: a dish previously logged ×2 re-logs ×2.
 - [x] **Branded 100 g default shown as fact** (`19a7a86`) — `parseServingGrams` reports the fallback; `BrandedFood.servingIsFallback` threads through `mapOffProduct`; the kcal label reads "NNN kcal / 100 g" only when the serving was the 100 g guess.
 - [x] **Craving search shows the active filter but can't edit it** (`c98892f`) — the clear-only chip is now the editable `QuestFilterMenu` (adjust cuisine/cook-time/role, or Reset). Verified in-browser + 4 filter e2e pass on chromium.
-- [ ] **Three orphaned Path subpages** (`/path/cuisines`, `/path/llm-spend`, `/path/charity-spend`) — add entry points or delete. **Awaiting founder decision** (delete-vs-keep is a product call): cuisines is a real but skill-tree-redundant feature; llm-spend + charity-spend are internal founder dashboards (rule 3 forbids them as user surfaces; the strategy report orders the charity system cut).
+- [x] **Three orphaned Path subpages** — DELETED per founder decision (keep libs). Removed the 3 page files (`/path/cuisines`, `/path/llm-spend`, `/path/charity-spend`) + the `/path/cuisines` e2e route-array entry + its DESIGN-SYSTEM "Live" row. The underlying libs (`cuisine-stats`, `llm-spend`, `charity`, `made-it-ring`) stay — a founder re-wires them behind real auth in one file later (rule 12). cuisines was skill-tree-redundant (rule 11); the two dashboards were internal founder surfaces (rule 3) with no entry point.
 
 ## P2 — polish / cohesion
 

@@ -43,7 +43,6 @@ const SECONDARY_ROUTES = [
   { path: "/path/household", name: "Household" },
   { path: "/path/eco", name: "Eco" },
   { path: "/path/recap", name: "Recap" },
-  { path: "/path/cuisines", name: "Cuisines" },
   { path: "/eat-out", name: "Eat out" },
   { path: "/games", name: "Games" },
   { path: "/community/saved", name: "Saved content" },

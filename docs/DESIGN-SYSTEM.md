@@ -197,7 +197,6 @@ Y3 W40. Standard tap-feedback springs over framer-motion. Reduced-motion gates t
 | `/today`                  | Polished | DailyNoveltyChip, TodayPlannedSlot, CookAgainChip |
 | `/today/search`           | Live     | EyebrowCaps + ChipFeedback (filter chips)         |
 | `/path`                   | Polished | (Path tab landing — links into subroutes)         |
-| `/path/cuisines`          | Live     | MadeItRing, EmptyState                            |
 | `/path/recipes`           | Live     | Pantry-coverage badge (W29)                       |
 | `/path/recipes/new`       | Live     | RecipeForm (existing)                             |
 | `/path/recipes/[id]/edit` | Live     | RecipeForm                                        |
