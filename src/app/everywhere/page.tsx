@@ -63,8 +63,8 @@ export default function EverywherePage() {
             />
             <SurfaceTile
               icon={LayoutGrid}
-              label="Today's craving"
-              hint="Tonight's pick, on open."
+              label="The Today deck"
+              hint="Where cravings live."
               status="live"
               onClick={() => router.push("/today")}
             />

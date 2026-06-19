@@ -21,10 +21,13 @@ export const widgetTodaySchema = z.object({
 });
 export type WidgetToday = z.infer<typeof widgetTodaySchema>;
 
-/** Wallpaper dimensions, clamped to a sane device range (defaults ≈ iPhone). */
+/** Wallpaper dimensions, clamped to a sane device range (defaults ≈ iPhone).
+ *  `.catch()` (not `.default()`) so a missing/invalid/out-of-range param — the
+ *  route feeds raw `string | null` from the query — falls back instead of
+ *  throwing, making the schema the single source of truth for the clamp. */
 export const wallpaperParamsSchema = z.object({
-  w: z.coerce.number().int().min(320).max(2160).default(1179),
-  h: z.coerce.number().int().min(320).max(3840).default(2556),
+  w: z.coerce.number().int().min(320).max(2160).catch(1179),
+  h: z.coerce.number().int().min(320).max(3840).catch(2556),
 });
 export type WallpaperParams = z.infer<typeof wallpaperParamsSchema>;
 

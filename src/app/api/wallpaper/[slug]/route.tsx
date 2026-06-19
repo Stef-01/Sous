@@ -60,15 +60,17 @@ export async function GET(
   if (!meal) return new Response("Not found", { status: 404 });
 
   const url = new URL(req.url);
-  const parsed = wallpaperParamsSchema.safeParse({
+  // `.catch()` in the schema clamps/defaults any bad value, so parse never throws.
+  const { w, h } = wallpaperParamsSchema.parse({
     w: url.searchParams.get("w"),
     h: url.searchParams.get("h"),
   });
-  const { w, h } = parsed.success ? parsed.data : { w: 1179, h: 2556 };
 
   // Resolve the hero photo against the request origin so it works in dev
-  // (localhost) and prod alike; on any fetch failure ImageResponse simply
-  // shows the gradient behind it.
+  // (localhost) and prod alike. The cuisine gradient is ALWAYS the under-layer,
+  // so if the photo fetch fails the wallpaper degrades to the gradient + caption
+  // (never a blank dark screen) — and the no-photo branch is gradient + type
+  // only, which is why this route can never synthesize food imagery (rule 7).
   const bgImage = meal.heroImageUrl
     ? `${url.origin}${meal.heroImageUrl}`
     : null;
@@ -84,7 +86,7 @@ export async function GET(
         flexDirection: "column",
         justifyContent: "flex-end",
         position: "relative",
-        background: bgImage ? "#15110d" : gradientFor(meal.cuisine),
+        background: gradientFor(meal.cuisine),
       }}
     >
       {bgImage ? (

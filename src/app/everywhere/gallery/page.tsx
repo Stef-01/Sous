@@ -66,7 +66,7 @@ export default function GalleryPage() {
           aria-label={`Cook ${meal.name}`}
           initial={reducedMotion ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={reducedMotion ? { opacity: 0 } : { opacity: 0 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: reducedMotion ? 0 : 0.8 }}
           className="absolute inset-0 flex flex-col justify-end text-left"
         >

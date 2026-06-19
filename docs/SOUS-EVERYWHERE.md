@@ -55,6 +55,27 @@ subscribe the moment VAPID lands).
 | `NEXT_PUBLIC_SOUS_SHORTCUT_URL` | `WallpaperPreview`                    | reveals the "auto-set daily" Shortcut row                                  |
 | `NEXT_PUBLIC_SITE_URL`          | (already set)                         | absolute origin; the wallpaper route prefers the request origin            |
 
+## iOS Shortcut recipe (auto-wallpaper)
+
+The endpoint `/api/wallpaper/today?w=&h=&hour=18` is live, so auto-wallpaper is
+usable **now** without any founder asset — the `/everywhere` "Auto-set it daily
+(iOS)" disclosure walks any user through building the Shortcut, and copies the
+device-sized daily link. The recipe:
+
+1. Shortcuts app → **Automation** → ＋ → **Time of Day** (e.g. 7 AM, daily; "Run
+   Immediately").
+2. Add **Get Contents of URL** → paste the copied link
+   (`https://<site>/api/wallpaper/today?w=<dpr-px-w>&h=<dpr-px-h>&hour=18`).
+   `hour=18` pins the evening "tonight you're making" daypart regardless of when
+   the automation runs (and side-steps the UTC-server-clock daypart skew —
+   `/api/wallpaper/today` also accepts `?hour=&month=` for a true local clock).
+3. Add **Set Wallpaper Photo** → use the result, Lock Screen.
+
+**Founder one-tap upgrade:** export that Shortcut once, host the `.shortcut`
+(iCloud link), set `NEXT_PUBLIC_SOUS_SHORTCUT_URL`, and the disclosure swaps the
+manual recipe for a "Get the one-tap Shortcut" button — integration is one env
+edit.
+
 ## Deferred (next founder-gate commit, not built now)
 
 - `/api/cron/craving-push` (Vercel Cron) — hunger-window push dispatch. Dead

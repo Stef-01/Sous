@@ -818,6 +818,7 @@ function CombinedMissionScreen({
   hasIngredients: boolean;
   onStart: () => void;
 }) {
+  const reducedMotion = useReducedMotion();
   const totalTime = prepTimeMinutes + cookTimeMinutes;
   const displayTime =
     sequencerEstimate && sequencerEstimate < totalTime
@@ -826,15 +827,19 @@ function CombinedMissionScreen({
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
+      initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       className="flex flex-col gap-5 min-h-[calc(100dvh-160px)]"
     >
       {/* Hero image  -  gradient+emoji fallback when no image */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25 }
+        }
         className="relative aspect-[4/3] overflow-hidden rounded-xl"
       >
         {mainDishHeroImage ? (
@@ -870,14 +875,13 @@ function CombinedMissionScreen({
       {/* Dish name + companion info */}
       <div className="space-y-3">
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={reducedMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 25,
-            delay: 0.1,
-          }}
+          transition={
+            reducedMotion
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 260, damping: 25, delay: 0.1 }
+          }
           className="font-serif text-2xl text-[var(--nourish-dark)]"
         >
           {mainDishName}
@@ -886,14 +890,13 @@ function CombinedMissionScreen({
         {/* Companion dishes */}
         {companionDishes.length > 0 && (
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 25,
-              delay: 0.15,
-            }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 25, delay: 0.15 }
+            }
             className="text-sm text-[var(--nourish-subtext)]"
           >
             Cooking with:{" "}
@@ -910,14 +913,18 @@ function CombinedMissionScreen({
           {flavorProfile.slice(0, 3).map((flavor, idx) => (
             <motion.span
               key={flavor}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 20,
-                delay: 0.2 + idx * 0.05,
-              }}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : {
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 20,
+                      delay: 0.2 + idx * 0.05,
+                    }
+              }
               className="rounded-full border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)] capitalize"
             >
               {flavor}
@@ -929,14 +936,18 @@ function CombinedMissionScreen({
             </span>
           )}
           <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-              delay: 0.2 + Math.min(flavorProfile.length, 3) * 0.05,
-            }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : {
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.2 + Math.min(flavorProfile.length, 3) * 0.05,
+                  }
+            }
             className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
           >
             {displayTime} min
@@ -945,14 +956,18 @@ function CombinedMissionScreen({
               : " total"}
           </motion.span>
           <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 20,
-              delay: 0.25 + Math.min(flavorProfile.length, 3) * 0.05,
-            }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : {
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 20,
+                    delay: 0.25 + Math.min(flavorProfile.length, 3) * 0.05,
+                  }
+            }
             className="rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]"
           >
             {companionDishes.length + 1} dishes
@@ -962,14 +977,13 @@ function CombinedMissionScreen({
 
       {/* Description */}
       <motion.p
-        initial={{ opacity: 0, y: 8 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 25,
-          delay: 0.25,
-        }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.25 }
+        }
         className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
       >
         {mainDishDescription}
@@ -977,10 +991,14 @@ function CombinedMissionScreen({
 
       {/* Primary action stays ahead of optional controls on short phones. */}
       <motion.button
-        initial={{ opacity: 0, y: 8 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
-        whileTap={{ scale: 0.96 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.3 }
+        }
+        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
         onClick={onStart}
         className={cn(
           "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
@@ -995,23 +1013,26 @@ function CombinedMissionScreen({
       {/* Plan-my-cook  -  uses sequencer-adjusted time when available so the
           computed start reflects parallelization savings. */}
       <motion.div
-        initial={{ opacity: 0, y: 6 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 25,
-          delay: 0.28,
-        }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.28 }
+        }
       >
         <PlanCookChip totalMinutes={displayTime} />
       </motion.div>
 
       {/* Big-hands  -  session-scoped opt-in for the rest of this cook */}
       <motion.div
-        initial={{ opacity: 0, y: 6 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 25, delay: 0.3 }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.3 }
+        }
       >
         <BigHandsToggle />
       </motion.div>

@@ -418,9 +418,13 @@ export function IngredientList({
                       sub-label so the whole list reads as one unified surface. */}
                   {isSegmented && section.label && (
                     <motion.h3
-                      initial={{ opacity: 0, x: -4 }}
+                      initial={reducedMotion ? false : { opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: sectionStartIdx * 0.04 }}
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { delay: sectionStartIdx * 0.04 }
+                      }
                       className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2"
                     >
                       {section.label}
@@ -464,10 +468,14 @@ export function IngredientList({
         <AnimatePresence>
           {allChecked && (
             <motion.div
-              initial={{ opacity: 0, y: 6 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+              transition={
+                reducedMotion
+                  ? { duration: 0.12 }
+                  : { type: "spring", stiffness: 300, damping: 25 }
+              }
               className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/25 bg-[var(--nourish-green)]/5 px-4 py-3"
             >
               <span className="text-lg">✅</span>
@@ -484,7 +492,7 @@ export function IngredientList({
         {/* Primary: Proceed to cook */}
         <motion.button
           onClick={onReady}
-          whileTap={{ scale: 0.97 }}
+          whileTap={reducedMotion ? undefined : { scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
@@ -501,15 +509,14 @@ export function IngredientList({
         {/* Add missing ingredients to shopping list */}
         {!allChecked && missingCount > 0 && (
           <motion.button
-            initial={{ opacity: 0, y: 6 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 25,
-              delay: 0.1,
-            }}
-            whileTap={{ scale: 0.96 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 25, delay: 0.1 }
+            }
+            whileTap={reducedMotion ? undefined : { scale: 0.96 }}
             onClick={handleAddMissingToShopping}
             className={cn(
               "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium",
@@ -532,15 +539,14 @@ export function IngredientList({
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (
           <motion.button
-            initial={{ opacity: 0, y: 8 }}
+            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 25,
-              delay: 0.15,
-            }}
-            whileTap={{ scale: 0.96 }}
+            transition={
+              reducedMotion
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 260, damping: 25, delay: 0.15 }
+            }
+            whileTap={reducedMotion ? undefined : { scale: 0.96 }}
             onClick={onSelectSides}
             className={cn(
               "flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-medium",
@@ -585,6 +591,7 @@ function IngredientRow({
   onTogglePantry: () => void;
 }) {
   const { system } = useUnitPref();
+  const reducedMotion = useReducedMotion();
   // AI substitution query  -  fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
     {
@@ -598,9 +605,9 @@ function IngredientRow({
   return (
     <div>
       <motion.div
-        initial={{ opacity: 0, x: -8 }}
+        initial={reducedMotion ? false : { opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: idx * 0.04 }}
+        transition={reducedMotion ? { duration: 0 } : { delay: idx * 0.04 }}
         className={cn(
           "flex w-full items-center gap-3 px-4 py-2.5",
           "transition-colors duration-100",
@@ -618,9 +625,13 @@ function IngredientRow({
         >
           {checked ? (
             <motion.div
-              initial={{ scale: 0.6 }}
+              initial={reducedMotion ? false : { scale: 0.6 }}
               animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : { type: "spring", stiffness: 400, damping: 15 }
+              }
               className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--nourish-green)]"
             >
               <Check size={12} className="text-white" strokeWidth={3} />
@@ -706,10 +717,10 @@ function IngredientRow({
       <AnimatePresence>
         {showingSub && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={reducedMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={reducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.2 }}
             className="overflow-hidden"
           >
             <div className="mb-3 ml-12 mr-4 rounded-lg border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-2.5">

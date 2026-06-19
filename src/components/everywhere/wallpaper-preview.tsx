@@ -2,8 +2,15 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { Download, UtensilsCrossed } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  Download,
+  UtensilsCrossed,
+} from "lucide-react";
 import { cravingForNow } from "@/lib/engine/craving-for-now";
+import { cn } from "@/lib/utils/cn";
 
 function dateSeed(d: Date): number {
   return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
@@ -42,9 +49,28 @@ export function WallpaperPreview() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const shortcutUrl = process.env.NEXT_PUBLIC_SOUS_SHORTCUT_URL;
+  const [showSetup, setShowSetup] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   if (!craving) return null;
   const downloadUrl = `/api/wallpaper/${craving.slug}?w=${size.w}&h=${size.h}`;
+
+  // The stable daily URL an iOS Shortcut polls — hour=18 pins the evening
+  // "tonight you're making" daypart regardless of when the automation runs.
+  const dailyUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/api/wallpaper/today?w=${size.w}&h=${size.h}&hour=18`
+      : "";
+
+  const copyDailyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(dailyUrl);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard blocked — the user can long-press the field instead */
+    }
+  };
 
   return (
     <div className="space-y-3">
@@ -101,16 +127,83 @@ export function WallpaperPreview() {
         Photos.
       </p>
 
-      {shortcutUrl && (
-        <a
-          href={shortcutUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block text-center text-[11px] font-medium text-[var(--nourish-subtext)] underline-offset-2 hover:text-[var(--nourish-green)] hover:underline"
+      {/* Auto-set daily (iOS) — disclosure on tap (rule 13). One-tap import
+          when the founder publishes the Shortcut; until then a copyable daily
+          URL + the 3-step recipe so any user can wire it themselves now. */}
+      <div className="rounded-xl border border-neutral-100 bg-white">
+        <button
+          type="button"
+          onClick={() => setShowSetup((s) => !s)}
+          aria-expanded={showSetup}
+          className="flex w-full items-center justify-between gap-2 px-3.5 py-2.5 text-left"
         >
-          Auto-set daily with the iOS Shortcut
-        </a>
-      )}
+          <span className="text-[13px] font-semibold text-[var(--nourish-dark)]">
+            Auto-set it daily (iOS)
+          </span>
+          <ChevronDown
+            size={16}
+            className={cn(
+              "shrink-0 text-[var(--nourish-subtext)] transition-transform",
+              showSetup && "rotate-180",
+            )}
+          />
+        </button>
+
+        {showSetup && (
+          <div className="space-y-3 border-t border-neutral-100 px-3.5 pb-3.5 pt-3">
+            {shortcutUrl ? (
+              <a
+                href={shortcutUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--nourish-green)]/10 py-2.5 text-[13px] font-semibold text-[var(--nourish-green)]"
+              >
+                Get the one-tap Shortcut
+              </a>
+            ) : null}
+
+            <ol className="space-y-2 text-[12px] leading-snug text-[var(--nourish-subtext)]">
+              <li>
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  1.
+                </span>{" "}
+                Shortcuts app → Automation → ＋ → Time of Day (e.g. 7 AM,
+                daily).
+              </li>
+              <li>
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  2.
+                </span>{" "}
+                Add <em>Get Contents of URL</em> → paste the daily link below.
+              </li>
+              <li>
+                <span className="font-semibold text-[var(--nourish-dark)]">
+                  3.
+                </span>{" "}
+                Add <em>Set Wallpaper Photo</em> → Lock Screen. Done.
+              </li>
+            </ol>
+
+            <button
+              type="button"
+              onClick={copyDailyUrl}
+              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--nourish-green)]/30 py-2.5 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+            >
+              {copied ? (
+                <>
+                  <Check size={13} strokeWidth={2.5} />
+                  Copied the daily link
+                </>
+              ) : (
+                <>
+                  <Copy size={13} />
+                  Copy the daily link
+                </>
+              )}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

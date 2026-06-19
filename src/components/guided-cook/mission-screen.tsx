@@ -197,7 +197,7 @@ export function MissionScreen({
           damping: 25,
           delay: 0.25,
         }}
-        whileTap={{ scale: 0.96 }}
+        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
         onClick={onStart}
         className={cn(
           "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
@@ -211,28 +211,26 @@ export function MissionScreen({
 
       {/* Plan-my-cook  -  optional eat-time → start-time assist */}
       <motion.div
-        initial={{ opacity: 0, y: 6 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 25,
-          delay: 0.22,
-        }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.22 }
+        }
       >
         <PlanCookChip totalMinutes={totalTime} />
       </motion.div>
 
       {/* Big-hands mode  -  calm opt-in for the rest of this session */}
       <motion.div
-        initial={{ opacity: 0, y: 6 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 25,
-          delay: 0.24,
-        }}
+        transition={
+          reducedMotion
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 260, damping: 25, delay: 0.24 }
+        }
       >
         <BigHandsToggle />
       </motion.div>

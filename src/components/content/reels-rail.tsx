@@ -25,7 +25,6 @@ function formatDuration(seconds: number): string {
  */
 export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   if (reels.length === 0) return null;
 
   return (
@@ -40,7 +39,7 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
         {reels.map((reel) => (
           <motion.div
             key={reel.id}
-            whileTap={{ scale: 0.97 }}
+            whileTap={reducedMotion ? undefined : { scale: 0.97 }}
             transition={{ type: "spring", stiffness: 360, damping: 24 }}
             className="w-[158px] shrink-0 snap-start"
           >
