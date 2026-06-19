@@ -15,7 +15,72 @@ import {
   getAvailableCookSlugs,
 } from "@/data/guided-cook-summary";
 import { sides, meals } from "@/data";
+import {
+  mealDaypartFromHour,
+  type MealDaypart,
+} from "@/lib/engine/craving-for-now";
+import type { WeatherSnapshot } from "@/lib/weather/weather-adapter";
+import {
+  weatherTempLean,
+  dishTempProfile,
+  dishMatchesWeather,
+  type WeatherLean,
+} from "@/lib/weather/weather-bias";
 import type { QuestDish } from "./quest-card";
+
+// ── Context reorder weights (the hunger / weather / crave-it spine) ──────────
+// Tuned to break ties + reorder near-equal candidates without leapfrogging a
+// quality signal (a hero image is worth 10): a daypart-eligible dish leads, the
+// weather nudges the temperature axis, and a saved dish resurfaces — amplified
+// when the weather matches what you craved ("save a cold dish → it comes back
+// when it's hot"). All zero when there's no signal → byte-identical deck.
+const DAYPART_BOOST = 8;
+const WEATHER_BOOST = 4;
+const SAVED_BASE_BOOST = 3;
+const SAVED_WEATHER_BOOST = 5;
+
+/** The live context the deck reorders against — the daypart, the weather lean,
+ *  and the user's saved ("craved") dishes. */
+export interface DeckContext {
+  daypart: MealDaypart;
+  weatherLean: WeatherLean;
+  savedSlugs: Set<string>;
+}
+
+/** Pure reorder boost for a dish given the live context. Tested directly
+ *  (no Date / no fetch) so the three behaviours are pinned independently. The
+ *  dish shape is loose on purpose — both a QuestDish (`Daypart[]`) and a test
+ *  fixture (`string[]`) satisfy it. */
+export function contextBoost(
+  dish: {
+    slug: string;
+    tags?: string[];
+    description?: string;
+    dayparts?: readonly string[];
+  },
+  ctx: DeckContext,
+): number {
+  let boost = 0;
+
+  // Hunger-aware: a meal authored for the current daypart leads the deck.
+  if (dish.dayparts && dish.dayparts.includes(ctx.daypart)) {
+    boost += DAYPART_BOOST;
+  }
+
+  // Weather-aware: hot → cold/fresh dishes; cold·rain·snow → warm/comfort.
+  const temp = dishTempProfile(dish);
+  const matchesWeather = dishMatchesWeather(ctx.weatherLean, temp);
+  if (matchesWeather) boost += WEATHER_BOOST;
+
+  // Crave-it resurface: a saved dish comes back, amplified when the weather
+  // matches its character (the Zeigarnik open loop the save opened).
+  if (ctx.savedSlugs.has(dish.slug)) {
+    boost += SAVED_BASE_BOOST;
+    if (matchesWeather) boost += SAVED_WEATHER_BOOST;
+  }
+
+  return boost;
+}
 
 /** A dish goes STRAIGHT to the guided cook only when it has cook steps AND
  *  isn't a main — mains route to /sides first to build a plate. This mirrors
@@ -269,10 +334,20 @@ export function buildQuestDishes(
     recommendedLevel: "easy" | "medium" | "hard";
     difficultyBoost: number;
   },
+  /** Live context: weather + the user's saved ("craved") dish slugs. Absent →
+   *  no daypart/weather/resurface tilt is added beyond the legacy time nudge. */
+  context?: { weather?: WeatherSnapshot | null; savedSlugs?: string[] },
 ): QuestDish[] {
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
 
   const now = new Date();
+
+  // The live reorder context (hunger / weather / crave-it). Built once.
+  const deckCtx: DeckContext = {
+    daypart: mealDaypartFromHour(now.getHours()),
+    weatherLean: weatherTempLean(context?.weather ?? null),
+    savedSlugs: new Set(context?.savedSlugs ?? []),
+  };
   const dayOfYear = Math.floor(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,
   );
@@ -369,7 +444,8 @@ export function buildQuestDishes(
         noveltyBonus(m.cuisineFamily) +
         pantryBoost(m) +
         timeOfDayBoost(m) +
-        difficultyBoost(m.slug),
+        difficultyBoost(m.slug) +
+        contextBoost(m, deckCtx),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
@@ -386,7 +462,8 @@ export function buildQuestDishes(
         noveltyBonus(s.cuisineFamily) +
         pantryBoost(s) +
         timeOfDayBoost(s) +
-        difficultyBoost(s.slug),
+        difficultyBoost(s.slug) +
+        contextBoost(s, deckCtx),
     }))
     .sort(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),

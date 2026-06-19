@@ -21,6 +21,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Drawer } from "vaul";
 import {
   ChevronDown,
+  CloudSun,
   Eye,
   Heart,
   HeartPulse,
@@ -42,6 +43,7 @@ import type { DietaryFlag } from "@/lib/engine/dietary-inferer";
 import type { FodmapPhase } from "@/types/care-profile";
 import { useVoiceCookPref } from "@/lib/voice/use-voice-cook-pref";
 import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
+import { useWeather } from "@/lib/weather/use-weather";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { SectionKicker } from "@/components/shared/section-kicker";
@@ -82,6 +84,7 @@ export function ProfileSettingsSheet({
   const { profile, toggle, setAgeBand } = useParentMode();
   const voicePref = useVoiceCookPref();
   const visualPref = useVisualModePref();
+  const weather = useWeather();
   const haptic = useHaptic();
   const reducedMotion = useReducedMotion();
 
@@ -321,6 +324,41 @@ export function ProfileSettingsSheet({
                     visualPref.setEnabled(next);
                   }}
                   label="Visual mode"
+                />
+              </div>
+            </section>
+
+            {/* Weather-aware picks (desire-thesis 4.14) — opt-in. Reads the
+                device location once + Open-Meteo (free, no key) to tilt the
+                deck: fresh/cold dishes when it's hot, warming ones when it's
+                cold, and resurfaces a saved dish when the weather matches it.
+                Off → no location, byte-identical deck. */}
+            <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                  >
+                    <CloudSun size={16} />
+                  </span>
+                  <div className="space-y-1">
+                    <SectionKicker as="p" size="10px">
+                      Weather-aware picks
+                    </SectionKicker>
+                    <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+                      Tilt the deck to the weather — fresh when it&rsquo;s hot,
+                      warming when it&rsquo;s cold. Uses your location.
+                    </p>
+                  </div>
+                </div>
+                <SettingToggle
+                  checked={weather.enabled}
+                  onChange={(next) => {
+                    haptic();
+                    weather.setEnabled(next);
+                  }}
+                  label="Weather-aware picks"
                 />
               </div>
             </section>

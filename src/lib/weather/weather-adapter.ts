@@ -64,8 +64,9 @@ function openMeteoAdapter(): WeatherAdapter {
   };
 }
 
-/** Open-Meteo WMO weather codes → our coarse condition buckets. */
-function mapWeatherCode(code: number | undefined): WeatherCondition {
+/** Open-Meteo WMO weather codes → our coarse condition buckets. Exported so the
+ *  client `useWeather` hook reuses the exact same mapping. */
+export function mapWeatherCode(code: number | undefined): WeatherCondition {
   if (code == null) return "unknown";
   if (code === 0) return "clear";
   if (code >= 71 && code <= 77) return "snow";

@@ -27,6 +27,7 @@ import {
   pickCurrentMeal,
 } from "@/types/meal-plan";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
+import { useWeather } from "@/lib/weather/use-weather";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { usePantry, normalizePantryName } from "@/lib/hooks/use-pantry";
 import { usePantryMode } from "@/lib/hooks/use-pantry-mode";
@@ -186,6 +187,13 @@ export function QuestCard({
     [pantryItems, pantryMounted],
   );
   const progression = useDifficultyProgression(cookSessions ?? []);
+  // Weather-aware + crave-it: the live weather signal (opt-in, null when off)
+  // and the user's saved ("craved") dishes reorder the deck — daypart-eligible
+  // dishes lead, the weather tilts the temperature axis, and a saved dish
+  // resurfaces (amplified when the weather matches what you craved).
+  const weather = useWeather();
+  const { saved } = useSavedDishes();
+  const savedSlugs = useMemo(() => saved.map((d) => d.slug), [saved]);
   // Quest filters: role / meal-type / cuisine / cook-time. Session-scoped so
   // they never become permanent settings — they reset at app close.
   const filters = useQuestFilters();
@@ -218,6 +226,7 @@ export function QuestCard({
         cookHistory,
         pantry,
         progression,
+        { weather: weather.snapshot, savedSlugs },
       ).filter((d) => d.role === "main");
       // Score the injected creations' pantry fit too (buildQuestDishes only
       // does it for the catalog pool). Your creations lead the deck.
@@ -244,6 +253,8 @@ export function QuestCard({
     progression,
     filters.roles,
     customDishes,
+    weather.snapshot,
+    savedSlugs,
   ]);
 
   // Build the cuisine option list from the actual dish index so we never
