@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import { persistSavedDishToggle } from "@/lib/trpc/vanilla";
 
 const STORAGE_KEY = "sous-saved-dishes";
+const SAVED_EVENT = "sous-saved-dishes-changed";
 const MAX_SAVED = 50;
 
 export interface SavedDish {
@@ -30,13 +31,30 @@ function persist(dishes: SavedDish[]) {
   }
 }
 
+/** Same-tab broadcast so every useSavedDishes instance stays in lock-step — the
+ *  deck reads `saved` from one instance while the heart button writes via
+ *  another, so without this the crave-it resurface wouldn't fire until reload. */
+function broadcast() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event(SAVED_EVENT));
+  }
+}
+
 export function useSavedDishes() {
   const [saved, setSaved] = useState<SavedDish[]>([]);
 
+   
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate from localStorage on mount
-    setSaved(loadSaved());
+    const read = () => setSaved(loadSaved());
+    read();
+    window.addEventListener(SAVED_EVENT, read);
+    window.addEventListener("storage", read);
+    return () => {
+      window.removeEventListener(SAVED_EVENT, read);
+      window.removeEventListener("storage", read);
+    };
   }, []);
+   
 
   const saveDish = useCallback((slug: string, name: string): boolean => {
     const existing = loadSaved();
@@ -50,6 +68,7 @@ export function useSavedDishes() {
     persist(updated);
     setSaved(updated);
     persistSavedDishToggle({ sideDishSlug: slug, saved: true });
+    broadcast();
     return true;
   }, []);
 
@@ -59,6 +78,7 @@ export function useSavedDishes() {
     persist(updated);
     setSaved(updated);
     persistSavedDishToggle({ sideDishSlug: slug, saved: false });
+    broadcast();
   }, []);
 
   const isDishSaved = useCallback(

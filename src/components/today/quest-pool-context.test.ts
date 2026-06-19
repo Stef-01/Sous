@@ -79,12 +79,26 @@ describe("contextBoost — crave-it resurface", () => {
   });
 });
 
-describe("contextBoost — quiet by default", () => {
-  it("is exactly 0 with no signal (byte-identical deck)", () => {
+describe("contextBoost — the on-by-default split", () => {
+  it("the daypart (hunger) reorder is ALWAYS on — a matching meal gets only the daypart boost when weather is off + nothing saved", () => {
+    const onlyDaypart = contextBoost(
+      dish({ dayparts: ["dinner"], tags: ["Savory"] }),
+      ctx({ daypart: "dinner", weatherLean: "neutral", savedSlugs: new Set() }),
+    );
+    expect(onlyDaypart).toBe(8); // DAYPART_BOOST — no weather, no resurface
+  });
+
+  it("weather + crave-it contribute exactly 0 when weather is off and nothing is saved", () => {
+    // A generic, daypart-non-matching dish → fully quiet; the contextual terms
+    // never fire on their own.
     expect(
       contextBoost(
-        dish({ dayparts: ["dinner"] }),
-        ctx({ daypart: "breakfast" }),
+        dish({ dayparts: ["dinner"], tags: ["Savory"], description: "tacos" }),
+        ctx({
+          daypart: "breakfast",
+          weatherLean: "neutral",
+          savedSlugs: new Set(),
+        }),
       ),
     ).toBe(0);
   });

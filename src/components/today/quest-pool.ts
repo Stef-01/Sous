@@ -33,7 +33,14 @@ import type { QuestDish } from "./quest-card";
 // quality signal (a hero image is worth 10): a daypart-eligible dish leads, the
 // weather nudges the temperature axis, and a saved dish resurfaces — amplified
 // when the weather matches what you craved ("save a cold dish → it comes back
-// when it's hot"). All zero when there's no signal → byte-identical deck.
+// when it's hot").
+//
+// On-by-default split: the DAYPART (hunger) reorder is ALWAYS on — that's the
+// "enable hunger-aware deck reorder" ask, so the deck always honours the time of
+// day, exactly like the legacy timeOfDayBoost it strengthens. The WEATHER and
+// CRAVE-IT terms are contextual and contribute 0 until the user opts into
+// weather (snapshot null → neutral lean) or saves a dish — so toggling weather
+// off / saving nothing leaves only the daypart nudge.
 const DAYPART_BOOST = 8;
 const WEATHER_BOOST = 4;
 const SAVED_BASE_BOOST = 3;
