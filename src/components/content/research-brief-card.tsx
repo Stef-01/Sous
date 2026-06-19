@@ -47,7 +47,7 @@ export function ResearchBriefCard({ brief }: Props) {
         </div>
       </div>
       <div className="flex flex-col gap-1.5 p-3.5">
-        <p className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[var(--nourish-green)]">
+        <p className="sous-label inline-flex items-center gap-1 text-[var(--nourish-green)]">
           <Microscope size={12} />
           {brief.labName}
           {brief.isPlaceholder && <SampleTag />}

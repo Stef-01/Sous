@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ExpertVoice } from "@/types/content";
 import { ExpertAvatar } from "./expert-avatar";
 import { SampleTag } from "./sample-tag";
+import { SectionHeader } from "./section-header";
 
 interface Props {
   experts: ExpertVoice[];
@@ -19,11 +20,7 @@ export function ExpertVoicesRow({ experts }: Props) {
   if (experts.length === 0) return null;
   return (
     <section aria-label="Expert voices" className="space-y-2">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
-          Experts
-        </h2>
-      </div>
+      <SectionHeader eyebrow="Voices" title="Experts" />
 
       <ul className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
         {experts.map((expert) => (

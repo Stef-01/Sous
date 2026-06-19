@@ -5,6 +5,7 @@ import { Play } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { Reel } from "@/types/content";
 import { BookmarkButton } from "./bookmark-button";
+import { SectionHeader } from "./section-header";
 
 interface Props {
   reels: Reel[];
@@ -29,18 +30,11 @@ export function ReelsRail({ reels, onSelect, onSeeAll }: Props) {
 
   return (
     <section aria-label="Cooking reels" className="space-y-2">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">Watch</h2>
-        {onSeeAll && (
-          <button
-            type="button"
-            onClick={onSeeAll}
-            className="inline-flex min-h-[44px] items-center rounded-lg px-1 text-[12px] font-medium text-[var(--nourish-green)] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-          >
-            See all
-          </button>
-        )}
-      </div>
+      <SectionHeader
+        eyebrow="Reels"
+        title="Watch"
+        action={onSeeAll ? { label: "See all", onClick: onSeeAll } : undefined}
+      />
 
       <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 scrollbar-hide">
         {reels.map((reel) => (

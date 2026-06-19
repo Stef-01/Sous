@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, Users, ChevronRight, X, Trophy } from "lucide-react";
+import { cn } from "@/lib/utils/cn";
+import { SectionHeader } from "@/components/content/section-header";
 import { ActiveChallengeBanner } from "@/components/community/active-challenge-banner";
 import {
   ARTICLES,
@@ -85,25 +88,33 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
-      <header className="space-y-4 page-x pt-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="space-y-0.5">
-            <h1 className="sous-title text-[var(--nourish-dark)]">Content</h1>
-            <p className="text-[12px] text-[var(--nourish-subtext)]">
-              Watch, learn, and ask better cooking questions.
+      <header className="page-x pt-6">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <p className="sous-label text-[var(--nourish-green)]">
+              The Kitchen
             </p>
+            <h1 className="sous-title mt-1 text-[var(--nourish-dark)]">
+              Content
+            </h1>
           </div>
           <Link
             href="/community/saved"
             aria-label="Saved content"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-dark)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="-mr-1 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--nourish-dark)] transition hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             <Bookmark size={18} />
           </Link>
         </div>
-
-        <CommunitySectionNav />
       </header>
+
+      {/* Sticky in-page nav — a pinned segmented control. Sits OUTSIDE the
+          padded header so its hairline + blur span the full column width. */}
+      <div className="sticky top-0 z-20 mt-3 border-b border-[var(--nourish-border)] bg-[var(--nourish-cream)]/85 backdrop-blur-md">
+        <div className="page-x py-2">
+          <CommunitySectionNav />
+        </div>
+      </div>
 
       <main className="space-y-8 page-x pt-5">
         {/* Featured — the one highlighted story at the very top. */}
@@ -166,10 +177,7 @@ export default function CommunityPage() {
           aria-label="Learn"
           className="scroll-mt-24 space-y-4"
         >
-          <SectionHeader
-            title="Learn"
-            subtitle="Readable cooking ideas and plain-English food research."
-          />
+          <SectionHeader eyebrow="Read" title="Learn" />
           {tag && (
             <button
               type="button"
@@ -215,64 +223,92 @@ export default function CommunityPage() {
   );
 }
 
+const SECTIONS = [
+  { id: "watch", label: "Watch" },
+  { id: "learn", label: "Learn" },
+  { id: "experts", label: "Experts" },
+  { id: "questions", label: "Ask" },
+] as const;
+
+/**
+ * CommunitySectionNav — a segmented control (track + sliding white lozenge)
+ * with scroll-spy: the active segment tracks the section scrolled under the
+ * sticky bar, and the pill slides between segments via a shared layoutId. The
+ * modern iOS/Flo tab idiom; collapses to an instant swap under reduced motion.
+ */
 function CommunitySectionNav() {
-  const scrollTo = (id: string) => {
+  const reducedMotion = useReducedMotion();
+  const [active, setActive] = useState<string>(SECTIONS[0].id);
+  // Guard scroll-spy from fighting a user's tap for the scroll's duration.
+  const lockRef = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (lockRef.current) return;
+        const onScreen = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (onScreen[0]) setActive(onScreen[0].target.id);
+      },
+      { rootMargin: "-72px 0px -55% 0px", threshold: 0 },
+    );
+    for (const s of SECTIONS) {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  const handleTap = (id: string) => {
+    setActive(id);
+    lockRef.current = true;
     document.getElementById(id)?.scrollIntoView({
-      behavior: "smooth",
+      behavior: reducedMotion ? "auto" : "smooth",
       block: "start",
     });
+    window.setTimeout(() => (lockRef.current = false), 650);
   };
 
   return (
     <nav
-      aria-label="Community sections"
-      className="flex items-center justify-between border-y border-[var(--nourish-border)] py-2 text-[13px] font-medium"
+      aria-label="Content sections"
+      className="flex gap-1 rounded-full bg-black/[0.04] p-1"
     >
-      <button
-        type="button"
-        onClick={() => scrollTo("watch")}
-        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-      >
-        Watch
-      </button>
-      <button
-        type="button"
-        onClick={() => scrollTo("learn")}
-        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-      >
-        Learn
-      </button>
-      <button
-        type="button"
-        onClick={() => scrollTo("experts")}
-        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-      >
-        Experts
-      </button>
-      <button
-        type="button"
-        onClick={() => scrollTo("questions")}
-        className="inline-flex min-h-[44px] items-center rounded-full px-2.5 py-1.5 text-[var(--nourish-subtext)] hover:bg-white/70 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-      >
-        Ask
-      </button>
+      {SECTIONS.map((s) => {
+        const isActive = active === s.id;
+        return (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => handleTap(s.id)}
+            aria-current={isActive ? "true" : undefined}
+            className="relative flex-1 rounded-full px-2 py-[11px] text-[13px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          >
+            {isActive && (
+              <motion.span
+                layoutId="content-tab-pill"
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 420, damping: 34 }
+                }
+                className="absolute inset-0 rounded-full bg-white shadow-[var(--shadow-card)]"
+              />
+            )}
+            <span
+              className={cn(
+                "relative z-10 transition-colors",
+                isActive
+                  ? "text-[var(--nourish-dark)]"
+                  : "text-[var(--nourish-subtext)]",
+              )}
+            >
+              {s.label}
+            </span>
+          </button>
+        );
+      })}
     </nav>
-  );
-}
-
-function SectionHeader({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <div className="space-y-0.5 px-1">
-      <h2 className="font-serif text-xl text-[var(--nourish-dark)]">{title}</h2>
-      <p className="text-[12px] leading-snug text-[var(--nourish-subtext)]">
-        {subtitle}
-      </p>
-    </div>
   );
 }

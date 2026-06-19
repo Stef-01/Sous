@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
 import type { ForumThread } from "@/types/content";
+import { SectionHeader } from "./section-header";
 
 interface Props {
   threads: ForumThread[];
@@ -30,9 +31,7 @@ export function ForumThreadList({ threads, limit = 3 }: Props) {
   if (visible.length === 0) return null;
   return (
     <section aria-label="Forum threads" className="space-y-2">
-      <div className="flex items-center justify-between px-1">
-        <h2 className="font-serif text-xl text-[var(--nourish-dark)]">Ask</h2>
-      </div>
+      <SectionHeader eyebrow="Community" title="Ask" />
 
       {/* W19b bonus: forum threads now use a subtle inset shadow + a
           green pill reply count so they read as conversation, not as

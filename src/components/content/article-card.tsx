@@ -36,7 +36,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
           />
         </div>
         <div className="min-w-0 flex-1 space-y-1">
-          <p className="truncate text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--nourish-green)]">
+          <p className="sous-label truncate text-[var(--nourish-green)]">
             {article.kicker}
           </p>
           <p className="line-clamp-2 text-sm font-semibold leading-tight text-[var(--nourish-dark)]">
@@ -75,7 +75,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-1 p-3">
-        <p className="truncate text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--nourish-green)]">
+        <p className="sous-label truncate text-[var(--nourish-green)]">
           {article.kicker}
         </p>
         <h3 className="font-serif text-base leading-tight text-[var(--nourish-dark)] line-clamp-2">
