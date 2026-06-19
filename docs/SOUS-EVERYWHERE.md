@@ -76,9 +76,35 @@ device-sized daily link. The recipe:
 manual recipe for a "Get the one-tap Shortcut" button — integration is one env
 edit.
 
-## Deferred (next founder-gate commit, not built now)
+## Push — fully wired, one env edit from live
 
-- `/api/cron/craving-push` (Vercel Cron) — hunger-window push dispatch. Dead
-  weight until VAPID + a store exist, so it ships with the gate, not now.
-- The server push-subscription store + the `sw.js` `push`/`notificationclick`
-  listeners (the SW currently has none).
+The whole Web Push path is built and ships DORMANT (stub mode until VAPID):
+
+- `public/sw.js` now has `push` + `notificationclick` handlers (shows the
+  craving notification, deep-links the cook on tap).
+- `usePushSubscription().subscribe()` requests permission, registers the SW,
+  creates a real `PushSubscription`, and POSTs it to `/api/push/subscribe`.
+- `/api/push/subscribe` saves it (`src/lib/notify/push-store.ts` — an in-memory
+  dev singleton; persistence is a one-impl swap to the diary-sync write-through).
+- `/api/push/test` dispatches today's craving to every stored sub via `web-push`
+  (returns **503** while VAPID is unset — the honest dormant response). The
+  future `/api/cron/craving-push` is the same call on a Vercel-Cron schedule.
+
+**To go live** (founder): add to `.env.local` (and the Vercel project env) — the
+keys are generated, gitignored, and never committed:
+
+```
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=<public>
+VAPID_PRIVATE_KEY=<private>
+VAPID_SUBJECT=mailto:you@sous.app
+```
+
+Restart; the Notify-me tiles flip from "Soon" to "Enable" and subscribing
+works. `npx web-push generate-vapid-keys --json` regenerates the pair.
+
+## Deferred (the only remaining founder-gate)
+
+- `/api/cron/craving-push` (Vercel Cron) — the scheduled hunger-window send (the
+  `/api/push/test` dispatch on a cron trigger); needs the deploy + `CRON_SECRET`.
+- Swap the in-memory `push-store` for the Supabase write-through (cross-device,
+  survives restarts) — the seam is already there.

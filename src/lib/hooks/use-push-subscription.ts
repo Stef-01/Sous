@@ -3,16 +3,27 @@
 import { useEffect, useState } from "react";
 
 /**
- * usePushSubscription — the client half of Web Push, deliberately DORMANT until
- * the founder provisions VAPID keys (mirrors the dormant-until-gate pattern of
- * `src/lib/notify/push-flag.ts`). When `NEXT_PUBLIC_VAPID_PUBLIC_KEY` is set it
- * flips to `ready` and `subscribe()` registers the existing `public/sw.js` and
- * creates a PushSubscription; until then `subscribe()` is a no-op that reports
- * `dormant` so the UI shows the honest in-app-nudge fallback. One config edit
- * (+ the server dispatch half) lights it up — no code change here.
+ * usePushSubscription — the client half of Web Push. DORMANT until the founder
+ * provisions VAPID keys (mirrors `src/lib/notify/push-flag.ts`): with no
+ * `NEXT_PUBLIC_VAPID_PUBLIC_KEY` the status is `dormant` and `subscribe()` is a
+ * no-op, so the UI shows the honest in-app-nudge fallback. The moment the key is
+ * set, status flips to `ready` and `subscribe()` requests permission, registers
+ * `public/sw.js`, creates a real PushSubscription, and POSTs it to
+ * `/api/push/subscribe`. No code change to light it up — just the env var.
  */
 
 type Status = "unsupported" | "dormant" | "ready";
+type SubscribeReason = Status | "denied" | "error";
+
+/** VAPID public keys are base64url; the Push API wants a Uint8Array. */
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(base64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
 
 export function usePushSubscription() {
   const [supported, setSupported] = useState(false);
@@ -22,7 +33,8 @@ export function usePushSubscription() {
     setSupported(
       typeof window !== "undefined" &&
         "serviceWorker" in navigator &&
-        "PushManager" in window,
+        "PushManager" in window &&
+        "Notification" in window,
     );
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
@@ -38,21 +50,36 @@ export function usePushSubscription() {
       : "dormant";
 
   async function subscribe(): Promise<
-    { ok: true } | { ok: false; reason: Status }
+    { ok: true } | { ok: false; reason: SubscribeReason }
   > {
     if (status !== "ready") return { ok: false, reason: status };
     try {
+      const permission = await Notification.requestPermission();
+      if (permission !== "granted") return { ok: false, reason: "denied" };
+
       const reg = await navigator.serviceWorker.register("/sw.js");
-      await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: vapidPublicKey,
+      await navigator.serviceWorker.ready;
+      const existing = await reg.pushManager.getSubscription();
+      const sub =
+        existing ??
+        (await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          // Cast around the TS lib's ArrayBufferLike/ArrayBuffer generic mismatch
+          // — the runtime value is a valid BufferSource.
+          applicationServerKey: urlBase64ToUint8Array(
+            vapidPublicKey,
+          ) as BufferSource,
+        }));
+
+      const res = await fetch("/api/push/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sub),
       });
-      // The server-side subscription store + dispatch land with the VAPID
-      // founder-gate commit; client registration is the only piece that's safe
-      // to run now.
+      if (!res.ok) return { ok: false, reason: "error" };
       return { ok: true };
     } catch {
-      return { ok: false, reason: "dormant" };
+      return { ok: false, reason: "error" };
     }
   }
 

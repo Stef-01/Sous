@@ -88,3 +88,49 @@ self.addEventListener("fetch", (event) => {
     );
   }
 });
+
+/*
+ * Web Push — the hunger-window craving nudge. The server (/api/push/test or the
+ * future cron) sends a JSON payload { title, body, image, url }; we show it as a
+ * notification and deep-link the cook on tap. Inert until VAPID keys exist, so
+ * this is safe to ship now.
+ */
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: "Sous", body: event.data ? event.data.text() : "" };
+  }
+  const title = data.title || "Tonight's craving";
+  const options = {
+    body: data.body || "",
+    icon: "/icons/icon.svg",
+    badge: "/icons/icon.svg",
+    image: data.image || undefined,
+    data: { url: data.url || "/today" },
+    tag: "sous-craving",
+    renotify: true,
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url =
+    (event.notification.data && event.notification.data.url) || "/today";
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        // Focus an existing tab if one is open; else open a new one.
+        for (const client of clients) {
+          if ("focus" in client) {
+            client.navigate(url);
+            return client.focus();
+          }
+        }
+        return self.clients.openWindow(url);
+      }),
+  );
+});

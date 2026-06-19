@@ -40,15 +40,24 @@ export function NotifyMeRow({
 }) {
   const { status, subscribe } = usePushSubscription();
   const [opted, setOpted] = useState(false);
+  const [denied, setDenied] = useState(false);
 
-   
   useEffect(() => {
     setOpted(readIntents().has(surfaceId));
   }, [surfaceId]);
-   
 
   const handle = async () => {
-    if (status === "ready") await subscribe();
+    setDenied(false);
+    // When push is REALLY enabled, only flip to "on" if the subscribe
+    // succeeds — never fake an opted-in state when permission is refused.
+    if (status === "ready") {
+      const result = await subscribe();
+      if (!result.ok) {
+        setDenied(result.reason === "denied");
+        return;
+      }
+    }
+    // Real subscription OR the honest dormant-stub in-app-nudge opt-in.
     try {
       const next = readIntents();
       next.add(surfaceId);
@@ -100,6 +109,12 @@ export function NotifyMeRow({
           "Notify me"
         )}
       </button>
+      {denied && (
+        <p className="text-[11px] leading-snug text-[var(--nourish-warm)]">
+          Notifications are blocked — allow them in your browser settings, then
+          tap again.
+        </p>
+      )}
     </div>
   );
 }
