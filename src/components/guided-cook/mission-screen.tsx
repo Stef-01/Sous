@@ -135,12 +135,13 @@ export function MissionScreen({
         {/* Creator byline — "by Chef Tu" for partner-chef recipes. */}
         {dishSlug && <CreatorByline slug={dishSlug} className="pt-1.5" />}
 
-        {/* Flavor pills — pattern #3 meta strip. Time chip moved
-            into the eyebrow row above; this row is now flavor-only
-            so the visual category doesn't mix. */}
+        {/* Flavor pills — pattern #3 meta strip. Capped at 3 visible
+            pills with a subtle +N overflow so multi-flavor dishes
+            (4-5+ tags) don't crowd the space above the CTA on 375px.
+            Quieter neutral-outline style replaces the green fill. */}
         {flavorProfile.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-1">
-            {flavorProfile.map((flavor, idx) => (
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {flavorProfile.slice(0, 3).map((flavor, idx) => (
               <motion.span
                 key={flavor}
                 initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
@@ -155,11 +156,16 @@ export function MissionScreen({
                         delay: 0.15 + idx * 0.05,
                       }
                 }
-                className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
+                className="rounded-full border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)] capitalize"
               >
                 {flavor}
               </motion.span>
             ))}
+            {flavorProfile.length > 3 && (
+              <span className="px-1 text-[11px] font-medium tabular-nums text-[var(--nourish-subtext)]/70">
+                +{flavorProfile.length - 3}
+              </span>
+            )}
           </div>
         )}
       </div>

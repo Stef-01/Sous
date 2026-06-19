@@ -903,9 +903,11 @@ function CombinedMissionScreen({
           </motion.p>
         )}
 
-        {/* Flavor badges + total time */}
-        <div className="flex flex-wrap gap-2">
-          {flavorProfile.map((flavor, idx) => (
+        {/* Flavor badges (capped at 3 + overflow — a combined cook unions
+            every dish's flavors, so this row would otherwise crowd the CTA)
+            + total time. Quieter outline-on-tint pills. */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {flavorProfile.slice(0, 3).map((flavor, idx) => (
             <motion.span
               key={flavor}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -916,11 +918,16 @@ function CombinedMissionScreen({
                 damping: 20,
                 delay: 0.2 + idx * 0.05,
               }}
-              className="rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-green)] capitalize"
+              className="rounded-full border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)] capitalize"
             >
               {flavor}
             </motion.span>
           ))}
+          {flavorProfile.length > 3 && (
+            <span className="px-0.5 text-[11px] font-medium tabular-nums text-[var(--nourish-subtext)]/70">
+              +{flavorProfile.length - 3}
+            </span>
+          )}
           <motion.span
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -928,9 +935,9 @@ function CombinedMissionScreen({
               type: "spring",
               stiffness: 300,
               damping: 20,
-              delay: 0.2 + flavorProfile.length * 0.05,
+              delay: 0.2 + Math.min(flavorProfile.length, 3) * 0.05,
             }}
-            className="rounded-full bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-subtext)]"
+            className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
           >
             {displayTime} min
             {sequencerEstimate && sequencerEstimate < totalTime
@@ -944,9 +951,9 @@ function CombinedMissionScreen({
               type: "spring",
               stiffness: 300,
               damping: 20,
-              delay: 0.25 + flavorProfile.length * 0.05,
+              delay: 0.25 + Math.min(flavorProfile.length, 3) * 0.05,
             }}
-            className="rounded-full bg-[var(--nourish-gold)]/15 px-2.5 py-0.5 text-xs font-medium text-[var(--nourish-gold)]"
+            className="rounded-full bg-[var(--nourish-gold)]/15 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-gold)]"
           >
             {companionDishes.length + 1} dishes
           </motion.span>

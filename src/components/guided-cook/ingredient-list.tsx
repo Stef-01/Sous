@@ -327,7 +327,7 @@ export function IngredientList({
                         type="button"
                         onClick={() => toggleCoalesced(item.name)}
                         className={cn(
-                          "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors",
+                          "flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors",
                           isChecked
                             ? "bg-[var(--nourish-green)]/5"
                             : "hover:bg-neutral-50",
@@ -352,32 +352,47 @@ export function IngredientList({
                           )}
                         </span>
                         {/* Reference grammar (matches IngredientRow): emoji
-                            anchor + bold quantity leading the name inline. */}
+                            anchor + NAME-left / AMOUNT-right two columns. */}
                         <span
-                          className="mt-px shrink-0 text-lg leading-none"
+                          className="shrink-0 text-lg leading-none"
                           aria-hidden
                         >
                           {ingredientEmoji(item.name)}
                         </span>
-                        <span className="flex-1">
-                          <span
-                            className={cn(
-                              "block text-sm leading-snug",
-                              isChecked
-                                ? "text-[var(--nourish-subtext)] line-through"
-                                : "text-[var(--nourish-dark)]",
-                            )}
-                          >
+                        <span className="min-w-0 flex-1">
+                          {/* NAME-left / AMOUNT floated-right; name wraps under
+                              the amount (NYT-style), never squeezed. */}
+                          <span className="block">
                             {item.quantity && (
-                              <span className="font-semibold">
+                              <span
+                                className={cn(
+                                  "float-right ml-3 text-[13px] leading-snug tabular-nums",
+                                  "text-[var(--nourish-subtext)]",
+                                  isChecked && "line-through",
+                                )}
+                              >
                                 {displayQuantity(
                                   item.quantity,
                                   item.name,
                                   system,
-                                )}{" "}
+                                )}
                               </span>
                             )}
-                            {item.name}
+                            <span
+                              className={cn(
+                                "text-[15px] leading-snug",
+                                isChecked
+                                  ? "text-[var(--nourish-subtext)] line-through"
+                                  : "text-[var(--nourish-dark)]",
+                              )}
+                            >
+                              {item.name}
+                              {item.isOptional && (
+                                <span className="text-[var(--nourish-subtext)] italic">
+                                  {" · optional"}
+                                </span>
+                              )}
+                            </span>
                           </span>
                           {item.sources.length > 1 && (
                             <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
@@ -587,7 +602,7 @@ function IngredientRow({
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: idx * 0.04 }}
         className={cn(
-          "flex w-full items-start gap-3 px-4 py-3",
+          "flex w-full items-center gap-3 px-4 py-2.5",
           "transition-colors duration-100",
           checked && "opacity-50",
         )}
@@ -597,7 +612,7 @@ function IngredientRow({
             gap-3 away — no stranded gap between the circle and the label. */}
         <button
           onClick={onToggle}
-          className="relative mt-px flex h-5 w-5 shrink-0 items-center justify-center transition-transform active:scale-90 before:absolute before:-inset-3 before:content-['']"
+          className="relative flex h-5 w-5 shrink-0 items-center justify-center transition-transform active:scale-90 before:absolute before:-inset-3 before:content-['']"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
@@ -617,49 +632,54 @@ function IngredientRow({
 
         {/* Food emoji — a visual anchor for the ingredient (recipe-preview
             style); decorative, the name carries the label. */}
-        <span className="mt-px shrink-0 text-lg leading-none" aria-hidden>
+        <span className="shrink-0 text-lg leading-none" aria-hidden>
           {ingredientEmoji(item.name)}
         </span>
 
-        {/* Ingredient info */}
+        {/* Ingredient info — NAME primary (full width), AMOUNT secondary
+            floated top-right and muted. The name flows the full width and
+            wraps UNDER the amount (NYT-style), so a long name + a wordy
+            amount ("1/2 medium") never squeeze each other into a ragged
+            narrow column. */}
         <button
           onClick={onToggle}
-          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
+          className="min-w-0 flex-1 text-left active:scale-[0.98] transition-transform"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
-          {/* Recipe-preview style: a bold quantity leads, then the name, on
-              one wrapping line (a long amount pushes the name to the next line
-              rather than crushing it). The pantry dot stays inline. */}
-          <div className="flex items-start gap-1.5">
-            {inPantry && (
-              <IngredientPantryDot
-                status="have"
-                optional={item.isOptional ?? false}
-                className="mt-1 shrink-0"
-              />
-            )}
-            <p
+          {item.quantity && (
+            <span
               className={cn(
-                "text-sm leading-snug",
-                checked
-                  ? "text-[var(--nourish-subtext)] line-through"
-                  : "text-[var(--nourish-dark)]",
+                "float-right ml-3 text-[13px] leading-snug tabular-nums",
+                "text-[var(--nourish-subtext)]",
+                checked && "line-through",
               )}
             >
-              {item.quantity && (
-                <span className="font-semibold">
-                  {displayQuantity(item.quantity, item.name, system)}{" "}
-                </span>
-              )}
-              {item.name}
-              {item.isOptional && (
-                <span className="text-[var(--nourish-subtext)] italic">
-                  {" · optional"}
-                </span>
-              )}
-            </p>
-          </div>
+              {displayQuantity(item.quantity, item.name, system)}
+            </span>
+          )}
+          {inPantry && (
+            <IngredientPantryDot
+              status="have"
+              optional={item.isOptional ?? false}
+              className="mr-1.5 inline-block align-middle"
+            />
+          )}
+          <span
+            className={cn(
+              "text-[15px] leading-snug",
+              checked
+                ? "text-[var(--nourish-subtext)] line-through"
+                : "text-[var(--nourish-dark)]",
+            )}
+          >
+            {item.name}
+            {item.isOptional && (
+              <span className="text-[var(--nourish-subtext)] italic">
+                {" · optional"}
+              </span>
+            )}
+          </span>
         </button>
 
         {/* Substitution toggle  -  44px touch target. The ONLY side action: the
