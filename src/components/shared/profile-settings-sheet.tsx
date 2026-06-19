@@ -26,6 +26,7 @@ import {
   HeartPulse,
   Mic,
   RotateCcw,
+  Smartphone,
   Sparkles,
   UserRound,
   X,
@@ -60,6 +61,8 @@ interface Props {
   onClose: () => void;
   /** Volunteered pulse entry — opens a quick "tune my picks" micro-survey. */
   onTunePicks?: () => void;
+  /** Opens the Sous Everywhere ecosystem showcase (wallpaper, gallery, …). */
+  onOpenEverywhere?: () => void;
 }
 
 const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
@@ -70,7 +73,12 @@ const AGE_BANDS: { id: AgeBand; label: string; help: string }[] = [
   { id: "mix", label: "Mixed", help: "More than one age" },
 ];
 
-export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
+export function ProfileSettingsSheet({
+  open,
+  onClose,
+  onTunePicks,
+  onOpenEverywhere,
+}: Props) {
   const { profile, toggle, setAgeBand } = useParentMode();
   const voicePref = useVoiceCookPref();
   const visualPref = useVisualModePref();
@@ -341,6 +349,41 @@ export function ProfileSettingsSheet({ open, onClose, onTunePicks }: Props) {
                     </SectionKicker>
                     <span className="mt-0.5 block text-[13px] leading-snug text-[var(--nourish-dark)]">
                       A quick question or two to sharpen your suggestions.
+                    </span>
+                  </span>
+                  <ChevronDown
+                    size={16}
+                    className="-rotate-90 text-[var(--nourish-subtext)]"
+                  />
+                </button>
+              </section>
+            )}
+
+            {/* Sous everywhere — the ecosystem showcase (wallpaper, gallery,
+                widget, push). A single row → a self-contained route (rule 3:
+                reached only from this sheet, not a tab). */}
+            {onOpenEverywhere && (
+              <section className="mt-4 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => {
+                    haptic();
+                    onOpenEverywhere();
+                  }}
+                  className="flex w-full items-center gap-3 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                  >
+                    <Smartphone size={16} />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <SectionKicker as="p" size="10px">
+                      Sous everywhere
+                    </SectionKicker>
+                    <span className="mt-0.5 block text-[13px] leading-snug text-[var(--nourish-dark)]">
+                      Put tonight&rsquo;s craving on your lock screen.
                     </span>
                   </span>
                   <ChevronDown

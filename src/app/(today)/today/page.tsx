@@ -759,6 +759,10 @@ function TodayPageContent() {
         open={showProfileSettings}
         onClose={() => setShowProfileSettings(false)}
         onTunePicks={handleTunePicks}
+        onOpenEverywhere={() => {
+          setShowProfileSettings(false);
+          router.push("/everywhere");
+        }}
       />
 
       {/* W4 — a surfaced pulse micro-survey (auto-triggered or volunteered). */}
