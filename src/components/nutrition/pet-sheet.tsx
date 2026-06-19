@@ -28,6 +28,8 @@ import { PixelIcon, type PixelIconName } from "./pixel-icons";
 import { pixelFont } from "@/lib/fonts/pixel-font";
 import { statTrends, type TrendDirection } from "@/lib/nutrition/pet-trends";
 import { computePetState, seasonFromMonth } from "@/lib/nutrition/pet-state";
+import { usePetAccessories } from "@/lib/hooks/use-pet-accessories";
+import { ACCESSORIES } from "@/lib/nutrition/pet-accessories";
 import {
   activityFeed,
   vitaminCoverage,
@@ -232,6 +234,9 @@ export function PetSheet({
   // also grows (smaller below Lv3).
   const cosmetics = cosmeticsForLevel(lvl.level);
   const heroSize = lvl.level >= 3 ? 176 : 150;
+  // Random accessory loot (variable reward) — what your pup is wearing + the
+  // wardrobe of everything it's found cooking.
+  const { owned, equipped, equip } = usePetAccessories();
 
   // Finch pattern: the pet visibly reacts to the REAL thing you just did.
   // A meal logged in the last 10 minutes puts its bowl on the rug and Dobe
@@ -450,6 +455,7 @@ export function PetSheet({
                 blink={blink}
                 earFlick={earFlick}
                 toque={cosmetics.toque}
+                accessory={equipped}
                 size={heroSize}
                 className={cn(
                   "pet-breathe",
@@ -484,6 +490,34 @@ export function PetSheet({
               ? `Dobe enjoyed the ${recentMeal.name}!`
               : MOOD_LINE[state.mood]}
           </p>
+
+          {/* Wardrobe — the accessories Dobe has found cooking (variable-reward
+              loot). Tap to dress your pup; tap the worn one to take it off. */}
+          {owned.size > 0 && (
+            <div className="flex flex-wrap items-center justify-center gap-1.5 px-2">
+              {ACCESSORIES.filter((a) => owned.has(a.id)).map((a) => {
+                const on = equipped === a.id;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    onClick={() => equip(on ? null : a.id)}
+                    aria-pressed={on}
+                    className={cn(
+                      "inline-flex items-center gap-1 rounded-md border-2 px-2 py-1 text-[10px] font-bold uppercase tracking-wide active:translate-y-[1px]",
+                      on
+                        ? "border-[#e8b73c] bg-[#3a2a14] text-[#f0d9a0]"
+                        : "border-[#6b4f3f] bg-[#241a12]/80 text-[#e8d9b5]",
+                    )}
+                  >
+                    <span aria-hidden>{a.emoji}</span>
+                    {a.name}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           {lastWeekDays >= 3 && (
             <Link
               href="/path/recap"

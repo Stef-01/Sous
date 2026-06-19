@@ -15,6 +15,7 @@
  */
 
 import type { PetMood } from "@/lib/nutrition/pet-state";
+import type { AccessoryId } from "@/lib/nutrition/pet-accessories";
 
 /** Classic black-and-rust Doberman palette. */
 const COLORS: Record<string, string> = {
@@ -30,6 +31,11 @@ const COLORS: Record<string, string> = {
   O: "#171310", // 1px contour outline (hero only)
   C: "#c8333d", // collar (earned at level 3)
   G: "#e8b73c", // gold collar tag / level-6 collar
+  // ── Random accessory loot (variable reward) ──
+  N: "#3a7bd5", // bandana blue
+  M: "#e86a9c", // bow-tie pink
+  Y: "#a86bd6", // party-hat purple
+  L: "#15151c", // sunglasses lens
 };
 
 /** 15×16 character map, composed per mood. "." = transparent. */
@@ -184,6 +190,15 @@ const HERO_TONGUE = [
  *  on the crown between the ears. Stamped before shade/outline so it integrates. */
 const HERO_TOQUE = [".WW.WW.", "WWWWWWW", "WWWWWWW", ".WWWWW."];
 
+/* ── Random accessory loot sprites (variable reward, R8b) ───────────────────
+ * Each is stamped onto the head in buildHeroMap (after the ears/eyes), before
+ * shade+outline so it gets the same contour as everything else. */
+const HERO_PARTY = ["..W..", ".YYY.", ".YYY.", "YYYYY"]; // cone + pom
+const HERO_CROWN = ["G.G.G", "GGGGG"]; // little zig-zag crown
+const HERO_SHADES = ["LLLLLLL", "L.L.L.L"]; // two lenses + bridge
+const HERO_BANDANA = ["NNNNNNN", ".NNNNN.", "..NNN..", "...N..."]; // neck kerchief
+const HERO_BOWTIE = ["M.M", "MMM", "M.M"]; // bow at the throat
+
 /**
  * Standing body v3 (36×20): docked tail up-left, level back, two rust chest
  * spots (the spec's), longer legs with rust socks, belly tuck.
@@ -269,6 +284,7 @@ export function buildHeroMap(
   blink = false,
   earFlick = false,
   toque = false,
+  accessory: AccessoryId | null = null,
 ): string[] {
   const grid: string[][] = Array.from({ length: HERO_H }, () =>
     Array<string>(HERO_W).fill("."),
@@ -320,6 +336,28 @@ export function buildHeroMap(
       grid[cy + 1][hx + 11] = collar === "red" ? "G" : "C"; // tag pops
   }
 
+  // Random accessory loot (variable reward) — stamped last so it reads on top,
+  // before shade/outline so it gets the same contour as the rest of the dog.
+  switch (accessory) {
+    case "party":
+      stamp(grid, hx + 4, hy - 4, HERO_PARTY);
+      break;
+    case "crown":
+      stamp(grid, hx + 4, hy - 2, HERO_CROWN);
+      break;
+    case "shades":
+      stamp(grid, hx + 4, hy + 4, HERO_SHADES);
+      break;
+    case "bandana":
+      stamp(grid, hx + 4, hy + 11, HERO_BANDANA);
+      break;
+    case "bowtie":
+      stamp(grid, hx + 7, hy + 11, HERO_BOWTIE);
+      break;
+    default:
+      break;
+  }
+
   shade(grid);
   outline(grid);
   return grid.map((row) => row.join(""));
@@ -332,6 +370,7 @@ export function PixelDobermanHero({
   blink = false,
   earFlick = false,
   toque = false,
+  accessory = null,
   size = 220,
   className,
 }: {
@@ -343,11 +382,21 @@ export function PixelDobermanHero({
   earFlick?: boolean;
   /** Earned chef's toque on the crown (R8). */
   toque?: boolean;
+  /** Random accessory loot equipped on the pet (R8b variable reward). */
+  accessory?: AccessoryId | null;
   /** Rendered width in px (height follows the 28:24 grid). */
   size?: number;
   className?: string;
 }) {
-  const map = buildHeroMap(mood, pose, collar, blink, earFlick, toque);
+  const map = buildHeroMap(
+    mood,
+    pose,
+    collar,
+    blink,
+    earFlick,
+    toque,
+    accessory,
+  );
   const cols = HERO_W;
   const rows = map.length;
   return (
