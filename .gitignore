@@ -47,6 +47,11 @@ next-env.d.ts
 # claude code hooks
 .claude/command-log.txt
 .claude/worktrees/
+
+# Vendored Tamaweb prototype game (CC BY-NC-SA code + author-permitted assets).
+# Kept OUT of this public repo until the written permission is documented in
+# docs/TAMAWEB-PERMISSION.md; runs locally for the prototype. See docs/DOGE-GAME-PLAN.md.
+/public/tamaweb/
 .claude/skills/
 .claude/launch.json
 .claude/settings.local.json
