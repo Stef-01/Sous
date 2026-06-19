@@ -10,21 +10,25 @@ is split:
   per Tamaweb's `TERMS_OF_USE.md` ("unauthorized use is prohibited"); they require
   **written permission** from the author.
 
-## Written permission on file
+## Permission on file
 
-> **ACTION REQUIRED:** paste the author's written grant below (the email/DM from
-> autosam — autosam.sm@gmail.com — permitting Sous/Doge to use the protected
-> assets). Until this is filled in, the vendored game stays **git-ignored**
-> (`public/tamaweb/`, see `.gitignore`) and is **not** published in this public
-> repo — it only runs locally for the prototype.
+**2026-06-19 — owner attestation.** The project owner (Stefan) confirmed that the
+Tamaweb author (autosam — autosam.sm@gmail.com) **granted permission** to use the
+Tamaweb assets in this non-commercial prototype, and directed that the vendored
+bundle ship in this public repo. On that basis, `public/tamaweb/` is committed
+(the `.gitignore` rule was removed) for the prototype.
+
+> **Strengthen the record:** paste the author's actual written grant (the
+> email/DM — date, who, exact scope) below, so the documentation is the grant
+> itself rather than an attestation of it.
 
 ```
 <paste the author's written permission here — date, who, what's granted>
 ```
 
-- [ ] Written permission pasted above
-- [ ] Scope confirmed (assets? the "Tamaweb" name? — note that we drop the name and reskin the pet regardless)
-- [ ] Once filled: remove `/public/tamaweb/` from `.gitignore` to ship the bundle (only if the repo staying public is intended)
+- [x] Owner attests permission was granted (2026-06-19)
+- [ ] Author's actual written grant pasted above (recommended)
+- Scope note: we drop the "Tamaweb" name and reskin the pet to a Doberman regardless.
 
 ## Attribution (carried in-app + here, per CC BY-NC-SA §3 + Terms §4)
 
