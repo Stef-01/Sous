@@ -1,376 +1,292 @@
 # DOGE — Technical Implementation Plan
 
-### Forking Sous into a Doberman virtual-pet game (a clean-room port of Tamaweb's mechanics)
+### Forking Sous + copying Tamaweb wholesale into a Doberman pet game (prototype), then a bespoke rewrite before launch
 
-> Source of inspiration: **[autosam/Tamaweb](https://github.com/autosam/Tamaweb)** ·
+> Inspiration + prototype source: **[autosam/Tamaweb](https://github.com/autosam/Tamaweb)** ·
 > live: [tamawebgame.github.io](https://tamawebgame.github.io/) ·
-> [itch devlogs](https://samandev.itch.io/tamaweb)
->
-> **Status:** plan only. No code in this document is copied from Tamaweb.
+> [itch devlogs](https://samandev.itch.io/tamaweb) ·
+> License: **CC BY-NC-SA 4.0**
 
 ---
 
 ## 0. TL;DR
 
-**Doge** is a virtual-pet game where you raise a pixel **Doberman** from puppy to
-elder — fed, walked, washed, played with, evolved — built by **forking the Sous
-repo** (which we own) and promoting its already-existing Doberman Tamagotchi from
-a nutrition easter-egg to the home screen. The "reskin the Tamagotchi to a
-Doberman" step is **~70% already done**: Sous ships a hand-pixelled Doberman with
-moods, poses, idle animations, earned cosmetics, accessory loot, an evolving room
-with seasons + day/night, a Fetch mini-game, an XP/level economy, streak freezes,
-PWA + offline, and Web Push. The work is (a) **port Tamaweb's deeper care loop +
-mini-games as a clean-room reimplementation**, and (b) **keep 100% of Sous's
-cooking/nutrition** — because Sous's unique twist is that _feeding the pet is real
-cooking_, which is a moat Tamaweb does not have.
+**Doge** is a Doberman virtual-pet game. The strategy is a deliberate **two
+tracks**:
 
-**The single most important constraint** (Section 1): Tamaweb is **CC BY-NC-SA
-4.0**. We must **not** copy its code or sprites — we reimplement its _mechanics_
-(which are not copyrightable) using Sous's own art. This keeps Doge free of the
-viral ShareAlike/NonCommercial license.
+- **Track A — the prototype (now):** **copy Tamaweb completely** into a fork of
+  the Sous repo, and the _only_ creative change is **reskinning Tamaweb's pet
+  sprite to a Doberman**. We get Tamaweb's entire game — the care loop, 300-char
+  evolution, mini-games, weather, day/night, shop, family trees, social hub — for
+  free, validated and polished, in days not months. This is **legal**: Tamaweb is
+  **CC BY-NC-SA 4.0**, which _expressly permits_ copying, modifying and sharing
+  for **non-commercial** use, provided we **attribute** the author and keep the
+  prototype under the **same license** (ShareAlike). Sous is already a free,
+  no-ads, no-paid-tier public good, so NonCommercial costs us nothing for the
+  prototype.
+- **Track B — the bespoke build (before public / commercial launch):**
+  _independently_ rebuild the game from scratch (original or clean-room) to shed
+  the CC obligations, so the production app can be commercial and is fully ours.
+  The prototype's only job is to **de-risk product decisions fast**; none of its
+  copied code/art needs to survive into Track B.
 
----
+The Sous side is the base app: **keep 100% of Sous's cooking/nutrition features**
+(they become "feeding & caring for your dog" — the moat Tamaweb lacks) and embed
+the copied Tamaweb game as the pet experience.
 
-## 1. The legal spine — why this is a CLEAN-ROOM port (read first)
-
-Tamaweb's license is **Creative Commons Attribution-NonCommercial-ShareAlike 4.0
-International (CC BY-NC-SA 4.0)**. The implications, and the mandate they create:
-
-| If we…                                                                          | Consequence                                                                                                                                          | Verdict        |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| Copy Tamaweb **source files / sprites / audio**                                 | Doge becomes a _derivative work_ → must be CC BY-NC-SA → forced **NonCommercial forever** + **ShareAlike** (must open-source under the same license) | **PROHIBITED** |
-| Reimplement Tamaweb's **game mechanics / systems / feature ideas** from scratch | Game _mechanics and rules are not copyrightable_ (only the specific code + art expression is) — no derivative-work trigger                           | **ALLOWED**    |
-| Use **Sous's own pixel Doberman + Sous's code**                                 | We own it                                                                                                                                            | **ALLOWED**    |
-
-**Mandate:** Doge is a **clean-room reimplementation**. Engineers building it
-must work only from _this plan's prose descriptions of the mechanics_ and from
-the Sous codebase — **never** from Tamaweb's source. We render with **Sous's own
-hand-authored pixel art** (the `pixel-doberman.tsx` system), not Tamaweb's
-sprites. As a courtesy (not a legal requirement, since no IP is copied) the About
-sheet credits Tamaweb as inspiration.
-
-> Aside: Sous already brands itself "a free public-good cooking app — no ads, no
-> paid tier," so the NC spirit is moot for us, but the **ShareAlike** clause
-> (forced open-sourcing under CC) is the real trap, and clean-room avoids it
-> entirely.
+**The single rule that makes Track A safe (Section 1): comply with CC BY-NC-SA on
+the prototype (attribute + ShareAlike license + non-commercial + no public
+distribution beyond what the license allows), and gate the commercial launch
+behind the Track-B bespoke rewrite.**
 
 ---
 
-## 2. The head start — what Sous already gives us (inventory)
+## 1. Licensing strategy — how to copy Tamaweb legally (read first)
 
-Doge is not a green-field build. The Doberman Tamagotchi already lives in Sous.
-Real files and what they already do:
+Tamaweb is **Creative Commons Attribution-NonCommercial-ShareAlike 4.0
+International (CC BY-NC-SA 4.0)**. Unlike a proprietary work, this license is an
+_affirmative grant of permission to copy and adapt_ — we just have to honor three
+conditions:
 
-| Tamaweb concept                    | Already in Sous                                                                   | File                                                                                                                  |
-| ---------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| The pixel pet sprite               | Hand-pixelled Doberman, SVG-from-charmap, mood-composed                           | `src/components/nutrition/pixel-doberman.tsx` (`buildHeroMap`, `PixelDobermanHero`)                                   |
-| Animation / idle life              | Blink, ear-flick, play-bow pose, breathing                                        | `pet-sheet.tsx` (idle effects)                                                                                        |
-| Pet stats / mood                   | `computePetState` → mood + 5 hearts + fullness/strength bars + "need"             | `src/lib/nutrition/pet-state.ts`                                                                                      |
-| Cosmetics (earned)                 | Chef's toque + red/gold collar by Path level                                      | `pixel-doberman.tsx` `cosmeticsForLevel`                                                                              |
-| **Accessory loot (random reward)** | Catalog + drop-roll + store + 5 pixel accessories + wardrobe                      | `src/lib/nutrition/pet-accessories.ts`, `use-pet-accessories.ts`, `pet-sheet.tsx` wardrobe _(in-flight, this branch)_ |
-| The world / room                   | Evolving pixel room: wall, curtained window, **seasons + day/night**, lamp, shelf | `src/components/nutrition/pet-room.tsx`                                                                               |
-| Full-screen pet view               | The Tamagotchi sheet (hero + room + stats + mini-game)                            | `src/components/nutrition/pet-sheet.tsx`                                                                              |
-| Header companion                   | Mini Doberman that reacts to cooks                                                | `src/components/today/mascot.tsx`, `mascot-mood.ts`                                                                   |
-| A mini-game                        | **Fetch / Treat-Toss** (tap → toss → catch → "good fetch!")                       | `pet-sheet.tsx`                                                                                                       |
-| Mini-game arcade                   | 4 cooking games: Speed Chop, Flavor Pairs, Cuisine Compass, What's Cooking        | `src/app/games/*`                                                                                                     |
-| XP / leveling economy              | XP awards + levels gate cosmetics                                                 | `src/lib/hooks/use-xp-system.ts`                                                                                      |
-| Streak + **streak freeze**         | Logging streak, earned freezes (Tamaweb "don't punish a miss")                    | `use-streak-freezes` (consumed in `pet-sheet.tsx`), `use-rest-days.ts`                                                |
-| Day-night / weather signal         | `daypart` + season; live **Open-Meteo weather** opt-in                            | `pet-room.tsx`, `src/lib/weather/use-weather.ts`                                                                      |
-| Persistence                        | localStorage everywhere + a Supabase write-through pattern (`diary-sync`)         | repo-wide                                                                                                             |
-| PWA + offline                      | Manifest + hand-rolled service worker (cache-first shell, offline page)           | `public/manifest.json`, `public/sw.js`                                                                                |
-| Push notifications                 | Full Web Push path (dormant until VAPID, now wired)                               | `sw.js`, `src/app/api/push/*`, `use-push-subscription.ts`                                                             |
-| Deterministic, tested engine       | Pure selectors + 4,100+ co-located tests                                          | `src/lib/engine/*`                                                                                                    |
+| Condition              | What it requires                                                        | How Doge complies (prototype)                                                                                                                                                                          |
+| ---------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **BY** (Attribution)   | Credit the creator + the license + note changes                         | An "About / Credits" screen + a `NOTICE` file naming **autosam/Tamaweb**, linking the repo + the CC BY-NC-SA deed, and stating "the pet has been reskinned to a Doberman; ported into a Next.js shell" |
+| **NC** (NonCommercial) | No primarily-commercial use                                             | The prototype is internal/free — no ads, no sale, no paid tier (already Sous's posture). Don't run it as a paid product.                                                                               |
+| **SA** (ShareAlike)    | Derivatives shipped to others must be under CC BY-NC-SA (or compatible) | If the prototype repo is published, license **that repo** CC BY-NC-SA. Keep it private/internal otherwise.                                                                                             |
 
-**Conclusion:** the prototype already contains a working Doberman virtual pet
-with a world, an art system, an economy, save/offline, and one mini-game. Doge =
-_depth_ on top of this, not a rebuild.
+**Net:** copying Tamaweb's code + sprites + data into the prototype is **allowed**.
+The two things to never forget:
 
----
+1. **Attribution + ShareAlike are load-bearing** — add the `NOTICE` + license on
+   day one, before any Tamaweb file lands.
+2. **The CC license is "viral":** anything that incorporates Tamaweb's copied code
+   is itself CC BY-NC-SA. That's fine for a non-commercial prototype, **fatal for
+   a commercial launch** — which is exactly why **Track B (a clean rebuild) is a
+   hard gate before going public/commercial** (Section 13, Phase 5).
 
-## 3. Tamaweb feature map → Doge port (the gap)
-
-Each Tamaweb system, the Doge equivalent, whether Sous already has scaffolding,
-and the build classification (AUTO-BUILD = repo + npm only; FOUNDER-GATED = needs
-an account/asset/server, per Sous rule 12).
-
-| #    | Tamaweb system                                                     | Doge port                                                                                                                     | Sous scaffold?                                                                            | Class                                                 |
-| ---- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| 3.1  | Care stats (hunger, energy, hygiene, fun) that **decay over time** | Doberman **needs** that decay between sessions; refilled by real actions                                                      | mood/needs exist (`pet-state`) but are _snapshot_ not _decaying_ — **add the decay loop** | AUTO                                                  |
-| 3.2  | Feed meals + snacks                                                | **Feeding = real cooking/logging** (the moat) + quick "snack" via the diary                                                   | nutrition diary, cook sessions                                                            | AUTO                                                  |
-| 3.3  | Bath / hygiene                                                     | **Bath-time** mini-interaction (scrub the muddy Doberman)                                                                     | new                                                                                       | AUTO                                                  |
-| 3.4  | Toilet / poop + cleaning                                           | **Walkies**: poop appears, tap to scoop; ignore → hygiene drops                                                               | new                                                                                       | AUTO                                                  |
-| 3.5  | Sleep + day-night                                                  | **Sleep**: dims the room at night, pet sleeps, energy recovers                                                                | `daypart`/night room + `asleep` mood exist                                                | AUTO                                                  |
-| 3.6  | Mini-games: Mimic, Catch, Leaves, cooking-photo                    | **Fetch** (have it) + **"Dobe Says"** (Mimic) + **"Treat Catch"** (Catch) + **"Shake-Off"** (Leaves) + cooking games (have 4) | Fetch + 4 cooking games                                                                   | AUTO                                                  |
-| 3.7  | Evolution baby→elder, 300+ characters                              | **Doberman life stages** (puppy → adolescent → adult → veteran) driven by care quality                                        | `cosmeticsForLevel` + size-by-level exist; **add stages + stage sprites**                 | AUTO                                                  |
-| 3.8  | Room customization                                                 | **Den décor**: unlockable wallpaper/rug/bed/bowl via play, swappable                                                          | room exists, single scene — **make it composable + swappable**                            | AUTO                                                  |
-| 3.9  | Dynamic weather                                                    | **Weather in the den window** (rain on glass, snow)                                                                           | weather signal + window exist — **render the weather in the scene**                       | AUTO                                                  |
-| 3.10 | Currency / items / shop                                            | **Kibble** soft-currency earned by play/cooking; spent on décor + treats                                                      | XP economy exists — **add a non-cash currency + a shop**                                  | AUTO                                                  |
-| 3.11 | Missions / quests                                                  | **Daily quests** ("walk the dog", "cook a protein", "win a mini-game")                                                        | weekly-challenge + quest-pool patterns exist                                              | AUTO                                                  |
-| 3.12 | Achievements                                                       | Doberman **badges** (milestones, evolution, mini-game records)                                                                | milestones engine exists                                                                  | AUTO                                                  |
-| 3.13 | Skills / teaching                                                  | **Tricks** the Doberman learns (sit/shake/roll) → new idle animations + bonuses                                               | new (reuses the animation system)                                                         | AUTO                                                  |
-| 3.14 | Adventures                                                         | **Walkies / park adventures** — a short seeded "encounter" loop (find a bone, meet a friend)                                  | seeded-event patterns exist (`daily-novelty`)                                             | AUTO                                                  |
-| 3.15 | Family tree / generations                                          | **Lineage**: when a Doberman retires, a pup inherits some traits                                                              | new (deterministic trait carry-over)                                                      | AUTO                                                  |
-| 3.16 | Hubchi (online pet socializing)                                    | **Dog park** — see friends' Dobermans (reuse the Friends strip + cook gifts)                                                  | Friends strip + gifting + Supabase Realtime _stub_ exist                                  | FOUNDER-GATED (realtime server)                       |
-| 3.17 | Camera cooking game (3 photos → stir)                              | Sous already has the **real Vision pipeline** (photograph a dish → cook it) — strictly better                                 | Vision API path exists                                                                    | AUTO (vision is founder-gated for live keys, stubbed) |
+> Engineering hygiene: keep all copied Tamaweb material under **one quarantined
+> directory** (`vendor/tamaweb/`) with the `NOTICE` + `LICENSE` at its root, so
+> Track B can delete that directory in one commit and prove nothing CC-licensed
+> leaked into the bespoke build.
 
 ---
 
-## 4. Architecture
+## 2. The Sous head start — what the base repo already gives us
 
-### 4.1 The core idea: a deterministic "pet brain" + a thin React shell
+Doge's _base_ is the Sous fork, which already ships a Doberman pet + a cooking
+engine. Even though Track A copies Tamaweb's game for the pet mechanics, Sous
+contributes the shell, the moat, and a ready Doberman art reference for the
+reskin:
 
-Mirror Sous's house style: **pure, testable, clock-injected engine** + a thin
-client. Tamaweb runs a `requestAnimationFrame` game loop mutating a live `Pet`
-object; Doge instead models the pet as **state-at-a-timestamp**, computed purely
-from `(lastState, now, events)`. This is more robust for a PWA that is backgrounded
-for hours and fits Sous's existing `computePetState` philosophy.
+| Need                                               | Already in Sous                                           | File                                                            |
+| -------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------- |
+| **A Doberman pixel sprite to reskin Tamaweb with** | Hand-pixelled Doberman, mood/pose composed                | `src/components/nutrition/pixel-doberman.tsx`                   |
+| Real-cooking "feeding" (the moat)                  | Guided cook + pairing deck + nutrition diary              | `src/lib/engine/*`, `src/app/cook/*`                            |
+| Pet mood from real nutrition                       | `computePetState`                                         | `src/lib/nutrition/pet-state.ts`                                |
+| Accessory loot + wardrobe                          | catalog + drop + 5 pixel accessories _(in-flight branch)_ | `pet-accessories.ts`, `use-pet-accessories.ts`, `pet-sheet.tsx` |
+| An evolving room (seasons/day-night)               | `pet-room.tsx`                                            | `src/components/nutrition/pet-room.tsx`                         |
+| A mini-game already done                           | Fetch / Treat-Toss                                        | `pet-sheet.tsx`                                                 |
+| Cooking mini-games                                 | Speed Chop, Flavor Pairs, Cuisine Compass, What's Cooking | `src/app/games/*`                                               |
+| XP / levels / streak freezes                       | economy + earned freezes                                  | `use-xp-system.ts`, `use-streak-freezes`                        |
+| Live weather, day/night, push, PWA                 | Open-Meteo opt-in, `sw.js`, Web Push                      | `src/lib/weather/*`, `public/sw.js`, `src/app/api/push/*`       |
+| Deterministic, tested engine + 4,100+ tests        | house style                                               | repo-wide                                                       |
 
-```
-src/lib/doge/
-  pet-needs.ts        // pure: decayNeeds(state, elapsedMs) → needs; the decay curves
-  pet-lifecycle.ts    // pure: stageFor(careScore, ageDays) → "pup"|"teen"|"adult"|"veteran"
-  pet-economy.ts      // pure: kibble earn/spend; the shop catalog
-  pet-quests.ts       // pure: daily-quest generation (seeded) + completion check
-  pet-events.ts       // the append-only event log (fed / walked / washed / played / slept)
-  doge-state.ts       // composeDoge(events, now, prefs) → the full live DogeState  ← the spine
-```
-
-`composeDoge` is the single entry the UI reads. Every action (feed, walk, wash,
-play, sleep) appends an **event** (timestamp + kind), and `composeDoge` folds the
-event log + elapsed time into the live state. Pure → golden-tested → identical on
-every surface (home, header mascot, widget, wallpaper).
-
-### 4.2 Time model (the load-bearing decision)
-
-- **Needs decay on wall-clock**, computed lazily on open: `elapsedMs = now - lastSeenAt`. No background timer; the PWA can sleep.
-- **Caps + grace:** decay is clamped so a few days away never "kills" the pet (Sous is a wellbeing product — _no death/guilt_; the worst state is "needs you," recoverable in one cook). This is a deliberate departure from classic Tamagotchi permadeath.
-- **Day/night** from the device clock (already in `pet-room.tsx` via `daypart`).
-- **Seed** = date-derived (the `dateSeed` helper already used by `cravingForNow`) for daily quests + adventure encounters.
-
-### 4.3 Rendering: extend the existing pixel system, do not add a canvas
-
-Tamaweb uses a 2D canvas + sprite atlas (`Object2d.js`, `Drawer.js`). Doge stays
-on Sous's **charmap → SVG `<rect>`** approach (`pixel-doberman.tsx`):
-crisp at any DPR, no asset pipeline, diff-able, already themed. We extend it:
-
-- **Life-stage maps:** new `HERO_BODY_*` charmaps per stage (pup = smaller head-to-body ratio; veteran = grey muzzle pixels). `buildHeroMap` gains a `stage` arg.
-- **Action poses:** `eat`, `wash`, `sleep`, `sit`, `shake` poses (new charmaps) — same stamp pipeline as the existing `stand`/`bow`.
-- **Scene props:** poop, mud, food bowl, leaves/snow, toys — small charmaps stamped into `pet-room.tsx`'s grid.
-- **CSS-keyframe motion** (already the pattern: `pet-breathe`, `fetch-ball`) for jumps/wags — **all reduced-motion-gated** (a documented Sous rule; the lint rule + the recent reduced-motion sweep enforce it).
-
-### 4.4 Persistence + offline
-
-- Event log + needs snapshot + economy + wardrobe in **localStorage** (the Sous default), one namespaced key each, with the defensive-parse pattern (`parseStoredOutcomes`-style).
-- **Cross-device** = the existing **diary-sync write-through** pattern (localStorage-first, Supabase mirror when `POSTGRES_URL`/Supabase env present) — one adapter, already proven.
-- **Offline** = the existing `public/sw.js` shell cache (Doge is fully playable offline; only the dog-park social needs network).
+So Doge = **Sous shell (cooking moat + Doberman art + PWA + push) + Tamaweb game
+(copied, pet reskinned)**.
 
 ---
 
-## 5. The reskin: Tamagotchi → Doberman (the art + lifecycle system)
+## 3. Tamaweb's systems — copied wholesale (what Track A inherits for free)
 
-The Doberman already exists; this section is about **depth**, not replacement.
+Because Track A copies the game, every Tamaweb system comes across as-is; the only
+edits are the **Doberman reskin** and the **wiring into the Sous shell**.
 
-### 5.1 Life stages (replaces Tamaweb's 300-character evolution with a tasteful 4)
-
-`pet-lifecycle.ts` (pure): `stageFor({ ageDays, careScore })` →
-`"pup" | "teen" | "adult" | "veteran"`. Ambition without bloat: **4 stages × a few
-care-branched variants** (e.g., a well-cared adult is sleek; a neglected one is
-scruffy — recoverable), each a charmap variant of the existing hero. Care quality
-(rolling average of needs satisfaction) gates the _quality_ of the next stage, not
-a 300-deep tree — keeps the art hand-authorable + on-brand.
-
-- **Age** ticks on real days the app is opened (gentle; pausing is fine).
-- **"Graduation" moment** at each stage transition = a celebration screen (reuse the win-screen confetti) + a badge + sometimes a guaranteed accessory drop.
-- **Lineage (3.15):** at veteran retirement, the player keeps the den + a "family tree" entry; a new pup inherits one trait (coat sheen / favorite cuisine) via a pure `inheritTraits(parent, seed)`.
-
-### 5.2 Animation vocabulary
-
-Extend the idle set (blink/ear-flick/bow already there) with action animations
-keyed to care events: `eat` (head dips to bowl), `wash` (suds + shake), `sleep`
-(curled, zzz), `play` (the Fetch jump exists), `trick` (sit/shake/roll). Each is a
-pose charmap + an optional CSS keyframe, reduced-motion-gated.
-
----
-
-## 6. Care systems (the daily loop) — and how the real-nutrition tie is preserved
-
-This is Doge's heart **and** where Sous's moat survives. Tamaguro-style "feed a
-sprite a sprite-burger" is replaced by **feeding = the real Sous cooking/nutrition
-engine**. Two cleanly separated layers (Sous already practices this separation —
-Fetch awards zero XP so play can't game the economy):
-
-- **Real layer (the moat):** the Doberman's _fullness/strength/health hearts_
-  come from `computePetState`, which reads the **real nutrition diary + targets +
-  deficits + streak**. Cooking a real meal that closes a real deficit is what
-  truly nourishes the pet. _This never changes — it's the unique value._
-- **Game layer (the fun):** _decaying needs_ — **Hunger, Energy, Hygiene, Fun** —
-  that refill from **game actions** and decay on the clock. These drive the
-  toy/play/clean loop and the kibble economy, but **never** feed back into the
-  real nutrition signal (a hard wall, enforced by keeping them in separate
-  modules with no import edge from `pet-state.ts` → `pet-needs.ts`).
-
-| Need    | Decays           | Refilled by                                                | Sprite cue            |
-| ------- | ---------------- | ---------------------------------------------------------- | --------------------- |
-| Hunger  | slow             | logging/cooking a meal (real) **or** a treat from the shop | bowl, "feed me" droop |
-| Energy  | over the day     | **sleep** (night) / a nap                                  | yawn, slower idle     |
-| Hygiene | after walks/play | **bath** mini-interaction; scooping poop                   | mud pixels, flies     |
-| Fun     | steady           | any **mini-game** / a trick / a walk                       | bouncy idle, toys out |
-
-**Care actions (each appends an event):**
-
-- **Feed** → opens the existing cook/log flow (real) or instant-uses a shop treat.
-- **Walkies** → a short seeded encounter (3.14) + may drop poop to scoop (3.4) + raises Fun, lowers Hygiene.
-- **Bath** → a scrub mini-interaction (drag-to-scrub or tap-to-suds) → Hygiene full.
-- **Sleep** → toggles night; Energy recovers while "asleep" (the mood already exists).
-- **Play** → any mini-game (Section 7).
-
-**No death, ever.** Needs floor at "needs you," never zero-out the pet. The
-worst-case screen is an invitation to cook, consistent with Sous being a
-wellbeing app, not a guilt machine.
+| #    | Tamaweb system                                         | Lives in (Tamaweb source)                   | Doge change                                                                                                                |
+| ---- | ------------------------------------------------------ | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 3.1  | Pet stats/needs (hunger, energy, hygiene, fun) + decay | `Pet.js`, `Animal.js`                       | **none** (copy)                                                                                                            |
+| 3.2  | Feeding (meals + snacks)                               | `Activities.js`, `Definitions.js`           | reskin food art; _also_ bridge to Sous's real cook flow (Section 6)                                                        |
+| 3.3  | Bath / hygiene                                         | `Activities.js`                             | reskin                                                                                                                     |
+| 3.4  | Toilet / poop + cleaning                               | `Pet.js`, `Scene.js`                        | reskin                                                                                                                     |
+| 3.5  | Sleep + day/night                                      | `Scene.js`, `Main.js`                       | none                                                                                                                       |
+| 3.6  | Mini-games (Mimic, Catch, Leaves, cooking-photo)       | `Activities.js`                             | reskin sprites; keep mechanics                                                                                             |
+| 3.7  | Evolution baby→elder, 300+ chars                       | `PetDefinition.js`                          | **the reskin**: swap the pet's sprite frames to Doberman frames (Section 5)                                                |
+| 3.8  | Room customization                                     | `Scene.js`, `Object2d.js`, `Definitions.js` | reskin props                                                                                                               |
+| 3.9  | Dynamic weather                                        | `Scene.js`                                  | optionally feed Sous's real `useWeather` in                                                                                |
+| 3.10 | Currency / items / shop                                | `Definitions.js`, `UiHelper.js`             | reskin; keep **earned-not-bought** (no IAP)                                                                                |
+| 3.11 | Missions / quests                                      | `Missions.js`                               | none                                                                                                                       |
+| 3.12 | Achievements                                           | `Definitions.js`                            | none                                                                                                                       |
+| 3.13 | Skills / tricks                                        | `Pet.js`, `Activities.js`                   | reskin                                                                                                                     |
+| 3.14 | Adventures                                             | `StoryGen.js`, `Missions.js`                | reskin                                                                                                                     |
+| 3.15 | Family tree / generations                              | `Pet.js`, `PetDefinition.js`                | none                                                                                                                       |
+| 3.16 | Hubchi (online social)                                 | networking modules                          | **disable for the prototype** (or keep if it points at Tamaweb's own server — likely founder-gated/ToS-bound; default OFF) |
+| 3.17 | Camera-cooking toy                                     | `Activities.js`                             | replace with Sous's **real** Vision cook flow                                                                              |
 
 ---
 
-## 7. Mini-games (the "Game Center")
+## 4. Architecture — embedding the copied Tamaweb game in the Sous shell
 
-A unified **Arcade** surface (extends the existing `/games` hub) hosting both the
-pet games (port targets) and the 4 existing cooking games. Each pet game is a
-small self-contained component + a pure scoring core (Sous's game pattern) and
-awards **kibble** (soft currency) + **Fun**, never real-nutrition XP.
+Tamaweb is **vanilla JS + a 2D canvas renderer + sprite atlases + its own service
+worker + its own localStorage save**, OOP-structured (`App.js`/`Main.js` loop,
+`Object2d.js`/`Drawer.js` rendering, `Pet.js`/`Animal.js`/`PetDefinition.js` model,
+`Activities.js`/`Missions.js`/`StoryGen.js` gameplay). Two integration options:
 
-| Doge game                                                    | Ported from        | Mechanic                                                                          | Reuse                                            |
-| ------------------------------------------------------------ | ------------------ | --------------------------------------------------------------------------------- | ------------------------------------------------ |
-| **Fetch**                                                    | Tamaweb _Catch_    | tap to toss, the Doberman fetches; combo for a treat                              | **already built** (`pet-sheet.tsx`) — promote it |
-| **Treat Catch**                                              | Tamaweb _Catch_    | treats fall, swipe the dog to catch, miss = lose a life                           | new; reuses the fetch-ball CSS arc               |
-| **Dobe Says**                                                | Tamaweb _Mimic_    | Simon-style: the dog flashes a paw/bark sequence, repeat it; lengthens each round | new; pure sequence core, trivially tested        |
-| **Shake-Off**                                                | Tamaweb _Leaves_   | leaves/snow pile on the dog, shake (tap/drag) to clear before the timer           | new; reuses the season props                     |
-| **Tug-of-War**                                               | (original)         | rhythmic tap to out-pull the dog on a rope                                        | new                                              |
-| Speed Chop / Flavor Pairs / Cuisine Compass / What's Cooking | — (Sous originals) | the cooking arcade                                                                | **already built** (`/games/*`)                   |
+### Option A (recommended for speed): self-contained canvas mount
 
-**Camera-cooking note (3.17):** Tamaweb's "take 3 photos → stir" is a _toy_. Sous
-already has the **real** thing — photograph a dish, the Vision pipeline identifies
-it, you actually cook it, the dog eats it. We surface that as the headline "cook
-for your dog" action; the toy version is unnecessary.
+Copy Tamaweb's built game into **`public/tamaweb/`** (its JS, CSS, assets) and
+mount it inside a Sous client route via a single canvas/`<div>` host that Tamaweb
+attaches to. A thin `DogeGame` React wrapper (dynamic-imported, `ssr:false`)
+boots Tamaweb's `App`/`Main` against that host on mount and tears it down on
+unmount.
 
-Each game ships with: a pure scoring/sequence core + unit test, a reduced-motion
-path (Sous rule), a best-score `MetaPill`, and a kibble payout curve.
+- **Pros:** fastest; minimal porting; Tamaweb's loop/render/save run untouched.
+- **Cons:** Tamaweb owns its own DOM/canvas + its own service worker + its own
+  save key — must be **sandboxed** so it doesn't fight Next's SW or routing
+  (don't let Tamaweb register its SW; namespace its localStorage; scope its CSS).
+- **Reskin** = swap the sprite-atlas PNGs (and the `PetDefinition` frame
+  references) for Doberman atlases.
+
+### Option B (cleaner, more work): port the JS modules into `src/lib/doge/`
+
+Translate Tamaweb's classes into the Sous tree as **client-only TS modules**
+(`Pet.ts`, `Scene.ts`, `Activities.ts`, …) driven by a single `<canvas>` React
+component, with its save routed through Sous's localStorage + the `diary-sync`
+write-through (so the dog syncs cross-device like the diary).
+
+- **Pros:** one codebase, one SW, one save system, Sous-native testing; easier to
+  feed Sous signals (real weather, real cooking) into the game.
+- **Cons:** a real porting effort (JS → TS, globals → modules, its loop → a React-
+  friendly RAF/`useEffect`).
+
+**Recommendation:** **start with Option A** to validate the product in days, then
+**incrementally migrate hot modules to Option B** where Sous integration matters
+(feeding ↔ real cook flow; weather ↔ `useWeather`; save ↔ cross-device). Quarantine
+all copied material in `public/tamaweb/` (Option A) or `vendor/tamaweb/` (Option B)
+per Section 1.
+
+### 4.1 Wiring Tamaweb (vanilla canvas) into Next.js 15 — the gotchas
+
+- **Client-only:** `dynamic(() => import('…'), { ssr: false })`; canvas + `window`/
+  `navigator` access must never run on the server.
+- **Service worker:** Tamaweb ships its own `service-worker.js`. **Do not register
+  it** — Sous already owns `public/sw.js`. Strip Tamaweb's SW registration so the
+  two don't collide.
+- **Save namespacing:** prefix Tamaweb's localStorage keys (e.g. `tw:`) so they
+  can't clash with Sous keys, and so Track-B deletion is trivial.
+- **Lifecycle:** start the game loop in `useEffect` on mount; **cancel the RAF +
+  detach listeners on unmount** (route changes) to avoid leaks/double-loops.
+- **Audio/haptics/camera:** route through Sous's existing sound/haptic/Vision
+  systems or disable; respect Sous's reduced-motion + sound-safe settings.
+- **Routing:** give the game its own route (e.g. `/doge`) inside the Sous
+  `DeviceFrame`, reached as the pet-first home when `SOUS_DOGE_MODE` is on.
 
 ---
 
-## 8. Evolution / lifecycle / generations — see §5.1 (the pure `pet-lifecycle.ts`).
+## 5. The reskin — Tamagotchi → Doberman (the one creative change in Track A)
 
-## 9. World — the den
+"All you have to do is re-skin the Tamagotchi to be the Doberman." Concretely:
 
-- **Composable den** (`pet-room.tsx` → a layered scene): swappable **floor / wall / bed / bowl / window** slots, each an unlockable charmap prop bought with kibble or earned at stage-ups. Today's room is the default skin.
-- **Weather in the window (3.9):** render the real `useWeather` snapshot — raindrops on the pane, drifting snow, a sun glow — all reduced-motion-gated; falls back to the current static window when weather is off.
-- **Day/night (3.5):** already driven by `daypart`; sleep dims it.
-- **Adventures / Walkies (3.14):** a seeded short loop — leave the den, a 2–3 beat encounter (sniff a bush, find a bone = kibble, meet a neighbor dog), back home. Pure, seeded by the date so it's a "daily walk."
+1. **Identify the pet's art** in `PetDefinition.js` + the sprite atlas(es) — the
+   frame sets per life stage / animation (idle, eat, walk, sleep, play, sick, …).
+2. **Author Doberman frames in the same atlas format + frame dimensions** so they
+   drop in without touching the engine. Two ways to source them:
+   - **Reuse Sous's pixel Doberman** (`pixel-doberman.tsx`): render its charmaps
+     to PNG frames at the atlas's cell size — instant, on-brand, ours.
+   - **Draw new Doberman frames** matching Tamaweb's animation set where Sous lacks
+     a pose (eat/wash/sleep/sick) — same pixel scale.
+3. **Swap the atlas + repoint `PetDefinition`** frame indices to the Doberman set.
+   The 300-char evolution still works — each "character" becomes a Doberman
+   variant (coat/markings/accessories), or collapse the tree to a tasteful set if
+   300 Doberman frames is too much art for the prototype (a prototype can ship a
+   subset; full set is a Track-B art task).
+4. **Reskin secondary art** to taste (food, props, UI) — optional for the
+   prototype; the pet swap is the must-have.
 
-## 10. Social — the Dog Park (FOUNDER-GATED)
+Everything else in Tamaweb (decay curves, mini-game logic, shop, missions, family
+tree) renders the new Doberman without further change.
 
-Tamaweb's "Hubchi." Reuse Sous's **Friends strip + recipe-gifting + the
-Supabase-Realtime adapter stub**. Local-first MVP: a deterministic "park" of
-seeded neighbor Dobermans you can wave at / gift a treat to. The live multiplayer
-(see real friends' dogs in real time) is the **one** founder-gated piece — it
-needs the Supabase Realtime server flipped on (the adapter + env contract already
-exist per Sous's W17 plan). Ships dormant; one config edit lights it up.
+---
 
-## 11. Persistence / save / offline — see §4.4 (localStorage + diary-sync mirror + existing `sw.js`).
+## 6. Preserving Sous's moat — feeding = real cooking
 
-## 12. Preserving ALL Sous functionality (non-negotiable)
+The one place we _add_ to copied Tamaweb rather than just reskin: **bridge
+Tamaweb's "feed" action to Sous's real cook/nutrition engine** so Doge keeps the
+thing Tamaweb can't do.
 
-Doge is a **superset**, not a replacement. Everything Sous does today stays and is
-_reframed_ as the dog's world:
+- Tamaweb "feed/snack" → also opens (or is satisfied by) **Sous's real cook/log
+  flow**; logging a real meal that closes a real deficit raises the dog's
+  _real-health_ hearts (`computePetState`), distinct from the game's hunger meter.
+- Keep a **hard wall**: the copied game's stats are the _toy_ layer; Sous's
+  nutrition truth is the _real_ layer. Surface both, never let the toy economy
+  corrupt the real signal (Sous already practices this — Fetch awards no XP).
+- The headline action becomes **"cook for your dog"** (photograph or pick a dish →
+  guided cook → the Doberman eats it), which is Sous's Vision + pairing path —
+  strictly better than Tamaweb's 3-photo toy (3.17).
 
-- **Cooking / guided cook / pairing deck** → "cook for your dog" (the dog eats what you cook; real nutrition still drives the real hearts).
-- **Nutrition / diary / targets** → the dog's true health.
-- **Path / skill tree / streaks / XP** → the dog's training + lifelong record.
-- **Content tab** → the "dog & you" magazine.
-- **Sous Everywhere (widget/wallpaper/push)** → the dog on your lock screen ("your Doberman misses you — dinnertime").
-- **Hunger/weather/crave-it deck** → the dog craves dinner at dinnertime, comfort food when it's cold.
+(Mini-games, lifecycle, den, weather, social: **as copied** — Sections 3–4. The
+deep designs from the prior clean-room draft become the Track-B spec.)
 
-Concretely: **fork, don't gut.** Keep the three product tabs; **promote the pet to
-the Today hero** (the dog is the first thing you see), with cooking one tap below.
-A feature flag `SOUS_DOGE_MODE` lets the same codebase render either "Sous (cooking
-first)" or "Doge (dog first)" — so the fork can converge back or A/B.
+---
 
-## 13. Phasing (sequenced; AUTO-BUILD first, per rule 12)
+## 7. Preserving ALL Sous functionality (non-negotiable)
 
-**Phase 0 — Fork + foundation (1 sprint).** Fork the repo to `doge`; land the
-in-flight **accessory loot** branch (catalog + drop + wardrobe + pixel accessories
-— already written, needs visual QA + the win-screen drop moment); add the
-`SOUS_DOGE_MODE` flag; promote the pet to a first-class route.
+Doge is a **superset**. Everything Sous does stays, reframed as the dog's world:
+cooking/deck → "cook for your dog"; nutrition/diary → the dog's true health;
+Path/streaks/XP → training + record; Content → the "dog & you" magazine; **Sous
+Everywhere** (widget/wallpaper/push) → the dog on your lock screen; the
+hunger/weather/crave-it deck → the dog craves dinner at dinnertime. A flag
+**`SOUS_DOGE_MODE`** renders either "Sous (cooking-first)" or "Doge (dog-first,
+Tamaweb embedded)" from one codebase — so the prototype can A/B and converge.
 
-**Phase 1 — The care loop (AUTO).** `pet-needs.ts` decay engine + `doge-state.ts`
-spine (+ golden tests); Feed/Walk/Bath/Sleep actions + event log; the no-death
-grace caps; sprite action poses.
+---
 
-**Phase 2 — Mini-games (AUTO).** Promote Fetch; build Dobe Says, Treat Catch,
-Shake-Off; the unified Arcade; kibble economy (`pet-economy.ts`) + the shop.
+## 8. Phasing (sequenced)
 
-**Phase 3 — Lifecycle + den (AUTO).** Life stages + graduation moments + badges;
-composable den + weather-in-window; daily quests + adventures.
+**Phase 0 — Legal + scaffold (day 1).** Fork Sous → `doge`. Add `NOTICE` + the
+CC BY-NC-SA `LICENSE` for the quarantined Tamaweb dir. Land the in-flight
+**accessory-loot** branch (Phase-0 seed). Add `SOUS_DOGE_MODE` + the `/doge` route.
 
-**Phase 4 — Lineage + polish (AUTO).** Family tree / generations; tricks/skills;
-the adversarial review + reduced-motion + a11y sweep (the Sous QA ritual).
+**Phase 1 — Embed Tamaweb (Option A).** Copy Tamaweb's build into
+`public/tamaweb/`; strip its SW; namespace its save; mount it via a client
+`DogeGame` wrapper inside the Sous frame. Sandbox + lifecycle-clean it.
 
-**Phase 5 — Dog Park (FOUNDER-GATED).** Live social via Supabase Realtime (the
-adapter is stubbed now; this is the only credential-gated week).
+**Phase 2 — The Doberman reskin.** Swap the pet sprite atlas to Doberman frames
+(reuse `pixel-doberman.tsx` rendered to PNG, + new poses). Repoint
+`PetDefinition`. This is the whole "make it a doge game" deliverable.
 
-## 14. File-by-file map (new + touched)
+**Phase 3 — Sous bridges (Option B, selective).** Feeding ↔ real cook flow;
+weather ↔ `useWeather`; save ↔ cross-device `diary-sync`; disable Hubchi.
 
-```
-NEW
-  src/lib/doge/pet-needs.ts (+test)        decay curves, refill, grace caps
-  src/lib/doge/doge-state.ts (+test)       composeDoge — the spine
-  src/lib/doge/pet-lifecycle.ts (+test)    stages, graduation, inheritTraits
-  src/lib/doge/pet-economy.ts (+test)      kibble earn/spend + shop catalog
-  src/lib/doge/pet-quests.ts (+test)       seeded daily quests
-  src/lib/doge/pet-events.ts               event log (append-only, defensive parse)
-  src/lib/hooks/use-doge.ts                the React binding over composeDoge
-  src/components/doge/care-bar.tsx         the 4 decaying-need bars
-  src/components/doge/care-actions.tsx     Feed / Walk / Bath / Sleep / Play
-  src/components/doge/arcade.tsx           the Game Center hub
-  src/components/doge/games/dobe-says.tsx  Mimic port (+ pure core/test)
-  src/components/doge/games/treat-catch.tsx
-  src/components/doge/games/shake-off.tsx
-  src/components/doge/den.tsx              composable room (wraps pet-room)
-  src/components/doge/shop.tsx             kibble shop (décor + treats)
-  src/app/(doge)/doge/page.tsx             the pet-first home (flagged)
-  docs/DOGE-GAME-PLAN.md                   this plan
+**Phase 4 — Product polish + QA.** Reduced-motion/sound-safe wiring; the
+adversarial-review + a11y sweep (Sous ritual); prototype with real users.
 
-EXTEND (Sous files we already know)
-  pixel-doberman.tsx     + stage charmaps, action poses, scene props (eat/wash/sleep/sit)
-  pet-room.tsx           + composable slots + weather rendering
-  pet-sheet.tsx          + care actions, promote Fetch, wire needs
-  pet-state.ts           UNCHANGED (the real-nutrition wall — do not couple to needs)
-  win-screen.tsx         + the accessory-drop moment + stage graduations
-  use-xp-system.ts       reuse for the real economy; kibble is separate
-```
+**Phase 5 — Track B: the bespoke rebuild (HARD GATE before public/commercial).**
+_Independently_ rebuild the validated game — original engine + art, or a clean-room
+reimplementation (the prior draft of this plan is the spec) — and **delete the
+`vendor/tamaweb/` quarantine**. This sheds NC + ShareAlike so the production app
+can be commercial and fully owned. **No public commercial launch until this lands.**
 
-## 15. Testing
+---
 
-Match Sous's bar (4,100+ tests, golden + co-located): **pure cores fully unit-
-tested** (`pet-needs` decay determinism + grace caps; `doge-state` fold;
-`pet-lifecycle` stage thresholds; each mini-game's scoring/sequence core;
-`pet-economy` earn/spend invariants; `inheritTraits` determinism). **Playwright**
-over the care loop (feed → needs rise → decay over injected time) and one full
-mini-game. **Reduced-motion + a11y** regression guards on every new animated
-surface (the documented Sous gotcha — the global CSS rule does not stop framer/CSS
-JS motion; gate each).
+## 9. Compliance checklist (do these before any Tamaweb file is copied)
 
-## 16. Risks + open founder decisions
+- [ ] `NOTICE` crediting autosam/Tamaweb + the repo URL + "CC BY-NC-SA 4.0" + "changes: reskinned the pet to a Doberman; embedded in a Next.js shell".
+- [ ] `LICENSE` (CC BY-NC-SA 4.0 text) at the quarantine dir root; the prototype repo licensed CC BY-NC-SA if published.
+- [ ] An in-app **Credits** screen with the attribution + a link.
+- [ ] All copied material under **one** quarantine dir (`public/tamaweb/` or `vendor/tamaweb/`).
+- [ ] **No commercial use** of the prototype (no ads/sale/paid tier).
+- [ ] Track B (bespoke rewrite) is a tracked, blocking pre-launch milestone.
+- [ ] Tamaweb's own SW unregistered; its online/social (Hubchi) disabled unless explicitly permitted.
 
-1. **License (settled):** clean-room only — no Tamaweb code/art. Credit as inspiration. _(Section 1.)_
-2. **No death (recommended):** keep Sous's wellbeing ethos — needs floor, never kill the pet. Confirm this vs. classic-Tamagotchi tension.
-3. **Fork vs. mode:** ship as a flagged `SOUS_DOGE_MODE` in one repo (recommended — converge/A-B) **or** a hard fork. Founder call.
-4. **Art scope:** 4 life-stages × a few care variants (hand-authorable) vs. Tamaweb's 300 (untenable for pixel art we draw ourselves). Recommend the tasteful 4.
-5. **Currency:** kibble is **earned, never bought** (matches Sous "no paid tier"). Confirm no IAP.
-6. **Founder-gated:** only the live **Dog Park** (Supabase Realtime) and live AI/Vision keys; everything else is AUTO-BUILD now.
-7. **In-flight branch:** the accessory-loot work on this branch is the literal Phase-0 seed — finish its visual QA + win-screen drop first.
+## 10. Risks + open founder decisions
 
-```
+1. **License (your call, settled):** copy under CC BY-NC-SA for the prototype; bespoke rebuild before public/commercial. Compliance checklist (§9) is mandatory.
+2. **Integration:** Option A (embed `public/tamaweb/`, fast) → migrate to Option B (port to `src/lib/doge/`) where Sous integration matters. Recommend A-then-B.
+3. **Reskin scope:** prototype can ship a _subset_ of the 300 evolutions as Doberman variants; the full set is a Track-B art task.
+4. **No death / wellbeing:** Tamaweb may allow neglect-death; decide whether to soften it (Sous is a wellbeing product). Easy to clamp.
+5. **Hubchi / online:** default OFF for the prototype (server + ToS + privacy); the Sous "Dog Park" via Supabase Realtime is the Track-B social path.
+6. **Save collisions:** namespace Tamaweb's localStorage + don't register its SW (or you'll break Sous's offline/push).
+7. **Track B is the real product:** treat Track A strictly as a throwaway prototype — don't let copied CC code accrete into shippable surfaces.
 
 > Sources: [autosam/Tamaweb](https://github.com/autosam/Tamaweb) ·
 > [Tamaweb site](https://tamawebgame.github.io/) ·
-> [devlog: content update 6](https://samandev.itch.io/tamaweb/devlog/763430/content-update-6)
-```
+> [CC BY-NC-SA 4.0 deed](https://creativecommons.org/licenses/by-nc-sa/4.0/)
