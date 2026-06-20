@@ -1,0 +1,22 @@
+{
+  "baby": {
+    "path": "resources/img/doge/doge_baby.png",
+    "cellSize": 16
+  },
+  "child": {
+    "path": "resources/img/doge/doge_child.png",
+    "cellSize": 24
+  },
+  "teen": {
+    "path": "resources/img/doge/doge_teen.png",
+    "cellSize": 24
+  },
+  "adult": {
+    "path": "resources/img/doge/doge_adult.png",
+    "cellSize": 32
+  },
+  "elder": {
+    "path": "resources/img/doge/doge_elder.png",
+    "cellSize": 32
+  }
+}

@@ -7,6 +7,8 @@
     "build": "pnpm validate:data && pnpm typecheck && next build",
     "validate:data": "tsx src/lib/db/validate-guided-cook.ts",
     "gen:cook-summary": "tsx scripts/gen-cook-summary.ts",
+    "gen:doge-atlas": "node scripts/gen-doge-atlas.mjs",
+    "gen:doge-logo": "node scripts/gen-doge-logo.mjs",
     "therapeutics:gaps": "tsx scripts/therapeutics-gap-report.ts",
     "therapeutics:review": "tsx scripts/therapeutics-review-export.ts",
     "start": "next start",
