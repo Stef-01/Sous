@@ -4225,7 +4225,7 @@ const App = {
                 }
                 if(salesDay) price = Math.round(price / 2);
 
-                const foodIcon = App.getFoodCSprite(current.sprite);
+                const foodIcon = App.getFoodCSpriteForDef(current);
 
                 list.push({
                     disabled: Boolean(isOutOfStock || isDisabled),
@@ -7903,6 +7903,17 @@ const App = {
             width="${FOOD_SPRITESHEET_DIMENSIONS.cellSize}" height="${FOOD_SPRITESHEET_DIMENSIONS.cellSize}" 
             index="${(index - 1)}"
             src="${FOOD_SPRITESHEET}"></c-sprite>`;
+    },
+    // Doge: render a food chip from a def. Sous-cooked dishes carry a customImage
+    // (the dish's real /food_images/*.png); render the WHOLE image (index 0,
+    // natural == display) instead of an atlas cell. Native foods have no
+    // customImage and fall through to the unchanged atlas-cell path.
+    getFoodCSpriteForDef: function(foodDef){
+        if(foodDef && foodDef.customImage){
+            const s = App.constants.FOOD_SPRITESHEET_DIMENSIONS.cellSize;
+            return `<c-sprite naturalWidth="${s}" naturalHeight="${s}" width="${s}" height="${s}" index="0" src="${foodDef.customImage}"></c-sprite>`;
+        }
+        return App.getFoodCSprite(foodDef.sprite);
     },
     getItemCSprite: function(index){
         const {ITEM_SPRITESHEET_DIMENSIONS, ITEM_SPRITESHEET} = App.constants;

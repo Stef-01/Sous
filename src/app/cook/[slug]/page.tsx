@@ -43,6 +43,7 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
+import { grantDishToDoge } from "@/lib/doge/sous-bridge";
 import { computeUserRecipeNutrition } from "@/lib/nutrition/user-recipe-nutrition";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
@@ -353,6 +354,9 @@ export default function GuidedCookPage({
           ? { nutrition: userNutrition.perServing }
           : {}),
       });
+      // Doge: cooking a real dish grants one feedable serving of it to the pet
+      // (cook pho → feed pho). No-op for non-catalog dishes (rule 7).
+      grantDishToDoge(slug);
       completeCookPhase();
     } else {
       useCookStore.setState({

@@ -19,6 +19,7 @@ import {
   type DogeMood,
   type GoldReason,
 } from "./bridge-protocol";
+import { dishToFood } from "./dish-to-food";
 
 const OUTBOX_KEY = "sous-doge-outbox-v1";
 
@@ -66,6 +67,18 @@ function writeOutbox(items: OutboxItem[]): void {
     window.localStorage.setItem(OUTBOX_KEY, JSON.stringify(items));
   } catch {
     /* quota / disabled — best effort */
+  }
+}
+
+/** Append a side-effecting message to the durable outbox (deduped by txnId).
+ * Shared by the bridge instance and by cook-time helpers that run with no live
+ * bridge (e.g. grantDishToDoge on a cook page) — it flushes on the next
+ * doge:ready. */
+function enqueueOutbox(item: OutboxItem): void {
+  const ob = readOutbox();
+  if (!ob.some((x) => x.txnId === item.txnId)) {
+    ob.push(item);
+    writeOutbox(ob);
   }
 }
 
@@ -129,11 +142,7 @@ export class SousBridge {
 
   /** Record a side-effecting message durably, then post opportunistically. */
   private enqueue(item: OutboxItem): void {
-    const ob = readOutbox();
-    if (!ob.some((x) => x.txnId === item.txnId)) {
-      ob.push(item);
-      writeOutbox(ob);
-    }
+    enqueueOutbox(item);
     if (this.ready) this.rawSend({ nonce: this.nonce, ...item });
   }
 
@@ -183,4 +192,23 @@ export class SousBridge {
   get isReady(): boolean {
     return this.ready;
   }
+}
+
+/**
+ * Grant one feedable serving of a just-cooked dish to the Doberman. Called from
+ * the cook pages on completion (no live bridge required) — it durably enqueues a
+ * `doge:grantDish` into the outbox, which the SousBridge flushes the next time
+ * `/doge` opens. Returns false (and grants nothing) for non-catalog dishes —
+ * rule 7. Each call grants exactly one serving; call once per completed cook.
+ */
+export function grantDishToDoge(slug: string): boolean {
+  if (typeof window === "undefined") return false;
+  const def = dishToFood(slug);
+  if (!def) return false;
+  enqueueOutbox({
+    type: "doge:grantDish",
+    txnId: `grant:${slug}:${makeNonce()}`,
+    def,
+  });
+  return true;
 }

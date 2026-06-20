@@ -29,6 +29,7 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
+import { grantDishToDoge } from "@/lib/doge/sous-bridge";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { toast } from "@/lib/hooks/use-toast";
@@ -398,6 +399,8 @@ function CombinedCookContent() {
             auto: true,
             batchId,
           });
+          // Doge: each finished dish grants one feedable serving to the pet.
+          grantDishToDoge(od.dish.slug);
         }
         completeCookPhase();
       }
