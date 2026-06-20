@@ -85,4 +85,19 @@ describe("buildTodayStats", () => {
     expect(s.kcal.consumed).toBe(0);
     expect(s.macros.find((m) => m.key === "carbs")!.grams).toBe(0);
   });
+
+  it("lists what was eaten today — deduped, trimmed, in log order", () => {
+    const s = buildTodayStats({ calories: 900 }, TARGETS, null, 1, [
+      "Pho",
+      "Caesar Salad",
+      "Pho", // dup
+      "  ", // blank
+      " Oatmeal ", // trimmed
+    ]);
+    expect(s.meals).toEqual(["Pho", "Caesar Salad", "Oatmeal"]);
+  });
+
+  it("has an empty meals list when nothing was passed", () => {
+    expect(buildTodayStats({ calories: 0 }, TARGETS, null).meals).toEqual([]);
+  });
 });

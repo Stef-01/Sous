@@ -28,6 +28,9 @@ export interface TodayStats {
   kcal: { consumed: number; target: number; left: number; pct: number };
   macros: TodayMacro[];
   gap: TodayGap | null;
+  /** What was actually eaten today — deduped dish names, in log order. The
+   *  concrete "food stats" the glance shows under the macro summary. */
+  meals: string[];
 }
 
 /** Minimal view of the diary aggregate (a superset is fine). */
@@ -84,6 +87,7 @@ export function buildTodayStats(
   targets: TargetsLike | null,
   deficitFill: DeficitFillLike | null,
   maxSuggestions = 2,
+  mealNames: ReadonlyArray<string> = [],
 ): TodayStats {
   const t = targets ?? FALLBACK_TARGETS;
   const consumed = Math.round(n(day?.calories));
@@ -111,5 +115,19 @@ export function buildTodayStats(
           ),
         }
       : null,
+    meals: dedupeNames(mealNames),
   };
+}
+
+/** Deduped, trimmed, non-empty dish names in first-seen order. */
+function dedupeNames(names: ReadonlyArray<string>): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of names) {
+    const name = (raw ?? "").trim();
+    if (!name || seen.has(name)) continue;
+    seen.add(name);
+    out.push(name);
+  }
+  return out;
 }

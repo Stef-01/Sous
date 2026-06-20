@@ -110,11 +110,18 @@ export function TodayNutritionGlance() {
       </div>
 
       {/* Macro mini-bars */}
-      <div className="flex items-center gap-3 px-4 pb-3 pt-2">
+      <div className="flex items-center gap-3 px-4 pt-2">
         {stats.macros.map((m) => (
           <MacroBar key={m.key} macro={m} />
         ))}
       </div>
+
+      {/* What you actually ate today — the concrete food stats under the macros. */}
+      {stats.meals.length > 0 && (
+        <p className="truncate px-4 pb-3 pt-1.5 text-[11px] text-[var(--nourish-subtext-faint)]">
+          {stats.meals.join(" · ")}
+        </p>
+      )}
 
       {/* The integration: biggest nutrient gap → real dishes that close it. */}
       {stats.gap && stats.gap.suggestions.length > 0 && (

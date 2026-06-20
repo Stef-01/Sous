@@ -16,6 +16,7 @@ import { CravingSearchBar } from "@/components/today/mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { TodayNutritionGlance } from "@/components/today/today-nutrition-glance";
+import { TodayContentCard } from "@/components/today/today-content-card";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
 // initial Today bundle does not pay their cost (~10KB combined). Both
 // only mount on user action (More-Options button / mascot tap).
@@ -718,6 +719,11 @@ function TodayPageContent() {
             RepeatCook / CookAgain / DailyNovelty were three more "here's a meal
             to cook" entry points. Earlier removed: welcome line + cook-rhythm +
             weekly-rhythm (cadence = the streak) and the eco stat chip. */}
+        {/* Content doorway — surfaces the magazine's lead read on the home,
+            below the meal hero. Disclosure-on-demand: one card → the full
+            Content tab. See docs/TODAY-DASHBOARD-PLAN.md. */}
+        <TodayContentCard />
+
         <TonightChip mode="banner-only" />
         <WhosAtTable />
 

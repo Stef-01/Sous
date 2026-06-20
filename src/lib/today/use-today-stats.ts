@@ -13,17 +13,25 @@ import { buildTodayStats, type TodayStats } from "./today-stats";
 export function useTodayStats(): TodayStats {
   // One Date per mount — offset 0 (today). Midnight rollover is an accepted edge.
   const today = useMemo(() => new Date(), []);
-  const { dayNutrition, cookedDayNutrition } = useNutritionDiary(today);
+  const { entries, dayNutrition, cookedDayNutrition } =
+    useNutritionDiary(today);
   const { targets } = usePersonalTargets();
   const deficitFill = useMemo(
     () => deficitFillFor(cookedDayNutrition),
     [cookedDayNutrition],
   );
+  const mealNames = useMemo(() => entries.map((e) => e.name), [entries]);
   return useMemo(
     // One gap dish keeps the glance a clean single line; the full list lives on
     // /nutrition (disclosure on demand, rule 13).
     () =>
-      buildTodayStats(dayNutrition ?? null, targets ?? null, deficitFill, 1),
-    [dayNutrition, targets, deficitFill],
+      buildTodayStats(
+        dayNutrition ?? null,
+        targets ?? null,
+        deficitFill,
+        1,
+        mealNames,
+      ),
+    [dayNutrition, targets, deficitFill, mealNames],
   );
 }
