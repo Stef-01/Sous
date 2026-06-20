@@ -15,6 +15,7 @@ import { StreakCounter } from "@/components/today/streak-counter";
 import { CravingSearchBar } from "@/components/today/mascot";
 import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
+import { TodayNutritionGlance } from "@/components/today/today-nutrition-glance";
 // W18 perf: both sheets are lazy-loaded behind next/dynamic so the
 // initial Today bundle does not pay their cost (~10KB combined). Both
 // only mount on user action (More-Options button / mascot tap).
@@ -686,6 +687,12 @@ function TodayPageContent() {
 
         {/* Phase 4 — first-run nudge pointing at the craving search (self-clearing). */}
         <FirstRunCoachmark />
+
+        {/* Today's metrics at a glance — food + nutrient stats, with the biggest
+            gap linking straight to dishes that close it (nutrient → craving).
+            Compact + subordinate to the QuestCard hero; taps open the full
+            dashboard at /nutrition. See docs/TODAY-DASHBOARD-PLAN.md. */}
+        <TodayNutritionGlance />
 
         {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
             under the search, so the one thing the user opened the app for is
