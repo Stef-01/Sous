@@ -900,6 +900,10 @@ const App = {
         return testers.includes(App.userName) || App.ENV == 'dev';
     },
     addEvent: function(name, payload, force){
+        // Doge: suppress the vendored game's promo / external-channel / update
+        // nags — they promote Tamaweb's own channels (off-brand for the Doge
+        // prototype) and pop over the pet. Gameplay events are untouched.
+        if(['itch_rating_dialog','discord_server_02_notice','update_26_notice','bugfix_notice_02','pwa_install_notice_01'].indexOf(name) !== -1) return false;
         if(!App.gameEventsHistory[name] || force){
             App.gameEventsHistory[name] = true;
             payload?.();
