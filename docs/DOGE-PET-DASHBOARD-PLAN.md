@@ -114,13 +114,28 @@ grid like the reference, reading the existing grant store.
 9. **Art-polish passes** — recursive fidelity to the mockup.
 10. **Verify** — tests (stat model, loggers), build, screenshots vs the mockup.
 
-## Open forks (need your call before building)
+## Decisions (locked 2026-06-20)
 
-1. **The Tamaweb game's role.** This custom dashboard is the bespoke ("Track B")
-   direction. Does it **replace** the Tamaweb iframe as `/doge`, sit **alongside**
-   it (Tamaweb becomes the "Play" minigame), or keep Tamaweb at `/doge` and put
-   this at a new route?
-2. **Sleep + Movement tracking.** Build the two tiny loggers (recommended — full
-   8-stat parity with the mockup), or map those bars to nutrition-only signals /
-   drop them?
-3. **Gems.** Introduce the second currency now, or defer (coins only for v1)?
+1. **Integrate INTO Tamaweb, not a separate page.** The Tamaweb game stays at
+   `/doge`; the nutrition aspects (the HEALTH STATS panel + status, reading the
+   real nutrition) are **layered onto the Tamaweb home screen** as a Sous-rendered
+   overlay panel — so opening the game shows the dog _and_ its real
+   nutrition-driven health stats. No risky edits to the vendored game UI; the
+   panel is React in the `/doge` shell, reading the shared aggregate.
+2. **Nutrition-only — no new tracking.** Drop Sleep + Movement; the panel shows
+   the 6 stats that come from real food/water: **Energy · Mood · Hydration ·
+   Protein · Fiber · Vitamins** (all already computed by `pet-state.ts` +
+   `pet-screen-data.ts` + `use-hydration`).
+3. **Coins only for v1.** Gems deferred.
+
+### Build order (locked)
+
+1. `buildPetHealthStats` selector (6 nutrition bars) in `pet-screen-data.ts` + test.
+2. `use-doge-health` hook — gathers the inputs (computePetState + hydration +
+   fiber/vitamin coverage) and returns the bars + status.
+3. `doge-health-panel.tsx` — the overlay panel (the reference's HEALTH STATS
+   chrome), mobile-first.
+4. Integrate into `src/app/doge/page.tsx` over the Tamaweb iframe.
+5. **Move off home** — drop the Dobe avatar from `today-nutrition-glance` (keep
+   the metrics glance).
+6. Verify (tests + build + screenshots) → recursive art-polish toward the mockup.

@@ -3,52 +3,25 @@
 /**
  * TodayNutritionGlance — the compact, glanceable metrics doorway on the Today
  * page. Integrates food stats (calories + what you ate), nutrient stats (macros
- * + the biggest gap), cravings (the gap's dishes link straight to /cook), AND
- * the pet: a small Doberman whose mood is computed from today's eating
- * (computePetState) and which taps through to the Doge game. Tapping the rest of
- * the card opens the full dashboard at /nutrition.
+ * + the biggest gap), and cravings (the gap's dishes link straight to /cook) in
+ * one quiet strip. Tapping the header opens the full dashboard at /nutrition.
  *
- * Subordinate to the QuestCard hero (rule 2). Reads the shared aggregate via
- * useTodayStats — one source of truth with the Nutrition page. The pet mood is
- * the same computation the Nutrition page's Dobe uses, so the dog reads the same
- * everywhere. See docs/TODAY-DASHBOARD-PLAN.md.
+ * The pet lives in the Doge game now (its health stats are this same nutrition),
+ * not on the home screen. Subordinate to the QuestCard hero (rule 2). Reads the
+ * shared aggregate via useTodayStats — one source of truth with the Nutrition
+ * page. See docs/TODAY-DASHBOARD-PLAN.md.
  */
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useTodayStats } from "@/lib/today/use-today-stats";
 import type { TodayMacro } from "@/lib/today/today-stats";
-import { computePetState, type PetMood } from "@/lib/nutrition/pet-state";
-import { PixelDoberman } from "@/components/nutrition/pixel-doberman";
 
 const MACRO_LETTER: Record<TodayMacro["key"], string> = {
   carbs: "C",
   fat: "F",
   protein: "P",
 };
-
-const MOOD_WORD: Record<PetMood, string> = {
-  asleep: "napping",
-  hungry: "hungry",
-  peckish: "peckish",
-  content: "content",
-  thriving: "thriving",
-};
-
-/** The pet, reflecting today's plate, tapping through to the Doge game. */
-function DobeAvatar({ mood }: { mood: PetMood }) {
-  return (
-    <Link
-      href="/doge"
-      aria-label={`Dobe is ${MOOD_WORD[mood]} — open the game`}
-      className="shrink-0 rounded-full transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-    >
-      <span className="pet-breathe block">
-        <PixelDoberman mood={mood} size={30} />
-      </span>
-    </Link>
-  );
-}
 
 function MacroBar({ macro }: { macro: TodayMacro }) {
   return (
@@ -73,46 +46,31 @@ function MacroBar({ macro }: { macro: TodayMacro }) {
   );
 }
 
-export function TodayNutritionGlance({ streak = 0 }: { streak?: number }) {
+export function TodayNutritionGlance() {
   const reduce = useReducedMotion();
   const stats = useTodayStats();
 
-  // Dobe's mood IS your plate — the same computePetState the Nutrition page uses.
-  // Only loggedCount/kcal/protein/streak drive the mood, all already on hand.
-  const protein = stats.macros.find((m) => m.key === "protein");
-  const mood = computePetState({
-    loggedCount: stats.meals.length,
-    kcal: stats.logged ? stats.kcal.consumed : null,
-    targetKcal: stats.kcal.target,
-    protein: stats.logged ? (protein?.grams ?? null) : null,
-    targetProtein: protein?.target ?? 50,
-    deficits: [],
-    streak,
-  }).mood;
-
-  // Empty state — Dobe naps until you log; a warm doorway, never a rival CTA.
+  // Empty state — a warm, single-line invite to start the day's plate. It is a
+  // doorway, never a rival to the craving search (rule 2).
   if (!stats.logged) {
     return (
-      <div className="flex items-center gap-2.5 rounded-2xl border border-dashed border-[var(--nourish-green)]/25 bg-white/70 px-4 py-2.5 shadow-[var(--shadow-card)]">
-        <DobeAvatar mood={mood} />
-        <Link
-          href="/nutrition"
-          className="flex flex-1 items-center justify-between text-[var(--nourish-subtext)] active:scale-[0.99]"
-          aria-label="Track today's plate"
-        >
-          <span className="text-[13px]">
-            <span className="font-semibold text-[var(--nourish-dark)]">
-              Today&rsquo;s plate
-            </span>{" "}
-            — nothing logged yet
-          </span>
-          <ChevronRight
-            size={16}
-            className="text-[var(--nourish-subtext-faint)]"
-            aria-hidden
-          />
-        </Link>
-      </div>
+      <Link
+        href="/nutrition"
+        className="flex items-center justify-between rounded-2xl border border-dashed border-[var(--nourish-green)]/25 bg-white/70 px-4 py-3 text-[var(--nourish-subtext)] shadow-[var(--shadow-card)] transition hover:border-[var(--nourish-green)]/45 active:scale-[0.99]"
+        aria-label="Track today's plate"
+      >
+        <span className="text-[13px]">
+          <span className="font-semibold text-[var(--nourish-dark)]">
+            Today&rsquo;s plate
+          </span>{" "}
+          — nothing logged yet
+        </span>
+        <ChevronRight
+          size={16}
+          className="text-[var(--nourish-subtext-faint)]"
+          aria-hidden
+        />
+      </Link>
     );
   }
 
@@ -124,20 +82,17 @@ export function TodayNutritionGlance({ streak = 0 }: { streak?: number }) {
       className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]"
       aria-label="Today's nutrition"
     >
-      {/* Header row: Dobe (→ game) + the dashboard doorway (→ /nutrition). */}
-      <div className="flex items-center gap-2.5 px-4 pt-3">
-        <DobeAvatar mood={mood} />
-        <Link
-          href="/nutrition"
-          className="flex flex-1 items-center justify-between gap-2 active:scale-[0.99]"
-        >
-          <span className="sous-label">Today&rsquo;s plate</span>
-          <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[var(--nourish-green)]">
-            {stats.kcal.left.toLocaleString()} left
-            <ChevronRight size={14} aria-hidden />
-          </span>
-        </Link>
-      </div>
+      {/* Header row → full dashboard */}
+      <Link
+        href="/nutrition"
+        className="flex items-center justify-between gap-2 px-4 pt-3 active:scale-[0.99]"
+      >
+        <span className="sous-label">Today&rsquo;s plate</span>
+        <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[var(--nourish-green)]">
+          {stats.kcal.left.toLocaleString()} left
+          <ChevronRight size={14} aria-hidden />
+        </span>
+      </Link>
 
       {/* Calories bar */}
       <div className="px-4 pt-2">

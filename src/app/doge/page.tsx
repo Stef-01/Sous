@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { DogeHealthPanel } from "@/components/doge/doge-health-panel";
 import {
   SousBridge,
   creditCheckinGold,
@@ -91,14 +92,19 @@ export default function DogePage() {
           </p>
         </div>
       ) : (
-        <iframe
-          ref={iframeRef}
-          src="/tamaweb/index.html"
-          title="Doge — Doberman virtual pet"
-          className="h-full w-full border-0"
-          // The game manages its own audio/fullscreen; allow what it needs.
-          allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope"
-        />
+        <>
+          <iframe
+            ref={iframeRef}
+            src="/tamaweb/index.html"
+            title="Doge — Doberman virtual pet"
+            className="h-full w-full border-0"
+            // The game manages its own audio/fullscreen; allow what it needs.
+            allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope"
+          />
+          {/* The nutrition system, attached to the game: real food/water → Dobe's
+              health stats, overlaid on the home screen. See DOGE-PET-DASHBOARD-PLAN.md. */}
+          <DogeHealthPanel />
+        </>
       )}
     </div>
   );

@@ -693,7 +693,7 @@ function TodayPageContent() {
             gap linking straight to dishes that close it (nutrient → craving).
             Compact + subordinate to the QuestCard hero; taps open the full
             dashboard at /nutrition. See docs/TODAY-DASHBOARD-PLAN.md. */}
-        <TodayNutritionGlance streak={stats.currentStreak} />
+        <TodayNutritionGlance />
 
         {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
             under the search, so the one thing the user opened the app for is

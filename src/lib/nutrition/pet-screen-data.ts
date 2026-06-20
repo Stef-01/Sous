@@ -101,6 +101,45 @@ export function activityFeed(
   return rows;
 }
 
+/** A single health-stat bar for the Doge dashboard. Each maps 1:1 to a real
+ *  nutrition signal — never an invented game number (rule 7). pct is 0..100. */
+export interface PetHealthStat {
+  key: "energy" | "mood" | "hydration" | "protein" | "fiber" | "vitamins";
+  label: string;
+  pct: number;
+}
+
+const toPct = (frac: number) =>
+  Math.max(
+    0,
+    Math.min(100, Math.round((Number.isFinite(frac) ? frac : 0) * 100)),
+  );
+
+/**
+ * The 6 nutrition-driven health bars shown on the Doge home screen. All inputs
+ * are 0..1 fractions (hearts is 0..5) sourced from the SAME aggregate the
+ * Nutrition page reads: Energy = kcal fullness, Mood = hearts, Hydration =
+ * glasses/goal, Protein = protein/target, Fiber = fiber DV, Vitamins = avg
+ * vitamin DV. Pure + ordered to match the reference panel.
+ */
+export function buildPetHealthStats(i: {
+  fullness: number;
+  hearts: number;
+  hydration: number;
+  strength: number;
+  fiber: number;
+  vitamins: number;
+}): PetHealthStat[] {
+  return [
+    { key: "energy", label: "Energy", pct: toPct(i.fullness) },
+    { key: "mood", label: "Mood", pct: toPct(i.hearts / 5) },
+    { key: "hydration", label: "Hydration", pct: toPct(i.hydration) },
+    { key: "protein", label: "Protein", pct: toPct(i.strength) },
+    { key: "fiber", label: "Fiber", pct: toPct(i.fiber) },
+    { key: "vitamins", label: "Vitamins", pct: toPct(i.vitamins) },
+  ];
+}
+
 // The Path XP curve — flat 100 XP per level. Same math as the module-local
 // computeLevel/xpForNextLevel in use-xp-system.ts (extracted, not imported:
 // that file is "use client"); keep in lockstep with the Path header's

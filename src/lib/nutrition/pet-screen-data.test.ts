@@ -5,6 +5,7 @@ import {
   activityFeed,
   xpToLevel,
   XP_PER_LEVEL,
+  buildPetHealthStats,
 } from "./pet-screen-data";
 import { NUTRIENT_DISPLAY } from "@/data/nutrition/nutrient-display";
 import { getDishNutrition } from "@/lib/engine/dish-nutrition";
@@ -150,6 +151,51 @@ describe("activityFeed", () => {
       "Meal 12",
       "Meal 9",
     ]);
+  });
+});
+
+describe("buildPetHealthStats", () => {
+  const base = {
+    fullness: 0.5,
+    hearts: 5,
+    hydration: 0.75,
+    strength: 0.9,
+    fiber: 0.6,
+    vitamins: 0.8,
+  };
+
+  it("returns the 6 nutrition bars in reference order", () => {
+    expect(buildPetHealthStats(base).map((s) => s.key)).toEqual([
+      "energy",
+      "mood",
+      "hydration",
+      "protein",
+      "fiber",
+      "vitamins",
+    ]);
+  });
+
+  it("maps each fraction to a 0–100 percent (hearts is /5)", () => {
+    const s = buildPetHealthStats(base);
+    expect(s.find((x) => x.key === "energy")!.pct).toBe(50);
+    expect(s.find((x) => x.key === "mood")!.pct).toBe(100); // 5/5 hearts
+    expect(s.find((x) => x.key === "hydration")!.pct).toBe(75);
+    expect(s.find((x) => x.key === "protein")!.pct).toBe(90);
+  });
+
+  it("clamps + tolerates out-of-range / NaN", () => {
+    const s = buildPetHealthStats({
+      fullness: 1.4,
+      hearts: 7,
+      hydration: -0.2,
+      strength: NaN,
+      fiber: 0,
+      vitamins: 0.5,
+    });
+    expect(s.find((x) => x.key === "energy")!.pct).toBe(100);
+    expect(s.find((x) => x.key === "mood")!.pct).toBe(100);
+    expect(s.find((x) => x.key === "hydration")!.pct).toBe(0);
+    expect(s.find((x) => x.key === "protein")!.pct).toBe(0);
   });
 });
 
