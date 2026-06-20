@@ -11,7 +11,11 @@ import {
 } from "@/lib/doge/sous-bridge";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useDogeHealth } from "@/lib/doge/use-doge-health";
-import { buildDogeHealthPayload, writeDogeHealth } from "@/lib/doge/doge-health-store";
+import {
+  buildDogeHealthPayload,
+  writeDogeHealth,
+  moodGreeting,
+} from "@/lib/doge/doge-health-store";
 
 /**
  * /doge — the Doberman virtual-pet game (Track A prototype). Mounts the vendored
@@ -39,8 +43,13 @@ export default function DogePage() {
   // whenever the real diary/hydration changes.
   const { stats: cook } = useCookSessions();
   const health = useDogeHealth(cook.currentStreak);
+  // Latest health for the bridge's onReady greeting (refs read fresh at fire time).
+  const healthRef = useRef(health);
   useEffect(() => {
-    writeDogeHealth(buildDogeHealthPayload(health.stats, health.mood, Date.now()));
+    healthRef.current = health;
+    writeDogeHealth(
+      buildDogeHealthPayload(health.stats, health.mood, Date.now()),
+    );
   }, [health]);
 
   useEffect(() => {
@@ -61,9 +70,18 @@ export default function DogePage() {
     let factTimer: ReturnType<typeof setInterval> | null = null;
     const bridge = new SousBridge(() => iframeRef.current, {
       onReady: () => {
-        // A beat after the dog settles in, share a fact about the last cook
-        // (nutrition or food history), then an ambient one every few minutes.
-        setTimeout(() => sayPendingCookFact(bridge), 2500);
+        // A beat after the dog settles in: greet with a fact about the last cook
+        // if there is one, else with how your nutrition is going (the dog speaks
+        // your real eating). Then an ambient fact every few minutes.
+        setTimeout(() => {
+          if (!sayPendingCookFact(bridge)) {
+            bridge.postSay({
+              sayId: `nut:${Date.now()}`,
+              text: moodGreeting(healthRef.current.mood),
+              ms: 7000,
+            });
+          }
+        }, 2500);
         factTimer = setInterval(() => sayAmbientFact(bridge), 5 * 60 * 1000);
       },
     });

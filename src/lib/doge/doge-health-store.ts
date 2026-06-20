@@ -57,6 +57,20 @@ export function buildDogeHealthPayload(
   };
 }
 
+/** First-person line the dog says about your nutrition when the game opens —
+ *  ties the real nutrition to the pet's voice (uses the proven doge:say verb). */
+const GREETING: Record<PetMood, string> = {
+  asleep: "Log a meal in Sous and I'll perk right up!",
+  hungry: "I'm hungry — let's cook something good today.",
+  peckish: "I'm a bit peckish — a few nutrient gaps to fill.",
+  content: "I'm content — you've been eating well!",
+  thriving: "I'm thriving — your cooking's been great lately!",
+};
+
+export function moodGreeting(mood: PetMood): string {
+  return GREETING[mood];
+}
+
 /** Persist the payload to the shared key the game reads. */
 export function writeDogeHealth(payload: DogeHealthPayload): void {
   if (typeof window === "undefined") return;
