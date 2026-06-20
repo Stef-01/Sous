@@ -3,13 +3,15 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { DogeHealthPanel } from "@/components/doge/doge-health-panel";
 import {
   SousBridge,
   creditCheckinGold,
   sayPendingCookFact,
   sayAmbientFact,
 } from "@/lib/doge/sous-bridge";
+import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
+import { useDogeHealth } from "@/lib/doge/use-doge-health";
+import { buildDogeHealthPayload, writeDogeHealth } from "@/lib/doge/doge-health-store";
 
 /**
  * /doge — the Doberman virtual-pet game (Track A prototype). Mounts the vendored
@@ -30,6 +32,16 @@ export default function DogePage() {
   const router = useRouter();
   const [present, setPresent] = useState<boolean | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // The nutrition system, written to the shared key the game reads NATIVELY in
+  // its own stats screen (App.handlers.open_stats → the Nutrition tab). Same
+  // origin → the iframe reads the latest whenever stats opens. Re-written
+  // whenever the real diary/hydration changes.
+  const { stats: cook } = useCookSessions();
+  const health = useDogeHealth(cook.currentStreak);
+  useEffect(() => {
+    writeDogeHealth(buildDogeHealthPayload(health.stats, health.mood, Date.now()));
+  }, [health]);
 
   useEffect(() => {
     // Probe whether the vendored bundle exists. HEAD avoids downloading the page.
@@ -92,19 +104,14 @@ export default function DogePage() {
           </p>
         </div>
       ) : (
-        <>
-          <iframe
-            ref={iframeRef}
-            src="/tamaweb/index.html"
-            title="Doge — Doberman virtual pet"
-            className="h-full w-full border-0"
-            // The game manages its own audio/fullscreen; allow what it needs.
-            allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope"
-          />
-          {/* The nutrition system, attached to the game: real food/water → Dobe's
-              health stats, overlaid on the home screen. See DOGE-PET-DASHBOARD-PLAN.md. */}
-          <DogeHealthPanel />
-        </>
+        <iframe
+          ref={iframeRef}
+          src="/tamaweb/index.html"
+          title="Doge — Doberman virtual pet"
+          className="h-full w-full border-0"
+          // The game manages its own audio/fullscreen; allow what it needs.
+          allow="autoplay; fullscreen; gamepad; accelerometer; gyroscope"
+        />
       )}
     </div>
   );

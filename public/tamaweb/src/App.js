@@ -3927,11 +3927,29 @@ const App = {
 
             const list = UI.genericListContainer();
             const content = UI.empty();
+
+            // Doge: the REAL Sous nutrition, read from the shared localStorage key
+            // Sous writes (src/lib/doge/doge-health-store.ts). Rendered natively as
+            // a Nutrition tab below, using the game's own createProgressbar.
+            let sousHealth = null;
+            try { sousHealth = JSON.parse(window.localStorage.getItem('sous-doge-health-v1') || 'null'); } catch(e) {}
+            const sousRows = (sousHealth && Array.isArray(sousHealth.stats) && sousHealth.stats.length)
+                ? sousHealth.stats.map(s => `
+                    <div class="relative flex flex-dir-row align-center flex-gap-1">
+                        <div class="stats-label">${s.label}</div>
+                        <b class="outlined-icon flex flex-center" style="width: 18px;">${App.getIcon(s.fa, true)}</b>
+                        ${App.createProgressbar(Math.max(0, Math.min(100, Number(s.pct) || 0))).node.outerHTML}
+                    </div>
+                `).join('')
+                : `<small class="list-text">Log meals in Sous to fill Dobe's nutrition.</small>`;
+            const sousStatus = (sousHealth && sousHealth.status) ? sousHealth.status : '';
+
             content.innerHTML = `
             <div class="tabs">
                 <div class="tab-titles">
                     <button for="tab-1" class="tab-title">${App.getIcon('bar-chart', true)}</button>
                     <button for="tab-2" class="tab-title">${App.getIcon('star', true)}</button>
+                    <button for="tab-3" class="tab-title">${App.getIcon('drumstick-bite', true)}</button>
                 </div>
                 <div class="tab-contents">
                     <div id="tab-1" class="tab">
@@ -3998,6 +4016,15 @@ const App = {
                                         <span class="flex-between items-center no-width-children"> ${App.getIcon('special:expression')}➜ ${getCareRatingIcons(3, undefined, 16)} </span>
                                     </div>
                                 </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab">
+                        <div class="tab-content">
+                            <div class="inner-padding b-radius-10 flex-gap-2 flex flex-dir-col m mt-6">
+                                <div class="stats-label" style="margin-bottom:2px">Nutrition · from Sous</div>
+                                ${sousRows}
+                                ${sousStatus ? '<small class="list-text" style="margin-top:4px">' + sousStatus + '</small>' : ''}
                             </div>
                         </div>
                     </div>
