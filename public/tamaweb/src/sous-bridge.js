@@ -183,12 +183,12 @@
     if (hudStyled) return;
     hudStyled = true;
     var css =
-      ".sous-nutrition-hud{position:absolute;top:6px;left:6px;right:6px;z-index:60;" +
+      ".sous-nutrition-hud{position:absolute;top:54px;left:6px;right:6px;z-index:60;" +
       "background:rgba(38,31,44,.82);border:2px solid rgba(255,255,255,.10);border-radius:12px;" +
       "padding:7px 9px 8px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4);" +
       "-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}" +
       ".sous-hud-title{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;" +
-      "color:#fff;opacity:.78;margin:0 0 5px 46px;}" +
+      "color:#fff;opacity:.78;margin:0 0 6px 2px;}" +
       ".sous-hud-row{display:flex;align-items:center;gap:5px;margin:2.5px 0;}" +
       ".sous-hud-ic{width:13px;text-align:center;color:#f5c542;flex:none;}" +
       ".sous-hud-ic i{font-size:11px;}" +
@@ -196,7 +196,9 @@
       "text-transform:uppercase;flex:none;}" +
       ".sous-nutrition-hud .progressbar{flex:1;min-width:0;margin:0;}" +
       ".sous-hud-pc{width:30px;text-align:right;font-size:9px;font-weight:800;color:#fff;flex:none;}" +
-      ".sous-hud-status{font-size:8.5px;color:#f5c542;margin-top:5px;font-weight:600;}";
+      ".sous-hud-status{font-size:8.5px;color:#f5c542;margin-top:5px;font-weight:600;}" +
+      // Hide the vendored SW-update notice — off-brand for Doge + it overlaps the HUD.
+      "#download-container,#download-complete-container{display:none!important;}";
     var style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);

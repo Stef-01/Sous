@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0PMN42B2LR"></script>
+    <!-- Google tag (gtag.js) — SDK fetch removed for the Doge prototype: no
+         phone-home. gtag() below stays a local no-op (pushes to dataLayer only). -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-0PMN42B2LR"></script> -->
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -35,8 +36,9 @@
         value:r,configurable:true})}
         }(),window.rudderAnalyticsAddScript("".concat(sdkBaseUrl,"/").concat(window.rudderAnalyticsBuildType,"/").concat(sdkName),"data-rsa-write-key","2suQ2opn34RCpjg3z3L3aW4Nhzp")
         },
-        "undefined"==typeof Promise||"undefined"==typeof globalThis?window.rudderAnalyticsAddScript("https://polyfill-fastly.io/v3/polyfill.min.js?version=3.111.0&features=Symbol%2CPromise&callback=rudderAnalyticsMount"):window.rudderAnalyticsMount()
-        ;var loadOptions={};rudderanalytics.load("2suQ2opn34RCpjg3z3L3aW4Nhzp","https://gmailautotdbwd.dataplane.rudderstack.com",loadOptions)}}}();
+        /* Doge: RudderStack SDK mount + dataplane load removed — no phone-home,
+           no offline error spam. rudderanalytics stays a local no-op queue. */
+        ;}}}();
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
