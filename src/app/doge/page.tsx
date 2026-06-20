@@ -1,18 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { SousBridge } from "@/lib/doge/sous-bridge";
 
 /**
  * /doge — the Doberman virtual-pet game (Track A prototype). Mounts the vendored
- * Tamaweb game (CC BY-NC-SA code + author-permitted assets) in a sandboxed
- * iframe inside the Sous DeviceFrame; the pet is reskinned to a Doberman.
+ * game (CC BY-NC-SA code + author-permitted assets) in an iframe inside the Sous
+ * DeviceFrame; the pet is reskinned to a Doberman.
  *
- * The game lives at /tamaweb/ (public/tamaweb/, git-ignored — it does NOT ship in
- * this public repo until the written permission is documented in
- * docs/TAMAWEB-PERMISSION.md). If the asset bundle isn't present, we show a calm
- * "vendor it" hint instead of a broken frame, so the route is safe to commit now.
+ * The game lives at /tamaweb/ (public/tamaweb/). A SousBridge is mounted here to
+ * carry the typed postMessage protocol (gold credits, dish grants, fun-fact
+ * speech) between Sous and the embedded game — see src/lib/doge/bridge-protocol.ts
+ * and docs/DOGE-INTEGRATION-PLAN.md. If the bundle is somehow absent we show a
+ * calm hint instead of a broken frame.
  *
  * Attribution (CC BY-NC-SA 4.0 + Tamaweb Terms of Use): the engine is
  * autosam/Tamaweb (https://github.com/autosam/Tamaweb). Reskinned to a Doberman;
@@ -21,10 +23,10 @@ import { ArrowLeft } from "lucide-react";
 export default function DogePage() {
   const router = useRouter();
   const [present, setPresent] = useState<boolean | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    // Probe whether the vendored bundle exists (it's git-ignored, so a fresh
-    // clone won't have it). HEAD avoids downloading the page.
+    // Probe whether the vendored bundle exists. HEAD avoids downloading the page.
     let alive = true;
     fetch("/tamaweb/index.html", { method: "HEAD" })
       .then((r) => alive && setPresent(r.ok))
@@ -32,6 +34,14 @@ export default function DogePage() {
     return () => {
       alive = false;
     };
+  }, []);
+
+  // Mount the Sous↔Doge bridge once. It listens on window for the game's
+  // `doge:ready` handshake (resolving the iframe lazily), so construction order
+  // vs. iframe load doesn't matter; it tears down on unmount.
+  useEffect(() => {
+    const bridge = new SousBridge(() => iframeRef.current);
+    return () => bridge.destroy();
   }, []);
 
   return (
@@ -48,21 +58,21 @@ export default function DogePage() {
       {present === false ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-8 text-center text-white/80">
           <p className="font-serif text-xl text-white">
-            Doge isn&rsquo;t vendored here
+            Doge isn&rsquo;t available here
           </p>
           <p className="text-[13px] leading-relaxed">
-            The game bundle is git-ignored and not in this clone. Drop the
-            author-permitted Tamaweb build into{" "}
-            <code className="rounded bg-white/15 px-1">public/tamaweb/</code> to
-            play. See{" "}
+            The game bundle isn&rsquo;t present in this build. Expected at{" "}
+            <code className="rounded bg-white/15 px-1">public/tamaweb/</code>.
+            See{" "}
             <code className="rounded bg-white/15 px-1">
-              docs/TAMAWEB-PERMISSION.md
+              docs/DOGE-INTEGRATION-PLAN.md
             </code>
             .
           </p>
         </div>
       ) : (
         <iframe
+          ref={iframeRef}
           src="/tamaweb/index.html"
           title="Doge — Doberman virtual pet"
           className="h-full w-full border-0"
