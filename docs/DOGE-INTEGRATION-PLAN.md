@@ -1,8 +1,17 @@
 # Doge Overhaul — Integration Plan
 
-> **Status:** active build (started 2026-06-20). Reskin the embedded Tamaweb pet
-> to a Doberman and wire Sous's cook loop into the pet game across four pillars
-> (visual · economy · feed · fun-facts), all riding one typed postMessage bridge.
+> **Status: SHIPPED (2026-06-20).** P0–P5 built, tested (36 doge tests), and
+> verified in-preview; P6 (mood mirror) intentionally deferred per the
+> guided-cook-deprioritized directive (the `sous:setMood` verb is wired as a
+> no-op for forward-compat). Reskin the embedded Tamaweb pet to a Doberman and
+> wire Sous's cook loop into the pet game across four pillars (visual · economy ·
+> feed · fun-facts), all riding one typed postMessage bridge.
+>
+> **Shipped commits:** P0 branding (`64b7b27`) · P1 bridge + logo (`ce43b05`) ·
+> P2 Doberman reskin (`cfb8783`) · P3 cook→feed (`6f11a5a`) · P4 economy
+> (`6d4bf02`) · P5 fun facts (`b7f6b35`) · promo-nag suppression (`fec1c0c`).
+> A receiver bug (the game's `App` is a lexical global, not `window.App`) made
+> the whole bridge inert until P3 fixed it to bare `App`.
 >
 > **Ground truth:** every seam below was read in the real vendored source, not
 > guessed. Key confirmations: `Pet.js:25-26` renders `spriteSkin ?? sprite`;
