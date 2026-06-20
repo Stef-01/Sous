@@ -29,7 +29,7 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
-import { grantDishToDoge } from "@/lib/doge/sous-bridge";
+import { grantDishToDoge, creditCookGold } from "@/lib/doge/sous-bridge";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { toast } from "@/lib/hooks/use-toast";
@@ -375,6 +375,13 @@ function CombinedCookContent() {
             skillProgress: allSkillEntries,
           });
           awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
+          // Doge: a combined plate is ONE cook → one gold credit (a plate bonus
+          // scales with dish count); each dish still grants its own food below.
+          creditCookGold({
+            sessionId: sessionIdRef.current,
+            dishCount: orderedDishes.length,
+            streak: result.newStreak,
+          });
         }
         // One signal per cooked dish in this combined session.
         // Pull cuisine + flavor + ingredients from `orderedDishes`

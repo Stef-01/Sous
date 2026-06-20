@@ -20,6 +20,14 @@ import {
   type GoldReason,
 } from "./bridge-protocol";
 import { dishToFood } from "./dish-to-food";
+import { goldForCook, goldForCheckin, clampToDailyCap } from "./gold-economy";
+import {
+  readLedger,
+  writeLedger,
+  alreadyPaid,
+  recordPaid,
+  todayKey,
+} from "./gold-ledger";
 
 const OUTBOX_KEY = "sous-doge-outbox-v1";
 
@@ -211,4 +219,79 @@ export function grantDishToDoge(slug: string): boolean {
     def,
   });
   return true;
+}
+
+/**
+ * Credit Doge gold for completing a real cook ("cooking generates money"). The
+ * cook's sessionId is the idempotency key — it pays exactly once even if /doge is
+ * opened days later. Returns the gold credited (0 if already paid / capped).
+ *
+ * The wall: this reads only the gold ledger + plain inputs and writes only a
+ * postMessage. `streak` is passed in from completeSession's return — it never
+ * reads the XP/streak store.
+ */
+export function creditCookGold(args: {
+  sessionId: string;
+  dishCount: number;
+  streak: number;
+}): number {
+  if (typeof window === "undefined") return 0;
+  const { sessionId, dishCount, streak } = args;
+  const key = `cook:${sessionId}`;
+  const ledger = readLedger();
+  if (alreadyPaid(ledger, key)) return 0;
+
+  const date = todayKey();
+  const cooksToday = ledger.cooksPaidByDay[date] ?? 0;
+  const proposed = goldForCook({
+    dishCount,
+    streak,
+    cooksAlreadyPaidToday: cooksToday,
+  });
+  const amount = clampToDailyCap(proposed, ledger.byDay[date] ?? 0);
+
+  // Record the cook as paid (and counted) even at amount 0, so it never re-pays.
+  recordPaid(ledger, key, amount, date);
+  ledger.cooksPaidByDay[date] = cooksToday + 1;
+  writeLedger(ledger);
+
+  if (amount > 0) {
+    enqueueOutbox({
+      type: "sous:gold:credit",
+      txnId: `gold:${key}`,
+      amount,
+      reason: "cook_complete",
+      juice: true,
+      label: "Cooked!",
+    });
+  }
+  return amount;
+}
+
+/**
+ * Credit the once-per-day check-in gold ("engaging with the app earns money").
+ * Idempotent per calendar day. Returns the gold credited.
+ */
+export function creditCheckinGold(): number {
+  if (typeof window === "undefined") return 0;
+  const date = todayKey();
+  const key = `checkin:${date}`;
+  const ledger = readLedger();
+  if (alreadyPaid(ledger, key)) return 0;
+
+  const amount = clampToDailyCap(goldForCheckin(), ledger.byDay[date] ?? 0);
+  recordPaid(ledger, key, amount, date);
+  writeLedger(ledger);
+
+  if (amount > 0) {
+    enqueueOutbox({
+      type: "sous:gold:credit",
+      txnId: `gold:${key}`,
+      amount,
+      reason: "checkin",
+      juice: false,
+      label: "Welcome back!",
+    });
+  }
+  return amount;
 }

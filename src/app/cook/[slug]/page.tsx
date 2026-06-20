@@ -43,7 +43,7 @@ import { CookTimer } from "@/components/guided-cook/cook-timer";
 import { useCookStore } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
-import { grantDishToDoge } from "@/lib/doge/sous-bridge";
+import { grantDishToDoge, creditCookGold } from "@/lib/doge/sous-bridge";
 import { computeUserRecipeNutrition } from "@/lib/nutrition/user-recipe-nutrition";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
@@ -309,6 +309,13 @@ export default function GuidedCookPage({
           skillProgress: skillEntries,
         });
         awardXP("cook_complete", XP_AWARDS.COOK_COMPLETE, result.newStreak);
+        // Doge: cooking generates gold (toy currency). Idempotent by sessionId;
+        // streak comes from completeSession's return (never reads the XP store).
+        creditCookGold({
+          sessionId: sessionIdRef.current,
+          dishCount: 1,
+          streak: result.newStreak,
+        });
       }
       // Strongest implicit preference signal — fired on cook
       // completion only, not on session start. Pulls cuisine

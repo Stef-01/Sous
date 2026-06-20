@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { SousBridge } from "@/lib/doge/sous-bridge";
+import { SousBridge, creditCheckinGold } from "@/lib/doge/sous-bridge";
 
 /**
  * /doge — the Doberman virtual-pet game (Track A prototype). Mounts the vendored
@@ -41,6 +41,10 @@ export default function DogePage() {
   // vs. iframe load doesn't matter; it tears down on unmount.
   useEffect(() => {
     const bridge = new SousBridge(() => iframeRef.current);
+    // Engagement → money: opening Doge counts as the daily check-in (idempotent
+    // per calendar day). The credit rides the same outbox the bridge flushes on
+    // doge:ready, so it lands as soon as the game hands-hakes.
+    creditCheckinGold();
     return () => bridge.destroy();
   }, []);
 
