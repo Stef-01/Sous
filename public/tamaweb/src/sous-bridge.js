@@ -197,6 +197,9 @@
       ".sous-nutrition-hud .progressbar{flex:1;min-width:0;margin:0;}" +
       ".sous-hud-pc{width:30px;text-align:right;font-size:9px;font-weight:800;color:#fff;flex:none;}" +
       ".sous-hud-status{font-size:8.5px;color:#f5c542;margin-top:5px;font-weight:600;}" +
+      ".sous-hud-meals{font-size:8.5px;color:rgba(255,255,255,.8);margin-top:4px;font-weight:600;" +
+      "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      ".sous-hud-meals i{color:#f5c542;margin-right:1px;}" +
       // Hide the vendored SW-update notice — off-brand for Doge + it overlaps the HUD.
       "#download-container,#download-complete-container{display:none!important;}";
     var style = document.createElement("style");
@@ -235,10 +238,23 @@
         Math.round(pct) +
         "%</span></div>";
     }
+    var meals = "";
+    if (Array.isArray(data.meals) && data.meals.length) {
+      var shown = data.meals.slice(0, 3);
+      var extra = data.meals.length - shown.length;
+      meals =
+        '<div class="sous-hud-meals">' +
+        App.getIcon("utensils", true) +
+        " Fed today: " +
+        shown.join(" · ") +
+        (extra > 0 ? " +" + extra : "") +
+        "</div>";
+    }
     hud.innerHTML =
       '<div class="sous-hud-title">Dobe’s health · your nutrition</div>' +
       rows +
-      (data.status ? '<div class="sous-hud-status">' + data.status + "</div>" : "");
+      (data.status ? '<div class="sous-hud-status">' + data.status + "</div>" : "") +
+      meals;
   }
   var hudTimer = null;
   function ensureHud() {

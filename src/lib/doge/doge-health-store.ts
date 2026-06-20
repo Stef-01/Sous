@@ -41,6 +41,8 @@ export interface DogeHealthStat {
 export interface DogeHealthPayload {
   stats: DogeHealthStat[];
   status: string;
+  /** Deduped dish names eaten today (newest first) — the HUD's recent activity. */
+  meals: string[];
   updatedAt: number;
 }
 
@@ -49,10 +51,12 @@ export function buildDogeHealthPayload(
   stats: PetHealthStat[],
   mood: PetMood,
   now: number,
+  meals: string[] = [],
 ): DogeHealthPayload {
   return {
     stats: stats.map((s) => ({ label: s.label, pct: s.pct, fa: FA[s.key] })),
     status: STATUS[mood],
+    meals,
     updatedAt: now,
   };
 }

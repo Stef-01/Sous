@@ -26,11 +26,21 @@ describe("buildDogeHealthPayload", () => {
   });
 
   it("carries a status line per mood", () => {
-    expect(buildDogeHealthPayload(STATS, "thriving", 0).status).toMatch(/thriving/i);
+    expect(buildDogeHealthPayload(STATS, "thriving", 0).status).toMatch(
+      /thriving/i,
+    );
     expect(buildDogeHealthPayload(STATS, "asleep", 0).status).toMatch(/nap/i);
   });
 
   it("never invents stats — only what was passed", () => {
     expect(buildDogeHealthPayload([], "content", 0).stats).toEqual([]);
+  });
+
+  it("carries the meals eaten today (defaulting to none)", () => {
+    expect(buildDogeHealthPayload(STATS, "content", 0).meals).toEqual([]);
+    expect(
+      buildDogeHealthPayload(STATS, "content", 0, ["Pho", "Caesar Salad"])
+        .meals,
+    ).toEqual(["Pho", "Caesar Salad"]);
   });
 });

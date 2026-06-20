@@ -48,7 +48,12 @@ export default function DogePage() {
   useEffect(() => {
     healthRef.current = health;
     writeDogeHealth(
-      buildDogeHealthPayload(health.stats, health.mood, Date.now()),
+      buildDogeHealthPayload(
+        health.stats,
+        health.mood,
+        Date.now(),
+        health.meals,
+      ),
     );
   }, [health]);
 

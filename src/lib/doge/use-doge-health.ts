@@ -33,6 +33,8 @@ export interface DogeHealth {
   mood: PetMood;
   hearts: number;
   loggedCount: number;
+  /** Deduped dish names eaten today — the "recent activity" the HUD shows. */
+  meals: string[];
   glasses: number;
   /** Log one glass of water — the Hydration bar updates live (same hook
    *  instance owns the store, so it re-renders immediately). */
@@ -70,11 +72,18 @@ export function useDogeHealth(streak = 0): DogeHealth {
       fiber: fiberCoverage(agg),
       vitamins: vitaminCoverage(agg),
     });
+    // Deduped dish names eaten today, newest first — the HUD's "recent activity".
+    const meals: string[] = [];
+    for (let i = entries.length - 1; i >= 0; i--) {
+      const n = entries[i]?.name;
+      if (n && !meals.includes(n)) meals.push(n);
+    }
     return {
       stats,
       mood: ps.mood,
       hearts: ps.hearts,
       loggedCount: entries.length,
+      meals,
     };
   }, [entries, targets, glasses, streak]);
 
