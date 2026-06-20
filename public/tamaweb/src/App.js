@@ -2768,6 +2768,13 @@ const App = {
             App.displayGrid([
                 ...renderingMainMenu,
                 {
+                    // Doge: top-level entry to the real Sous nutrition (opens the
+                    // stats screen straight to the Nutrition tab).
+                    id: 'nutrition',
+                    name: '<i class="fa-solid fa-heart-pulse"></i>',
+                    onclick: () => { App.handlers.open_stats('tab-3'); }
+                },
+                {
                     name: App.getIcon('arrow-left back-sound', true),
                     class: 'back-sound back-btn',
                     onclick: () => { }
@@ -3916,7 +3923,7 @@ const App = {
                 },
             ], null, 'Settings')
         },
-        open_stats: function(){
+        open_stats: function(defaultTab){
             const getCareRatingIcons = (current = App.pet.stats.current_care, max = App.pet.stats.max_care, sizePx) => {
                 return new Array(max).fill('').map((_, i) => {
                     const style = i >= current ? 'opacity: 0.5; filter:grayscale();' : 'filter:hue-rotate(310deg);';
@@ -4032,6 +4039,12 @@ const App = {
             </div>
             `;
             App.initTab(content);
+            // Doge: open straight to a given tab (e.g. the Nutrition tab from the
+            // main menu) instead of always tab 1.
+            if(defaultTab){
+                const dt = content.querySelector('.tab-title[for="' + defaultTab + '"]');
+                if(dt) dt.click();
+            }
             list.appendChild(content);
         },
         open_food_stats: function(foodName){
