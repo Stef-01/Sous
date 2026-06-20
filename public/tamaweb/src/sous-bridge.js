@@ -201,7 +201,24 @@
       "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
       ".sous-hud-meals i{color:#f5c542;margin-right:1px;}" +
       // Hide the vendored SW-update notice — off-brand for Doge + it overlaps the HUD.
-      "#download-container,#download-complete-container{display:none!important;}";
+      "#download-container,#download-complete-container{display:none!important;}" +
+      // --- Fullscreen layout fix --------------------------------------------
+      // The game's built-in fullscreen stretches a 96x96 square scene with
+      // object-fit:fill across a ~1:2 portrait, distorting the art ~2x tall and
+      // pushing the dog (scene y=88/96) off the bottom. Instead: anchor the room
+      // to the BOTTOM at its true 1:1 aspect (cover, pixel-perfect), occupying
+      // the lower ~60% so the dog is always visible, with the HUD reading as a
+      // top dashboard over a clean gradient. !important to beat the game's rules.
+      ".graphics-wrapper.fullscreen{display:flex!important;flex-direction:column!important;" +
+      "padding:248px 0 18px!important;box-sizing:border-box!important;" +
+      "background:linear-gradient(180deg,#17131d 0%,#221b29 56%,#2c2433 100%)!important;}" +
+      ".graphics-wrapper.fullscreen .screen-wrapper{flex:1!important;width:100%!important;" +
+      "height:auto!important;min-height:0!important;}" +
+      // contain (not cover): the WHOLE square room is always visible so a roaming
+      // dog is never cropped off a side edge. Centered in the space below the HUD,
+      // clear of the bezel, true 1:1 aspect (no distortion), crisp pixels.
+      ".graphics-wrapper.fullscreen .graphics-canvas{height:100%!important;width:100%!important;" +
+      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;}";
     var style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
