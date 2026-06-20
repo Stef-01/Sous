@@ -74,6 +74,10 @@ export default function DogePage() {
         // if there is one, else with how your nutrition is going (the dog speaks
         // your real eating). Then an ambient fact every few minutes.
         setTimeout(() => {
+          // Dobe reacts to your real nutrition: a celebratory animation when
+          // you've eaten well (cosmetic, never touches the game's stat loop)...
+          bridge.postMood(healthRef.current.mood);
+          // ...and a spoken greeting (the last cook's fact if any, else status).
           if (!sayPendingCookFact(bridge)) {
             bridge.postSay({
               sayId: `nut:${Date.now()}`,

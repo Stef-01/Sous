@@ -116,8 +116,23 @@
     post("doge:said", { sayId: d.sayId });
   }
 
-  function handleSetMood(_d) {
-    // P1: forward-compat no-op. P6 maps DogeMood → App.pet.stats.
+  function handleSetMood(d) {
+    // Drive Dobe's VISIBLE reaction from your real nutrition — a momentary
+    // scripted animation (the same kind the game uses for its own celebrations),
+    // NOT a stat overwrite, so it never fights the game's depleting-stat loop.
+    // Positive-only + guarded: never interrupts sleep or another scripted state.
+    var pet = getApp().pet;
+    if (!pet || typeof pet.triggerScriptedState !== "function") return;
+    if (pet.stats && pet.stats.is_sleeping) return;
+    if (typeof pet.isDuringScriptedState === "function" && pet.isDuringScriptedState()) return;
+    try {
+      if (d.mood === "thriving") pet.triggerScriptedState("cheering", 4000, 0, true);
+      else if (d.mood === "content") pet.triggerScriptedState("blush", 3000, 0, true);
+      // peckish / hungry / asleep → no forced animation; the greeting already
+      // voices those, and we don't fake the game's own low-stat states.
+    } catch (_e) {
+      /* never let a reaction crash the game loop */
+    }
   }
 
   // ---- message plumbing -------------------------------------------------------
