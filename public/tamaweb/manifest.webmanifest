@@ -1,7 +1,7 @@
 {
-  "short_name": "Tamaweb",
-  "name": "Tamaweb",
-  "id": "tamaweb",
+  "short_name": "Doge",
+  "name": "Doge",
+  "id": "doge",
   "description": "Virtual Pet Game",
   "start_url": "index.html",
   "scope": "/",

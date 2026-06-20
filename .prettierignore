@@ -5,6 +5,9 @@ node_modules
 .claude
 .cache
 
+# vendored third-party game (Tamaweb/Doge) — never reformat third-party code
+public/tamaweb
+
 # tool-managed lockfiles
 pnpm-lock.yaml
 package-lock.json

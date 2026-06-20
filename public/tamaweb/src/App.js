@@ -3185,7 +3185,7 @@ const App = {
                                         {
                                             name: 'ok',
                                             onclick: () => {
-                                                App.displayConfirm(`After copying the code, open Tamaweb on another device and paste the code in <b>settings > input code</b>`, [
+                                                App.displayConfirm(`After copying the code, open Doge on another device and paste the code in <b>settings > input code</b>`, [
                                                     {
                                                         name: 'ok',
                                                         onclick: () => {
@@ -8168,7 +8168,7 @@ const App = {
         UI.show(overlay);
         setTimeout(() => UI.hide(overlay), 250);
         App.playSound('resources/sounds/camera_shutter_01.ogg');
-        const name = 'Tamaweb_' + moment().format('D-M-YY_h-m-s');
+        const name = 'Doge_' + moment().format('D-M-YY_h-m-s');
         downloadUpscaledCanvasAsImage(App.drawer.canvas, name, 5)
     },
     handleSequentiallyLoad: async function(loaders){
@@ -8809,7 +8809,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
     const showInstallPrompt = () => {
         App.addEvent(`pwa_install_notice_01`, () => {
-            App.displayConfirm(`Do you want to install <b>Tamaweb</b> as an app?`, [
+            App.displayConfirm(`Do you want to install <b>Doge</b> as an app?`, [
                 {
                     name: 'install',
                     onclick: () => {
