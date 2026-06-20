@@ -29,7 +29,11 @@ import { useCookStore } from "@/lib/hooks/use-cook-store";
 import type { CookDishEntry } from "@/lib/hooks/use-cook-store";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { diaryLogCook } from "@/lib/hooks/use-nutrition-diary";
-import { grantDishToDoge, creditCookGold } from "@/lib/doge/sous-bridge";
+import {
+  grantDishToDoge,
+  creditCookGold,
+  noteCookForFact,
+} from "@/lib/doge/sous-bridge";
 import { useSkillProgress } from "@/lib/hooks/use-skill-progress";
 import { useXPSystem, XP_AWARDS } from "@/lib/hooks/use-xp-system";
 import { toast } from "@/lib/hooks/use-toast";
@@ -409,6 +413,9 @@ function CombinedCookContent() {
           // Doge: each finished dish grants one feedable serving to the pet.
           grantDishToDoge(od.dish.slug);
         }
+        // Note the plate's primary dish so the dog can share a fact about it.
+        const lead = orderedDishes[0]?.dish;
+        if (lead) noteCookForFact(lead.slug, lead.cuisineFamily ?? "");
         completeCookPhase();
       }
     } else {

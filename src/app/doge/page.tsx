@@ -3,7 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { SousBridge, creditCheckinGold } from "@/lib/doge/sous-bridge";
+import {
+  SousBridge,
+  creditCheckinGold,
+  sayPendingCookFact,
+  sayAmbientFact,
+} from "@/lib/doge/sous-bridge";
 
 /**
  * /doge — the Doberman virtual-pet game (Track A prototype). Mounts the vendored
@@ -40,12 +45,23 @@ export default function DogePage() {
   // `doge:ready` handshake (resolving the iframe lazily), so construction order
   // vs. iframe load doesn't matter; it tears down on unmount.
   useEffect(() => {
-    const bridge = new SousBridge(() => iframeRef.current);
+    let factTimer: ReturnType<typeof setInterval> | null = null;
+    const bridge = new SousBridge(() => iframeRef.current, {
+      onReady: () => {
+        // A beat after the dog settles in, share a fact about the last cook
+        // (nutrition or food history), then an ambient one every few minutes.
+        setTimeout(() => sayPendingCookFact(bridge), 2500);
+        factTimer = setInterval(() => sayAmbientFact(bridge), 5 * 60 * 1000);
+      },
+    });
     // Engagement → money: opening Doge counts as the daily check-in (idempotent
     // per calendar day). The credit rides the same outbox the bridge flushes on
-    // doge:ready, so it lands as soon as the game hands-hakes.
+    // doge:ready, so it lands as soon as the game handshakes.
     creditCheckinGold();
-    return () => bridge.destroy();
+    return () => {
+      if (factTimer) clearInterval(factTimer);
+      bridge.destroy();
+    };
   }, []);
 
   return (

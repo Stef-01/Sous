@@ -28,6 +28,7 @@ import {
   recordPaid,
   todayKey,
 } from "./gold-ledger";
+import { pickFact, readSeenFacts, markFactSeen } from "./fun-fact-scheduler";
 
 const OUTBOX_KEY = "sous-doge-outbox-v1";
 
@@ -94,10 +95,16 @@ export class SousBridge {
   private getIframe: () => HTMLIFrameElement | null;
   private nonce: string;
   private ready = false;
+  private firstReadyFired = false;
+  private onReady?: () => void;
   private boundOnMessage: (e: MessageEvent) => void;
 
-  constructor(getIframe: () => HTMLIFrameElement | null) {
+  constructor(
+    getIframe: () => HTMLIFrameElement | null,
+    opts?: { onReady?: () => void },
+  ) {
     this.getIframe = getIframe;
+    this.onReady = opts?.onReady;
     this.nonce = makeNonce();
     this.boundOnMessage = (e) => this.onMessage(e);
     if (typeof window !== "undefined") {
@@ -125,6 +132,10 @@ export class SousBridge {
         this.ready = true;
         this.rawSend({ type: "sous:hello", nonce: this.nonce });
         this.flushOutbox();
+        if (!this.firstReadyFired) {
+          this.firstReadyFired = true;
+          this.onReady?.();
+        }
         break;
       case "doge:ack":
       case "doge:granted":
@@ -294,4 +305,60 @@ export function creditCheckinGold(): number {
     });
   }
   return amount;
+}
+
+// ---- fun facts (the dog teaches nutrition + food history) -------------------
+
+const LAST_COOK_KEY = "sous-doge-last-cook";
+
+/** Remember the dish just cooked so the Doberman can mention a fact about it the
+ * next time /doge opens (the bridge isn't mounted on the cook page). */
+export function noteCookForFact(slug: string, cuisine: string): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      LAST_COOK_KEY,
+      JSON.stringify({ slug, cuisine }),
+    );
+  } catch {
+    /* best effort */
+  }
+}
+
+function sayFact(
+  bridge: SousBridge,
+  ctx: Parameters<typeof pickFact>[0],
+): boolean {
+  const fact = pickFact({ ...ctx, seen: readSeenFacts() }, Math.random());
+  if (!fact) return false;
+  bridge.postSay({ sayId: `say:${makeNonce()}`, text: fact.text, ms: 7000 });
+  markFactSeen(fact.id);
+  return true;
+}
+
+/** On /doge open: if a cook is pending, the dog says a fact about that dish. */
+export function sayPendingCookFact(bridge: SousBridge): boolean {
+  if (typeof window === "undefined") return false;
+  let pending: { slug?: string; cuisine?: string } | null = null;
+  try {
+    const raw = window.localStorage.getItem(LAST_COOK_KEY);
+    pending = raw ? JSON.parse(raw) : null;
+  } catch {
+    pending = null;
+  }
+  if (!pending) return false;
+  try {
+    window.localStorage.removeItem(LAST_COOK_KEY);
+  } catch {
+    /* best effort */
+  }
+  return sayFact(bridge, { dishSlug: pending.slug, cuisine: pending.cuisine });
+}
+
+/** Periodic ambient fact (generic rotation; `need` can bias toward a nutrient). */
+export function sayAmbientFact(
+  bridge: SousBridge,
+  need?: string | null,
+): boolean {
+  return sayFact(bridge, { need: need ?? null });
 }
