@@ -173,10 +173,96 @@
 
   window.addEventListener("message", onMessage);
 
-  // Announce readiness, then watch for pet reassignment (hatch / age-up) so the
-  // parent can re-handshake + re-flush its outbox.
+  // ---- native nutrition HUD on the (fullscreen) main view ---------------------
+  // The real Sous nutrition, on screen the moment you open the app — rendered
+  // with the GAME's own primitives (createProgressbar + getIcon) and injected
+  // into the game's own DOM, styled like the game. Not a foreign React overlay;
+  // it reads the shared localStorage key Sous writes (doge-health-store.ts).
+  var hudStyled = false;
+  function injectHudStyle() {
+    if (hudStyled) return;
+    hudStyled = true;
+    var css =
+      ".sous-nutrition-hud{position:absolute;top:6px;left:6px;right:6px;z-index:60;" +
+      "background:rgba(38,31,44,.82);border:2px solid rgba(255,255,255,.10);border-radius:12px;" +
+      "padding:7px 9px 8px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4);" +
+      "-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}" +
+      ".sous-hud-title{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;" +
+      "color:#fff;opacity:.78;margin:0 0 5px 46px;}" +
+      ".sous-hud-row{display:flex;align-items:center;gap:5px;margin:2.5px 0;}" +
+      ".sous-hud-ic{width:13px;text-align:center;color:#f5c542;flex:none;}" +
+      ".sous-hud-ic i{font-size:11px;}" +
+      ".sous-hud-lb{width:54px;font-size:8.5px;font-weight:700;color:rgba(255,255,255,.85);" +
+      "text-transform:uppercase;flex:none;}" +
+      ".sous-nutrition-hud .progressbar{flex:1;min-width:0;margin:0;}" +
+      ".sous-hud-pc{width:30px;text-align:right;font-size:9px;font-weight:800;color:#fff;flex:none;}" +
+      ".sous-hud-status{font-size:8.5px;color:#f5c542;margin-top:5px;font-weight:600;}";
+    var style = document.createElement("style");
+    style.textContent = css;
+    document.head.appendChild(style);
+  }
+  function readSousHealth() {
+    try {
+      return JSON.parse(window.localStorage.getItem("sous-doge-health-v1") || "null");
+    } catch (_e) {
+      return null;
+    }
+  }
+  function renderHud(hud) {
+    var App = getApp();
+    if (!App) return;
+    var data = readSousHealth();
+    if (!data || !Array.isArray(data.stats) || !data.stats.length) {
+      hud.innerHTML =
+        '<div class="sous-hud-title">Dobe’s health</div>' +
+        '<div class="sous-hud-status">Log meals in Sous to fill these.</div>';
+      return;
+    }
+    var rows = "";
+    for (var i = 0; i < data.stats.length; i++) {
+      var s = data.stats[i];
+      var pct = Math.max(0, Math.min(100, Number(s.pct) || 0));
+      rows +=
+        '<div class="sous-hud-row"><span class="sous-hud-ic">' +
+        App.getIcon(s.fa, true) +
+        '</span><span class="sous-hud-lb">' +
+        s.label +
+        "</span>" +
+        App.createProgressbar(pct).node.outerHTML +
+        '<span class="sous-hud-pc">' +
+        Math.round(pct) +
+        "%</span></div>";
+    }
+    hud.innerHTML =
+      '<div class="sous-hud-title">Dobe’s health · your nutrition</div>' +
+      rows +
+      (data.status ? '<div class="sous-hud-status">' + data.status + "</div>" : "");
+  }
+  var hudTimer = null;
+  function ensureHud() {
+    if (!gameReady()) return;
+    var wrap = document.querySelector(".graphics-wrapper");
+    if (!wrap) return;
+    injectHudStyle();
+    var hud = wrap.querySelector(".sous-nutrition-hud");
+    if (!hud) {
+      hud = document.createElement("div");
+      hud.className = "sous-nutrition-hud";
+      wrap.appendChild(hud);
+      renderHud(hud);
+      if (!hudTimer)
+        hudTimer = setInterval(function () {
+          var h = document.querySelector(".sous-nutrition-hud");
+          if (h) renderHud(h);
+        }, 3000);
+    }
+  }
+
+  // Announce readiness, surface the nutrition HUD, then watch for pet
+  // reassignment (hatch / age-up) so the parent can re-handshake.
   setInterval(function () {
     if (!gameReady()) return;
+    ensureHud();
     if (!announced) announceReady();
     else if (getApp().pet !== lastPet) announceReady();
   }, 400);

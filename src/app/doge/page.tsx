@@ -128,7 +128,7 @@ export default function DogePage() {
       ) : (
         <iframe
           ref={iframeRef}
-          src="/tamaweb/index.html"
+          src="/tamaweb/index.html?fullscreen"
           title="Doge — Doberman virtual pet"
           className="h-full w-full border-0"
           // The game manages its own audio/fullscreen; allow what it needs.
