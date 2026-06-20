@@ -9,7 +9,7 @@
  * This is the pet HEALTH (mood/stats), which is meant to reflect nutrition — it
  * is NOT the gold economy (that stays walled off in gold-*.ts).
  */
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   useNutritionDiary,
   aggregateDay,
@@ -33,15 +33,23 @@ export interface DogeHealth {
   mood: PetMood;
   hearts: number;
   loggedCount: number;
+  glasses: number;
+  /** Log one glass of water — the Hydration bar updates live (same hook
+   *  instance owns the store, so it re-renders immediately). */
+  logWater: () => void;
 }
 
 export function useDogeHealth(streak = 0): DogeHealth {
   const today = useMemo(() => new Date(), []);
   const { entries } = useNutritionDiary(today);
   const { targets } = usePersonalTargets();
-  const { glasses } = useHydration();
+  const { glasses, setGlasses } = useHydration();
+  const logWater = useCallback(
+    () => setGlasses(glasses + 1),
+    [glasses, setGlasses],
+  );
 
-  return useMemo(() => {
+  const data = useMemo(() => {
     const agg = aggregateDay(entries);
     const kcal = typeof agg?.calories === "number" ? agg.calories : null;
     const protein = typeof agg?.protein_g === "number" ? agg.protein_g : null;
@@ -69,4 +77,6 @@ export function useDogeHealth(streak = 0): DogeHealth {
       loggedCount: entries.length,
     };
   }, [entries, targets, glasses, streak]);
+
+  return { ...data, glasses, logWater };
 }

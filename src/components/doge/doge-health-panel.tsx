@@ -10,6 +10,7 @@
  * See docs/DOGE-PET-DASHBOARD-PLAN.md.
  */
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Zap,
@@ -21,9 +22,12 @@ import {
   ArrowUp,
   ChevronUp,
   ChevronDown,
+  Utensils,
+  BarChart3,
 } from "lucide-react";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useDogeHealth } from "@/lib/doge/use-doge-health";
+import { haptic } from "@/lib/motion/haptics";
 import type { PetHealthStat } from "@/lib/nutrition/pet-screen-data";
 import type { PetMood } from "@/lib/nutrition/pet-state";
 
@@ -76,8 +80,9 @@ function StatRow({ stat }: { stat: PetHealthStat }) {
 
 export function DogeHealthPanel() {
   const reduce = useReducedMotion();
+  const router = useRouter();
   const { stats: cook } = useCookSessions();
-  const { stats, mood } = useDogeHealth(cook.currentStreak);
+  const { stats, mood, glasses, logWater } = useDogeHealth(cook.currentStreak);
   const [open, setOpen] = useState(true);
 
   return (
@@ -114,6 +119,37 @@ export function DogeHealthPanel() {
             <p className="pt-1 text-[10.5px] font-medium leading-snug text-[#f5c542]">
               {MOOD_STATUS[mood]}
             </p>
+
+            {/* Care actions — real nutrition logging from the game screen. */}
+            <div className="flex gap-1.5 pt-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  haptic("success");
+                  logWater();
+                }}
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-[#4aa3e0]/85 px-1.5 py-1.5 text-[10px] font-bold text-white transition active:scale-95"
+                aria-label={`Log a glass of water (${glasses} today)`}
+              >
+                <Droplet size={12} aria-hidden /> Water
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/nutrition")}
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-[#e8893a]/85 px-1.5 py-1.5 text-[10px] font-bold text-white transition active:scale-95"
+                aria-label="Log a meal"
+              >
+                <Utensils size={12} aria-hidden /> Log
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/nutrition")}
+                className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-white/10 px-1.5 py-1.5 text-[10px] font-bold text-white transition active:scale-95"
+                aria-label="Check full stats"
+              >
+                <BarChart3 size={12} aria-hidden /> Stats
+              </button>
+            </div>
           </div>
         )}
       </motion.section>
