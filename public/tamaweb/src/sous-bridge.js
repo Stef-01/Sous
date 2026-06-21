@@ -212,6 +212,10 @@
       ".graphics-wrapper.fullscreen{display:flex!important;flex-direction:column!important;" +
       "padding:248px 0 18px!important;box-sizing:border-box!important;" +
       "background:linear-gradient(180deg,#17131d 0%,#221b29 56%,#2c2433 100%)!important;}" +
+      // Default reserves the top for the room's HUD. On canvas SUB-screens
+      // (locations, mini-games — no HUD), reclaim that space so the scene fills
+      // instead of leaving a big empty band. Toggled by syncHudVisibility.
+      ".graphics-wrapper.fullscreen.sous-subscreen{padding-top:20px!important;}" +
       ".graphics-wrapper.fullscreen .screen-wrapper{flex:1!important;width:100%!important;" +
       "height:auto!important;min-height:0!important;}" +
       // contain (not cover): the WHOLE square room is always visible so a roaming
@@ -314,6 +318,9 @@
     );
     var onRoom = !!(el && el.classList && el.classList.contains("graphics-canvas"));
     hud.style.display = onRoom ? "" : "none";
+    // Reclaim the HUD-reserved top padding on canvas sub-screens (no HUD there).
+    var wrap = document.querySelector(".graphics-wrapper");
+    if (wrap) wrap.classList.toggle("sous-subscreen", !onRoom);
     // Also toggle the Sous (parent) back button: hide it over game overlays —
     // those screens have their own BACK and two collide at the top-left corner.
     try {
