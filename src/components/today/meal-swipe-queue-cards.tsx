@@ -156,6 +156,16 @@ export function FullscreenSwipeCard({
         aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}
       >
         <DishImage dish={dish} priority={isTop} fit="cover" />
+        {/* Time pill on the photo — the reference mockups' signature recipe-card
+            treatment (translucent pill, bottom-left). The time was removed from the
+            meta line below so it isn't duplicated. */}
+        {dish.cookTimeMinutes > 0 && (
+          <span className="absolute bottom-3 left-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
+            {dish.cookTimeMinutes >= 60
+              ? `${Math.floor(dish.cookTimeMinutes / 60)}hr ${dish.cookTimeMinutes % 60 ? `${dish.cookTimeMinutes % 60}min` : ""}`.trim()
+              : `${dish.cookTimeMinutes} min`}
+          </span>
+        )}
         {/* Threshold stamps — visible only while dragging the top card. */}
         {isTop && (
           <>

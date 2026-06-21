@@ -1041,9 +1041,8 @@ function MealSwipeQueueOverlay({
                 </>
               ) : (
                 <>
+                  {/* Time now lives in the photo pill (reference grammar). */}
                   <span>{activeDish.cuisineFamily}</span>
-                  <span aria-hidden="true">/</span>
-                  <span>{activeDish.cookTimeMinutes} min</span>
                   <span aria-hidden="true">/</span>
                   <span>{activeDish.ingredientCount} ingredients</span>
                 </>
