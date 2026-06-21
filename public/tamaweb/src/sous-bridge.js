@@ -20,7 +20,37 @@
   var nonce = null; // set by sous:hello
   var announced = false; // have we posted doge:ready for the current pet?
   var lastPet = null; // identity watch for hatch / age-up
-  var seenTxn = Object.create(null); // txnId -> true (per-session dedupe)
+  // Settled-transaction dedupe. PERSISTED to localStorage (capped) so an iframe
+  // reload mid-transaction can't reset it: the parent's durable outbox replays
+  // every unsettled txn on the next doge:ready handshake, and a fresh in-memory
+  // set would re-credit gold / re-grant a dish. With persistence the replay is
+  // recognised as already-settled and merely re-acked. (Audit C1.)
+  var SEEN_KEY = "sous-doge-seen-txn-v1";
+  var SEEN_CAP = 300;
+  var seenOrder = [];
+  var seenTxn = Object.create(null);
+  (function loadSeenTxn() {
+    try {
+      var arr = JSON.parse(window.localStorage.getItem(SEEN_KEY) || "[]");
+      if (Array.isArray(arr)) {
+        seenOrder = arr.slice(-SEEN_CAP);
+        for (var i = 0; i < seenOrder.length; i++) seenTxn[seenOrder[i]] = true;
+      }
+    } catch (_e) {
+      /* corrupt / disabled — start empty */
+    }
+  })();
+  function markSeen(txnId) {
+    if (!txnId || seenTxn[txnId]) return;
+    seenTxn[txnId] = true;
+    seenOrder.push(txnId);
+    if (seenOrder.length > SEEN_CAP) delete seenTxn[seenOrder.shift()];
+    try {
+      window.localStorage.setItem(SEEN_KEY, JSON.stringify(seenOrder));
+    } catch (_e) {
+      /* quota / disabled — best effort */
+    }
+  }
 
   function getApp() {
     return typeof App !== "undefined" ? App : null;
@@ -57,7 +87,6 @@
       post("doge:ack", { txnId: d.txnId, credited: 0 });
       return;
     }
-    seenTxn[d.txnId] = true;
     var App = getApp();
     App.pet.stats.gold = (App.pet.stats.gold || 0) + amt;
     if (d.juice) {
@@ -70,6 +99,7 @@
       }
     }
     if (App.save) App.save(true);
+    markSeen(d.txnId); // record settled only AFTER the credit is durably saved
     post("doge:ack", { txnId: d.txnId, credited: amt });
   }
 
@@ -104,9 +134,9 @@
     if (!App.definitions.food) App.definitions.food = {};
     if (!App.definitions.food[def.id]) App.definitions.food[def.id] = toNativeFoodDef(def);
     if (!seenTxn[d.txnId]) {
-      seenTxn[d.txnId] = true;
       App.addNumToObject(App.pet.inventory.food, def.id, 1);
       if (App.save) App.save(true);
+      markSeen(d.txnId); // record settled only AFTER the grant is durably saved
     }
     post("doge:granted", { txnId: d.txnId, id: def.id });
   }
