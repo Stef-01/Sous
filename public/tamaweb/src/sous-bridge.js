@@ -97,6 +97,10 @@
       return;
     }
     var App = getApp();
+    if (!App || !App.definitions || !App.pet) {
+      post("doge:granted", { txnId: d.txnId, id: "" });
+      return;
+    }
     if (!App.definitions.food) App.definitions.food = {};
     if (!App.definitions.food[def.id]) App.definitions.food[def.id] = toNativeFoodDef(def);
     if (!seenTxn[d.txnId]) {
@@ -108,7 +112,12 @@
   }
 
   function handleSay(d) {
-    var pet = getApp().pet;
+    var App = getApp();
+    if (!App || !App.pet) {
+      post("doge:said", { sayId: d.sayId });
+      return;
+    }
+    var pet = App.pet;
     var asleep = pet.stats && pet.stats.is_sleeping;
     var scripted = typeof pet.isDuringScriptedState === "function" && pet.isDuringScriptedState();
     var text = String(d.text || "").replace(/[<>]/g, ""); // dodge the raw-HTML bubble branch
@@ -121,7 +130,8 @@
     // scripted animation (the same kind the game uses for its own celebrations),
     // NOT a stat overwrite, so it never fights the game's depleting-stat loop.
     // Positive-only + guarded: never interrupts sleep or another scripted state.
-    var pet = getApp().pet;
+    var App = getApp();
+    var pet = App && App.pet;
     if (!pet || typeof pet.triggerScriptedState !== "function") return;
     if (pet.stats && pet.stats.is_sleeping) return;
     if (typeof pet.isDuringScriptedState === "function" && pet.isDuringScriptedState()) return;
