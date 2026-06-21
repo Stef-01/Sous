@@ -408,21 +408,32 @@ export default function EatOutPage() {
   const dishFitsGoals = (dish: DemoDish) =>
     dish.tags.some((t) => goalTags.has(t));
 
-  // Featured bar — every dish across the area, swipeable; goal-fit dishes
-  // lead, then nearest venue. Tap = open that venue's sheet.
+  // Featured bar — every dish across the area, swipeable. Leads with your TASTE
+  // (same cuisine-preference signal as the venue sort + the rings), nudged by
+  // goal-fit, then nearest venue. At cold-start (no taste) it falls back to
+  // goal-fit + distance — the prior behaviour. Tap = open that venue's sheet.
   const featured = useMemo(() => {
     const all = STANFORD_VENUES.flatMap((venue) =>
       venue.dishes.map((dish) => ({ dish, venue })),
     );
+    // Inline lookups (same signal as the venue sort) so the memo deps are just
+    // [goalTags, merged] — no unstable function dependency.
+    const taste = (x: { venue: DemoVenue }) =>
+      merged.cuisines[cuisineKeyFor(x.venue.cuisine)] ?? 0;
+    const goalFit = (x: { dish: DemoDish }) =>
+      x.dish.tags.some((t) => goalTags.has(t)) ? 1 : 0;
     return all
       .sort((a, b) => {
-        const af = a.dish.tags.some((t) => goalTags.has(t)) ? 1 : 0;
-        const bf = b.dish.tags.some((t) => goalTags.has(t)) ? 1 : 0;
-        if (af !== bf) return bf - af;
+        // Your TASTE leads (same 0.05 threshold the venue list uses), then
+        // goal-fit, then nearest. Cold-start (no taste) ⇒ goal-fit + distance.
+        const dt = taste(b) - taste(a);
+        if (Math.abs(dt) > 0.05) return dt;
+        const dg = goalFit(b) - goalFit(a);
+        if (dg !== 0) return dg;
         return a.venue.distanceKm - b.venue.distanceKm;
       })
       .slice(0, 14);
-  }, [goalTags]);
+  }, [goalTags, merged]);
 
   // "Your taste, near you": lead with cuisines you lean toward (from your real
   // cook/log signals via usePreferenceProfile), then nearest. Falls back to pure
