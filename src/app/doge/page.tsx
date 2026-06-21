@@ -45,6 +45,10 @@ export default function DogePage() {
   const health = useDogeHealth(cook.currentStreak);
   // Latest health for the bridge's onReady greeting (refs read fresh at fire time).
   const healthRef = useRef(health);
+  // The live bridge + a first-run guard, so a separate effect can re-post Dobe's
+  // mood whenever your nutrition changes — not only at the onReady greeting.
+  const bridgeRef = useRef<SousBridge | null>(null);
+  const didInitialMoodRef = useRef(false);
   useEffect(() => {
     healthRef.current = health;
     writeDogeHealth(
@@ -97,6 +101,7 @@ export default function DogePage() {
       // Sous hydration store (ref read fresh); the health payload + HUD update.
       onLogWater: () => healthRef.current.logWater(),
     });
+    bridgeRef.current = bridge;
     // Engagement → money: opening Doge counts as the daily check-in (idempotent
     // per calendar day). The credit rides the same outbox the bridge flushes on
     // doge:ready, so it lands as soon as the game handshakes.
@@ -104,8 +109,23 @@ export default function DogePage() {
     return () => {
       if (factTimer) clearInterval(factTimer);
       bridge.destroy();
+      bridgeRef.current = null;
     };
   }, []);
+
+  // Keep Dobe's VISIBLE reaction in sync with your LIVE eating: log a meal while
+  // the game is open and his mood animation updates to match (cosmetic setMood —
+  // handleSetMood is positive-only + sleep/scripted-guarded, never the depleting
+  // stat loop). The initial mood rides the onReady greeting, so skip the first
+  // run here to avoid double-firing at mount; the bridge's outbox queues until
+  // the game handshakes, so an early change is never lost.
+  useEffect(() => {
+    if (!didInitialMoodRef.current) {
+      didInitialMoodRef.current = true;
+      return;
+    }
+    bridgeRef.current?.postMood(health.mood);
+  }, [health.mood]);
 
   return (
     <div className="relative flex h-[100dvh] flex-col bg-black">
