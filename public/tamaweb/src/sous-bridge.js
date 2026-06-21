@@ -321,6 +321,14 @@
   function pctWord(p) {
     return p >= 80 ? "Great" : p >= 55 ? "On track" : p >= 30 ? "Getting there" : "Low";
   }
+  // Exact "value / target unit" for the drill-down when Sous sends real numbers
+  // (energy/protein/hydration/fiber) — e.g. "30g / 50g", "6 / 8 glasses".
+  function fmtDetail(d) {
+    if (!d || typeof d.value !== "number" || typeof d.target !== "number") return "";
+    if (d.unit === "glass") return d.value + " / " + d.target + " glasses";
+    if (d.unit === "g") return d.value + "g / " + d.target + "g";
+    return d.value + " / " + d.target + " " + (d.unit || "");
+  }
 
   function renderHud(hud) {
     var App = getApp();
@@ -368,14 +376,16 @@
               App.getIcon("droplet", true) +
               " Log a glass</button>"
             : "";
+        var exact = fmtDetail(s.detail);
+        var headline = exact
+          ? exact + " · " + pctWord(rounded)
+          : pctWord(rounded) + " · " + rounded + "%";
         detail =
           '<div class="sous-metric-detail">' +
           (METRIC_INFO[key] || "") +
           " <b>" +
-          pctWord(rounded) +
-          " · " +
-          rounded +
-          "%</b>." +
+          headline +
+          "</b>." +
           src +
           act +
           "</div>";

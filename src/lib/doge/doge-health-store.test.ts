@@ -43,4 +43,28 @@ describe("buildDogeHealthPayload", () => {
         .meals,
     ).toEqual(["Pho", "Caesar Salad"]);
   });
+
+  it("forwards a metric's exact detail (value/target/unit) when present", () => {
+    const withDetail: PetHealthStat[] = [
+      {
+        key: "protein",
+        label: "Protein",
+        pct: 60,
+        detail: { value: 30, target: 50, unit: "g" },
+      },
+    ];
+    expect(buildDogeHealthPayload(withDetail, "content", 0).stats).toEqual([
+      {
+        label: "Protein",
+        pct: 60,
+        fa: "drumstick-bite",
+        detail: { value: 30, target: 50, unit: "g" },
+      },
+    ]);
+  });
+
+  it("omits detail entirely for metrics without a clean number", () => {
+    const p = buildDogeHealthPayload(STATS, "content", 0);
+    expect(p.stats.every((s) => !("detail" in s))).toBe(true);
+  });
 });

@@ -71,6 +71,17 @@ export function useDogeHealth(streak = 0): DogeHealth {
       strength: ps.strength,
       fiber: fiberCoverage(agg),
       vitamins: vitaminCoverage(agg),
+      // raw amounts so the in-game drill-down can show exact numbers vs target
+      // ("Protein 30g / 50g") instead of just a percentage.
+      raw: {
+        kcal,
+        targetKcal: targets?.kcal ?? 2000,
+        protein_g: protein,
+        targetProtein: targets?.protein_g ?? 50,
+        glasses,
+        glassTarget: HYDRATION_GOAL_GLASSES,
+        fiber_g: typeof agg?.fiber_g === "number" ? agg.fiber_g : null,
+      },
     });
     // Deduped dish names eaten today, newest first — the HUD's "recent activity".
     const meals: string[] = [];

@@ -107,6 +107,9 @@ export interface PetHealthStat {
   key: "energy" | "mood" | "hydration" | "protein" | "fiber" | "vitamins";
   label: string;
   pct: number;
+  /** Exact amount vs target for the drill-down, when a clean number exists
+   *  (energy/protein/hydration/fiber). Mood + vitamins have no single number. */
+  detail?: { value: number; target: number; unit: "kcal" | "g" | "glass" };
 }
 
 const toPct = (frac: number) =>
@@ -129,13 +132,55 @@ export function buildPetHealthStats(i: {
   strength: number;
   fiber: number;
   vitamins: number;
+  /** Raw amounts for exact-number drill-downs (optional → no `detail`). */
+  raw?: {
+    kcal?: number | null;
+    targetKcal?: number;
+    protein_g?: number | null;
+    targetProtein?: number;
+    glasses?: number;
+    glassTarget?: number;
+    fiber_g?: number | null;
+  };
 }): PetHealthStat[] {
+  const r = i.raw;
+  const mk = (
+    v: number | null | undefined,
+    target: number,
+    unit: "kcal" | "g" | "glass",
+  ): PetHealthStat["detail"] =>
+    typeof v === "number" && Number.isFinite(v)
+      ? { value: Math.round(v), target, unit }
+      : undefined;
+  const withDetail = (d: PetHealthStat["detail"]) => (d ? { detail: d } : {});
   return [
-    { key: "energy", label: "Energy", pct: toPct(i.fullness) },
+    {
+      key: "energy",
+      label: "Energy",
+      pct: toPct(i.fullness),
+      ...withDetail(r ? mk(r.kcal, r.targetKcal ?? 2000, "kcal") : undefined),
+    },
     { key: "mood", label: "Mood", pct: toPct(i.hearts / 5) },
-    { key: "hydration", label: "Hydration", pct: toPct(i.hydration) },
-    { key: "protein", label: "Protein", pct: toPct(i.strength) },
-    { key: "fiber", label: "Fiber", pct: toPct(i.fiber) },
+    {
+      key: "hydration",
+      label: "Hydration",
+      pct: toPct(i.hydration),
+      ...withDetail(r ? mk(r.glasses, r.glassTarget ?? 8, "glass") : undefined),
+    },
+    {
+      key: "protein",
+      label: "Protein",
+      pct: toPct(i.strength),
+      ...withDetail(
+        r ? mk(r.protein_g, r.targetProtein ?? 50, "g") : undefined,
+      ),
+    },
+    {
+      key: "fiber",
+      label: "Fiber",
+      pct: toPct(i.fiber),
+      ...withDetail(r ? mk(r.fiber_g, Math.round(FIBER_DV), "g") : undefined),
+    },
     { key: "vitamins", label: "Vitamins", pct: toPct(i.vitamins) },
   ];
 }

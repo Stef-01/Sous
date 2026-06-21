@@ -36,6 +36,8 @@ export interface DogeHealthStat {
   pct: number;
   /** FontAwesome icon name for the game's getIcon. */
   fa: string;
+  /** Exact amount vs target for the drill-down (energy/protein/hydration/fiber). */
+  detail?: { value: number; target: number; unit: "kcal" | "g" | "glass" };
 }
 
 export interface DogeHealthPayload {
@@ -54,7 +56,12 @@ export function buildDogeHealthPayload(
   meals: string[] = [],
 ): DogeHealthPayload {
   return {
-    stats: stats.map((s) => ({ label: s.label, pct: s.pct, fa: FA[s.key] })),
+    stats: stats.map((s) => ({
+      label: s.label,
+      pct: s.pct,
+      fa: FA[s.key],
+      ...(s.detail ? { detail: s.detail } : {}),
+    })),
     status: STATUS[mood],
     meals,
     updatedAt: now,
