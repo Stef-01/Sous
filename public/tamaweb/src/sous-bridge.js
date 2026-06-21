@@ -73,6 +73,11 @@
     }
   }
 
+  // Expose the post path so the diegetic room layer (room-objects.js) can fire
+  // doge:logWater through the SAME channel as the cream HUD's water button —
+  // single source of the outgoing-message logic, no nonce/channel duplication.
+  if (typeof window !== "undefined") window.SOUS_DOGE_POST = post;
+
   function announceReady() {
     announced = true;
     lastPet = getApp().pet;
