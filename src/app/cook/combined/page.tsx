@@ -15,6 +15,9 @@ import { ArrowLeft, ChefHat, UtensilsCrossed } from "lucide-react";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
+import { ServingSlider } from "@/components/guided-cook/serving-slider";
+import { scaleQuantity } from "@/lib/cook/scale-quantity";
+import { getRecipeLink } from "@/data/ingredients/recipe-links";
 import { CombinedCookWatchlist } from "@/components/guided-cook/cook-watchlist";
 import { StepCard } from "@/components/guided-cook/step-card";
 import { ParallelHintBanner } from "@/components/guided-cook/parallel-hint-banner";
@@ -212,16 +215,40 @@ function CombinedCookContent() {
     }
   }, [data, orderedDishes, startCombinedSession, startSession]);
 
-  // Build segmented ingredient sections for the Grab phase
-  const ingredientSections = useMemo<IngredientSection[]>(
-    () => buildIngredientSections(orderedDishes),
-    [orderedDishes],
-  );
+  // Servings — scale EVERY dish's ingredient quantities by one shared serving
+  // count (the missing-from-combined-cook control). Base is the main dish's
+  // servingsPerRecipe; each dish scales by servings / its-own-base so mains +
+  // sides with different bases stay proportional.
+  const [servingsOverride, setServingsOverride] = useState<number | null>(null);
+  const mainSlugForBase =
+    data?.main?.dish?.slug ?? orderedDishes[0]?.dish?.slug ?? "";
+  const baseServings = getRecipeLink(mainSlugForBase)?.servingsPerRecipe ?? 4;
+  const servings = servingsOverride ?? baseServings;
 
-  // Flat ingredients for backward-compat (used by step card)
+  // Build segmented ingredient sections for the Grab phase, scaled to servings.
+  const ingredientSections = useMemo<IngredientSection[]>(() => {
+    const sections = buildIngredientSections(orderedDishes);
+    return sections.map((sec, i) => {
+      const dishSlug = orderedDishes[i]?.dish.slug ?? "";
+      const dishBase =
+        getRecipeLink(dishSlug)?.servingsPerRecipe ?? baseServings;
+      const mult = dishBase > 0 ? servings / dishBase : 1;
+      if (Math.abs(mult - 1) < 0.001) return sec;
+      return {
+        ...sec,
+        ingredients: sec.ingredients.map((ing) => ({
+          ...ing,
+          quantity: scaleQuantity(ing.quantity, mult),
+        })),
+      };
+    });
+  }, [orderedDishes, servings, baseServings]);
+
+  // Flat ingredients (used by step card) — derived from the scaled sections so
+  // the cook steps reference the same scaled amounts.
   const allIngredients = useMemo(
-    () => orderedDishes.flatMap((d) => d.ingredients),
-    [orderedDishes],
+    () => ingredientSections.flatMap((s) => s.ingredients),
+    [ingredientSections],
   );
 
   // Shape each orderedDish back into a StaticDishData-compatible object so
@@ -661,6 +688,15 @@ function CombinedCookContent() {
                   steps: d.steps,
                 }))}
               />
+              {/* Scale the whole plate — one servings control drives every
+                  dish's amounts below (the missing combined-cook ability). */}
+              <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                <ServingSlider
+                  servings={servings}
+                  baseServings={baseServings}
+                  onChange={setServingsOverride}
+                />
+              </div>
               <IngredientList
                 key="grab"
                 ingredients={allIngredients}
