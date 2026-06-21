@@ -13,10 +13,17 @@
  * clearly badged as curated demo picks.
  */
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Sparkles, Star, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  MapPin,
+  Plus,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import {
   STANFORD_VENUES,
   ALL_CUISINES,
@@ -58,6 +65,211 @@ function walkOrDrive(km: number): string {
   return `${Math.max(4, Math.round(km * 2.5))} min drive`;
 }
 
+/**
+ * A single dish, as an individually-selectable object: hover highlights it, click
+ * selects it (green object-box) and drills into its blurb + the Log action.
+ */
+function DishObject({
+  dish,
+  fits,
+  selected,
+  onSelect,
+  onLog,
+}: {
+  dish: DemoDish;
+  fits: boolean;
+  selected: boolean;
+  onSelect: () => void;
+  onLog: () => void;
+}) {
+  return (
+    <div
+      className={cn(
+        "overflow-hidden rounded-xl border transition-colors",
+        selected
+          ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/[0.06] ring-2 ring-[var(--nourish-green)]/25"
+          : "border-neutral-200/80 bg-white hover:border-[var(--nourish-green)]/55",
+      )}
+    >
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-expanded={selected}
+        className="flex w-full items-center gap-3 p-2.5 text-left"
+      >
+        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
+          <Image
+            src={dish.image}
+            alt={dish.name}
+            fill
+            sizes="56px"
+            className="object-cover"
+          />
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="truncate text-[13.5px] font-semibold text-[var(--nourish-dark)]">
+              {dish.name}
+            </p>
+            <span className="shrink-0 text-[12px] font-medium text-[var(--nourish-subtext)]">
+              ${dish.priceUsd}
+            </span>
+          </div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+            <span className="text-[11px] font-semibold tabular-nums text-[var(--nourish-dark)]">
+              ~{dish.kcal} kcal
+            </span>
+            <span className="text-[11px] tabular-nums text-[var(--nourish-subtext-faint)]">
+              P{dish.protein_g}·C{dish.carbs_g}·F{dish.fat_g}
+            </span>
+            {fits && (
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-gold)]">
+                <Star size={8} className="fill-[var(--nourish-gold)]" /> goal
+                fit
+              </span>
+            )}
+          </div>
+        </div>
+        <ChevronDown
+          size={16}
+          aria-hidden
+          className={cn(
+            "shrink-0 text-[var(--nourish-subtext-faint)] transition-transform",
+            selected && "rotate-180",
+          )}
+        />
+      </button>
+      {selected && (
+        <div className="px-2.5 pb-2.5">
+          <p className="text-[12px] leading-snug text-[var(--nourish-subtext)]">
+            {dish.blurb}
+          </p>
+          <button
+            type="button"
+            onClick={onLog}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition active:scale-[0.96] motion-reduce:active:scale-100"
+          >
+            <Plus size={13} aria-hidden /> Log this dish
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * A single venue, as an individually-selectable object: hover highlights it, click
+ * selects it (gold object-box) and drills its dishes inline (each a DishObject).
+ */
+function VenueObject({
+  venue,
+  hero = false,
+  reason = null,
+  tasteHit,
+  goalHit,
+  open,
+  onToggle,
+  children,
+}: {
+  venue: DemoVenue;
+  hero?: boolean;
+  reason?: string | null;
+  tasteHit: boolean;
+  goalHit: boolean;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={cn(
+        "overflow-hidden rounded-2xl bg-white shadow-sm transition-colors",
+        open
+          ? "border-2 border-[var(--nourish-gold)] ring-2 ring-[var(--nourish-gold)]/30"
+          : hero
+            ? "border-2 border-[var(--nourish-gold)]/45 hover:border-[var(--nourish-gold)]/70"
+            : "border border-neutral-200 hover:border-[var(--nourish-gold)]/45",
+      )}
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="block w-full text-left"
+      >
+        <div className={cn("relative w-full", hero ? "h-52" : "h-40")}>
+          <Image
+            src={venue.heroImage ?? venue.dishes[0].image}
+            alt={venue.name}
+            fill
+            sizes="(max-width: 448px) 100vw, 448px"
+            className="object-cover"
+          />
+          <div
+            className={cn(
+              "absolute inset-0",
+              hero
+                ? "bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                : "bg-gradient-to-t from-black/72 to-transparent",
+            )}
+          />
+          {hero ? (
+            <span className="absolute left-4 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
+              <Sparkles size={11} aria-hidden /> For your taste
+            </span>
+          ) : (
+            tasteHit && (
+              <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/95 px-2.5 py-1 text-[11px] font-semibold text-white">
+                <Sparkles size={10} aria-hidden /> Your kind of spot
+              </span>
+            )
+          )}
+          {goalHit && (
+            <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-dark)]">
+              <Star
+                size={10}
+                className="fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
+              />
+              Fits your goals
+            </span>
+          )}
+          <div className="absolute bottom-3 left-4 right-12">
+            {hero && reason && (
+              <p className="text-[11.5px] font-semibold text-white/85">
+                {reason}
+              </p>
+            )}
+            <h2
+              className={cn(
+                "font-serif font-semibold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.6)]",
+                hero ? "text-[26px]" : "text-[20px]",
+              )}
+            >
+              {venue.name}
+            </h2>
+            <p className="mt-0.5 text-[12px] font-medium text-white/85">
+              {venue.cuisine} · {walkOrDrive(venue.distanceKm)} · {venue.price}
+            </p>
+          </div>
+          <ChevronDown
+            size={20}
+            aria-hidden
+            className={cn(
+              "absolute bottom-3 right-3 text-white/90 transition-transform [filter:drop-shadow(0_1px_1px_rgba(0,0,0,.55))]",
+              open && "rotate-180",
+            )}
+          />
+        </div>
+      </button>
+      {open && (
+        <div className="space-y-1.5 border-t border-neutral-100 bg-[var(--nourish-cream)]/50 p-2">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function EatOutPage() {
   const router = useRouter();
   const { stars } = useNutrientGoals();
@@ -66,7 +278,16 @@ export default function EatOutPage() {
     merged.cuisines[cuisineKeyFor(v.cuisine)] ?? 0;
   const [cuisine, setCuisine] = useState<string | null>(null);
   const [goalsOnly, setGoalsOnly] = useState(false);
-  const [openVenue, setOpenVenue] = useState<DemoVenue | null>(null);
+  // Selection state: which venue is drilled-open (the gold object-box), and which
+  // dish inside it is selected (the green object-box). Single-select at each level.
+  const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
+  const [selectedDish, setSelectedDish] = useState<string | null>(null);
+  const toggleVenue = (slug: string) => {
+    setSelectedDish(null);
+    setExpandedVenue((prev) => (prev === slug ? null : slug));
+  };
+  const toggleDish = (slug: string) =>
+    setSelectedDish((prev) => (prev === slug ? null : slug));
 
   const goalTags = useMemo(() => {
     const tags = new Set<DemoDish["tags"][number]>();
@@ -178,8 +399,11 @@ export default function EatOutPage() {
               <button
                 key={dish.slug}
                 type="button"
-                onClick={() => setOpenVenue(venue)}
-                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform active:scale-[0.97] motion-reduce:active:scale-100"
+                onClick={() => {
+                  setExpandedVenue(venue.slug);
+                  setSelectedDish(dish.slug);
+                }}
+                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform hover:border-[var(--nourish-gold)]/55 active:scale-[0.97] motion-reduce:active:scale-100"
               >
                 <div className="relative h-24 w-full">
                   <Image
@@ -250,88 +474,65 @@ export default function EatOutPage() {
           ))}
         </div>
 
-        {/* Editorial hero — the single strongest taste match, if any. */}
+        {/* Editorial hero — the strongest taste match, itself an open-able object. */}
         {topMatch && (
-          <button
-            type="button"
-            onClick={() => setOpenVenue(topMatch)}
-            className="block w-full overflow-hidden rounded-3xl border-2 border-[var(--nourish-gold)]/45 text-left shadow-md transition-transform active:scale-[0.99] motion-reduce:active:scale-100"
+          <VenueObject
+            venue={topMatch}
+            hero
+            reason={`Because you love ${topMatch.cuisine}`}
+            tasteHit={tasteScore(topMatch) >= TASTE_MATCH}
+            goalHit={goalTags.size > 0 && topMatch.dishes.some(dishFitsGoals)}
+            open={expandedVenue === topMatch.slug}
+            onToggle={() => toggleVenue(topMatch.slug)}
           >
-            <div className="relative h-52 w-full">
-              <Image
-                src={topMatch.heroImage ?? topMatch.dishes[0].image}
-                alt={topMatch.name}
-                fill
-                sizes="(max-width: 448px) 100vw, 448px"
-                className="object-cover"
+            <p className="px-1 pb-1 text-[12px] italic leading-snug text-[var(--nourish-subtext)]">
+              {topMatch.vibe}
+            </p>
+            {topMatch.dishes.map((dish) => (
+              <DishObject
+                key={dish.slug}
+                dish={dish}
+                fits={dishFitsGoals(dish)}
+                selected={selectedDish === dish.slug}
+                onSelect={() => toggleDish(dish.slug)}
+                onLog={() => logDish(dish, topMatch)}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <span className="absolute left-4 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
-                <Sparkles size={11} aria-hidden /> For your taste
-              </span>
-              <div className="absolute bottom-4 left-4 right-4">
-                <p className="text-[11.5px] font-semibold text-white/85">
-                  Because you love {topMatch.cuisine}
-                </p>
-                <h2 className="font-serif text-[26px] font-semibold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">
-                  {topMatch.name}
-                </h2>
-                <p className="mt-0.5 text-[12px] font-medium text-white/85">
-                  {topMatch.cuisine} · {walkOrDrive(topMatch.distanceKm)} ·{" "}
-                  {topMatch.price}
-                </p>
-              </div>
-            </div>
-          </button>
+            ))}
+          </VenueObject>
         )}
 
-        {/* Photo-led venue cards — your taste leads, then nearest. */}
-        <div className="space-y-4">
+        {/* Venue objects — taste leads, then nearest. Each is individually
+            selectable: tap to drill its dishes; tap a dish to log it. */}
+        <div className="space-y-3">
           {venues.map((v) => (
-            <button
+            <VenueObject
               key={v.slug}
-              type="button"
-              onClick={() => setOpenVenue(v)}
-              className="block w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white text-left shadow-sm transition-transform active:scale-[0.99] motion-reduce:active:scale-100"
+              venue={v}
+              tasteHit={tasteScore(v) >= TASTE_MATCH}
+              goalHit={goalTags.size > 0 && v.dishes.some(dishFitsGoals)}
+              open={expandedVenue === v.slug}
+              onToggle={() => toggleVenue(v.slug)}
             >
-              <div className="relative h-44 w-full">
-                <Image
-                  src={v.heroImage ?? v.dishes[0].image}
-                  alt={`${v.dishes[0].name} at ${v.name}`}
-                  fill
-                  sizes="(max-width: 448px) 100vw, 448px"
-                  className="object-cover"
-                />
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-3 left-4 right-4">
-                  <h2 className="font-serif text-[20px] font-semibold text-white [text-shadow:0_1px_2px_rgba(0,0,0,.5)]">
-                    {v.name}
-                  </h2>
-                  <p className="text-[12px] font-medium text-white/85">
-                    {v.cuisine} · {v.distanceKm} km ·{" "}
-                    {walkOrDrive(v.distanceKm)} · {v.price}
-                  </p>
-                </div>
-                {tasteScore(v) >= TASTE_MATCH && (
-                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/95 px-2.5 py-1 text-[11px] font-semibold text-white">
-                    <Sparkles size={10} aria-hidden /> Your kind of spot
-                  </span>
-                )}
-                {goalTags.size > 0 && v.dishes.some(dishFitsGoals) && (
-                  <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-dark)]">
-                    <Star
-                      size={10}
-                      className="fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
-                    />
-                    Fits your goals
-                  </span>
-                )}
-              </div>
-              <p className="px-4 py-3 text-[13px] leading-snug text-[var(--nourish-subtext)]">
+              <p className="px-1 pb-1 text-[12px] italic leading-snug text-[var(--nourish-subtext)]">
                 {v.vibe}
               </p>
-            </button>
+              {v.dishes.map((dish) => (
+                <DishObject
+                  key={dish.slug}
+                  dish={dish}
+                  fits={dishFitsGoals(dish)}
+                  selected={selectedDish === dish.slug}
+                  onSelect={() => toggleDish(dish.slug)}
+                  onLog={() => logDish(dish, v)}
+                />
+              ))}
+            </VenueObject>
           ))}
+          {venues.length === 0 && (
+            <p className="rounded-2xl border border-dashed border-neutral-300 bg-white px-4 py-6 text-center text-[13px] text-[var(--nourish-subtext)]">
+              No spots match that filter — try another cuisine.
+            </p>
+          )}
         </div>
 
         <p className="px-1 text-center text-[10.5px] leading-snug text-[var(--nourish-subtext-faint)]">
@@ -339,111 +540,6 @@ export default function EatOutPage() {
           hours change — check the restaurant.
         </p>
       </main>
-
-      {/* Venue sheet — dishes with macros + one-tap log. */}
-      {openVenue && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/35">
-          <button
-            type="button"
-            aria-label="Close"
-            className="flex-1"
-            onClick={() => setOpenVenue(null)}
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={openVenue.name}
-            className="max-h-[86dvh] overflow-y-auto rounded-t-3xl bg-[var(--nourish-cream)] pb-[max(1.25rem,env(safe-area-inset-bottom))]"
-          >
-            <div className="relative h-40 w-full">
-              <Image
-                src={openVenue.heroImage ?? openVenue.dishes[0].image}
-                alt={openVenue.name}
-                fill
-                sizes="(max-width: 448px) 100vw, 448px"
-                className="object-cover"
-              />
-              <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
-              <button
-                type="button"
-                onClick={() => setOpenVenue(null)}
-                aria-label="Close"
-                className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white"
-              >
-                <X size={16} />
-              </button>
-              <div className="absolute bottom-3 left-4 right-4">
-                <h2 className="font-serif text-[22px] font-semibold text-white [text-shadow:0_1px_2px_rgba(0,0,0,.5)]">
-                  {openVenue.name}
-                </h2>
-                <p className="text-[12px] font-medium text-white/85">
-                  {openVenue.area} · {openVenue.distanceKm} km ·{" "}
-                  {openVenue.price}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 p-4">
-              {openVenue.dishes.map((dish) => {
-                const fits = dishFitsGoals(dish);
-                return (
-                  <div
-                    key={dish.slug}
-                    className="flex gap-3 rounded-2xl border border-neutral-200 bg-white p-3"
-                  >
-                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl">
-                      <Image
-                        src={dish.image}
-                        alt={dish.name}
-                        fill
-                        sizes="64px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <p className="truncate text-[14px] font-semibold text-[var(--nourish-dark)]">
-                          {dish.name}
-                        </p>
-                        <span className="shrink-0 text-[12px] font-medium text-[var(--nourish-subtext)]">
-                          ${dish.priceUsd}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 line-clamp-2 text-[12px] leading-snug text-[var(--nourish-subtext)]">
-                        {dish.blurb}
-                      </p>
-                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
-                        <span className="text-[11px] font-semibold tabular-nums text-[var(--nourish-dark)]">
-                          ~{dish.kcal} kcal
-                        </span>
-                        <span className="text-[11px] tabular-nums text-[var(--nourish-subtext-faint)]">
-                          P{dish.protein_g} · C{dish.carbs_g} · F{dish.fat_g}
-                        </span>
-                        {fits && (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-gold)]">
-                            <Star
-                              size={8}
-                              className="fill-[var(--nourish-gold)]"
-                            />
-                            goal fit
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => logDish(dish, openVenue)}
-                      className="self-center rounded-full bg-[var(--nourish-green)] px-3.5 py-2 text-[12px] font-semibold text-white transition active:scale-[0.96]"
-                    >
-                      Log
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
