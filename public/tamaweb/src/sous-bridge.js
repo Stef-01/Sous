@@ -257,6 +257,13 @@
       ".sous-metric-detail b{font-weight:700;}" +
       ".sous-metric-src{display:block;opacity:.85;margin-top:1px;" +
       "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
+      // actionable drill-down (Hydration: log a glass) — a native pixel button.
+      ".sous-metric-act{display:inline-flex;align-items:center;gap:4px;margin-top:5px;" +
+      "padding:3px 10px;border-radius:8px;border:1.5px solid var(--prim-clr-b-border,#ffb362);" +
+      "background:var(--prim-clr-b-bg,#fff4e8);color:var(--prim-clr-b-text,#ff8000);" +
+      "font-family:inherit;font-weight:700;font-size:8.5px;cursor:pointer;" +
+      "box-shadow:0 2px 5px rgba(120,70,15,.2);}" +
+      ".sous-metric-act:active{transform:scale(.95);}" +
       ".sous-hud-ic{width:14px;text-align:center;flex:none;}" +
       ".sous-hud-ic i{font-size:12px;}" +
       ".sous-hud-lb{width:56px;font-size:9px;font-weight:700;text-transform:uppercase;flex:none;}" +
@@ -355,6 +362,12 @@
               data.meals.slice(0, 3).join(" · ") +
               "</span>"
             : "";
+        var act =
+          key === "hydration"
+            ? '<button class="sous-metric-act" data-act="water" type="button">' +
+              App.getIcon("droplet", true) +
+              " Log a glass</button>"
+            : "";
         detail =
           '<div class="sous-metric-detail">' +
           (METRIC_INFO[key] || "") +
@@ -364,6 +377,7 @@
           rounded +
           "%</b>." +
           src +
+          act +
           "</div>";
       }
       rows +=
@@ -416,6 +430,16 @@
         if (e.target.closest(".sous-hud-title")) {
           if (A && A.handlers && A.handlers.open_stats) A.handlers.open_stats("tab-3");
           return;
+        }
+        var act = e.target.closest("[data-act]");
+        if (act) {
+          if (act.getAttribute("data-act") === "water") post("doge:logWater");
+          if (A && A.playSound) {
+            try {
+              A.playSound("resources/sounds/ui_click_01.ogg", true);
+            } catch (_e) {}
+          }
+          return; // action button — don't also toggle the metric selection
         }
         var metric = e.target.closest(".sous-metric");
         if (!metric) return;

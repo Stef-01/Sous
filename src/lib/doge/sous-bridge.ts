@@ -97,14 +97,16 @@ export class SousBridge {
   private ready = false;
   private firstReadyFired = false;
   private onReady?: () => void;
+  private onLogWater?: () => void;
   private boundOnMessage: (e: MessageEvent) => void;
 
   constructor(
     getIframe: () => HTMLIFrameElement | null,
-    opts?: { onReady?: () => void },
+    opts?: { onReady?: () => void; onLogWater?: () => void },
   ) {
     this.getIframe = getIframe;
     this.onReady = opts?.onReady;
+    this.onLogWater = opts?.onLogWater;
     this.nonce = makeNonce();
     this.boundOnMessage = (e) => this.onMessage(e);
     if (typeof window !== "undefined") {
@@ -142,6 +144,10 @@ export class SousBridge {
         this.settle(d.txnId);
         break;
       case "doge:said":
+        break;
+      case "doge:logWater":
+        // The Hydration drill-down asked to log a glass of water.
+        this.onLogWater?.();
         break;
     }
   }

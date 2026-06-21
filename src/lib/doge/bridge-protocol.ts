@@ -100,8 +100,15 @@ export type DogeGranted = Base & {
   id: string;
 };
 export type DogeSaid = Base & { type: "doge:said"; sayId: string };
+/** Game asks the parent to log one glass of water (Hydration drill-down action). */
+export type DogeLogWater = Base & { type: "doge:logWater" };
 
-export type DogeToSous = DogeReady | DogeAck | DogeGranted | DogeSaid;
+export type DogeToSous =
+  | DogeReady
+  | DogeAck
+  | DogeGranted
+  | DogeSaid
+  | DogeLogWater;
 
 // ───────────────────────── guards ─────────────────────────
 
@@ -123,6 +130,7 @@ export function isDogeToSous(data: unknown): data is DogeToSous {
     (data.type === "doge:ready" ||
       data.type === "doge:ack" ||
       data.type === "doge:granted" ||
-      data.type === "doge:said")
+      data.type === "doge:said" ||
+      data.type === "doge:logWater")
   );
 }

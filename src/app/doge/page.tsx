@@ -93,6 +93,9 @@ export default function DogePage() {
         }, 2500);
         factTimer = setInterval(() => sayAmbientFact(bridge), 5 * 60 * 1000);
       },
+      // The Hydration drill-down asked to log a glass — write it through the real
+      // Sous hydration store (ref read fresh); the health payload + HUD update.
+      onLogWater: () => healthRef.current.logWater(),
     });
     // Engagement → money: opening Doge counts as the daily check-in (idempotent
     // per calendar day). The credit rides the same outbox the bridge flushes on
