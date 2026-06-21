@@ -133,7 +133,7 @@ function DishObject({
         type="button"
         onClick={onSelect}
         aria-expanded={selected}
-        className="flex w-full items-center gap-3 p-2.5 text-left"
+        className="flex w-full items-center gap-3 p-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]"
       >
         <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg">
           <Image
@@ -157,13 +157,17 @@ function DishObject({
             <span className="text-[11px] font-semibold tabular-nums text-[var(--nourish-dark)]">
               ~{dish.kcal} kcal
             </span>
-            <span className="text-[11px] tabular-nums text-[var(--nourish-subtext-faint)]">
+            <span
+              className="text-[11px] tabular-nums text-[var(--nourish-subtext)]"
+              aria-label={`Protein ${dish.protein_g}g, carbs ${dish.carbs_g}g, fat ${dish.fat_g}g`}
+              title="Protein · Carbs · Fat (grams)"
+            >
               P{dish.protein_g}·C{dish.carbs_g}·F{dish.fat_g}
             </span>
             {fits && (
-              <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-gold)]">
-                <Star size={8} className="fill-[var(--nourish-gold)]" /> goal
-                fit
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-green)]">
+                <Star size={8} className="fill-[var(--nourish-gold)]" /> Likely
+                fits
               </span>
             )}
           </div>
@@ -233,12 +237,14 @@ function VenueObject({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="block w-full text-left"
+        className="block w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]"
       >
         <div className={cn("relative w-full", hero ? "h-52" : "h-40")}>
           <Image
             src={venue.heroImage ?? venue.dishes[0].image}
-            alt={venue.name}
+            // Decorative: the venue name is already the visible <h2> below in the
+            // same button, so empty alt avoids a duplicate screen-reader read.
+            alt=""
             fill
             sizes="(max-width: 448px) 100vw, 448px"
             className="object-cover"
@@ -268,7 +274,7 @@ function VenueObject({
                 size={10}
                 className="fill-[var(--nourish-gold)] text-[var(--nourish-gold)]"
               />
-              Fits your goals
+              Likely fits
             </span>
           )}
           <div className="absolute bottom-3 left-4 right-12">
@@ -434,7 +440,7 @@ export default function EatOutPage() {
             onClick={() => router.push("/today")}
             type="button"
             aria-label="Back to Today"
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
           >
             <ArrowLeft size={18} />
           </button>
@@ -451,7 +457,11 @@ export default function EatOutPage() {
 
       <main className="mx-auto max-w-md page-x space-y-4 pb-24 pt-2">
         {/* Featured dishes — swipe across the whole area's menus. */}
-        <div className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          role="group"
+          aria-label="Featured dishes near you"
+          className="-mx-[var(--gutter)] flex snap-x snap-mandatory gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {featured.map(({ dish, venue }) => {
             const fits = dish.tags.some((t) => goalTags.has(t));
             return (
@@ -469,7 +479,7 @@ export default function EatOutPage() {
                     }),
                   });
                 }}
-                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform hover:border-[var(--nourish-gold)]/55 active:scale-[0.97] motion-reduce:active:scale-100"
+                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform hover:border-[var(--nourish-gold)]/55 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)] motion-reduce:active:scale-100"
               >
                 <div className="relative h-24 w-full">
                   <Image
@@ -502,16 +512,20 @@ export default function EatOutPage() {
         </div>
 
         {/* Filters — cuisines + the goal lens (real starred nutrients). */}
-        <div className="-mx-[var(--gutter)] flex gap-1.5 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div
+          role="group"
+          aria-label="Filter by cuisine"
+          className="-mx-[var(--gutter)] flex gap-1.5 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
           {goalTags.size > 0 && (
             <button
               type="button"
               onClick={() => setGoalsOnly((g) => !g)}
               aria-pressed={goalsOnly}
               className={cn(
-                "inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                "inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 goalsOnly
-                  ? "border-[var(--nourish-gold)] bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
+                  ? "border-[var(--nourish-gold)] bg-[var(--nourish-gold)]/15 text-[var(--nourish-green)]"
                   : "border-neutral-200 bg-white text-[var(--nourish-dark)]",
               )}
             >
@@ -529,7 +543,7 @@ export default function EatOutPage() {
               onClick={() => setCuisine(c)}
               aria-pressed={cuisine === c}
               className={cn(
-                "shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors",
+                "shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 cuisine === c
                   ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
                   : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/50",
@@ -545,7 +559,11 @@ export default function EatOutPage() {
           <VenueObject
             venue={topMatch}
             hero
-            reason={`Because you love ${topMatch.cuisine}`}
+            reason={
+              tasteScore(topMatch) >= 0.5
+                ? `Because you love ${topMatch.cuisine}`
+                : `Because you've been into ${topMatch.cuisine}`
+            }
             tasteStrength={tasteScore(topMatch)}
             goalHit={goalTags.size > 0 && topMatch.dishes.some(dishFitsGoals)}
             open={expandedVenue === topMatch.slug}
@@ -602,8 +620,8 @@ export default function EatOutPage() {
         </div>
 
         <p className="px-1 text-center text-[10.5px] leading-snug text-[var(--nourish-subtext-faint)]">
-          Curated Stanford-area demo · nutrition is an estimate · menus and
-          hours change — check the restaurant.
+          Nutrition is an estimate · menus and hours change — check the
+          restaurant.
         </p>
       </main>
     </div>
