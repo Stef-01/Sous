@@ -1,31 +1,27 @@
 /**
- * room-objects.js — Diegetic Dobe nutrition room, Month 1 Week 2.
+ * room-objects.js — Diegetic Dobe nutrition room (Month 1, Weeks 2–3).
  *
- * Spawns the manifest's object slots (room-manifest.js) into the live 96×96 world
- * as real engine Object2d's, z-sorted so the dog occludes / is occluded by the
- * floor objects (the one thing the DOM HUD can never do). Procedural solidColor
- * stand-ins this week — value-fill + drill-down + the dark-navy theme come in
- * W3/W4. Each slot's art.kind flips "solid"→"sprite" with zero code change when
- * the founder art lands (the drop-in seam).
+ * W2: spawn the manifest's slots into the live 96×96 world as real engine
+ * Object2d's, z-sorted so the dog occludes the floor objects.
+ * W3: each metric now BREATHES with your real eating — a dim "vessel" container
+ * plus a band-coloured fill (red <40 / amber 40–70 / green ≥70) whose height
+ * tracks the live pct from sous-doge-health-v1. The exact value/target + the
+ * drill card + the dark-navy theme are W4; the liquid-`clip` + animation are W5.
  *
- * SAFETY: read-only. This file never writes stats or gold (CI-guarded by
- * room-manifest.test.ts). The hydration action (W4) reuses the doge:logWater
- * postMessage — it does not mutate anything here.
+ * SAFETY: read-only. Never writes stats or gold (CI-guarded). The health key is
+ * parsed once per 400ms lifecycle tick into a cached snapshot — onDraw (60fps)
+ * reads only the cache, never JSON.parse per frame.
  *
- * FLAG: default OFF. Spawns only when localStorage["sous-doge-room-objects-v1"]
- * === "1" OR the iframe URL carries ?roomobjects=1. Flag off ⇒ nothing spawns ⇒
- * production (the cream DOM HUD) is byte-identical.
- *
- * SW gotcha: edits here won't appear until the /tamaweb/ service worker is
- * unregistered + caches cleared; pnpm build is the real gate.
+ * FLAG default OFF: localStorage["sous-doge-room-objects-v1"]==="1" OR
+ * ?roomobjects=1. Off ⇒ nothing spawns ⇒ the cream DOM HUD is byte-identical.
+ * SW gotcha: edits need the /tamaweb/ service worker unregistered to appear.
  */
 (function () {
   "use strict";
 
   var FLAG_KEY = "sous-doge-room-objects-v1";
-  var WORLD = 96; // the manifest's world units == the background's width/height
-  // Floor objects depth-sort against the pet (it can stand in front/behind);
-  // the bubble bars float above the dog at a fixed high z.
+  var HEALTH_KEY = "sous-doge-health-v1";
+  var WORLD = 96;
   var FLOOR_IDS = {
     hydration: 1,
     protein: 1,
@@ -36,8 +32,9 @@
   };
   var BUBBLE_Z = 50;
 
-  var spawned = []; // the live Object2d's, for idempotent despawn
+  var spawned = []; // every live Object2d we own (containers + fills)
   var lifecycleTimer = null;
+  var healthCache = null; // parsed once per tick; onDraw reads this only
 
   function getApp() {
     try {
@@ -46,22 +43,19 @@
       return null;
     }
   }
-
   function getManifest() {
     return (typeof window !== "undefined" && window.SOUS_ROOM_MANIFEST) || null;
   }
-
   function isEnabled() {
     try {
       if (window.localStorage.getItem(FLAG_KEY) === "1") return true;
     } catch (_e) {
-      /* localStorage blocked — fall through to the query flag */
+      /* localStorage blocked */
     }
     return /[?&]roomobjects=1\b/.test(window.location.search);
   }
-
   function onHomeScene(App) {
-    return (
+    return !!(
       App &&
       App.currentScene &&
       App.scene &&
@@ -69,36 +63,80 @@
     );
   }
 
-  // World (0..96) → live canvas pixels, recomputed every frame so the objects
-  // stay correct through resize / fullscreen toggles (no stale projection).
-  function applyLayout(me, slot) {
-    var d = me.drawer;
-    if (!d || !d.canvas) return;
-    var cw = d.canvas.width || WORLD;
-    var ch = d.canvas.height || WORLD;
-    me.x = (slot.anchor.x / WORLD) * cw;
-    me.y = (slot.anchor.y / WORLD) * ch;
-    me.width = Math.max(1, (slot.size.w / WORLD) * cw);
-    me.height = Math.max(1, (slot.size.h / WORLD) * ch);
+  // ---- data binding (read-only) ----------------------------------------------
+  function refreshHealth() {
+    try {
+      var raw = window.localStorage.getItem(HEALTH_KEY);
+      if (!raw) {
+        healthCache = null;
+        return;
+      }
+      var p = JSON.parse(raw);
+      healthCache = p && Array.isArray(p.stats) ? p : null;
+    } catch (_e) {
+      healthCache = null; // corrupt value must never throw a frame
+    }
+  }
+  function slotPct(slot) {
+    if (!healthCache || !slot.bind || !slot.label) return 0;
+    var stats = healthCache.stats;
+    for (var i = 0; i < stats.length; i++) {
+      if (stats[i] && stats[i].label === slot.label) {
+        var n = Number(stats[i].pct);
+        return Math.max(0, Math.min(100, isFinite(n) ? n : 0));
+      }
+    }
+    return 0;
+  }
+  function bandColor(pct, band) {
+    var low = (band && band.low) || 30;
+    var mid = (band && band.mid) || 70;
+    if (pct >= mid) return { r: 110, g: 185, b: 90 }; // green
+    if (pct >= low) return { r: 240, g: 170, b: 40 }; // amber
+    return { r: 224, g: 92, b: 92 }; // red
+  }
+  function dim(c, f) {
+    return {
+      r: Math.round(c.r * f),
+      g: Math.round(c.g * f),
+      b: Math.round(c.b * f),
+    };
   }
 
-  function buildObject(App, slot) {
+  // world (0..96) → live canvas px, every frame (resize/fullscreen-safe)
+  function canvasOf(me) {
+    var d = me.drawer;
+    return d && d.canvas
+      ? { cw: d.canvas.width || WORLD, ch: d.canvas.height || WORLD }
+      : { cw: WORLD, ch: WORLD };
+  }
+  function applyLayout(me, slot) {
+    var c = canvasOf(me);
+    me.x = (slot.anchor.x / WORLD) * c.cw;
+    me.y = (slot.anchor.y / WORLD) * c.ch;
+    me.width = Math.max(1, (slot.size.w / WORLD) * c.cw);
+    me.height = Math.max(1, (slot.size.h / WORLD) * c.ch);
+  }
+
+  // ---- object builders -------------------------------------------------------
+  function buildContainer(App, slot) {
     var isFloor = !!FLOOR_IDS[slot.id];
-    var color =
+    var isMetric = !!(slot.bind && slot.bind.statKey);
+    var base =
       slot.art && slot.art.kind === "solid" && slot.art.color
         ? slot.art.color
         : { r: 200, g: 200, b: 200 };
+    // Metrics render as a dim "vessel" so the bright fill (the value) reads on
+    // top. Feed companions keep their solid placeholder (their meals come in W7).
+    var color = isMetric ? dim(base, 0.42) : base;
 
     var config = {
-      // Explicit width/height from the start so getBoundingBox never derefs the
-      // (empty) image before the first onDraw (plan A7 / P1.1).
       x: (slot.anchor.x / WORLD) * 100 + "%",
       y: (slot.anchor.y / WORLD) * 100 + "%",
       width: Math.max(1, slot.size.w),
       height: Math.max(1, slot.size.h),
       z: isFloor ? slot.z : BUBBLE_Z,
       solidColor: { r: color.r, g: color.g, b: color.b },
-      // Tag so we can find + remove our own objects, never the game's.
       sousRoomSlot: slot.id,
       onDraw: function (me) {
         applyLayout(me, slot);
@@ -106,35 +144,66 @@
       onHover: function (me) {
         me.showOutline("#7CE0E6");
       },
-      // config.onClick is wrapped by Object2d so it (a) fires once per press —
-      // the wrapper clears App.mouse.isDown, killing the 60fps auto-repeat — and
-      // (b) sets App.preventNextGameplayControl, suppressing open_main_menu. W4
-      // opens the real drill card here; for W2 we just confirm the wrapper fires.
+      // Wrapped by Object2d → fires once/press (clears App.mouse.isDown) and sets
+      // preventNextGameplayControl (suppresses open_main_menu). W4 opens the drill.
       onClick: function () {
         try {
           App.playSound &&
             App.playSound("resources/sounds/ui_tab_01.ogg", true);
         } catch (_e) {
-          /* sound is cosmetic */
+          /* cosmetic */
         }
       },
     };
-
     if (isFloor) {
-      // The proven furniture occlusion pattern (App.temp.petBowlObject): let the
-      // pet's depth solver place us relative to it by our on-screen y.
       config.onLateDraw = function (me) {
         try {
-          if (App.pet && App.pet.setLocalZBasedOnSelf) {
+          App.pet &&
+            App.pet.setLocalZBasedOnSelf &&
             App.pet.setLocalZBasedOnSelf(me);
-          }
         } catch (_e) {
-          /* never let depth-sort crash the frame */
+          /* never crash the frame */
         }
       };
     }
-
     return new Object2d(config);
+  }
+
+  // The value fill: a band-coloured sub-rect anchored at the bottom of the slot's
+  // fillBox, its height = pct% of the cavity. Tracks the container's z/localZ so
+  // it always draws just above its vessel. No interaction (the container owns hover).
+  function buildFill(App, slot, container) {
+    var fb =
+      slot.fill && slot.fill.fillBox
+        ? slot.fill.fillBox
+        : { x: 0, y: 0, w: slot.size.w, h: slot.size.h };
+    return new Object2d({
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+      z: container.z,
+      solidColor: { r: 200, g: 200, b: 200 },
+      sousRoomSlot: slot.id + ":fill",
+      onDraw: function (me) {
+        var c = canvasOf(me);
+        var pct = slotPct(slot);
+        var frac = Math.max(0, Math.min(1, pct / 100));
+        var fx = ((slot.anchor.x + fb.x) / WORLD) * c.cw;
+        var fullH = (fb.h / WORLD) * c.ch;
+        var fillH = fullH * frac;
+        me.width = Math.max(1, (fb.w / WORLD) * c.cw);
+        me.height = Math.max(0, fillH);
+        me.x = fx;
+        me.y = ((slot.anchor.y + fb.y) / WORLD) * c.ch + (fullH - fillH);
+        me.solidColor = bandColor(pct, slot.fill && slot.fill.band);
+        me.invisible = frac <= 0; // empty ⇒ draw nothing (the vessel shows empty)
+      },
+      onLateDraw: function (me) {
+        me.z = container.z;
+        me.localZ = (container.localZ || 0) + 0.01; // just above the vessel
+      },
+    });
   }
 
   function spawnRoomObjects() {
@@ -142,15 +211,20 @@
     var App = getApp();
     var manifest = getManifest();
     if (!App || !manifest || !onHomeScene(App)) return;
-    if (!Object2d || !Object2d.defaultDrawer) return;
+    if (typeof Object2d === "undefined" || !Object2d.defaultDrawer) return;
     var objects = manifest.objects || [];
     for (var i = 0; i < objects.length; i++) {
+      var slot = objects[i];
       try {
-        var obj = buildObject(App, objects[i]);
-        if (obj) spawned.push(obj);
+        var container = buildContainer(App, slot);
+        if (container) spawned.push(container);
+        if (slot.bind && slot.bind.statKey && container) {
+          var fill = buildFill(App, slot, container);
+          if (fill) spawned.push(fill);
+        }
       } catch (e) {
         if (typeof console !== "undefined") {
-          console.warn("[doge-room] spawn failed for", objects[i] && objects[i].id, e);
+          console.warn("[doge-room] spawn failed:", slot && slot.id, e);
         }
       }
     }
@@ -167,12 +241,10 @@
     spawned = [];
   }
 
-  // Lifecycle: poll on the same cadence the bridge uses. Spawn when (flagged +
-  // game ready + on the home scene); despawn the moment we leave home or the
-  // flag is cleared. Idempotent both ways, so menu/kitchen/park stay untouched.
   function tick() {
     var App = getApp();
     if (!App || !App.loadingEnded) return;
+    refreshHealth(); // once per tick; onDraw reads the cache only
     var want = isEnabled() && onHomeScene(App);
     if (want && !spawned.length) spawnRoomObjects();
     else if (!want && spawned.length) despawnRoomObjects();
@@ -185,7 +257,6 @@
   }
 
   if (typeof window !== "undefined") {
-    // Expose for debugging / tests; the lifecycle drives itself.
     window.SOUS_ROOM = {
       spawnRoomObjects: spawnRoomObjects,
       despawnRoomObjects: despawnRoomObjects,
