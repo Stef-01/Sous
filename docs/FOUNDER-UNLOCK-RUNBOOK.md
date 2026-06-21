@@ -388,3 +388,48 @@ F W26 timeframe based on Y2 trajectory).
 backfill when retune-day comes. See
 `docs/y2/sprints/B/IDEO-REVIEW.md` for the full eval result and
 W10 gate decision.
+
+### 16. Dobe diegetic nutrition-room art (priority-A north star, filed 2026-06-21)
+
+**Surface unlocked:** the `/doge` pet game's nutrition reads as a
+NATIVE, fully-illustrated room (the founder's diegetic reference) —
+the hydration bottle's liquid IS your water %, the kibble bowl IS
+protein, the spiral notebook IS the feed log — instead of the
+current floating cream HUD.
+
+**Why gated:** CLAUDE.md rule 7/11 — bespoke pixel art is the
+separate AI-image-pipeline / artist's job, never autonomously
+generated. EVERYTHING else is already built + tested behind the
+default-OFF `sous-doge-room-objects-v1` flag: the typed manifest,
+read-only data-binding, animated red/amber/green band fills,
+per-object selection + cream `.surface-stylized` drill cards, the
+hydration "Log a glass" action, the feed-log notebook, a11y focus
+proxies, and the AssetLoader that swaps a sprite in. Commits
+089b9a4 → 2c43d93; the system is feature-complete.
+
+**What founder does (one slot at a time, ZERO code change):**
+
+1. Read `docs/DOGE-ART-HANDOFF.md` — the exact per-object spec
+   (world anchor / size / z / fillBox for all 8 slots), the art
+   constraints (96×96 nearest-neighbour, transparent PNG, NO baked
+   text/numbers, NO drop-shadow, palette), and naming.
+2. Drop each PNG at
+   `public/tamaweb/resources/img/doge/objects/<slotId>.png`, flip
+   that slot's `art.kind:"solid"→"sprite"` in
+   `public/tamaweb/src/doge/room-manifest.{ts,js}`, unregister the
+   `/tamaweb/` service worker, reload `/doge?roomobjects=1`. Preview
+   any single delivered asset live first via
+   `?roomart=<slotId>:<path>`. A missing/bad sprite auto-falls back
+   to the procedural rect, so a typo never breaks the room.
+3. The portrait room-background PNG (assign `App.scene.home.image`)
+   is the proper fix for the standing "edge-to-edge / no black
+   margins" framing ask — the 96×96 square letterboxes in a portrait
+   screen; the app fills the margin with the sampled room palette
+   (not black) until the portrait art lands.
+4. Flip the flag default-on once the art is in + a live design pass
+   signs off.
+
+**Estimated landing:** whenever the art is produced — pure drop-in,
+no engineering dependency remains. Full system + the
+adversarial-review-hardened build log:
+`docs/DOGE-DIEGETIC-ROOM-3MO-PLAN.md`.
