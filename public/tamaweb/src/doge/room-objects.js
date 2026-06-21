@@ -148,6 +148,18 @@
       b: Math.round(c.b * f),
     };
   }
+  // The iframe reads its OWN reduced-motion preference (no host channel needed);
+  // the fill animation branches the JS on it — a CSS rule can't stop canvas draws.
+  function prefersReducedMotion() {
+    try {
+      return (
+        !!window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      );
+    } catch (_e) {
+      return false;
+    }
+  }
 
   function canvasOf(me) {
     var d = me.drawer;
@@ -277,6 +289,74 @@
   function selectSlot(id) {
     roomSelected = roomSelected === id ? null : id;
     renderDrill();
+    updateProxies();
+  }
+
+  // ---- a11y focus proxies -----------------------------------------------------
+  // Canvas objects aren't in the DOM, so keyboard / screen-reader users can't
+  // reach them. A parallel list of sr-only <button>s (Tab-order = manifest order)
+  // mirrors each object: Enter/Space selects (opens the same drill card), and the
+  // aria-label carries the live value + word so the canvas meaning isn't lost.
+  var proxyWrap = null;
+  function proxyAriaLabel(slot) {
+    var bind = slotBinding(slot);
+    if (bind.feed) {
+      return (
+        slot.label +
+        ": " +
+        (bind.meals && bind.meals.length
+          ? bind.meals.slice(0, 3).join(", ")
+          : "nothing logged yet")
+      );
+    }
+    var val = bind.detailText || bind.coverageText || "";
+    return slot.label + (val ? ": " + val : "") + (bind.word ? ", " + bind.word : "");
+  }
+  function ensureProxies() {
+    if (proxyWrap && proxyWrap.isConnected) return;
+    var m = getManifest();
+    if (!m || !document.body) return;
+    proxyWrap = document.createElement("div");
+    proxyWrap.className = "sous-room-proxies";
+    proxyWrap.setAttribute("role", "group");
+    proxyWrap.setAttribute("aria-label", "Dobe's nutrition — your eating today");
+    // sr-only: focusable but off-screen (the canvas + drill card are the visual).
+    proxyWrap.style.cssText =
+      "position:absolute;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;";
+    for (var i = 0; i < m.objects.length; i++) {
+      var slot = m.objects[i];
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.setAttribute("data-room-proxy", slot.id);
+      btn.textContent = slot.label;
+      (function (id) {
+        btn.addEventListener("click", function () {
+          selectSlot(id);
+        });
+      })(slot.id);
+      proxyWrap.appendChild(btn);
+    }
+    document.body.appendChild(proxyWrap);
+    updateProxies();
+  }
+  function updateProxies() {
+    if (!proxyWrap) return;
+    var btns = proxyWrap.querySelectorAll("[data-room-proxy]");
+    for (var i = 0; i < btns.length; i++) {
+      var id = btns[i].getAttribute("data-room-proxy");
+      var slot = findSlot(id);
+      if (!slot) continue;
+      btns[i].setAttribute("aria-label", proxyAriaLabel(slot));
+      btns[i].setAttribute(
+        "aria-pressed",
+        roomSelected === id ? "true" : "false",
+      );
+    }
+  }
+  function removeProxies() {
+    if (proxyWrap && proxyWrap.parentNode)
+      proxyWrap.parentNode.removeChild(proxyWrap);
+    proxyWrap = null;
   }
 
   // ---- object builders --------------------------------------------------------
@@ -346,7 +426,16 @@
       onDraw: function (me) {
         var c = canvasOf(me);
         var pct = slotPct(slot);
-        var frac = Math.max(0, Math.min(1, pct / 100));
+        var target = Math.max(0, Math.min(1, pct / 100));
+        // Animate the LEVEL toward the target (~250ms ease); start empty so the
+        // room visibly fills up on open. Colour uses the real pct immediately.
+        if (me._df == null) me._df = 0;
+        if (prefersReducedMotion()) me._df = target;
+        else {
+          var d = target - me._df;
+          me._df += Math.abs(d) < 0.004 ? d : d * 0.16;
+        }
+        var frac = me._df;
         var fx = ((slot.anchor.x + fb.x) / WORLD) * c.cw;
         var fullH = (fb.h / WORLD) * c.ch;
         var fillH = fullH * frac;
@@ -355,7 +444,7 @@
         me.x = fx;
         me.y = ((slot.anchor.y + fb.y) / WORLD) * c.ch + (fullH - fillH);
         me.solidColor = bandColor(pct, slot.fill && slot.fill.band);
-        me.invisible = frac <= 0;
+        me.invisible = frac <= 0.001;
       },
       onLateDraw: function (me) {
         me.z = container.z;
@@ -391,6 +480,7 @@
           console.warn("[doge-room] spawn failed:", slot && slot.id, e);
       }
     }
+    ensureProxies();
   }
 
   function despawnRoomObjects() {
@@ -404,6 +494,7 @@
     spawned = [];
     roomSelected = null;
     hideDrill();
+    removeProxies();
     try {
       document.body.classList.remove("sous-room-active"); // restore the cream HUD
     } catch (_e) {
@@ -418,7 +509,10 @@
     var want = isEnabled() && onHomeScene(App);
     if (want && !spawned.length) spawnRoomObjects();
     else if (!want && spawned.length) despawnRoomObjects();
-    else if (want && roomSelected) renderDrill(); // keep the open card live
+    else if (want && spawned.length) {
+      updateProxies(); // keep the SR labels live
+      if (roomSelected) renderDrill(); // keep the open card live
+    }
   }
 
   function start() {
