@@ -314,6 +314,17 @@
     );
     var onRoom = !!(el && el.classList && el.classList.contains("graphics-canvas"));
     hud.style.display = onRoom ? "" : "none";
+    // Also toggle the Sous (parent) back button: hide it over game overlays —
+    // those screens have their own BACK and two collide at the top-left corner.
+    try {
+      var pb =
+        window.parent &&
+        window.parent !== window &&
+        window.parent.document.querySelector("[data-doge-back]");
+      if (pb) pb.style.display = onRoom ? "" : "none";
+    } catch (_e) {
+      /* cross-origin (shouldn't happen here) — skip */
+    }
   }
 
   // Announce readiness, surface the nutrition HUD, then watch for pet
