@@ -433,3 +433,46 @@ proxies, and the AssetLoader that swaps a sprite in. Commits
 no engineering dependency remains. Full system + the
 adversarial-review-hardened build log:
 `docs/DOGE-DIEGETIC-ROOM-3MO-PLAN.md`.
+
+### 17. Home-chef surplus-meal rail (priority-C prototype, filed 2026-06-21)
+
+**Surface unlocked:** the `/eat-out` page shows a "Surplus specials
+near you" rail — discounted, home-packed meals partner restaurants
+produce from unsold / over-ordered SURPLUS ingredients (the
+waste-reduction angle), sorted by the user's existing eat-out taste.
+
+**Why gated:** STRATEGY §12.11 — a two-sided marketplace (supply
+onboarding, kitchen ops, payments, pickup logistics, food-safety
+liability) is off-thesis + founder-gated; none of it is AI-executable,
+and it needs a real restaurant partner + a committed metro. Everything
+auto-buildable is already built + tested behind the default-OFF flag
+(commit a8c42f8): the `HomeChefBatch` Zod schema
+(`src/types/home-chef.ts`), demo fixtures that reference ONLY real
+eat-out venues + existing dishes (`src/data/home-chef/demo-batches.ts`,
+rule 7 — no invented recipes), the flag (`src/lib/home-chef/flag.ts`),
+and the taste-sorted, flywheel-wired rail
+(`src/components/eat-out/surplus-specials-rail.tsx`). It renders
+`null` for users until activated — no fake marketplace ships.
+
+**What founder does (when a real partner feed exists):**
+
+1. Stand up the partner surplus feed as an array of `HomeChefBatch`
+   (the typed contract: `restaurant, dish, surplusIngredients[],
+regularPrice, surplusPrice, qtyAvailable, pickupWindow,
+perBatchNutrition`). `surplusPrice` must be below `regularPrice`
+   (schema-enforced). Dishes should map to real catalog dishes (rule 7).
+2. Feed it in: pass the prop —
+   `<SurplusSpecialsRail batches={realFeed} isSample={false} />` — or
+   replace `DEMO_HOME_CHEF_BATCHES`. The taste sort, discount badges,
+   pickup/qty, and the flywheel tap all work unchanged.
+3. Flip `NEXT_PUBLIC_SOUS_HOME_CHEF_ENABLED="true"` in Vercel (env), or
+   per-user via the `sous-home-chef-v1` localStorage override. Dev
+   preview now: append `?homechef=1` to `/eat-out`.
+4. Real reservation → payment → pickup is the marketplace build itself
+   (the founder-gated half); the rail's tap is a demo reserve + a taste
+   signal until that backend exists. Do NOT flip the env flag on for
+   real users until reservation actually fulfils.
+
+**Estimated landing:** after consumer PMF **and** a committed
+restaurant partner (STRATEGY §12.11 status). The rule-12 prep is done;
+no engineering dependency remains for the rail itself.

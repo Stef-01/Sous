@@ -101,10 +101,23 @@ export function SurplusSpecialsRail({
           const pct = batchDiscountPct(b);
           const soldOut = !isBatchAvailable(b);
           const isReserved = reserved.has(b.id);
+          const status = isReserved
+            ? "reserved"
+            : soldOut
+              ? "sold out"
+              : `${b.qtyAvailable} left`;
+          // Screen readers otherwise hear an ambiguous "$11 $18" for the struck
+          // price — spell the offer out explicitly.
+          const label = `${b.dishName} from ${b.restaurantName}, ${
+            pct > 0
+              ? `now $${b.surplusPrice}, was $${b.regularPrice}, ${pct}% off`
+              : `$${b.surplusPrice}`
+          }, pickup ${b.pickupWindow}, ${status}`;
           return (
             <button
               key={b.id}
               type="button"
+              aria-label={label}
               disabled={soldOut || isReserved}
               onClick={() => reserve(b)}
               className={cn(
