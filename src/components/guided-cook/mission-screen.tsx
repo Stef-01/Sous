@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
-import { UtensilsCrossed } from "lucide-react";
+import { UtensilsCrossed, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
+import { haptic } from "@/lib/motion/haptics";
 import { PlanCookChip } from "./plan-cook-chip";
 import { BigHandsToggle } from "./big-hands-toggle";
 import { DishRecallLine } from "./dish-recall-line";
@@ -46,6 +48,17 @@ export function MissionScreen({
   const reducedMotion = useReducedMotion();
   const [imgError, setImgError] = useState(false);
   const totalTime = prepTimeMinutes + cookTimeMinutes;
+
+  // Save the recipe for later straight from the detail view (the reference
+  // mockups' bookmark affordance). Only when we have a slug to key it by.
+  const { isDishSaved, saveDish, removeDish } = useSavedDishes();
+  const isSaved = dishSlug ? isDishSaved(dishSlug) : false;
+  const toggleSaved = () => {
+    if (!dishSlug) return;
+    haptic("select");
+    if (isSaved) removeDish(dishSlug);
+    else saveDish(dishSlug, dishName);
+  };
 
   return (
     <motion.div
@@ -105,6 +118,26 @@ export function MissionScreen({
               ? `${Math.floor(totalTime / 60)}hr ${totalTime % 60 ? `${totalTime % 60}min` : ""}`.trim()
               : `${totalTime} min`}
           </span>
+        )}
+        {/* Save bookmark — the reference mockups' top-right card affordance.
+            Save the recipe for later without having to cook it now. */}
+        {dishSlug && (
+          <button
+            type="button"
+            onClick={toggleSaved}
+            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
+            aria-pressed={isSaved}
+            className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm transition-transform active:scale-90 motion-reduce:active:scale-100"
+          >
+            <Bookmark
+              size={17}
+              strokeWidth={2.2}
+              className={cn(
+                isSaved &&
+                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
+              )}
+            />
+          </button>
         )}
       </motion.div>
 
