@@ -37,6 +37,8 @@ import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
 import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import {
   FullscreenSwipeCard,
   QueueComplete,
@@ -772,6 +774,7 @@ function MealSwipeQueueOverlay({
   const [exitVelocity, setExitVelocity] = useState(0);
   const [initialTotal, setInitialTotal] = useState(() => dishes.length);
   const haptic = useHaptic();
+  const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const resetDeck = useCallback(() => {
@@ -817,6 +820,19 @@ function MealSwipeQueueOverlay({
     (direction: "left" | "right", velocityX = 0) => {
       if (!activeDish || exitDirection) return;
       haptic();
+      // Feed the taste flywheel: a swipe IS a preference signal (right = picked
+      // to cook → +1.0; left = passed → -0.6). Without this the deck's swipes
+      // only trained the pairing engine — the cuisine/flavor taste profile that
+      // powers eat-out + recommendations never learned from the daily deck, and
+      // a left-swipe "pass" (the only negative signal in the loop) was lost.
+      recordSignal({
+        kind: direction === "right" ? "swipe-right" : "swipe-left",
+        facets: dishToFacets({
+          cuisineFamily: activeDish.cuisineFamily,
+          tags: activeDish.tags,
+          ingredients: activeDish.ingredientNames,
+        }),
+      });
       setExitVelocity(velocityX);
       setExitDirection(direction);
 
@@ -837,7 +853,7 @@ function MealSwipeQueueOverlay({
       }, QUEUE_EXIT_MS);
       timersRef.current.push(id);
     },
-    [activeDish, exitDirection, haptic, onCookDish, onConsume],
+    [activeDish, exitDirection, haptic, onCookDish, onConsume, recordSignal],
   );
 
   const saveActive = useCallback(() => {
