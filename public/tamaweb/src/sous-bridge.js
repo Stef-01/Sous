@@ -230,7 +230,10 @@
       ".sous-nutrition-hud{position:absolute;top:50px;left:7px;right:7px;z-index:60;" +
       "background:var(--prim-clr-b-bg,#fff4e8);color:var(--prim-clr-b-text,#ff8000);" +
       "border:2px solid var(--prim-clr-b-border,#ffb362);" +
-      "box-shadow:10px -20px 0px -15px inset var(--prim-clr-b-shadow,#f5deb3);" +
+      // inset bevel (native) + an outer soft drop-shadow so the board reads as
+      // physically mounted on the room wall (was floating flat on the white).
+      "box-shadow:10px -20px 0px -15px inset var(--prim-clr-b-shadow,#f5deb3)," +
+      "0 7px 16px rgba(70,42,15,.22);" +
       "text-shadow:1px 1px 0px var(--prim-clr-b-text-shadow,#ffcf9d);" +
       "border-radius:10px;border-top-left-radius:20px;border-bottom-right-radius:20px;" +
       "padding:9px 12px 10px;pointer-events:auto;cursor:pointer;}" +
