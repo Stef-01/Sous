@@ -320,9 +320,18 @@ export default function EatOutPage() {
   // dish inside it is selected (the green object-box). Single-select at each level.
   const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
   const [selectedDish, setSelectedDish] = useState<string | null>(null);
-  const toggleVenue = (slug: string) => {
+  const toggleVenue = (v: DemoVenue) => {
     setSelectedDish(null);
-    setExpandedVenue((prev) => (prev === slug ? null : slug));
+    const opening = expandedVenue !== v.slug;
+    setExpandedVenue(opening ? v.slug : null);
+    // Opening a venue is a real interest signal — teach the taste profile with a
+    // graded "tapped" weight (below a full "saved" log), under the canonical key.
+    if (opening) {
+      recordSignal({
+        kind: "search-result-tapped",
+        facets: dishToFacets({ cuisineFamily: cuisineKeyFor(v.cuisine) }),
+      });
+    }
   };
   const toggleDish = (slug: string) =>
     setSelectedDish((prev) => (prev === slug ? null : slug));
@@ -360,7 +369,12 @@ export default function EatOutPage() {
   // distance at cold-start (all weights ~0). The strongest match (>= TASTE_HERO)
   // becomes the editorial hero above the list.
   const topMatch = useMemo(() => {
-    if (cuisine || goalsOnly) return null; // only on the default view
+    // Only on the default view — and only suppress for the goal lens when it is
+    // actually active. goalsOnly has no reset control, so if the user clears all
+    // starred nutrients elsewhere the toggle vanishes while goalsOnly stays true;
+    // gating on goalTags.size (mirroring the venue-list filter) keeps that from
+    // silently stranding the taste hero off.
+    if (cuisine || (goalsOnly && goalTags.size > 0)) return null;
     const best = [...STANFORD_VENUES].sort(
       (a, b) =>
         (merged.cuisines[cuisineKeyFor(b.cuisine)] ?? 0) -
@@ -370,7 +384,7 @@ export default function EatOutPage() {
       (merged.cuisines[cuisineKeyFor(best.cuisine)] ?? 0) >= TASTE_HERO
       ? best
       : null;
-  }, [merged, cuisine, goalsOnly]);
+  }, [merged, cuisine, goalsOnly, goalTags.size]);
 
   const venues = useMemo(() => {
     let list = [...STANFORD_VENUES].sort((a, b) => {
@@ -392,10 +406,17 @@ export default function EatOutPage() {
     haptic("commit");
     diaryLogBranded(demoDishToBrandedFood(dish, venue), 1);
     // Feed the taste profile: eating out teaches Sous your cuisine leanings just
-    // like cooking does — closing the eat-out data-flywheel hole.
+    // like cooking does — closing the eat-out data-flywheel hole. Canonicalize the
+    // cuisine through cuisineKeyFor so the WRITE key matches every READ key
+    // (tasteScore/topMatch/sort all read merged.cuisines[cuisineKeyFor(...)]);
+    // without this the two remapped venues (Pakistani-Indian→indian,
+    // Israeli→mediterranean) would log into a bucket the page never reads.
     recordSignal({
       kind: "saved",
-      facets: dishToFacets({ cuisineFamily: venue.cuisine, tags: dish.tags }),
+      facets: dishToFacets({
+        cuisineFamily: cuisineKeyFor(venue.cuisine),
+        tags: dish.tags,
+      }),
     });
     toast.push({
       variant: "success",
@@ -440,6 +461,13 @@ export default function EatOutPage() {
                 onClick={() => {
                   setExpandedVenue(venue.slug);
                   setSelectedDish(dish.slug);
+                  recordSignal({
+                    kind: "search-result-tapped",
+                    facets: dishToFacets({
+                      cuisineFamily: cuisineKeyFor(venue.cuisine),
+                      tags: dish.tags,
+                    }),
+                  });
                 }}
                 className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform hover:border-[var(--nourish-gold)]/55 active:scale-[0.97] motion-reduce:active:scale-100"
               >
@@ -521,7 +549,7 @@ export default function EatOutPage() {
             tasteStrength={tasteScore(topMatch)}
             goalHit={goalTags.size > 0 && topMatch.dishes.some(dishFitsGoals)}
             open={expandedVenue === topMatch.slug}
-            onToggle={() => toggleVenue(topMatch.slug)}
+            onToggle={() => toggleVenue(topMatch)}
           >
             <p className="px-1 pb-1 text-[12px] italic leading-snug text-[var(--nourish-subtext)]">
               {topMatch.vibe}
@@ -549,7 +577,7 @@ export default function EatOutPage() {
               tasteStrength={tasteScore(v)}
               goalHit={goalTags.size > 0 && v.dishes.some(dishFitsGoals)}
               open={expandedVenue === v.slug}
-              onToggle={() => toggleVenue(v.slug)}
+              onToggle={() => toggleVenue(v)}
             >
               <p className="px-1 pb-1 text-[12px] italic leading-snug text-[var(--nourish-subtext)]">
                 {v.vibe}
