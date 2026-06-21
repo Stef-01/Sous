@@ -207,6 +207,18 @@
       // When the diegetic room is on, demote the floating cream HUD — the room
       // objects ARE the nutrition surface, and the HUD would collide with the
       // drill card (both z-index 60). !important beats syncHudVisibility's inline.
+      // The spiral FEED-LOG notebook — today's meals shown in-world, always (the
+      // reference's "FED TODAY: …"). Same cream panel, left-aligned, pointer-none.
+      ".sous-room-feedlog{position:fixed;z-index:59;transform:translate(-50%,-100%);",
+      "min-width:86px;max-width:152px;background:var(--prim-clr-b-bg,#fff4e8);",
+      "color:var(--prim-clr-b-text,#ff8000);border:2px solid var(--prim-clr-b-border,#ffb362);",
+      "border-radius:3px 9px 9px 9px;padding:4px 8px 6px;",
+      "box-shadow:9px -14px 0 -12px inset var(--prim-clr-b-shadow,#ffcf9d),0 4px 12px rgba(70,42,15,.25);",
+      "pointer-events:none;font-family:'Pixel','PixelOld',monospace;image-rendering:pixelated;",
+      "text-shadow:0 1px 0 rgba(255,255,255,.45);display:none;line-height:1.3;}",
+      ".sous-rf-title{font-size:8px;letter-spacing:.5px;text-transform:uppercase;opacity:.72;text-align:center;}",
+      ".sous-rf-row{font-size:9px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}",
+      ".sous-rf-empty{font-size:8.5px;opacity:.82;text-align:center;}",
       "body.sous-room-active .sous-nutrition-hud{display:none!important;}",
     ].join("");
     (document.head || document.documentElement).appendChild(s);
@@ -255,30 +267,24 @@
       return;
     }
     var slot = findSlot(roomSelected);
-    if (!slot) {
+    // Feed companions show their meals PERSISTENTLY (the spiral notebook), not in
+    // a tap drill — so the drill is metric-only.
+    if (!slot || (slot.bind && slot.bind.feed)) {
       hideDrill();
       return;
     }
     var bind = slotBinding(slot);
     var el = drillEl();
     var html = '<div class="sous-rd-title">' + escapeHtml(slot.label) + "</div>";
-    if (bind.feed) {
-      var line =
-        bind.meals && bind.meals.length
-          ? bind.meals.slice(0, 3).join(" · ")
-          : "Nothing logged yet";
-      html += '<div class="sous-rd-val" style="font-size:9.5px">' + escapeHtml(line) + "</div>";
-    } else {
-      var value = bind.detailText || bind.coverageText || "";
-      var band = bandColor(bind.pct, slot.fill && slot.fill.band);
-      // Value inherits the panel's orange (native); the WORD carries the red/amber/
-      // green health hint so the band signal survives the cream restyle.
-      if (value) html += '<div class="sous-rd-val">' + escapeHtml(value) + "</div>";
-      html +=
-        '<div class="sous-rd-word" style="color:rgb(' +
-        band.r + "," + band.g + "," + band.b +
-        ')">' + escapeHtml(bind.word) + "</div>";
-    }
+    var value = bind.detailText || bind.coverageText || "";
+    var band = bandColor(bind.pct, slot.fill && slot.fill.band);
+    // Value inherits the panel's orange (native); the WORD carries the red/amber/
+    // green health hint so the band signal survives the cream restyle.
+    if (value) html += '<div class="sous-rd-val">' + escapeHtml(value) + "</div>";
+    html +=
+      '<div class="sous-rd-word" style="color:rgb(' +
+      band.r + "," + band.g + "," + band.b +
+      ')">' + escapeHtml(bind.word) + "</div>";
     if (slot.bind.action === "water")
       html += '<button class="sous-rd-water" type="button">Log a glass</button>';
     el.innerHTML = html;
@@ -298,6 +304,48 @@
     roomSelected = roomSelected === id ? null : id;
     renderDrill();
     updateProxies();
+  }
+
+  // ---- the persistent spiral FEED-LOG notebook (today's meals, in-world) ------
+  var feedLogNode = null;
+  function feedLogEl() {
+    if (feedLogNode && feedLogNode.isConnected) return feedLogNode;
+    ensureDrillStyle();
+    feedLogNode = document.createElement("div");
+    feedLogNode.className = "sous-room-feedlog";
+    document.body.appendChild(feedLogNode);
+    return feedLogNode;
+  }
+  function removeFeedLog() {
+    if (feedLogNode && feedLogNode.parentNode)
+      feedLogNode.parentNode.removeChild(feedLogNode);
+    feedLogNode = null;
+  }
+  function updateFeedLog() {
+    var slot = findSlot("feed-log");
+    if (!slot) return;
+    var meals =
+      healthCache && Array.isArray(healthCache.meals) ? healthCache.meals : [];
+    var el = feedLogEl();
+    var html;
+    if (meals.length) {
+      html = '<div class="sous-rf-title">Fed today</div>';
+      var shown = meals.slice(0, 3);
+      for (var i = 0; i < shown.length; i++)
+        html += '<div class="sous-rf-row">' + escapeHtml(shown[i]) + "</div>";
+      if (meals.length > shown.length)
+        html +=
+          '<div class="sous-rf-title">+' +
+          (meals.length - shown.length) +
+          " more</div>";
+    } else {
+      html =
+        '<div class="sous-rf-title">Feed log</div>' +
+        "<div class=\"sous-rf-empty\">Dobe's hungry — feed him today</div>";
+    }
+    el.innerHTML = html;
+    positionDrill(el, slot); // reuse the contain+58% projection
+    el.style.display = "block";
   }
 
   // ---- a11y focus proxies -----------------------------------------------------
@@ -522,6 +570,7 @@
       }
     }
     ensureProxies();
+    updateFeedLog();
   }
 
   function despawnRoomObjects() {
@@ -535,6 +584,7 @@
     spawned = [];
     roomSelected = null;
     hideDrill();
+    removeFeedLog();
     removeProxies();
     try {
       document.body.classList.remove("sous-room-active"); // restore the cream HUD
@@ -552,6 +602,7 @@
     else if (!want && spawned.length) despawnRoomObjects();
     else if (want && spawned.length) {
       updateProxies(); // keep the SR labels live
+      updateFeedLog(); // the always-on spiral notebook (today's meals)
       if (roomSelected) renderDrill(); // keep the open card live
     }
   }
