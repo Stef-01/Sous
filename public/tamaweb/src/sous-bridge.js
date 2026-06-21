@@ -185,10 +185,14 @@
     var css =
       ".sous-nutrition-hud{position:absolute;top:54px;left:6px;right:6px;z-index:60;" +
       "background:rgba(38,31,44,.82);border:2px solid rgba(255,255,255,.10);border-radius:12px;" +
-      "padding:7px 9px 8px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.4);" +
+      "padding:7px 9px 8px;pointer-events:auto;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);" +
       "-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}" +
+      ".sous-nutrition-hud:active{transform:scale(.985);}" +
       ".sous-hud-title{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;" +
-      "color:#fff;opacity:.78;margin:0 0 6px 2px;}" +
+      "color:#fff;opacity:.85;margin:0 0 6px 2px;display:flex;align-items:baseline;" +
+      "justify-content:space-between;gap:8px;}" +
+      ".sous-hud-titletext{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}" +
+      ".sous-hud-more{flex:none;opacity:.8;letter-spacing:0;color:#f5c542;}" +
       ".sous-hud-row{display:flex;align-items:center;gap:5px;margin:2.5px 0;}" +
       ".sous-hud-ic{width:13px;text-align:center;color:#f5c542;flex:none;}" +
       ".sous-hud-ic i{font-size:11px;}" +
@@ -279,7 +283,8 @@
         "</div>";
     }
     hud.innerHTML =
-      '<div class="sous-hud-title">Dobe’s health · your nutrition</div>' +
+      '<div class="sous-hud-title"><span class="sous-hud-titletext">Dobe’s health · your nutrition</span>' +
+      '<span class="sous-hud-more">tap ›</span></div>' +
       rows +
       (data.status ? '<div class="sous-hud-status">' + data.status + "</div>" : "") +
       meals;
@@ -294,6 +299,13 @@
     if (!hud) {
       hud = document.createElement("div");
       hud.className = "sous-nutrition-hud";
+      // Tap the HUD summary -> open the full native Nutrition tab (progressive
+      // disclosure). Bound on the persistent container so it survives the 3s
+      // innerHTML refresh.
+      hud.addEventListener("click", function () {
+        var A = getApp();
+        if (A && A.handlers && A.handlers.open_stats) A.handlers.open_stats("tab-3");
+      });
       wrap.appendChild(hud);
       renderHud(hud);
       if (!hudTimer)
