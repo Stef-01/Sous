@@ -333,7 +333,7 @@ const App = {
             }
         })
         App.petDefinition = new PetDefinition({
-            name: getRandomName(),
+            name: "Dobe",
             sprite: randomFromArray(PET_BABY_CHARACTERS),
         })
             .setStats({is_egg: true})
@@ -2269,7 +2269,7 @@ const App = {
         const lastPet = App.petDefinition;
         App.pet.removeObject();
         App.petDefinition = new PetDefinition({
-            name: getRandomName(),
+            name: "Dobe",
             sprite: randomFromArray(PET_BABY_CHARACTERS),
         }).setStats({is_egg: true});
 

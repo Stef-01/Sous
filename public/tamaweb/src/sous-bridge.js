@@ -398,10 +398,29 @@
     }
   }
 
+  // The pet IS Dobe the Doberman in Sous. New pets are named "Dobe" at the
+  // source (App.js), but legacy saves carry a random "...tchi" name — rename
+  // those to Dobe ONCE (guarded by a flag so a later in-game rename sticks).
+  function ensureDobeName() {
+    var App = getApp();
+    if (!App || !App.petDefinition) return;
+    try {
+      if (window.localStorage.getItem("sous-doge-named-v1")) return;
+      if (App.petDefinition.name !== "Dobe") {
+        App.petDefinition.name = "Dobe";
+        if (App.save) App.save(true);
+      }
+      window.localStorage.setItem("sous-doge-named-v1", "1");
+    } catch (_e) {
+      /* disabled storage — best effort */
+    }
+  }
+
   // Announce readiness, surface the nutrition HUD, then watch for pet
   // reassignment (hatch / age-up) so the parent can re-handshake.
   setInterval(function () {
     if (!gameReady()) return;
+    ensureDobeName();
     ensureHud();
     syncHudVisibility();
     if (!announced) announceReady();
