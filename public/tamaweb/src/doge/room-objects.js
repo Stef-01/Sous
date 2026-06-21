@@ -220,6 +220,12 @@
       ".sous-rf-row{font-size:9px;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}",
       ".sous-rf-empty{font-size:8.5px;opacity:.82;text-align:center;}",
       "body.sous-room-active .sous-nutrition-hud{display:none!important;}",
+      // The 58% object-position pushes the room DOWN to clear the cream HUD — but
+      // when the diegetic room is on, the HUD is demoted, so re-centre the room so
+      // it's balanced and the dog isn't jammed against the bottom edge. (The square
+      // room still letterboxes in portrait — full edge-to-edge needs the portrait
+      // background PNG, see DOGE-ART-HANDOFF.md.) positionDrill uses the SAME 0.50.
+      "body.sous-room-active .graphics-wrapper.fullscreen .graphics-canvas{object-position:center 50%!important;}",
     ].join("");
     (document.head || document.documentElement).appendChild(s);
   }
@@ -255,7 +261,7 @@
     var dispW = cw * scale;
     var dispH = ch * scale;
     var offX = rect.left + (rect.width - dispW) * 0.5;
-    var offY = rect.top + (rect.height - dispH) * 0.58;
+    var offY = rect.top + (rect.height - dispH) * 0.5; // matches the room-active 50%
     var cx = (container.x || 0) + (container.width || 0) / 2;
     var cy = container.y || 0;
     el.style.left = Math.round(offX + cx * scale) + "px";
