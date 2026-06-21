@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
+import { useToday } from "@/lib/hooks/use-today";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import { deficitFillFor } from "@/lib/nutrition/deficit-fill-dishes";
 import { buildTodayStats, type TodayStats } from "./today-stats";
@@ -11,8 +12,9 @@ import { buildTodayStats, type TodayStats } from "./today-stats";
  * (so the two are always in sync). Today = day offset 0.
  */
 export function useTodayStats(): TodayStats {
-  // One Date per mount — offset 0 (today). Midnight rollover is an accepted edge.
-  const today = useMemo(() => new Date(), []);
+  // Offset 0 (today) — refreshes at local midnight so the glance never goes
+  // stale if the page is left open across the day boundary.
+  const today = useToday();
   const { entries, dayNutrition, cookedDayNutrition } =
     useNutritionDiary(today);
   const { targets } = usePersonalTargets();

@@ -14,6 +14,7 @@ import {
   useNutritionDiary,
   aggregateDay,
 } from "@/lib/hooks/use-nutrition-diary";
+import { useToday } from "@/lib/hooks/use-today";
 import { usePersonalTargets } from "@/lib/hooks/use-personal-targets";
 import {
   useHydration,
@@ -42,7 +43,7 @@ export interface DogeHealth {
 }
 
 export function useDogeHealth(streak = 0): DogeHealth {
-  const today = useMemo(() => new Date(), []);
+  const today = useToday(); // refreshes at local midnight (no stale day if left open)
   const { entries } = useNutritionDiary(today);
   const { targets } = usePersonalTargets();
   const { glasses, setGlasses } = useHydration();
