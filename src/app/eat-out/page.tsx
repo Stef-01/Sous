@@ -555,13 +555,18 @@ export default function EatOutPage() {
                       />
                     </span>
                   )}
+                  {/* kcal pill on the photo — consistent with the recipe time
+                      pills + the reference's pill-on-photo card grammar. */}
+                  <span className="absolute bottom-1.5 left-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
+                    ~{dish.kcal} kcal
+                  </span>
                 </div>
                 <div className="px-2.5 py-2">
                   <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
                     {dish.name}
                   </p>
                   <p className="mt-0.5 truncate text-[10.5px] text-[var(--nourish-subtext)]">
-                    ~{dish.kcal} kcal · {venue.name}
+                    {venue.name}
                   </p>
                 </div>
               </button>
