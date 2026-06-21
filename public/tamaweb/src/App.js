@@ -3940,16 +3940,33 @@ const App = {
             // a Nutrition tab below, using the game's own createProgressbar.
             let sousHealth = null;
             try { sousHealth = JSON.parse(window.localStorage.getItem('sous-doge-health-v1') || 'null'); } catch(e) {}
+            const fmtSousDetail = (d) => {
+                if (!d || typeof d.value !== 'number' || typeof d.target !== 'number') return '';
+                if (d.unit === 'glass') return d.value + ' / ' + d.target + ' glasses';
+                if (d.unit === 'g') return d.value + 'g / ' + d.target + 'g';
+                return d.value + ' / ' + d.target + ' ' + (d.unit || '');
+            };
+            // The native stats tab is the FULL readout (the in-room HUD drills;
+            // this shows everything) — each metric carries its exact amount.
             const sousRows = (sousHealth && Array.isArray(sousHealth.stats) && sousHealth.stats.length)
-                ? sousHealth.stats.map(s => `
-                    <div class="relative flex flex-dir-row align-center flex-gap-1">
-                        <div class="stats-label">${s.label}</div>
-                        <b class="outlined-icon flex flex-center" style="width: 18px;">${App.getIcon(s.fa, true)}</b>
-                        ${App.createProgressbar(Math.max(0, Math.min(100, Number(s.pct) || 0))).node.outerHTML}
+                ? sousHealth.stats.map(s => {
+                    const pct = Math.max(0, Math.min(100, Number(s.pct) || 0));
+                    const exact = fmtSousDetail(s.detail);
+                    return `
+                    <div style="margin-bottom:4px">
+                        <div class="relative flex flex-dir-row align-center flex-gap-1">
+                            <div class="stats-label">${s.label}</div>
+                            <b class="outlined-icon flex flex-center" style="width: 18px;">${App.getIcon(s.fa, true)}</b>
+                            ${App.createProgressbar(pct).node.outerHTML}
+                        </div>
+                        ${exact ? '<small class="list-text" style="display:block;margin:1px 0 0 28px;opacity:.85">' + exact + '</small>' : ''}
                     </div>
-                `).join('')
-                : `<small class="list-text">Log meals in Sous to fill Dobe's nutrition.</small>`;
+                `;
+                }).join('')
+                : `<small class="list-text">Cook or log a meal in Sous to fill Dobe's nutrition.</small>`;
             const sousStatus = (sousHealth && sousHealth.status) ? sousHealth.status : '';
+            const sousMeals = (sousHealth && Array.isArray(sousHealth.meals) && sousHealth.meals.length)
+                ? sousHealth.meals.slice(0, 4).join(' · ') : '';
 
             content.innerHTML = `
             <div class="tabs">
@@ -4031,7 +4048,8 @@ const App = {
                             <div class="inner-padding b-radius-10 flex-gap-2 flex flex-dir-col m mt-6">
                                 <div class="stats-label" style="margin-bottom:2px">Nutrition · from Sous</div>
                                 ${sousRows}
-                                ${sousStatus ? '<small class="list-text" style="margin-top:4px">' + sousStatus + '</small>' : ''}
+                                ${sousStatus ? '<small class="list-text" style="display:block;margin-top:4px">' + sousStatus + '</small>' : ''}
+                                ${sousMeals ? '<small class="list-text" style="display:block;margin-top:3px;opacity:.85">' + App.getIcon('utensils', true) + ' Fed today: ' + sousMeals + '</small>' : ''}
                             </div>
                         </div>
                     </div>
