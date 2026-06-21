@@ -97,6 +97,15 @@ export function MissionScreen({
             </span>
           </div>
         )}
+        {/* Time pill overlaid on the photo — the reference mockups' signature
+            recipe-card treatment (a translucent pill, bottom-left). */}
+        {totalTime > 0 && (
+          <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
+            {totalTime >= 60
+              ? `${Math.floor(totalTime / 60)}hr ${totalTime % 60 ? `${totalTime % 60}min` : ""}`.trim()
+              : `${totalTime} min`}
+          </span>
+        )}
       </motion.div>
 
       {/* Dish name + meta strip — Y3 W9 visual hierarchy:
@@ -104,17 +113,19 @@ export function MissionScreen({
           Time chip moves into the eyebrow row so it competes with
           metadata, not with flavor. */}
       <div className="space-y-2">
-        {/* Eyebrow caps — the canonical .sous-label role (was an ad-hoc
-            text-[10px] caps that drifted off the type scale). */}
-        <motion.p
-          initial={reducedMotion ? false : { opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={reducedMotion ? { duration: 0 } : { delay: 0.08 }}
-          className="sous-label"
-        >
-          {cuisineFamily ? `${cuisineFamily} · ` : ""}
-          {totalTime} min
-        </motion.p>
+        {/* Cuisine eyebrow caps — only when there IS a cuisine (the total time
+            now lives in the photo pill; no generic "Recipe" filler, matching the
+            reference's clean author→title hierarchy). */}
+        {cuisineFamily && (
+          <motion.p
+            initial={reducedMotion ? false : { opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={reducedMotion ? { duration: 0 } : { delay: 0.08 }}
+            className="sous-label"
+          >
+            {cuisineFamily}
+          </motion.p>
+        )}
 
         {/* Title — the canonical .sous-title serif role (was ad-hoc
             font-serif text-2xl). line-clamp 2 keeps the CTA above the
