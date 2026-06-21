@@ -223,27 +223,32 @@
     if (hudStyled) return;
     hudStyled = true;
     var css =
-      ".sous-nutrition-hud{position:absolute;top:54px;left:6px;right:6px;z-index:60;" +
-      "background:rgba(38,31,44,.82);border:2px solid rgba(255,255,255,.10);border-radius:12px;" +
-      "padding:7px 9px 8px;pointer-events:auto;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);" +
-      "-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}" +
+      // Render in the GAME's own panel art (.surface-stylized): cream bg, tan
+      // border, inset bevel, orange pixel text + text-shadow, asymmetric radius —
+      // so the nutrition reads as a native in-game measure, not a foreign HUD.
+      // (Falls back to the default-theme literals if the theme vars are absent.)
+      ".sous-nutrition-hud{position:absolute;top:50px;left:7px;right:7px;z-index:60;" +
+      "background:var(--prim-clr-b-bg,#fff4e8);color:var(--prim-clr-b-text,#ff8000);" +
+      "border:2px solid var(--prim-clr-b-border,#ffb362);" +
+      "box-shadow:10px -20px 0px -15px inset var(--prim-clr-b-shadow,#f5deb3);" +
+      "text-shadow:1px 1px 0px var(--prim-clr-b-text-shadow,#ffcf9d);" +
+      "border-radius:10px;border-top-left-radius:20px;border-bottom-right-radius:20px;" +
+      "padding:9px 12px 10px;pointer-events:auto;cursor:pointer;}" +
       ".sous-nutrition-hud:active{transform:scale(.985);}" +
-      ".sous-hud-title{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;" +
-      "color:#fff;opacity:.85;margin:0 0 6px 2px;display:flex;align-items:baseline;" +
-      "justify-content:space-between;gap:8px;}" +
+      ".sous-hud-title{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;" +
+      "margin:0 0 7px 2px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;}" +
       ".sous-hud-titletext{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}" +
-      ".sous-hud-more{flex:none;opacity:.8;letter-spacing:0;color:#f5c542;}" +
-      ".sous-hud-row{display:flex;align-items:center;gap:5px;margin:2.5px 0;}" +
-      ".sous-hud-ic{width:13px;text-align:center;color:#f5c542;flex:none;}" +
-      ".sous-hud-ic i{font-size:11px;}" +
-      ".sous-hud-lb{width:54px;font-size:8.5px;font-weight:700;color:rgba(255,255,255,.85);" +
-      "text-transform:uppercase;flex:none;}" +
+      ".sous-hud-more{flex:none;letter-spacing:0;opacity:.8;}" +
+      ".sous-hud-row{display:flex;align-items:center;gap:6px;margin:3px 0;}" +
+      ".sous-hud-ic{width:14px;text-align:center;flex:none;}" +
+      ".sous-hud-ic i{font-size:12px;}" +
+      ".sous-hud-lb{width:56px;font-size:9px;font-weight:700;text-transform:uppercase;flex:none;}" +
       ".sous-nutrition-hud .progressbar{flex:1;min-width:0;margin:0;}" +
-      ".sous-hud-pc{width:30px;text-align:right;font-size:9px;font-weight:800;color:#fff;flex:none;}" +
-      ".sous-hud-status{font-size:8.5px;color:#f5c542;margin-top:5px;font-weight:600;}" +
-      ".sous-hud-meals{font-size:8.5px;color:rgba(255,255,255,.8);margin-top:4px;font-weight:600;" +
+      ".sous-hud-pc{width:32px;text-align:right;font-size:9px;font-weight:700;flex:none;}" +
+      ".sous-hud-status{font-size:9px;margin-top:6px;font-weight:700;}" +
+      ".sous-hud-meals{font-size:9px;margin-top:4px;font-weight:700;opacity:.92;" +
       "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
-      ".sous-hud-meals i{color:#f5c542;margin-right:1px;}" +
+      ".sous-hud-meals i{margin-right:2px;}" +
       // Hide the vendored SW-update notice — off-brand for Doge + it overlaps the HUD.
       "#download-container,#download-complete-container{display:none!important;}" +
       // --- Fullscreen layout fix --------------------------------------------
@@ -255,7 +260,10 @@
       // top dashboard over a clean gradient. !important to beat the game's rules.
       ".graphics-wrapper.fullscreen{display:flex!important;flex-direction:column!important;" +
       "padding:248px 0 18px!important;box-sizing:border-box!important;" +
-      "background:linear-gradient(180deg,#17131d 0%,#221b29 56%,#2c2433 100%)!important;}" +
+      // Warm game-palette backdrop (not black): the margins around the contained
+      // room read as the game's own cream/tan UI surface, so the screen feels
+      // flush + framed instead of a dark void around a floating panel.
+      "background:linear-gradient(180deg,#ffe7d0 0%,#ffdcc0 52%,#ffd2b2 100%)!important;}" +
       // Default reserves the top for the room's HUD. On canvas SUB-screens
       // (locations, mini-games — no HUD), reclaim that space so the scene fills
       // instead of leaving a big empty band. Toggled by syncHudVisibility.
@@ -266,7 +274,10 @@
       // dog is never cropped off a side edge. Centered in the space below the HUD,
       // clear of the bezel, true 1:1 aspect (no distortion), crisp pixels.
       ".graphics-wrapper.fullscreen .graphics-canvas{height:100%!important;width:100%!important;" +
-      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;}" +
+      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;" +
+      // transparent so the warm backdrop shows through the contain letterbox
+      // (the canvas's own black bg was the leftover black band).
+      "background:transparent!important;}" +
       // Grid menus (main menu, care, inventory) size each tile to 1/3 of the
       // container height — fine on the 192px egg-shell, but on the fullscreen
       // 742px screen each tile balloons to ~245px so the 4th row (the Back
