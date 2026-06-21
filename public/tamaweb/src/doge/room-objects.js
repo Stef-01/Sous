@@ -359,6 +359,37 @@
     proxyWrap = null;
   }
 
+  // ---- the founder-art drop-in seam (AssetLoader) -----------------------------
+  // dev-only: ?roomart=<slotId>:<path> swaps ONE slot's sprite at runtime so a
+  // single delivered asset can be eyeballed in place before it's in the manifest.
+  function artOverride(id) {
+    try {
+      var m = /[?&]roomart=([^&]+)/.exec(window.location.search);
+      if (!m) return null;
+      var parts = decodeURIComponent(m[1]).split(":");
+      return parts[0] === id && parts[1]
+        ? { kind: "sprite", src: parts.slice(1).join(":") }
+        : null;
+    } catch (_e) {
+      return null;
+    }
+  }
+  // The ONE drop-in: art.kind:"solid"→"sprite" loads the founder PNG. The Drawer
+  // draws solidColor ONLY when no image is loaded (Drawer.js:204 is an else-if
+  // after the image branch), so the procedural rect is the AUTOMATIC fallback —
+  // during load AND on a 404/decode error (image.naturalWidth stays 0). Zero
+  // logic change to bind/hover/select/fill: art is cosmetic-only.
+  function applyArt(obj, slot) {
+    var art = artOverride(slot.id) || slot.art;
+    if (art && art.kind === "sprite" && art.src) {
+      try {
+        obj.setImg(art.src);
+      } catch (_e) {
+        /* falls back to solidColor automatically */
+      }
+    }
+  }
+
   // ---- object builders --------------------------------------------------------
   function buildContainer(App, slot) {
     var isFloor = !!FLOOR_IDS[slot.id];
@@ -407,7 +438,9 @@
         }
       };
     }
-    return new Object2d(config);
+    var obj = new Object2d(config);
+    applyArt(obj, slot); // founder sprite if one is set; else the solidColor stand-in
+    return obj;
   }
 
   function buildFill(App, slot, container) {
