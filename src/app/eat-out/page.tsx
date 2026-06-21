@@ -31,6 +31,8 @@ import {
   type DemoVenue,
   type DemoDish,
 } from "@/data/eat-out/stanford-demo";
+import { cuisineKeyFor } from "@/data/eat-out/cuisine-key";
+import { SurplusSpecialsRail } from "@/components/eat-out/surplus-specials-rail";
 import { diaryLogBranded } from "@/lib/hooks/use-nutrition-diary";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
@@ -77,15 +79,6 @@ function parentSignalFor(
   };
 }
 
-/** Demo venue cuisine string → the preference profile's lowercase family key. */
-const CUISINE_KEY: Record<string, string> = {
-  "pakistani-indian": "indian",
-  israeli: "mediterranean",
-};
-function cuisineKeyFor(cuisine: string): string {
-  const k = cuisine.toLowerCase();
-  return CUISINE_KEY[k] ?? k;
-}
 /** Enough signal to lead with a "for your taste" hero (weight ∈ [-1,1]). */
 const TASTE_HERO = 0.18;
 
@@ -575,6 +568,10 @@ export default function EatOutPage() {
             );
           })}
         </div>
+
+        {/* Surplus specials — STRATEGY §12.11 rule-12 stub; renders nothing
+            unless the home-chef flag is on (no fake marketplace shipped). */}
+        <SurplusSpecialsRail />
 
         {/* Filters — cuisines + the goal lens (real starred nutrients). */}
         <div
