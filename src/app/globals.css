@@ -242,7 +242,7 @@
   font-size: var(--text-display);
   line-height: var(--text-display-lh);
   letter-spacing: var(--tracking-display);
-  font-weight: 400;
+  font-weight: 800;
   text-wrap: balance;
 }
 .sous-title {
@@ -250,7 +250,7 @@
   font-size: var(--text-title);
   line-height: var(--text-title-lh);
   letter-spacing: var(--tracking-title);
-  font-weight: 400;
+  font-weight: 700;
   text-wrap: balance;
 }
 .sous-h2 {
@@ -266,6 +266,14 @@
   font-weight: 600;
   color: var(--nourish-subtext);
 }
+/* The display font (Hanken Grotesk) only ever dresses headings/display — the old
+   serif read heavy at 400, a grotesque does not. Give the family a 700 default at
+   ZERO specificity (:where) so bare `font-serif` headings read like the reference,
+   while any explicit weight utility (font-normal/medium/bold/black) still wins. */
+:where(.font-serif) {
+  font-weight: 700;
+}
+
 /* One role for ALL secondary/caption text — one size, one gray, one leading.
    Replaces the text-xs / text-[11px] / text-[10px] / text-[12px] drift. */
 .sous-meta {
@@ -321,7 +329,12 @@
   --color-nourish-evaluate: var(--nourish-evaluate);
   --color-nourish-evaluate-hover: var(--nourish-evaluate-hover);
   --font-sans: "Inter", sans-serif;
-  --font-serif: "DM Serif Display", Georgia, serif;
+  /* Display font for headings — heavy geometric grotesque (reference mockups).
+     --font-display is the forward-looking alias + single swap point for an exact
+     licensed brand font; --font-serif is kept as the live token so the app's
+     existing heading usages adopt it without a sweep. */
+  --font-serif: "Hanken Grotesk", system-ui, sans-serif;
+  --font-display: var(--font-serif);
 }
 
 /* === SHARED SURFACE PATTERNS === */

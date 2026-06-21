@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, DM_Serif_Display } from "next/font/google";
+import { Inter, Hanken_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/providers";
@@ -15,9 +15,13 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const dmSerif = DM_Serif_Display({
+// Display font for headings — a heavy geometric grotesque matching the reference
+// mockups (replaces the prior DM Serif Display serif). Kept under the --font-serif
+// variable so all existing heading usages flip at once; aliased to --font-display
+// (see globals) as the single swap point for an exact licensed brand font later.
+const hankenGrotesk = Hanken_Grotesk({
   variable: "--font-serif",
-  weight: "400",
+  weight: ["500", "600", "700", "800"],
   subsets: ["latin"],
 });
 
@@ -74,7 +78,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body
-          className={`${inter.variable} ${dmSerif.variable} antialiased font-sans min-h-dvh`}
+          className={`${inter.variable} ${hankenGrotesk.variable} antialiased font-sans min-h-dvh`}
         >
           <Providers>
             <ErrorBoundary>
