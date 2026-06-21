@@ -4,13 +4,12 @@
  * /eat-out — Stanford-area demo (founder-directed prototype, 2026-06-10).
  *
  * Photo-led venue list → dish sheet → ONE-TAP LOG into the same diary every
- * other surface reads (brand = restaurant, estimates marked approximated).
- * The "Fits goals" filter and per-dish goal badges run off the user's REAL
- * starred nutrients, so eating out plugs into the same goal loop as cooking.
- *
- * Replaces the Y5 card-stack fixtures (L'Artusi/Noma — wrong continent for a
- * "near me" surface). Live Places/hours integration remains Y7; this set is
- * clearly badged as curated demo picks.
+ * other surface reads (brand = restaurant, estimates marked approximated). Every
+ * venue + dish is an individually-selectable object; cards surface a graded
+ * taste-match ring (from the real preference profile), "Likely fits" goal hints
+ * (off the user's starred nutrients), and — when Parent Mode is on — kid-friendly
+ * / spice pills. Logging or browsing a venue teaches the taste flywheel. Live
+ * Places/hours integration is a later stage; this set is badged as a curated demo.
  */
 
 import { useMemo, useState, type ReactNode } from "react";
