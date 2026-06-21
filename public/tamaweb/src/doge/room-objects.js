@@ -185,17 +185,24 @@
     if (document.getElementById("sous-rd-style")) return;
     var s = document.createElement("style");
     s.id = "sous-rd-style";
+    // Native CREAM .surface-stylized panel — the game's own stats/menu look
+    // (priority A: the cream/beveled pixel-art panel, pixel font, outlined). Uses
+    // the same theme tokens as the in-game panels (fallbacks match the HUD).
     s.textContent = [
       ".sous-room-drill{position:fixed;z-index:60;transform:translate(-50%,-100%);",
-      "min-width:78px;max-width:168px;background:#1b2447;border:2px solid #46598f;",
-      "border-radius:7px;padding:5px 8px 7px;box-shadow:0 5px 16px rgba(8,12,28,.55);",
+      "min-width:80px;max-width:170px;background:var(--prim-clr-b-bg,#fff4e8);",
+      "color:var(--prim-clr-b-text,#ff8000);border:2px solid var(--prim-clr-b-border,#ffb362);",
+      "border-radius:9px 9px 9px 3px;padding:5px 9px 7px;",
+      "box-shadow:9px -16px 0 -13px inset var(--prim-clr-b-shadow,#ffcf9d),0 5px 14px rgba(70,42,15,.28);",
       "text-align:center;pointer-events:auto;font-family:'Pixel','PixelOld',monospace;",
-      "image-rendering:pixelated;display:none;line-height:1.25;}",
-      ".sous-rd-title{color:#ffb96b;font-size:9px;letter-spacing:.5px;text-transform:uppercase;}",
-      ".sous-rd-val{color:#ffe1b0;font-size:12px;font-weight:bold;margin-top:1px;}",
-      ".sous-rd-word{color:#9fb0dd;font-size:8.5px;margin-top:1px;}",
-      ".sous-rd-water{margin-top:5px;background:#3a7bd0;border:1px solid #6aa0e6;color:#fff;",
-      "font-family:inherit;font-size:8.5px;padding:3px 8px;border-radius:5px;cursor:pointer;}",
+      "image-rendering:pixelated;text-shadow:0 1px 0 rgba(255,255,255,.45);display:none;line-height:1.25;}",
+      ".sous-rd-title{font-size:9px;letter-spacing:.5px;text-transform:uppercase;opacity:.8;}",
+      ".sous-rd-val{font-size:12px;font-weight:bold;margin-top:1px;}",
+      ".sous-rd-word{font-size:8.5px;margin-top:1px;opacity:.85;}",
+      ".sous-rd-water{margin-top:5px;background:var(--prim-clr-b-text,#ff8000);",
+      "border:1px solid var(--prim-clr-b-border,#ffb362);color:var(--prim-clr-b-bg,#fff4e8);",
+      "font-family:inherit;font-size:8.5px;padding:3px 8px;border-radius:5px;cursor:pointer;",
+      "text-shadow:none;}",
       ".sous-rd-water:active{transform:scale(.95);}",
       // When the diegetic room is on, demote the floating cream HUD — the room
       // objects ARE the nutrition surface, and the HUD would collide with the
@@ -264,12 +271,13 @@
     } else {
       var value = bind.detailText || bind.coverageText || "";
       var band = bandColor(bind.pct, slot.fill && slot.fill.band);
-      if (value)
-        html +=
-          '<div class="sous-rd-val" style="color:rgb(' +
-          band.r + "," + band.g + "," + band.b +
-          ')">' + escapeHtml(value) + "</div>";
-      html += '<div class="sous-rd-word">' + escapeHtml(bind.word) + "</div>";
+      // Value inherits the panel's orange (native); the WORD carries the red/amber/
+      // green health hint so the band signal survives the cream restyle.
+      if (value) html += '<div class="sous-rd-val">' + escapeHtml(value) + "</div>";
+      html +=
+        '<div class="sous-rd-word" style="color:rgb(' +
+        band.r + "," + band.g + "," + band.b +
+        ')">' + escapeHtml(bind.word) + "</div>";
     }
     if (slot.bind.action === "water")
       html += '<button class="sous-rd-water" type="button">Log a glass</button>';
