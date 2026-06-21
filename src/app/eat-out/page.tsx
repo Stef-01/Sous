@@ -16,7 +16,7 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Star, X } from "lucide-react";
+import { ArrowLeft, MapPin, Sparkles, Star, X } from "lucide-react";
 import {
   STANFORD_VENUES,
   ALL_CUISINES,
@@ -26,6 +26,8 @@ import {
 } from "@/data/eat-out/stanford-demo";
 import { diaryLogBranded } from "@/lib/hooks/use-nutrition-diary";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { toast } from "@/lib/hooks/use-toast";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
@@ -37,6 +39,20 @@ const STAR_TO_TAG: Record<string, DemoDish["tags"][number]> = {
   fiber_g: "fiber",
 };
 
+/** Demo venue cuisine string → the preference profile's lowercase family key. */
+const CUISINE_KEY: Record<string, string> = {
+  "pakistani-indian": "indian",
+  israeli: "mediterranean",
+};
+function cuisineKeyFor(cuisine: string): string {
+  const k = cuisine.toLowerCase();
+  return CUISINE_KEY[k] ?? k;
+}
+/** A cuisine the user demonstrably leans toward (weight ∈ [-1,1]). */
+const TASTE_MATCH = 0.25;
+/** Enough signal to lead with a "for your taste" hero. */
+const TASTE_HERO = 0.18;
+
 function walkOrDrive(km: number): string {
   if (km <= 3) return `${Math.round(km * 12)} min walk`;
   return `${Math.max(4, Math.round(km * 2.5))} min drive`;
@@ -45,6 +61,9 @@ function walkOrDrive(km: number): string {
 export default function EatOutPage() {
   const router = useRouter();
   const { stars } = useNutrientGoals();
+  const { merged, recordSignal } = usePreferenceProfile();
+  const tasteScore = (v: DemoVenue) =>
+    merged.cuisines[cuisineKeyFor(v.cuisine)] ?? 0;
   const [cuisine, setCuisine] = useState<string | null>(null);
   const [goalsOnly, setGoalsOnly] = useState(false);
   const [openVenue, setOpenVenue] = useState<DemoVenue | null>(null);
@@ -77,19 +96,48 @@ export default function EatOutPage() {
       .slice(0, 14);
   }, [goalTags]);
 
+  // "Your taste, near you": lead with cuisines you lean toward (from your real
+  // cook/log signals via usePreferenceProfile), then nearest. Falls back to pure
+  // distance at cold-start (all weights ~0). The strongest match (>= TASTE_HERO)
+  // becomes the editorial hero above the list.
+  const topMatch = useMemo(() => {
+    if (cuisine || goalsOnly) return null; // only on the default view
+    const best = [...STANFORD_VENUES].sort(
+      (a, b) =>
+        (merged.cuisines[cuisineKeyFor(b.cuisine)] ?? 0) -
+        (merged.cuisines[cuisineKeyFor(a.cuisine)] ?? 0),
+    )[0];
+    return best &&
+      (merged.cuisines[cuisineKeyFor(best.cuisine)] ?? 0) >= TASTE_HERO
+      ? best
+      : null;
+  }, [merged, cuisine, goalsOnly]);
+
   const venues = useMemo(() => {
-    let list = [...STANFORD_VENUES].sort((a, b) => a.distanceKm - b.distanceKm);
+    let list = [...STANFORD_VENUES].sort((a, b) => {
+      const ta = merged.cuisines[cuisineKeyFor(a.cuisine)] ?? 0;
+      const tb = merged.cuisines[cuisineKeyFor(b.cuisine)] ?? 0;
+      if (Math.abs(tb - ta) > 0.05) return tb - ta; // real taste signal leads
+      return a.distanceKm - b.distanceKm; // else nearest
+    });
     if (cuisine) list = list.filter((v) => v.cuisine === cuisine);
     if (goalsOnly && goalTags.size > 0)
       list = list.filter((v) =>
         v.dishes.some((dd) => dd.tags.some((t) => goalTags.has(t))),
       );
+    if (topMatch) list = list.filter((v) => v.slug !== topMatch.slug);
     return list;
-  }, [cuisine, goalsOnly, goalTags]);
+  }, [cuisine, goalsOnly, goalTags, merged, topMatch]);
 
   const logDish = (dish: DemoDish, venue: DemoVenue) => {
     haptic("commit");
     diaryLogBranded(demoDishToBrandedFood(dish, venue), 1);
+    // Feed the taste profile: eating out teaches Sous your cuisine leanings just
+    // like cooking does — closing the eat-out data-flywheel hole.
+    recordSignal({
+      kind: "saved",
+      facets: dishToFacets({ cuisineFamily: venue.cuisine, tags: dish.tags }),
+    });
     toast.push({
       variant: "success",
       title: `Logged ${dish.name}`,
@@ -202,7 +250,42 @@ export default function EatOutPage() {
           ))}
         </div>
 
-        {/* Photo-led venue cards, nearest first. */}
+        {/* Editorial hero — the single strongest taste match, if any. */}
+        {topMatch && (
+          <button
+            type="button"
+            onClick={() => setOpenVenue(topMatch)}
+            className="block w-full overflow-hidden rounded-3xl border-2 border-[var(--nourish-gold)]/45 text-left shadow-md transition-transform active:scale-[0.99] motion-reduce:active:scale-100"
+          >
+            <div className="relative h-52 w-full">
+              <Image
+                src={topMatch.heroImage ?? topMatch.dishes[0].image}
+                alt={topMatch.name}
+                fill
+                sizes="(max-width: 448px) 100vw, 448px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <span className="absolute left-4 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
+                <Sparkles size={11} aria-hidden /> For your taste
+              </span>
+              <div className="absolute bottom-4 left-4 right-4">
+                <p className="text-[11.5px] font-semibold text-white/85">
+                  Because you love {topMatch.cuisine}
+                </p>
+                <h2 className="font-serif text-[26px] font-semibold leading-tight text-white [text-shadow:0_1px_3px_rgba(0,0,0,.6)]">
+                  {topMatch.name}
+                </h2>
+                <p className="mt-0.5 text-[12px] font-medium text-white/85">
+                  {topMatch.cuisine} · {walkOrDrive(topMatch.distanceKm)} ·{" "}
+                  {topMatch.price}
+                </p>
+              </div>
+            </div>
+          </button>
+        )}
+
+        {/* Photo-led venue cards — your taste leads, then nearest. */}
         <div className="space-y-4">
           {venues.map((v) => (
             <button
@@ -229,6 +312,11 @@ export default function EatOutPage() {
                     {walkOrDrive(v.distanceKm)} · {v.price}
                   </p>
                 </div>
+                {tasteScore(v) >= TASTE_MATCH && (
+                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/95 px-2.5 py-1 text-[11px] font-semibold text-white">
+                    <Sparkles size={10} aria-hidden /> Your kind of spot
+                  </span>
+                )}
                 {goalTags.size > 0 && v.dishes.some(dishFitsGoals) && (
                   <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/92 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-dark)]">
                     <Star
