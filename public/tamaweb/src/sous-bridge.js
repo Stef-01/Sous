@@ -251,8 +251,9 @@
     var data = readSousHealth();
     if (!data || !Array.isArray(data.stats) || !data.stats.length) {
       hud.innerHTML =
-        '<div class="sous-hud-title">Dobe’s health</div>' +
-        '<div class="sous-hud-status">Log meals in Sous to fill these.</div>';
+        '<div class="sous-hud-title"><span class="sous-hud-titletext">Dobe’s health · your nutrition</span>' +
+        '<span class="sous-hud-more">tap ›</span></div>' +
+        '<div class="sous-hud-status">Cook or log a meal in Sous to fill Dobe’s health.</div>';
       return;
     }
     var rows = "";
