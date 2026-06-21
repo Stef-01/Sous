@@ -252,31 +252,18 @@
       // Hide the vendored SW-update notice — off-brand for Doge + it overlaps the HUD.
       "#download-container,#download-complete-container{display:none!important;}" +
       // --- Fullscreen layout fix --------------------------------------------
-      // The game's built-in fullscreen stretches a 96x96 square scene with
-      // object-fit:fill across a ~1:2 portrait, distorting the art ~2x tall and
-      // pushing the dog (scene y=88/96) off the bottom. Instead: anchor the room
-      // to the BOTTOM at its true 1:1 aspect (cover, pixel-perfect), occupying
-      // the lower ~60% so the dog is always visible, with the HUD reading as a
-      // top dashboard over a clean gradient. !important to beat the game's rules.
-      ".graphics-wrapper.fullscreen{display:flex!important;flex-direction:column!important;" +
-      "padding:248px 0 18px!important;box-sizing:border-box!important;" +
-      // Warm game-palette backdrop (not black): the margins around the contained
-      // room read as the game's own cream/tan UI surface, so the screen feels
-      // flush + framed instead of a dark void around a floating panel.
-      "background:linear-gradient(180deg,#ffe7d0 0%,#ffdcc0 52%,#ffd2b2 100%)!important;}" +
-      // Default reserves the top for the room's HUD. On canvas SUB-screens
-      // (locations, mini-games — no HUD), reclaim that space so the scene fills
-      // instead of leaving a big empty band. Toggled by syncHudVisibility.
-      ".graphics-wrapper.fullscreen.sous-subscreen{padding-top:20px!important;}" +
-      ".graphics-wrapper.fullscreen .screen-wrapper{flex:1!important;width:100%!important;" +
-      "height:auto!important;min-height:0!important;}" +
-      // contain (not cover): the WHOLE square room is always visible so a roaming
-      // dog is never cropped off a side edge. Centered in the space below the HUD,
-      // clear of the bezel, true 1:1 aspect (no distortion), crisp pixels.
+      // The room/world FILLS the entire screen (cover, pixel-perfect) — the game
+      // IS the screen, not a small square on a flat backdrop. The 96x96 room is a
+      // fixed square image, so cover crops the far side-edges (mostly bare wall);
+      // the dog + bed + depth stay centered and full-height. The nutrition then
+      // overlays it as a native in-room board, so the metrics live in the room.
+      ".graphics-wrapper.fullscreen{display:block!important;padding:0!important;" +
+      "background:#15121a!important;}" +
+      ".graphics-wrapper.fullscreen.sous-subscreen{padding:0!important;}" +
+      ".graphics-wrapper.fullscreen .screen-wrapper{position:absolute!important;inset:0!important;" +
+      "width:100%!important;height:100%!important;}" +
       ".graphics-wrapper.fullscreen .graphics-canvas{height:100%!important;width:100%!important;" +
-      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;" +
-      // transparent so the warm backdrop shows through the contain letterbox
-      // (the canvas's own black bg was the leftover black band).
+      "object-fit:contain!important;object-position:center 58%!important;image-rendering:pixelated!important;" +
       "background:transparent!important;}" +
       // Grid menus (main menu, care, inventory) size each tile to 1/3 of the
       // container height — fine on the 192px egg-shell, but on the fullscreen
@@ -416,6 +403,36 @@
     }
   }
 
+  // Bleed the room's OWN wall colour up and floor colour down into the contain
+  // margins, so the scene reads as ONE tall room filling the screen — not a
+  // square on a flat ("lazy orange") backdrop. Samples the room canvas edges so
+  // it adapts to every room (bedroom/kitchen/...) + day-night.
+  var bgSampleTick = 0;
+  function sampleRoomBackdrop() {
+    var canvas = document.querySelector(".graphics-canvas");
+    var wrap = document.querySelector(".graphics-wrapper");
+    if (!canvas || !wrap || !canvas.width) return;
+    if (bgSampleTick++ % 5 !== 0) return; // edges change slowly; ~every 2s
+    try {
+      var ctx = canvas.getContext("2d");
+      var w = canvas.width,
+        h = canvas.height;
+      var px = function (x, y) {
+        var d = ctx.getImageData(x, y, 1, 1).data;
+        return "rgb(" + d[0] + "," + d[1] + "," + d[2] + ")";
+      };
+      var wall = px((w / 2) | 0, 2); // top-centre = back wall
+      var floor = px(3, h - 3); // bottom-left corner = floor (dog rarely here)
+      wrap.style.setProperty(
+        "background",
+        "linear-gradient(180deg," + wall + " 0%," + wall + " 34%," + floor + " 70%," + floor + " 100%)",
+        "important"
+      );
+    } catch (_e) {
+      /* tainted/odd canvas — keep the CSS fallback */
+    }
+  }
+
   // Announce readiness, surface the nutrition HUD, then watch for pet
   // reassignment (hatch / age-up) so the parent can re-handshake.
   setInterval(function () {
@@ -423,6 +440,7 @@
     ensureDobeName();
     ensureHud();
     syncHudVisibility();
+    sampleRoomBackdrop();
     if (!announced) announceReady();
     else if (getApp().pet !== lastPet) announceReady();
   }, 400);
