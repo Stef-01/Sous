@@ -32,6 +32,11 @@ describe("buildDogeHealthPayload", () => {
     expect(buildDogeHealthPayload(STATS, "asleep", 0).status).toMatch(/nap/i);
   });
 
+  it("exposes the raw mood enum so the game can key its thriving celebration", () => {
+    expect(buildDogeHealthPayload(STATS, "thriving", 0).mood).toBe("thriving");
+    expect(buildDogeHealthPayload(STATS, "hungry", 0).mood).toBe("hungry");
+  });
+
   it("never invents stats — only what was passed", () => {
     expect(buildDogeHealthPayload([], "content", 0).stats).toEqual([]);
   });

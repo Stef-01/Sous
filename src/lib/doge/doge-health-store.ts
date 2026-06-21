@@ -43,6 +43,9 @@ export interface DogeHealthStat {
 export interface DogeHealthPayload {
   stats: DogeHealthStat[];
   status: string;
+  /** The mood enum itself, so the game can key a native "thriving" celebration
+   *  off the exact state instead of string-matching the status copy. */
+  mood: PetMood;
   /** Deduped dish names eaten today (newest first) — the HUD's recent activity. */
   meals: string[];
   updatedAt: number;
@@ -63,6 +66,7 @@ export function buildDogeHealthPayload(
       ...(s.detail ? { detail: s.detail } : {}),
     })),
     status: STATUS[mood],
+    mood,
     meals,
     updatedAt: now,
   };

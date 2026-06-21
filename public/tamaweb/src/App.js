@@ -3965,8 +3965,24 @@ const App = {
                 }).join('')
                 : `<small class="list-text">Cook or log a meal in Sous to fill Dobe's nutrition.</small>`;
             const sousStatus = (sousHealth && sousHealth.status) ? sousHealth.status : '';
+            const sousMood = (sousHealth && sousHealth.mood) ? sousHealth.mood : '';
             const sousMeals = (sousHealth && Array.isArray(sousHealth.meals) && sousHealth.meals.length)
                 ? sousHealth.meals.slice(0, 4).join(' · ') : '';
+            // Doge: a native "thriving" CELEBRATION — when the real Sous nutrition
+            // has Dobe thriving, the tab leads with a cream beveled banner (the
+            // game's own .surface-stylized) + a gentle pulse (reduced-motion safe),
+            // instead of the plain status line. Pure display; the stat loop is untouched.
+            const sousThriveBanner = (sousMood === 'thriving') ? `
+                <style>
+                    @keyframes sousThrivePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.035)} }
+                    .sous-thrive-banner{ animation: sousThrivePulse 1.8s ease-in-out infinite; }
+                    @media (prefers-reduced-motion: reduce){ .sous-thrive-banner{ animation:none } }
+                </style>
+                <div class="sous-thrive-banner inner-padding b-radius-10 surface-stylized flex flex-center flex-gap-1" style="margin-bottom:6px;justify-content:center;text-align:center">
+                    <b class="outlined-icon flex flex-center">${App.getIcon('star', true)}</b>
+                    <b style="text-transform:uppercase;letter-spacing:.04em">Dobe is thriving!</b>
+                    <b class="outlined-icon flex flex-center">${App.getIcon('star', true)}</b>
+                </div>` : '';
 
             content.innerHTML = `
             <div class="tabs">
@@ -4047,8 +4063,9 @@ const App = {
                         <div class="tab-content">
                             <div class="inner-padding b-radius-10 flex-gap-2 flex flex-dir-col m mt-6">
                                 <div class="stats-label" style="margin-bottom:2px">Nutrition · from Sous</div>
+                                ${sousThriveBanner}
                                 ${sousRows}
-                                ${sousStatus ? '<small class="list-text" style="display:block;margin-top:4px">' + sousStatus + '</small>' : ''}
+                                ${(sousStatus && sousMood !== 'thriving') ? '<small class="list-text" style="display:block;margin-top:4px">' + sousStatus + '</small>' : ''}
                                 ${sousMeals ? '<small class="list-text" style="display:block;margin-top:3px;opacity:.85">' + App.getIcon('utensils', true) + ' Fed today: ' + sousMeals + '</small>' : ''}
                             </div>
                         </div>

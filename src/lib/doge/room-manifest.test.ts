@@ -61,6 +61,7 @@ const PAYLOAD: DogeHealthPayload = {
     { label: "Vitamins", pct: 22, fa: "shield-halved" },
   ],
   status: "Dobe's peckish",
+  mood: "peckish",
   meals: ["Pho", "Caesar Salad"],
   updatedAt: 123,
 };
@@ -178,7 +179,13 @@ describe("readRoomBinding", () => {
   it("never throws — null / undefined / missing-stat payloads return error", () => {
     expect(readRoomBinding(null, slot("protein")).state).toBe("error");
     expect(readRoomBinding(undefined, slot("protein")).state).toBe("error");
-    const noStats = { stats: [], status: "", meals: [], updatedAt: 0 };
+    const noStats = {
+      stats: [],
+      status: "",
+      mood: "content" as const,
+      meals: [],
+      updatedAt: 0,
+    };
     expect(readRoomBinding(noStats, slot("protein")).state).toBe("error");
   });
 
@@ -238,7 +245,7 @@ describe("TS ↔ JS manifest parity", () => {
       "utf8",
     );
     const mod = { exports: {} as unknown };
-     
+
     new Function("module", "window", src)(mod, undefined);
     expect(mod.exports).toEqual(ROOM_MANIFEST);
   });
