@@ -218,7 +218,14 @@
       // dog is never cropped off a side edge. Centered in the space below the HUD,
       // clear of the bezel, true 1:1 aspect (no distortion), crisp pixels.
       ".graphics-wrapper.fullscreen .graphics-canvas{height:100%!important;width:100%!important;" +
-      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;}";
+      "object-fit:contain!important;object-position:center center!important;image-rendering:pixelated!important;}" +
+      // Grid menus (main menu, care, inventory) size each tile to 1/3 of the
+      // container height — fine on the 192px egg-shell, but on the fullscreen
+      // 742px screen each tile balloons to ~245px so the 4th row (the Back
+      // button) overflows below the fold. Cap the tile height + center the grid
+      // so all entries fit on one screen, clear of the bezel + the Sous back btn.
+      ".graphics-wrapper.fullscreen .generic-grid-container{align-content:center!important;}" +
+      ".graphics-wrapper.fullscreen .generic-grid-container .grid-item{height:165px!important;min-height:0!important;}";
     var style = document.createElement("style");
     style.textContent = css;
     document.head.appendChild(style);
@@ -293,11 +300,28 @@
     }
   }
 
+  // The HUD belongs to the main ROOM view only. Hide it whenever a menu, the
+  // stats/care screen, a dialog, or the welcome modal covers the room — so it
+  // never overlaps the game's own UI (e.g. the menu's top row sat behind it).
+  // Detect by probing a point well below the HUD: if the room canvas is the
+  // topmost element there we're on the main view; otherwise an overlay is open.
+  function syncHudVisibility() {
+    var hud = document.querySelector(".sous-nutrition-hud");
+    if (!hud) return;
+    var el = document.elementFromPoint(
+      Math.round(window.innerWidth / 2),
+      Math.round(window.innerHeight * 0.62)
+    );
+    var onRoom = !!(el && el.classList && el.classList.contains("graphics-canvas"));
+    hud.style.display = onRoom ? "" : "none";
+  }
+
   // Announce readiness, surface the nutrition HUD, then watch for pet
   // reassignment (hatch / age-up) so the parent can re-handshake.
   setInterval(function () {
     if (!gameReady()) return;
     ensureHud();
+    syncHudVisibility();
     if (!announced) announceReady();
     else if (getApp().pet !== lastPet) announceReady();
   }, 400);
