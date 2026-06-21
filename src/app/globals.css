@@ -6,8 +6,12 @@
 :root {
   --background: #ffffff;
   --foreground: #0d0d0d;
-  --nourish-green: #2d5a3d;
-  --nourish-dark-green: #1a3d25;
+  /* Primary brand green — deepened to the reference mockups' rich forest green
+     (was #2d5a3d, a lighter sage). Used for solid CTAs/FAB/selected chips + as
+     tints; white-on-green and green-text-on-cream both clear WCAG AA comfortably
+     at this depth (~11:1). The reference's buttons are this deep. */
+  --nourish-green: #1d4d37;
+  --nourish-dark-green: #143524;
   --nourish-light-green: #4a8c5c;
   --nourish-gold: #d4a84b;
 
@@ -36,8 +40,8 @@
      ~3-3.5:1 and failed AA on small text. Still notably lighter than the solid
      subtext, so the airy feel is preserved. */
   --nourish-subtext-faint: #737373;
-  --nourish-button: #2d5a3d;
-  --nourish-button-hover: #1a3d25;
+  --nourish-button: #1d4d37;
+  --nourish-button-hover: #143524;
   --nourish-evaluate: #8c1515;
   --nourish-evaluate-hover: #6f1010;
 
