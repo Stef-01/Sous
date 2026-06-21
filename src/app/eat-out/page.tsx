@@ -16,14 +16,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  ChevronDown,
-  MapPin,
-  Plus,
-  Sparkles,
-  Star,
-} from "lucide-react";
+import { ArrowLeft, ChevronDown, MapPin, Plus, Star } from "lucide-react";
 import {
   STANFORD_VENUES,
   ALL_CUISINES,
@@ -55,14 +48,59 @@ function cuisineKeyFor(cuisine: string): string {
   const k = cuisine.toLowerCase();
   return CUISINE_KEY[k] ?? k;
 }
-/** A cuisine the user demonstrably leans toward (weight ∈ [-1,1]). */
-const TASTE_MATCH = 0.25;
-/** Enough signal to lead with a "for your taste" hero. */
+/** Enough signal to lead with a "for your taste" hero (weight ∈ [-1,1]). */
 const TASTE_HERO = 0.18;
 
 function walkOrDrive(km: number): string {
   if (km <= 3) return `${Math.round(km * 12)} min walk`;
   return `${Math.max(4, Math.round(km * 2.5))} min drive`;
+}
+
+/**
+ * A small radial that GRADES how much a venue's cuisine matches your taste — the
+ * arc length is the real preference weight (clamped to 0..1), not a yes/no badge.
+ * Rule 13: the ring encodes the value, so we never print the number (it lives in
+ * the aria-label for AT). `light` = white strokes for placement on the gold hero
+ * pill; default = gold-on-white for the venue list.
+ */
+function TasteRing({
+  strength,
+  light = false,
+}: {
+  strength: number;
+  light?: boolean;
+}) {
+  const pct = Math.max(0, Math.min(1, strength)); // negatives → empty
+  const r = 7;
+  const c = 2 * Math.PI * r;
+  return (
+    <svg
+      viewBox="0 0 18 18"
+      className="h-[15px] w-[15px] -rotate-90"
+      role="img"
+      aria-label={`Taste match ${Math.round(pct * 100)} percent`}
+    >
+      <circle
+        cx="9"
+        cy="9"
+        r={r}
+        fill="none"
+        strokeWidth="2.5"
+        stroke={light ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.12)"}
+      />
+      <circle
+        cx="9"
+        cy="9"
+        r={r}
+        fill="none"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        stroke={light ? "#fff" : "var(--nourish-gold)"}
+        strokeDasharray={c}
+        strokeDashoffset={c * (1 - pct)}
+      />
+    </svg>
+  );
 }
 
 /**
@@ -165,7 +203,7 @@ function VenueObject({
   venue,
   hero = false,
   reason = null,
-  tasteHit,
+  tasteStrength,
   goalHit,
   open,
   onToggle,
@@ -174,7 +212,7 @@ function VenueObject({
   venue: DemoVenue;
   hero?: boolean;
   reason?: string | null;
-  tasteHit: boolean;
+  tasteStrength: number;
   goalHit: boolean;
   open: boolean;
   onToggle: () => void;
@@ -214,13 +252,13 @@ function VenueObject({
             )}
           />
           {hero ? (
-            <span className="absolute left-4 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
-              <Sparkles size={11} aria-hidden /> For your taste
+            <span className="absolute left-4 top-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-gold)] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-white">
+              <TasteRing strength={tasteStrength} light /> For your taste
             </span>
           ) : (
-            tasteHit && (
-              <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-[var(--nourish-gold)]/95 px-2.5 py-1 text-[11px] font-semibold text-white">
-                <Sparkles size={10} aria-hidden /> Your kind of spot
+            tasteStrength > 0 && (
+              <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/92 px-2 py-1 text-[11px] font-semibold text-[var(--nourish-dark)]">
+                <TasteRing strength={tasteStrength} /> Your taste
               </span>
             )
           )}
@@ -480,7 +518,7 @@ export default function EatOutPage() {
             venue={topMatch}
             hero
             reason={`Because you love ${topMatch.cuisine}`}
-            tasteHit={tasteScore(topMatch) >= TASTE_MATCH}
+            tasteStrength={tasteScore(topMatch)}
             goalHit={goalTags.size > 0 && topMatch.dishes.some(dishFitsGoals)}
             open={expandedVenue === topMatch.slug}
             onToggle={() => toggleVenue(topMatch.slug)}
@@ -508,7 +546,7 @@ export default function EatOutPage() {
             <VenueObject
               key={v.slug}
               venue={v}
-              tasteHit={tasteScore(v) >= TASTE_MATCH}
+              tasteStrength={tasteScore(v)}
               goalHit={goalTags.size > 0 && v.dishes.some(dishFitsGoals)}
               open={expandedVenue === v.slug}
               onToggle={() => toggleVenue(v.slug)}
