@@ -16,7 +16,15 @@
 import { useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChevronDown, MapPin, Plus, Star } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDown,
+  Flame,
+  MapPin,
+  Plus,
+  Smile,
+  Star,
+} from "lucide-react";
 import {
   STANFORD_VENUES,
   ALL_CUISINES,
@@ -27,6 +35,8 @@ import {
 import { diaryLogBranded } from "@/lib/hooks/use-nutrition-diary";
 import { useNutrientGoals } from "@/lib/hooks/use-nutrient-goals";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { useParentMode } from "@/lib/hooks/use-parent-mode";
+import { getKidFriendlinessLabel } from "@/data/parent-mode/kid-friendliness-labels";
 import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { toast } from "@/lib/hooks/use-toast";
 import { haptic } from "@/lib/motion/haptics";
@@ -38,6 +48,35 @@ const STAR_TO_TAG: Record<string, DemoDish["tags"][number]> = {
   iron_mg: "iron",
   fiber_g: "fiber",
 };
+
+/**
+ * Parent-mode signal for a dish, derived from the existing kid-friendliness label
+ * set keyed by the dish PHOTO's basename (the venue-prefixed dish.slug won't match;
+ * "/food_images/chicken_tikka_masala.png" → "chicken-tikka-masala" does). null when
+ * Parent Mode is off OR no label exists (graceful — most dishes simply show no pill).
+ */
+type ParentSignal = { kidFriendly: boolean; tooSpicy: boolean };
+function parentSignalFor(
+  dish: DemoDish,
+  spiceTolerance: number,
+  enabled: boolean,
+): ParentSignal | null {
+  if (!enabled) return null;
+  const slug =
+    dish.image
+      .split("/")
+      .pop()
+      ?.replace(/\.\w+$/, "")
+      .replace(/_/g, "-") ?? "";
+  const label = getKidFriendlinessLabel(slug);
+  if (!label) return null;
+  return {
+    kidFriendly: label.parentModeEligible,
+    // heatLevel 0..4 vs spiceTolerance 1..5 (1 = no heat). Flag only the
+    // actionable case — hotter than this household tolerates.
+    tooSpicy: label.heatLevel > spiceTolerance - 1,
+  };
+}
 
 /** Demo venue cuisine string → the preference profile's lowercase family key. */
 const CUISINE_KEY: Record<string, string> = {
@@ -110,12 +149,14 @@ function TasteRing({
 function DishObject({
   dish,
   fits,
+  parentSignal,
   selected,
   onSelect,
   onLog,
 }: {
   dish: DemoDish;
   fits: boolean;
+  parentSignal: ParentSignal | null;
   selected: boolean;
   onSelect: () => void;
   onLog: () => void;
@@ -168,6 +209,17 @@ function DishObject({
               <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-gold)]/15 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-green)]">
                 <Star size={8} className="fill-[var(--nourish-gold)]" /> Likely
                 fits
+              </span>
+            )}
+            {/* Parent Mode (off by default) — only the actionable kid signals. */}
+            {parentSignal?.kidFriendly && (
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-[var(--nourish-green)]/12 px-1.5 py-0.5 text-[10px] font-semibold text-[var(--nourish-green)]">
+                <Smile size={9} aria-hidden /> Kid-friendly
+              </span>
+            )}
+            {parentSignal?.tooSpicy && (
+              <span className="inline-flex items-center gap-0.5 rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-orange-700">
+                <Flame size={9} aria-hidden /> Too spicy
               </span>
             )}
           </div>
@@ -318,6 +370,9 @@ export default function EatOutPage() {
   const router = useRouter();
   const { stars } = useNutrientGoals();
   const { merged, recordSignal } = usePreferenceProfile();
+  // Parent Mode (off by default) — when on, dishes show kid-friendly / too-spicy
+  // pills derived from the existing kid-friendliness label set.
+  const { profile: parentProfile } = useParentMode();
   const tasteScore = (v: DemoVenue) =>
     merged.cuisines[cuisineKeyFor(v.cuisine)] ?? 0;
   const [cuisine, setCuisine] = useState<string | null>(null);
@@ -577,6 +632,11 @@ export default function EatOutPage() {
                 key={dish.slug}
                 dish={dish}
                 fits={dishFitsGoals(dish)}
+                parentSignal={parentSignalFor(
+                  dish,
+                  parentProfile.spiceTolerance,
+                  parentProfile.enabled,
+                )}
                 selected={selectedDish === dish.slug}
                 onSelect={() => toggleDish(dish.slug)}
                 onLog={() => logDish(dish, topMatch)}
@@ -605,6 +665,11 @@ export default function EatOutPage() {
                   key={dish.slug}
                   dish={dish}
                   fits={dishFitsGoals(dish)}
+                  parentSignal={parentSignalFor(
+                    dish,
+                    parentProfile.spiceTolerance,
+                    parentProfile.enabled,
+                  )}
                   selected={selectedDish === dish.slug}
                   onSelect={() => toggleDish(dish.slug)}
                   onLog={() => logDish(dish, v)}
