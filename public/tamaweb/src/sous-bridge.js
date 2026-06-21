@@ -236,13 +236,27 @@
       "0 7px 16px rgba(70,42,15,.22);" +
       "text-shadow:1px 1px 0px var(--prim-clr-b-text-shadow,#ffcf9d);" +
       "border-radius:10px;border-top-left-radius:20px;border-bottom-right-radius:20px;" +
-      "padding:9px 12px 10px;pointer-events:auto;cursor:pointer;}" +
-      ".sous-nutrition-hud:active{transform:scale(.985);}" +
+      "padding:9px 12px 10px;pointer-events:auto;cursor:default;}" +
       ".sous-hud-title{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;" +
       "margin:0 0 7px 2px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;}" +
       ".sous-hud-titletext{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}" +
       ".sous-hud-more{flex:none;letter-spacing:0;opacity:.8;}" +
-      ".sous-hud-row{display:flex;align-items:center;gap:6px;margin:3px 0;}" +
+      // Each metric is its OWN interactive object: hover highlights it, click
+      // selects it (the "object box") + drills into that metric's detail.
+      ".sous-metric{border-radius:6px;padding:2px 5px;margin:1px -4px;cursor:pointer;" +
+      "transition:background .08s ease;outline:2px solid transparent;outline-offset:-1px;" +
+      "-webkit-tap-highlight-color:transparent;}" +
+      ".sous-metric:hover{background:rgba(255,178,98,.22);}" +
+      ".sous-metric:active{transform:scale(.99);}" +
+      ".sous-metric.selected{background:rgba(255,178,98,.16);" +
+      "outline:2px solid var(--prim-clr-b-border,#ffb362);" +
+      "box-shadow:0 0 0 1px rgba(255,255,255,.9) inset,0 2px 7px rgba(120,70,15,.18);}" +
+      ".sous-metric-head{display:flex;align-items:center;gap:6px;}" +
+      ".sous-metric-detail{font-size:8.5px;font-weight:600;line-height:1.45;" +
+      "padding:4px 2px 1px 22px;}" +
+      ".sous-metric-detail b{font-weight:700;}" +
+      ".sous-metric-src{display:block;opacity:.85;margin-top:1px;" +
+      "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}" +
       ".sous-hud-ic{width:14px;text-align:center;flex:none;}" +
       ".sous-hud-ic i{font-size:12px;}" +
       ".sous-hud-lb{width:56px;font-size:9px;font-weight:700;text-transform:uppercase;flex:none;}" +
@@ -286,6 +300,21 @@
       return null;
     }
   }
+
+  // which metric is drilled-into (persists across the 3s re-render).
+  var hudSelected = null;
+  var METRIC_INFO = {
+    energy: "Calories toward your daily target.",
+    mood: "How balanced & varied your eating has been.",
+    hydration: "Water you’ve logged today.",
+    protein: "Protein toward your daily target.",
+    fiber: "Fiber-rich foods you’ve eaten today.",
+    vitamins: "Key vitamins & minerals you’ve covered.",
+  };
+  function pctWord(p) {
+    return p >= 80 ? "Great" : p >= 55 ? "On track" : p >= 30 ? "Getting there" : "Low";
+  }
+
   function renderHud(hud) {
     var App = getApp();
     if (!App) return;
@@ -293,7 +322,7 @@
     if (!data || !Array.isArray(data.stats) || !data.stats.length) {
       hud.innerHTML =
         '<div class="sous-hud-title"><span class="sous-hud-titletext">Dobe’s health · your nutrition</span>' +
-        '<span class="sous-hud-more">tap ›</span></div>' +
+        '<span class="sous-hud-more">all ›</span></div>' +
         '<div class="sous-hud-status">Cook or log a meal in Sous to fill Dobe’s health.</div>';
       return;
     }
@@ -301,16 +330,53 @@
     for (var i = 0; i < data.stats.length; i++) {
       var s = data.stats[i];
       var pct = Math.max(0, Math.min(100, Number(s.pct) || 0));
-      rows +=
-        '<div class="sous-hud-row"><span class="sous-hud-ic">' +
+      var rounded = Math.round(pct);
+      var key = String(s.label || "").toLowerCase();
+      var sel = hudSelected === key;
+      var head =
+        '<div class="sous-metric-head"><span class="sous-hud-ic">' +
         App.getIcon(s.fa, true) +
         '</span><span class="sous-hud-lb">' +
         s.label +
         "</span>" +
         App.createProgressbar(pct).node.outerHTML +
         '<span class="sous-hud-pc">' +
-        Math.round(pct) +
+        rounded +
         "%</span></div>";
+      var detail = "";
+      if (sel) {
+        var foodMetric =
+          key === "energy" || key === "protein" || key === "fiber" || key === "vitamins";
+        var src =
+          foodMetric && Array.isArray(data.meals) && data.meals.length
+            ? '<span class="sous-metric-src">' +
+              App.getIcon("utensils", true) +
+              " From: " +
+              data.meals.slice(0, 3).join(" · ") +
+              "</span>"
+            : "";
+        detail =
+          '<div class="sous-metric-detail">' +
+          (METRIC_INFO[key] || "") +
+          " <b>" +
+          pctWord(rounded) +
+          " · " +
+          rounded +
+          "%</b>." +
+          src +
+          "</div>";
+      }
+      rows +=
+        '<div class="sous-metric' +
+        (sel ? " selected" : "") +
+        '" data-key="' +
+        key +
+        '" role="button" tabindex="0" aria-expanded="' +
+        (sel ? "true" : "false") +
+        '">' +
+        head +
+        detail +
+        "</div>";
     }
     var meals = "";
     if (Array.isArray(data.meals) && data.meals.length) {
@@ -326,7 +392,7 @@
     }
     hud.innerHTML =
       '<div class="sous-hud-title"><span class="sous-hud-titletext">Dobe’s health · your nutrition</span>' +
-      '<span class="sous-hud-more">tap ›</span></div>' +
+      '<span class="sous-hud-more">all ›</span></div>' +
       rows +
       (data.status ? '<div class="sous-hud-status">' + data.status + "</div>" : "") +
       meals;
@@ -341,12 +407,35 @@
     if (!hud) {
       hud = document.createElement("div");
       hud.className = "sous-nutrition-hud";
-      // Tap the HUD summary -> open the full native Nutrition tab (progressive
-      // disclosure). Bound on the persistent container so it survives the 3s
-      // innerHTML refresh.
-      hud.addEventListener("click", function () {
+      // Delegated interaction (bound once; survives the 3s innerHTML refresh):
+      // clicking a METRIC selects it (the object box) + drills into its detail;
+      // clicking the title opens the full native Nutrition tab. Plays the game's
+      // own click sound so it feels like a native in-game object.
+      hud.addEventListener("click", function (e) {
         var A = getApp();
-        if (A && A.handlers && A.handlers.open_stats) A.handlers.open_stats("tab-3");
+        if (e.target.closest(".sous-hud-title")) {
+          if (A && A.handlers && A.handlers.open_stats) A.handlers.open_stats("tab-3");
+          return;
+        }
+        var metric = e.target.closest(".sous-metric");
+        if (!metric) return;
+        var k = metric.getAttribute("data-key");
+        hudSelected = hudSelected === k ? null : k;
+        if (A && A.playSound) {
+          try {
+            A.playSound("resources/sounds/ui_click_01.ogg", true);
+          } catch (_e) {}
+        }
+        var h = document.querySelector(".sous-nutrition-hud");
+        if (h) renderHud(h);
+      });
+      hud.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        var m = e.target && e.target.closest && e.target.closest(".sous-metric");
+        if (m) {
+          e.preventDefault();
+          m.click();
+        }
       });
       wrap.appendChild(hud);
       renderHud(hud);
