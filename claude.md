@@ -8,6 +8,18 @@ Do it right. Do it with tests. Do it with documentation. Do it so well that Stef
 
 ---
 
+## ⚡ BULLETPROOF — DEPTH OVER SPEED ⚡
+
+**Never optimize for speed or for "shipping fast." Optimize for DEPTH. Always do things as detailed and fully executed as possible.** (Standing directive from Stefan, 2026-06-20, after repeatedly shipping the shallow version.)
+
+- The default failure mode is the **module bolted on top**: a single dumb block that _looks_ right but is interactionally dead. The fix is always to go one level deeper than feels necessary.
+- **The "individually selectable" bar**: every distinct thing the user sees should be its own first-class object — individually hoverable, clickable/selectable (with a visible selection state / object box), and drillable into its own detail. A monolithic panel that opens "the whole tab" is the lazy version; per-element select + drill-down is the real one. (Reference: the Dobe nutrition metrics — each metric became its own selectable object with hover + object-box + inline drill-down. That is the minimum bar, everywhere.)
+- Reach for the **deeper architecture**, not the first one that works. Don't anchor on a quick shape and iterate inside it; if the right answer is more elements, more wiring, more states — do that.
+- "Fully executed" means: every state (hover, focus, selected, empty, error), keyboard, the real data wired through, and verified live — not a happy-path stub.
+- Slowness is acceptable; shallowness is not. When tempted to ship the quick version, that is the signal to go deeper instead.
+
+---
+
 ## ⚡ BULLETPROOF — ALWAYS COMMIT TO MAIN ⚡
 
 **Always commit directly to main and push. Always. When in doubt, commit.**
