@@ -86,6 +86,13 @@
   --text-title-lh: 1.15;
   --text-h2: 1.25rem;
   --text-label: 0.6875rem;
+  /* Body + caption — the airy low end of the F3 mockup-measured ramp (Inter body,
+     not the display font). Gives screens a semantic class to adopt instead of
+     ad-hoc text-sm / text-[15px]; Phase S replaces those per surface. */
+  --text-body: 0.9375rem; /* 15px */
+  --text-body-lh: 1.45;
+  --text-caption: 0.8125rem; /* 13px */
+  --text-caption-lh: 1.4;
   /* Display tracking (E6) — negative letter-spacing tightens the large serif
      for an editorial, premium feel (small text + uppercase labels keep their
      default / positive tracking). */
@@ -269,6 +276,19 @@
   text-transform: uppercase;
   font-weight: 600;
   color: var(--nourish-subtext);
+}
+/* Body + caption — the low end of the ramp (Inter; inherits the default text
+   colour so callers control emphasis). Completes display → title → h2 → body →
+   caption so a surface never needs an ad-hoc text-* size for running copy. */
+.sous-body {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: 400;
+}
+.sous-caption {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption-lh);
+  font-weight: 500;
 }
 /* The display font (Hanken Grotesk) only ever dresses headings/display — the old
    serif read heavy at 400, a grotesque does not. Give the family a 700 default at

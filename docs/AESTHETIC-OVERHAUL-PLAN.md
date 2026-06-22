@@ -126,4 +126,14 @@ Generous whitespace, rounded-2xl cards, photo-forward, calm. Headlines do the
 ## 5. Progress log
 
 - 2026-06-21: plan written. Servings fix (combined cook) shipped (e26d6c6).
-- _next: Phase F1 — the display-font swap._
+- F1 ✅ Hanken Grotesk display font + `--font-display` token (heading serif→sans). F2 ✅
+  deepened primary green + surface/accent tokens. (Both reflected in `globals.css` now.)
+- 2026-06-22: F3 (partial) — added the ramp's airy low end: `.sous-body` (15/1.45/400) +
+  `.sous-caption` (13/1.4/500) semantic utilities, so a surface never needs an ad-hoc
+  `text-sm`/`text-[15px]` for running copy. The prior "E6" ramp already had
+  `.sous-display / .sous-title / .sous-h2 / .sous-label`. **REMAINING F3:** the existing
+  heading SIZES are the E6 scale (display clamp 32–40, title 26–30, h2 20), NOT yet the
+  mockup spec (display-xl ≈30 / display-lg ≈24 / title ≈18) — reconciling them is an
+  app-wide heading rescale, so do it as a deliberate, per-surface-verified pass (not a
+  rushed token edit).
+- _next: F3 heading-scale reconciliation → then Phase S (per-screen adoption of the ramp)._
