@@ -114,8 +114,8 @@ export const JourneySummary = memo(function JourneySummary({
           </h2>
           {stats.completedCooks >= 10 && (
             <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={reducedMotion ? { opacity: 0 } : { scale: 0 }}
+              animate={reducedMotion ? { opacity: 1 } : { scale: 1 }}
               transition={{
                 type: "spring",
                 stiffness: 400,

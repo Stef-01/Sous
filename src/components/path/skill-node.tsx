@@ -48,8 +48,8 @@ export function SkillNodeComponent({
 
   return (
     <motion.button
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
+      initial={reducedMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
+      animate={reducedMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
       whileTap={
         isInteractive
@@ -145,8 +145,8 @@ export function SkillNodeComponent({
             )}
             {/* Checkmark badge */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              initial={reducedMotion ? { opacity: 0 } : { scale: 0 }}
+              animate={reducedMotion ? { opacity: 1 } : { scale: 1 }}
               transition={{
                 type: "spring",
                 stiffness: 400,

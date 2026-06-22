@@ -107,8 +107,8 @@ export const WeeklyGoalCard = memo(function WeeklyGoalCard({
         </div>
         {isComplete ? (
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={reducedMotion ? { opacity: 0 } : { scale: 0 }}
+            animate={reducedMotion ? { opacity: 1 } : { scale: 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 12 }}
             className="flex flex-col items-center"
           >
