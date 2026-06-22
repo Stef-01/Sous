@@ -93,12 +93,32 @@ export function CookTimer() {
 
   return (
     <motion.div
-      initial={{ y: 64, opacity: 0, scale: 0.9 }}
-      animate={{ y: 0, opacity: 1, scale: 1 }}
-      exit={{ y: 64, opacity: 0, scale: 0.9 }}
-      transition={{ type: "spring", stiffness: 320, damping: 26 }}
+      initial={
+        prefersReducedMotion
+          ? { opacity: 0 }
+          : { y: 64, opacity: 0, scale: 0.9 }
+      }
+      animate={
+        prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }
+      }
+      exit={
+        prefersReducedMotion
+          ? { opacity: 0 }
+          : { y: 64, opacity: 0, scale: 0.9 }
+      }
+      transition={
+        prefersReducedMotion
+          ? { duration: 0.15 }
+          : { type: "spring", stiffness: 320, damping: 26 }
+      }
       className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50"
     >
+      {/* Screen-reader announcement — the countdown is purely visual + haptic, so
+          a blind cook would never know the timer finished (vibration only fires on
+          some mobile). Announce completion via an assertive live region. */}
+      <span className="sr-only" aria-live="assertive">
+        {isDone ? `${primary.label} timer finished` : ""}
+      </span>
       <motion.div
         animate={
           prefersReducedMotion
