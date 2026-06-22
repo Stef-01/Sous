@@ -32,4 +32,21 @@ describe("planBalance", () => {
       expect(dairyOnly.hasProtein).toBe(false);
     }
   });
+
+  it("attributes each food group to the distinct plan dishes that contribute it", () => {
+    const plan = ["guacamole", "tabbouleh", "three-bean-salad"];
+    const b = planBalance(plan);
+    // every present group has ≥1 contributing dish, all drawn from the plan
+    for (const g of b.foodGroups) {
+      const slugs = b.byGroupSlugs[g];
+      expect(slugs?.length ?? 0).toBeGreaterThan(0);
+      for (const s of slugs ?? []) expect(plan).toContain(s);
+    }
+    // a dish repeated across slots is de-duplicated within each group
+    const doubled = planBalance([...plan, ...plan]);
+    for (const g of doubled.foodGroups) {
+      const slugs = doubled.byGroupSlugs[g] ?? [];
+      expect(new Set(slugs).size).toBe(slugs.length);
+    }
+  });
 });

@@ -47,15 +47,23 @@ export interface PlanBalance {
   foodGroups: FoodGroup[];
   hasVegetable: boolean;
   hasProtein: boolean;
+  /** Per group, the DISTINCT plan dish slugs that actually contribute it — the
+   *  attribution behind each group, so a UI can drill "which dishes give me this"
+   *  (insertion order = plan order). Only dishes with > 0 grams of the group. */
+  byGroupSlugs: Partial<Record<FoodGroup, string[]>>;
 }
 
 export function planBalance(slugs: ReadonlyArray<string>): PlanBalance {
   const groupGrams: Partial<Record<FoodGroup, number>> = {};
+  const groupSlugs: Partial<Record<FoodGroup, Set<string>>> = {};
   for (const slug of slugs) {
     const comp = getDishCompositionGrams(slug);
     for (const [g, grams] of Object.entries(comp.byGroup)) {
-      groupGrams[g as FoodGroup] =
-        (groupGrams[g as FoodGroup] ?? 0) + (grams ?? 0);
+      const key = g as FoodGroup;
+      groupGrams[key] = (groupGrams[key] ?? 0) + (grams ?? 0);
+      if ((grams ?? 0) > 0) {
+        (groupSlugs[key] ??= new Set<string>()).add(slug);
+      }
     }
   }
 
@@ -63,5 +71,13 @@ export function planBalance(slugs: ReadonlyArray<string>): PlanBalance {
     .sort((a, b) => b[1] - a[1])
     .map(([g]) => g);
 
-  return { foodGroups, ...foodGroupRoles(foodGroups) };
+  const byGroupSlugs: Partial<Record<FoodGroup, string[]>> = {};
+  for (const [g, set] of Object.entries(groupSlugs) as [
+    FoodGroup,
+    Set<string>,
+  ][]) {
+    byGroupSlugs[g] = [...set];
+  }
+
+  return { foodGroups, ...foodGroupRoles(foodGroups), byGroupSlugs };
 }
