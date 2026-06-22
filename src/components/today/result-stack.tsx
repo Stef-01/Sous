@@ -1,6 +1,13 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect, useRef } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   ChevronDown,
@@ -392,6 +399,29 @@ export function ResultStack({
     }
   }, [selectedSides, onCookSelected, onCookThis, recordPick]);
 
+  // Roving keyboard navigation across the suggested-side cards (rule 13 "fully
+  // executed … keyboard" — the correct selection-group idiom). The cards are
+  // already operable (each checkbox is a <button>: Tab + native Space/Enter);
+  // this adds Arrow Up/Down to jump card-to-card rather than tabbing every control.
+  const cardListRef = useRef<HTMLDivElement>(null);
+  const handleCardNav = useCallback((e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    const list = cardListRef.current;
+    if (!list) return;
+    const cards = Array.from(
+      list.querySelectorAll<HTMLElement>("[data-result-card]"),
+    );
+    if (cards.length < 2) return;
+    const activeIdx = cards.findIndex((c) =>
+      c.contains(document.activeElement),
+    );
+    if (activeIdx === -1) return;
+    e.preventDefault();
+    const delta = e.key === "ArrowDown" ? 1 : -1;
+    const nextIdx = (activeIdx + delta + cards.length) % cards.length;
+    cards[nextIdx]?.querySelector<HTMLElement>('[role="checkbox"]')?.focus();
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -437,7 +467,13 @@ export function ResultStack({
         )}
       </div>
 
-      <div className="space-y-3">
+      <div
+        ref={cardListRef}
+        role="group"
+        aria-label="Suggested sides"
+        onKeyDown={handleCardNav}
+        className="space-y-3"
+      >
         {sides.map((side, idx) => (
           // Entrance-only stagger: the three sides cascade in when results
           // land, and a rerolled side fades back in (its id changes → remount).
@@ -445,6 +481,7 @@ export function ResultStack({
           // and the sticky cook bar jank-free.
           <motion.div
             key={side.id}
+            data-result-card
             initial={reducedMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{
