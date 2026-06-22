@@ -36,6 +36,7 @@ const ProfileSettingsSheet = dynamic(
   { ssr: false },
 );
 import { FriendsStrip } from "@/components/today/friends-strip";
+import { SavedRecipesStrip } from "@/components/today/saved-recipes-strip";
 import { NutritionGoalCard } from "@/components/today/nutrition-goal-card";
 import { FirstRunCoachmark } from "@/components/today/first-run-coachmark";
 import { TextPrompt } from "@/components/today/text-prompt";
@@ -745,6 +746,10 @@ function TodayPageContent() {
 
         {/* W47 — one-tap nutrition goal, shown once (renders null after). */}
         <NutritionGoalCard />
+
+        {/* Saved recipes — browse what you bookmarked (deck heart / mission
+            bookmark). Below the fold; renders null when nothing is saved. */}
+        <SavedRecipesStrip />
 
         {/* Friends social feed  -  below fold, horizontal-scroll social proof */}
         <FriendsStrip
