@@ -11,7 +11,9 @@ import {
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ChefHat, UtensilsCrossed } from "lucide-react";
+import { ArrowLeft, ChefHat, UtensilsCrossed, Bookmark } from "lucide-react";
+import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
+import { haptic } from "@/lib/motion/haptics";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
@@ -664,6 +666,7 @@ function CombinedCookContent() {
             <CombinedMissionScreen
               key="mission"
               mainDishName={mainDish.name}
+              mainDishSlug={mainDish.slug}
               mainDishDescription={mainDish.description ?? ""}
               mainDishHeroImage={mainDish.heroImageUrl ?? null}
               companionDishes={orderedDishes
@@ -850,6 +853,7 @@ function CombinedCookContent() {
 
 function CombinedMissionScreen({
   mainDishName,
+  mainDishSlug,
   mainDishDescription,
   mainDishHeroImage,
   companionDishes,
@@ -861,6 +865,7 @@ function CombinedMissionScreen({
   onStart,
 }: {
   mainDishName: string;
+  mainDishSlug: string;
   mainDishDescription: string;
   mainDishHeroImage: string | null;
   companionDishes: string[];
@@ -873,6 +878,16 @@ function CombinedMissionScreen({
 }) {
   const reducedMotion = useReducedMotion();
   const totalTime = prepTimeMinutes + cookTimeMinutes;
+  // Save the main dish for later — the single-mission bookmark, on the primary
+  // (combined) flow too. Saving the headline main; companions re-pair on re-cook.
+  const { isDishSaved, saveDish, removeDish } = useSavedDishes();
+  const isSaved = mainDishSlug ? isDishSaved(mainDishSlug) : false;
+  const toggleSaved = () => {
+    if (!mainDishSlug) return;
+    haptic("select");
+    if (isSaved) removeDish(mainDishSlug);
+    else saveDish(mainDishSlug, mainDishName);
+  };
   const displayTime =
     sequencerEstimate && sequencerEstimate < totalTime
       ? sequencerEstimate
@@ -922,6 +937,26 @@ function CombinedMissionScreen({
               {mainDishName}
             </span>
           </div>
+        )}
+        {/* Save the main dish for later — same bookmark affordance as the
+            single-dish mission (top-right on the photo). */}
+        {mainDishSlug && (
+          <button
+            type="button"
+            onClick={toggleSaved}
+            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
+            aria-pressed={isSaved}
+            className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm transition-transform active:scale-90 motion-reduce:active:scale-100"
+          >
+            <Bookmark
+              size={17}
+              strokeWidth={2.2}
+              className={cn(
+                isSaved &&
+                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
+              )}
+            />
+          </button>
         )}
       </motion.div>
 
