@@ -461,6 +461,7 @@ const App = {
         }, App.constants.AUTO_SAVE_INTERVAL_SECS * 1000);
     },
     initRudderStack: function(){
+        if (typeof rudderanalytics === 'undefined') return;
         rudderanalytics.identify(App.userId, {
             username: App.userName,
             petName: App.petDefinition?.name,
@@ -8559,9 +8560,14 @@ const App = {
 
         if(!type) type = 'default';
 
-        rudderanalytics.track(
-            type, {value},
-        );
+        // rudderanalytics is CDN-loaded; guard against it being unavailable
+        // (ad-blockers routinely block it, offline PWA play, CDN outage) — a
+        // throw here used to abort the whole async init() and brick the game.
+        if (typeof rudderanalytics !== 'undefined') {
+            rudderanalytics.track(
+                type, {value},
+            );
+        }
 
         if(App.isOnItch) type += '_itch';
         else if(App.isOnElectronClient) type += '_electron';

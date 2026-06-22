@@ -135,9 +135,11 @@ const showError = (msg, stack) => {
     document.querySelector('.error-container').style.display = ''
     document.querySelector('#error-message').textContent = msg;
 }
-window.onerror = (message) => {
+window.onerror = (message, source, lineno, colno, error) => {
+    // Include the stack in the error log so production failures are diagnosable
+    // (the bare message alone hid a CDN-dependency crash for a long time).
     showError(message);
-    App.sendErrorLog(message);
+    App.sendErrorLog(error && error.stack ? `${message} - ${error.stack}` : message);
 }
 window.onunhandledrejection = (event) => {
     const reason = event?.reason;
