@@ -185,8 +185,12 @@ class Object2d {
     getBoundingBox(shrinkX = 0, shrinkY = 0) {
         const scale = this.scale ?? 1;
 
-        const baseWidth = this.spritesheet?.cellSize || this.width || this.image.width;
-        const baseHeight = this.spritesheet?.cellSize || this.height || this.image.height;
+        // this.image is the last-resort size source; guard it (`?.`) so an
+        // image-only object whose sprite failed to load degrades to a 0-size box
+        // instead of throwing "cannot read width of undefined" in the draw/collision
+        // loop and bricking the whole game (same failure class as the rudderanalytics crash).
+        const baseWidth = this.spritesheet?.cellSize || this.width || this.image?.width || 0;
+        const baseHeight = this.spritesheet?.cellSize || this.height || this.image?.height || 0;
 
         const width = (baseWidth - shrinkX * 2) * scale;
         const height = (baseHeight - shrinkY * 2) * scale;
