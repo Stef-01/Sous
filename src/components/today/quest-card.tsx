@@ -6,7 +6,7 @@ import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { premiumEntrance } from "@/lib/motion/tokens";
 import {
   X,
-  Heart,
+  Bookmark,
   UtensilsCrossed,
   Layers,
   ChefHat,
@@ -160,7 +160,7 @@ export function partitionMetaTags(tags: ReadonlyArray<string>): {
 /**
  * QuestCard  -  swipeable Tinder-style card stack.
  * Dishes are sourced from guided-cook-steps data (real recipes with cook flows).
- * Swipe right to cook, left to skip. Heart saves to localStorage.
+ * Swipe right to cook, left to skip. Bookmark saves to localStorage.
  * Pass userPreferences to surface preference-matched dishes first.
  */
 export function QuestCard({
@@ -640,7 +640,7 @@ export function QuestCard({
             className="mx-auto w-fit rounded-full bg-[var(--nourish-dark)] px-4 py-2"
           >
             <span className="flex items-center gap-1.5 text-xs font-medium text-white">
-              <Heart size={12} className="fill-current" />
+              <Bookmark size={12} className="fill-current" />
               Saved for later
             </span>
           </motion.div>
@@ -1067,7 +1067,7 @@ function MealSwipeQueueOverlay({
               className={cn(
                 "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-colors",
                 isDishSaved(activeDish.slug)
-                  ? "border-pink-200 bg-pink-50 text-pink-500"
+                  ? "border-[var(--nourish-light-green)]/60 bg-[var(--nourish-light-green)]/20 text-[var(--nourish-light-green)]"
                   : "border-white/16 bg-transparent text-white hover:bg-white/10",
               )}
               aria-label={
@@ -1076,7 +1076,7 @@ function MealSwipeQueueOverlay({
                   : `Save ${activeDish.dishName}`
               }
             >
-              <Heart
+              <Bookmark
                 size={20}
                 className={isDishSaved(activeDish.slug) ? "fill-current" : ""}
               />
