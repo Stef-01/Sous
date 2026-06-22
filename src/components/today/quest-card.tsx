@@ -435,6 +435,7 @@ export function QuestCard({
     filters.source,
   ]);
   const { saveDish, isDishSaved } = useSavedDishes();
+  const { recordSignal } = usePreferenceProfile();
   const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
   const haptic = useHaptic();
@@ -518,11 +519,24 @@ export function QuestCard({
       haptic();
       const wasNew = saveDish(dish.slug, dish.dishName);
       if (wasNew) {
+        // A genuine new save is an explicit interest signal — feed the taste
+        // flywheel (weight 0.8), same as saving in eat-out. saveDish is add-only,
+        // so wasNew gates this to real saves (no re-save / unsave noise). Without
+        // this, bookmarking a main dish on the Today deck never taught the taste
+        // profile — only cooking + swiping did.
+        recordSignal({
+          kind: "saved",
+          facets: dishToFacets({
+            cuisineFamily: dish.cuisineFamily,
+            tags: dish.tags,
+            ingredients: dish.ingredientNames,
+          }),
+        });
         setSavedToastSlug(dish.slug);
         scheduleTimeout(() => setSavedToastSlug(null), 1500);
       }
     },
-    [haptic, saveDish, scheduleTimeout],
+    [haptic, saveDish, scheduleTimeout, recordSignal],
   );
 
   if (questDishes.length === 0) {
