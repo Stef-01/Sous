@@ -48,6 +48,9 @@ export interface DogeHealthPayload {
   mood: PetMood;
   /** Deduped dish names eaten today (newest first) — the HUD's recent activity. */
   meals: string[];
+  /** Same recent activity, each with a pre-formatted local log time ("8:30a"), so
+   *  the game renders a timestamped feed without doing any date math itself. */
+  recentMeals: { name: string; time: string }[];
   updatedAt: number;
 }
 
@@ -57,6 +60,7 @@ export function buildDogeHealthPayload(
   mood: PetMood,
   now: number,
   meals: string[] = [],
+  recentMeals: { name: string; time: string }[] = [],
 ): DogeHealthPayload {
   return {
     stats: stats.map((s) => ({
@@ -68,6 +72,7 @@ export function buildDogeHealthPayload(
     status: STATUS[mood],
     mood,
     meals,
+    recentMeals,
     updatedAt: now,
   };
 }

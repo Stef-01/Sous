@@ -29,6 +29,19 @@ import {
   type PetHealthStat,
 } from "@/lib/nutrition/pet-screen-data";
 
+/** Pure: an ISO log timestamp → a compact local clock label ("8:30a"). Empty
+ *  string for a missing/invalid time so the game just omits the prefix. */
+function formatLogTime(at: string | undefined): string {
+  if (!at) return "";
+  const d = new Date(at);
+  if (Number.isNaN(d.getTime())) return "";
+  let h = d.getHours();
+  const m = d.getMinutes();
+  const meridiem = h < 12 ? "a" : "p";
+  h = h % 12 || 12;
+  return `${h}:${String(m).padStart(2, "0")}${meridiem}`;
+}
+
 export interface DogeHealth {
   stats: PetHealthStat[];
   mood: PetMood;
@@ -36,6 +49,8 @@ export interface DogeHealth {
   loggedCount: number;
   /** Deduped dish names eaten today — the "recent activity" the HUD shows. */
   meals: string[];
+  /** Same, each with a pre-formatted local log time ("8:30a") for the game feed. */
+  recentMeals: { name: string; time: string }[];
   glasses: number;
   /** Log one glass of water — the Hydration bar updates live (same hook
    *  instance owns the store, so it re-renders immediately). */
@@ -85,10 +100,17 @@ export function useDogeHealth(streak = 0): DogeHealth {
       },
     });
     // Deduped dish names eaten today, newest first — the HUD's "recent activity".
+    // recentMeals carries each one's pre-formatted local log time for the game's
+    // timestamped feed (newest occurrence wins on dedupe, so its time is kept).
     const meals: string[] = [];
+    const recentMeals: { name: string; time: string }[] = [];
     for (let i = entries.length - 1; i >= 0; i--) {
-      const n = entries[i]?.name;
-      if (n && !meals.includes(n)) meals.push(n);
+      const e = entries[i];
+      const n = e?.name;
+      if (n && !meals.includes(n)) {
+        meals.push(n);
+        recentMeals.push({ name: n, time: formatLogTime(e?.at) });
+      }
     }
     return {
       stats,
@@ -96,6 +118,7 @@ export function useDogeHealth(streak = 0): DogeHealth {
       hearts: ps.hearts,
       loggedCount: entries.length,
       meals,
+      recentMeals,
     };
   }, [entries, targets, glasses, streak]);
 

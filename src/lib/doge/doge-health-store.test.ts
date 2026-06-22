@@ -49,6 +49,18 @@ describe("buildDogeHealthPayload", () => {
     ).toEqual(["Pho", "Caesar Salad"]);
   });
 
+  it("carries the timestamped recentMeals feed (defaulting to none)", () => {
+    expect(buildDogeHealthPayload(STATS, "content", 0).recentMeals).toEqual([]);
+    const recent = [
+      { name: "Pho", time: "12:15p" },
+      { name: "Oatmeal", time: "8:30a" },
+    ];
+    expect(
+      buildDogeHealthPayload(STATS, "content", 0, ["Pho", "Oatmeal"], recent)
+        .recentMeals,
+    ).toEqual(recent);
+  });
+
   it("forwards a metric's exact detail (value/target/unit) when present", () => {
     const withDetail: PetHealthStat[] = [
       {

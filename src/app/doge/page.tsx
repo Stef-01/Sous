@@ -57,6 +57,7 @@ export default function DogePage() {
         health.mood,
         Date.now(),
         health.meals,
+        health.recentMeals,
       ),
     );
   }, [health]);

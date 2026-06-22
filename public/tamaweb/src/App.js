@@ -3969,6 +3969,27 @@ const App = {
             const sousMood = (sousHealth && sousHealth.mood) ? sousHealth.mood : '';
             const sousMeals = (sousHealth && Array.isArray(sousHealth.meals) && sousHealth.meals.length)
                 ? sousHealth.meals.slice(0, 4).join(' · ') : '';
+            // Doge: a native timestamped recent-activity FEED — one row per meal
+            // (local log time · name), capped + "+N more", in the same cream
+            // list-text styling. Falls back to the flat "Fed today: A · B" join for
+            // old payloads with no recentMeals. Pure display; stat loop untouched.
+            const sousRecent = (sousHealth && Array.isArray(sousHealth.recentMeals)) ? sousHealth.recentMeals : [];
+            let sousFedHtml = '';
+            if (sousRecent.length) {
+                let rows = '';
+                const shown = Math.min(4, sousRecent.length);
+                for (let i = 0; i < shown; i++) {
+                    const m = sousRecent[i] || {};
+                    const t = m.time ? (m.time + ' · ') : '';
+                    rows += '<span style="display:block;padding-left:16px">' + t + (m.name || '') + '</span>';
+                }
+                if (sousRecent.length > shown) {
+                    rows += '<span style="display:block;padding-left:16px;opacity:.7">+' + (sousRecent.length - shown) + ' more</span>';
+                }
+                sousFedHtml = '<small class="list-text" style="display:block;margin-top:3px;opacity:.85">' + App.getIcon('utensils', true) + ' Fed today' + rows + '</small>';
+            } else if (sousMeals) {
+                sousFedHtml = '<small class="list-text" style="display:block;margin-top:3px;opacity:.85">' + App.getIcon('utensils', true) + ' Fed today: ' + sousMeals + '</small>';
+            }
             // Doge: a native "thriving" CELEBRATION — when the real Sous nutrition
             // has Dobe thriving, the tab leads with a cream beveled banner (the
             // game's own .surface-stylized) + a gentle pulse (reduced-motion safe),
@@ -4067,7 +4088,7 @@ const App = {
                                 ${sousThriveBanner}
                                 ${sousRows}
                                 ${(sousStatus && sousMood !== 'thriving') ? '<small class="list-text" style="display:block;margin-top:4px">' + sousStatus + '</small>' : ''}
-                                ${sousMeals ? '<small class="list-text" style="display:block;margin-top:3px;opacity:.85">' + App.getIcon('utensils', true) + ' Fed today: ' + sousMeals + '</small>' : ''}
+                                ${sousFedHtml}
                             </div>
                         </div>
                     </div>

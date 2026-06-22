@@ -63,6 +63,10 @@ const PAYLOAD: DogeHealthPayload = {
   status: "Dobe's peckish",
   mood: "peckish",
   meals: ["Pho", "Caesar Salad"],
+  recentMeals: [
+    { name: "Pho", time: "12:15p" },
+    { name: "Caesar Salad", time: "6:40p" },
+  ],
   updatedAt: 123,
 };
 
@@ -184,6 +188,7 @@ describe("readRoomBinding", () => {
       status: "",
       mood: "content" as const,
       meals: [],
+      recentMeals: [],
       updatedAt: 0,
     };
     expect(readRoomBinding(noStats, slot("protein")).state).toBe("error");
