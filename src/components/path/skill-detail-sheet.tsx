@@ -105,9 +105,9 @@ export function SkillDetailSheet({
             aria-modal="true"
             aria-label={node ? `${node.name} details` : "Skill details"}
             className="fixed inset-x-0 bottom-0 z-[60] flex flex-col max-h-[80vh] rounded-t-3xl bg-white shadow-2xl safe-area-bottom"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
+            initial={reducedMotion ? { opacity: 0 } : { y: "100%" }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: "100%" }}
             transition={{
               type: "spring",
               damping: 28,

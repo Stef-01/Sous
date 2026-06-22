@@ -117,9 +117,9 @@ export function EvaluateSheet({
             aria-modal="true"
             aria-label="Plate evaluation"
             className="fixed inset-x-0 bottom-0 z-50 flex flex-col max-h-[85vh] rounded-t-2xl bg-white shadow-2xl"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
+            initial={reducedMotion ? { opacity: 0 } : { y: "100%" }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
           >
             {/* Fixed header (never scrolls) */}

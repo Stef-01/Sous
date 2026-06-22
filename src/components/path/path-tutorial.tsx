@@ -131,9 +131,9 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
             aria-modal="true"
             aria-labelledby="path-tutorial-title"
             className="relative z-10 m-3 w-full max-w-md overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-b from-[#1a2e26] to-[#0f1714] text-white shadow-2xl sm:m-4"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
+            initial={reducedMotion ? { opacity: 0 } : { y: 30, opacity: 0 }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: 20, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 26 }}
           >
             <div className="absolute right-2 top-2">

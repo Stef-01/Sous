@@ -109,9 +109,9 @@ export function AchievementsLauncher({
               aria-modal="true"
               aria-labelledby="achievements-sheet-title"
               className="relative z-10 max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-2xl bg-[var(--nourish-cream)] shadow-[var(--shadow-raised)]"
-              initial={{ y: 24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 16, opacity: 0 }}
+              initial={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
+              animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+              exit={reducedMotion ? { opacity: 0 } : { y: 16, opacity: 0 }}
               transition={{ type: "spring", stiffness: 380, damping: 28 }}
             >
               <div className="sticky top-0 z-10 flex items-center justify-between border-b border-neutral-100 bg-[var(--nourish-cream)]/95 px-4 py-3 backdrop-blur-sm">

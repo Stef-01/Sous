@@ -80,9 +80,9 @@ export function MoreOptionsSheet({
             role="dialog"
             aria-modal="true"
             aria-label="More options"
-            initial={{ y: 32, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 24, opacity: 0 }}
+            initial={reducedMotion ? { opacity: 0 } : { y: 32, opacity: 0 }}
+            animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+            exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
             className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-6 shadow-2xl sm:rounded-3xl sm:m-4"
           >
