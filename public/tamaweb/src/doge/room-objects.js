@@ -6,8 +6,12 @@
  * W4: each object is individually SELECTABLE + DRILLABLE — click → a dark-navy drill
  *     card (projected over the object) shows the exact value/target (detail metrics)
  *     or coverage copy (mood/vitamins, never a fabricated number) or the meals (feed
- *     companions); the hydration card carries "Log a glass" → doge:logWater. The
- *     liquid-clip + animation + a11y focus proxies + HUD demotion are W4b/W5.
+ *     companions); the hydration card carries "Log a glass" → doge:logWater.
+ * W4b/W5: animated LEVEL fill, HUD demotion, the spiral feed-log, and the a11y
+ *     focus proxies are all IN — proxies are sr-only <button>s (Tab=manifest order,
+ *     Enter/Space select), keyboard focus mirrors hover onto the canvas object, and
+ *     Escape closes the drill. Remaining: the clip-SHAPED liquid mask + founder
+ *     sprites (both art-gated; the procedural level fill is the permanent fallback).
  *
  * SAFETY: read-only. Never writes stats or gold (CI-guarded). The water action only
  * POSTS doge:logWater (via the receiver's exposed post) — the parent owns the write.
@@ -41,6 +45,7 @@
   var lifecycleTimer = null;
   var healthCache = null;
   var roomSelected = null; // the selected slot id (the object-box + drill)
+  var roomFocused = null; // the keyboard-focused proxy's slot id (sighted highlight)
 
   function getApp() {
     try {
@@ -395,6 +400,14 @@
         btn.addEventListener("click", function () {
           selectSlot(id);
         });
+        // Mirror hover→canvas on keyboard focus so a SIGHTED keyboard user sees
+        // which object their (sr-only / off-screen) proxy is on.
+        btn.addEventListener("focus", function () {
+          roomFocused = id;
+        });
+        btn.addEventListener("blur", function () {
+          if (roomFocused === id) roomFocused = null;
+        });
       })(slot.id);
       proxyWrap.appendChild(btn);
     }
@@ -419,6 +432,14 @@
     if (proxyWrap && proxyWrap.parentNode)
       proxyWrap.parentNode.removeChild(proxyWrap);
     proxyWrap = null;
+  }
+  // Escape closes the open drill (the standard dismiss idiom — the room's focus
+  // model). Acts ONLY when a drill is open, so the game's own Escape is untouched.
+  function onRoomKeyDown(e) {
+    if ((e.key === "Escape" || e.key === "Esc") && roomSelected) {
+      selectSlot(roomSelected); // toggles → deselect + hide drill
+      if (e.stopPropagation) e.stopPropagation();
+    }
   }
 
   // ---- the founder-art drop-in seam (AssetLoader) -----------------------------
@@ -473,6 +494,10 @@
         applyLayout(me, slot);
         // persistent selected outline; hover (onHover) shows cyan on top.
         me.filter = roomSelected === slot.id ? OUTLINE_SELECTED : "";
+        // Keyboard focus mirrors hover (cyan) — the proxy is sr-only/off-screen,
+        // so this is how a sighted keyboard user sees what they're on.
+        if (roomFocused === slot.id && roomSelected !== slot.id)
+          me.showOutline("#7CE0E6");
       },
       onHover: function (me) {
         me.showOutline("#7CE0E6");
@@ -576,6 +601,7 @@
       }
     }
     ensureProxies();
+    document.addEventListener("keydown", onRoomKeyDown);
     updateFeedLog();
   }
 
@@ -589,9 +615,11 @@
     }
     spawned = [];
     roomSelected = null;
+    roomFocused = null;
     hideDrill();
     removeFeedLog();
     removeProxies();
+    document.removeEventListener("keydown", onRoomKeyDown);
     try {
       document.body.classList.remove("sous-room-active"); // restore the cream HUD
     } catch (_e) {
@@ -627,6 +655,9 @@
       select: selectSlot,
       selected: function () {
         return roomSelected;
+      },
+      focused: function () {
+        return roomFocused;
       },
       count: function () {
         return spawned.length;
