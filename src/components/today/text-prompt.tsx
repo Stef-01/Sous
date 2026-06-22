@@ -24,6 +24,8 @@ import { sides, meals } from "@/data";
 import { getCookSummary, getMealCookSummary } from "@/data/guided-cook-summary";
 import { findClosestDishes } from "@/lib/engine/find-closest-dishes";
 import { useCravingHistory } from "@/lib/hooks/use-craving-history";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import {
   useQuestFilters,
   cookTimeCapMinutes,
@@ -218,6 +220,7 @@ export function TextPrompt({
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { entries: historyEntries, record: recordHistory } =
     useCravingHistory();
+  const { recordSignal } = usePreferenceProfile();
   const questFilters = useQuestFilters();
 
   // Cuisine options for the inline filter menu, from the static catalog so we
@@ -285,11 +288,23 @@ export function TextPrompt({
   );
 
   const handleSelectResult = useCallback(
-    (name: string) => {
+    (name: string, resultCuisine?: string) => {
+      if (resultCuisine) {
+        // Flywheel: tapping a craving-search result expresses taste for that
+        // dish's cuisine. The searched main dish is never guided-cooked (only its
+        // paired sides are), so this is the one place the craving's own cuisine
+        // reaches the taste profile that powers the deck + eat-out. (search-issued
+        // — the typed query before a result exists — still needs craving-parser
+        // facets, so it stays deferred.)
+        recordSignal({
+          kind: "search-result-tapped",
+          facets: dishToFacets({ cuisineFamily: resultCuisine }),
+        });
+      }
       setText(name);
       handleSubmit(name);
     },
-    [handleSubmit],
+    [handleSubmit, recordSignal],
   );
 
   const showResults = !!text && !isLoading && effectiveHasSearched;
@@ -469,7 +484,9 @@ export function TextPrompt({
                               key={result.name}
                               result={result}
                               idx={idx}
-                              onSelect={handleSelectResult}
+                              onSelect={(n) =>
+                                handleSelectResult(n, result.cuisine)
+                              }
                             />
                           ))}
                         </div>
@@ -496,7 +513,9 @@ export function TextPrompt({
                               key={result.name}
                               result={result}
                               idx={idx}
-                              onSelect={handleSelectResult}
+                              onSelect={(n) =>
+                                handleSelectResult(n, result.cuisine)
+                              }
                             />
                           ))}
                         </div>
