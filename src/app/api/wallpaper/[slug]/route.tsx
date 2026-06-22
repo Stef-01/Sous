@@ -45,8 +45,10 @@ const CUISINE_GRADIENTS: Record<string, string> = {
 
 function gradientFor(cuisine: string): string {
   return (
+    // Deepened brand green (matches --nourish-green #1d4d37). Hardcoded because
+    // ImageResponse renders without CSS-variable context.
     CUISINE_GRADIENTS[(cuisine || "").toLowerCase()] ??
-    "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)"
+    "linear-gradient(135deg, #1d4d37 0%, #4a8c5c 40%, #a8d8b9 100%)"
   );
 }
 

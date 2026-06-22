@@ -908,7 +908,7 @@ function CombinedMissionScreen({
             className="absolute inset-0 flex flex-col items-center justify-center gap-3"
             style={{
               background:
-                "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)",
+                "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 40%, #a8d8b9 100%)",
             }}
           >
             <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-white/20">

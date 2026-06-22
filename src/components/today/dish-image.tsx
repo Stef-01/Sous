@@ -35,7 +35,7 @@ const CUISINE_GRADIENTS: Record<string, string> = {
 function getCuisineGradient(cuisine: string): string {
   return (
     CUISINE_GRADIENTS[cuisine.toLowerCase()] ??
-    "linear-gradient(135deg, #2d5a3d 0%, #4a8c5c 40%, #a8d8b9 100%)"
+    "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 40%, #a8d8b9 100%)"
   );
 }
 
