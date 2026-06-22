@@ -62,6 +62,26 @@ describe("sous/reduced-motion-gate", () => {
             }
           `,
         },
+        {
+          // Percent slide GATED on reduced-motion (conditional) → not flagged.
+          code: `
+            import { motion, useReducedMotion } from "framer-motion";
+            export function C() {
+              const r = useReducedMotion();
+              return <motion.div initial={r ? { opacity: 0 } : { y: "100%" }} animate={{ y: 0 }} />;
+            }
+          `,
+        },
+        {
+          // Numeric-px slide is intentionally OUT of scope (percent-only) → not flagged.
+          code: `
+            import { motion, useReducedMotion } from "framer-motion";
+            export function C() {
+              useReducedMotion();
+              return <motion.div initial={{ y: 20 }} animate={{ y: 0 }} />;
+            }
+          `,
+        },
       ],
       invalid: [
         {
@@ -88,6 +108,18 @@ describe("sous/reduced-motion-gate", () => {
           `,
           // Two violations: AnimatePresence + motion.span.
           errors: [{ messageId: "missing" }, { messageId: "missing" }],
+        },
+        {
+          // Imports useReducedMotion (so no "missing") but leaves a PERCENT
+          // slide ungated → flagged by the branch-level check.
+          code: `
+            import { motion, useReducedMotion } from "framer-motion";
+            export function C() {
+              useReducedMotion();
+              return <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} />;
+            }
+          `,
+          errors: [{ messageId: "ungatedSlide" }],
         },
       ],
     });

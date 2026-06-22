@@ -42,6 +42,8 @@ module.exports = {
     messages: {
       missing:
         "This file uses `<{{name}}>` from framer-motion but does not import `useReducedMotion`. Add it to the framer-motion import and gate the animation. See docs/design-tokens.md.",
+      ungatedSlide:
+        "This `<{{name}}>` `{{prop}}` slides it ({{offset}}) but isn't gated on reduced-motion. Wrap the offset in a conditional, e.g. `{{prop}}={reducedMotion ? { opacity: 0 } : { ...slide }}`, so prefers-reduced-motion users get a fade, not a slide.",
     },
     schema: [],
   },
@@ -51,6 +53,39 @@ module.exports = {
     let importsUseReducedMotion = false;
     /** Element nodes deferred until the import scan finishes. */
     const offenders = [];
+
+    // Branch-level check: a `motion.*` whose `initial`/`exit` is a DIRECT object
+    // literal (not a `reducedMotion ? … : …` conditional) carrying a PERCENT
+    // translation (`y`/`x` like "100%") slides a full sheet/drawer/overlay
+    // regardless of the user's motion preference — the most jarring reduced-motion
+    // violation. The import-only check above misses this: a file can import
+    // useReducedMotion yet leave a specific entrance ungated (the gap that produced
+    // commits 2122b37 / bdf0ae3). Scope is deliberately PERCENT-only — numeric-px
+    // slides on secondary surfaces are a tracked, lower-impact follow-up (see the
+    // autobuild-saturation memory); opacity/scale are left be.
+    function ungatedSlide(openingEl, attrName) {
+      const attr = openingEl.attributes.find(
+        (a) => a.type === "JSXAttribute" && a.name && a.name.name === attrName,
+      );
+      if (!attr || !attr.value || attr.value.type !== "JSXExpressionContainer")
+        return null;
+      const expr = attr.value.expression;
+      // A conditional / variable / `false` value is considered gated → skip.
+      if (!expr || expr.type !== "ObjectExpression") return null;
+      for (const prop of expr.properties) {
+        if (prop.type !== "Property" || !prop.key) continue;
+        const key = prop.key.name ?? prop.key.value;
+        if (key !== "y" && key !== "x") continue;
+        const v = prop.value;
+        if (
+          v.type === "Literal" &&
+          typeof v.value === "string" &&
+          /%/.test(v.value)
+        )
+          return `${key}: "${v.value}"`;
+      }
+      return null;
+    }
 
     return {
       ImportDeclaration(node) {
@@ -88,6 +123,19 @@ module.exports = {
 
         if (elementName) {
           offenders.push({ node, elementName });
+          // Branch-level slide check (motion.* only, not AnimatePresence).
+          if (elementName.startsWith("motion.")) {
+            for (const attrName of ["initial", "exit"]) {
+              const offset = ungatedSlide(node, attrName);
+              if (offset) {
+                context.report({
+                  node,
+                  messageId: "ungatedSlide",
+                  data: { name: elementName, prop: attrName, offset },
+                });
+              }
+            }
+          }
         }
       },
 
