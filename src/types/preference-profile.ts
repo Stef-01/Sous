@@ -23,6 +23,7 @@ export const signalKindEnum = z.enum([
   "swipe-right",
   "swipe-left",
   "cooked",
+  "logged",
   "rerolled",
   "saved",
   "skipped",

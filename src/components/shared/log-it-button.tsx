@@ -3,6 +3,12 @@
 import { useState } from "react";
 import { Plus, Check } from "lucide-react";
 import { useNutritionDiary } from "@/lib/hooks/use-nutrition-diary";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
+import {
+  getStaticCookData,
+  getStaticMealCookData,
+} from "@/data/guided-cook-steps";
 import { toast } from "@/lib/hooks/use-toast";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
@@ -19,20 +25,44 @@ export function LogItButton({
   servings = 1,
   variant = "pill",
   className,
+  recordTaste = false,
 }: {
   slug: string;
   name: string;
   servings?: number;
   variant?: "pill" | "block";
   className?: string;
+  /** When true, logging also feeds the taste flywheel with a `logged` signal
+   *  (a real "I ate this" preference). Pass ONLY on non-cook surfaces — the cook
+   *  flow already records the stronger `cooked` signal, so passing it on the cook
+   *  readout would double-count the same dish. */
+  recordTaste?: boolean;
 }) {
   const { logCook, entries } = useNutritionDiary();
+  const { recordSignal } = usePreferenceProfile();
   const [justLogged, setJustLogged] = useState(false);
   // Already-logged detection lives here now (was re-derived per surface).
   const logged = justLogged || entries.some((e) => e.slug === slug);
 
   const onLog = () => {
     logCook(slug, name, servings);
+    // Flywheel: a manual "I ate this" is a real revealed-taste signal that the
+    // diary write alone never sends to the profile. Fire it only on the first
+    // log (the already-logged guard) and only when the caller opts in via
+    // recordTaste (non-cook surfaces — the cook flow sends `cooked` itself).
+    if (recordTaste && !logged) {
+      const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
+      if (staticData) {
+        recordSignal({
+          kind: "logged",
+          facets: dishToFacets({
+            cuisineFamily: staticData.cuisineFamily,
+            tags: staticData.flavorProfile,
+            ingredients: staticData.ingredients.map((i) => i.name),
+          }),
+        });
+      }
+    }
     haptic("commit");
     setJustLogged(true);
     setTimeout(() => setJustLogged(false), 1800);

@@ -295,7 +295,11 @@ export function MealHealthPanel({
 
       {hasNutrition && (
         <div className="flex items-center justify-between gap-2">
-          {slug ? <LogItButton slug={slug} name={dishName} /> : <span />}
+          {slug ? (
+            <LogItButton slug={slug} name={dishName} recordTaste />
+          ) : (
+            <span />
+          )}
           <NutritionShareButton title={dishName} nutrition={perServing} />
         </div>
       )}

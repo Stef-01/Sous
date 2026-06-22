@@ -15,6 +15,8 @@
  * Signal weights:
  *   cooked              +1.5  (very strong positive)
  *   swipe-right         +1.0
+ *   logged              +0.9  (manually logged "I ate this" — revealed taste,
+ *                              shy of a deliberate cook; tune freely)
  *   saved               +0.8
  *   search-result-tapped +0.6
  *   search-issued       +0.4
@@ -40,6 +42,7 @@ const DECAY_HALF_LIFE_DAYS = 60;
 const SIGNAL_WEIGHTS: Record<SignalKind, number> = {
   cooked: 1.5,
   "swipe-right": 1.0,
+  logged: 0.9,
   saved: 0.8,
   "search-result-tapped": 0.6,
   "search-issued": 0.4,

@@ -98,6 +98,16 @@ describe("aggregateSignals — positive signals", () => {
     expect(out.inferred.cuisines.indian).toBe(1);
   });
 
+  it("a 'logged' signal (manual 'I ate this') applies the +0.9 weight", () => {
+    const out = aggregateSignals({
+      signals: [signal("logged", 0)],
+      now: NOW,
+    });
+    // weighted=0.9, volume=1.0 → 0.9. Below the [-1,1] clamp, so the exact
+    // weight shows through — unlike cooked/swipe-right which saturate to 1.0.
+    expect(out.inferred.cuisines.indian).toBeCloseTo(0.9, 5);
+  });
+
   it("multiple cooks of the same cuisine reinforce the weight (still saturated)", () => {
     const out = aggregateSignals({
       signals: [signal("cooked", 0), signal("cooked", 1), signal("cooked", 2)],
