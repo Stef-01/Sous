@@ -128,7 +128,15 @@ export default function DogePage() {
   }, [health.mood]);
 
   return (
-    <div className="relative flex h-[100dvh] flex-col bg-black">
+    <div
+      className={`relative flex h-[100dvh] flex-col ${
+        // Match the game's own splash/room backdrop (navajowhite #ffdead) so the
+        // brief pre-paint load shows the game's palette, not a black flash
+        // (priority A: "use the game's wallpaper/palette … instead of black").
+        // The not-available fallback keeps a dark bg so its white text stays legible.
+        present === false ? "bg-black" : "bg-[#ffdead]"
+      }`}
+    >
       <button
         type="button"
         onClick={() => router.push("/today")}
