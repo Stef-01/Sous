@@ -6,12 +6,14 @@ function ctx(over: Partial<DeckContext> = {}): DeckContext {
     daypart: "dinner",
     weatherLean: "neutral",
     savedSlugs: new Set<string>(),
+    tableCuisines: new Set<string>(),
     ...over,
   };
 }
 
 const dish = (over: {
   slug?: string;
+  cuisineFamily?: string;
   tags?: string[];
   description?: string;
   dayparts?: string[];
@@ -101,5 +103,20 @@ describe("contextBoost — the on-by-default split", () => {
         }),
       ),
     ).toBe(0);
+  });
+});
+
+describe("contextBoost — who's-at-the-table cuisine (W37 table aggregate)", () => {
+  it("boosts a dish whose cuisine the household table leans toward", () => {
+    const d = dish({ slug: "pasta", cuisineFamily: "Italian" });
+    expect(
+      contextBoost(d, ctx({ tableCuisines: new Set(["italian"]) })),
+    ).toBeGreaterThan(0);
+  });
+
+  it("stays quiet with no table set, or when the cuisine doesn't match", () => {
+    const d = dish({ slug: "pasta", cuisineFamily: "Italian" });
+    expect(contextBoost(d, ctx())).toBe(0);
+    expect(contextBoost(d, ctx({ tableCuisines: new Set(["thai"]) }))).toBe(0);
   });
 });

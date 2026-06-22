@@ -45,13 +45,19 @@ const DAYPART_BOOST = 8;
 const WEATHER_BOOST = 4;
 const SAVED_BASE_BOOST = 3;
 const SAVED_WEATHER_BOOST = 5;
+// Who's at the table tonight: lean the deck toward a cuisine the selected
+// household members share (the W37 table aggregate). 0 when no table is set.
+const TABLE_CUISINE_BOOST = 5;
 
 /** The live context the deck reorders against — the daypart, the weather lean,
- *  and the user's saved ("craved") dishes. */
+ *  the user's saved ("craved") dishes, and tonight's household-table cuisines. */
 export interface DeckContext {
   daypart: MealDaypart;
   weatherLean: WeatherLean;
   savedSlugs: Set<string>;
+  /** Lowercased cuisine families the table leans toward (household members
+   *  eating tonight). Empty → no table tilt. */
+  tableCuisines: ReadonlySet<string>;
 }
 
 /** Pure reorder boost for a dish given the live context. Tested directly
@@ -61,6 +67,7 @@ export interface DeckContext {
 export function contextBoost(
   dish: {
     slug: string;
+    cuisineFamily?: string;
     tags?: string[];
     description?: string;
     dayparts?: readonly string[];
@@ -84,6 +91,17 @@ export function contextBoost(
   if (ctx.savedSlugs.has(dish.slug)) {
     boost += SAVED_BASE_BOOST;
     if (matchesWeather) boost += SAVED_WEATHER_BOOST;
+  }
+
+  // Who's-at-the-table: lean toward a cuisine the household eating tonight
+  // shares (the W37 table aggregate — dietary was already wired into the deck,
+  // the cuisine side was computed but never fed in).
+  if (
+    ctx.tableCuisines.size > 0 &&
+    dish.cuisineFamily &&
+    ctx.tableCuisines.has(dish.cuisineFamily.toLowerCase())
+  ) {
+    boost += TABLE_CUISINE_BOOST;
   }
 
   return boost;
@@ -341,19 +359,27 @@ export function buildQuestDishes(
     recommendedLevel: "easy" | "medium" | "hard";
     difficultyBoost: number;
   },
-  /** Live context: weather + the user's saved ("craved") dish slugs. Absent →
-   *  no daypart/weather/resurface tilt is added beyond the legacy time nudge. */
-  context?: { weather?: WeatherSnapshot | null; savedSlugs?: string[] },
+  /** Live context: weather, the user's saved ("craved") dish slugs, and the
+   *  cuisines of the household eating tonight. Absent → no daypart/weather/
+   *  resurface/table tilt beyond the legacy time nudge. */
+  context?: {
+    weather?: WeatherSnapshot | null;
+    savedSlugs?: string[];
+    tableCuisines?: string[];
+  },
 ): QuestDish[] {
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
 
   const now = new Date();
 
-  // The live reorder context (hunger / weather / crave-it). Built once.
+  // The live reorder context (hunger / weather / crave-it / who's-at-table).
   const deckCtx: DeckContext = {
     daypart: mealDaypartFromHour(now.getHours()),
     weatherLean: weatherTempLean(context?.weather ?? null),
     savedSlugs: new Set(context?.savedSlugs ?? []),
+    tableCuisines: new Set(
+      (context?.tableCuisines ?? []).map((c) => c.toLowerCase()),
+    ),
   };
   const dayOfYear = Math.floor(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,

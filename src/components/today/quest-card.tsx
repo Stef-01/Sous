@@ -37,6 +37,7 @@ import type { FilterOption } from "@/components/shared/filter-dropdown";
 import { DishImage } from "./dish-image";
 import { MealHealthSheet } from "./meal-health-sheet";
 import { useMealHealthPanel } from "@/lib/hooks/use-meal-health-panel";
+import { useHouseholdDietary } from "@/lib/hooks/use-household-dietary";
 import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
 import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import {
@@ -210,6 +211,9 @@ export function QuestCard({
   // W5: trim the swipe queue when the decision-fatigue signal is set.
   const calmDeck = useSignalFlag("decisionFatigue");
   const queueSize = calmDeck ? CALM_QUEUE_SIZE : QUEUE_SIZE;
+  // Who's at the table tonight → lean the deck toward the household's shared
+  // cuisines (the W37 table aggregate; dietary was already wired, cuisine wasn't).
+  const { aggregate: household } = useHouseholdDietary();
   // The role facet rewires the feed: Main → the full quest pool; Side/Drink/Snack
   // → the role-specific catalogue feed (same quest shell, rule 4).
   const baseDishes = useMemo(() => {
@@ -228,7 +232,11 @@ export function QuestCard({
         cookHistory,
         pantry,
         progression,
-        { weather: weather.snapshot, savedSlugs },
+        {
+          weather: weather.snapshot,
+          savedSlugs,
+          tableCuisines: household.cuisinePreferences,
+        },
       ).filter((d) => d.role === "main");
       // Score the injected creations' pantry fit too (buildQuestDishes only
       // does it for the catalog pool). Your creations lead the deck.
@@ -257,6 +265,7 @@ export function QuestCard({
     customDishes,
     weather.snapshot,
     savedSlugs,
+    household.cuisinePreferences,
   ]);
 
   // Build the cuisine option list from the actual dish index so we never
