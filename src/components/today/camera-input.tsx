@@ -79,7 +79,7 @@ export function CameraInput({
       <div className="flex items-center justify-between px-4 py-3">
         <button
           onClick={onClose}
-          className="rounded-lg p-2 text-white/80 hover:text-white"
+          className="rounded-lg p-2 text-white/80 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           type="button"
           aria-label="Close camera"
         >
@@ -148,7 +148,7 @@ export function CameraInput({
               onClick={() => fileInputRef.current?.click()}
               whileTap={reducedMotion ? undefined : { scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="flex flex-col items-center gap-1 rounded-xl px-4 py-3 text-white/70 transition-colors duration-150 hover:text-white"
+              className="flex flex-col items-center gap-1 rounded-xl px-4 py-3 text-white/70 transition-colors duration-150 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               type="button"
             >
               <Upload size={24} />
@@ -160,7 +160,7 @@ export function CameraInput({
               whileHover={reducedMotion ? undefined : { scale: 1.05 }}
               whileTap={reducedMotion ? undefined : { scale: 0.92 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg"
+              className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--nourish-dark)]"
               type="button"
               aria-label="Take photo"
             >
@@ -181,7 +181,7 @@ export function CameraInput({
                 reducedMotion || isProcessing ? undefined : { scale: 0.96 }
               }
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="rounded-xl px-6 py-3 text-sm font-medium text-white/70 transition-colors duration-150 hover:text-white disabled:opacity-50"
+              className="rounded-xl px-6 py-3 text-sm font-medium text-white/70 transition-colors duration-150 hover:text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               type="button"
             >
               Retake
@@ -199,6 +199,7 @@ export function CameraInput({
                 "rounded-xl px-8 py-3 text-sm font-semibold",
                 "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
                 "transition-colors duration-200 disabled:opacity-50",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--nourish-dark)]",
               )}
               type="button"
             >

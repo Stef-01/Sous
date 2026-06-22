@@ -220,7 +220,7 @@ export function QueueComplete({
         <button
           type="button"
           onClick={onReset}
-          className="flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/12 bg-white/10 px-5 text-sm font-semibold text-white"
+          className="flex min-h-[52px] items-center justify-center gap-2 rounded-full border border-white/12 bg-white/10 px-5 text-sm font-semibold text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           <RotateCcw size={16} />
           Reset queue
@@ -228,7 +228,7 @@ export function QueueComplete({
         <button
           type="button"
           onClick={onClose}
-          className="h-12 text-sm font-medium text-white/62"
+          className="h-12 rounded-full text-sm font-medium text-white/62 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
         >
           Back to Today
         </button>
