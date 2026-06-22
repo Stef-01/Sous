@@ -9,6 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import {
+  ArrowRight,
   CalendarDays,
   Bookmark,
   ChefHat,
@@ -235,6 +236,32 @@ export default function PathPage() {
               </motion.div>
             ))}
           </div>
+
+          {/* First-run hero — a brand-new cook (0 completed cooks) otherwise lands
+              on a barren Path: collapsed sections + an empty void, nothing inviting.
+              Fill it with one card that says what this page BECOMES + drives the
+              first cook (the Sous Test). Vanishes the moment they've cooked once. */}
+          {completedSessions.length === 0 && (
+            <div className="mt-4 rounded-2xl border border-[var(--nourish-green)]/20 bg-gradient-to-br from-white to-[var(--nourish-green)]/[0.06] p-6 text-center shadow-[var(--shadow-card)]">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
+                <ChefHat size={22} className="text-[var(--nourish-green)]" />
+              </div>
+              <h2 className="mt-3 font-serif text-lg font-semibold text-[var(--nourish-dark)]">
+                Your kitchen journey starts here
+              </h2>
+              <p className="mx-auto mt-1.5 max-w-[270px] text-[13px] leading-snug text-[var(--nourish-subtext)]">
+                Cook your first meal — your skills, XP, and streak all grow on
+                this page as you go.
+              </p>
+              <Link
+                href="/today"
+                className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              >
+                Find something to cook
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+          )}
 
           {/* The rest of the kitchen — one tap away. (Diary became the
               Nutrition tab; Pantry + Shopping list moved up.) */}
