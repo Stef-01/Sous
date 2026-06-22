@@ -117,7 +117,9 @@ export function CaloriesCard({
   consumed: number;
   target: number;
 }) {
+  const over = consumed > target;
   const left = Math.max(0, Math.round(target - consumed));
+  const overBy = Math.round(consumed - target);
   const pct = Math.min(100, (consumed / target) * 100);
   return (
     <div className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]">
@@ -133,13 +135,25 @@ export function CaloriesCard({
             / {Math.round(target).toLocaleString()}
           </span>
         </p>
-        <p className="text-[13px] font-medium text-[var(--nourish-subtext)] tabular-nums">
-          {left.toLocaleString()} left
+        <p
+          className={cn(
+            "text-[13px] tabular-nums",
+            over
+              ? "font-semibold text-[var(--nourish-warm)]"
+              : "font-medium text-[var(--nourish-subtext)]",
+          )}
+        >
+          {over
+            ? `${overBy.toLocaleString()} over`
+            : `${left.toLocaleString()} left`}
         </p>
       </div>
       <div className="mt-3 h-3 overflow-hidden rounded-full bg-neutral-100">
         <div
-          className="h-full rounded-full bg-[var(--nourish-green)] transition-[width] duration-500"
+          className={cn(
+            "h-full rounded-full transition-[width] duration-500",
+            over ? "bg-[var(--nourish-warm)]" : "bg-[var(--nourish-green)]",
+          )}
           style={{ width: `${pct}%` }}
         />
       </div>
