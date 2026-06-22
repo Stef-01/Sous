@@ -18,7 +18,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
-import { pickReSuggestion } from "@/lib/engine/cook-again";
+import {
+  pickReSuggestion,
+  cookAgainHighlightTier,
+} from "@/lib/engine/cook-again";
+import { cn } from "@/lib/utils/cn";
 
 interface CookAgainChipProps {
   sessions: CookSessionRecord[];
@@ -34,7 +38,12 @@ export function CookAgainChip({ sessions, now }: CookAgainChipProps) {
   const candidate = pickReSuggestion(sessions, reference);
   if (!candidate) return null;
 
-  const { recipeSlug, dishName, lastRating, daysSinceLastCook } = candidate;
+  const { recipeSlug, dishName, lastRating, daysSinceLastCook, score } =
+    candidate;
+  // The cook-again scorer earns a subtle star-glow when its composite score
+  // (recency × seasonality × rotation) clears the threshold — ~1 in 4 chips,
+  // "rare enough to feel earned". It was computed but never rendered.
+  const highlighted = cookAgainHighlightTier(score);
   const weeksAgo = Math.round(daysSinceLastCook / 7);
   const ageLabel =
     weeksAgo <= 1 ? `${daysSinceLastCook} days ago` : `${weeksAgo} weeks ago`;
@@ -51,12 +60,22 @@ export function CookAgainChip({ sessions, now }: CookAgainChipProps) {
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 25 }}
-      className="group flex w-full items-center gap-2.5 rounded-xl border border-[var(--nourish-border-strong)] bg-white/70 px-3.5 py-2.5 text-left text-[13px] transition-colors hover:border-[var(--nourish-gold)]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-gold)]/40"
-      aria-label={`Make ${dishName} again — you rated it ${lastRating} stars ${ageLabel}`}
+      className={cn(
+        "group flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-gold)]/40",
+        highlighted
+          ? "border-[var(--nourish-gold)]/50 bg-[var(--nourish-gold)]/[0.07] shadow-[0_0_16px_-4px_var(--nourish-gold)] hover:border-[var(--nourish-gold)]/70"
+          : "border-[var(--nourish-border-strong)] bg-white/70 hover:border-[var(--nourish-gold)]/50",
+      )}
+      aria-label={`Make ${dishName} again — you rated it ${lastRating} stars ${ageLabel}${highlighted ? ", a top pick to revisit" : ""}`}
     >
       <span
         aria-hidden
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
+        className={cn(
+          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[var(--nourish-gold)]",
+          highlighted
+            ? "bg-[var(--nourish-gold)]/25"
+            : "bg-[var(--nourish-gold)]/15",
+        )}
       >
         <Star size={15} strokeWidth={2} fill="currentColor" />
       </span>
