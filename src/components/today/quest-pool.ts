@@ -48,9 +48,14 @@ const SAVED_WEATHER_BOOST = 5;
 // Who's at the table tonight: lean the deck toward a cuisine the selected
 // household members share (the W37 table aggregate). 0 when no table is set.
 const TABLE_CUISINE_BOOST = 5;
+// Spice safety: when the least-tolerant member at the table can't handle heat
+// (minSpiceTolerance ≤ 2), de-prioritize dishes the description marks "spicy".
+const LOW_SPICE_THRESHOLD = 2;
+const SPICE_INTOLERANT_PENALTY = 6;
 
 /** The live context the deck reorders against — the daypart, the weather lean,
- *  the user's saved ("craved") dishes, and tonight's household-table cuisines. */
+ *  the user's saved ("craved") dishes, and tonight's household table (the
+ *  cuisines it leans toward + the lowest spice tolerance among the diners). */
 export interface DeckContext {
   daypart: MealDaypart;
   weatherLean: WeatherLean;
@@ -58,6 +63,9 @@ export interface DeckContext {
   /** Lowercased cuisine families the table leans toward (household members
    *  eating tonight). Empty → no table tilt. */
   tableCuisines: ReadonlySet<string>;
+  /** Lowest spice tolerance (1–5) among the members at the table; 5 = no
+   *  restriction (the default when no table is set). */
+  tableMinSpice: number;
 }
 
 /** Pure reorder boost for a dish given the live context. Tested directly
@@ -102,6 +110,16 @@ export function contextBoost(
     ctx.tableCuisines.has(dish.cuisineFamily.toLowerCase())
   ) {
     boost += TABLE_CUISINE_BOOST;
+  }
+
+  // Spice safety: if the least-tolerant member at the table can't take heat,
+  // push explicitly-spicy dishes down (the W37 minSpiceTolerance — also computed
+  // but never fed to the deck). The "spicy" tag is set when the description is.
+  if (
+    ctx.tableMinSpice <= LOW_SPICE_THRESHOLD &&
+    dish.tags?.some((t) => t.toLowerCase() === "spicy")
+  ) {
+    boost -= SPICE_INTOLERANT_PENALTY;
   }
 
   return boost;
@@ -366,6 +384,7 @@ export function buildQuestDishes(
     weather?: WeatherSnapshot | null;
     savedSlugs?: string[];
     tableCuisines?: string[];
+    tableMinSpice?: number;
   },
 ): QuestDish[] {
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
@@ -380,6 +399,7 @@ export function buildQuestDishes(
     tableCuisines: new Set(
       (context?.tableCuisines ?? []).map((c) => c.toLowerCase()),
     ),
+    tableMinSpice: context?.tableMinSpice ?? 5,
   };
   const dayOfYear = Math.floor(
     (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000,

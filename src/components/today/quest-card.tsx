@@ -236,6 +236,7 @@ export function QuestCard({
           weather: weather.snapshot,
           savedSlugs,
           tableCuisines: household.cuisinePreferences,
+          tableMinSpice: household.minSpiceTolerance,
         },
       ).filter((d) => d.role === "main");
       // Score the injected creations' pantry fit too (buildQuestDishes only
@@ -266,6 +267,7 @@ export function QuestCard({
     weather.snapshot,
     savedSlugs,
     household.cuisinePreferences,
+    household.minSpiceTolerance,
   ]);
 
   // Build the cuisine option list from the actual dish index so we never

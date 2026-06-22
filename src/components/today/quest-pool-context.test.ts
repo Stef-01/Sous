@@ -7,6 +7,7 @@ function ctx(over: Partial<DeckContext> = {}): DeckContext {
     weatherLean: "neutral",
     savedSlugs: new Set<string>(),
     tableCuisines: new Set<string>(),
+    tableMinSpice: 5,
     ...over,
   };
 }
@@ -118,5 +119,21 @@ describe("contextBoost — who's-at-the-table cuisine (W37 table aggregate)", ()
     const d = dish({ slug: "pasta", cuisineFamily: "Italian" });
     expect(contextBoost(d, ctx())).toBe(0);
     expect(contextBoost(d, ctx({ tableCuisines: new Set(["thai"]) }))).toBe(0);
+  });
+});
+
+describe("contextBoost — table spice tolerance (W37 minSpiceTolerance)", () => {
+  it("penalizes an explicitly-spicy dish when the table can't take heat", () => {
+    const d = dish({ slug: "vindaloo", tags: ["Indian", "Spicy"] });
+    expect(contextBoost(d, ctx({ tableMinSpice: 1 }))).toBeLessThan(0);
+    expect(contextBoost(d, ctx({ tableMinSpice: 2 }))).toBeLessThan(0);
+  });
+
+  it("no penalty when tolerance is fine, no table, or the dish isn't spicy", () => {
+    const spicy = dish({ slug: "vindaloo", tags: ["Indian", "Spicy"] });
+    const mild = dish({ slug: "rice", tags: ["Plain"] });
+    expect(contextBoost(spicy, ctx({ tableMinSpice: 3 }))).toBe(0); // tolerant
+    expect(contextBoost(spicy, ctx())).toBe(0); // no table (default 5)
+    expect(contextBoost(mild, ctx({ tableMinSpice: 1 }))).toBe(0); // not spicy
   });
 });
