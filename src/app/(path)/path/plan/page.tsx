@@ -22,6 +22,8 @@ import { buildSwipeCardPool, type SwipeCard } from "@/lib/planner/swipe-pool";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useCookSessions } from "@/lib/hooks/use-cook-sessions";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
+import { usePreferenceProfile } from "@/lib/hooks/use-preference-profile";
+import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { PlanBalanceCard } from "@/components/path/plan-balance-card";
 import {
   buildSlotKey,
@@ -60,6 +62,7 @@ export default function SwipePlannerPage() {
   const { items: pantryItems, mounted: pantryMounted } = usePantry();
   const { sessions } = useCookSessions();
   const { slotMap, scheduleSlot, mounted: planMounted } = useMealPlanWeek();
+  const { recordSignal } = usePreferenceProfile();
 
   const [poolCursor, setPoolCursor] = useState(0);
   const [scheduledCount, setScheduledCount] = useState(0);
@@ -114,10 +117,27 @@ export default function SwipePlannerPage() {
   const exhausted = poolCursor >= pool.length;
 
   const onSkip = () => {
+    // Skipping a planner card is a mild taste rejection. Feed the flywheel's
+    // defined-but-never-wired "skipped" weight (-0.2) with the card's cuisine —
+    // dishes you pass on otherwise never get cooked, so this is their only signal.
+    if (currentCard) {
+      recordSignal({
+        kind: "skipped",
+        facets: dishToFacets({ cuisineFamily: currentCard.cuisineFamily }),
+      });
+    }
     setPoolCursor((c) => c + 1);
   };
 
   const onTwist = () => {
+    // "Give me different options" rejects the visible card. Feed the defined-but-
+    // never-wired "rerolled" weight (-0.3) with its cuisine.
+    if (currentCard) {
+      recordSignal({
+        kind: "rerolled",
+        facets: dishToFacets({ cuisineFamily: currentCard.cuisineFamily }),
+      });
+    }
     setTwistVersion((v) => v + 1);
   };
 
