@@ -6,6 +6,7 @@ import {
 } from "@/lib/trpc/server";
 import { parseCraving } from "@/lib/ai/craving-parser";
 import { suggestSides } from "@/lib/engine/pairing-engine";
+import { sideTooSpicyForTable } from "@/lib/engine/household-heat";
 import {
   getAvailableCookSlugs,
   getAvailableMealCookSlugs,
@@ -240,6 +241,11 @@ export const pairingRouter = router({
          *  /today. Engine hard-filters candidates whose
          *  dietaryFlags don't include every entry here. */
         householdDietaryFlags: z.array(z.string()).max(20).optional(),
+        /** W37 household heat constraint — the lowest spice tolerance (1–5)
+         *  among the "who's at the table" selection. When ≤2, the engine
+         *  hard-filters explicitly-spicy sides (the deck-spice wire only covered
+         *  the mains). Absent / ≥3 → byte-identical ranking. */
+        householdMaxHeat: z.number().int().min(1).max(5).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
         /** W1 pantry-reuse — ingredient names the user already has in their
          *  pantry. Joined with `recentCookSlugs` to nudge waste-reducing
@@ -291,15 +297,17 @@ export const pairingRouter = router({
       // dietary constraints if the client provided them).
       const allCandidates = getCandidates();
       const householdRequired = input.householdDietaryFlags ?? [];
-      const candidates =
-        householdRequired.length > 0
-          ? allCandidates.filter((c) =>
-              satisfiesDietaryRequirement(
-                c.dietaryFlags ?? [],
-                householdRequired,
-              ),
-            )
-          : allCandidates;
+      // W37 — the table's lowest spice tolerance (default 5 = no constraint).
+      const householdMaxHeat = input.householdMaxHeat ?? 5;
+      const candidates = allCandidates.filter(
+        (c) =>
+          (householdRequired.length === 0 ||
+            satisfiesDietaryRequirement(
+              c.dietaryFlags ?? [],
+              householdRequired,
+            )) &&
+          !sideTooSpicyForTable(c.tags, c.flavorProfile, householdMaxHeat),
+      );
 
       // Dietary-specific empty state: if the "who's at the table" restrictions
       // exclude every side, say so instead of the generic engine error — the
@@ -396,6 +404,11 @@ export const pairingRouter = router({
         userPreferences: z.record(z.number().finite()).optional(),
         userWeights: z.record(z.number().nonnegative().finite()).optional(),
         householdDietaryFlags: z.array(z.string()).max(20).optional(),
+        /** W37 household heat constraint — the lowest spice tolerance (1–5)
+         *  among the "who's at the table" selection. When ≤2, the engine
+         *  hard-filters explicitly-spicy sides (the deck-spice wire only covered
+         *  the mains). Absent / ≥3 → byte-identical ranking. */
+        householdMaxHeat: z.number().int().min(1).max(5).optional(),
         effortTolerance: z.enum(["minimal", "moderate", "willing"]).optional(),
         // Reroll must honour the same pantry (W1) + deficiency (W29) nudges as
         // the original plate, else a rerolled slot ignores on-hand ingredients
@@ -431,10 +444,16 @@ export const pairingRouter = router({
 
       const excludeSet = new Set(input.excludeIds);
       const householdRequired = input.householdDietaryFlags ?? [];
+      // W37 — the table's lowest spice tolerance (default 5 = no constraint).
+      const householdMaxHeat = input.householdMaxHeat ?? 5;
       const candidates = getCandidates().filter(
         (c) =>
           !excludeSet.has(c.id) &&
-          satisfiesDietaryRequirement(c.dietaryFlags ?? [], householdRequired),
+          satisfiesDietaryRequirement(
+            c.dietaryFlags ?? [],
+            householdRequired,
+          ) &&
+          !sideTooSpicyForTable(c.tags, c.flavorProfile, householdMaxHeat),
       );
       const result = suggestSides(
         intent,

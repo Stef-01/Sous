@@ -170,7 +170,8 @@ function TodayPageContent() {
   const { weights: userWeights } = useUserWeights();
   // W37 household table aggregate — feeds the pairing engine the
   // dietary union across the "who's at the table" selection.
-  const { dietaryFlags: householdDietaryFlags } = useHouseholdDietary();
+  const { dietaryFlags: householdDietaryFlags, aggregate: householdAggregate } =
+    useHouseholdDietary();
   // Culinary Therapeutics activation wiring (dormant until founder gate G1):
   // derived care exclusions (e.g. gluten-free) merge into the dietary union.
   // Returns [] while dormant, so the request below stays byte-identical.
@@ -366,6 +367,14 @@ function TodayPageContent() {
       userWeights,
       householdDietaryFlags:
         effectiveDietaryFlags.length > 0 ? effectiveDietaryFlags : undefined,
+      // W37 — the table's lowest spice tolerance, sent only when a member is
+      // below the tolerant default (5). The engine filters explicitly-spicy
+      // SIDES when it's ≤2 — completing the deck-spice wire (which only
+      // covered the mains) to the paired sides. Omitted otherwise → identical.
+      householdMaxHeat:
+        householdAggregate.minSpiceTolerance < 5
+          ? householdAggregate.minSpiceTolerance
+          : undefined,
       effortTolerance,
       // W1 pantry-reuse: nudge waste-reducing sides up when the user has
       // ingredients on hand. Both omitted when empty → byte-identical ranking.
