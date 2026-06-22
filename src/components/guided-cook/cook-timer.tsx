@@ -178,7 +178,7 @@ export function CookTimer() {
 
         <button
           onClick={() => stopTimer(primary.id)}
-          className="flex items-center justify-center rounded-full min-h-11 min-w-11 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+          className="flex items-center justify-center rounded-full min-h-11 min-w-11 text-white/60 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           aria-label={`Stop ${primary.label}`}
           type="button"
         >

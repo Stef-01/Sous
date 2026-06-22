@@ -1056,7 +1056,7 @@ function MealSwipeQueueOverlay({
             <button
               type="button"
               onClick={() => swipeTop("left")}
-              className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10"
+              className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               aria-label={`Pass on ${activeDish.dishName}`}
             >
               <X size={21} strokeWidth={2.2} />
@@ -1065,7 +1065,7 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={saveActive}
               className={cn(
-                "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-colors",
+                "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
                 isDishSaved(activeDish.slug)
                   ? "border-[var(--nourish-light-green)]/60 bg-[var(--nourish-light-green)]/20 text-[var(--nourish-light-green)]"
                   : "border-white/16 bg-transparent text-white hover:bg-white/10",
@@ -1084,7 +1084,7 @@ function MealSwipeQueueOverlay({
             <button
               type="button"
               onClick={() => swipeTop("right")}
-              className="flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88"
+              className="flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]"
               aria-label={
                 activeDish.eatOut
                   ? `Log ${activeDish.dishName}`
