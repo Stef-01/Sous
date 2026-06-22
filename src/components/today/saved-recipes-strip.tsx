@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Bookmark } from "lucide-react";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
+import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
+import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
 import { buildQuestDishes } from "./quest-pool";
 import { DishImage } from "./dish-image";
 import type { QuestDish } from "./quest-card";
@@ -17,15 +19,19 @@ import type { QuestDish } from "./quest-card";
 export function SavedRecipesStrip() {
   const router = useRouter();
   const { saved } = useSavedDishes();
+  const { drafts } = useRecipeDrafts();
 
   const dishes = useMemo<QuestDish[]>(() => {
     if (saved.length === 0) return [];
-    const bySlug = new Map(buildQuestDishes().map((d) => [d.slug, d]));
-    // Preserve saved order (newest first); keep only resolvable catalog dishes.
+    // Resolve from the catalog AND the user's own drafts — both are saveable in
+    // the deck, so a saved custom recipe must not silently vanish here.
+    const all = [...buildQuestDishes(), ...drafts.map(userRecipeToQuestDish)];
+    const bySlug = new Map(all.map((d) => [d.slug, d]));
+    // Preserve saved order (newest first); keep only resolvable dishes.
     return saved
       .map((s) => bySlug.get(s.slug))
       .filter((d): d is QuestDish => Boolean(d));
-  }, [saved]);
+  }, [saved, drafts]);
 
   if (dishes.length === 0) return null;
 
