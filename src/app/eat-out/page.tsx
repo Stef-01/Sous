@@ -22,6 +22,7 @@ import {
   MapPin,
   Plus,
   Smile,
+  Sparkles,
   Star,
 } from "lucide-react";
 import {
@@ -466,6 +467,14 @@ export default function EatOutPage() {
     return list;
   }, [cuisine, goalsOnly, goalTags, merged, topMatch]);
 
+  // A genuinely-fresh user (no positive cuisine taste yet) gets no taste hero — show
+  // a one-line nudge so they know Eat Out personalises as they cook/save (not a dead
+  // static list). Suppressed the moment any taste signal lands.
+  const hasTaste = useMemo(
+    () => Object.values(merged.cuisines).some((w) => w > 0),
+    [merged],
+  );
+
   const logDish = (dish: DemoDish, venue: DemoVenue) => {
     haptic("commit");
     diaryLogBranded(demoDishToBrandedFood(dish, venue), 1);
@@ -655,6 +664,22 @@ export default function EatOutPage() {
               />
             ))}
           </VenueObject>
+        )}
+
+        {/* Fresh user (no taste yet): a one-line nudge that this list personalises
+            as they cook/save — so it doesn't read as a static directory. Vanishes
+            the moment any positive cuisine signal lands. */}
+        {!topMatch && !cuisine && !goalsOnly && !hasTaste && (
+          <div className="flex items-center gap-2.5 rounded-2xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 px-4 py-3">
+            <Sparkles
+              size={15}
+              className="shrink-0 text-[var(--nourish-green)]"
+              aria-hidden
+            />
+            <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+              Cook or save a few dishes and these reorder to your taste.
+            </p>
+          </div>
         )}
 
         {/* Venue objects — taste leads, then nearest. Each is individually
