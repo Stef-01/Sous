@@ -76,8 +76,8 @@ export default function FavoritesPage() {
                 No favorites yet
               </p>
               <p className="text-xs text-[var(--nourish-subtext)] max-w-[240px]">
-                Finish a cook and tap the heart on the win screen to favorite it
-                - your go-to cooks, always one tap away.
+                Finish a cook, then tap the heart on it in your Scrapbook — your
+                go-to cooks, always one tap away.
               </p>
             </div>
             <motion.button
