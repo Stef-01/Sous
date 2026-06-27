@@ -4,7 +4,12 @@
 > **Decision on file:** The founder chose **go native** — adopt the Casa React Native (Expo) shell
 > as the product across iOS + Android + web, and port the real Sous engine, catalog, AI, and
 > backend into it. This document is the technical plan to do that **without losing features**.
-> **Out of scope (founder directive):** the Tama web game / Doge pet and the arcade mini-games.
+> **Out of scope (founder directive):** the Tama web game / Doge pet (deferred to a late, post-ship
+> phase for **native** re-integration) and the arcade mini-games.
+> **All five §12 product decisions are now resolved (founder, 2026-06-27) and binding — see §12.**
+> Headline bindings: when in doubt **always adopt Casa**; **one codebase** (Expo/RN-Web on every
+> platform, no separate Next.js frontend); **full rename incl. internal identifiers**; therapeutics
+> ship **live for the clinician-approved subset**.
 
 ---
 
@@ -132,7 +137,7 @@ casa/  (pnpm + Turborepo monorepo)
 
 | Token family | Casa (shell)              | Sous (today)              | Plan                                                                                                                                      |
 | ------------ | ------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Brand green  | `#16341f`                 | `--nourish-green #1d4d37` | **Casa `theme/colors.ts` becomes canonical** on native; pick one green with the founder (lean Casa's deeper `#16341f`).                   |
+| Brand green  | `#16341f`                 | `--nourish-green #1d4d37` | **DECIDED: Casa `#16341f`.** Casa `theme/colors.ts` is canonical; when any token conflicts, Casa wins (founder rule §12.1).               |
 | Display type | **Archivo** 400–900       | Hanken Grotesk            | Adopt **Archivo** (shell already loads it via `@expo-google-fonts/archivo`); both are geometric grotesques, so headings read identically. |
 | Body type    | Archivo                   | Inter                     | Archivo for both (shell convention) — one fewer font to ship.                                                                             |
 | Macro triad  | carb/fat/protein defined  | carb/fat/protein defined  | Identical intent → map 1:1.                                                                                                               |
@@ -239,8 +244,9 @@ Sous behavior into the new shell screen) · `NET-NEW` (no real Sous equivalent) 
 ## 6. Net-new screens to build (the critical ask)
 
 **Tier A — truly net-new (no real Sous feature; this is the Culinary Therapeutics "clinician
-wedge" productized).** UI is AUTO-BUILD now against the schema + sample data; **real clinical
-content is FOUNDER-GATED.**
+wedge" productized).** UI is AUTO-BUILD now against the schema. **Posture (founder rule §12.5):
+clinician-approved content ships LIVE and un-flagged; only not-yet-approved content stays gated /
+`(sample)`-flagged.** _(Phase-4 input needed: the list of what is currently clinician-approved.)_
 
 1. **Therapy** — the Culinary Therapeutics hub: therapeutic cuisines / bioactives, entry to
    protocols + tonics.
@@ -324,16 +330,16 @@ Every Sous feature flagged "at risk" by the inventory, with an explicit decision
 
 ## 10. Phased roadmap (each phase shippable; AUTO-BUILD first — rule 12)
 
-| Phase | Title                                                                                                                                                                                                              | Classification                                                                                 | Exit criterion                                                                  |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| **0** | **Foundation** — monorepo, bring shell in, `packages/core` (engine/intelligence/types/catalog moved), Expo app boots on sample data, CI (typecheck + core Vitest), Archivo/theme confirmed, **Sous→Casa branding** | **AUTO-BUILD**                                                                                 | `pnpm turbo typecheck test` green; `expo start` runs the shell; core tests pass |
-| **1** | **Real catalog + engine** — catalog adapter, replace 7 samples with ~200 sides/~76 meals, wire `buildQuestDishes`+flywheel+household into the deck/Today/Recipe, AsyncStorage persistence                          | **AUTO-BUILD**                                                                                 | deck + Today run on real engine + real catalog on device                        |
-| **2** | **Core loop parity** — Guided Cook (Mission→Grab→Cook→Win), Nutrition diary + macros, Path progression, feature-preservation pass 1 (favorites/scrapbook/pantry/groceries/plan/household)                          | **AUTO-BUILD**                                                                                 | a full craving→cook→log→progress loop works end-to-end offline                  |
-| **3** | **Content + discovery** — Content magazine, Discover/Search/Reel/Lesson/Challenge/Community                                                                                                                        | **AUTO-BUILD** UI · _real editorial FOUNDER-GATED (sample-flagged)_                            | screens render real catalog + sample-flagged editorial                          |
-| **4** | **Culinary Therapeutics** — Therapy/Protocols/ProtocolDetail/Tonic/Vitality/Coach against the therapeutic schema                                                                                                   | **AUTO-BUILD** UI + schema/adapter/seed · _real clinical content + partnerships FOUNDER-GATED_ | screens fully interactive on sample-flagged data; env contract ready            |
-| **5** | **Backend integration** — point RN at the Next.js tRPC backend; Clerk-Expo auth; live AI endpoints; push; R2 upload                                                                                                | _mostly **FOUNDER-GATED** on accounts/keys; abstractions + mocks **AUTO-BUILD** now_           | authed sync + live AI behind config flags                                       |
-| **6** | **Ship pipeline** — EAS Build/Submit, TestFlight/Play, store listings; slim Next.js to backend + landing/SEO/gift/clinician                                                                                        | **FOUNDER-GATED** (store accounts)                                                             | TestFlight build in hand                                                        |
-| **—** | **Deferred** — Doge/Tama web game, arcade mini-games, eat-out                                                                                                                                                      | out of scope                                                                                   | n/a                                                                             |
+| Phase | Title                                                                                                                                                                                                                                                     | Classification                                                                                 | Exit criterion                                                                  |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **0** | **Foundation** — monorepo, bring shell in, `packages/core` (engine/intelligence/types/catalog moved), Expo app boots on sample data, CI (typecheck + core Vitest), Archivo/theme canonical, **full Sous→Casa rename incl. internal `sous-*` identifiers** | **AUTO-BUILD**                                                                                 | `pnpm turbo typecheck test` green; `expo start` runs the shell; core tests pass |
+| **1** | **Real catalog + engine** — catalog adapter, replace 7 samples with ~200 sides/~76 meals, wire `buildQuestDishes`+flywheel+household into the deck/Today/Recipe, AsyncStorage persistence                                                                 | **AUTO-BUILD**                                                                                 | deck + Today run on real engine + real catalog on device                        |
+| **2** | **Core loop parity** — Guided Cook (Mission→Grab→Cook→Win), Nutrition diary + macros, Path progression, feature-preservation pass 1 (favorites/scrapbook/pantry/groceries/plan/household)                                                                 | **AUTO-BUILD**                                                                                 | a full craving→cook→log→progress loop works end-to-end offline                  |
+| **3** | **Content + discovery** — Content magazine, Discover/Search/Reel/Lesson/Challenge/Community                                                                                                                                                               | **AUTO-BUILD** UI · _real editorial FOUNDER-GATED (sample-flagged)_                            | screens render real catalog + sample-flagged editorial                          |
+| **4** | **Culinary Therapeutics** — Therapy/Protocols/ProtocolDetail/Tonic/Vitality/Coach against the therapeutic schema                                                                                                                                          | **AUTO-BUILD** UI + schema/adapter/seed · _real clinical content + partnerships FOUNDER-GATED_ | screens fully interactive on sample-flagged data; env contract ready            |
+| **5** | **Backend integration** — point RN at the Next.js tRPC backend; Clerk-Expo auth; live AI endpoints; push; R2 upload                                                                                                                                       | _mostly **FOUNDER-GATED** on accounts/keys; abstractions + mocks **AUTO-BUILD** now_           | authed sync + live AI behind config flags                                       |
+| **6** | **Ship pipeline** — EAS Build/Submit, TestFlight/Play, store listings; slim Next.js to backend + landing/SEO/gift/clinician                                                                                                                               | **FOUNDER-GATED** (store accounts)                                                             | TestFlight build in hand                                                        |
+| **—** | **Deferred** — Doge/Tama web game, arcade mini-games, eat-out                                                                                                                                                                                             | out of scope                                                                                   | n/a                                                                             |
 
 ---
 
@@ -352,17 +358,27 @@ Every Sous feature flagged "at risk" by the inventory, with an explicit decision
 
 ---
 
-## 12. Open product decisions for the founder
+## 12. Resolved decisions (founder, 2026-06-27)
 
-1. **Green:** adopt Casa's deeper `#16341f`, or keep Sous's `#1d4d37`? (Lean Casa.)
-2. **Web app surface:** serve web via **RN-Web** (one codebase) or keep the Next.js frontend for
-   web and ship native only? (Lean RN-Web — one UI everywhere.)
-3. **Doge pet:** confirmed deferred — but is a **native** pet companion a later phase, or dropped?
-4. **Rename depth now:** user-facing strings + app identity (yes) vs. internal `sous-*` identifiers
-   (gradual)?
-5. **Culinary Therapeutics go-live:** keep Therapy/Protocols/Tonic/Vitality **visible but
-   sample-flagged**, or **hidden behind a flag** until real clinical content lands (mirrors today's
-   dormant-wedge posture)?
+All five open decisions are now settled. These are **binding** for the build:
+
+1. **Aesthetics/format → ALWAYS Casa.** When Sous and Casa differ on any look-or-format question,
+   adopt Casa with no further deliberation. Concretely: brand green is Casa's **`#16341f`**, display
+   type is **Archivo**, and Casa's token ladders / screen layouts are canonical. The Casa shell (and
+   its `Clove.dc.html` design codex) is the single source of design truth.
+2. **One codebase.** Use the single codebase Casa was built in — the Expo/RN app serves **all
+   platforms including web** (via react-native-web). **No separate Next.js frontend for web.** Next.js
+   survives only as the headless backend + SEO/landing/gift/clinician shell (and even those are
+   candidates to fold in later).
+3. **Doge → re-integrate, very late stage.** Not dropped — but explicitly a **late** phase, after the
+   core product is shipped, and re-integrated **natively** (no Tama web iframe).
+4. **Rename to full depth — including identifiers.** Go deep: user-facing strings **and** internal
+   `sous-*` / `Sous` identifiers → `casa-*` / `Casa` (tokens, packages, hooks, env keys, file names).
+   No half-rename.
+5. **Therapeutics → keep clinician-approved content LIVE.** Do **not** hide the whole wedge behind a
+   flag. Everything that has been **clinician-approved** ships **live and un-flagged**; only
+   not-yet-approved content stays gated / `(sample)`-flagged. _(Input needed at Phase 4: the list of
+   what is currently clinician-approved, or where approval status is recorded.)_
 
 ---
 
