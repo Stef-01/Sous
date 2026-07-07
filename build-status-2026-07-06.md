@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 9 Units Shipped
+## This Session: 10 Units Shipped
 
-### Menu-app (W1–W8 shipped, next: W9)
+### Menu-app (W1–W9 shipped, next: W10)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -11,9 +11,10 @@
 - **W5** — Profile sheet now edits device-local display name + email; community recipe publish uses the saved display name for attribution (`380beaa`)
 - **W6** — Guided-cook ingredient icons now render as stable, family-toned food marks with a quiet checked overlay; component contract covered by tests (`d7e4819`)
 - **W7** — Guided-cook Grab list now carries the shared g/cups unit switch only when rows can honestly convert, using the registry-backed displayQuantity path for by-dish and by-station quantities (`75102c8`)
-- **W8** — Guided-cook "Add missing" now preserves ingredient quantities and per-dish recipe source metadata into the shopping list, so grocery rows show amounts and recipe chips stay accurate (this commit)
-- Tests: 21 → 49
-- Next unit: **W9** (pick next highest-value menu-app polish/bug from current repo state)
+- **W8** — Guided-cook "Add missing" now preserves ingredient quantities and per-dish recipe source metadata into the shopping list, so grocery rows show amounts and recipe chips stay accurate (`10bb13f`)
+- **W9** — Combined-cook "By station" Grab view now uses the same serving-scaled ingredient sections as "By dish", preventing stale quantities after the serving stepper changes (this commit)
+- Tests: 21 → 52
+- Next unit: **W10** (pick next highest-value menu-app polish/bug from current repo state)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -24,4 +25,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W9 + Y7.
+Say "keep going" to start W10 + Y7.

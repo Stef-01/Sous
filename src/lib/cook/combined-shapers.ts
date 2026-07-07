@@ -15,6 +15,8 @@
  * type dependency. The structural minimum is captured below.
  */
 
+import type { StaticDishData } from "@/data/guided-cook-steps";
+
 /** Structural minimum for a dish-with-ingredients-and-steps payload. */
 export interface CombinedDishLike<TStep, TIngredient> {
   dish: {
@@ -31,6 +33,28 @@ export interface CombinedDishLike<TStep, TIngredient> {
   };
   ingredients: TIngredient[];
   steps: TStep[];
+}
+
+/** Structural minimum for prep-view ingredient rows. */
+export interface CombinedPrepIngredientLike {
+  id: string;
+  name: string;
+  quantity: string;
+  isOptional?: boolean | null;
+  substitution?: string | null;
+}
+
+/** Structural minimum for authored cook steps used by the prep coalescer. */
+export interface CombinedPrepStepLike {
+  phase?: string;
+  stepNumber?: number | null;
+  instruction: string;
+  timerSeconds?: number | null;
+  mistakeWarning?: string | null;
+  quickHack?: string | null;
+  cuisineFact?: string | null;
+  donenessCue?: string | null;
+  imageUrl?: string | null;
 }
 
 /** Sequencer hint shape (parallel-cook prompts). */
@@ -80,6 +104,57 @@ export function buildIngredientSections<TStep, TIngredient>(
     sourceRecipeSlug: d.dish.slug,
     sourceRecipeName: d.dish.name,
   }));
+}
+
+/**
+ * Build StaticDishData-compatible dishes for the IngredientList prep-station
+ * view. When scaled ingredient sections are supplied, use those quantities
+ * instead of the raw dish payload so "By station" stays aligned with the
+ * serving slider.
+ */
+export function buildPrepDishesForCombinedCook<
+  TStep extends CombinedPrepStepLike,
+  TIngredient extends CombinedPrepIngredientLike,
+>(
+  orderedDishes: ReadonlyArray<CombinedDishLike<TStep, TIngredient>>,
+  ingredientSections?: ReadonlyArray<{
+    ingredients: ReadonlyArray<CombinedPrepIngredientLike>;
+  }>,
+): StaticDishData[] {
+  return orderedDishes.map((d, index) => {
+    const ingredients =
+      ingredientSections?.[index]?.ingredients ?? d.ingredients;
+    return {
+      name: d.dish.name,
+      slug: d.dish.slug,
+      description: d.dish.description ?? "",
+      cuisineFamily: d.dish.cuisineFamily,
+      prepTimeMinutes: d.dish.prepTimeMinutes,
+      cookTimeMinutes: d.dish.cookTimeMinutes,
+      skillLevel: d.dish.skillLevel ?? "beginner",
+      heroImageUrl: d.dish.heroImageUrl ?? null,
+      flavorProfile: (d.dish.flavorProfile ?? []) as string[],
+      temperature: d.dish.temperature ?? "hot",
+      ingredients: ingredients.map((i) => ({
+        id: i.id,
+        name: i.name,
+        quantity: i.quantity,
+        isOptional: !!i.isOptional,
+        substitution: i.substitution ?? null,
+      })),
+      steps: d.steps.map((s) => ({
+        phase: "cook" as const,
+        stepNumber: s.stepNumber ?? 0,
+        instruction: s.instruction,
+        timerSeconds: s.timerSeconds ?? null,
+        mistakeWarning: s.mistakeWarning ?? null,
+        quickHack: s.quickHack ?? null,
+        cuisineFact: s.cuisineFact ?? null,
+        donenessCue: s.donenessCue ?? null,
+        imageUrl: s.imageUrl ?? null,
+      })),
+    };
+  });
 }
 
 /**

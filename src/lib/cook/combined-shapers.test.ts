@@ -5,6 +5,7 @@ import {
   buildIngredientSections,
   buildOrderedDishes,
   buildParallelHintMap,
+  buildPrepDishesForCombinedCook,
 } from "./combined-shapers";
 
 const dish = (slug: string, name: string) => ({
@@ -20,7 +21,15 @@ const dish = (slug: string, name: string) => ({
     flavorProfile: [],
     temperature: "hot",
   },
-  ingredients: [{ id: `${slug}-i1`, name: "salt" }],
+  ingredients: [
+    {
+      id: `${slug}-i1`,
+      name: "salt",
+      quantity: "1 tsp",
+      isOptional: false,
+      substitution: null,
+    },
+  ],
   steps: [{ phase: "cook", stepNumber: 1, instruction: "do thing" }],
 });
 
@@ -86,6 +95,51 @@ describe("buildIngredientSections", () => {
     };
     const result = buildIngredientSections([d]);
     expect(result[0].ingredients.map((i) => i.id)).toEqual(["1", "2"]);
+  });
+});
+
+describe("buildPrepDishesForCombinedCook", () => {
+  it("uses scaled ingredient sections so station prep matches the serving slider", () => {
+    const dishes = [dish("rice", "Rice")];
+    const sections = buildIngredientSections(dishes).map((section) => ({
+      ...section,
+      ingredients: section.ingredients.map((ingredient) => ({
+        ...ingredient,
+        quantity: "2 tsp",
+      })),
+    }));
+
+    const result = buildPrepDishesForCombinedCook(dishes, sections);
+
+    expect(result[0].ingredients[0]).toMatchObject({
+      id: "rice-i1",
+      name: "salt",
+      quantity: "2 tsp",
+      isOptional: false,
+      substitution: null,
+    });
+  });
+
+  it("falls back to raw dish ingredients when no scaled section exists", () => {
+    const result = buildPrepDishesForCombinedCook([dish("dal", "Dal")]);
+
+    expect(result[0].ingredients[0].quantity).toBe("1 tsp");
+  });
+
+  it("normalizes optional cook-step fields for StaticDishData consumers", () => {
+    const result = buildPrepDishesForCombinedCook([dish("salad", "Salad")]);
+
+    expect(result[0].steps[0]).toEqual({
+      phase: "cook",
+      stepNumber: 1,
+      instruction: "do thing",
+      timerSeconds: null,
+      mistakeWarning: null,
+      quickHack: null,
+      cuisineFact: null,
+      donenessCue: null,
+      imageUrl: null,
+    });
   });
 });
 
