@@ -2,14 +2,15 @@
 
 ## This Session: 6 Units Shipped
 
-### Menu-app (W1–W4 shipped, next: W5)
+### Menu-app (W1–W5 shipped, next: W6)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
 - **W3** — Feedback double-submit guard: disabled Share button during write, sheet stays open on failure (`3847873`)
 - **W4** — Dish-detail allergen transform extracted + tested (`0bf38cc`)
-- Tests: 21 → 30
-- Next unit: **W5** (profile email + display-name edit)
+- **W5** — Profile sheet now edits device-local display name + email; community recipe publish uses the saved display name for attribution (this commit)
+- Tests: 21 → 37
+- Next unit: **W6** (pick next highest-value menu-app polish/bug from current repo state)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -20,4 +21,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W5 + Y7.
+Say "keep going" to start W6 + Y7.

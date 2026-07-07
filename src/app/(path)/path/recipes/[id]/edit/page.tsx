@@ -29,6 +29,10 @@ import type { RecipeDraft } from "@/lib/recipe-authoring/recipe-draft";
 import { submitForCommunityReview } from "@/lib/recipe-authoring/admin-approval";
 import { toast } from "@/lib/hooks/use-toast";
 import type { UserRecipe } from "@/types/user-recipe";
+import {
+  profileIdentityAuthorName,
+  useProfileIdentity,
+} from "@/lib/hooks/use-profile-identity";
 
 export default function EditRecipePage({
   params,
@@ -39,6 +43,7 @@ export default function EditRecipePage({
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { drafts, mounted, upsert } = useRecipeDrafts();
+  const { profile: profileIdentity } = useProfileIdentity();
 
   // UserRecipe is a strict superset of RecipeDraft (the draft has
   // four optional fields that UserRecipe always provides), so the
@@ -52,7 +57,8 @@ export default function EditRecipePage({
     upsert(
       submitForCommunityReview(r, {
         now: new Date().toISOString(),
-        authorDisplayName: r.authorDisplayName ?? "A community cook",
+        authorDisplayName:
+          r.authorDisplayName ?? profileIdentityAuthorName(profileIdentity),
       }),
     );
     toast.push({

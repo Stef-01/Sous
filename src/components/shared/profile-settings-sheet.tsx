@@ -25,6 +25,7 @@ import {
   Eye,
   Heart,
   HeartPulse,
+  Mail,
   Mic,
   RotateCcw,
   Smartphone,
@@ -57,6 +58,11 @@ import { PantryModeSection } from "@/components/shared/pantry-mode-section";
 import { PreferencesSection } from "@/components/shared/preferences-section";
 import { PersonalTargetsSection } from "@/components/shared/personal-targets-section";
 import { GoalPlansSection } from "@/components/shared/goal-plans-section";
+import {
+  isProfileEmailValid,
+  useProfileIdentity,
+  type ProfileIdentity,
+} from "@/lib/hooks/use-profile-identity";
 
 interface Props {
   open: boolean;
@@ -136,27 +142,7 @@ export function ProfileSettingsSheet({
               paddingBottom: "max(2rem, env(safe-area-inset-bottom))",
             }}
           >
-            {/* Profile placeholder section. Friendlier framing of the
-                "no auth yet" state — explains the trade-off without
-                making it feel half-built. */}
-            <section className="mt-5 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
-              <div className="flex items-start gap-3">
-                <span
-                  aria-hidden
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
-                >
-                  <UserRound size={16} />
-                </span>
-                <div className="space-y-1">
-                  <SectionKicker as="p" size="10px">
-                    Profile
-                  </SectionKicker>
-                  <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
-                    Sign-in is coming. For now, your cooks live on this device.
-                  </p>
-                </div>
-              </div>
-            </section>
+            <ProfileIdentitySection />
 
             {/* Personal targets (#6) — drives the ring target bars + kcal-left. */}
             <PersonalTargetsSection />
@@ -517,6 +503,118 @@ const chipClass = (active: boolean, tone: "green" | "warm") =>
         : "bg-[var(--nourish-warm)]/12 text-[var(--nourish-warm)] ring-1 ring-[var(--nourish-warm)]/40"
       : "bg-neutral-50 text-[var(--nourish-subtext)] hover:bg-neutral-100",
   );
+
+function ProfileIdentitySection() {
+  const { profile, setProfile } = useProfileIdentity();
+  const profileKey = `${profile.updatedAt}:${profile.displayName}:${profile.email}`;
+  return (
+    <ProfileIdentityFields
+      key={profileKey}
+      profile={profile}
+      setProfile={setProfile}
+    />
+  );
+}
+
+function ProfileIdentityFields({
+  profile,
+  setProfile,
+}: {
+  profile: ProfileIdentity;
+  setProfile: (next: Omit<ProfileIdentity, "v" | "updatedAt">) => void;
+}) {
+  const haptic = useHaptic();
+  const [draft, setDraft] = useState({
+    displayName: profile.displayName,
+    email: profile.email,
+  });
+  const [emailTouched, setEmailTouched] = useState(false);
+
+  const emailValid = isProfileEmailValid(draft.email);
+
+  const commit = () => {
+    if (!emailValid) return;
+    const displayName = draft.displayName.replace(/\s+/g, " ").trim();
+    const email = draft.email.trim().toLowerCase();
+    if (displayName === profile.displayName && email === profile.email) return;
+    haptic();
+    setDraft({ displayName, email });
+    setProfile({ displayName, email });
+  };
+
+  return (
+    <section className="mt-5 rounded-2xl border border-neutral-100/80 bg-white p-4 shadow-sm">
+      <div className="flex items-start gap-3">
+        <span
+          aria-hidden
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+        >
+          <UserRound size={16} />
+        </span>
+        <div className="min-w-0 flex-1 space-y-3">
+          <div className="space-y-1">
+            <SectionKicker as="p" size="10px">
+              Profile
+            </SectionKicker>
+            <p className="text-[13px] leading-snug text-[var(--nourish-dark)]">
+              Sign-in is coming. For now, your cooks and profile live on this
+              device.
+            </p>
+          </div>
+
+          <label className="block space-y-1.5">
+            <span className="sous-label">Display name</span>
+            <input
+              value={draft.displayName}
+              onChange={(e) =>
+                setDraft((cur) => ({ ...cur, displayName: e.target.value }))
+              }
+              onBlur={commit}
+              maxLength={40}
+              placeholder="A community cook"
+              className="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
+            />
+          </label>
+
+          <label className="block space-y-1.5">
+            <span className="sous-label">Email</span>
+            <div className="relative">
+              <Mail
+                size={14}
+                aria-hidden
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--nourish-subtext)]"
+              />
+              <input
+                value={draft.email}
+                onChange={(e) =>
+                  setDraft((cur) => ({ ...cur, email: e.target.value }))
+                }
+                onBlur={() => {
+                  setEmailTouched(true);
+                  commit();
+                }}
+                type="email"
+                inputMode="email"
+                placeholder="you@example.com"
+                aria-invalid={emailTouched && !emailValid}
+                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 py-2 pr-3 pl-9 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
+              />
+            </div>
+            {emailTouched && !emailValid ? (
+              <span className="block text-[11px] text-rose-500" role="alert">
+                Enter a valid email, or leave it blank.
+              </span>
+            ) : (
+              <span className="block text-[11px] text-[var(--nourish-subtext)]">
+                Saved locally for future sign-in and recipe attribution.
+              </span>
+            )}
+          </label>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 /**
  * CareFocusSection — optional, collapsed-by-default capture of a health focus.
