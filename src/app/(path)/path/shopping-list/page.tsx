@@ -25,10 +25,7 @@ import { cn } from "@/lib/utils/cn";
 import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { displayQuantity } from "@/lib/units/display-quantity";
 import { toast } from "@/lib/hooks/use-toast";
-import {
-  shoppingItemHasRecipeSource,
-  shoppingRecipeSourceSlugs,
-} from "@/lib/shopping/recipe-sources";
+import { shoppingRecipeSourceSlugs } from "@/lib/shopping/recipe-sources";
 
 /**
  * Shopping list — the inverse of the pantry, redesigned as an aisle-grouped
@@ -45,6 +42,7 @@ export default function ShoppingListPage() {
     unboughtCount,
     toggleBought,
     remove,
+    removeRecipeSource,
     clear,
     restore,
     clearBought,
@@ -78,9 +76,7 @@ export default function ShoppingListPage() {
   );
 
   const removeRecipe = (slug: string) => {
-    for (const it of items) {
-      if (shoppingItemHasRecipeSource(it, slug)) remove(it.key);
-    }
+    removeRecipeSource(slug);
   };
 
   const handleMoveBoughtToPantry = () => {

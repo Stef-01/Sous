@@ -6,6 +6,13 @@ import {
   canonicalIngredientId,
   combineQuantities,
 } from "@/lib/shopping/aggregate-quantity";
+import {
+  removeRecipeSourceFromShoppingItem,
+  shoppingContributionForSource,
+  shoppingContributionsForItem,
+  shoppingRecipeSourceSlugs,
+  type ShoppingRecipeContribution,
+} from "@/lib/shopping/recipe-sources";
 
 /**
  * Shopping list  -  ingredients you've wanted but not yet cooked with. Each
@@ -37,6 +44,8 @@ export interface ShoppingItem {
   /** Recipes whose quantities are already folded into this row — makes
    *  same-recipe re-adds idempotent (no double-counting on a second tap). */
   contributedBy?: string[];
+  /** Per-recipe source ledger used for non-destructive recipe-chip removal. */
+  contributions?: ShoppingRecipeContribution[];
 }
 
 /** A richer add payload. Plain strings are still accepted by addMany. */
@@ -90,6 +99,7 @@ export interface UseShoppingListResult {
   add: (name: string) => void;
   addMany: (items: Array<string | ShoppingAddition>) => void;
   remove: (key: string) => void;
+  removeRecipeSource: (slug: string) => void;
   toggleBought: (key: string) => void;
   clear: () => void;
   restore: (snapshot: ShoppingItem[]) => void;
@@ -160,11 +170,13 @@ export function useShoppingList(): UseShoppingListResult {
           // adopt the recipe source when the row didn't have one. A recipe
           // that already contributed is a no-op (idempotent re-add).
           const target = working[matchIdx];
-          const ledger =
-            target.contributedBy ??
-            (target.sourceRecipeSlug ? [target.sourceRecipeSlug] : []);
-          if (e.sourceRecipeSlug && ledger.includes(e.sourceRecipeSlug))
+          const ledger = shoppingRecipeSourceSlugs([target]);
+          const contribution = shoppingContributionForSource(e);
+          if (contribution && ledger.includes(contribution.sourceRecipeSlug))
             continue;
+          const contributions = contribution
+            ? [...shoppingContributionsForItem(target), contribution]
+            : target.contributions;
           const quantity = canon
             ? combineQuantities(target.quantity, e.quantity, canon)
             : target.quantity && e.quantity && target.quantity !== e.quantity
@@ -173,30 +185,37 @@ export function useShoppingList(): UseShoppingListResult {
           working[matchIdx] = {
             ...target,
             ...(quantity ? { quantity } : {}),
-            ...(!target.sourceRecipeSlug && e.sourceRecipeSlug
+            ...(!target.sourceRecipeSlug && contribution
               ? {
-                  sourceRecipeSlug: e.sourceRecipeSlug,
-                  sourceRecipeName: e.sourceRecipeName,
+                  sourceRecipeSlug: contribution.sourceRecipeSlug,
+                  sourceRecipeName: contribution.sourceRecipeName,
                 }
               : {}),
-            ...(e.sourceRecipeSlug
-              ? { contributedBy: [...ledger, e.sourceRecipeSlug] }
+            ...(contribution
+              ? {
+                  contributedBy: shoppingRecipeSourceSlugs([
+                    { ...target, contributions },
+                  ]),
+                }
               : {}),
+            ...(contributions ? { contributions } : {}),
           };
           changed = true;
           continue;
         }
+        const contribution = shoppingContributionForSource(e);
         const item: ShoppingItem = {
           key,
           name: trimmed,
           addedAt: now,
           bought: false,
           ...(e.quantity ? { quantity: e.quantity } : {}),
-          ...(e.sourceRecipeSlug
+          ...(contribution
             ? {
-                sourceRecipeSlug: e.sourceRecipeSlug,
-                sourceRecipeName: e.sourceRecipeName,
-                contributedBy: [e.sourceRecipeSlug],
+                sourceRecipeSlug: contribution.sourceRecipeSlug,
+                sourceRecipeName: contribution.sourceRecipeName,
+                contributedBy: [contribution.sourceRecipeSlug],
+                contributions: [contribution],
               }
             : {}),
         };
@@ -208,6 +227,25 @@ export function useShoppingList(): UseShoppingListResult {
       }
       if (!changed) return prev;
       const next = working.slice(-MAX_ITEMS);
+      writeState(next);
+      return next;
+    });
+  }, []);
+
+  const removeRecipeSource = useCallback((slug: string) => {
+    setItems((prev) => {
+      let changed = false;
+      const next: ShoppingItem[] = [];
+      for (const item of prev) {
+        const updated = removeRecipeSourceFromShoppingItem(item, slug);
+        if (!updated) {
+          changed = true;
+          continue;
+        }
+        if (updated !== item) changed = true;
+        next.push(updated);
+      }
+      if (!changed) return prev;
       writeState(next);
       return next;
     });
@@ -263,6 +301,7 @@ export function useShoppingList(): UseShoppingListResult {
     add,
     addMany,
     remove,
+    removeRecipeSource,
     toggleBought,
     clear,
     restore,
