@@ -187,7 +187,7 @@ Two independent code-verified review passes found the ADR's instinct sound but c
 
 ## 4. Month 1 — Foundation + the diegetic-object ENGINE
 
-**End state:** the entire interactive diegetic room _works_ with placeholder art — 9 individually-selectable, drillable, keyboard-reachable, live-bound objects; one working `doge:logWater` action; numberless in-world value + on-demand drill (rule 13); dark-navy theme; full-bleed composition; the pointer-ownership + open_main_menu mechanism _proven live_; coordinate projection handled in both fullscreen and embedded views. Flag OFF → production byte-identical. Stat loop + gold wall physically unreachable. `pnpm build`+`test`+`lint` green throughout.
+**End state:** the entire interactive diegetic room _works_ with placeholder art — 9 individually-selectable, drillable, keyboard-reachable, live-bound objects; one working `doge:logWater` action; numberless in-world value + on-demand drill (rule 13); dark-navy theme; full-bleed composition; the pointer-ownership + `open_main_menu` mechanism _proven live_; coordinate projection handled in both fullscreen and embedded views. Flag OFF → production byte-identical. Stat loop + gold wall physically unreachable. `pnpm build`+`test`+`lint` green throughout.
 
 **Standing weekly invariants:** flag-guard early-return; read-only + `doge:logWater` reuse; pointer-ownership contract; cached-parse on the 400ms tick (never per-frame); SW-unregister before every "verified live"; commit to main after each edit.
 

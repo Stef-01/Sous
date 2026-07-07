@@ -43,7 +43,6 @@ function broadcast() {
 export function useSavedDishes() {
   const [saved, setSaved] = useState<SavedDish[]>([]);
 
-   
   useEffect(() => {
     const read = () => setSaved(loadSaved());
     read();
@@ -54,7 +53,6 @@ export function useSavedDishes() {
       window.removeEventListener("storage", read);
     };
   }, []);
-   
 
   const saveDish = useCallback((slug: string, name: string): boolean => {
     const existing = loadSaved();

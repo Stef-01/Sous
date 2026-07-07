@@ -1,0 +1,6 @@
+allowBuilds:
+  "@clerk/shared": true
+  esbuild: true
+  sharp: true
+  tesseract.js: true
+  unrs-resolver: true

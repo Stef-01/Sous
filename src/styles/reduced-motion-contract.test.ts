@@ -80,7 +80,7 @@ describe("animated blur is focal-only (60fps guard)", () => {
     for (const dir of ["components", "lib/motion"]) {
       for (const file of walk(join(ROOT, dir))) {
         if (ANIMATED_BLUR.test(readFileSync(file, "utf8"))) {
-          const rel = file.replace(ROOT, "src");
+          const rel = file.replace(ROOT, "src").replace(/\\/g, "/");
           if (!ALLOW.has(rel)) offenders.push(rel);
         }
       }

@@ -170,12 +170,12 @@ Touch only what you must. Don't improve adjacent code, refactor things that aren
 
 Transform tasks into verifiable goals. For multi-step tasks, state a brief plan with verify steps. Define success criteria before starting so you can loop independently without constant clarification.
 
-
 ---
 
 ## ⚡ DISPATCH PROTOCOL ⚡
 
 If `DISPATCH.md` exists in the repo root with `state: open`:
+
 1. **Read it FIRST**, before any other work, unless Stefan's prompt explicitly
    overrides it. If Stefan gave a different task, do Stefan's task, then note
    in STATUS.md that the dispatch was preempted (outcome stays as-is).
@@ -188,4 +188,4 @@ If `DISPATCH.md` exists in the repo root with `state: open`:
    it is `partial`. Commit and push everything to main.
 5. Never edit DISPATCH.md. Cowork owns it. Never delete STATUS.md history —
    prior cycles are archived by the sync task, not by you.
-6. Log the session to Stefan-Brain wiki/_log/ as always.
+6. Log the session to `Stefan-Brain wiki/_log/` as always.

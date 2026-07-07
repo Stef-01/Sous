@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { guidedCookData } from "@/data/guided-cook-steps";
 import {
   normalizeIngredientName,
   resolveIngredientIcon,
@@ -114,5 +115,18 @@ describe("resolveIngredientIcon", () => {
       label: "ingredient",
       family: "unknown",
     });
+  });
+
+  it("covers every guided-cook ingredient with a non-generic icon", () => {
+    const unknowns = Object.values(guidedCookData).flatMap((dish) =>
+      dish.ingredients
+        .filter(
+          (ingredient) =>
+            resolveIngredientIcon(ingredient.name).family === "unknown",
+        )
+        .map((ingredient) => `${dish.slug}: ${ingredient.name}`),
+    );
+
+    expect(unknowns).toEqual([]);
   });
 });
