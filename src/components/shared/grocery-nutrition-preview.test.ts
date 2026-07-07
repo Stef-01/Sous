@@ -34,6 +34,9 @@ describe("GroceryNutritionPreview", () => {
     expect(html).toContain("border-radius:var(--radius-lg)");
     expect(html).toContain("What these meals deliver");
     expect(html).toContain("Calories");
+    expect(html).toContain("sous-meta");
+    expect(html).toContain("mt-[var(--row-gap)]");
+    expect(html).toContain("gap-[var(--space-2)]");
   });
 
   it("renders nothing when there is no backed nutrition data", () => {

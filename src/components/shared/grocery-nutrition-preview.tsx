@@ -27,11 +27,11 @@ export function GroceryNutritionPreview({
   return (
     <Card as="section" radius="lg">
       <SectionKicker as="p">What these meals deliver</SectionKicker>
-      <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
+      <p className="sous-meta mt-[var(--space-1)]">
         Across {roll.recipeCount} recipe{roll.recipeCount === 1 ? "" : "s"} ·
         one serving each
       </p>
-      <div className="mt-3 grid grid-cols-4 gap-2">
+      <div className="mt-[var(--row-gap)] grid grid-cols-4 gap-[var(--space-2)]">
         {stats.map(([label, value]) => (
           <div key={label} className="text-center">
             <p className="text-[15px] font-semibold text-[var(--nourish-dark)]">
@@ -41,7 +41,7 @@ export function GroceryNutritionPreview({
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[10px] leading-snug text-[var(--nourish-subtext-faint)]">
+      <p className="sous-meta mt-[var(--row-gap)]">
         Estimated from recipe ingredients — a guide, not a label.
         {roll.excludedCount > 0
           ? ` ${roll.excludedCount} item${roll.excludedCount === 1 ? "" : "s"} without recipe nutrition aren't counted.`

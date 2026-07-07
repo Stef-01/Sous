@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 14 Units Shipped
+## This Session: 15 Units Shipped
 
-### Menu-app (W1-W13 shipped, next: W14)
+### Menu-app (W1-W14 shipped, next: W15)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -16,9 +16,10 @@
 - **W10** — Shopping-list recipe chips and grocery nutrition preview now read merged `contributedBy` source ledgers, so recipes do not disappear when all their ingredients aggregate into shared rows (`2514691`)
 - **W11** - Shopping-list recipe-chip removal is now non-destructive for merged grocery rows, using per-recipe contribution ledgers to keep shared ingredients and recompute quantities where possible (`888b812`)
 - **W12** - Shopping-list rows now use the richer ingredient-icon library for known foods while preserving the legacy aisle emoji fallback for unknown grocery items (`56b3b27`)
-- **W13** - Card and kicker primitives are now contract-tested, `Card` supports semantic surfaces, and the shopping-list recipe/nutrition surfaces use the shared card + kicker treatment (this commit)
-- Tests: 21 → 72
-- Next unit: **W14** (pick next highest-value menu-app polish/bug from current repo state)
+- **W13** - Card and kicker primitives are now contract-tested, `Card` supports semantic surfaces, and the shopping-list recipe/nutrition surfaces use the shared card + kicker treatment (`f708c23`)
+- **W14** - Shopping-list captions, spacing, and row motion are token-aligned: grocery nutrition copy uses `.sous-meta`, list chrome moved to `--space-*`/`--row-gap`, and row animation routes through `motionTransition` with a design-contract test (this commit)
+- Tests: 21 → 73
+- Next unit: **W15** (pick next highest-value menu-app polish/bug from current repo state)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -29,4 +30,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W14 + Y7.
+Say "keep going" to start W15 + Y7.

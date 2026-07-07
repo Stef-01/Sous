@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Check, ChevronRight, ShoppingCart, X } from "lucide-react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { SPRING } from "@/lib/motion/tokens";
+import { motionTransition, SPRING } from "@/lib/motion/tokens";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
@@ -95,7 +95,7 @@ export default function ShoppingListPage() {
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)]">
-      <header className="app-header page-x py-2.5">
+      <header className="app-header page-x py-[var(--space-2)]">
         <div className="mx-auto flex max-w-md items-center">
           <button
             onClick={() => router.push("/path")}
@@ -110,25 +110,25 @@ export default function ShoppingListPage() {
 
       <main className="mx-auto max-w-md page-x pb-28">
         {/* Title row — big serif. */}
-        <div className="flex items-center justify-between gap-2 pt-1 pb-1">
+        <div className="flex items-center justify-between gap-[var(--space-2)] py-[var(--space-1)]">
           <h1 className="sous-title text-[var(--nourish-dark)]">
             Shopping list
           </h1>
           {unboughtCount > 0 && (
-            <span className="shrink-0 text-[13px] font-medium text-[var(--nourish-subtext)]">
+            <span className="sous-meta shrink-0 font-medium">
               {unboughtCount} to buy
             </span>
           )}
         </div>
 
         {!mounted ? (
-          <div className="mt-4 animate-pulse space-y-2">
+          <div className="mt-[var(--space-4)] animate-pulse space-y-[var(--space-2)]">
             <div className="h-12 rounded-xl bg-neutral-100" />
             <div className="h-12 rounded-xl bg-neutral-100" />
             <div className="h-12 rounded-xl bg-neutral-100" />
           </div>
         ) : items.length === 0 ? (
-          <div className="pt-4">
+          <div className="pt-[var(--space-4)]">
             <EmptyStateCTA
               icon={ShoppingCart}
               iconSize={24}
@@ -140,20 +140,20 @@ export default function ShoppingListPage() {
           </div>
         ) : (
           <>
-            <div className="mb-2 mt-1">
+            <div className="mb-[var(--space-2)] mt-[var(--space-1)]">
               <InstacartHint missingCount={unboughtCount} />
             </div>
 
             {/* Recipes that contributed items — horizontal carousel. */}
             {recipes.length > 0 && (
-              <section className="mb-1">
+              <section className="mb-[var(--space-1)]">
                 <SectionKicker
                   as="p"
-                  className="pb-2 pt-1 text-[var(--grocery-cat)]"
+                  className="pb-[var(--space-2)] pt-[var(--space-1)] text-[var(--grocery-cat)]"
                 >
                   Recipes
                 </SectionKicker>
-                <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="-mx-[var(--gutter)] flex gap-[var(--row-gap)] overflow-x-auto px-[var(--gutter)] pb-[var(--space-1)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {recipes.map((r) => (
                     <RecipeChip
                       key={r.slug}
@@ -171,7 +171,7 @@ export default function ShoppingListPage() {
 
             {/* W33 — what the planned recipes will deliver (nutrition rollup). */}
             {recipes.length > 0 && (
-              <div className="mb-3">
+              <div className="mb-[var(--row-gap)]">
                 <GroceryNutritionPreview recipeSlugs={recipeSlugs} />
               </div>
             )}
@@ -181,13 +181,13 @@ export default function ShoppingListPage() {
               <section key={category}>
                 {i > 0 && (
                   <div
-                    className="-mx-[var(--gutter)] mt-1 h-1.5 bg-[var(--divider-warm)]"
+                    className="-mx-[var(--gutter)] mt-[var(--space-1)] h-1.5 bg-[var(--divider-warm)]"
                     aria-hidden
                   />
                 )}
                 <SectionKicker
                   as="p"
-                  className="pb-1 pt-4 text-[var(--grocery-cat)]"
+                  className="pb-[var(--space-1)] pt-[var(--space-4)] text-[var(--grocery-cat)]"
                 >
                   {category}
                 </SectionKicker>
@@ -211,12 +211,12 @@ export default function ShoppingListPage() {
             {boughtItems.length > 0 && (
               <section>
                 <div
-                  className="-mx-[var(--gutter)] mt-1 h-1.5 bg-[var(--divider-warm)]"
+                  className="-mx-[var(--gutter)] mt-[var(--space-1)] h-1.5 bg-[var(--divider-warm)]"
                   aria-hidden
                 />
                 <SectionKicker
                   as="p"
-                  className="pb-1 pt-4 text-[var(--nourish-subtext-faint)]"
+                  className="pb-[var(--space-1)] pt-[var(--space-4)] text-[var(--nourish-subtext-faint)]"
                 >
                   In the cart ({boughtItems.length})
                 </SectionKicker>
@@ -237,11 +237,11 @@ export default function ShoppingListPage() {
               </section>
             )}
 
-            <div className="mt-6 space-y-2">
+            <div className="mt-[var(--space-6)] space-y-[var(--space-2)]">
               {boughtItems.length > 0 && (
                 <button
                   onClick={handleMoveBoughtToPantry}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-3 text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
+                  className="flex w-full items-center justify-center gap-[var(--space-2)] rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-[var(--row-gap)] text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
                   type="button"
                 >
                   <Check size={14} />
@@ -301,8 +301,8 @@ function GroceryRow({
       initial={reducedMotion ? false : { opacity: 0, y: -4 }}
       animate={{ opacity: 1, y: 0 }}
       exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 12 }}
-      transition={reducedMotion ? { duration: 0 } : SPRING.soft}
-      className="flex items-center gap-3 py-3"
+      transition={motionTransition(SPRING.soft, reducedMotion)}
+      className="flex items-center gap-[var(--row-gap)] py-[var(--row-gap)]"
     >
       {/* Rounded-square checkbox — LEFT edge, like the reference mockups. */}
       <button
@@ -321,7 +321,7 @@ function GroceryRow({
       </button>
       <button
         onClick={onToggle}
-        className="min-w-0 flex flex-1 items-center gap-3 text-left"
+        className="min-w-0 flex flex-1 items-center gap-[var(--row-gap)] text-left"
         type="button"
         aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
       >
@@ -410,7 +410,7 @@ function RecipeChip({
           <X size={13} />
         </button>
       </div>
-      <div className="p-2.5">
+      <div className="p-[var(--space-2)]">
         <p className="truncate text-[14px] font-semibold text-[var(--nourish-dark)]">
           {label}
         </p>
