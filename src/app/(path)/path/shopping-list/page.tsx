@@ -25,6 +25,10 @@ import { cn } from "@/lib/utils/cn";
 import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { displayQuantity } from "@/lib/units/display-quantity";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  shoppingItemHasRecipeSource,
+  shoppingRecipeSourceSlugs,
+} from "@/lib/shopping/recipe-sources";
 
 /**
  * Shopping list — the inverse of the pantry, redesigned as an aisle-grouped
@@ -65,18 +69,18 @@ export default function ShoppingListPage() {
     }));
   }, [unboughtItems]);
 
-  // Distinct source recipes (for the "Recipes" carousel), in first-seen order.
-  const recipes = useMemo(() => {
-    const seen = new Map<string, string>();
-    for (const it of items) {
-      if (it.sourceRecipeSlug && !seen.has(it.sourceRecipeSlug))
-        seen.set(it.sourceRecipeSlug, it.sourceRecipeName ?? "");
-    }
-    return [...seen.keys()].map((slug) => lookupDish(slug));
-  }, [items]);
+  // Distinct source recipes (for the "Recipes" carousel), including merged
+  // contributor ledgers from aggregated shopping rows.
+  const recipeSlugs = useMemo(() => shoppingRecipeSourceSlugs(items), [items]);
+  const recipes = useMemo(
+    () => recipeSlugs.map((slug) => lookupDish(slug)),
+    [recipeSlugs],
+  );
 
   const removeRecipe = (slug: string) => {
-    for (const it of items) if (it.sourceRecipeSlug === slug) remove(it.key);
+    for (const it of items) {
+      if (shoppingItemHasRecipeSource(it, slug)) remove(it.key);
+    }
   };
 
   const handleMoveBoughtToPantry = () => {
@@ -169,9 +173,7 @@ export default function ShoppingListPage() {
             {/* W33 — what the planned recipes will deliver (nutrition rollup). */}
             {recipes.length > 0 && (
               <div className="mb-3">
-                <GroceryNutritionPreview
-                  recipeSlugs={recipes.map((r) => r.slug)}
-                />
+                <GroceryNutritionPreview recipeSlugs={recipeSlugs} />
               </div>
             )}
 
