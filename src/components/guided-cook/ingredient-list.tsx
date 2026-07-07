@@ -8,7 +8,13 @@ import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { useSubstitutionMemory } from "@/lib/hooks/use-substitution-memory";
+import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { toast } from "@/lib/hooks/use-toast";
+import {
+  displayQuantity,
+  quantityHasAlternativeDisplay,
+} from "@/lib/units/display-quantity";
+import type { UnitSystem } from "@/lib/units/convert-quantity";
 import {
   coalescePrepList,
   normalizePrepName,
@@ -82,6 +88,7 @@ export function IngredientList({
     remember: rememberSub,
     mounted: subMemMounted,
   } = useSubstitutionMemory();
+  const { system: unitSystem, setSystem: setUnitSystem } = useUnitPref();
 
   // Build effective sections: either use provided sections or wrap flat list
   const effectiveSections = useMemo<IngredientSection[]>(() => {
@@ -117,6 +124,16 @@ export function IngredientList({
 
   const isSegmented =
     effectiveSections.length > 1 || effectiveSections[0]?.label !== "";
+
+  const hasUnitAlternatives = useMemo(
+    () =>
+      effectiveSections.some((section) =>
+        section.ingredients.some((item) =>
+          quantityHasAlternativeDisplay(item.quantity, item.name),
+        ),
+      ),
+    [effectiveSections],
+  );
 
   const toggleItem = (id: string) => {
     setChecked((prev) => {
@@ -214,46 +231,34 @@ export function IngredientList({
     >
       {/* Scrollable ingredient list */}
       <div className="flex-1 overflow-y-auto min-h-0 space-y-5 pb-4">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             Gather these
           </h2>
-          {hasCoalescedView && (
-            <div
-              role="tablist"
-              aria-label="Prep view"
-              className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === "dish"}
-                onClick={() => setViewMode("dish")}
-                className={cn(
-                  "rounded-full px-2.5 py-1 transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                  viewMode === "dish"
-                    ? "bg-[var(--nourish-green)] text-white"
-                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                )}
-              >
-                By dish
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === "station"}
-                onClick={() => setViewMode("station")}
-                className={cn(
-                  "rounded-full px-2.5 py-1 transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                  viewMode === "station"
-                    ? "bg-[var(--nourish-green)] text-white"
-                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                )}
-              >
-                By station
-              </button>
+          {(hasCoalescedView || hasUnitAlternatives) && (
+            <div className="flex flex-wrap items-center justify-end gap-1.5">
+              {hasCoalescedView && (
+                <SegmentedControl
+                  ariaLabel="Prep view"
+                  options={[
+                    ["dish", "By dish"],
+                    ["station", "By station"],
+                  ]}
+                  value={viewMode}
+                  onChange={setViewMode}
+                />
+              )}
+              {hasUnitAlternatives && (
+                <SegmentedControl
+                  ariaLabel="Ingredient quantity units"
+                  options={[
+                    ["metric", "g"],
+                    ["us", "cups"],
+                  ]}
+                  value={unitSystem}
+                  onChange={setUnitSystem}
+                />
+              )}
             </div>
           )}
         </div>
@@ -300,8 +305,15 @@ export function IngredientList({
                           >
                             {item.name}
                           </span>
-                          <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
-                            {item.quantity}
+                          <span
+                            data-ingredient-quantity
+                            className="mt-0.5 block text-xs text-[var(--nourish-subtext)]"
+                          >
+                            {displayQuantity(
+                              item.quantity,
+                              item.name,
+                              unitSystem,
+                            )}
                             {item.sources.length > 1
                               ? ` · ${item.sources.join(" & ")}`
                               : ""}
@@ -358,6 +370,7 @@ export function IngredientList({
                           setAskingSub(askingSub === item.id ? null : item.id)
                         }
                         onTogglePantry={() => togglePantry(item.name)}
+                        unitSystem={unitSystem}
                       />
                     ))}
                   </div>
@@ -465,6 +478,45 @@ export function IngredientList({
   );
 }
 
+function SegmentedControl<T extends string>({
+  ariaLabel,
+  options,
+  value,
+  onChange,
+}: {
+  ariaLabel: string;
+  options: readonly (readonly [T, string])[];
+  value: T;
+  onChange: (value: T) => void;
+}) {
+  return (
+    <div
+      role="tablist"
+      aria-label={ariaLabel}
+      className="inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
+    >
+      {options.map(([optionValue, label]) => (
+        <button
+          key={optionValue}
+          type="button"
+          role="tab"
+          aria-selected={value === optionValue}
+          onClick={() => onChange(optionValue)}
+          className={cn(
+            "rounded-full px-2.5 py-1 transition-colors",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+            value === optionValue
+              ? "bg-[var(--nourish-green)] text-white"
+              : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+          )}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function IngredientRow({
   item,
   idx,
@@ -478,6 +530,7 @@ function IngredientRow({
   onToggle,
   onAskSub,
   onTogglePantry,
+  unitSystem,
 }: {
   item: Ingredient;
   idx: number;
@@ -491,6 +544,7 @@ function IngredientRow({
   onToggle: () => void;
   onAskSub: () => void;
   onTogglePantry: () => void;
+  unitSystem: UnitSystem;
 }) {
   // AI substitution query  -  fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
@@ -565,6 +619,7 @@ function IngredientRow({
           {/* Quantity on its own line so a long amount never crushes the
               name into a multi-line wrap (the old inline layout did). */}
           <p
+            data-ingredient-quantity
             className={cn(
               "mt-0.5 text-xs",
               checked
@@ -572,7 +627,7 @@ function IngredientRow({
                 : "text-[var(--nourish-subtext)]",
             )}
           >
-            {item.quantity}
+            {displayQuantity(item.quantity, item.name, unitSystem)}
           </p>
           {item.substitution && !showingSub && !rememberedSub && (
             <p className="mt-0.5 text-xs text-[var(--nourish-subtext-faint)]">

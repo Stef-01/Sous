@@ -18,3 +18,14 @@ export function displayQuantity(
   const ing = id ? getIngredient(id) : null;
   return convertQuantity(quantity, ing ?? null, system) ?? quantity;
 }
+
+export function quantityHasAlternativeDisplay(
+  quantity: string | undefined,
+  ingredientName: string,
+): boolean {
+  if (!quantity) return false;
+  return (
+    displayQuantity(quantity, ingredientName, "metric") !== quantity ||
+    displayQuantity(quantity, ingredientName, "us") !== quantity
+  );
+}
