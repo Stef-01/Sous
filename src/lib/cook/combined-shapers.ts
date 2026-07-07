@@ -68,10 +68,17 @@ export function buildOrderedDishes<TStep, TIngredient>(
  */
 export function buildIngredientSections<TStep, TIngredient>(
   orderedDishes: ReadonlyArray<CombinedDishLike<TStep, TIngredient>>,
-): { label: string; ingredients: TIngredient[] }[] {
+): {
+  label: string;
+  ingredients: TIngredient[];
+  sourceRecipeSlug: string;
+  sourceRecipeName: string;
+}[] {
   return orderedDishes.map((d) => ({
     label: `For ${d.dish.name}`,
     ingredients: d.ingredients as TIngredient[],
+    sourceRecipeSlug: d.dish.slug,
+    sourceRecipeName: d.dish.name,
   }));
 }
 

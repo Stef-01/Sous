@@ -66,6 +66,8 @@ describe("buildIngredientSections", () => {
     const dishes = [dish("rice", "Rice"), dish("dal", "Dal")];
     const result = buildIngredientSections(dishes);
     expect(result.map((s) => s.label)).toEqual(["For Rice", "For Dal"]);
+    expect(result.map((s) => s.sourceRecipeSlug)).toEqual(["rice", "dal"]);
+    expect(result.map((s) => s.sourceRecipeName)).toEqual(["Rice", "Dal"]);
     expect(result[0].ingredients).toEqual(dishes[0].ingredients);
     expect(result[1].ingredients).toEqual(dishes[1].ingredients);
   });

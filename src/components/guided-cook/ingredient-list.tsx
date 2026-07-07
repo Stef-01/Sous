@@ -10,6 +10,7 @@ import { useShoppingList } from "@/lib/hooks/use-shopping-list";
 import { useSubstitutionMemory } from "@/lib/hooks/use-substitution-memory";
 import { useUnitPref } from "@/lib/hooks/use-unit-pref";
 import { toast } from "@/lib/hooks/use-toast";
+import { buildGrabShoppingAdditions } from "@/lib/shopping/grab-additions";
 import {
   displayQuantity,
   quantityHasAlternativeDisplay,
@@ -37,6 +38,8 @@ interface Ingredient {
 export interface IngredientSection {
   label: string;
   ingredients: Ingredient[];
+  sourceRecipeSlug?: string;
+  sourceRecipeName?: string;
 }
 
 interface IngredientListProps {
@@ -152,12 +155,12 @@ export function IngredientList({
   const { addMany: addToShopping } = useShoppingList();
 
   const handleAddMissingToShopping = () => {
-    const missing: string[] = [];
-    for (const section of effectiveSections) {
-      for (const item of section.ingredients) {
-        if (!checked.has(item.id)) missing.push(item.name);
-      }
-    }
+    const missing = buildGrabShoppingAdditions({
+      sections: effectiveSections,
+      checkedIds: checked,
+      fallbackRecipeSlug: dishSlug,
+      fallbackRecipeName: recipeName,
+    });
     if (missing.length === 0) return;
     addToShopping(missing);
     toast.push({
