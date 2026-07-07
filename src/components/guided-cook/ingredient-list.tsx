@@ -2,17 +2,8 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import {
-  Check,
-  Circle,
-  ArrowRightLeft,
-  Utensils,
-  ShoppingCart,
-} from "lucide-react";
+import { ArrowRightLeft, Utensils, ShoppingCart, Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { useUnitPref } from "@/lib/hooks/use-unit-pref";
-import { displayQuantity } from "@/lib/units/display-quantity";
-import { ingredientEmoji } from "@/lib/utils/ingredient-meta";
 import { trpc } from "@/lib/trpc/client";
 import { usePantry } from "@/lib/hooks/use-pantry";
 import { useShoppingList } from "@/lib/hooks/use-shopping-list";
@@ -26,6 +17,7 @@ import {
 import type { StaticDishData } from "@/data/guided-cook-steps";
 import { InstacartHint } from "./instacart-hint";
 import { IngredientPantryDot } from "@/components/shared/ingredient-pantry-dot";
+import { IngredientIcon } from "@/components/shared/ingredient-icon";
 
 interface Ingredient {
   id: string;
@@ -78,7 +70,6 @@ export function IngredientList({
 }: IngredientListProps) {
   const reducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<"dish" | "station">("dish");
-  const { system, setSystem } = useUnitPref();
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [askingSub, setAskingSub] = useState<string | null>(null);
   const {
@@ -144,21 +135,10 @@ export function IngredientList({
   const { addMany: addToShopping } = useShoppingList();
 
   const handleAddMissingToShopping = () => {
-    const missing: Array<{
-      name: string;
-      quantity?: string;
-      sourceRecipeSlug?: string;
-      sourceRecipeName?: string;
-    }> = [];
+    const missing: string[] = [];
     for (const section of effectiveSections) {
       for (const item of section.ingredients) {
-        if (!checked.has(item.id))
-          missing.push({
-            name: item.name,
-            quantity: item.quantity || undefined,
-            sourceRecipeSlug: dishSlug || undefined,
-            sourceRecipeName: recipeName || undefined,
-          });
+        if (!checked.has(item.id)) missing.push(item.name);
       }
     }
     if (missing.length === 0) return;
@@ -238,36 +218,6 @@ export function IngredientList({
           <h2 className="font-serif text-xl text-[var(--nourish-dark)]">
             Gather these
           </h2>
-          {/* Unit swap — same preference the profile sheet holds. */}
-          <div
-            role="tablist"
-            aria-label="Units"
-            className="ml-auto inline-flex items-center rounded-full border border-neutral-200 bg-white p-0.5 text-[11px] font-semibold"
-          >
-            {(
-              [
-                ["metric", "g"],
-                ["us", "cups"],
-              ] as const
-            ).map(([sys, label]) => (
-              <button
-                key={sys}
-                type="button"
-                role="tab"
-                aria-selected={system === sys}
-                onClick={() => setSystem(sys)}
-                className={cn(
-                  "rounded-full px-2.5 py-1 transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
-                  system === sys
-                    ? "bg-[var(--nourish-green)] text-white"
-                    : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                )}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
           {hasCoalescedView && (
             <div
               role="tablist"
@@ -309,7 +259,7 @@ export function IngredientList({
         </div>
 
         {viewMode === "station" && hasCoalescedView ? (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             {prepGroups.map((group) => (
               <div key={group.station}>
                 <h3 className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2">
@@ -327,78 +277,35 @@ export function IngredientList({
                         type="button"
                         onClick={() => toggleCoalesced(item.name)}
                         className={cn(
-                          "flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors",
+                          "flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors",
                           isChecked
                             ? "bg-[var(--nourish-green)]/5"
                             : "hover:bg-neutral-50",
                         )}
                       >
-                        <span
-                          className={cn(
-                            "mt-px flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
-                            isChecked
-                              ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]"
-                              : "border-neutral-300",
-                          )}
-                        >
-                          {isChecked ? (
-                            <Check
-                              size={12}
-                              className="text-white"
-                              strokeWidth={3}
-                            />
-                          ) : (
-                            <Circle size={6} className="text-transparent" />
-                          )}
-                        </span>
-                        {/* Reference grammar (matches IngredientRow): emoji
-                            anchor + NAME-left / AMOUNT-right two columns. */}
-                        <span
-                          className="shrink-0 text-lg leading-none"
-                          aria-hidden
-                        >
-                          {ingredientEmoji(item.name)}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          {/* NAME-left / AMOUNT floated-right; name wraps under
-                              the amount (NYT-style), never squeezed. */}
-                          <span className="block">
-                            {item.quantity && (
-                              <span
-                                className={cn(
-                                  "float-right ml-3 text-[13px] leading-snug tabular-nums",
-                                  "text-[var(--nourish-subtext)]",
-                                  isChecked && "line-through",
-                                )}
-                              >
-                                {displayQuantity(
-                                  item.quantity,
-                                  item.name,
-                                  system,
-                                )}
-                              </span>
+                        <IngredientIcon
+                          name={item.name}
+                          checked={isChecked}
+                          size="sm"
+                          className="mt-0.5"
+                        />
+                        <span className="flex-1">
+                          <span
+                            className={cn(
+                              "block text-sm font-medium",
+                              isChecked
+                                ? "text-[var(--nourish-subtext)] line-through"
+                                : "text-[var(--nourish-dark)]",
                             )}
-                            <span
-                              className={cn(
-                                "text-[15px] leading-snug",
-                                isChecked
-                                  ? "text-[var(--nourish-subtext)] line-through"
-                                  : "text-[var(--nourish-dark)]",
-                              )}
-                            >
-                              {item.name}
-                              {item.isOptional && (
-                                <span className="text-[var(--nourish-subtext)] italic">
-                                  {" · optional"}
-                                </span>
-                              )}
-                            </span>
+                          >
+                            {item.name}
                           </span>
-                          {item.sources.length > 1 && (
-                            <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
-                              {item.sources.join(" & ")}
-                            </span>
-                          )}
+                          <span className="mt-0.5 block text-xs text-[var(--nourish-subtext)]">
+                            {item.quantity}
+                            {item.sources.length > 1
+                              ? ` · ${item.sources.join(" & ")}`
+                              : ""}
+                          </span>
                         </span>
                       </button>
                     );
@@ -408,7 +315,7 @@ export function IngredientList({
             ))}
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]">
+          <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             {effectiveSections.map((section, sectionIdx) => {
               const sectionStartIdx = sectionStartIndices[sectionIdx];
 
@@ -418,13 +325,9 @@ export function IngredientList({
                       sub-label so the whole list reads as one unified surface. */}
                   {isSegmented && section.label && (
                     <motion.h3
-                      initial={reducedMotion ? false : { opacity: 0, x: -4 }}
+                      initial={{ opacity: 0, x: -4 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={
-                        reducedMotion
-                          ? { duration: 0 }
-                          : { delay: sectionStartIdx * 0.04 }
-                      }
+                      transition={{ delay: sectionStartIdx * 0.04 }}
                       className="sous-label border-b border-neutral-100 bg-neutral-50/60 px-4 py-2"
                     >
                       {section.label}
@@ -468,14 +371,10 @@ export function IngredientList({
         <AnimatePresence>
           {allChecked && (
             <motion.div
-              initial={reducedMotion ? false : { opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
-              transition={
-                reducedMotion
-                  ? { duration: 0.12 }
-                  : { type: "spring", stiffness: 300, damping: 25 }
-              }
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/25 bg-[var(--nourish-green)]/5 px-4 py-3"
             >
               <span className="text-lg">✅</span>
@@ -492,7 +391,7 @@ export function IngredientList({
         {/* Primary: Proceed to cook */}
         <motion.button
           onClick={onReady}
-          whileTap={reducedMotion ? undefined : { scale: 0.97 }}
+          whileTap={{ scale: 0.97 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
           className={cn(
             "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
@@ -509,14 +408,15 @@ export function IngredientList({
         {/* Add missing ingredients to shopping list */}
         {!allChecked && missingCount > 0 && (
           <motion.button
-            initial={reducedMotion ? false : { opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={
-              reducedMotion
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 260, damping: 25, delay: 0.1 }
-            }
-            whileTap={reducedMotion ? undefined : { scale: 0.96 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: 0.1,
+            }}
+            whileTap={{ scale: 0.96 }}
             onClick={handleAddMissingToShopping}
             className={cn(
               "flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium",
@@ -539,14 +439,15 @@ export function IngredientList({
         {/* Secondary: Select sides to pair */}
         {onSelectSides && (
           <motion.button
-            initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={
-              reducedMotion
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 260, damping: 25, delay: 0.15 }
-            }
-            whileTap={reducedMotion ? undefined : { scale: 0.96 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 25,
+              delay: 0.15,
+            }}
+            whileTap={{ scale: 0.96 }}
             onClick={onSelectSides}
             className={cn(
               "flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-medium",
@@ -576,6 +477,7 @@ function IngredientRow({
   onRememberSub,
   onToggle,
   onAskSub,
+  onTogglePantry,
 }: {
   item: Ingredient;
   idx: number;
@@ -590,8 +492,6 @@ function IngredientRow({
   onAskSub: () => void;
   onTogglePantry: () => void;
 }) {
-  const { system } = useUnitPref();
-  const reducedMotion = useReducedMotion();
   // AI substitution query  -  fires only when expanded
   const subQuery = trpc.ai.suggestSubstitution.useQuery(
     {
@@ -605,96 +505,108 @@ function IngredientRow({
   return (
     <div>
       <motion.div
-        initial={reducedMotion ? false : { opacity: 0, x: -8 }}
+        initial={{ opacity: 0, x: -8 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={reducedMotion ? { duration: 0 } : { delay: idx * 0.04 }}
+        transition={{ delay: idx * 0.04 }}
         className={cn(
-          "flex w-full items-center gap-3 px-4 py-2.5",
+          "flex w-full items-start gap-3 px-4 py-3.5",
           "transition-colors duration-100",
           checked && "opacity-50",
         )}
       >
-        {/* Checkbox  -  20px visual circle, 44px touch target via before-inset.
-            Left-aligned at the row's padding edge so the name sits a tight
-            gap-3 away — no stranded gap between the circle and the label. */}
+        {/* Ingredient icon doubles as the check target, keeping the row visual
+            food-first while preserving the 44px touch area. */}
         <button
           onClick={onToggle}
-          className="relative flex h-5 w-5 shrink-0 items-center justify-center transition-transform active:scale-90 before:absolute before:-inset-3 before:content-['']"
+          className="relative -ml-0.5 -my-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-transform active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
-          {checked ? (
-            <motion.div
-              initial={reducedMotion ? false : { scale: 0.6 }}
-              animate={{ scale: 1 }}
-              transition={
-                reducedMotion
-                  ? { duration: 0 }
-                  : { type: "spring", stiffness: 400, damping: 15 }
-              }
-              className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--nourish-green)]"
-            >
-              <Check size={12} className="text-white" strokeWidth={3} />
-            </motion.div>
-          ) : (
-            <Circle size={20} className="text-neutral-300" />
-          )}
+          <IngredientIcon name={item.name} checked={checked} size="md" />
         </button>
 
-        {/* Food emoji — a visual anchor for the ingredient (recipe-preview
-            style); decorative, the name carries the label. */}
-        <span className="shrink-0 text-lg leading-none" aria-hidden>
-          {ingredientEmoji(item.name)}
-        </span>
-
-        {/* Ingredient info — NAME primary (full width), AMOUNT secondary
-            floated top-right and muted. The name flows the full width and
-            wraps UNDER the amount (NYT-style), so a long name + a wordy
-            amount ("1/2 medium") never squeeze each other into a ragged
-            narrow column. */}
+        {/* Ingredient info */}
         <button
           onClick={onToggle}
-          className="min-w-0 flex-1 text-left active:scale-[0.98] transition-transform"
+          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
-          {item.quantity && (
+          <div className="flex items-center gap-2">
+            {/* Pantry-status dot — only rendered when the item IS in the
+                pantry (a calm green confirmation). For the common
+                not-in-pantry case we show nothing rather than a faint
+                outline on every row: an empty "missing" dot restates the
+                absence of a bookmark-fill and just adds a second circle
+                next to the checkbox (rule 13 — no redundant restatement). */}
+            {inPantry && (
+              <IngredientPantryDot
+                status="have"
+                optional={item.isOptional ?? false}
+                className="shrink-0"
+              />
+            )}
             <span
               className={cn(
-                "float-right ml-3 text-[13px] leading-snug tabular-nums",
-                "text-[var(--nourish-subtext)]",
-                checked && "line-through",
+                "text-sm font-medium",
+                checked
+                  ? "text-[var(--nourish-subtext)] line-through"
+                  : "text-[var(--nourish-dark)]",
               )}
             >
-              {displayQuantity(item.quantity, item.name, system)}
+              {item.name}
             </span>
-          )}
-          {inPantry && (
-            <IngredientPantryDot
-              status="have"
-              optional={item.isOptional ?? false}
-              className="mr-1.5 inline-block align-middle"
-            />
-          )}
-          <span
-            className={cn(
-              "text-[15px] leading-snug",
-              checked
-                ? "text-[var(--nourish-subtext)] line-through"
-                : "text-[var(--nourish-dark)]",
-            )}
-          >
-            {item.name}
             {item.isOptional && (
-              <span className="text-[var(--nourish-subtext)] italic">
-                {" · optional"}
+              <span className="text-[11px] text-[var(--nourish-subtext)] italic">
+                optional
               </span>
             )}
-          </span>
+          </div>
+          {/* Quantity on its own line so a long amount never crushes the
+              name into a multi-line wrap (the old inline layout did). */}
+          <p
+            className={cn(
+              "mt-0.5 text-xs",
+              checked
+                ? "text-[var(--nourish-subtext-faint)]"
+                : "text-[var(--nourish-subtext)]",
+            )}
+          >
+            {item.quantity}
+          </p>
+          {item.substitution && !showingSub && !rememberedSub && (
+            <p className="mt-0.5 text-xs text-[var(--nourish-subtext-faint)]">
+              sub: {item.substitution}
+            </p>
+          )}
+          {rememberedSub && !showingSub && (
+            <p className="mt-0.5 text-xs text-[var(--nourish-green)]/80">
+              last time: {rememberedSub}
+            </p>
+          )}
         </button>
 
-        {/* Substitution toggle  -  44px touch target. The ONLY side action: the
-            recipe's default sub is surfaced here on tap, never inline. */}
+        {/* Stash in pantry  -  small bookmark toggle, preserves future cooks */}
+        <button
+          onClick={onTogglePantry}
+          className={cn(
+            "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
+            inPantry
+              ? "text-[var(--nourish-green)]"
+              : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
+          )}
+          type="button"
+          aria-label={
+            inPantry
+              ? `Remove ${item.name} from pantry`
+              : `Add ${item.name} to pantry`
+          }
+          title={inPantry ? "In your pantry" : "Add to pantry"}
+        >
+          <Bookmark size={14} fill={inPantry ? "currentColor" : "none"} />
+        </button>
+
+        {/* Substitution toggle  -  44px touch target */}
         {!checked && !item.isOptional && (
           <button
             onClick={onAskSub}
@@ -717,13 +629,13 @@ function IngredientRow({
       <AnimatePresence>
         {showingSub && (
           <motion.div
-            initial={reducedMotion ? false : { height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
-            exit={reducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.2 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="mb-3 ml-12 mr-4 rounded-lg border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-2.5">
+            <div className="mb-3 ml-[72px] mr-4 rounded-lg border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-2.5">
               {subQuery.isLoading ? (
                 <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
                   Finding a swap...

@@ -8,18 +8,6 @@ Do it right. Do it with tests. Do it with documentation. Do it so well that Stef
 
 ---
 
-## ⚡ BULLETPROOF — DEPTH OVER SPEED ⚡
-
-**Never optimize for speed or for "shipping fast." Optimize for DEPTH. Always do things as detailed and fully executed as possible.** (Standing directive from Stefan, 2026-06-20, after repeatedly shipping the shallow version.)
-
-- The default failure mode is the **module bolted on top**: a single dumb block that _looks_ right but is interactionally dead. The fix is always to go one level deeper than feels necessary.
-- **The "individually selectable" bar**: every distinct thing the user sees should be its own first-class object — individually hoverable, clickable/selectable (with a visible selection state / object box), and drillable into its own detail. A monolithic panel that opens "the whole tab" is the lazy version; per-element select + drill-down is the real one. (Reference: the Dobe nutrition metrics — each metric became its own selectable object with hover + object-box + inline drill-down. That is the minimum bar, everywhere.)
-- Reach for the **deeper architecture**, not the first one that works. Don't anchor on a quick shape and iterate inside it; if the right answer is more elements, more wiring, more states — do that.
-- "Fully executed" means: every state (hover, focus, selected, empty, error), keyboard, the real data wired through, and verified live — not a happy-path stub.
-- Slowness is acceptable; shallowness is not. When tempted to ship the quick version, that is the signal to go deeper instead.
-
----
-
 ## ⚡ BULLETPROOF — ALWAYS COMMIT TO MAIN ⚡
 
 **Always commit directly to main and push. Always. When in doubt, commit.**
@@ -125,8 +113,6 @@ src/
 
 12. **Plan only what an autonomous agent can execute (load-bearing rule)**: When writing or extending any timeline / phase / week-by-week document, classify every deliverable as either **AUTO-BUILD** (everything needed lives in this repo + npm + the codebase's existing tools) or **FOUNDER-GATED** (needs an external account, paid service, real human counsel, real users, or third-party permission/asset). Founder-gated weeks must explicitly list what autonomous prep work is shippable now (the abstraction, the schema, the wiring stub, the env-var contract) so when the founder eventually provides credentials, integration is one config edit away. Never schedule a founder-gated week as if it were autonomous — that buries the actual blocker and wastes the AI's time. Sequence AUTO-BUILD weeks first; surface founder-gated dependencies in the planning doc's header so they get acted on in parallel rather than discovered mid-execution. This rule was added 2026-05-01 after the Stage-1+2 timeline incorrectly scheduled W13 (Clerk) / W14 (Neon) / W15 (R2) / W16 (Redis) / W17 (Sentry) / W19 (real Stanford content) as if they were normal AI-executable work.
 
-13. **Minimal visual text — disclosure on demand (load-bearing rule)**: Default every surface to the fewest words possible. The UI is for _doing_, not _reading_. Concretely: (a) a feature entry is a **button with a label, not a label + an explanatory paragraph** — e.g. a "Group Challenge" button, never "Group cook challenge / Form a pod, cook the weekly recipe together, climb the leaderboard." (b) **Never explain self-evident concepts** — "Cuisine fit", "Flavor contrast", "Protein" etc. stand on their own; do not add a sentence defining what they mean. Assume a competent adult. (c) Prefer **icon + short label pills** over prose for scores/attributes. (d) **No redundant restatement** — if a bar/ring already encodes a value, don't also print the number; if a pill says "cuisine fit", don't also print a "92%". (e) Anything genuinely needed for the curious goes behind **tap / hold / hover** (a tooltip, an expand panel, a detail screen) — never inline by default. When in doubt, cut the sentence and trust the click. This rule was added 2026-06-06; it strengthens rule 6 (Simplicity-first UI) with a hard bias toward progressive disclosure.
-
 ## AI integration notes
 
 - Food recognition uses a two-step pipeline: Vision API identifies the dish, then a correction chip UI lets the user fix misidentification. Never trust vision output alone.
@@ -148,9 +134,8 @@ The V1 internal database targets 80-100 side dishes across 8-10 cuisine families
 - Run `pnpm lint && pnpm test` before committing.
 - Prefer small, focused PRs. One feature or fix per PR.
 - When adding a new screen or flow, sketch the component tree in a comment before writing code.
-- **Before answering questions about the codebase**, use `qmd search "query"` to find relevant docs across the sous collection, Stefan-Brain wiki, and strategy documents.
-- **When planning new features**, search strategy and planning docs via QMD first: `qmd search "feature topic"` for keyword matches, `qmd vsearch "feature topic"` for semantic matches.
-- QMD collections available: `sous` (all Sous markdown), `stefan-brain` (wiki), `optimus` (Optimus docs).
+- **Before answering questions about the codebase**, search directly with Grep/Glob across this repo's `docs/`, `STRATEGY.md`, and `ROADMAP.md`, plus the Stefan-Brain wiki (`wiki/` — start from `wiki/MAP.md`). (QMD was removed from the stack 2026-07-04 — do not attempt `qmd` commands.)
+- **When planning new features**, search strategy and planning docs the same way: Grep for keywords across `docs/`, `STRATEGY.md`, and `Stefan-Brain/wiki/entrepreneurship/sous/`.
 
 ## Operational guardrails
 
@@ -184,3 +169,23 @@ Touch only what you must. Don't improve adjacent code, refactor things that aren
 ### 4. Goal-Driven Execution
 
 Transform tasks into verifiable goals. For multi-step tasks, state a brief plan with verify steps. Define success criteria before starting so you can loop independently without constant clarification.
+
+
+---
+
+## ⚡ DISPATCH PROTOCOL ⚡
+
+If `DISPATCH.md` exists in the repo root with `state: open`:
+1. **Read it FIRST**, before any other work, unless Stefan's prompt explicitly
+   overrides it. If Stefan gave a different task, do Stefan's task, then note
+   in STATUS.md that the dispatch was preempted (outcome stays as-is).
+2. On starting dispatch work: overwrite `STATUS.md` with the matching
+   `dispatch_id` and `outcome: in-progress`. Commit.
+3. Execute against the acceptance criteria. Challenge bad assumptions —
+   `outcome: rejected` with reasoning beats silently building the wrong thing.
+4. On finish: finalize STATUS.md (outcome, commits, verification evidence,
+   suggested_next). `shipped` requires lint+tests+build passing — otherwise
+   it is `partial`. Commit and push everything to main.
+5. Never edit DISPATCH.md. Cowork owns it. Never delete STATUS.md history —
+   prior cycles are archived by the sync task, not by you.
+6. Log the session to Stefan-Brain wiki/_log/ as always.
