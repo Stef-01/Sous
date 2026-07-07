@@ -12,9 +12,9 @@ import { usePantry } from "@/lib/hooks/use-pantry";
 import { InstacartHint } from "@/components/guided-cook/instacart-hint";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { GroceryNutritionPreview } from "@/components/shared/grocery-nutrition-preview";
+import { ShoppingIngredientMark } from "@/components/shared/shopping-ingredient-mark";
 import {
   ingredientCategory,
-  ingredientEmoji,
   GROCERY_CATEGORY_ORDER,
   type GroceryCategory,
 } from "@/lib/utils/ingredient-meta";
@@ -30,9 +30,10 @@ import { shoppingRecipeSourceSlugs } from "@/lib/shopping/recipe-sources";
 /**
  * Shopping list — the inverse of the pantry, redesigned as an aisle-grouped
  * grocery list: items grouped under colour-coded aisle labels (Produce, Meat &
- * Seafood, …), each row a food-emoji + name + a rounded checkbox, warm cream
- * bars between aisles. Tap an item to mark it bought; bought items can be sent
- * straight to the pantry. Motion-free / reduced-motion safe by construction.
+ * Seafood, …), each row a rounded checkbox + name + quantity + ingredient
+ * mark, warm cream bars between aisles. Tap an item to mark it bought; bought
+ * items can be sent straight to the pantry. Motion-free / reduced-motion safe
+ * by construction.
  */
 export default function ShoppingListPage() {
   const router = useRouter();
@@ -286,7 +287,7 @@ function GroceryRow({
   onRemove: () => void;
 }) {
   // Reference grammar (Crouton mockups): checkbox LEFT, name left, BOLD
-  // quantity right-aligned on the same line, food emoji far right.
+  // quantity right-aligned on the same line, ingredient mark far right.
   const { system } = useUnitPref();
   const reducedMotion = useReducedMotion();
   return (
@@ -341,9 +342,7 @@ function GroceryRow({
             {displayQuantity(quantity, name, system)}
           </span>
         )}
-        <span className="w-7 shrink-0 text-center text-xl" aria-hidden>
-          {ingredientEmoji(name)}
-        </span>
+        <ShoppingIngredientMark name={name} bought={bought} />
       </button>
       {/* Quiet per-item remove — present but subordinate to the checkbox. */}
       <button

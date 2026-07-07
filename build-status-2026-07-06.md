@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 12 Units Shipped
+## This Session: 13 Units Shipped
 
-### Menu-app (W1-W11 shipped, next: W12)
+### Menu-app (W1-W12 shipped, next: W13)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -14,9 +14,10 @@
 - **W8** — Guided-cook "Add missing" now preserves ingredient quantities and per-dish recipe source metadata into the shopping list, so grocery rows show amounts and recipe chips stay accurate (`10bb13f`)
 - **W9** — Combined-cook "By station" Grab view now uses the same serving-scaled ingredient sections as "By dish", preventing stale quantities after the serving stepper changes (`4db06e4`)
 - **W10** — Shopping-list recipe chips and grocery nutrition preview now read merged `contributedBy` source ledgers, so recipes do not disappear when all their ingredients aggregate into shared rows (`2514691`)
-- **W11** - Shopping-list recipe-chip removal is now non-destructive for merged grocery rows, using per-recipe contribution ledgers to keep shared ingredients and recompute quantities where possible (this commit)
-- Tests: 21 → 61
-- Next unit: **W12** (pick next highest-value menu-app polish/bug from current repo state)
+- **W11** - Shopping-list recipe-chip removal is now non-destructive for merged grocery rows, using per-recipe contribution ledgers to keep shared ingredients and recompute quantities where possible (`888b812`)
+- **W12** - Shopping-list rows now use the richer ingredient-icon library for known foods while preserving the legacy aisle emoji fallback for unknown grocery items (this commit)
+- Tests: 21 → 64
+- Next unit: **W13** (pick next highest-value menu-app polish/bug from current repo state)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -27,4 +28,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W12 + Y7.
+Say "keep going" to start W13 + Y7.
