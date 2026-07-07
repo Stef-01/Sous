@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
 
 type Radius = "sm" | "md" | "lg";
+type CardElement = "div" | "section" | "article" | "aside";
 
 const RADIUS: Record<Radius, string> = {
   sm: "var(--radius-sm)",
@@ -21,28 +22,31 @@ const RADIUS: Record<Radius, string> = {
  */
 export function Card({
   children,
+  as: Tag = "div",
   radius = "md",
   padded = true,
   className,
+  style,
   ...rest
 }: {
   children: ReactNode;
+  as?: CardElement;
   radius?: Radius;
   /** Apply the standard 16px card padding. Off for image-forward cards. */
   padded?: boolean;
   className?: string;
-} & React.HTMLAttributes<HTMLDivElement>) {
+} & React.HTMLAttributes<HTMLElement>) {
   return (
-    <div
+    <Tag
       className={cn(
         "bg-white shadow-[var(--shadow-card)]",
         padded && "p-[var(--card-pad)]",
         className,
       )}
-      style={{ borderRadius: RADIUS[radius] }}
+      style={{ ...style, borderRadius: RADIUS[radius] }}
       {...rest}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

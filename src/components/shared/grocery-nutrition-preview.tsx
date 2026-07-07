@@ -1,5 +1,7 @@
 "use client";
 
+import { Card } from "@/components/shared/layout/card";
+import { SectionKicker } from "@/components/shared/section-kicker";
 import { groceryNutritionRollup } from "@/lib/nutrition/grocery-rollup";
 
 /**
@@ -23,8 +25,8 @@ export function GroceryNutritionPreview({
   ];
 
   return (
-    <section className="rounded-[var(--radius-lg)] border border-neutral-200/80 bg-white p-4">
-      <p className="sous-label">What these meals deliver</p>
+    <Card as="section" radius="lg">
+      <SectionKicker as="p">What these meals deliver</SectionKicker>
       <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
         Across {roll.recipeCount} recipe{roll.recipeCount === 1 ? "" : "s"} ·
         one serving each
@@ -45,6 +47,6 @@ export function GroceryNutritionPreview({
           ? ` ${roll.excludedCount} item${roll.excludedCount === 1 ? "" : "s"} without recipe nutrition aren't counted.`
           : ""}
       </p>
-    </section>
+    </Card>
   );
 }

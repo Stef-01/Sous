@@ -13,6 +13,8 @@ import { InstacartHint } from "@/components/guided-cook/instacart-hint";
 import { EmptyStateCTA } from "@/components/shared/empty-state-cta";
 import { GroceryNutritionPreview } from "@/components/shared/grocery-nutrition-preview";
 import { ShoppingIngredientMark } from "@/components/shared/shopping-ingredient-mark";
+import { Card } from "@/components/shared/layout/card";
+import { SectionKicker } from "@/components/shared/section-kicker";
 import {
   ingredientCategory,
   GROCERY_CATEGORY_ORDER,
@@ -145,12 +147,12 @@ export default function ShoppingListPage() {
             {/* Recipes that contributed items — horizontal carousel. */}
             {recipes.length > 0 && (
               <section className="mb-1">
-                <p
-                  className="sous-label pb-2 pt-1"
-                  style={{ color: "var(--grocery-cat)" }}
+                <SectionKicker
+                  as="p"
+                  className="pb-2 pt-1 text-[var(--grocery-cat)]"
                 >
                   Recipes
-                </p>
+                </SectionKicker>
                 <div className="-mx-[var(--gutter)] flex gap-3 overflow-x-auto px-[var(--gutter)] pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {recipes.map((r) => (
                     <RecipeChip
@@ -183,12 +185,12 @@ export default function ShoppingListPage() {
                     aria-hidden
                   />
                 )}
-                <p
-                  className="sous-label pt-4 pb-1"
-                  style={{ color: "var(--grocery-cat)" }}
+                <SectionKicker
+                  as="p"
+                  className="pb-1 pt-4 text-[var(--grocery-cat)]"
                 >
                   {category}
-                </p>
+                </SectionKicker>
                 <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
                   <AnimatePresence initial={false}>
                     {list.map((item) => (
@@ -212,9 +214,12 @@ export default function ShoppingListPage() {
                   className="-mx-[var(--gutter)] mt-1 h-1.5 bg-[var(--divider-warm)]"
                   aria-hidden
                 />
-                <p className="sous-label pt-4 pb-1 text-[var(--nourish-subtext-faint)]">
+                <SectionKicker
+                  as="p"
+                  className="pb-1 pt-4 text-[var(--nourish-subtext-faint)]"
+                >
                   In the cart ({boughtItems.length})
-                </p>
+                </SectionKicker>
                 <ul className="divide-y divide-dashed divide-[var(--nourish-border)]">
                   <AnimatePresence initial={false}>
                     {boughtItems.map((item) => (
@@ -376,7 +381,12 @@ function RecipeChip({
 }) {
   const label = name.replace(/\s*\([^)]*\)\s*$/, "").trim() || name;
   return (
-    <div className="relative w-[176px] shrink-0 overflow-hidden rounded-2xl border border-[var(--nourish-border-strong)] bg-white">
+    <Card
+      as="article"
+      radius="md"
+      padded={false}
+      className="relative w-[176px] shrink-0 overflow-hidden"
+    >
       <div className="relative aspect-[4/3] bg-[var(--nourish-cream)]">
         {image ? (
           <Image
@@ -411,6 +421,6 @@ function RecipeChip({
           View recipe <ChevronRight size={13} aria-hidden />
         </Link>
       </div>
-    </div>
+    </Card>
   );
 }
