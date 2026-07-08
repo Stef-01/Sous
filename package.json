@@ -9,6 +9,7 @@
     "gen:cook-summary": "tsx scripts/gen-cook-summary.ts",
     "gen:doge-atlas": "node scripts/gen-doge-atlas.mjs",
     "gen:doge-logo": "node scripts/gen-doge-logo.mjs",
+    "founder:preflight": "tsx scripts/founder-preflight.ts",
     "therapeutics:gaps": "tsx scripts/therapeutics-gap-report.ts",
     "therapeutics:review": "tsx scripts/therapeutics-review-export.ts",
     "start": "next start",

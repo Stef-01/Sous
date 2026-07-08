@@ -29,6 +29,20 @@ track is `docs/20-WEEK-AUTONOMOUS-MOAT-RETRO.md`.
 | Legal/clinical   | Therapeutics remain educational and founder-gated; deferred ledger is still binding before public launch.                                                  | Secure counsel and clinician sign-off before public health-claim positioning.  | Re-run copy/claim checks and manually review condition-aware outputs.                    |
 | Beta cohort      | Analytics taxonomy and local habit loops exist; retention evidence still needs real households.                                                            | Recruit the first 10 households and run structured cook/interview loops.       | Track cooks/user/week, acceptance rate, completion rate, and top friction notes.         |
 
+### Current preflight command
+
+Run this before any credential-day smoke:
+
+```bash
+pnpm founder:preflight
+```
+
+It prints the canonical database -> auth -> storage -> realtime -> charity ->
+AI unlock order, which env var names are configured or missing, the next
+founder action, and the smoke test to run after that unlock. Use
+`pnpm founder:preflight -- --json` for automation, or
+`pnpm founder:preflight -- --fail-on-missing` in CI/staging checks.
+
 ## Priority order (recommended)
 
 1. **Neon Postgres** (W14) — unlocks every persistence layer.

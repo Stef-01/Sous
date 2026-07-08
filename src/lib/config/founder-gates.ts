@@ -1,5 +1,6 @@
 export type FounderGateId =
   | "auth"
+  | "database"
   | "storage"
   | "realtime"
   | "charity-payments"
@@ -21,6 +22,9 @@ export interface FounderGateEnv {
   CLERK_SECRET_KEY?: string;
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?: string;
   SOUS_AUTH_ENABLED?: string;
+
+  DATABASE_URL?: string;
+  POSTGRES_URL?: string;
 
   NEXT_PUBLIC_SUPABASE_URL?: string;
   NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
@@ -60,6 +64,7 @@ export type LlmCostGuardDecision =
 
 const GATE_ORDER: FounderGateId[] = [
   "auth",
+  "database",
   "storage",
   "realtime",
   "charity-payments",
@@ -79,6 +84,8 @@ export function resolveFounderGateStatus(
   switch (id) {
     case "auth":
       return resolveAuthGate(env);
+    case "database":
+      return resolveDatabaseGate(env);
     case "storage":
       return resolveStorageGate(env);
     case "realtime":
@@ -145,6 +152,28 @@ function resolveAuthGate(env: FounderGateEnv): FounderGateStatus {
     notes: live
       ? ["Clerk provider and server auth can be enabled."]
       : ["Mock user remains the default; no sign-in wall is required."],
+  };
+}
+
+function resolveDatabaseGate(env: FounderGateEnv): FounderGateStatus {
+  const hasDatabaseUrl = hasValue(env.DATABASE_URL);
+  const hasPostgresUrl = hasValue(env.POSTGRES_URL);
+  const live = hasDatabaseUrl || hasPostgresUrl;
+  return {
+    id: "database",
+    mode: live ? "live" : "stub",
+    ready: live,
+    configuredEnv: [
+      ...(hasDatabaseUrl ? ["DATABASE_URL"] : []),
+      ...(hasPostgresUrl ? ["POSTGRES_URL"] : []),
+    ],
+    missingEnv: live ? [] : ["DATABASE_URL|POSTGRES_URL"],
+    blockedByFlag: null,
+    notes: live
+      ? ["Postgres-backed reads and write-through persistence can run."]
+      : [
+          "The app keeps serving bundled content and localStorage writes until the Supabase connection string is present.",
+        ],
   };
 }
 

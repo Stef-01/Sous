@@ -11,6 +11,7 @@ describe("resolveFounderGateStatus", () => {
   it("keeps every gate mock/stub when no founder env is configured", () => {
     expect(summariseFounderGateModes(resolveFounderGateStatuses({}))).toEqual({
       auth: "mock",
+      database: "stub",
       storage: "stub",
       realtime: "stub",
       "charity-payments": "stub",
@@ -43,6 +44,38 @@ describe("resolveFounderGateStatus", () => {
       mode: "mock",
       ready: false,
       blockedByFlag: "SOUS_AUTH_ENABLED",
+    });
+  });
+
+  it("marks database live when DATABASE_URL or POSTGRES_URL is present", () => {
+    expect(
+      resolveFounderGateStatus("database", {
+        DATABASE_URL: "postgres://example",
+      }),
+    ).toMatchObject({
+      mode: "live",
+      ready: true,
+      configuredEnv: ["DATABASE_URL"],
+      missingEnv: [],
+    });
+
+    expect(
+      resolveFounderGateStatus("database", {
+        POSTGRES_URL: "postgres://vercel-supabase",
+      }),
+    ).toMatchObject({
+      mode: "live",
+      ready: true,
+      configuredEnv: ["POSTGRES_URL"],
+      missingEnv: [],
+    });
+  });
+
+  it("keeps database in stub mode until a Supabase connection string exists", () => {
+    expect(resolveFounderGateStatus("database", {})).toMatchObject({
+      mode: "stub",
+      ready: false,
+      missingEnv: ["DATABASE_URL|POSTGRES_URL"],
     });
   });
 
