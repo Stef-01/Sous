@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 17 Units Shipped
+## This Session: 18 Units Shipped
 
-### Menu-app (W1-W16 shipped, next: W17)
+### Menu-app (W1-W17 shipped, next: W18)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -20,8 +20,9 @@
 - **W14** - Shopping-list captions, spacing, and row motion are token-aligned: grocery nutrition copy uses `.sous-meta`, list chrome moved to `--space-*`/`--row-gap`, and row animation routes through `motionTransition` with a design-contract test (`67b4cf3`)
 - **W15** - Added a Playwright provenance smoke for the combined-cook grocery handoff and hardened localhost production/WebKit e2e by keeping HTTPS-only transport headers deployed-only: direct combined cook → Add missing → persisted recipe/quantity ledgers → shopping-list recipe chips, nutrition preview, ingredient row, plus tested security-header policy (this commit)
 - **W16** - Deferred Today search taxonomy, saved recipes, and friends rails behind intent/viewport loaders: closed Today no longer requests the craving-search chunk until search opens, below-fold rails load only after the app scroller reaches them, and a Today performance-budget test pins the source split (this commit)
-- Tests: 21 → 79 plus 1 Playwright spec
-- Next unit: **W17** (Cook Together local core + realtime stub)
+- **W17** - Added the Cook Together deterministic local core and realtime adapter seam: presence, step progress, leave/stale handling, shared win derivation for two simulated cooks, local publish/subscribe bus, and Supabase-ready env-mode stub are covered by focused tests (this commit)
+- Tests: 21 → 86 plus 1 Playwright spec
+- Next unit: **W18** (Group-challenge depth + gifting polish)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -32,4 +33,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W17 + Y7.
+Say "keep going" to start W18 + Y7.
