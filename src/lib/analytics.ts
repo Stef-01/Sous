@@ -20,6 +20,9 @@ export type AnalyticsEvent =
   | "cook_completed"
   | "evaluate_opened"
   | "plate_shared"
+  | "recipe_gift_created"
+  | "recipe_gift_opened"
+  | "pod_challenge_shared"
   | "recognition_used";
 
 type AnalyticsValue = string | number | boolean | null;

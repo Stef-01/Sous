@@ -11,6 +11,7 @@ import {
   useFriendsLastSeen,
   parsePostedAgoMs,
 } from "@/lib/hooks/use-friends-last-seen";
+import { buildRecipeGiftPath } from "@/lib/share/recipe-gift";
 
 /** A friend cook enriched with a canonical 4-star "rating" for the gift
  *  preview. We don't track real friend ratings  -  4 reads as "they liked
@@ -185,13 +186,13 @@ export function FriendsStrip({
     // same surface a recipient sees when someone shares a dish via the
     // Win-screen gift flow. Makes the feed a discovery layer, not
     // wallpaper.
-    const params = new URLSearchParams({
-      from: entry.friend,
-      stars: String(entry.stars),
+    const giftPath = buildRecipeGiftPath({
+      slug: entry.dishSlug,
+      fromName: entry.friend,
+      stars: entry.stars,
+      source: "friends",
     });
-    router.push(
-      `/gift/${encodeURIComponent(entry.dishSlug)}?${params.toString()}`,
-    );
+    if (giftPath) router.push(giftPath);
   };
 
   return (

@@ -7,6 +7,12 @@ import {
   getStaticMealCookData,
   type StaticDishData,
 } from "@/data/guided-cook-steps";
+import {
+  clampGiftStars,
+  normaliseGiftSenderName,
+  normaliseRecipeGiftSource,
+} from "@/lib/share/recipe-gift";
+import { GiftOpenTracker } from "@/components/gift/gift-open-tracker";
 
 /** Gift page  -  a read-only preview of a dish a friend has sent you.
  *
@@ -21,26 +27,11 @@ import {
 
 interface GiftPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ from?: string; stars?: string }>;
+  searchParams: Promise<{ from?: string; stars?: string; src?: string }>;
 }
 
 function lookupDish(slug: string): StaticDishData | null {
   return getStaticCookData(slug) ?? getStaticMealCookData(slug);
-}
-
-function clampStars(raw: string | undefined): number {
-  if (!raw) return 0;
-  const n = Number.parseInt(raw, 10);
-  if (!Number.isFinite(n)) return 0;
-  return Math.max(0, Math.min(5, n));
-}
-
-function safeFirstName(raw: string | undefined): string {
-  if (!raw) return "A friend";
-  // Allow letters/numbers/spaces/hyphens/apostrophes  -  strip anything else
-  // and clamp length so nobody can jam rendering with a novel.
-  const cleaned = raw.replace(/[^\p{L}\p{N}\s'\-]/gu, "").trim();
-  return cleaned.slice(0, 24) || "A friend";
 }
 
 /** Shareable preview metadata: when a friend pastes the gift link into
@@ -56,7 +47,7 @@ export async function generateMetadata({
   const dish = lookupDish(slug);
   if (!dish) return { title: "Recipe gift  -  Sous", robots: { index: false } };
 
-  const sender = safeFirstName(from);
+  const sender = normaliseGiftSenderName(from);
   const title = `${sender} sent you ${dish.name}  -  Sous`;
   const description = dish.description;
   const image = dish.heroImageUrl ?? "/og-image.png";
@@ -85,16 +76,23 @@ export default async function GiftPage({
   searchParams,
 }: GiftPageProps) {
   const { slug } = await params;
-  const { from, stars } = await searchParams;
+  const { from, stars, src } = await searchParams;
   const dish = lookupDish(slug);
   if (!dish) notFound();
 
-  const senderName = safeFirstName(from);
-  const starCount = clampStars(stars);
+  const senderName = normaliseGiftSenderName(from);
+  const starCount = clampGiftStars(stars);
+  const source = normaliseRecipeGiftSource(src);
   const totalMins = dish.prepTimeMinutes + dish.cookTimeMinutes;
 
   return (
     <div className="min-h-dvh bg-[var(--nourish-cream)]">
+      <GiftOpenTracker
+        dishSlug={slug}
+        source={source}
+        hasSender={senderName !== "A friend"}
+        starCount={starCount}
+      />
       <main className="mx-auto flex max-w-md flex-col gap-5 px-5 py-8">
         <header className="flex flex-col items-center gap-2 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">

@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 18 Units Shipped
+## This Session: 19 Units Shipped
 
-### Menu-app (W1-W17 shipped, next: W18)
+### Menu-app (W1-W18 shipped, next: W19)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -21,8 +21,9 @@
 - **W15** - Added a Playwright provenance smoke for the combined-cook grocery handoff and hardened localhost production/WebKit e2e by keeping HTTPS-only transport headers deployed-only: direct combined cook → Add missing → persisted recipe/quantity ledgers → shopping-list recipe chips, nutrition preview, ingredient row, plus tested security-header policy (this commit)
 - **W16** - Deferred Today search taxonomy, saved recipes, and friends rails behind intent/viewport loaders: closed Today no longer requests the craving-search chunk until search opens, below-fold rails load only after the app scroller reaches them, and a Today performance-budget test pins the source split (this commit)
 - **W17** - Added the Cook Together deterministic local core and realtime adapter seam: presence, step progress, leave/stale handling, shared win derivation for two simulated cooks, local publish/subscribe bus, and Supabase-ready env-mode stub are covered by focused tests (this commit)
-- Tests: 21 → 86 plus 1 Playwright spec
-- Next unit: **W18** (Group-challenge depth + gifting polish)
+- **W18** - Added deterministic group-challenge depth and gifting polish: in-pod member leaderboards, group streak/at-risk computation, pod-share analytics payloads, canonical recipe-gift URLs/payloads, shared gift-page sanitizers, Win-screen/friends-strip gift routing, and typed viral-loop analytics are covered by focused tests (this commit)
+- Tests: 21 → 104 plus 1 Playwright spec
+- Next unit: **W19** (Founder-gated integration prep)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -33,4 +34,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W18 + Y7.
+Say "keep going" to start W19 + Y7.

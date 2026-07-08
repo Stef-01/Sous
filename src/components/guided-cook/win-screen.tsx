@@ -55,6 +55,7 @@ import {
 import { PetSheet } from "@/components/nutrition/pet-sheet";
 import { useXPSystem } from "@/lib/hooks/use-xp-system";
 import { haptic } from "@/lib/motion/haptics";
+import { buildRecipeGiftPayload } from "@/lib/share/recipe-gift";
 
 /** Skill node that was progressed during this cook. */
 export interface SkillProgressEntry {
@@ -351,18 +352,22 @@ export function WinScreen({
       saveGiftSenderName(senderName);
     }
 
-    const params = new URLSearchParams({ from: senderName });
-    if (rating > 0) params.set("stars", String(rating));
-    const giftUrl = `${window.location.origin}/gift/${encodeURIComponent(
-      dishSlug,
-    )}?${params.toString()}`;
+    const giftPayload = buildRecipeGiftPayload({
+      slug: dishSlug,
+      dishName,
+      fromName: senderName,
+      stars: rating,
+      source: podChallenge ? "pod" : "win",
+      origin: window.location.origin,
+    });
+    if (!giftPayload) return;
 
     // Prefer the native share sheet where available (mobile + some
     // desktops); fall back to clipboard so the user always gets a link.
     const shareData = {
-      title: `${senderName} cooked ${dishName}`,
-      text: `${senderName} made ${dishName} on Sous. Try it yourself  - `,
-      url: giftUrl,
+      title: giftPayload.title,
+      text: giftPayload.text,
+      url: giftPayload.url,
     };
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
@@ -371,15 +376,18 @@ export function WinScreen({
         typeof navigator !== "undefined" &&
         navigator.clipboard?.writeText
       ) {
-        await navigator.clipboard.writeText(giftUrl);
+        await navigator.clipboard.writeText(giftPayload.url);
       } else {
-        window.prompt("Copy this link:", giftUrl);
+        window.prompt("Copy this link:", giftPayload.url);
       }
       setGiftSent(true);
       logShare({
         dishSlug,
         dishName,
         recipient: senderName,
+        kind: "gift",
+        source: giftPayload.source,
+        stars: giftPayload.stars,
       });
     } catch {
       // Share dialog dismissed  -  don't flip the button to "sent" state.
@@ -389,14 +397,18 @@ export function WinScreen({
   const handleInvite = () => {
     if (!dishSlug) return;
     const senderName = loadGiftSenderName() || "Someone";
-    const params = new URLSearchParams({ from: senderName });
-    if (rating > 0) params.set("stars", String(rating));
-    const giftUrl = `${window.location.origin}/gift/${encodeURIComponent(
-      dishSlug,
-    )}?${params.toString()}`;
+    const giftPayload = buildRecipeGiftPayload({
+      slug: dishSlug,
+      dishName,
+      fromName: senderName,
+      stars: rating,
+      source: podChallenge ? "pod" : "win",
+      origin: window.location.origin,
+    });
+    if (!giftPayload) return;
     const name = inviteFriendName.trim();
     const greeting = name ? `Hey ${name}  -  ` : "";
-    const body = `${greeting}I made ${dishName} on Sous tonight. Want to cook it with me next week? ${giftUrl}`;
+    const body = `${greeting}I made ${dishName} on Sous tonight. Want to cook it with me next week? ${giftPayload.url}`;
     const href = `sms:?&body=${encodeURIComponent(body)}`;
     try {
       window.location.href = href;

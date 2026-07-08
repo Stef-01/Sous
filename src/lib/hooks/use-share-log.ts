@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { track } from "@/lib/analytics";
+import type { RecipeGiftSource } from "@/lib/share/recipe-gift";
 
 /** localStorage key for the share log. v1 so we can migrate later without
  *  breaking old data. */
@@ -20,6 +21,15 @@ export interface ShareLogEntry {
   /** Free-form first name the sender identified with at the time. Kept so
    *  we can surface "Alex cooked this too" type lines on the Path tally. */
   recipient?: string;
+  /** Back-compat default is "plate"; W18 gift links use "gift". */
+  kind?: "plate" | "gift" | "pod-challenge";
+  /** Non-PII source for viral-loop analytics. */
+  source?: RecipeGiftSource;
+  /** 0..5 sender rating when a gift was created. */
+  stars?: number;
+  /** Optional non-PII pod context for future challenge share instrumentation. */
+  podId?: string;
+  weekKey?: string;
 }
 
 function load(): ShareLogEntry[] {
@@ -72,6 +82,26 @@ export function logShare(entry: Omit<ShareLogEntry, "sharedAt">) {
   persist(next);
   // Funnel: plate shared (dish slug only — never the recipient).
   track("plate_shared", { dishSlug: entry.dishSlug });
+  if (entry.kind === "gift") {
+    track("recipe_gift_created", {
+      dishSlug: entry.dishSlug,
+      source: entry.source ?? "win",
+      hasRecipient: Boolean(entry.recipient?.trim()),
+      starCount: normaliseStarCount(entry.stars),
+    });
+  }
+  if (entry.kind === "pod-challenge") {
+    track("pod_challenge_shared", {
+      dishSlug: entry.dishSlug,
+      podId: entry.podId ?? null,
+      weekKey: entry.weekKey ?? null,
+    });
+  }
+}
+
+function normaliseStarCount(stars: number | undefined): number {
+  if (typeof stars !== "number" || !Number.isFinite(stars)) return 0;
+  return Math.max(0, Math.min(5, Math.trunc(stars)));
 }
 
 /** React hook that exposes the current share log and re-reads on storage
