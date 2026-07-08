@@ -113,7 +113,7 @@ Every week below is classified **AUTO-BUILD** (everything needed lives in this r
 | W14  | Caption/spacing/motion consistency       | Craft       | —                           | —                                                                                                     |
 | W15  | Test depth (E2E + golden + a11y)         | Reliability | —                           | —                                                                                                     |
 | W16  | Performance pass                         | Reliability | —                           | —                                                                                                     |
-| W17  | Cook Together local core + realtime stub | Network     | —                           | —                                                                                                     |
-| W18  | Group-challenge depth + gifting          | Network     | —                           | —                                                                                                     |
-| W19  | Founder-gated integration prep           | Rails       | —                           | —                                                                                                     |
-| W20  | Hardening + retro                        | Reliability | —                           | —                                                                                                     |
+| W17  | Cook Together local core + realtime stub | Network     | done                        | local core + realtime adapter seam                                                                    |
+| W18  | Group-challenge depth + gifting          | Network     | done                        | group challenge depth + recipe gifting polish                                                         |
+| W19  | Founder-gated integration prep           | Rails       | done                        | `73a036c`                                                                                             |
+| W20  | Hardening + retro                        | Reliability | done                        | `docs/20-WEEK-AUTONOMOUS-MOAT-RETRO.md`                                                               |

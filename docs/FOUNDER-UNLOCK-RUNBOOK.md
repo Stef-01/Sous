@@ -11,6 +11,24 @@
 > stub for each one (see `STAGE-1-2-6MO-TIMELINE.md` §0.5), so each
 > unlock is one config edit + smoke test rather than a week of work.
 
+## Current W20 punch list (filed 2026-07-08)
+
+The historical sections below remain useful as implementation notes. The
+current production direction is Supabase-first with documented Clerk/R2/Upstash
+fallbacks where they already exist. The canonical closeout for the autonomous
+track is `docs/20-WEEK-AUTONOMOUS-MOAT-RETRO.md`.
+
+| Gate             | Repo state                                                                                                                                                 | Founder action                                                                 | Smoke test                                                                               |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| Auth             | Mock user remains default; `src/lib/config/founder-gates.ts` reports auth live only when both Clerk env vars are present and the kill switch is not false. | Provide auth provider keys and confirm Clerk vs Supabase Auth rollout order.   | Sign in, complete a cook, verify the session is tied to the real user id.                |
+| Database         | Supabase is the documented production platform; local-first stores keep the demo shippable.                                                                | Add production `DATABASE_URL`, migrate/seed, and confirm RLS posture.          | Complete a cook, reload on another device, verify diary/session continuity.              |
+| Storage          | W19 gate recognizes either Supabase Storage public env or full R2 bucket env; local image fallback remains default.                                        | Add chosen storage env and host the existing food/user-photo assets.           | Resolve a stored win photo to a public URL and render it on Path/gift surfaces.          |
+| Realtime         | Cook Together deterministic local adapter is live; realtime reports live only with Supabase env plus `SOUS_REALTIME_ENABLED=true`.                         | Provide Supabase project env and choose the live channel implementation.       | Join one cook from two browsers and confirm presence + step progress converge.           |
+| Charity payments | Stripe charge helper is idempotent and verified-nonprofit gated; default is no-money stub.                                                                 | Provide Stripe test/live keys after charity/KYC decisions.                     | Run a test-mode pledge charge twice and confirm idempotency.                             |
+| AI               | Mock/heuristic providers remain default; cost budget parser/guard exists in W19.                                                                           | Provide `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` plus daily/monthly budget env. | Trigger one real call, confirm telemetry cost logging, then verify over-budget blocking. |
+| Legal/clinical   | Therapeutics remain educational and founder-gated; deferred ledger is still binding before public launch.                                                  | Secure counsel and clinician sign-off before public health-claim positioning.  | Re-run copy/claim checks and manually review condition-aware outputs.                    |
+| Beta cohort      | Analytics taxonomy and local habit loops exist; retention evidence still needs real households.                                                            | Recruit the first 10 households and run structured cook/interview loops.       | Track cooks/user/week, acceptance rate, completion rate, and top friction notes.         |
+
 ## Priority order (recommended)
 
 1. **Neon Postgres** (W14) — unlocks every persistence layer.

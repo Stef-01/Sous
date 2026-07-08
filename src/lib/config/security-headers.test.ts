@@ -55,4 +55,14 @@ describe("security headers", () => {
       ]),
     );
   });
+
+  it("allows the Cuisine Compass MapLibre stylesheet and worker primitives", () => {
+    const csp = valueFor(
+      "Content-Security-Policy",
+      buildSecurityHeaders({ httpsOnly: false }),
+    );
+
+    expect(csp).toContain("style-src 'self' 'unsafe-inline' https://unpkg.com");
+    expect(csp).toContain("worker-src 'self' blob:");
+  });
 });

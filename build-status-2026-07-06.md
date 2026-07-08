@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 20 Units Shipped
+## This Session: 21 Units Shipped
 
-### Menu-app (W1-W19 shipped, next: W20)
+### Menu-app (W1-W20 shipped, autonomous track complete)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -23,8 +23,9 @@
 - **W17** - Added the Cook Together deterministic local core and realtime adapter seam: presence, step progress, leave/stale handling, shared win derivation for two simulated cooks, local publish/subscribe bus, and Supabase-ready env-mode stub are covered by focused tests (this commit)
 - **W18** - Added deterministic group-challenge depth and gifting polish: in-pod member leaderboards, group streak/at-risk computation, pod-share analytics payloads, canonical recipe-gift URLs/payloads, shared gift-page sanitizers, Win-screen/friends-strip gift routing, and typed viral-loop analytics are covered by focused tests (this commit)
 - **W19** - Added the founder-gated integration contract: auth, storage/R2, realtime, charity payments, and AI now have one pure env switchboard with mock/stub/live status, kill switches, configured/missing env reporting, and LLM budget guard decisions covered by focused tests (this commit)
+- **W20** - Closed the 20-week autonomous moat track with a regression checklist, founder-gate punch list, ROADMAP closeout, STRATEGY decision-log update, and plan progress update (this commit)
 - Tests: 21 → 117 plus 1 Playwright spec
-- Next unit: **W20** (Hardening + retro)
+- Next unit: founder-unlock rehearsal or one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -35,4 +36,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W20 + Y7.
+Say "keep going" to start the next founder-unlock rehearsal slice + Y7.

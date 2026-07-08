@@ -5,7 +5,7 @@
 
 ---
 
-## ACTIVE WORKSTREAM: 20-WEEK AUTONOMOUS MOAT-DEEPENING PLAN — IN PROGRESS
+## STAGE 4: 20-WEEK AUTONOMOUS MOAT-DEEPENING PLAN — COMPLETE
 
 > Authored 2026-06-05. Full plan: **`docs/20-WEEK-AUTONOMOUS-MOAT-PLAN.md`**. The
 > AUTO-BUILD track (rule 12) that runs while the founder-gated rails get
@@ -17,6 +17,26 @@
 > founder-gated integration stubs. Founder gates (Auth, Storage, Realtime, Stripe,
 > AI keys, beta cohorts, legal/clinical) are surfaced in the plan header with the
 > autonomous prep that ships for each, so go-live is one config edit, not a rebuild.
+>
+> Closed 2026-07-08 with W20 hardening + retro. Close doc:
+> **`docs/20-WEEK-AUTONOMOUS-MOAT-RETRO.md`**. Final validated state:
+> typecheck, lint, full Vitest, production build, and Playwright smoke green.
+> Remaining work is founder action: credentials, legal/clinical review, and beta
+> cohorts.
+
+### Closing state
+
+- **Engine/Data:** context, pantry, preference, novelty, and time/season signals
+  are deeper in deterministic helpers and covered by focused tests.
+- **Content/Craft:** guided-cook ingredient display, quantity handling, shared
+  card/kicker primitives, tokenized spacing, motion contracts, and ingredient
+  icons raised the visual and structural floor.
+- **Network/Rails:** Cook Together local core, group challenge depth, gifting,
+  realtime seams, charity stubs, AI cost guard, and the founder-gate switchboard
+  are ready for credential-day wiring.
+- **Founder gates:** current punch list lives in
+  `docs/20-WEEK-AUTONOMOUS-MOAT-RETRO.md` and the existing
+  `docs/FOUNDER-UNLOCK-RUNBOOK.md`.
 
 ---
 
