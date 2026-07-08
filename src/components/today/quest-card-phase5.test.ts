@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { decideSwipe, exitDistanceFor } from "./quest-card";
+import {
+  decideSwipe,
+  exitDistanceFor,
+  resolveMealQueueShortcut,
+} from "./quest-card";
 
 // ---------------------------------------------------------------------------
 // Phase 5 contract: the fullscreen swiper maps a LEFT commit -> Pass and a
@@ -61,6 +65,66 @@ describe("Phase 5 exit distance preserves swipe direction for Cook/Pass", () => 
   it("velocity boost is clamped so a wild flick can't fly the Cook card off-screen unbounded", () => {
     expect(exitDistanceFor("right", 100000)).toBe(320 + 200);
     expect(exitDistanceFor("left", -100000)).toBe(-320 - 200);
+  });
+});
+
+describe("Phase 5 meal queue keyboard shortcut contract", () => {
+  it("maps the core one-handed shortcuts only when a dish is active", () => {
+    expect(
+      resolveMealQueueShortcut({ key: "ArrowLeft", hasActiveDish: true }),
+    ).toBe("pass");
+    expect(
+      resolveMealQueueShortcut({ key: "ArrowRight", hasActiveDish: true }),
+    ).toBe("cook");
+    expect(
+      resolveMealQueueShortcut({ key: "Enter", hasActiveDish: true }),
+    ).toBe("cook");
+    expect(resolveMealQueueShortcut({ key: " ", hasActiveDish: true })).toBe(
+      "cook",
+    );
+    expect(resolveMealQueueShortcut({ key: "s", hasActiveDish: true })).toBe(
+      "save",
+    );
+    expect(resolveMealQueueShortcut({ key: "S", hasActiveDish: true })).toBe(
+      "save",
+    );
+  });
+
+  it("lets Escape close the info sheet before closing the queue", () => {
+    expect(
+      resolveMealQueueShortcut({
+        key: "Escape",
+        hasActiveDish: true,
+        infoOpen: true,
+      }),
+    ).toBe("close-info");
+    expect(
+      resolveMealQueueShortcut({
+        key: "Escape",
+        hasActiveDish: true,
+        infoOpen: false,
+      }),
+    ).toBe("close-queue");
+  });
+
+  it("disables cook/pass/save shortcuts while the info sheet or an editable target is active", () => {
+    expect(
+      resolveMealQueueShortcut({
+        key: "ArrowRight",
+        hasActiveDish: true,
+        infoOpen: true,
+      }),
+    ).toBeNull();
+    expect(
+      resolveMealQueueShortcut({
+        key: "s",
+        hasActiveDish: true,
+        isEditableTarget: true,
+      }),
+    ).toBeNull();
+    expect(
+      resolveMealQueueShortcut({ key: "ArrowLeft", hasActiveDish: false }),
+    ).toBeNull();
   });
 });
 

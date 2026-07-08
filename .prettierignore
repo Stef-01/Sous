@@ -11,6 +11,7 @@ public/tamaweb
 # tool-managed lockfiles
 pnpm-lock.yaml
 package-lock.json
+recipe-trends/
 
 # large generated data files — prettier OOMs scanning them alongside the tree.
 # Their generators emit clean, deterministic output (prettier-written on gen).

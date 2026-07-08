@@ -1,8 +1,8 @@
 # Build Status - July 6, 2026
 
-## This Session: 22 Units Shipped
+## This Session: 23 Units Shipped
 
-### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight)
+### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue keyboard polish)
 
 - **W1** - Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** - Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -25,7 +25,8 @@
 - **W19** - Added the founder-gated integration contract: auth, storage/R2, realtime, charity payments, and AI now have one pure env switchboard with mock/stub/live status, kill switches, configured/missing env reporting, and LLM budget guard decisions covered by focused tests (this commit)
 - **W20** - Closed the 20-week autonomous moat track with a regression checklist, founder-gate punch list, ROADMAP closeout, STRATEGY decision-log update, and plan progress update (this commit)
 - **W21** - Added founder-unlock preflight: the gate contract now includes database readiness, `pnpm founder:preflight` prints the ordered unlock/smoke checklist without exposing secret values, and focused tests cover the report path (this commit)
-- Tests: 21 -> 124 plus 1 Playwright spec
+- **W22** - Hardened the fullscreen Today meal-queue keyboard flow: shortcuts now resolve through an explicit contract, Escape closes the nutrition sheet before closing the queue, cook/pass/save shortcuts pause while the sheet or editable focus is active, and the core-loop Playwright smoke verifies keyboard save against the current Today UI (this commit)
+- Tests: 21 -> 127 plus core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
@@ -37,4 +38,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to run the next founder-unlock rehearsal or start Casa Y7.
+Say "keep going" to run the next founder-unlock rehearsal, take another narrow core-loop friction reduction, or start Casa Y7.

@@ -54,6 +54,7 @@ next-env.d.ts
 # cowork session artifacts (daily briefs, temp scripts, write tests)
 daily-brief-*.md
 daily-feature-ideas/
+recipe-trends/
 canva-asset-sync-*.md
 .write-test
 *.ps1

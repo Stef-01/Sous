@@ -21,17 +21,26 @@ test.describe("Core Loop - Today meal queue to cook", () => {
         JSON.stringify({ spicy: 0.5, fresh: 0.3 }),
       );
       localStorage.setItem("sous-effort-tolerance", "moderate");
+      localStorage.setItem(
+        "sous-pulse-ledger-v1",
+        JSON.stringify({
+          shown: [{ pulseId: "e2e-quiet", at: new Date().toISOString() }],
+          answered: [],
+          dismissed: [],
+          onboardingDoneAt: new Date().toISOString(),
+        }),
+      );
     });
   });
 
-  test("Today page loads with meal queue, craving search, and community", async ({
+  test("Today page loads with meal queue, craving search, and content doorway", async ({
     page,
   }) => {
     await page.goto("/today");
     await expect(page.locator("h1")).toContainText("Sous");
     await expect(page.getByText("Meal queue")).toBeVisible();
     await expect(page.getByText(/what are you craving/i).first()).toBeVisible();
-    await expect(page.getByText("Community this week")).toBeVisible();
+    await expect(page.getByRole("link", { name: /Read:/i })).toBeVisible();
   });
 
   test("Search flow: type craving -> recommended sides", async ({ page }) => {
@@ -66,7 +75,7 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(page.getByText(/cook watch-outs/i)).toBeVisible();
 
     await page.getByRole("button", { name: /I have everything/i }).click();
-    await expect(page.getByText(/Step 1 of \d+/)).toBeVisible({
+    await expect(page.getByRole("img", { name: /Step 1 of \d+/ })).toBeVisible({
       timeout: 15000,
     });
     await expect(
@@ -74,16 +83,17 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     ).toBeVisible();
   });
 
-  test("Meal queue opens and save state is visible", async ({ page }) => {
+  test("Meal queue opens and keyboard save state is visible", async ({
+    page,
+  }) => {
     await page.goto("/today");
-    await page.getByRole("button", { name: /Open meal queue/i }).click();
+    await page.getByRole("button", { name: /Browse meals/i }).click();
 
     await expect(page.getByRole("dialog")).toBeVisible({ timeout: 5000 });
-    const saveButton = page
-      .getByRole("button", { name: /^Save\b|Save .+/i })
-      .first();
-    await expect(saveButton).toBeVisible();
-    await saveButton.click();
+    await expect(
+      page.getByRole("button", { name: /^Save\b|Save .+/i }).first(),
+    ).toBeVisible();
+    await page.keyboard.press("s");
     await expect(
       page
         .getByRole("button", { name: /Already saved|^Saved\b|Saved .+/i })

@@ -147,6 +147,32 @@ export function exitDistanceFor(
   return baseDistance + signed;
 }
 
+export type MealQueueShortcutAction =
+  | "close-queue"
+  | "close-info"
+  | "pass"
+  | "cook"
+  | "save";
+
+export function resolveMealQueueShortcut({
+  key,
+  hasActiveDish,
+  infoOpen = false,
+  isEditableTarget = false,
+}: {
+  key: string;
+  hasActiveDish: boolean;
+  infoOpen?: boolean;
+  isEditableTarget?: boolean;
+}): MealQueueShortcutAction | null {
+  if (key === "Escape") return infoOpen ? "close-info" : "close-queue";
+  if (infoOpen || isEditableTarget || !hasActiveDish) return null;
+  if (key === "ArrowLeft") return "pass";
+  if (key === "ArrowRight" || key === "Enter" || key === " ") return "cook";
+  if (key.toLowerCase() === "s") return "save";
+  return null;
+}
+
 /** Extract descriptive tags for a meal from its description. */
 export function partitionMetaTags(tags: ReadonlyArray<string>): {
   popularInline: boolean;
@@ -828,6 +854,7 @@ function MealSwipeQueueOverlay({
   }, []);
 
   const healthPanel = useMealHealthPanel();
+  const { isOpen: healthPanelOpen, close: closeHealthPanel } = healthPanel;
   const activeDish = unswiped[0] ?? null;
   // Fire once when the user has swiped the whole deck (deck-exhaust anchor).
   useEffect(() => {
@@ -888,30 +915,37 @@ function MealSwipeQueueOverlay({
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
+      const action = resolveMealQueueShortcut({
+        key: event.key,
+        hasActiveDish: !!activeDish,
+        infoOpen: healthPanelOpen,
+        isEditableTarget: isEditableShortcutTarget(event.target),
+      });
+      if (!action) return;
+
+      event.preventDefault();
+      if (action === "close-info") {
+        closeHealthPanel();
+      } else if (action === "close-queue") {
         onClose();
-      }
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
+      } else if (action === "pass") {
         swipeTop("left");
-      }
-      if (event.key === "ArrowRight") {
-        event.preventDefault();
+      } else if (action === "cook") {
         swipeTop("right");
-      }
-      if ((event.key === "Enter" || event.key === " ") && activeDish) {
-        event.preventDefault();
-        swipeTop("right");
-      }
-      if (event.key.toLowerCase() === "s") {
-        event.preventDefault();
+      } else if (action === "save") {
         saveActive();
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [activeDish, onClose, saveActive, swipeTop]);
+  }, [
+    activeDish,
+    closeHealthPanel,
+    healthPanelOpen,
+    onClose,
+    saveActive,
+    swipeTop,
+  ]);
 
   // Velocity-matched exit (R3): distance grows with the fling (up to ~520px) and
   // duration shrinks (down to 150ms), so a hard fling rockets the card off-screen
@@ -929,12 +963,17 @@ function MealSwipeQueueOverlay({
       role="dialog"
       aria-modal="true"
       aria-label="Meal swipe queue"
+      aria-describedby="meal-queue-shortcuts"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
       className="fixed inset-0 z-[180] flex h-full flex-col overflow-hidden bg-[#080907] text-white"
     >
+      <p id="meal-queue-shortcuts" className="sr-only">
+        Use left arrow to pass, right arrow or Enter to cook, S to save, and
+        Escape to close.
+      </p>
       <div
         className="absolute inset-x-0 top-0 z-40 px-4"
         style={{
@@ -1125,5 +1164,16 @@ function MealSwipeQueueOverlay({
         </div>
       )}
     </motion.div>
+  );
+}
+
+function isEditableShortcutTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tagName = target.tagName;
+  return (
+    target.isContentEditable ||
+    tagName === "INPUT" ||
+    tagName === "TEXTAREA" ||
+    tagName === "SELECT"
   );
 }
