@@ -196,7 +196,7 @@ function searchLocal(
   return results.slice(0, 8);
 }
 
-interface TextPromptProps {
+export interface TextPromptProps {
   onSubmit: (text: string) => void;
   onCameraClick: () => void;
   isLoading: boolean;

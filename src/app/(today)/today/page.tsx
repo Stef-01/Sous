@@ -17,10 +17,13 @@ import { TonightChip } from "@/components/today/tonight-chip";
 import { QuestCard } from "@/components/today/quest-card";
 import { TodayNutritionGlance } from "@/components/today/today-nutrition-glance";
 import { TodayContentCard } from "@/components/today/today-content-card";
-// W18 perf: both sheets are lazy-loaded behind next/dynamic so the
-// initial Today bundle does not pay their cost (~10KB combined). Both
-// only mount on user action (More-Options button / mascot tap).
 import dynamic from "next/dynamic";
+import { LazyTextPrompt } from "@/components/today/lazy-text-prompt";
+import { LazySavedRecipesStrip } from "@/components/today/lazy-saved-recipes-strip";
+import { LazyFriendsStrip } from "@/components/today/lazy-friends-strip";
+// Post-interaction sheets stay behind next/dynamic so the initial Today bundle
+// does not pay their cost. Heavier catalog/search and below-fold rails use
+// intent/viewport wrappers (`Lazy*`) instead of route preloads.
 const MoreOptionsSheet = dynamic(
   () =>
     import("@/components/today/more-options-sheet").then(
@@ -35,11 +38,8 @@ const ProfileSettingsSheet = dynamic(
     ),
   { ssr: false },
 );
-import { FriendsStrip } from "@/components/today/friends-strip";
-import { SavedRecipesStrip } from "@/components/today/saved-recipes-strip";
 import { NutritionGoalCard } from "@/components/today/nutrition-goal-card";
 import { FirstRunCoachmark } from "@/components/today/first-run-coachmark";
-import { TextPrompt } from "@/components/today/text-prompt";
 import { HeadroomHeader } from "@/components/shared/headroom-header";
 
 // W18 perf round 2: post-interaction surfaces are dynamic-imported.
@@ -758,10 +758,10 @@ function TodayPageContent() {
 
         {/* Saved recipes — browse what you bookmarked (deck heart / mission
             bookmark). Below the fold; renders null when nothing is saved. */}
-        <SavedRecipesStrip />
+        <LazySavedRecipesStrip />
 
         {/* Friends social feed  -  below fold, horizontal-scroll social proof */}
-        <FriendsStrip
+        <LazyFriendsStrip
           sessions={completedSessions}
           onDishSelect={(dishName) => {
             setShowSearch(true);
@@ -856,7 +856,7 @@ function TodayPageContent() {
           view.type === "loading" ||
           view.type === "results") && (
           <>
-            <TextPrompt
+            <LazyTextPrompt
               key={resetKey}
               onSubmit={handleTextSubmit}
               onCameraClick={handleCameraOpen}

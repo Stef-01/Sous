@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 16 Units Shipped
+## This Session: 17 Units Shipped
 
-### Menu-app (W1-W15 shipped, next: W16)
+### Menu-app (W1-W16 shipped, next: W17)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -19,8 +19,9 @@
 - **W13** - Card and kicker primitives are now contract-tested, `Card` supports semantic surfaces, and the shopping-list recipe/nutrition surfaces use the shared card + kicker treatment (`f708c23`)
 - **W14** - Shopping-list captions, spacing, and row motion are token-aligned: grocery nutrition copy uses `.sous-meta`, list chrome moved to `--space-*`/`--row-gap`, and row animation routes through `motionTransition` with a design-contract test (`67b4cf3`)
 - **W15** - Added a Playwright provenance smoke for the combined-cook grocery handoff and hardened localhost production/WebKit e2e by keeping HTTPS-only transport headers deployed-only: direct combined cook → Add missing → persisted recipe/quantity ledgers → shopping-list recipe chips, nutrition preview, ingredient row, plus tested security-header policy (this commit)
-- Tests: 21 → 78 plus 1 Playwright spec
-- Next unit: **W16** (performance pass: lazy loading, image abstraction, bundle budget)
+- **W16** - Deferred Today search taxonomy, saved recipes, and friends rails behind intent/viewport loaders: closed Today no longer requests the craving-search chunk until search opens, below-fold rails load only after the app scroller reaches them, and a Today performance-budget test pins the source split (this commit)
+- Tests: 21 → 79 plus 1 Playwright spec
+- Next unit: **W17** (Cook Together local core + realtime stub)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -31,4 +32,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W16 + Y7.
+Say "keep going" to start W17 + Y7.
