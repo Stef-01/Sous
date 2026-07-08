@@ -1,8 +1,8 @@
 # Build Status — July 6, 2026
 
-## This Session: 15 Units Shipped
+## This Session: 16 Units Shipped
 
-### Menu-app (W1-W14 shipped, next: W15)
+### Menu-app (W1-W15 shipped, next: W16)
 
 - **W1** — Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** — Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -17,9 +17,10 @@
 - **W11** - Shopping-list recipe-chip removal is now non-destructive for merged grocery rows, using per-recipe contribution ledgers to keep shared ingredients and recompute quantities where possible (`888b812`)
 - **W12** - Shopping-list rows now use the richer ingredient-icon library for known foods while preserving the legacy aisle emoji fallback for unknown grocery items (`56b3b27`)
 - **W13** - Card and kicker primitives are now contract-tested, `Card` supports semantic surfaces, and the shopping-list recipe/nutrition surfaces use the shared card + kicker treatment (`f708c23`)
-- **W14** - Shopping-list captions, spacing, and row motion are token-aligned: grocery nutrition copy uses `.sous-meta`, list chrome moved to `--space-*`/`--row-gap`, and row animation routes through `motionTransition` with a design-contract test (this commit)
-- Tests: 21 → 73
-- Next unit: **W15** (pick next highest-value menu-app polish/bug from current repo state)
+- **W14** - Shopping-list captions, spacing, and row motion are token-aligned: grocery nutrition copy uses `.sous-meta`, list chrome moved to `--space-*`/`--row-gap`, and row animation routes through `motionTransition` with a design-contract test (`67b4cf3`)
+- **W15** - Added a Playwright provenance smoke for the combined-cook grocery handoff and hardened localhost production/WebKit e2e by keeping HTTPS-only transport headers deployed-only: direct combined cook → Add missing → persisted recipe/quantity ledgers → shopping-list recipe chips, nutrition preview, ingredient row, plus tested security-header policy (this commit)
+- Tests: 21 → 78 plus 1 Playwright spec
+- Next unit: **W16** (performance pass: lazy loading, image abstraction, bundle budget)
 
 ### Casa (K11 + RF13 shipped, next: Y7)
 
@@ -30,4 +31,4 @@
 
 ## Ready to Launch
 
-Say "keep going" to start W15 + Y7.
+Say "keep going" to start W16 + Y7.

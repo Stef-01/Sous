@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { buildSecurityHeaders } from "./src/lib/config/security-headers";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
@@ -31,42 +32,10 @@ const nextConfig: NextConfig = {
     // 'unsafe-inline'; Framer/Tailwind injected styles → style 'unsafe-inline';
     // camera/photo blobs → img/media blob:+data:), strict where it costs
     // nothing (object-src none, base-uri self, frame-ancestors none). Next's
-    // own JS chunks load from 'self', so hydration is unaffected.
-    const csp = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
-      "font-src 'self' data:",
-      "connect-src 'self' https: https://vitals.vercel-insights.com",
-      "media-src 'self' blob: data:",
-      "worker-src 'self'",
-      "manifest-src 'self'",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
-    ].join("; ");
-
-    const securityHeaders = [
-      { key: "Content-Security-Policy", value: csp },
-      // Clickjacking: belt-and-suspenders with CSP frame-ancestors.
-      { key: "X-Frame-Options", value: "DENY" },
-      { key: "X-Content-Type-Options", value: "nosniff" },
-      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-      {
-        key: "Strict-Transport-Security",
-        value: "max-age=63072000; includeSubDomains; preload",
-      },
-      // Camera (food recognition) + microphone (voice cook) are first-party
-      // only; geolocation/payment/USB are never used.
-      {
-        key: "Permissions-Policy",
-        value:
-          "camera=(self), microphone=(self), geolocation=(), payment=(), usb=(), interest-cohort=()",
-      },
-    ];
+    // own JS chunks load from 'self', so hydration is unaffected. HTTPS-only
+    // transport directives stay deployed-only inside the helper so local
+    // `next start` over HTTP remains usable in WebKit e2e.
+    const securityHeaders = buildSecurityHeaders();
 
     return [
       {
