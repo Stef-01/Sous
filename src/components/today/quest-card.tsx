@@ -829,8 +829,10 @@ function MealSwipeQueueOverlay({
   const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const queueDialogRef = useRef<HTMLDivElement>(null);
+  const healthPanel = useMealHealthPanel();
+  const { isOpen: healthPanelOpen, close: closeHealthPanel } = healthPanel;
   useBodyScrollLock(true);
-  useFocusTrap(true, queueDialogRef);
+  useFocusTrap(!healthPanelOpen, queueDialogRef);
 
   const resetDeck = useCallback(() => {
     if (onResetProgress) {
@@ -854,8 +856,6 @@ function MealSwipeQueueOverlay({
     };
   }, []);
 
-  const healthPanel = useMealHealthPanel();
-  const { isOpen: healthPanelOpen, close: closeHealthPanel } = healthPanel;
   const activeDish = unswiped[0] ?? null;
   // Fire once when the user has swiped the whole deck (deck-exhaust anchor).
   useEffect(() => {

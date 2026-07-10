@@ -124,6 +124,18 @@ test.describe("Core Loop - Today meal queue to cook", () => {
       },
     );
 
+    await page.keyboard.press("Shift+Tab");
+    await expect(
+      page.getByRole("button", { name: /Close meal queue/i }),
+    ).not.toBeFocused();
+    await expect
+      .poll(() =>
+        infoDialog.evaluate((dialog) =>
+          dialog.contains(document.activeElement),
+        ),
+      )
+      .toBe(true);
+
     await page.keyboard.press("Escape");
     await expect(infoDialog).toBeHidden({ timeout: 5000 });
     await expect(queueDialog).toBeVisible();
