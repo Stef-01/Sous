@@ -75,6 +75,7 @@ import {
 import type { Daypart } from "@/types";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { useDifficultyProgression } from "@/lib/hooks/use-difficulty-progression";
+import { useBodyScrollLock, useFocusTrap } from "@/lib/hooks/use-overlay-a11y";
 
 export interface QuestDish {
   dishName: string;
@@ -827,6 +828,9 @@ function MealSwipeQueueOverlay({
   const haptic = useHaptic();
   const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const queueDialogRef = useRef<HTMLDivElement>(null);
+  useBodyScrollLock(true);
+  useFocusTrap(true, queueDialogRef);
 
   const resetDeck = useCallback(() => {
     if (onResetProgress) {
@@ -844,11 +848,8 @@ function MealSwipeQueueOverlay({
   }, [dishes, onResetProgress]);
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
     const timers = timersRef.current;
-    document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = previousOverflow;
       timers.forEach(clearTimeout);
     };
   }, []);
@@ -960,6 +961,8 @@ function MealSwipeQueueOverlay({
 
   return (
     <motion.div
+      ref={queueDialogRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label="Meal swipe queue"
@@ -968,7 +971,7 @@ function MealSwipeQueueOverlay({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[180] flex h-full flex-col overflow-hidden bg-[#080907] text-white"
+      className="fixed inset-0 z-[180] flex h-full flex-col overflow-hidden bg-[#080907] text-white focus:outline-none"
     >
       <p id="meal-queue-shortcuts" className="sr-only">
         Use left arrow to pass, right arrow or Enter to cook, S to save, and

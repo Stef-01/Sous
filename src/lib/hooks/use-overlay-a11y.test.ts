@@ -24,6 +24,7 @@ const HAND_ROLLED_OVERLAYS = [
   "components/path/skill-detail-sheet.tsx",
   "components/results/EvaluateSheet.tsx",
   "components/today/more-options-sheet.tsx",
+  "components/today/quest-card.tsx",
   "components/path/achievements-launcher.tsx",
   "components/community/demo-challenge-picker.tsx",
 ];
