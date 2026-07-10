@@ -31,6 +31,7 @@ import {
   useSignalFlags,
   stepDensityFromFlags,
 } from "@/lib/hooks/use-signal-flags";
+import { resolveCookStepShortcut } from "@/lib/cook/step-shortcuts";
 import type { AttentionPointer } from "@/lib/cook/attention-pointer";
 import { AttentionPointerOverlay } from "./attention-pointer-overlay";
 
@@ -74,6 +75,18 @@ interface StepCardProps {
   /** Slug of the dish being cooked. When set, the mistake helper's per-dish
    *  suppression affordance is enabled. */
   dishSlug?: string;
+}
+
+function isEditableShortcutTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName.toLowerCase();
+  return (
+    tag === "input" ||
+    tag === "textarea" ||
+    tag === "select" ||
+    target.isContentEditable ||
+    target.closest('[contenteditable="true"]') !== null
+  );
 }
 
 /**
@@ -204,6 +217,35 @@ export function StepCard({
       ingredients,
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const intent = resolveCookStepShortcut({
+        key: event.key,
+        altKey: event.altKey,
+        ctrlKey: event.ctrlKey,
+        metaKey: event.metaKey,
+        shiftKey: event.shiftKey,
+        isEditableTarget: isEditableShortcutTarget(event.target),
+        isShortcutPaused: showQA || askMutation.isPending,
+      });
+      if (!intent) return;
+
+      if (intent === "prev") {
+        if (isFirst) return;
+        event.preventDefault();
+        onPrev();
+        return;
+      }
+
+      if (isLast) return;
+      event.preventDefault();
+      onNext();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [askMutation.isPending, isFirst, isLast, onNext, onPrev, showQA]);
 
   // W22 / W27: visual-mode resolves which image to render. Step
   // image wins; dish hero is the visually-related fallback;
@@ -540,6 +582,7 @@ export function StepCard({
           )}
           type="button"
           aria-label={`Go back to step ${stepNumber - 1}`}
+          aria-keyshortcuts={isFirst ? undefined : "ArrowLeft PageUp"}
         >
           <ChevronLeft size={16} />
           Back
@@ -556,6 +599,7 @@ export function StepCard({
             "transition-colors duration-200",
           )}
           type="button"
+          aria-keyshortcuts={isLast ? undefined : "ArrowRight PageDown"}
           aria-label={
             isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`
           }

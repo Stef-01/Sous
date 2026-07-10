@@ -82,6 +82,16 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(
       page.getByRole("button", { name: /Go to step 2|Next/i }),
     ).toBeVisible();
+
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 2 of \d+/ })).toBeVisible({
+      timeout: 5000,
+    });
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.getByRole("img", { name: /Step 1 of \d+/ })).toBeVisible({
+      timeout: 5000,
+    });
   });
 
   test("Meal queue opens and keyboard save state is visible", async ({
