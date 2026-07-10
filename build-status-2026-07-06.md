@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 31 Units Shipped
+## This Session: 32 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -34,7 +34,8 @@
 - **W28** - Closed the last keyboard-only gap in guided cook: ArrowRight/PageDown now activate the final step's Done action and continue into the Win screen, with a 3-step garlic-bread Playwright smoke asserting final-step completion, diary auto-log confirmation, and rating group visibility (this commit)
 - **W29** - Closed the Today meal-queue filter touch-target gap from the design audit: source tabs, filter category rows, filter option rows, reset/clear rows, and the shared dropdown option rows now keep 44px tap geometry while preserving the compact visual language; Today filter Playwright now asserts those hit areas in Chromium and mobile Safari (this commit)
 - **W30** - Clarified the Today craving-search affordance: the home trigger now stays a single minimalist control, drops the tiny "Go" text, exposes an explicit accessible name, and uses a quiet 44px green arrow target so the primary meal-discovery action reads as tappable without adding another button (this commit)
-- Tests: 21 -> 139 plus strengthened core-loop Playwright coverage
+- **W31** - Hardened the opened Today craving helper for touch: camera, submit, and close are now true 44px icon controls, the input reserves space so text no longer sits under the icons, and core-loop Playwright measures the helper controls in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 140 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

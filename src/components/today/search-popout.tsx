@@ -56,7 +56,7 @@ export function SearchPopout({ isOpen, onClose, children }: SearchPopoutProps) {
                 type="button"
                 onClick={onClose}
                 aria-label="Close search"
-                className="rounded-lg p-2.5 text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] active:scale-90 transition-colors"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-100 hover:text-[var(--nourish-dark)] active:scale-90"
               >
                 <X size={20} />
               </button>

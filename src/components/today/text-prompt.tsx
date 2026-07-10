@@ -337,7 +337,7 @@ export function TextPrompt({
           disabled={isLoading}
           autoFocus
           className={cn(
-            "w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-4 py-3.5 pr-24 text-base",
+            "w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-4 py-3.5 pr-28 text-base",
             "placeholder:text-[var(--nourish-subtext)]",
             "focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/30 focus:border-[var(--nourish-green)]",
             "disabled:opacity-50",
@@ -349,7 +349,7 @@ export function TextPrompt({
             onClick={onCameraClick}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="rounded-lg p-2 text-[var(--nourish-subtext)] hover:bg-neutral-200/60 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-200/60"
             aria-label="Take a photo"
             type="button"
           >
@@ -361,10 +361,10 @@ export function TextPrompt({
             whileTap={text.trim() && !isLoading ? { scale: 0.88 } : undefined}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "rounded-lg p-2 transition duration-200",
+              "flex h-11 w-11 items-center justify-center rounded-xl transition duration-200",
               text.trim() && !isLoading
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
-                : "text-[var(--nourish-subtext-faint)] cursor-not-allowed",
+                : "cursor-not-allowed bg-neutral-100 text-[var(--nourish-subtext-faint)]",
             )}
             aria-label="Search"
             type="button"
