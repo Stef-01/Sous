@@ -43,6 +43,26 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(page.getByRole("link", { name: /Read:/i })).toBeVisible();
   });
 
+  test("Today craving search trigger keeps a single 44px affordance", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+
+    const searchTrigger = page.getByRole("button", {
+      name: /search what you.re craving/i,
+    });
+    await expect(searchTrigger).toBeVisible();
+
+    const triggerBox = await searchTrigger.boundingBox();
+    expect(triggerBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(triggerBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+
+    const arrowAffordance = searchTrigger.locator("span[aria-hidden='true']");
+    const arrowBox = await arrowAffordance.boundingBox();
+    expect(arrowBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(arrowBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+  });
+
   test("Search flow: type craving -> recommended sides", async ({ page }) => {
     await page.goto("/today");
     await openCravingSearch(page, "butter chicken");

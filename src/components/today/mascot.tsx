@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { premiumEntrance, SPRING } from "@/lib/motion/tokens";
 import { haptic } from "@/lib/motion/haptics";
 import type { MascotMood } from "./mascot-mood";
@@ -237,18 +237,22 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
         transition={SPRING.snappy}
-        className="group flex w-full items-center gap-3 rounded-2xl bg-white px-4 py-3.5 text-left shadow-[var(--shadow-card)] transition-shadow duration-200
-                   hover:shadow-[var(--shadow-raised)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+        className="group flex min-h-[64px] w-full items-center gap-3 rounded-2xl bg-white px-3 py-2 text-left shadow-[var(--shadow-card)] transition duration-200
+                   hover:bg-white active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         type="button"
+        aria-label="Search what you're craving"
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
-          <Search size={15} className="text-[var(--nourish-green)]" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
+          <Search size={16} className="text-[var(--nourish-green)]" />
         </div>
-        <span className="text-sm font-medium text-[var(--nourish-subtext)] group-hover:text-[var(--nourish-dark)] transition-colors">
+        <span className="min-w-0 flex-1 text-[15px] font-medium text-[var(--nourish-subtext)] transition-colors group-hover:text-[var(--nourish-dark)]">
           What are you craving?
         </span>
-        <span className="ml-auto text-xs text-[var(--nourish-green)] font-semibold">
-          Go →
+        <span
+          aria-hidden="true"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-colors group-hover:bg-[var(--nourish-dark-green)]"
+        >
+          <ArrowRight size={18} strokeWidth={2.4} />
         </span>
       </motion.button>
     </motion.div>
