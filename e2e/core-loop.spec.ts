@@ -78,6 +78,7 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(page.getByRole("img", { name: /Step 1 of \d+/ })).toBeVisible({
       timeout: 15000,
     });
+    await expect(page.locator('[data-visual-mode="true"]')).toBeVisible();
     await expect(
       page.getByRole("button", { name: /Go to step 2|Next/i }),
     ).toBeVisible();

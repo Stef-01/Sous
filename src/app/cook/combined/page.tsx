@@ -14,6 +14,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChefHat, UtensilsCrossed, Bookmark } from "lucide-react";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { haptic } from "@/lib/motion/haptics";
+import { useVisualModePref } from "@/lib/cook/use-visual-mode-pref";
 import { PhaseIndicator } from "@/components/guided-cook/phase-indicator";
 import { IngredientList } from "@/components/guided-cook/ingredient-list";
 import type { IngredientSection } from "@/components/guided-cook/ingredient-list";
@@ -96,6 +97,7 @@ function CombinedCookContent() {
   );
 
   const { enabled: bigHands } = useBigHands();
+  const { enabled: visualMode } = useVisualModePref();
   // Session tracking
   const { startSession, completeSession, updateSession } = useCookSessions();
   // Y5 D, audit P0 #6 — fired once at the win transition with one
@@ -766,6 +768,8 @@ function CombinedCookContent() {
                 cuisineFact={currentCookStep.cuisineFact}
                 donenessCue={currentCookStep.donenessCue}
                 imageUrl={currentCookStep.imageUrl}
+                heroImageUrl={currentDish.dish.heroImageUrl}
+                visualMode={visualMode}
                 expandedChip={expandedChip}
                 onToggleChip={handleToggleChip}
                 onStartTimer={handleStartTimer}

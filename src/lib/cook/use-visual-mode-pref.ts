@@ -2,9 +2,8 @@
 
 /**
  * useVisualModePref — persisted user preference for "visual mode"
- * during cook flow. When on, the cook step page shows a large
- * step image with shrunken instruction text (Google-Maps "look,
- * don't read" mode).
+ * during cook flow. On a fresh device this defaults on, so the cook step page
+ * leads with a large step or dish image and keeps the instruction as a caption.
  *
  * W22 from STAGE-3-VIBECODE-AUTONOMOUS-12MO.md (Sprint E, MVP 3
  * of the cook-nav initiative). Mirrors the W15 useVoiceCookPref
@@ -23,7 +22,7 @@ interface VisualModePref {
 /** Defensive default factory — returns a NEW object on every call.
  *  Pattern from W15 RCA. */
 function freshDefaultPref(): VisualModePref {
-  return { enabled: false };
+  return { enabled: true };
 }
 
 /**
@@ -49,7 +48,10 @@ export function parseStoredVisualModePref(
     }
     const obj = parsed as Partial<VisualModePref>;
     return {
-      enabled: typeof obj.enabled === "boolean" ? obj.enabled : false,
+      enabled:
+        typeof obj.enabled === "boolean"
+          ? obj.enabled
+          : freshDefaultPref().enabled,
     };
   } catch {
     return freshDefaultPref();

@@ -3,15 +3,15 @@ import { parseStoredVisualModePref } from "./use-visual-mode-pref";
 
 describe("parseStoredVisualModePref", () => {
   it("returns default for null", () => {
-    expect(parseStoredVisualModePref(null)).toEqual({ enabled: false });
+    expect(parseStoredVisualModePref(null)).toEqual({ enabled: true });
   });
 
   it("returns default for undefined", () => {
-    expect(parseStoredVisualModePref(undefined)).toEqual({ enabled: false });
+    expect(parseStoredVisualModePref(undefined)).toEqual({ enabled: true });
   });
 
   it("returns default for empty string", () => {
-    expect(parseStoredVisualModePref("")).toEqual({ enabled: false });
+    expect(parseStoredVisualModePref("")).toEqual({ enabled: true });
   });
 
   it("parses a valid enabled-true payload", () => {
@@ -28,14 +28,14 @@ describe("parseStoredVisualModePref", () => {
 
   it("falls back to default when raw is corrupt JSON", () => {
     expect(parseStoredVisualModePref("{not json")).toEqual({
-      enabled: false,
+      enabled: true,
     });
   });
 
-  it("treats non-boolean enabled as false", () => {
+  it("treats non-boolean enabled as the default", () => {
     expect(
       parseStoredVisualModePref(JSON.stringify({ enabled: "yes" })),
-    ).toEqual({ enabled: false });
+    ).toEqual({ enabled: true });
   });
 
   it("ignores extra fields", () => {
@@ -47,11 +47,11 @@ describe("parseStoredVisualModePref", () => {
   });
 
   it("handles JSON null payload by returning default", () => {
-    expect(parseStoredVisualModePref("null")).toEqual({ enabled: false });
+    expect(parseStoredVisualModePref("null")).toEqual({ enabled: true });
   });
 
   it("handles JSON array payload by returning default", () => {
-    expect(parseStoredVisualModePref("[1,2,3]")).toEqual({ enabled: false });
+    expect(parseStoredVisualModePref("[1,2,3]")).toEqual({ enabled: true });
   });
 
   // W22 stress loops mirror the W15 catalog.
@@ -77,7 +77,7 @@ describe("parseStoredVisualModePref", () => {
     const a = parseStoredVisualModePref(null);
     const b = parseStoredVisualModePref(null);
     expect(a).toEqual(b);
-    a.enabled = true;
-    expect(b.enabled).toBe(false);
+    a.enabled = false;
+    expect(b.enabled).toBe(true);
   });
 });
