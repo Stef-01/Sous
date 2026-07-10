@@ -140,7 +140,7 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
               <button
                 type="button"
                 onClick={skip}
-                className="rounded-full p-2 text-white/70 transition hover:bg-white/10 hover:text-white"
+                className="flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white"
                 aria-label="Skip tutorial"
               >
                 <X className="h-5 w-5" />
@@ -186,7 +186,7 @@ export function PathTutorial({ open, onComplete }: PathTutorialProps) {
                 <button
                   type="button"
                   onClick={skip}
-                  className="inline-flex min-h-[44px] items-center text-[13px] font-semibold text-white/85 underline underline-offset-4 transition hover:text-white"
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 text-[13px] font-semibold text-white transition hover:bg-white/15"
                 >
                   Skip intro
                 </button>

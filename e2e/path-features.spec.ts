@@ -16,21 +16,26 @@ test.describe("Path Tab Features", () => {
     page,
   }) => {
     await page.goto("/path", { waitUntil: "domcontentloaded" });
-    await expect(page.getByText("Your journey")).toBeVisible({
+    await expect(page.getByRole("heading", { name: "Your Path" })).toBeVisible({
       timeout: 30000,
     });
+    await page.getByRole("button", { name: /Progression/i }).click();
     await expect(page.getByText("Knife Skills & Cuts").first()).toBeVisible({
       timeout: 15000,
     });
-    await expect(page.locator("text=Scrapbook")).toBeVisible();
-    await expect(page.locator("text=Favorites")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Pantry" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Plan" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Groceries" })).toBeVisible();
+    await page.getByRole("button", { name: /Your kitchen/i }).click();
+    await expect(page.getByRole("link", { name: "Favorites" })).toBeVisible();
   });
 
   test("Path page shows weekly challenge card", async ({ page }) => {
     await page.goto("/path", { waitUntil: "domcontentloaded" });
-    await expect(page.getByText("Your journey")).toBeVisible({
+    await expect(page.getByRole("heading", { name: "Your Path" })).toBeVisible({
       timeout: 30000,
     });
+    await page.getByRole("button", { name: /Progression/i }).click();
     // Weekly challenge title rotates by calendar week — match known pool titles only
     const challengeCard = page.locator(
       "text=/Cook 3 Times|Japanese Week|Italian Week|Try Something New|Food Critic Week|5-Day Streak|Indian Spice Week|High Five|Mexican Fiesta|Thai Taste/i",
@@ -55,5 +60,41 @@ test.describe("Path Tab Features", () => {
     await expect(
       page.locator("text=/favorites|no favorites/i").first(),
     ).toBeVisible({ timeout: 10000 });
+  });
+});
+
+test.describe("Path tutorial first-run escape", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("sous-coach-quiz-done", "true");
+      localStorage.removeItem("sous-path-tutorial-v1");
+    });
+  });
+
+  test("skip controls are visible 44px exits", async ({ page }) => {
+    await page.goto("/path", { waitUntil: "domcontentloaded" });
+
+    const dialog = page.getByRole("dialog", {
+      name: /welcome to your culinary campus/i,
+    });
+    await expect(dialog).toBeVisible({ timeout: 10000 });
+
+    const skipIcon = dialog.getByRole("button", { name: /skip tutorial/i });
+    const skipIntro = dialog.getByRole("button", { name: /skip intro/i });
+
+    for (const control of [skipIcon, skipIntro]) {
+      await expect(control).toBeVisible();
+      const box = await control.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    await skipIntro.click();
+    await expect(dialog).toBeHidden({ timeout: 5000 });
+    await expect
+      .poll(() =>
+        page.evaluate(() => localStorage.getItem("sous-path-tutorial-v1")),
+      )
+      .toBe("done");
   });
 });
