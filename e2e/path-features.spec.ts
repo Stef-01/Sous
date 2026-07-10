@@ -63,7 +63,7 @@ test.describe("Path Tab Features", () => {
   });
 });
 
-test.describe("Path tutorial first-run escape", () => {
+test.describe("Path tutorial opt-in help", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem("sous-coach-quiz-done", "true");
@@ -71,8 +71,27 @@ test.describe("Path tutorial first-run escape", () => {
     });
   });
 
-  test("skip controls are visible 44px exits", async ({ page }) => {
+  test("fresh Path visit lands on the real page without an interstitial", async ({
+    page,
+  }) => {
     await page.goto("/path", { waitUntil: "domcontentloaded" });
+    await expect(page.getByRole("heading", { name: "Your Path" })).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(
+      page.getByRole("link", { name: "Find something to cook" }),
+    ).toBeVisible();
+    await page.waitForTimeout(650);
+    await expect(
+      page.getByRole("dialog", { name: /welcome to your culinary campus/i }),
+    ).toBeHidden();
+  });
+
+  test("optional help opens the tutorial with visible 44px exits", async ({
+    page,
+  }) => {
+    await page.goto("/path", { waitUntil: "domcontentloaded" });
+    await page.getByRole("button", { name: "How Path works" }).click();
 
     const dialog = page.getByRole("dialog", {
       name: /welcome to your culinary campus/i,

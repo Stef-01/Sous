@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 34 Units Shipped
+## This Session: 35 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -37,7 +37,8 @@
 - **W31** - Hardened the opened Today craving helper for touch: camera, submit, and close are now true 44px icon controls, the input reserves space so text no longer sits under the icons, and core-loop Playwright measures the helper controls in Chromium and mobile Safari (this commit)
 - **W32** - Finished the Today craving helper's one-tap discovery targets: popular suggestions, recent-history chips, "Show more" rows, result rows, and semantic "Why?" controls now preserve 44px touch geometry while staying visually light; core-loop Playwright checks suggestions and search results in Chromium and mobile Safari (this commit)
 - **W33** - Made the first-run Path tutorial escape harder to miss: both the top-right close icon and the bottom "Skip intro" control now use explicit 44px geometry, the text escape has visible pill treatment on the dark sheet, and Path Playwright verifies both exits plus persistence of the completed tutorial flag (this commit)
-- Tests: 21 -> 142 plus strengthened core-loop Playwright coverage
+- **W34** - Removed the first-run Path interstitial from the default flow: fresh devices now land on the real Path page immediately, the empty-state hero exposes an explicit "How Path works" help action, and Path Playwright verifies both the zero-tap landing and the opt-in tutorial exits (this commit)
+- Tests: 21 -> 143 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

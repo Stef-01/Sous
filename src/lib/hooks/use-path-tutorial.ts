@@ -1,29 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 /**
- * Path onboarding tutorial state. First visit auto-opens once (gated on the
- * localStorage flag the PathTutorial component sets to "done" on completion),
- * plus the `complete` / `replay` controls. Extracted from PathPage so the page
- * stays orchestration-only.
+ * Path tutorial state. The design-audit direction is to keep Path usable on
+ * first load and expose the orientation as an explicit, optional help action.
  */
-const TUTORIAL_SEEN_KEY = "sous-path-tutorial-v1";
-
-export function usePathTutorial(mounted: boolean) {
+export function usePathTutorial() {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const id = window.setTimeout(() => {
-      try {
-        if (localStorage.getItem(TUTORIAL_SEEN_KEY) !== "done") setOpen(true);
-      } catch {
-        setOpen(true);
-      }
-    }, 400);
-    return () => clearTimeout(id);
-  }, [mounted]);
 
   const complete = useCallback(() => setOpen(false), []);
   const replay = useCallback(() => setOpen(true), []);

@@ -89,7 +89,7 @@ export default function PathPage() {
     open: pathTutorialOpen,
     complete: completePathTutorial,
     replay: replayPathTutorial,
-  } = usePathTutorial(mounted);
+  } = usePathTutorial();
 
   // "Your kitchen" toolset is collapsed by default — keeps Path's default view
   // condensed; the tools are one tap away.
@@ -253,13 +253,22 @@ export default function PathPage() {
                 Cook your first meal — your skills, XP, and streak all grow on
                 this page as you go.
               </p>
-              <Link
-                href="/today"
-                className="mt-4 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
-              >
-                Find something to cook
-                <ArrowRight size={15} />
-              </Link>
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                <Link
+                  href="/today"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                >
+                  Find something to cook
+                  <ArrowRight size={15} />
+                </Link>
+                <button
+                  type="button"
+                  onClick={replayPathTutorial}
+                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[var(--nourish-green)]/20 bg-white px-4 py-2.5 text-[13px] font-semibold text-[var(--nourish-green)] transition hover:border-[var(--nourish-green)]/40 hover:bg-[var(--nourish-green)]/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                >
+                  How Path works
+                </button>
+              </div>
             </div>
           )}
 
