@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 28 Units Shipped
+## This Session: 29 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -31,6 +31,7 @@
 - **W25** - Fixed nested focus ownership in the fullscreen meal queue: the parent queue trap now pauses while the Info sheet is open, so Tab/Shift+Tab wraps inside nutrition instead of counting background queue controls; core-loop Playwright now asserts focus remains inside the Info dialog (this commit)
 - **W26** - Made the post-queue cook step visual-first by default for fresh devices and wired combined cooks to pass dish hero images into `StepCard`, so the main plate flow lands on a large food image plus compact instruction instead of a text-first step; core-loop Playwright now asserts the combined cook step is in visual mode (this commit)
 - **W27** - Added a shared cook-step keyboard contract: ArrowRight/PageDown advance one step, ArrowLeft/PageUp go back one step, shortcuts pause while editing or asking step Q&A, and the core-loop Playwright smoke now verifies keyboard step navigation inside a combined cook (this commit)
+- **W28** - Closed the last keyboard-only gap in guided cook: ArrowRight/PageDown now activate the final step's Done action and continue into the Win screen, with a 3-step garlic-bread Playwright smoke asserting final-step completion, diary auto-log confirmation, and rating group visibility (this commit)
 - Tests: 21 -> 137 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 

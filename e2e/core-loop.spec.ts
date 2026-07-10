@@ -94,6 +94,34 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     });
   });
 
+  test("Cook step keyboard can advance through final step to win", async ({
+    page,
+  }) => {
+    await page.goto("/cook/garlic-bread");
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+
+    await expect(page.getByRole("img", { name: /Step 1 of 3/i })).toBeVisible({
+      timeout: 10000,
+    });
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 2 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 3 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+
+    await expect(
+      page.getByRole("group", { name: /Rate this cook/i }),
+    ).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Logged to your diary/i)).toBeVisible();
+  });
+
   test("Meal queue opens and keyboard save state is visible", async ({
     page,
   }) => {

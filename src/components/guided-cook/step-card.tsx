@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
@@ -76,6 +82,10 @@ interface StepCardProps {
    *  suppression affordance is enabled. */
   dishSlug?: string;
 }
+
+// Exiting animated step cards stay mounted briefly; only the newest card should
+// own global cook shortcuts.
+let activeShortcutInstance: symbol | null = null;
 
 function isEditableShortcutTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
@@ -157,7 +167,6 @@ export function StepCard({
   // fallback line and then swaps to the real button on hydration.
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -218,8 +227,27 @@ export function StepCard({
     });
   };
 
+  const navigationRef = useRef({ isFirst, onNext, onPrev });
+  const shortcutInstanceRef = useRef(Symbol("cook-step-shortcut"));
+
+  useEffect(() => {
+    navigationRef.current = { isFirst, onNext, onPrev };
+  }, [isFirst, onNext, onPrev]);
+
+  useEffect(() => {
+    const instance = shortcutInstanceRef.current;
+    activeShortcutInstance = instance;
+    return () => {
+      if (activeShortcutInstance === instance) {
+        activeShortcutInstance = null;
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (activeShortcutInstance !== shortcutInstanceRef.current) return;
+
       const intent = resolveCookStepShortcut({
         key: event.key,
         altKey: event.altKey,
@@ -231,21 +259,22 @@ export function StepCard({
       });
       if (!intent) return;
 
+      const navigation = navigationRef.current;
+
       if (intent === "prev") {
-        if (isFirst) return;
+        if (navigation.isFirst) return;
         event.preventDefault();
-        onPrev();
+        navigation.onPrev();
         return;
       }
 
-      if (isLast) return;
       event.preventDefault();
-      onNext();
+      navigation.onNext();
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [askMutation.isPending, isFirst, isLast, onNext, onPrev, showQA]);
+  }, [askMutation.isPending, showQA]);
 
   // W22 / W27: visual-mode resolves which image to render. Step
   // image wins; dish hero is the visually-related fallback;
@@ -599,7 +628,7 @@ export function StepCard({
             "transition-colors duration-200",
           )}
           type="button"
-          aria-keyshortcuts={isLast ? undefined : "ArrowRight PageDown"}
+          aria-keyshortcuts="ArrowRight PageDown"
           aria-label={
             isLast ? "Complete cooking" : `Go to step ${stepNumber + 1}`
           }
