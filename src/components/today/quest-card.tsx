@@ -632,7 +632,7 @@ export function QuestCard({
               aria-selected={queueMode === mode}
               onClick={() => setQueueMode(mode)}
               className={cn(
-                "sous-label rounded-full px-2 py-1 transition-colors",
+                "sous-label min-h-[44px] rounded-full px-3 py-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/35",
                 queueMode === mode
                   ? "bg-[var(--nourish-green)]/10 !text-[var(--nourish-green)]"
                   : "opacity-60 hover:opacity-100",

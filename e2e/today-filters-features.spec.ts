@@ -19,6 +19,42 @@ async function bypassOnboarding(page: Page): Promise<void> {
 }
 
 test.describe("Today multi-select filters", () => {
+  test("Filter controls keep 44px touch targets", async ({ page }) => {
+    await bypassOnboarding(page);
+    await page.goto("/today");
+
+    const tabNames = ["Meal queue", "Eat out"];
+    for (const name of tabNames) {
+      const box = await page
+        .getByRole("tab", { name, exact: true })
+        .boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    await page.getByRole("button", { name: /^Filter/ }).click();
+    const categoryNames = ["Role", "Cuisine", "Cook time"];
+    for (const name of categoryNames) {
+      const box = await page
+        .getByRole("button", { name: new RegExp(`^${name}`) })
+        .boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    await page.getByRole("button", { name: /^Cuisine/ }).click();
+    const backRow = await page
+      .getByRole("button", { name: /^Cuisine/ })
+      .boundingBox();
+    expect(backRow?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    const firstCuisine = page
+      .getByRole("menu")
+      .getByRole("button")
+      .filter({ hasNotText: "Pick any" })
+      .nth(1);
+    const optionBox = await firstCuisine.boundingBox();
+    expect(optionBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+  });
+
   test("Role filter is multi-select — ticking Side keeps Main + adds Side", async ({
     page,
   }) => {

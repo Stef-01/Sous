@@ -227,7 +227,7 @@ export function QuestFilterMenu({
                   <button
                     type="button"
                     onClick={() => setCategory(r.key)}
-                    className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-cream)]"
+                    className="flex min-h-[44px] w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-cream)]"
                   >
                     <span className="font-medium">{r.rowLabel}</span>
                     <span className="flex items-center gap-1 text-[var(--nourish-subtext)]">
@@ -245,7 +245,7 @@ export function QuestFilterMenu({
                       filters.reset();
                       setCategory(null);
                     }}
-                    className="w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
+                    className="min-h-[44px] w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
                   >
                     Reset
                   </button>
@@ -257,7 +257,7 @@ export function QuestFilterMenu({
               <button
                 type="button"
                 onClick={() => setCategory(null)}
-                className="flex w-full items-center gap-1.5 border-b border-[var(--nourish-border)] px-3 py-2 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
+                className="flex min-h-[44px] w-full items-center gap-1.5 border-b border-[var(--nourish-border)] px-3 py-2 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
               >
                 <ChevronLeft size={13} strokeWidth={2.2} />
                 {activeRow.rowLabel}
@@ -278,7 +278,7 @@ export function QuestFilterMenu({
                           if (!activeRow.multi) setCategory(null);
                         }}
                         className={cn(
-                          "flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] transition-colors",
+                          "flex min-h-[44px] w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] transition-colors",
                           current
                             ? "bg-[var(--nourish-green)]/8 font-semibold text-[var(--nourish-green)]"
                             : "text-[var(--nourish-dark)] hover:bg-[var(--nourish-cream)]",
@@ -311,7 +311,7 @@ export function QuestFilterMenu({
                       <button
                         type="button"
                         onClick={() => activeRow.onClear?.()}
-                        className="w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
+                        className="min-h-[44px] w-full px-3 py-2 text-left text-[12px] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-cream)]"
                       >
                         Clear
                       </button>

@@ -135,7 +135,7 @@ export function FilterDropdown<T extends string>({
                         close();
                       }}
                       className={cn(
-                        "flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] transition-colors",
+                        "flex min-h-[44px] w-full items-center justify-between gap-3 px-3 py-2 text-left text-[12px] transition-colors",
                         selected
                           ? "bg-[var(--nourish-green)]/8 text-[var(--nourish-green)] font-semibold"
                           : "text-[var(--nourish-dark)] hover:bg-[var(--nourish-cream)]",
