@@ -29,6 +29,8 @@ const HAND_ROLLED_OVERLAYS = [
   "components/community/demo-challenge-picker.tsx",
 ];
 
+const NESTED_HAND_ROLLED_OVERLAYS = ["components/today/meal-health-sheet.tsx"];
+
 describe("use-overlay-a11y module", () => {
   it("exports the three overlay hooks as functions", () => {
     expect(typeof overlayA11y.useBodyScrollLock).toBe("function");
@@ -62,6 +64,32 @@ describe("hand-rolled overlay a11y contract", () => {
       });
 
       it("exposes dialog semantics to assistive tech", () => {
+        expect(src).toMatch(/role="dialog"/);
+        expect(src).toMatch(/aria-modal="true"/);
+      });
+    });
+  }
+});
+
+describe("nested hand-rolled overlay a11y contract", () => {
+  for (const rel of NESTED_HAND_ROLLED_OVERLAYS) {
+    describe(rel, () => {
+      const src = readFileSync(join(SRC_ROOT, rel), "utf8");
+
+      it("traps focus inside the nested sheet while open", () => {
+        expect(src).toMatch(/useFocusTrap\(/);
+      });
+
+      it("makes its dialog container focusable for the trap", () => {
+        expect(src).toMatch(/tabIndex=\{-1\}/);
+      });
+
+      it("is dismissible by Escape and an explicit close control", () => {
+        expect(src).toMatch(/useDismissOnEscape\(/);
+        expect(src).toContain('aria-label="Close info"');
+      });
+
+      it("exposes nested dialog semantics to assistive tech", () => {
         expect(src).toMatch(/role="dialog"/);
         expect(src).toMatch(/aria-modal="true"/);
       });

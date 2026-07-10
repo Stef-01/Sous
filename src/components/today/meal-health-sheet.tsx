@@ -16,7 +16,10 @@ import {
   useReducedMotion,
   type PanInfo,
 } from "framer-motion";
+import { useRef } from "react";
+import { X } from "lucide-react";
 import type { ConditionId } from "@/types/therapeutics";
+import { useDismissOnEscape, useFocusTrap } from "@/lib/hooks/use-overlay-a11y";
 import { MealHealthPanel } from "./meal-health-panel";
 
 interface Props {
@@ -54,7 +57,10 @@ export function MealHealthSheet({
   onDragEnd,
 }: Props) {
   const reducedMotion = useReducedMotion();
+  const sheetRef = useRef<HTMLDivElement>(null);
   const handleDragEnd = reducedMotion ? undefined : onDragEnd;
+  useFocusTrap(isOpen, sheetRef);
+  useDismissOnEscape(isOpen, onClose);
 
   return (
     <AnimatePresence>
@@ -71,9 +77,12 @@ export function MealHealthSheet({
           />
           <motion.div
             key="sheet"
+            ref={sheetRef}
+            tabIndex={-1}
             role="dialog"
+            aria-modal="true"
             aria-label={`Info for ${dishName}`}
-            className="absolute inset-x-0 bottom-0 z-50 flex h-[68%] flex-col rounded-t-[var(--radius-lg)] bg-white shadow-[0_-10px_44px_rgba(0,0,0,0.22)]"
+            className="absolute inset-x-0 bottom-0 z-50 flex h-[68%] flex-col rounded-t-[var(--radius-lg)] bg-white shadow-[0_-10px_44px_rgba(0,0,0,0.22)] focus:outline-none"
             initial={reducedMotion ? false : { y: "100%" }}
             animate={{ y: 0 }}
             exit={reducedMotion ? { opacity: 0 } : { y: "100%" }}
@@ -83,10 +92,20 @@ export function MealHealthSheet({
             dragElastic={{ top: 0, bottom: 0.6, left: 0, right: 0 }}
             onDragEnd={handleDragEnd}
           >
-            <div
-              className="mx-auto mt-3 mb-1 h-1 w-9 shrink-0 rounded-full bg-neutral-300/80"
-              aria-hidden="true"
-            />
+            <div className="relative shrink-0 px-5 pt-3 pb-1">
+              <div
+                className="mx-auto h-1 w-9 rounded-full bg-neutral-300/80"
+                aria-hidden="true"
+              />
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close info"
+                className="absolute right-4 top-2 flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              >
+                <X size={16} strokeWidth={2.2} />
+              </button>
+            </div>
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pb-8 pt-2">
               <MealHealthPanel
                 dishName={dishName}

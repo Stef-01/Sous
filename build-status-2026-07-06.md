@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 24 Units Shipped
+## This Session: 25 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -27,7 +27,8 @@
 - **W21** - Added founder-unlock preflight: the gate contract now includes database readiness, `pnpm founder:preflight` prints the ordered unlock/smoke checklist without exposing secret values, and focused tests cover the report path (this commit)
 - **W22** - Hardened the fullscreen Today meal-queue keyboard flow: shortcuts now resolve through an explicit contract, Escape closes the nutrition sheet before closing the queue, cook/pass/save shortcuts pause while the sheet or editable focus is active, and the core-loop Playwright smoke verifies keyboard save against the current Today UI (this commit)
 - **W23** - Put the fullscreen Today meal queue on the shared modal accessibility contract: the dialog now locks background scroll via the common hook, moves focus into the full-screen queue, cycles Tab/Shift+Tab inside it, restores focus on close, and is guarded by the overlay-a11y source contract while preserving the meal-swipe shortcuts (this commit)
-- Tests: 21 -> 132 plus core-loop Playwright coverage
+- **W24** - Hardened the meal-queue Info sheet as a nested modal: opening nutrition now moves focus into the sheet, Tab lands on an explicit Close info control, Escape closes the sheet while keeping the meal queue open, and the nested overlay contract plus Chromium/mobile-Safari core-loop coverage guard the flow (this commit)
+- Tests: 21 -> 136 plus core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

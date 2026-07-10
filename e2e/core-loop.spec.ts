@@ -101,6 +101,34 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     ).toBeVisible({ timeout: 5000 });
   });
 
+  test("Meal queue info sheet traps focus and closes before queue", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+    await page.getByRole("button", { name: /Browse meals/i }).click();
+
+    const queueDialog = page.getByRole("dialog", {
+      name: /Meal swipe queue/i,
+    });
+    await expect(queueDialog).toBeVisible({ timeout: 5000 });
+
+    await page.getByRole("button", { name: /Show info for/i }).click();
+    const infoDialog = page.getByRole("dialog", { name: /Info for/i });
+    await expect(infoDialog).toBeVisible({ timeout: 5000 });
+    await expect(infoDialog).toBeFocused({ timeout: 5000 });
+
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("button", { name: /Close info/i })).toBeFocused(
+      {
+        timeout: 5000,
+      },
+    );
+
+    await page.keyboard.press("Escape");
+    await expect(infoDialog).toBeHidden({ timeout: 5000 });
+    await expect(queueDialog).toBeVisible();
+  });
+
   test("Fallback actions open the craving helper", async ({ page }) => {
     await page.goto("/today");
     await page.getByRole("button", { name: /More options/i }).click();
