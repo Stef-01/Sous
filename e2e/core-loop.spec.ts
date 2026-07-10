@@ -87,6 +87,38 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     }
   });
 
+  test("Craving helper suggestions and result rows keep 44px tap targets", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+    await page
+      .getByRole("button", { name: /search what you.re craving/i })
+      .click();
+
+    const helper = page.locator('[aria-label="Search for a dish"]').first();
+    await expect(helper).toBeVisible({ timeout: 5000 });
+
+    for (const name of [
+      /Chicken pasta/i,
+      /^Tacos$/i,
+      /Quick rice bowl/i,
+      /Something cozy/i,
+    ]) {
+      const chip = helper.getByRole("button", { name });
+      await expect(chip).toBeVisible({ timeout: 5000 });
+      const box = await chip.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    }
+
+    await helper.getByPlaceholder(/Roast chicken|pasta|curry/i).fill("pasta");
+    const resultRow = helper.getByRole("button", { name: /pasta/i }).first();
+    await expect(resultRow).toBeVisible({ timeout: 5000 });
+    const resultBox = await resultRow.boundingBox();
+    expect(resultBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(resultBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+  });
+
   test("Search flow: type craving -> recommended sides", async ({ page }) => {
     await page.goto("/today");
     await openCravingSearch(page, "butter chicken");

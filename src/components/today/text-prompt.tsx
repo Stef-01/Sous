@@ -397,7 +397,7 @@ export function TextPrompt({
                   whileTap={{ scale: 0.93 }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   className={cn(
-                    "rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-3 py-1.5 text-sm",
+                    "inline-flex min-h-[44px] items-center justify-center rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 text-sm",
                     "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10",
                     "transition-colors duration-150",
                   )}
@@ -427,7 +427,7 @@ export function TextPrompt({
                 whileTap={{ scale: 0.93 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 className={cn(
-                  "rounded-full border border-neutral-200 px-3 py-1.5 text-sm",
+                  "inline-flex min-h-[44px] items-center justify-center rounded-full border border-neutral-200 px-4 text-sm",
                   "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
                   "transition-colors duration-150",
                 )}
@@ -494,7 +494,7 @@ export function TextPrompt({
                           <button
                             onClick={() => setShowAllLiteral(true)}
                             type="button"
-                            className="mt-1.5 w-full rounded-lg py-1.5 text-[11px] font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5 transition-colors"
+                            className="mt-1.5 flex min-h-[44px] w-full items-center justify-center rounded-lg text-xs font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/5"
                           >
                             Show {literalHidden} more
                           </button>
@@ -523,7 +523,7 @@ export function TextPrompt({
                           <button
                             onClick={() => setShowAllSemantic(true)}
                             type="button"
-                            className="w-full rounded-lg py-1.5 text-[11px] font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5 transition-colors"
+                            className="flex min-h-[44px] w-full items-center justify-center rounded-lg text-xs font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/5"
                           >
                             Show {semanticHidden} more
                           </button>
@@ -573,7 +573,7 @@ function ResultRow({
       <div className="flex w-full items-center">
         <button
           onClick={() => onSelect(result.name)}
-          className="flex flex-1 items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--nourish-green)]/5 transition-colors min-w-0"
+          className="flex min-h-[56px] min-w-0 flex-1 items-center gap-3 px-3 py-2.5 text-left transition-colors hover:bg-[var(--nourish-green)]/5"
           type="button"
         >
           <Icon
@@ -600,7 +600,7 @@ function ResultRow({
             aria-expanded={expanded}
             aria-label={expanded ? "Hide match details" : "Why this match?"}
             className={cn(
-              "shrink-0 px-2.5 py-1 mr-2 rounded-md text-[10px] font-semibold uppercase tracking-wide",
+              "mr-2 inline-flex min-h-[44px] min-w-[56px] shrink-0 items-center justify-center rounded-full px-3 text-[11px] font-semibold uppercase tracking-wide",
               "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10 transition-colors",
             )}
             type="button"

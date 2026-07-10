@@ -250,7 +250,7 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         </span>
         <span
           aria-hidden="true"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-colors group-hover:bg-[var(--nourish-dark-green)]"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-colors group-hover:bg-[var(--nourish-dark-green)]"
         >
           <ArrowRight size={18} strokeWidth={2.4} />
         </span>
