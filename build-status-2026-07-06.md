@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 45 Units Shipped
+## This Session: 46 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -48,7 +48,8 @@
 - **W42** - Hardened guided-cook utility controls that still sat below the Apple-level touch target: servings minus/plus, Bigger Controls, timer chip/start/stop, parent-mode spice dots, and the parent split pill now keep 44px geometry while preserving their compact visual treatment; core-loop Playwright verifies servings, timers, and parent-mode spice controls in Chromium and mobile Safari (this commit)
 - **W43** - Hardened the remaining live guided-cook Win-screen micro-actions: the Parent Mode lunchbox chip and close affordance now keep 44px touch geometry with a quieter no-shadow sheet, and the hidden "Save note" action now has a real tap target; core-loop Playwright verifies the post-cook note and lunchbox flows in Chromium and mobile Safari (this commit)
 - **W44** - Hardened the last live guided-cook Win-screen reaction controls: low-star feedback chips, the friend-name invite input, and the "Send invite" action now preserve 44px tap geometry while keeping the post-cook screen quiet; core-loop Playwright verifies the low-rating feedback and high-rating invite prompt in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 155 plus strengthened core-loop Playwright coverage
+- **W45** - Hardened the Parent Mode KidsAteIt win-screen pills so Yes/Some/No preserve 44px tap geometry without adding visual weight; core-loop Playwright now verifies KidsAteIt and lunchbox controls together in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 156 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

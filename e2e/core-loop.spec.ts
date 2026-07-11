@@ -483,7 +483,7 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     expect(Math.ceil(saveNoteBox?.width ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
-  test("Parent-mode lunchbox win controls keep 44px touch geometry", async ({
+  test("Parent-mode win controls keep 44px touch geometry", async ({
     page,
   }) => {
     await page.addInitScript(() => {
@@ -524,6 +524,16 @@ test.describe("Core Loop - Today meal queue to cook", () => {
       page.getByRole("group", { name: /Rate this cook/i }),
     ).toBeVisible({ timeout: 10000 });
     await page.getByRole("button", { name: /More actions/i }).click();
+
+    for (const choice of ["Yes", "Some", "No"]) {
+      const kidsChoice = page
+        .getByRole("radiogroup", { name: "Did the kids eat it?" })
+        .getByRole("radio", { name: choice });
+      await expect(kidsChoice).toBeVisible();
+      const box = await kidsChoice.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
 
     const lunchbox = page.getByRole("button", {
       name: /Lunchbox tip for/i,

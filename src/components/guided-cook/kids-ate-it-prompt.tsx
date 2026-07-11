@@ -88,7 +88,7 @@ export function KidsAteItPrompt({ cookSessionId, recipeSlug }: Props) {
               role="radio"
               aria-checked={false}
               className={cn(
-                "rounded-full border border-[var(--nourish-border)] bg-white px-4 py-1.5 text-[12px] font-semibold text-[var(--nourish-dark)] hover:bg-[var(--nourish-green)]/5",
+                "inline-flex min-h-[44px] items-center rounded-full border border-[var(--nourish-border)] bg-white px-4 text-[12px] font-semibold text-[var(--nourish-dark)] hover:bg-[var(--nourish-green)]/5",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
               )}
             >
