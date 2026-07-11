@@ -99,7 +99,7 @@ export default function ShoppingListPage() {
         <div className="mx-auto flex max-w-md items-center">
           <button
             onClick={() => router.push("/path")}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
             type="button"
             aria-label="Back to Path"
           >
@@ -241,7 +241,7 @@ export default function ShoppingListPage() {
               {boughtItems.length > 0 && (
                 <button
                   onClick={handleMoveBoughtToPantry}
-                  className="flex w-full items-center justify-center gap-[var(--space-2)] rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-[var(--row-gap)] text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
+                  className="flex min-h-[44px] w-full items-center justify-center gap-[var(--space-2)] rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-[var(--row-gap)] text-sm font-medium text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/10"
                   type="button"
                 >
                   <Check size={14} />
@@ -264,7 +264,7 @@ export default function ShoppingListPage() {
                       },
                     });
                   }}
-                  className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
+                  className="inline-flex min-h-[44px] items-center justify-center px-3 text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
                   type="button"
                 >
                   Clear list
@@ -307,7 +307,7 @@ function GroceryRow({
       {/* Rounded-square checkbox — LEFT edge, like the reference mockups. */}
       <button
         onClick={onToggle}
-        className="shrink-0 transition-transform active:scale-90 motion-reduce:active:scale-100"
+        className="flex h-11 w-11 shrink-0 items-center justify-center transition-transform active:scale-90 motion-reduce:active:scale-100"
         type="button"
         aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
       >
@@ -321,7 +321,7 @@ function GroceryRow({
       </button>
       <button
         onClick={onToggle}
-        className="min-w-0 flex flex-1 items-center gap-[var(--row-gap)] text-left"
+        className="min-h-[44px] min-w-0 flex flex-1 items-center gap-[var(--row-gap)] text-left"
         type="button"
         aria-label={bought ? `Mark ${name} not bought` : `Mark ${name} bought`}
       >
@@ -352,7 +352,7 @@ function GroceryRow({
       {/* Quiet per-item remove — present but subordinate to the checkbox. */}
       <button
         onClick={onRemove}
-        className="flex h-8 w-7 shrink-0 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-[var(--nourish-dark)]"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-neutral-300 transition-colors hover:text-[var(--nourish-dark)]"
         type="button"
         aria-label={`Remove ${name}`}
       >
@@ -405,9 +405,11 @@ function RecipeChip({
           type="button"
           onClick={onRemove}
           aria-label={`Remove ${label} items`}
-          className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-white/85 text-[var(--nourish-subtext)] backdrop-blur-sm transition-colors hover:text-[var(--nourish-dark)]"
+          className="absolute right-0 top-0 flex h-11 w-11 items-center justify-center text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
         >
-          <X size={13} />
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/85 backdrop-blur-sm">
+            <X size={13} />
+          </span>
         </button>
       </div>
       <div className="p-[var(--space-2)]">
@@ -416,7 +418,7 @@ function RecipeChip({
         </p>
         <Link
           href={`/cook/${slug}`}
-          className="mt-0.5 inline-flex items-center gap-0.5 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
+          className="mt-0.5 inline-flex min-h-[44px] items-center gap-0.5 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
         >
           View recipe <ChevronRight size={13} aria-hidden />
         </Link>

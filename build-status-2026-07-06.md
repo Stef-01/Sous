@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 48 Units Shipped
+## This Session: 49 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -51,7 +51,8 @@
 - **W45** - Hardened the Parent Mode KidsAteIt win-screen pills so Yes/Some/No preserve 44px tap geometry without adding visual weight; core-loop Playwright now verifies KidsAteIt and lunchbox controls together in Chromium and mobile Safari (this commit)
 - **W46** - Hardened the live single-cook voice toggle in the cook header so hands-free control keeps 44px touch geometry without adding header chrome; core-loop Playwright now measures the voice affordance alongside the Mission and Cook helper controls in Chromium and mobile Safari (this commit)
 - **W47** - Hardened the Path pantry surface so the header back/import controls, pantry-mode row, add/search textboxes, ingredient result rows, saved-item remove actions, clear action, and empty-state CTA all preserve 44px touch geometry without adding visual weight; a new pantry Playwright smoke verifies the stocked and empty states in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 158 plus strengthened core-loop and pantry Playwright coverage
+- **W48** - Hardened the Path shopping-list surface so the back control, recipe chip actions, grocery row checkbox/name/remove actions, move-bought control, clear action, and empty-state CTA all preserve 44px touch geometry while keeping the Crouton-style row grammar; a new shopping-list Playwright smoke verifies stocked, bought, recipe-chip, and empty states in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 160 plus strengthened core-loop, pantry, and shopping-list Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
