@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 50 Units Shipped
+## This Session: 51 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -53,7 +53,8 @@
 - **W47** - Hardened the Path pantry surface so the header back/import controls, pantry-mode row, add/search textboxes, ingredient result rows, saved-item remove actions, clear action, and empty-state CTA all preserve 44px touch geometry without adding visual weight; a new pantry Playwright smoke verifies the stocked and empty states in Chromium and mobile Safari (this commit)
 - **W48** - Hardened the Path shopping-list surface so the back control, recipe chip actions, grocery row checkbox/name/remove actions, move-bought control, clear action, and empty-state CTA all preserve 44px touch geometry while keeping the Crouton-style row grammar; a new shopping-list Playwright smoke verifies stocked, bought, recipe-chip, and empty states in Chromium and mobile Safari (this commit)
 - **W49** - Hardened the Path planning surfaces so the swipe planner back/actions, completion/empty states, weekly review header and week navigator, day add affordances, meal-picker rows, manage-sheet move grid, cook/remove actions, add-sheet search/results, shop-week, and clear-week controls all keep 44px touch geometry while preserving the quiet planner layout; a new plan-week Playwright smoke verifies seeded week review, manage, add-sheet, swipe-planner, completed-planner, and empty-pool states in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, and plan-week Playwright coverage
+- **W50** - Closed the Reels share silent-fail quick win: the action rail now preserves the native share sheet when available, falls back to a deterministic `/community/reels?start=<id>` copied link when Web Share is unavailable, and surfaces success/failure toasts instead of doing nothing; focused unit coverage pins the fallback payload and clipboard outcomes (this commit)
+- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week Playwright coverage, and focused reel-share unit coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

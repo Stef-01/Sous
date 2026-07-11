@@ -12,6 +12,11 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Bookmark, BookmarkCheck, Heart, Send } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useHaptic } from "@/lib/hooks/use-haptic";
+import { toast } from "@/lib/hooks/use-toast";
+import {
+  buildReelSharePayload,
+  copyReelSharePayload,
+} from "@/lib/share/reel-share";
 import { useContentBookmarks } from "@/lib/hooks/use-content-bookmarks";
 import { useReelEngagement } from "@/lib/hooks/use-reel-engagement";
 import type { Reel } from "@/types/content";
@@ -35,6 +40,40 @@ export function ReelActionRail({ reel }: Props) {
   const liked = isLiked(reel.id);
   const saved = isBookmarked("reels", reel.id);
   const likeCount = reel.likes + (liked ? 1 : 0);
+
+  const handleShare = async () => {
+    haptic();
+    if (typeof navigator !== "undefined" && navigator.share) {
+      navigator
+        .share({ title: reel.title, text: reel.caption })
+        .catch(() => {});
+      return;
+    }
+
+    const payload = buildReelSharePayload({
+      id: reel.id,
+      origin:
+        typeof window !== "undefined" ? window.location.origin : undefined,
+    });
+    if (!payload) return;
+
+    const result = await copyReelSharePayload(payload);
+    if (result === "copied") {
+      toast.push({
+        variant: "success",
+        title: "Reel link copied",
+        body: "Paste it anywhere.",
+        dedupKey: "reel-share-copied",
+      });
+    } else if (result === "copy-failed" || result === "unsupported") {
+      toast.push({
+        variant: "info",
+        title: "Couldn't copy automatically",
+        body: "Open this reel and copy the URL from the address bar.",
+        dedupKey: "reel-share-failed",
+      });
+    }
+  };
 
   return (
     <aside
@@ -73,17 +112,7 @@ export function ReelActionRail({ reel }: Props) {
         )}
       </ActionButton>
 
-      <ActionButton
-        label="Share reel"
-        onClick={() => {
-          haptic();
-          if (typeof navigator !== "undefined" && navigator.share) {
-            navigator
-              .share({ title: reel.title, text: reel.caption })
-              .catch(() => {});
-          }
-        }}
-      >
+      <ActionButton label="Share reel" onClick={() => void handleShare()}>
         <Send size={22} className="text-white" />
       </ActionButton>
     </aside>
