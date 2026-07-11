@@ -75,7 +75,7 @@ function IconButton({
       aria-pressed={active}
       title={label}
       className={cn(
-        "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition-colors duration-150",
+        "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-colors duration-150",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
         active
           ? activeClass
@@ -200,7 +200,7 @@ export function StepHelpRow({
                 <button
                   type="button"
                   onClick={() => suppress(dishSlug!, mistakeId!)}
-                  className="mt-2 text-xs font-medium text-amber-700/70 underline-offset-2 hover:text-amber-800 hover:underline"
+                  className="mt-2 inline-flex min-h-11 items-center text-xs font-medium text-amber-700/70 underline-offset-2 hover:text-amber-800 hover:underline"
                 >
                   Got it — don&apos;t remind me on this dish
                 </button>

@@ -330,7 +330,7 @@ export function StepCard({
             whileTap={{ scale: 0.92 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-xs font-medium transition-colors",
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xs font-medium transition-colors",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
               isSpeaking
                 ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"

@@ -259,6 +259,74 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     }
   });
 
+  test("Mission planner and Cook step helpers keep 44px touch geometry", async ({
+    page,
+  }) => {
+    await page.goto("/cook/garlic-bread");
+
+    const planningChip = page.getByRole("button", {
+      name: /When do you want to eat/i,
+    });
+    await expect(planningChip).toBeVisible({ timeout: 10000 });
+    let box = await planningChip.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await planningChip.click();
+    const cancelPlan = page.getByRole("button", { name: "Cancel" });
+    await expect(cancelPlan).toBeVisible();
+    box = await cancelPlan.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await page.getByLabel("Eat by").fill("23:59");
+    const changePlan = page.getByRole("button", {
+      name: /Clear planned eat time/i,
+    });
+    await expect(changePlan).toBeVisible();
+    box = await changePlan.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+    await expect(page.getByRole("img", { name: /Step 1 of 3/i })).toBeVisible({
+      timeout: 10000,
+    });
+
+    const helperControls = [
+      page.getByRole("button", { name: "Common mistake" }),
+      page.getByRole("button", { name: "Quick hack" }),
+      page.getByRole("button", { name: "Cuisine fact" }),
+      page.getByRole("button", { name: "Ask about this step" }),
+    ];
+
+    for (const control of helperControls) {
+      await expect(control).toBeVisible();
+      box = await control.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
+
+    await page.getByRole("button", { name: "Common mistake" }).click();
+    const dismissMistake = page.getByRole("button", {
+      name: /don't remind me on this dish/i,
+    });
+    await expect(dismissMistake).toBeVisible();
+    box = await dismissMistake.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    const speechSupported = await page.evaluate(() => !!window.speechSynthesis);
+    if (speechSupported) {
+      const readAloud = page.getByRole("button", {
+        name: /Read step aloud|Stop reading aloud/i,
+      });
+      await expect(readAloud).toBeVisible();
+      box = await readAloud.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
+  });
+
   test("Cook step keyboard can advance through final step to win", async ({
     page,
   }) => {
@@ -289,12 +357,12 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     const backToday = page.getByRole("button", { name: /Back to Today/i });
     await expect(backToday).toBeVisible();
     const backBox = await backToday.boundingBox();
-    expect(backBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(backBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
 
     const moreActions = page.getByRole("button", { name: /More actions/i });
     await expect(moreActions).toBeVisible();
     const moreBox = await moreActions.boundingBox();
-    expect(moreBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(moreBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
 
     const saveCook = page.getByRole("button", {
       name: /Save this cook to your scrapbook/i,
