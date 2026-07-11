@@ -774,7 +774,7 @@ export default function GuidedCookPage({
               voice.enabled ? "Turn off voice control" : "Turn on voice control"
             }
             className={cn(
-              "flex min-h-[32px] items-center gap-1 rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors active:scale-95",
+              "flex min-h-[44px] min-w-[44px] items-center justify-center gap-1 rounded-full px-3 text-[10px] font-semibold transition-colors active:scale-95",
               voice.enabled && voice.listening
                 ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)]"
                 : voice.enabled

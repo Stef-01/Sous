@@ -281,6 +281,14 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
     expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
 
+    const voiceToggle = page.getByRole("button", {
+      name: /Turn on voice control|Turn off voice control/i,
+    });
+    await expect(voiceToggle).toBeVisible();
+    box = await voiceToggle.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+
     await planningChip.click();
     const cancelPlan = page.getByRole("button", { name: "Cancel" });
     await expect(cancelPlan).toBeVisible();
