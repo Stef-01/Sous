@@ -159,7 +159,7 @@ export function WeekDayList({
                     }
                     aria-label={`Add a meal to ${DAY_NAMES[dayKey]}`}
                     aria-expanded={pickerDay === dayKey}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors duration-150 hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors duration-150 hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
                   >
                     <Plus size={18} aria-hidden />
                   </button>
@@ -173,7 +173,7 @@ export function WeekDayList({
                         className="fixed inset-0 z-20 cursor-default"
                         tabIndex={-1}
                       />
-                      <div className="absolute right-0 top-10 z-30 w-44 overflow-hidden rounded-2xl border border-[var(--nourish-border-strong)] bg-white py-1 shadow-lg">
+                      <div className="absolute right-0 top-12 z-30 w-44 overflow-hidden rounded-2xl border border-[var(--nourish-border-strong)] bg-white py-1 shadow-lg">
                         {MEAL_PICKER.map(({ key, label, Icon }) => (
                           <button
                             key={key}
@@ -182,7 +182,7 @@ export function WeekDayList({
                               setPickerDay(null);
                               onAddToSlot(dayKey, key);
                             }}
-                            className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-[14px] font-medium text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-cream)]"
+                            className="flex min-h-[44px] w-full items-center gap-3 px-4 py-2.5 text-left text-[14px] font-medium text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-cream)]"
                           >
                             <Icon
                               size={16}
@@ -208,7 +208,7 @@ export function WeekDayList({
                 <button
                   type="button"
                   onClick={() => setPickerDay(dayKey)}
-                  className="mt-1 flex w-full items-center gap-2 rounded-xl py-2.5 text-left text-sm text-[var(--nourish-subtext-faint)] transition-colors hover:text-[var(--nourish-subtext)]"
+                  className="mt-1 flex min-h-[44px] w-full items-center gap-2 rounded-xl py-2.5 text-left text-sm text-[var(--nourish-subtext-faint)] transition-colors hover:text-[var(--nourish-subtext)]"
                 >
                   Nothing planned — tap to add a meal
                 </button>

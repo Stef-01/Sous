@@ -162,7 +162,7 @@ export default function SwipePlannerPage() {
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/path"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             aria-label="Back to Path"
           >
             <ArrowLeft size={16} aria-hidden />
@@ -270,14 +270,14 @@ export default function SwipePlannerPage() {
           <div className="mt-6 flex flex-col gap-2">
             <Link
               href="/path/plan/week"
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               Review the week
               <ArrowRight size={14} aria-hidden />
             </Link>
             <Link
               href="/today"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
+              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
             >
               Go to Today
             </Link>
@@ -304,7 +304,7 @@ function ActionButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex flex-col items-center justify-center gap-1 rounded-xl py-3 text-xs font-semibold transition-colors",
+        "flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl py-3 text-xs font-semibold transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
         tone === "neutral" &&
           "border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)] hover:bg-neutral-50",
@@ -358,7 +358,7 @@ function EmptyPoolPanel({
       <button
         type="button"
         onClick={onTwist}
-        className="mt-4 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-4 py-2 text-sm font-medium text-[var(--nourish-dark)] hover:bg-neutral-50"
+        className="mt-4 min-h-[44px] rounded-xl border border-[var(--nourish-border-strong)] bg-white px-4 py-2 text-sm font-medium text-[var(--nourish-dark)] hover:bg-neutral-50"
       >
         Twist for a fresh batch
       </button>

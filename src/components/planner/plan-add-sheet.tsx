@@ -75,7 +75,7 @@ export function PlanAddSheet({
           {heading}
         </p>
 
-        <div className="mt-3 flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2.5 transition-colors focus-within:border-[var(--nourish-green)]/45">
+        <div className="mt-3 flex min-h-[44px] items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 transition-colors focus-within:border-[var(--nourish-green)]/45">
           <Search
             size={15}
             className="shrink-0 text-[var(--nourish-subtext)]"
@@ -93,7 +93,7 @@ export function PlanAddSheet({
             }}
             placeholder="Search a dish, or type your own…"
             aria-label="Search dishes to add to the plan"
-            className="min-w-0 flex-1 bg-transparent text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
+            className="h-11 min-w-0 flex-1 bg-transparent text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
           />
         </div>
 
@@ -104,7 +104,7 @@ export function PlanAddSheet({
                 <button
                   type="button"
                   onClick={() => onPick(r.slug)}
-                  className="flex w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left transition-colors hover:border-[var(--nourish-green)]/40"
+                  className="flex min-h-[44px] w-full items-center gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left transition-colors hover:border-[var(--nourish-green)]/40"
                 >
                   <span className="min-w-0 flex-1 truncate text-sm text-[var(--nourish-dark)]">
                     {r.name}
@@ -123,7 +123,7 @@ export function PlanAddSheet({
                 <button
                   type="button"
                   onClick={() => onPick(customDishSlug(trimmed))}
-                  className="flex w-full items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-white px-3 py-2 text-left text-sm text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/40"
+                  className="flex min-h-[44px] w-full items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-white px-3 py-2 text-left text-sm text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/40"
                 >
                   <Plus
                     size={15}
@@ -145,7 +145,7 @@ export function PlanAddSheet({
           <button
             type="button"
             onClick={onBrowseCards}
-            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-2.5 text-[13px] font-medium text-[var(--nourish-subtext)] transition hover:bg-neutral-50"
+            className="mt-3 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-2.5 text-[13px] font-medium text-[var(--nourish-subtext)] transition hover:bg-neutral-50"
           >
             Browse ideas instead →
           </button>

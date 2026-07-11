@@ -161,7 +161,7 @@ export default function WeekPlanPage() {
         <div className="mx-auto flex max-w-md items-center">
           <Link
             href="/path"
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)]"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)]"
             aria-label="Back to Path"
           >
             <ArrowLeft size={18} aria-hidden />
@@ -178,7 +178,7 @@ export default function WeekPlanPage() {
               type="button"
               onClick={handleClearWeek}
               aria-label="Clear this week's plan"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
             >
               <MoreHorizontal size={18} aria-hidden />
             </button>
@@ -194,7 +194,7 @@ export default function WeekPlanPage() {
               setShopAdded(null);
             }}
             aria-label="Previous week"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
           >
             <ChevronLeft size={20} aria-hidden />
           </button>
@@ -208,7 +208,7 @@ export default function WeekPlanPage() {
               setShopAdded(null);
             }}
             aria-label="Next week"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition-colors hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 motion-reduce:active:scale-100"
           >
             <ChevronRight size={20} aria-hidden />
           </button>
@@ -297,10 +297,10 @@ export default function WeekPlanPage() {
                               }}
                               className={
                                 isSelf
-                                  ? "h-8 flex-1 rounded-lg bg-[var(--nourish-green)] text-[10px] font-semibold uppercase text-white"
+                                  ? "min-h-[44px] flex-1 rounded-lg bg-[var(--nourish-green)] text-[10px] font-semibold uppercase text-white"
                                   : taken
-                                    ? "h-8 flex-1 rounded-lg border border-neutral-200 bg-neutral-100 text-[10px] uppercase text-neutral-400"
-                                    : "h-8 flex-1 rounded-lg border border-neutral-200 bg-white text-[10px] font-medium uppercase text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50"
+                                    ? "min-h-[44px] flex-1 rounded-lg border border-neutral-200 bg-neutral-100 text-[10px] uppercase text-neutral-400"
+                                    : "min-h-[44px] flex-1 rounded-lg border border-neutral-200 bg-white text-[10px] font-medium uppercase text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50"
                               }
                             >
                               {m[0]}
@@ -318,7 +318,7 @@ export default function WeekPlanPage() {
                     <button
                       type="button"
                       onClick={() => router.push(`/cook/${manage.slug}`)}
-                      className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white active:scale-[0.98]"
+                      className="flex min-h-[44px] flex-1 items-center justify-center rounded-xl bg-[var(--nourish-green)] py-2.5 text-[13px] font-semibold text-white active:scale-[0.98]"
                     >
                       Cook now
                     </button>
@@ -329,7 +329,7 @@ export default function WeekPlanPage() {
                       clearSlot(manage.slot);
                       setManage(null);
                     }}
-                    className="flex-1 rounded-xl border border-neutral-200 bg-white py-2.5 text-[13px] font-medium text-[var(--nourish-subtext)] active:scale-[0.98]"
+                    className="flex min-h-[44px] flex-1 items-center justify-center rounded-xl border border-neutral-200 bg-white py-2.5 text-[13px] font-medium text-[var(--nourish-subtext)] active:scale-[0.98]"
                   >
                     Remove
                   </button>
@@ -356,7 +356,7 @@ export default function WeekPlanPage() {
         <div className="flex flex-col gap-2 pt-5">
           <Link
             href="/path/plan"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.99] motion-reduce:active:scale-100"
+            className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.99] motion-reduce:active:scale-100"
           >
             Add more cooks
           </Link>
@@ -365,7 +365,7 @@ export default function WeekPlanPage() {
               <button
                 type="button"
                 onClick={handleShopWeek}
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
+                className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
               >
                 <ShoppingCart size={15} aria-hidden />
                 Shop this week
@@ -377,7 +377,7 @@ export default function WeekPlanPage() {
             ) : (
               <Link
                 href="/path/shopping-list"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
+                className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)] bg-white py-3 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.99] motion-reduce:active:scale-100"
               >
                 <ShoppingCart size={15} aria-hidden />
                 {shopAdded} added — view shopping list
@@ -387,7 +387,7 @@ export default function WeekPlanPage() {
             <button
               type="button"
               onClick={handleClearWeek}
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] transition hover:bg-neutral-50"
+              className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] transition hover:bg-neutral-50"
             >
               <RotateCcw size={14} aria-hidden />
               Clear the week
