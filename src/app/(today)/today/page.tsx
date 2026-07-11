@@ -259,18 +259,6 @@ function TodayPageContent() {
     return () => clearTimeout(id);
   }, []);
 
-  // Auto-show coach quiz for first-time users (after a brief delay so the page settles)
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem("sous-coach-quiz-done")) {
-        const timer = setTimeout(() => setShowCoachQuiz(true), 900);
-        return () => clearTimeout(timer);
-      }
-    } catch {
-      // localStorage unavailable
-    }
-  }, []);
-
   // W4 — surface an eligible "visit" pulse once per mount, never while
   // onboarding is up/pending. Cooldowns + the 7-day post-onboarding quiet
   // window are enforced by the scheduler, so this stays calm by default.
@@ -697,7 +685,7 @@ function TodayPageContent() {
         <CravingSearchBar onClick={handleOpenSearch} />
 
         {/* Phase 4 — first-run nudge pointing at the craving search (self-clearing). */}
-        <FirstRunCoachmark />
+        <FirstRunCoachmark onPersonalize={() => setShowCoachQuiz(true)} />
 
         {/* Today's metrics at a glance — food + nutrient stats, with the biggest
             gap linking straight to dishes that close it (nutrient → craving).
@@ -775,7 +763,7 @@ function TodayPageContent() {
         onClose={() => setShowMoreOptions(false)}
         onRescueFridge={handleRescueFridge}
         onPlayGame={() => router.push("/games")}
-        onPersonalize={quizDone ? () => setShowCoachQuiz(true) : undefined}
+        onPersonalize={() => setShowCoachQuiz(true)}
         onEatOut={() => router.push("/eat-out")}
         onFindSide={() => router.push("/sides")}
       />

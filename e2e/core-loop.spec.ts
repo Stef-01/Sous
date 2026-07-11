@@ -11,6 +11,66 @@ async function openCravingSearch(page: Page, query: string) {
   await input.press("Enter");
 }
 
+test.describe("Today progressive onboarding", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.removeItem("sous-coach-quiz-done");
+      localStorage.removeItem("sous-firstrun-seen");
+      localStorage.setItem("sous-path-tutorial-v1", "done");
+    });
+  });
+
+  test("fresh visit lands on the meal surface without an onboarding interstitial", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+
+    await expect(page.locator("h1")).toContainText("Sous");
+    await expect(page.getByText("Meal queue")).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(
+      page.getByRole("button", { name: /search what you.re craving/i }),
+    ).toBeVisible();
+
+    const tune = page.getByRole("button", { name: "Tune taste" });
+    await expect(tune).toBeVisible();
+    const tuneBox = await tune.boundingBox();
+    expect(tuneBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    const dismiss = page.getByRole("button", { name: "Dismiss tip" });
+    const dismissBox = await dismiss.boundingBox();
+    expect(dismissBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(dismissBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+
+    await page.waitForTimeout(1200);
+    await expect(
+      page.getByRole("heading", { name: "What are you cooking for?" }),
+    ).toBeHidden();
+  });
+
+  test("optional tune taste opens onboarding and can be skipped", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+    await page.getByRole("button", { name: "Tune taste" }).click();
+
+    await expect(
+      page.getByRole("heading", { name: "What are you cooking for?" }),
+    ).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole("button", { name: "Back" }).click();
+    await expect(
+      page.getByRole("heading", { name: "What are you cooking for?" }),
+    ).toBeHidden({ timeout: 5000 });
+    await expect
+      .poll(() =>
+        page.evaluate(() => localStorage.getItem("sous-coach-quiz-done")),
+      )
+      .toBe("true");
+  });
+});
+
 test.describe("Core Loop - Today meal queue to cook", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {

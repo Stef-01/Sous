@@ -397,7 +397,7 @@ export function TextPrompt({
                   whileTap={{ scale: 0.93 }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
                   className={cn(
-                    "inline-flex min-h-[44px] items-center justify-center rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 text-sm",
+                    "inline-flex min-h-[45px] items-center justify-center rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 text-sm",
                     "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10",
                     "transition-colors duration-150",
                   )}
@@ -427,7 +427,7 @@ export function TextPrompt({
                 whileTap={{ scale: 0.93 }}
                 transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 className={cn(
-                  "inline-flex min-h-[44px] items-center justify-center rounded-full border border-neutral-200 px-4 text-sm",
+                  "inline-flex min-h-[45px] items-center justify-center rounded-full border border-neutral-200 px-4 text-sm",
                   "text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)] hover:text-[var(--nourish-green)]",
                   "transition-colors duration-150",
                 )}
