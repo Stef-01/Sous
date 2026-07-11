@@ -23,7 +23,7 @@ export function BigHandsToggle() {
         aria-label="Bigger controls — larger text and buttons for this cook"
         title="Bigger controls — larger text and buttons for this cook"
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+          "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-4 text-xs font-medium transition-colors",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           enabled
             ? "border-[var(--nourish-green)]/40 bg-[var(--nourish-green)]/8 text-[var(--nourish-green)]"

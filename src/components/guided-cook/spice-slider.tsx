@@ -62,13 +62,18 @@ export function SpiceSlider({ value, onChange, alwaysShow }: Props) {
                 haptic();
                 onChange(dot as SpiceTolerance);
               }}
-              className={cn(
-                "h-3 w-3 rounded-full transition-colors",
-                active
-                  ? "bg-[var(--nourish-warm)]"
-                  : "bg-[var(--nourish-border)]",
-              )}
-            />
+              className="flex h-[44px] w-[44px] items-center justify-center rounded-full transition-colors hover:bg-neutral-100/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  "h-3 w-3 rounded-full transition-colors",
+                  active
+                    ? "bg-[var(--nourish-warm)]"
+                    : "bg-[var(--nourish-border)]",
+                )}
+              />
+            </motion.button>
           );
         })}
       </div>

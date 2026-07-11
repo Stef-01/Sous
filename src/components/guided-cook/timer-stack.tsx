@@ -55,7 +55,7 @@ export function TimerStack() {
                 exit={{ opacity: 0, y: -4, scale: 0.96 }}
                 transition={{ type: "spring", stiffness: 360, damping: 28 }}
                 className={cn(
-                  "relative flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 pr-1.5 text-[12px] font-medium",
+                  "relative flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border pl-3 pr-1.5 text-[12px] font-medium",
                   isDone
                     ? "border-[var(--nourish-gold)]/50 bg-[var(--nourish-gold)]/10 text-[var(--nourish-gold)]"
                     : isLow
@@ -96,7 +96,7 @@ export function TimerStack() {
                   type="button"
                   onClick={() => stopTimer(t.id)}
                   aria-label={`Stop ${t.label}`}
-                  className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--nourish-subtext-faint)] transition-colors hover:bg-black/5 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-[var(--nourish-subtext-faint)] transition-colors hover:bg-black/5 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   <X size={13} strokeWidth={2.2} />
                 </button>

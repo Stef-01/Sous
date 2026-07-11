@@ -241,6 +241,8 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     });
 
     const controls = [
+      page.getByRole("button", { name: "Fewer servings" }).first(),
+      page.getByRole("button", { name: "More servings" }).first(),
       page.getByRole("tab", { name: "By dish" }).first(),
       page.getByRole("tab", { name: "By station" }).first(),
       page.getByRole("button", { name: /Add .* to pantry/i }).first(),
@@ -270,6 +272,14 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(planningChip).toBeVisible({ timeout: 10000 });
     let box = await planningChip.boundingBox();
     expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    const biggerControls = page.getByRole("button", {
+      name: /Bigger controls/i,
+    });
+    await expect(biggerControls).toBeVisible();
+    box = await biggerControls.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
 
     await planningChip.click();
     const cancelPlan = page.getByRole("button", { name: "Cancel" });
@@ -322,6 +332,90 @@ test.describe("Core Loop - Today meal queue to cook", () => {
       });
       await expect(readAloud).toBeVisible();
       box = await readAloud.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
+  });
+
+  test("Cook timer controls keep 44px touch geometry", async ({ page }) => {
+    await page.goto("/cook/garlic-bread");
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+
+    await expect(page.getByRole("img", { name: /Step 1 of 3/i })).toBeVisible({
+      timeout: 10000,
+    });
+    await page.getByRole("button", { name: /Go to step 2/i }).click();
+    await expect(page.getByRole("img", { name: /Step 2 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.getByRole("button", { name: /Go to step 3/i }).click();
+    await expect(page.getByRole("img", { name: /Step 3 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+
+    const setTimer = page.getByRole("button", { name: /Set 8 min timer/i });
+    await expect(setTimer).toBeVisible();
+    let box = await setTimer.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await setTimer.click();
+    const startTimer = page.getByRole("button", {
+      name: /Start 8 min countdown timer/i,
+    });
+    await expect(startTimer).toBeVisible();
+    box = await startTimer.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await startTimer.click();
+    const timerStop = page
+      .getByRole("button", { name: /Stop Garlic Bread/i })
+      .first();
+    await expect(timerStop).toBeVisible();
+    await expect
+      .poll(async () => {
+        const box = await timerStop.boundingBox();
+        return Math.ceil(box?.height ?? 0);
+      })
+      .toBeGreaterThanOrEqual(44);
+    await expect
+      .poll(async () => {
+        const box = await timerStop.boundingBox();
+        return Math.ceil(box?.width ?? 0);
+      })
+      .toBeGreaterThanOrEqual(44);
+  });
+
+  test("Parent-mode spice dots keep 44px touch geometry", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "sous-parent-mode-v1",
+        JSON.stringify({
+          v: 1,
+          profile: {
+            enabled: true,
+            ageBand: "4-8",
+            spiceTolerance: 3,
+            enabledAt: "2026-07-11T00:00:00.000Z",
+          },
+        }),
+      );
+    });
+
+    await page.goto("/cook/butter-chicken");
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+
+    await expect(
+      page.getByRole("radio", { name: "Spice level 1 of 5" }),
+    ).toBeVisible({ timeout: 10000 });
+
+    for (const level of [1, 2, 3, 4, 5]) {
+      const dot = page.getByRole("radio", {
+        name: `Spice level ${level} of 5`,
+      });
+      await expect(dot).toBeVisible();
+      const box = await dot.boundingBox();
       expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
       expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
     }

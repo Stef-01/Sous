@@ -53,7 +53,7 @@ export function ServingSlider({
             onClick={() => step(-1)}
             disabled={servings <= min}
             aria-label="Fewer servings"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 active:scale-95 disabled:opacity-30"
+            className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 active:scale-95 disabled:opacity-30"
           >
             <Minus size={15} strokeWidth={2.2} />
           </button>
@@ -68,7 +68,7 @@ export function ServingSlider({
             onClick={() => step(1)}
             disabled={servings >= max}
             aria-label="More servings"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 active:scale-95 disabled:opacity-30"
+            className="flex h-[44px] w-[44px] items-center justify-center rounded-full text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 active:scale-95 disabled:opacity-30"
           >
             <Plus size={15} strokeWidth={2.2} />
           </button>

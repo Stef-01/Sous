@@ -32,7 +32,7 @@ export function TimerChip({
       <button
         onClick={onToggle}
         className={cn(
-          "flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium",
+          "flex min-h-[44px] w-full items-center gap-2 rounded-lg px-3 text-sm font-medium",
           "border transition duration-150",
           isExpanded
             ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
@@ -62,7 +62,7 @@ export function TimerChip({
             <div className="px-3 py-3">
               <button
                 onClick={onStart}
-                className="w-full rounded-lg bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition active:scale-[0.97]"
+                className="min-h-[44px] w-full rounded-lg bg-[var(--nourish-green)] text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                 type="button"
                 aria-label={`Start ${formatTime(seconds)} countdown timer`}
               >

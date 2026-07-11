@@ -53,7 +53,7 @@ export function ComponentSplitToggle({ dishSlug }: Props) {
         aria-pressed={open}
         aria-expanded={open}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors",
+          "inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-4 text-[11px] font-semibold transition-colors",
           open
             ? "bg-[var(--nourish-green)] text-white"
             : "bg-neutral-100 text-[var(--nourish-dark)] hover:bg-neutral-200",
