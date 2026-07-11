@@ -276,6 +276,46 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     ).toBeVisible({ timeout: 5000 });
   });
 
+  test("Meal queue stays photo-led with minimal visible actions", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+    await page.getByRole("button", { name: /Browse meals/i }).click();
+
+    const queueDialog = page.getByRole("dialog", {
+      name: /Meal swipe queue/i,
+    });
+    await expect(queueDialog).toBeVisible({ timeout: 5000 });
+
+    const activeCard = page.getByTestId("meal-swipe-card").first();
+    await expect(activeCard).toBeVisible({ timeout: 5000 });
+    await page.waitForTimeout(450);
+
+    const viewport = page.viewportSize();
+    const cardBox = await activeCard.boundingBox();
+    expect(cardBox?.height ?? 0).toBeGreaterThanOrEqual(
+      (viewport?.height ?? 0) * 0.68,
+    );
+    if ((viewport?.width ?? 0) <= 500) {
+      expect(cardBox?.width ?? 0).toBeGreaterThanOrEqual(
+        (viewport?.width ?? 0) * 0.94,
+      );
+    } else {
+      expect(cardBox?.width ?? 0).toBeGreaterThanOrEqual(360);
+      expect(cardBox?.width ?? 0).toBeLessThanOrEqual(450);
+    }
+    await expect(page.getByText(/^Info$/)).toHaveCount(0);
+    await expect(activeCard).toHaveCSS("box-shadow", "none");
+
+    const actionBar = page.getByTestId("meal-queue-action-bar");
+    await expect(actionBar.getByRole("button")).toHaveCount(3);
+    for (const action of await actionBar.getByRole("button").all()) {
+      const box = await action.boundingBox();
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    }
+  });
+
   test("Meal queue info sheet traps focus and closes before queue", async ({
     page,
   }) => {

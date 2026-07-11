@@ -93,19 +93,19 @@ export function FullscreenSwipeCard({
     }
   };
 
-  const scale = reducedMotion ? 1 : 1 - stackIndex * 0.045;
-  const y = reducedMotion ? 0 : stackIndex * 14;
+  const scale = reducedMotion ? 1 : 1 - stackIndex * 0.025;
+  const y = reducedMotion ? 0 : stackIndex * 8;
   const peekRotate = reducedMotion
     ? 0
     : stackIndex === 1
-      ? 2.2
+      ? 1.2
       : stackIndex === 2
-        ? -1.6
+        ? -0.8
         : 0;
 
   return (
     <motion.div
-      className="absolute inset-0 px-3 pb-[126px] pt-[104px]"
+      className="absolute inset-x-0 bottom-0 top-0 mx-auto w-full max-w-[430px] px-0 pb-[100px] pt-[68px]"
       style={{
         x: isTop ? x : 0,
         rotate: isTop ? (reducedMotion ? 0 : rotate) : peekRotate,
@@ -149,23 +149,14 @@ export function FullscreenSwipeCard({
       onDragEnd={isTop ? handleDragEnd : undefined}
     >
       <article
+        data-testid="meal-swipe-card"
         className={cn(
-          "relative h-full overflow-hidden rounded-[var(--radius-lg)] border border-white/10 bg-white",
+          "relative h-full overflow-hidden rounded-[1.375rem] bg-white",
           isTop && "cursor-grab active:cursor-grabbing",
         )}
         aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}
       >
         <DishImage dish={dish} priority={isTop} fit="cover" />
-        {/* Time pill on the photo — the reference mockups' signature recipe-card
-            treatment (translucent pill, bottom-left). The time was removed from the
-            meta line below so it isn't duplicated. */}
-        {dish.cookTimeMinutes > 0 && (
-          <span className="absolute bottom-3 left-3 z-10 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
-            {dish.cookTimeMinutes >= 60
-              ? `${Math.floor(dish.cookTimeMinutes / 60)}hr ${dish.cookTimeMinutes % 60 ? `${dish.cookTimeMinutes % 60}min` : ""}`.trim()
-              : `${dish.cookTimeMinutes} min`}
-          </span>
-        )}
         {/* Threshold stamps — visible only while dragging the top card. */}
         {isTop && (
           <>
@@ -175,7 +166,7 @@ export function FullscreenSwipeCard({
                 opacity: cookStampOpacity,
                 scale: reducedMotion ? 1 : cookStampScale,
               }}
-              className="absolute left-4 top-4 z-10 inline-flex -rotate-12 items-center gap-1.5 rounded-xl bg-white px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-neutral-950 shadow-lg"
+              className="absolute left-4 top-4 z-10 inline-flex -rotate-12 items-center gap-1.5 rounded-xl border border-white/70 bg-white/92 px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-neutral-950 backdrop-blur-sm"
             >
               <ChefHat size={15} strokeWidth={2.4} />
               {primaryActionLabel(dish)}
@@ -186,7 +177,7 @@ export function FullscreenSwipeCard({
                 opacity: passStampOpacity,
                 scale: reducedMotion ? 1 : passStampScale,
               }}
-              className="absolute right-4 top-4 z-10 inline-flex rotate-12 items-center gap-1.5 rounded-xl border-2 border-white bg-black/45 px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white shadow-lg backdrop-blur-sm"
+              className="absolute right-4 top-4 z-10 inline-flex rotate-12 items-center gap-1.5 rounded-xl border border-white/70 bg-black/40 px-3 py-1.5 text-[13px] font-bold uppercase tracking-wide text-white backdrop-blur-sm"
             >
               <X size={15} strokeWidth={2.6} />
               Pass

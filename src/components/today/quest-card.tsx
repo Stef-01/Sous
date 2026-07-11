@@ -11,7 +11,6 @@ import {
   Layers,
   ChefHat,
   Info,
-  ChevronUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
@@ -1065,9 +1064,9 @@ function MealSwipeQueueOverlay({
 
       {activeDish && (
         <div
-          className="absolute inset-x-0 bottom-0 z-40 bg-[#080907] px-5 pt-2"
+          className="absolute inset-x-0 bottom-0 z-40 bg-[#080907]/96 px-4 pt-1.5"
           style={{
-            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.875rem)",
+            paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)",
           }}
         >
           {/* Floating Info button — anchored just above the recipe name, over the
@@ -1078,21 +1077,14 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={healthPanel.open}
               aria-label={`Show info for ${activeDish.dishName}`}
-              className="absolute -top-[52px] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/15 bg-black/55 px-4 py-2 text-[12px] font-semibold text-white shadow-lg backdrop-blur-md transition-transform active:scale-95"
+              className="absolute -top-[50px] right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
-              <Info size={14} strokeWidth={2.2} />
-              Info
-              <ChevronUp
-                size={13}
-                strokeWidth={2.4}
-                className="opacity-75"
-                aria-hidden="true"
-              />
+              <Info size={17} strokeWidth={2.2} />
             </button>
           )}
 
-          <div className="mx-auto mb-2 max-w-[430px] space-y-1">
-            <h3 className="line-clamp-1 font-serif text-[25px] leading-none text-white">
+          <div className="mx-auto mb-2 max-w-[430px] space-y-0.5">
+            <h3 className="line-clamp-1 font-serif text-[23px] leading-none text-white">
               {activeDish.dishName}
             </h3>
             <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-white/56">
@@ -1108,9 +1100,16 @@ function MealSwipeQueueOverlay({
                 </>
               ) : (
                 <>
-                  {/* Time now lives in the photo pill (reference grammar). */}
                   <span>{activeDish.cuisineFamily}</span>
                   <span aria-hidden="true">/</span>
+                  {activeDish.cookTimeMinutes > 0 && (
+                    <>
+                      <span>
+                        {formatCookDuration(activeDish.cookTimeMinutes)}
+                      </span>
+                      <span aria-hidden="true">/</span>
+                    </>
+                  )}
                   <span>{activeDish.ingredientCount} ingredients</span>
                 </>
               )}
@@ -1119,11 +1118,14 @@ function MealSwipeQueueOverlay({
 
           {/* Phase 5 — one dominant action: Pass + Save are equal ghost circles,
               Cook is the single wide solid primary (Rule 2). */}
-          <div className="mx-auto grid max-w-[430px] grid-cols-[52px_52px_1fr] items-center gap-3">
+          <div
+            data-testid="meal-queue-action-bar"
+            className="mx-auto grid max-w-[430px] grid-cols-[48px_48px_1fr] items-center gap-2.5"
+          >
             <button
               type="button"
               onClick={() => swipeTop("left")}
-              className="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/16 bg-transparent text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               aria-label={`Pass on ${activeDish.dishName}`}
             >
               <X size={21} strokeWidth={2.2} />
@@ -1132,7 +1134,7 @@ function MealSwipeQueueOverlay({
               type="button"
               onClick={saveActive}
               className={cn(
-                "flex h-[52px] w-[52px] items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+                "flex h-12 w-12 items-center justify-center rounded-full border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
                 isDishSaved(activeDish.slug)
                   ? "border-[var(--nourish-light-green)]/60 bg-[var(--nourish-light-green)]/20 text-[var(--nourish-light-green)]"
                   : "border-white/16 bg-transparent text-white hover:bg-white/10",
@@ -1151,7 +1153,7 @@ function MealSwipeQueueOverlay({
             <button
               type="button"
               onClick={() => swipeTop("right")}
-              className="flex h-[52px] items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]"
+              className="flex h-12 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-neutral-950 transition-colors hover:bg-white/88 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]"
               aria-label={
                 activeDish.eatOut
                   ? `Log ${activeDish.dishName}`
@@ -1168,6 +1170,15 @@ function MealSwipeQueueOverlay({
       )}
     </motion.div>
   );
+}
+
+function formatCookDuration(minutes: number): string {
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainder = minutes % 60;
+    return `${hours}hr${remainder ? ` ${remainder}min` : ""}`;
+  }
+  return `${minutes} min`;
 }
 
 function isEditableShortcutTarget(target: EventTarget | null): boolean {

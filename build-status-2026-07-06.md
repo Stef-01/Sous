@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 37 Units Shipped
+## This Session: 38 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -40,7 +40,8 @@
 - **W34** - Removed the first-run Path interstitial from the default flow: fresh devices now land on the real Path page immediately, the empty-state hero exposes an explicit "How Path works" help action, and Path Playwright verifies both the zero-tap landing and the opt-in tutorial exits (this commit)
 - **W35** - Removed the first-run Today onboarding interstitial from the default flow: fresh devices now land on the real meal surface, the first-run hint exposes a 44px "Tune taste" action, More Options keeps personalization reachable, and core-loop Playwright verifies both zero-tap landing and opt-in onboarding skip persistence (this commit)
 - **W36** - Reworked the Games hub away from the audited symmetric arcade-card pattern: the page now uses local food photography, one large featured daily game, compact asymmetric rows for the other games, no "Tap to try" filler, and Playwright verifies the photo-led layout geometry plus all four routes (this commit)
-- Tests: 21 -> 146 plus strengthened core-loop Playwright coverage
+- **W37** - Made the fullscreen Today meal queue more food-led and less chrome-heavy: the active card now uses a taller centered photo frame, permanent photo overlays and queue-card shadows are removed, the Info affordance is icon-only, cook time moved into the metadata line, and Playwright verifies the dominant image geometry plus the three-action bar (this commit)
+- Tests: 21 -> 147 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
