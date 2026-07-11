@@ -801,6 +801,7 @@ export default function GuidedCookPage({
                 heroImageUrl={dish.heroImageUrl}
                 hasIngredients={ingredients.length > 0}
                 dishSlug={dish.slug}
+                cuisineFamily={cuisine}
                 onStart={handleMissionStart}
               />
             </PhaseShell>

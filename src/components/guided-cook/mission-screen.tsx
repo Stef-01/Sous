@@ -64,11 +64,10 @@ export function MissionScreen({
     <motion.div
       initial={false}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-3 min-h-[calc(100dvh-160px)]"
+      className="flex min-h-[calc(100dvh-160px)] flex-col gap-3"
     >
-      {/* Hero image — food-first 4:3 aspect ratio (pattern #1
-          standardisation across recipe surfaces). Falls back to a
-          gradient + name overlay when no hero image is available. */}
+      {/* Food-first hero: full-width in the mobile rail with no permanent
+          controls over the meal. */}
       <motion.div
         initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -77,8 +76,8 @@ export function MissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25 }
         }
-        className="relative overflow-hidden rounded-[var(--radius-lg)]"
-        style={{ aspectRatio: "4 / 3" }}
+        data-testid="cook-mission-hero"
+        className="relative left-1/2 h-[min(40dvh,340px)] w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-none bg-[var(--nourish-dark)]"
       >
         {heroImageUrl && !imgError ? (
           <Image
@@ -110,35 +109,6 @@ export function MissionScreen({
             </span>
           </div>
         )}
-        {/* Time pill overlaid on the photo — the reference mockups' signature
-            recipe-card treatment (a translucent pill, bottom-left). */}
-        {totalTime > 0 && (
-          <span className="absolute bottom-2 left-2 rounded-full bg-white/90 px-2.5 py-1 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
-            {totalTime >= 60
-              ? `${Math.floor(totalTime / 60)}hr ${totalTime % 60 ? `${totalTime % 60}min` : ""}`.trim()
-              : `${totalTime} min`}
-          </span>
-        )}
-        {/* Save bookmark — the reference mockups' top-right card affordance.
-            Save the recipe for later without having to cook it now. */}
-        {dishSlug && (
-          <button
-            type="button"
-            onClick={toggleSaved}
-            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
-            aria-pressed={isSaved}
-            className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm transition-transform active:scale-90 motion-reduce:active:scale-100"
-          >
-            <Bookmark
-              size={17}
-              strokeWidth={2.2}
-              className={cn(
-                isSaved &&
-                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
-              )}
-            />
-          </button>
-        )}
       </motion.div>
 
       {/* Dish name + meta strip — Y3 W9 visual hierarchy:
@@ -146,9 +116,7 @@ export function MissionScreen({
           Time chip moves into the eyebrow row so it competes with
           metadata, not with flavor. */}
       <div className="space-y-2">
-        {/* Cuisine eyebrow caps — only when there IS a cuisine (the total time
-            now lives in the photo pill; no generic "Recipe" filler, matching the
-            reference's clean author→title hierarchy). */}
+        {/* Cuisine eyebrow caps — only when there IS a cuisine. */}
         {cuisineFamily && (
           <motion.p
             initial={reducedMotion ? false : { opacity: 0, y: 4 }}
@@ -183,7 +151,7 @@ export function MissionScreen({
             pills with a subtle +N overflow so multi-flavor dishes
             (4-5+ tags) don't crowd the space above the CTA on 375px.
             Quieter neutral-outline style replaces the green fill. */}
-        {flavorProfile.length > 0 && (
+        {(flavorProfile.length > 0 || totalTime > 0) && (
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             {flavorProfile.slice(0, 3).map((flavor, idx) => (
               <motion.span
@@ -210,6 +178,25 @@ export function MissionScreen({
                 +{flavorProfile.length - 3}
               </span>
             )}
+            {totalTime > 0 && (
+              <motion.span
+                initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={
+                  reducedMotion
+                    ? { duration: 0 }
+                    : {
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                        delay: 0.15 + Math.min(flavorProfile.length, 3) * 0.05,
+                      }
+                }
+                className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
+              >
+                {formatMissionDuration(totalTime)}
+              </motion.span>
+            )}
           </div>
         )}
       </div>
@@ -232,7 +219,7 @@ export function MissionScreen({
       </motion.p>
 
       {/* Primary action stays ahead of optional controls on short phones. */}
-      <motion.button
+      <motion.div
         initial={false}
         animate={{ opacity: 1, y: 0 }}
         transition={{
@@ -241,17 +228,41 @@ export function MissionScreen({
           damping: 25,
           delay: 0.25,
         }}
-        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
-        onClick={onStart}
-        className={cn(
-          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200",
-        )}
-        type="button"
+        className="grid grid-cols-[48px_1fr] gap-2.5"
       >
-        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
-      </motion.button>
+        {dishSlug ? (
+          <button
+            type="button"
+            onClick={toggleSaved}
+            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
+            aria-pressed={isSaved}
+            className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+          >
+            <Bookmark
+              size={18}
+              strokeWidth={2.2}
+              className={cn(
+                isSaved &&
+                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
+              )}
+            />
+          </button>
+        ) : (
+          <span aria-hidden />
+        )}
+        <motion.button
+          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+          onClick={onStart}
+          className={cn(
+            "h-12 rounded-xl text-sm font-semibold text-white",
+            "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+            "transition-colors duration-200",
+          )}
+          type="button"
+        >
+          {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+        </motion.button>
+      </motion.div>
 
       {/* Plan-my-cook  -  optional eat-time → start-time assist */}
       <motion.div
@@ -280,4 +291,13 @@ export function MissionScreen({
       </motion.div>
     </motion.div>
   );
+}
+
+function formatMissionDuration(minutes: number): string {
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const remainder = minutes % 60;
+    return `${hours}hr${remainder ? ` ${remainder}min` : ""}`;
+  }
+  return `${minutes} min`;
 }

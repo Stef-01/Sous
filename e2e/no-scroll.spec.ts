@@ -102,6 +102,49 @@ test.describe("No-Scroll CTA — 375×667 viewport", () => {
     );
   });
 
+  test("cook mission heroes are photo-led with split save and cook actions", async ({
+    page,
+  }) => {
+    for (const route of [
+      "/cook/caesar-salad",
+      "/cook/combined?main=butter-chicken&sides=tabbouleh,pico-de-gallo",
+    ]) {
+      await page.goto(route);
+      await page.waitForLoadState("networkidle");
+
+      const hero = page.getByTestId("cook-mission-hero").first();
+      await expect(hero).toBeVisible({ timeout: 10000 });
+      const heroBox = await hero.boundingBox();
+      const viewport = page.viewportSize();
+      expect(heroBox?.x ?? 999).toBeLessThanOrEqual(1);
+      expect(heroBox?.width ?? 0).toBeGreaterThanOrEqual(
+        (viewport?.width ?? 0) - 1,
+      );
+      expect(heroBox?.height ?? 0).toBeGreaterThanOrEqual(
+        (viewport?.height ?? 0) * 0.39,
+      );
+      await expect(hero.getByRole("button")).toHaveCount(0);
+
+      const save = page
+        .getByRole("button", {
+          name: /Save recipe|Remove from saved recipes/i,
+        })
+        .first();
+      await expect(save).toBeVisible({ timeout: 10000 });
+      const saveBox = await save.boundingBox();
+      expect(saveBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(saveBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+
+      const start = page
+        .getByRole("button", { name: /Let.s gather|Let.s cook/i })
+        .first();
+      await expect(start).toBeVisible({ timeout: 10000 });
+      const startBox = await start.boundingBox();
+      expect(startBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+      expect(startBox?.width ?? 0).toBeGreaterThanOrEqual(216);
+    }
+  });
+
   test("/cook/combined — CTA visible", async ({ page }) => {
     await page.goto("/cook/combined");
     await page.waitForLoadState("networkidle");
@@ -124,7 +167,7 @@ test.describe("Meal-First Quest Experience", () => {
       timeout: 10000,
     });
     await expect(
-      page.getByRole("button", { name: /Open meal queue/i }).first(),
+      page.getByRole("button", { name: /Browse meals/i }).first(),
     ).toBeVisible({ timeout: 10000 });
   });
 

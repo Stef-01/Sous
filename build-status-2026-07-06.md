@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 38 Units Shipped
+## This Session: 39 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -41,7 +41,8 @@
 - **W35** - Removed the first-run Today onboarding interstitial from the default flow: fresh devices now land on the real meal surface, the first-run hint exposes a 44px "Tune taste" action, More Options keeps personalization reachable, and core-loop Playwright verifies both zero-tap landing and opt-in onboarding skip persistence (this commit)
 - **W36** - Reworked the Games hub away from the audited symmetric arcade-card pattern: the page now uses local food photography, one large featured daily game, compact asymmetric rows for the other games, no "Tap to try" filler, and Playwright verifies the photo-led layout geometry plus all four routes (this commit)
 - **W37** - Made the fullscreen Today meal queue more food-led and less chrome-heavy: the active card now uses a taller centered photo frame, permanent photo overlays and queue-card shadows are removed, the Info affordance is icon-only, cook time moved into the metadata line, and Playwright verifies the dominant image geometry plus the three-action bar (this commit)
-- Tests: 21 -> 147 plus strengthened core-loop Playwright coverage
+- **W38** - Made guided-cook Mission screens more food-led across single and combined cooks: the hero now bleeds to the mobile rail, permanent hero overlays are removed, Save sits beside the primary cook CTA as a separate 44px action, and Playwright verifies the full-width hero plus split save/cook controls (this commit)
+- Tests: 21 -> 148 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

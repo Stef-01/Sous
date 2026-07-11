@@ -875,9 +875,10 @@ function CombinedMissionScreen({
     <motion.div
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col gap-5 min-h-[calc(100dvh-160px)]"
+      className="flex min-h-[calc(100dvh-160px)] flex-col gap-3"
     >
-      {/* Hero image  -  gradient+emoji fallback when no image */}
+      {/* Food-first hero: full-width in the mobile rail with no permanent
+          controls over the meal. */}
       <motion.div
         initial={reducedMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -886,7 +887,8 @@ function CombinedMissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25 }
         }
-        className="relative aspect-[4/3] overflow-hidden rounded-xl"
+        data-testid="cook-mission-hero"
+        className="relative left-1/2 h-[min(40dvh,340px)] w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-none bg-[var(--nourish-dark)]"
       >
         {mainDishHeroImage ? (
           <Image
@@ -915,26 +917,6 @@ function CombinedMissionScreen({
               {mainDishName}
             </span>
           </div>
-        )}
-        {/* Save the main dish for later — same bookmark affordance as the
-            single-dish mission (top-right on the photo). */}
-        {mainDishSlug && (
-          <button
-            type="button"
-            onClick={toggleSaved}
-            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
-            aria-pressed={isSaved}
-            className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm transition-transform active:scale-90 motion-reduce:active:scale-100"
-          >
-            <Bookmark
-              size={17}
-              strokeWidth={2.2}
-              className={cn(
-                isSaved &&
-                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
-              )}
-            />
-          </button>
         )}
       </motion.div>
 
@@ -1050,13 +1032,13 @@ function CombinedMissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25, delay: 0.25 }
         }
-        className="text-sm text-[var(--nourish-subtext)] leading-relaxed"
+        className="line-clamp-2 text-sm leading-relaxed text-[var(--nourish-subtext)]"
       >
         {mainDishDescription}
       </motion.p>
 
       {/* Primary action stays ahead of optional controls on short phones. */}
-      <motion.button
+      <motion.div
         initial={reducedMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={
@@ -1064,17 +1046,41 @@ function CombinedMissionScreen({
             ? { duration: 0 }
             : { type: "spring", stiffness: 260, damping: 25, delay: 0.3 }
         }
-        whileTap={reducedMotion ? undefined : { scale: 0.96 }}
-        onClick={onStart}
-        className={cn(
-          "w-full rounded-xl py-3.5 text-sm font-semibold text-white",
-          "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
-          "transition-colors duration-200",
-        )}
-        type="button"
+        className="grid grid-cols-[48px_1fr] gap-2.5"
       >
-        {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
-      </motion.button>
+        {mainDishSlug ? (
+          <button
+            type="button"
+            onClick={toggleSaved}
+            aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
+            aria-pressed={isSaved}
+            className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+          >
+            <Bookmark
+              size={18}
+              strokeWidth={2.2}
+              className={cn(
+                isSaved &&
+                  "fill-[var(--nourish-green)] text-[var(--nourish-green)]",
+              )}
+            />
+          </button>
+        ) : (
+          <span aria-hidden />
+        )}
+        <motion.button
+          whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+          onClick={onStart}
+          className={cn(
+            "h-12 rounded-xl text-sm font-semibold text-white",
+            "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
+            "transition-colors duration-200",
+          )}
+          type="button"
+        >
+          {hasIngredients ? "Let\u2019s gather" : "Let\u2019s cook"}
+        </motion.button>
+      </motion.div>
 
       {/* Plan-my-cook  -  uses sequencer-adjusted time when available so the
           computed start reflects parallelization savings. */}
