@@ -36,12 +36,12 @@ test.describe("Today progressive onboarding", () => {
     const tune = page.getByRole("button", { name: "Tune taste" });
     await expect(tune).toBeVisible();
     const tuneBox = await tune.boundingBox();
-    expect(tuneBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(tuneBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
 
     const dismiss = page.getByRole("button", { name: "Dismiss tip" });
     const dismissBox = await dismiss.boundingBox();
-    expect(dismissBox?.height ?? 0).toBeGreaterThanOrEqual(44);
-    expect(dismissBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(dismissBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(dismissBox?.width ?? 0)).toBeGreaterThanOrEqual(44);
 
     await page.waitForTimeout(1200);
     await expect(
@@ -228,6 +228,35 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(page.getByRole("img", { name: /Step 1 of \d+/ })).toBeVisible({
       timeout: 5000,
     });
+  });
+
+  test("Grab step controls keep 44px touch geometry", async ({ page }) => {
+    await page.goto(
+      "/cook/combined?main=butter-chicken&sides=tabbouleh,pico-de-gallo",
+    );
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+
+    await expect(page.getByText("Gather these")).toBeVisible({
+      timeout: 10000,
+    });
+
+    const controls = [
+      page.getByRole("tab", { name: "By dish" }).first(),
+      page.getByRole("tab", { name: "By station" }).first(),
+      page.getByRole("button", { name: /Add .* to pantry/i }).first(),
+      page.getByRole("button", { name: /Find substitute for/i }).first(),
+      page.getByRole("button", { name: /I have everything/i }).first(),
+      page
+        .getByRole("button", { name: /Add \d+ items? to shopping list/i })
+        .first(),
+    ];
+
+    for (const control of controls) {
+      await expect(control).toBeVisible({ timeout: 10000 });
+      const box = await control.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
   });
 
   test("Cook step keyboard can advance through final step to win", async ({

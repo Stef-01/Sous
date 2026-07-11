@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 40 Units Shipped
+## This Session: 41 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -43,7 +43,8 @@
 - **W37** - Made the fullscreen Today meal queue more food-led and less chrome-heavy: the active card now uses a taller centered photo frame, permanent photo overlays and queue-card shadows are removed, the Info affordance is icon-only, cook time moved into the metadata line, and Playwright verifies the dominant image geometry plus the three-action bar (this commit)
 - **W38** - Made guided-cook Mission screens more food-led across single and combined cooks: the hero now bleeds to the mobile rail, permanent hero overlays are removed, Save sits beside the primary cook CTA as a separate 44px action, and Playwright verifies the full-width hero plus split save/cook controls (this commit)
 - **W39** - Simplified the guided-cook Win screen so completion defaults to the rating, auto-log confirmation, one dominant "Back to Today" CTA, and one 44px "More actions" disclosure; Save/Photo/Note/Again/Send remain available inside the tray with 44px targets, low-star reflection still auto-opens it, and core-loop Playwright verifies the collapsed and expanded states (this commit)
-- Tests: 21 -> 149 plus strengthened core-loop Playwright coverage
+- **W40** - Hardened the guided-cook Grab step touch geometry: prep and unit segmented controls, ingredient row labels, pantry toggles, substitution toggles, and remembered-swap actions now preserve 44px hit targets while keeping the same ingredient, pantry, substitution, and shopping-list behavior; core-loop Playwright verifies the combined-cook Grab controls in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 150 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

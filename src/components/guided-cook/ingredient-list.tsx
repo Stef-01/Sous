@@ -506,7 +506,7 @@ function SegmentedControl<T extends string>({
           aria-selected={value === optionValue}
           onClick={() => onChange(optionValue)}
           className={cn(
-            "rounded-full px-2.5 py-1 transition-colors",
+            "min-h-11 rounded-full px-3 transition-colors",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
             value === optionValue
               ? "bg-[var(--nourish-green)] text-white"
@@ -585,7 +585,7 @@ function IngredientRow({
         {/* Ingredient info */}
         <button
           onClick={onToggle}
-          className="flex-1 min-w-0 text-left active:scale-[0.98] transition-transform"
+          className="min-h-11 flex-1 min-w-0 text-left transition-transform active:scale-[0.98]"
           type="button"
           aria-label={checked ? `Uncheck ${item.name}` : `Check ${item.name}`}
         >
@@ -648,7 +648,7 @@ function IngredientRow({
         <button
           onClick={onTogglePantry}
           className={cn(
-            "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
+            "flex h-11 w-11 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
             inPantry
               ? "text-[var(--nourish-green)]"
               : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
@@ -669,7 +669,7 @@ function IngredientRow({
           <button
             onClick={onAskSub}
             className={cn(
-              "flex h-11 w-9 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
+              "flex h-11 w-11 shrink-0 -my-1 items-center justify-center rounded-md transition-colors",
               showingSub
                 ? "text-[var(--nourish-green)] bg-[var(--nourish-green)]/10"
                 : "text-neutral-400 hover:text-[var(--nourish-subtext)]",
@@ -718,7 +718,7 @@ function IngredientRow({
                       subQuery.data && onRememberSub(subQuery.data.suggestion)
                     }
                     className={cn(
-                      "mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium transition-colors",
+                      "mt-1 inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-[10px] font-medium transition-colors",
                       rememberedSub === subQuery.data.suggestion
                         ? "bg-[var(--nourish-green)]/15 text-[var(--nourish-green)]"
                         : "bg-white/60 text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/10",
