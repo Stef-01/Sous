@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   ArrowLeft,
+  ArrowRight,
   Joystick,
   Lightbulb,
   Puzzle,
@@ -20,18 +22,33 @@ interface GameCard {
   description: string;
   Icon: LucideIcon;
   route: string;
-  /** Tint drawn from the app's own palette (no off-system pastels). */
-  tint: string;
+  image: string;
+  meta: string;
 }
 
+type GameScoreSummary = {
+  bestScore: number;
+  totalPlays: number;
+} | null;
+
 const games: GameCard[] = [
+  {
+    id: "cuisine-compass",
+    name: "Cuisine Compass",
+    description: "Pin dishes to their homeland",
+    Icon: Compass,
+    route: "/games/cuisine-compass",
+    image: "/food_images/sushi_platter.png",
+    meta: "Daily",
+  },
   {
     id: "whats-cooking",
     name: "What's Cooking?",
     description: "Guess the dish from cryptic clues",
     Icon: Lightbulb,
     route: "/games/whats-cooking",
-    tint: "--nourish-gold",
+    image: "/food_images/pasta_carbonara.png",
+    meta: "Clues",
   },
   {
     id: "flavor-pairs",
@@ -39,7 +56,8 @@ const games: GameCard[] = [
     description: "Match ingredients that pair well",
     Icon: Puzzle,
     route: "/games/flavor-pairs",
-    tint: "--nourish-green",
+    image: "/food_images/caprese_salad.png",
+    meta: "Pairing",
   },
   {
     id: "speed-chop",
@@ -47,15 +65,8 @@ const games: GameCard[] = [
     description: "Sort ingredients into categories",
     Icon: Timer,
     route: "/games/speed-chop",
-    tint: "--nourish-warm",
-  },
-  {
-    id: "cuisine-compass",
-    name: "Cuisine Compass",
-    description: "Pin dishes to their homeland",
-    Icon: Compass,
-    route: "/games/cuisine-compass",
-    tint: "--nourish-light-green",
+    image: "/food_images/abc_salad.png",
+    meta: "Speed",
   },
 ];
 
@@ -63,6 +74,7 @@ export default function GamesArcadePage() {
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { getScore, mounted } = useGameScores();
+  const [featured, ...secondaryGames] = games;
 
   return (
     <motion.div
@@ -74,7 +86,7 @@ export default function GamesArcadePage() {
         <div className="mx-auto flex max-w-md items-center justify-between gap-2">
           <motion.button
             onClick={() => router.push("/today")}
-            whileTap={{ scale: 0.88 }}
+            whileTap={reducedMotion ? undefined : { scale: 0.88 }}
             className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)]"
             type="button"
             aria-label="Back to Today"
@@ -87,84 +99,167 @@ export default function GamesArcadePage() {
             </h1>
             <p className="sous-label">Learn food, have fun</p>
           </div>
-          {/* Spacer keeps title visually centred without forcing the
-              back button into a different cell. */}
           <span className="min-w-11" aria-hidden />
         </div>
       </header>
 
-      <main className="mx-auto max-w-md page-x py-6">
-        <div className="grid grid-cols-2 gap-3">
-          {games.map((game, idx) => {
-            const score = mounted ? getScore(game.id) : null;
-            const hasPlayed = score && score.totalPlays > 0;
-            return (
-              <motion.button
+      <main className="mx-auto max-w-md page-x py-5">
+        <div className="space-y-3">
+          {featured && (
+            <GameFeatureCard
+              game={featured}
+              score={mounted ? getScore(featured.id) : null}
+              onSelect={() => router.push(featured.route)}
+              reducedMotion={reducedMotion}
+            />
+          )}
+
+          <div className="space-y-2">
+            {secondaryGames.map((game, idx) => (
+              <GameListRow
                 key={game.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 260,
-                  damping: 25,
-                  delay: idx * 0.05,
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => router.push(game.route)}
-                className="relative flex flex-col items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-5 text-center shadow-sm transition-shadow hover:shadow-md"
-                type="button"
-              >
-                {hasPlayed ? null : (
-                  <MetaPill
-                    variant="green"
-                    size="xs"
-                    className="absolute right-2 top-2 font-bold uppercase tracking-[0.12em]"
-                    aria-label="New game, never played"
-                  >
-                    New
-                  </MetaPill>
-                )}
-                <div
-                  className="flex h-16 w-16 items-center justify-center rounded-2xl"
-                  style={{
-                    backgroundColor: `color-mix(in srgb, var(${game.tint}) 14%, transparent)`,
-                    color: `var(${game.tint})`,
-                  }}
-                >
-                  <game.Icon size={28} strokeWidth={1.8} aria-hidden />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-[var(--nourish-dark)]">
-                    {game.name}
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-[var(--nourish-subtext)]">
-                    {game.description}
-                  </p>
-                </div>
-                {hasPlayed ? (
-                  <div className="flex items-center gap-1.5 rounded-full bg-neutral-50 px-2.5 py-1 text-[10px] tabular-nums text-[var(--nourish-subtext)]">
-                    <span>
-                      Best{" "}
-                      <span className="font-semibold text-[var(--nourish-dark)]">
-                        {score.bestScore}
-                      </span>
-                    </span>
-                    <span aria-hidden>·</span>
-                    <span>
-                      {score.totalPlays} play
-                      {score.totalPlays === 1 ? "" : "s"}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-[10px] italic text-[var(--nourish-subtext-faint)]">
-                    Tap to try
-                  </span>
-                )}
-              </motion.button>
-            );
-          })}
+                game={game}
+                score={mounted ? getScore(game.id) : null}
+                onSelect={() => router.push(game.route)}
+                index={idx}
+                reducedMotion={reducedMotion}
+              />
+            ))}
+          </div>
         </div>
       </main>
     </motion.div>
+  );
+}
+
+function GameFeatureCard({
+  game,
+  score,
+  onSelect,
+  reducedMotion,
+}: {
+  game: GameCard;
+  score: GameScoreSummary;
+  onSelect: () => void;
+  reducedMotion: boolean | null;
+}) {
+  return (
+    <motion.button
+      initial={reducedMotion ? false : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+      whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+      onClick={onSelect}
+      className="group relative min-h-[218px] w-full overflow-hidden rounded-2xl bg-[var(--nourish-dark)] text-left text-white shadow-[var(--shadow-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      type="button"
+      aria-label={`Open ${game.name}`}
+    >
+      <Image
+        src={game.image}
+        alt=""
+        fill
+        priority
+        sizes="(max-width: 768px) 100vw, 448px"
+        className="object-cover transition duration-500 group-hover:scale-[1.03]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/18 to-black/10" />
+      <div className="relative flex min-h-[218px] flex-col justify-between p-4">
+        <div className="flex items-start justify-between gap-3">
+          <MetaPill
+            variant="default"
+            size="xs"
+            className="border border-white/20 bg-white/90 text-[var(--nourish-dark)]"
+          >
+            {game.meta}
+          </MetaPill>
+          <MetaPill
+            variant="default"
+            size="xs"
+            className="border border-white/20 bg-white/90 text-[var(--nourish-dark)]"
+          >
+            {score && score.totalPlays > 0 ? `Best ${score.bestScore}` : "New"}
+          </MetaPill>
+        </div>
+        <div>
+          <div className="mb-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[var(--nourish-green)]">
+            <game.Icon size={17} strokeWidth={2} aria-hidden />
+          </div>
+          <h2 className="text-[26px] font-bold leading-[1.02]">{game.name}</h2>
+          <p className="mt-1 max-w-[260px] text-[13px] font-medium leading-snug text-white/82">
+            {game.description}
+          </p>
+        </div>
+      </div>
+    </motion.button>
+  );
+}
+
+function GameListRow({
+  game,
+  score,
+  onSelect,
+  index,
+  reducedMotion,
+}: {
+  game: GameCard;
+  score: GameScoreSummary;
+  onSelect: () => void;
+  index: number;
+  reducedMotion: boolean | null;
+}) {
+  const hasPlayed = !!score && score.totalPlays > 0;
+
+  return (
+    <motion.button
+      initial={reducedMotion ? false : { opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 25,
+        delay: reducedMotion ? 0 : (index + 1) * 0.04,
+      }}
+      whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+      onClick={onSelect}
+      className="group flex min-h-[92px] w-full items-center gap-3 rounded-2xl border border-neutral-100 bg-white p-2.5 text-left shadow-sm transition-colors hover:border-[var(--nourish-green)]/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+      type="button"
+      aria-label={`Open ${game.name}`}
+    >
+      <Image
+        src={game.image}
+        alt=""
+        width={164}
+        height={136}
+        sizes="82px"
+        className="h-[68px] w-[82px] shrink-0 rounded-xl object-cover"
+      />
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-1.5">
+          <game.Icon
+            size={14}
+            strokeWidth={2}
+            className="shrink-0 text-[var(--nourish-green)]"
+            aria-hidden
+          />
+          <span className="truncate text-[15px] font-bold leading-tight text-[var(--nourish-dark)]">
+            {game.name}
+          </span>
+        </span>
+        <span className="mt-1 line-clamp-2 block text-[12px] leading-snug text-[var(--nourish-subtext)]">
+          {game.description}
+        </span>
+        <span className="mt-2 flex flex-wrap items-center gap-1.5">
+          <MetaPill variant="subtle" size="xs">
+            {game.meta}
+          </MetaPill>
+          <MetaPill variant={hasPlayed ? "subtle" : "green"} size="xs">
+            {hasPlayed ? `Best ${score.bestScore}` : "New"}
+          </MetaPill>
+        </span>
+      </span>
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition group-hover:bg-[var(--nourish-green)]/[0.08] group-hover:text-[var(--nourish-green)]">
+        <ArrowRight size={17} strokeWidth={2} aria-hidden />
+      </span>
+    </motion.button>
   );
 }

@@ -14,6 +14,32 @@ test.describe("Games Arcade", () => {
     await expect(page.locator("text=Flavor Pairs")).toBeVisible();
     await expect(page.locator("text=Speed Chop")).toBeVisible();
     await expect(page.locator("text=Cuisine Compass")).toBeVisible();
+
+    await expect(page.getByText("Tap to try")).toHaveCount(0);
+
+    const feature = page.getByRole("button", { name: "Open Cuisine Compass" });
+    const featureBox = await feature.boundingBox();
+    expect(featureBox?.height ?? 0).toBeGreaterThanOrEqual(200);
+
+    for (const name of [
+      "Open What's Cooking?",
+      "Open Flavor Pairs",
+      "Open Speed Chop",
+    ]) {
+      const rowBox = await page.getByRole("button", { name }).boundingBox();
+      expect(rowBox?.height ?? 0).toBeGreaterThanOrEqual(92);
+      expect(rowBox?.width ?? 0).toBeGreaterThanOrEqual(260);
+    }
+
+    const localFoodImages = await page.evaluate(
+      () =>
+        Array.from(document.images).filter(
+          (img) =>
+            img.currentSrc.includes("/food_images/") ||
+            img.currentSrc.includes("%2Ffood_images"),
+        ).length,
+    );
+    expect(localFoodImages).toBeGreaterThanOrEqual(4);
   });
 
   test("What's Cooking game shows clues and accepts input", async ({
