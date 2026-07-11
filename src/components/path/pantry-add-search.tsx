@@ -102,7 +102,7 @@ export function PantryAddSearch() {
 
   return (
     <div className="mb-3">
-      <div className="flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2.5 transition-colors focus-within:border-[var(--nourish-green)]/45">
+      <div className="flex min-h-[44px] items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 transition-colors focus-within:border-[var(--nourish-green)]/45">
         <Search
           size={15}
           className="shrink-0 text-[var(--nourish-subtext)]"
@@ -119,14 +119,14 @@ export function PantryAddSearch() {
           }}
           placeholder="Add an ingredient…"
           aria-label="Search ingredients to add to your pantry"
-          className="min-w-0 flex-1 bg-transparent text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
+          className="min-h-[44px] min-w-0 flex-1 bg-transparent text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
         />
         <input
           value={qty}
           onChange={(e) => setQty(e.target.value)}
           placeholder="Qty"
           aria-label="Quantity (optional, e.g. 2 kg)"
-          className="w-14 shrink-0 border-l border-neutral-200 bg-transparent pl-2 text-right text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
+          className="min-h-[44px] w-14 shrink-0 border-l border-neutral-200 bg-transparent pl-2 text-right text-sm text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
         />
       </div>
 
@@ -140,7 +140,7 @@ export function PantryAddSearch() {
                   type="button"
                   disabled={already}
                   onClick={() => addName(r.name, r.id)}
-                  className="flex w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left text-sm capitalize text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 disabled:cursor-default disabled:opacity-60"
+                  className="flex min-h-[44px] w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2 text-left text-sm capitalize text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 disabled:cursor-default disabled:opacity-60"
                 >
                   <span className="flex-1 truncate">{r.name}</span>
                   {already ? (
@@ -164,7 +164,7 @@ export function PantryAddSearch() {
               <button
                 type="button"
                 onClick={() => addName(trimmed)}
-                className="flex w-full items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-white px-3 py-2 text-left text-sm text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/40"
+                className="flex min-h-[44px] w-full items-center gap-2 rounded-lg border border-dashed border-neutral-300 bg-white px-3 py-2 text-left text-sm text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/40"
               >
                 <Plus
                   size={15}

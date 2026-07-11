@@ -46,7 +46,7 @@ export default function PantryPage() {
             onClick={() => router.push("/path")}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             type="button"
             aria-label="Back to Path"
           >
@@ -58,7 +58,7 @@ export default function PantryPage() {
           <button
             onClick={() => setShowImport(true)}
             type="button"
-            className="ml-auto inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.06] px-3 text-[12px] font-semibold text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/12"
+            className="ml-auto inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-1.5 rounded-full border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.06] px-3 text-[12px] font-semibold text-[var(--nourish-green)] transition-colors hover:bg-[var(--nourish-green)]/12"
           >
             <Sparkles size={13} aria-hidden />
             Import
@@ -90,7 +90,7 @@ export default function PantryPage() {
               onClick={() => setPantryModeEnabled(!pantryMode.enabled)}
               aria-pressed={pantryMode.enabled}
               className={
-                "mt-3 flex w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-[12px] transition-colors " +
+                "mt-3 flex min-h-[44px] w-full items-center gap-2 rounded-xl border px-3 py-2 text-left text-[12px] transition-colors " +
                 (pantryMode.enabled
                   ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/[0.06]"
                   : "border-neutral-200 bg-white hover:bg-neutral-50")
@@ -183,7 +183,7 @@ export default function PantryPage() {
                             remove(name);
                             inventory.remove(name);
                           }}
-                          className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+                          className="flex h-11 w-11 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
                           type="button"
                           aria-label={`Remove ${name} from pantry`}
                         >
@@ -215,7 +215,7 @@ export default function PantryPage() {
                         },
                       });
                     }}
-                    className="text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
+                    className="inline-flex min-h-[44px] items-center justify-center px-3 text-xs font-medium text-[var(--nourish-subtext)] underline decoration-dotted underline-offset-4 hover:text-[var(--nourish-dark)]"
                     type="button"
                   >
                     Clear pantry
