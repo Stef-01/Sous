@@ -269,10 +269,8 @@ let _baseSideDishes: BaseQuestDish[] | null = null;
 
 function getBaseMealDishes(): BaseQuestDish[] {
   if (_baseMealDishes) return _baseMealDishes;
-  const guidedSlugs = new Set(getAvailableCookSlugs());
   _baseMealDishes = meals.map((meal) => {
     const mealCookData = getMealCookSummary(meal.id);
-    const hasCook = !!mealCookData || guidedSlugs.has(meal.id);
     const ingredientNames =
       mealCookData?.ingredientNames.map(normalizePantryName) ?? [];
     return {
@@ -287,7 +285,7 @@ function getBaseMealDishes(): BaseQuestDish[] {
       tags: buildMealTags(meal.cuisine, meal.description, meal.sidePool.length),
       ingredientCount: mealCookData ? mealCookData.ingredientNames.length : 8,
       ingredientNames,
-      hasGuidedCook: hasCook,
+      hasGuidedCook: !!mealCookData,
       isMeal: true,
       isVerified: !!meal.nourishVerified,
       role: "main" as const,
@@ -335,7 +333,7 @@ function getBaseSideDishes(): BaseQuestDish[] {
 
 /**
  * Build the quest feed for a non-main role (side / drink / snack) — every
- * catalogue dish of that role, scored lightly (has-image → guided → name) +
+ * guided catalogue dish of that role, scored lightly (has-image → name) +
  * per-call pantry fit. Mains keep `buildQuestDishes`; this powers the Today
  * Filter's role switch (TODAY-FILTER-PLAN.md Phase D).
  */
@@ -345,7 +343,7 @@ export function buildRoleQuestDishes(
 ): QuestDish[] {
   const pantrySet = new Set((pantryNames ?? []).map(normalizePantryName));
   return getBaseSideDishes()
-    .filter((d) => d.role === role)
+    .filter((d) => d.role === role && d.hasGuidedCook)
     .map((base) => ({
       ...base,
       pantryFit: computePantryFit(base.ingredientNames, pantrySet),
@@ -353,8 +351,6 @@ export function buildRoleQuestDishes(
     .sort((a, b) => {
       const img = (b.heroImageUrl ? 1 : 0) - (a.heroImageUrl ? 1 : 0);
       if (img) return img;
-      const guided = (b.hasGuidedCook ? 1 : 0) - (a.hasGuidedCook ? 1 : 0);
-      if (guided) return guided;
       return a.dishName.localeCompare(b.dishName);
     });
 }
@@ -485,14 +481,17 @@ export function buildQuestDishes(
     ? (slug: string) => scoreDifficultyAlignment(slug, difficultyProgression)
     : () => 0;
 
-  // Score and sort meals: prefer meals with images, then verified, then preference match
+  // Score and sort meals: prefer meals with images, then verified, then
+  // preference match. Only guided mains are eligible for Today because every
+  // main routes into the plate-builder; an unguided main can otherwise anchor a
+  // combined cook that silently drops the selected entree.
   const scoredMeals = mealDishes
+    .filter((m) => m.hasGuidedCook)
     .map((m) => ({
       dish: m,
       score:
         (m.heroImageUrl ? 10 : 0) +
         (m.isVerified ? 3 : 0) +
-        (m.hasGuidedCook ? 5 : 0) +
         (hasPrefs ? scoreDishForPreferences(m, userPreferences!) : 0) +
         noveltyBonus(m.cuisineFamily) +
         pantryBoost(m) +
@@ -522,13 +521,9 @@ export function buildQuestDishes(
       (a, b) => b.score - a.score || a.dish.slug.localeCompare(b.dish.slug),
     );
 
-  // Partition into "ready" (has image + guided cook) and "rest", rotate within each partition
-  const readyMeals = scoredMeals.filter(
-    (s) => s.dish.heroImageUrl && s.dish.hasGuidedCook,
-  );
-  const restMeals = scoredMeals.filter(
-    (s) => !(s.dish.heroImageUrl && s.dish.hasGuidedCook),
-  );
+  // Partition into visual-first and text-only dishes, then rotate within each partition.
+  const readyMeals = scoredMeals.filter((s) => s.dish.heroImageUrl);
+  const restMeals = scoredMeals.filter((s) => !s.dish.heroImageUrl);
   const readySides = scoredSides.filter((s) => s.dish.heroImageUrl);
   const restSides = scoredSides.filter((s) => !s.dish.heroImageUrl);
 

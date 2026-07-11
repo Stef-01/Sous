@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { goesStraightToCook, primaryActionLabel } from "./quest-pool";
+import {
+  getAvailableCookSlugs,
+  getAvailableMealCookSlugs,
+} from "@/data/guided-cook-summary";
+import {
+  buildRoleQuestDishes,
+  buildQuestDishes,
+  goesStraightToCook,
+  primaryActionLabel,
+} from "./quest-pool";
 
 // Pins the deck's primary-action LABEL to where the button actually routes
 // (quest-card's routeDish), so "Cook" can never again lie about opening the
@@ -47,5 +56,34 @@ describe("primaryActionLabel", () => {
     expect(primaryActionLabel({ hasGuidedCook: false, isMeal: false })).toBe(
       "Build plate",
     );
+  });
+});
+
+describe("buildQuestDishes", () => {
+  it("only surfaces mains with guided cook data", () => {
+    const guidedMealSlugs = new Set(getAvailableMealCookSlugs());
+    const mains = buildQuestDishes().filter((dish) => dish.isMeal);
+
+    expect(mains.length).toBeGreaterThan(0);
+    expect(mains.every((dish) => dish.hasGuidedCook)).toBe(true);
+    expect(mains.every((dish) => guidedMealSlugs.has(dish.slug))).toBe(true);
+  });
+});
+
+describe("buildRoleQuestDishes", () => {
+  it("only surfaces non-main role dishes with guided cook data", () => {
+    const guidedSideSlugs = new Set(getAvailableCookSlugs());
+
+    for (const role of ["side", "drink", "snack"] as const) {
+      const roleDishes = buildRoleQuestDishes(role);
+
+      expect(roleDishes.every((dish) => dish.role === role)).toBe(true);
+      expect(roleDishes.every((dish) => dish.hasGuidedCook)).toBe(true);
+      expect(roleDishes.every((dish) => guidedSideSlugs.has(dish.slug))).toBe(
+        true,
+      );
+    }
+
+    expect(buildRoleQuestDishes("side").length).toBeGreaterThan(0);
   });
 });
