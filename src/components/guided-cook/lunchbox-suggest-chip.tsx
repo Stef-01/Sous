@@ -48,7 +48,7 @@ export function LunchboxSuggestChip({ dishSlug, recipeName }: Props) {
           setOpen(true);
         }}
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/30 bg-white px-3 py-1.5 text-[12px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
+          "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/30 bg-white px-4 text-[12px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
         )}
         aria-label={`Lunchbox tip for ${recipeName}`}
@@ -114,7 +114,7 @@ function LunchboxSheet({
             animate={reducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { y: 24, opacity: 0 }}
             transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            className="relative z-10 w-full max-w-md rounded-t-3xl bg-[var(--nourish-cream)] px-5 pt-4 pb-6 shadow-2xl sm:rounded-3xl sm:m-4"
+            className="relative z-10 w-full max-w-md rounded-t-3xl border border-black/5 bg-[var(--nourish-cream)] px-5 pt-4 pb-6 shadow-none sm:m-4 sm:rounded-3xl"
           >
             <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-[var(--nourish-border-strong)] sm:hidden" />
             <div className="flex items-start justify-between gap-3">
@@ -127,7 +127,7 @@ function LunchboxSheet({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
+                className="inline-flex h-[44px] w-[44px] items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 aria-label="Close"
               >
                 <X size={16} />

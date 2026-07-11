@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 43 Units Shipped
+## This Session: 44 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -46,7 +46,8 @@
 - **W40** - Hardened the guided-cook Grab step touch geometry: prep and unit segmented controls, ingredient row labels, pantry toggles, substitution toggles, and remembered-swap actions now preserve 44px hit targets while keeping the same ingredient, pantry, substitution, and shopping-list behavior; core-loop Playwright verifies the combined-cook Grab controls in Chromium and mobile Safari (this commit)
 - **W41** - Hardened the remaining guided-cook Mission and Cook micro-controls: the meal-timing planner chip, cancel/change controls, read-aloud affordance, step helper icons, and "don't remind me" suppression action now preserve 44px geometry while keeping the same quiet visual treatment; core-loop Playwright walks Mission -> Grab -> Cook to verify those controls in Chromium and mobile Safari (this commit)
 - **W42** - Hardened guided-cook utility controls that still sat below the Apple-level touch target: servings minus/plus, Bigger Controls, timer chip/start/stop, parent-mode spice dots, and the parent split pill now keep 44px geometry while preserving their compact visual treatment; core-loop Playwright verifies servings, timers, and parent-mode spice controls in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 153 plus strengthened core-loop Playwright coverage
+- **W43** - Hardened the remaining live guided-cook Win-screen micro-actions: the Parent Mode lunchbox chip and close affordance now keep 44px touch geometry with a quieter no-shadow sheet, and the hidden "Save note" action now has a real tap target; core-loop Playwright verifies the post-cook note and lunchbox flows in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 154 plus strengthened core-loop Playwright coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

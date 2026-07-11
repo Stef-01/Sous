@@ -1002,7 +1002,7 @@ export function WinScreen({
                           <motion.button
                             onClick={() => onAddNote(note)}
                             whileTap={{ scale: 0.93 }}
-                            className="text-xs font-medium text-[var(--nourish-green)]"
+                            className="inline-flex min-h-[44px] items-center rounded-full px-3 text-xs font-medium text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                             type="button"
                           >
                             Save note

@@ -467,9 +467,80 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(
       page.getByRole("button", { name: /Add a photo of your dish/i }),
     ).toBeVisible();
+    const noteToggle = page.getByRole("button", { name: /Add a cook note/i });
+    await expect(noteToggle).toBeVisible();
+    const noteToggleBox = await noteToggle.boundingBox();
+    expect(Math.ceil(noteToggleBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await noteToggle.click();
+    await page
+      .getByPlaceholder(/How did it taste/i)
+      .fill("A keeper for weeknights.");
+    const saveNote = page.getByRole("button", { name: "Save note" });
+    await expect(saveNote).toBeVisible();
+    const saveNoteBox = await saveNote.boundingBox();
+    expect(Math.ceil(saveNoteBox?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(saveNoteBox?.width ?? 0)).toBeGreaterThanOrEqual(44);
+  });
+
+  test("Parent-mode lunchbox win controls keep 44px touch geometry", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "sous-parent-mode-v1",
+        JSON.stringify({
+          v: 1,
+          profile: {
+            enabled: true,
+            ageBand: "4-8",
+            spiceTolerance: 3,
+            enabledAt: "2026-07-11T00:00:00.000Z",
+          },
+        }),
+      );
+    });
+
+    await page.goto("/cook/garlic-bread");
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+
+    await expect(page.getByRole("img", { name: /Step 1 of 3/i })).toBeVisible({
+      timeout: 10000,
+    });
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 2 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 3 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+
     await expect(
-      page.getByRole("button", { name: /Add a cook note/i }),
-    ).toBeVisible();
+      page.getByRole("group", { name: /Rate this cook/i }),
+    ).toBeVisible({ timeout: 10000 });
+    await page.getByRole("button", { name: /More actions/i }).click();
+
+    const lunchbox = page.getByRole("button", {
+      name: /Lunchbox tip for/i,
+    });
+    await expect(lunchbox).toBeVisible();
+    let box = await lunchbox.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+
+    await lunchbox.click();
+    const sheet = page.getByRole("dialog", { name: /Lunchbox tip for/i });
+    await expect(sheet).toBeVisible({ timeout: 5000 });
+    const close = sheet.getByRole("button", { name: "Close" });
+    await expect(close).toBeVisible();
+    box = await close.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
   test("Meal queue opens and keyboard save state is visible", async ({
