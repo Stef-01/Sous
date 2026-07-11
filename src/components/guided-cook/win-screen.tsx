@@ -30,6 +30,7 @@ import {
   Award,
   Send,
   NotebookText,
+  MoreHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import {
@@ -261,6 +262,7 @@ export function WinScreen({
   const [note, setNote] = useState("");
   const [showNote, setShowNote] = useState(false);
   const [showReflection, setShowReflection] = useState(false);
+  const [showTools, setShowTools] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const [showConfetti, setShowConfetti] = useState(!prefersReducedMotion);
   const [photoAdded, setPhotoAdded] = useState(false);
@@ -324,6 +326,7 @@ export function WinScreen({
   );
 
   useEffect(() => {
+    haptic("success");
     const timer = setTimeout(() => setShowConfetti(false), 3500);
     return () => clearTimeout(timer);
   }, []);
@@ -331,7 +334,10 @@ export function WinScreen({
   const handleRate = (stars: number) => {
     setRating(stars);
     onRate(stars);
-    if (stars <= 3 && !showReflection) setShowReflection(true);
+    if (stars <= 3) {
+      setShowReflection(true);
+      setShowTools(true);
+    }
   };
 
   const handleSendGift = async () => {
@@ -695,6 +701,7 @@ export function WinScreen({
             onClick={() => {
               // §6.2 win-close anchor — surfaces a post-cook pulse (felt-easier
               // / pacing) when the user lands back on Today.
+              haptic("commit");
               setPendingAnchor("win-close");
               onBackToday();
             }}
@@ -753,327 +760,390 @@ export function WinScreen({
           )}
         </AnimatePresence>
 
-        {/* ── Secondary actions  -  one subordinate, wrapping chip row:
-             Save · Photo · Note · Again · Send ── */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        {/* Secondary cook tools stay behind a single disclosure so the win
+            moment defaults to rating, auto-log, and the primary exit. */}
+        <motion.button
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="flex flex-wrap items-center justify-center gap-2"
-        >
-          <input
-            ref={photoInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            className="hidden"
-            onChange={handlePhotoFile}
-          />
-          <motion.button
-            onClick={onSave}
-            disabled={saved}
-            whileTap={saved ? undefined : { scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className={cn(
-              "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-              saved
-                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
-                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
-            )}
-            type="button"
-            aria-label={
-              saved
-                ? "Already saved to scrapbook"
-                : "Save this cook to your scrapbook"
-            }
-          >
-            <BookmarkPlus size={14} />
-            {saved ? "Saved" : "Save"}
-          </motion.button>
-          <motion.button
-            onClick={() => photoInputRef.current?.click()}
-            disabled={photoAdded}
-            whileTap={photoAdded ? undefined : { scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className={cn(
-              "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-              photoAdded
-                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
-                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
-            )}
-            type="button"
-            aria-label={
-              photoAdded ? "Photo already added" : "Add a photo of your dish"
-            }
-          >
-            <Camera size={14} />
-            {photoAdded ? "Photo added" : "Add photo"}
-          </motion.button>
-
-          <motion.button
-            onClick={() => setShowNote(!showNote)}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
-            type="button"
-            aria-label={showNote ? "Hide note" : "Add a cook note"}
-            aria-expanded={showNote}
-          >
-            <StickyNote size={14} />
-            Note
-          </motion.button>
-
-          <motion.button
-            onClick={onCookAgain}
-            whileTap={{ scale: 0.92 }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] hover:border-neutral-300 transition-colors"
-            type="button"
-          >
-            <RotateCcw size={14} />
-            Again
-          </motion.button>
-          {dishSlug && (
-            <motion.button
-              onClick={handleSendGift}
-              whileTap={{ scale: 0.92 }}
-              transition={{ type: "spring", stiffness: 400, damping: 28 }}
-              className={cn(
-                "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
-                giftSent
-                  ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
-                  : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
-              )}
-              type="button"
-              aria-label={
-                giftSent ? "Gift link copied" : `Send ${dishName} to a friend`
-              }
-            >
-              <Send size={14} />
-              {giftSent ? "Sent" : "Send"}
-            </motion.button>
+          onClick={() => {
+            haptic("select");
+            setShowTools((open) => !open);
+          }}
+          className={cn(
+            "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border px-4 text-xs font-semibold transition-colors",
+            showTools
+              ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 text-[var(--nourish-green)]"
+              : "border-neutral-200 bg-white text-[var(--nourish-subtext)] hover:border-neutral-300",
           )}
-        </motion.div>
-
-        {/* ── W46 pod-challenge submit slot ───────────────────
-             Renders only when the cook page has wired a podChallenge
-             prop (i.e. the user is in a pod and the cooked dish
-             matches the active week's challenge). */}
-        {podChallenge && (
-          <button
-            type="button"
-            onClick={podChallenge.onSubmit}
-            className={cn(
-              "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition",
-              podChallenge.alreadySubmitted
-                ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10"
-                : "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
-            )}
+          type="button"
+          aria-expanded={showTools}
+          aria-controls="win-secondary-tools"
+        >
+          <MoreHorizontal size={15} aria-hidden />
+          More actions
+          <motion.span
+            animate={{ rotate: showTools ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
+            aria-hidden
           >
-            <span aria-hidden className="text-2xl">
-              🤝
-            </span>
-            <span className="min-w-0 flex-1">
-              <span
-                className={cn(
-                  "block text-[11px] font-semibold uppercase tracking-[0.06em]",
-                  podChallenge.alreadySubmitted
-                    ? "text-[var(--nourish-green)]"
-                    : "text-white/80",
-                )}
-              >
-                {podChallenge.podName}
-              </span>
-              <span
-                className={cn(
-                  "block font-serif text-sm font-semibold",
-                  podChallenge.alreadySubmitted
-                    ? "text-[var(--nourish-dark)]"
-                    : "text-white",
-                )}
-              >
-                {podChallenge.alreadySubmitted
-                  ? "Update pod submission"
-                  : "Submit to pod challenge"}
-              </span>
-            </span>
-            <span
-              className={cn(
-                "rounded-full px-2.5 py-1 text-[12px] font-bold tabular-nums",
-                podChallenge.alreadySubmitted
-                  ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
-                  : "bg-white/20 text-white",
-              )}
-            >
-              {Math.round(podChallenge.computedScore)}
-            </span>
-          </button>
-        )}
+            <ChevronDown size={14} />
+          </motion.span>
+        </motion.button>
 
-        {/* ── Parent Mode block (W12) — KidsAteIt + Lunchbox + Spotlight ─
-             All three components self-render null when PM is off so this
-             block has zero footprint for non-parents. */}
-        {dishSlug && (
-          <div className="w-full space-y-3 pt-1">
-            <KidsAteItPrompt recipeSlug={dishSlug} />
-            <NutrientSpotlight recipeSlug={dishSlug} variant="full" />
-            <div className="flex justify-center">
-              <LunchboxSuggestChip dishSlug={dishSlug} recipeName={dishName} />
-            </div>
-          </div>
-        )}
-
-        {/* ── Note input (expandable) ── */}
-        <AnimatePresence>
-          {showNote && (
+        <AnimatePresence initial={false}>
+          {showTools && (
             <motion.div
+              id="win-secondary-tools"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="overflow-hidden w-full"
+              transition={{ type: "spring", stiffness: 300, damping: 26 }}
+              className="w-full overflow-hidden"
             >
-              <div className="space-y-2 pt-1">
-                <textarea
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="How did it taste? Anything you'd change?"
-                  rows={3}
-                  className="w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2.5 text-sm placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20 resize-none"
-                />
-                {note.trim() && (
+              <div className="space-y-3 pt-1">
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                    onChange={handlePhotoFile}
+                  />
                   <motion.button
-                    onClick={() => onAddNote(note)}
-                    whileTap={{ scale: 0.93 }}
-                    className="text-xs font-medium text-[var(--nourish-green)]"
+                    onClick={onSave}
+                    disabled={saved}
+                    whileTap={saved ? undefined : { scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    className={cn(
+                      "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors",
+                      saved
+                        ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                        : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+                    )}
+                    type="button"
+                    aria-label={
+                      saved
+                        ? "Already saved to scrapbook"
+                        : "Save this cook to your scrapbook"
+                    }
+                  >
+                    <BookmarkPlus size={14} />
+                    {saved ? "Saved" : "Save"}
+                  </motion.button>
+                  <motion.button
+                    onClick={() => photoInputRef.current?.click()}
+                    disabled={photoAdded}
+                    whileTap={photoAdded ? undefined : { scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    className={cn(
+                      "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors",
+                      photoAdded
+                        ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                        : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+                    )}
+                    type="button"
+                    aria-label={
+                      photoAdded
+                        ? "Photo already added"
+                        : "Add a photo of your dish"
+                    }
+                  >
+                    <Camera size={14} />
+                    {photoAdded ? "Photo added" : "Add photo"}
+                  </motion.button>
+
+                  <motion.button
+                    onClick={() => setShowNote(!showNote)}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    className="flex min-h-11 items-center gap-1.5 rounded-lg border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
+                    type="button"
+                    aria-label={showNote ? "Hide note" : "Add a cook note"}
+                    aria-expanded={showNote}
+                  >
+                    <StickyNote size={14} />
+                    Note
+                  </motion.button>
+
+                  <motion.button
+                    onClick={onCookAgain}
+                    whileTap={{ scale: 0.92 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    className="flex min-h-11 items-center gap-1.5 rounded-lg border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition-colors hover:border-neutral-300"
                     type="button"
                   >
-                    Save note
+                    <RotateCcw size={14} />
+                    Again
                   </motion.button>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* ── Reflect on this meal (expandable) ── */}
-        <div className="w-full">
-          <motion.button
-            onClick={() => setShowReflection(!showReflection)}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 400, damping: 28 }}
-            className={cn(
-              "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition duration-150",
-              showReflection
-                ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
-                : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
-            )}
-            type="button"
-            aria-label={
-              showReflection ? "Hide meal reflection" : "Reflect on this meal"
-            }
-            aria-expanded={showReflection}
-          >
-            <Sparkles size={14} />
-            Reflect on this meal
-            <motion.div
-              animate={{ rotate: showReflection ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ChevronDown size={14} />
-            </motion.div>
-          </motion.button>
-
-          <AnimatePresence>
-            {showReflection && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="overflow-hidden"
-              >
-                <div className="pt-3 space-y-3">
-                  {reflection.isLoading && (
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
-                      <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
-                        Thinking about your cook...
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.isError && (
-                    <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
-                      <p className="text-xs text-[var(--nourish-subtext)]">
-                        Great job completing this cook! Reflection unavailable
-                        right now.
-                      </p>
-                    </div>
-                  )}
-
-                  {reflection.data && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }}
-                      animate={{ opacity: 1, y: 0 }}
+                  {dishSlug && (
+                    <motion.button
+                      onClick={handleSendGift}
+                      whileTap={{ scale: 0.92 }}
                       transition={{
                         type: "spring",
-                        stiffness: 260,
+                        stiffness: 400,
+                        damping: 28,
+                      }}
+                      className={cn(
+                        "flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-xs font-medium transition-colors",
+                        giftSent
+                          ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5 cursor-default"
+                          : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+                      )}
+                      type="button"
+                      aria-label={
+                        giftSent
+                          ? "Gift link copied"
+                          : `Send ${dishName} to a friend`
+                      }
+                    >
+                      <Send size={14} />
+                      {giftSent ? "Sent" : "Send"}
+                    </motion.button>
+                  )}
+                </div>
+
+                {/* ── W46 pod-challenge submit slot ───────────────────
+             Renders only when the cook page has wired a podChallenge
+             prop (i.e. the user is in a pod and the cooked dish
+             matches the active week's challenge). */}
+                {podChallenge && (
+                  <button
+                    type="button"
+                    onClick={podChallenge.onSubmit}
+                    className={cn(
+                      "flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition",
+                      podChallenge.alreadySubmitted
+                        ? "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10"
+                        : "border-[var(--nourish-green)]/30 bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]",
+                    )}
+                  >
+                    <span aria-hidden className="text-2xl">
+                      🤝
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span
+                        className={cn(
+                          "block text-[11px] font-semibold uppercase tracking-[0.06em]",
+                          podChallenge.alreadySubmitted
+                            ? "text-[var(--nourish-green)]"
+                            : "text-white/80",
+                        )}
+                      >
+                        {podChallenge.podName}
+                      </span>
+                      <span
+                        className={cn(
+                          "block font-serif text-sm font-semibold",
+                          podChallenge.alreadySubmitted
+                            ? "text-[var(--nourish-dark)]"
+                            : "text-white",
+                        )}
+                      >
+                        {podChallenge.alreadySubmitted
+                          ? "Update pod submission"
+                          : "Submit to pod challenge"}
+                      </span>
+                    </span>
+                    <span
+                      className={cn(
+                        "rounded-full px-2.5 py-1 text-[12px] font-bold tabular-nums",
+                        podChallenge.alreadySubmitted
+                          ? "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                          : "bg-white/20 text-white",
+                      )}
+                    >
+                      {Math.round(podChallenge.computedScore)}
+                    </span>
+                  </button>
+                )}
+
+                {/* ── Parent Mode block (W12) — KidsAteIt + Lunchbox + Spotlight ─
+             All three components self-render null when PM is off so this
+             block has zero footprint for non-parents. */}
+                {dishSlug && (
+                  <div className="w-full space-y-3 pt-1">
+                    <KidsAteItPrompt recipeSlug={dishSlug} />
+                    <NutrientSpotlight recipeSlug={dishSlug} variant="full" />
+                    <div className="flex justify-center">
+                      <LunchboxSuggestChip
+                        dishSlug={dishSlug}
+                        recipeName={dishName}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* ── Note input (expandable) ── */}
+                <AnimatePresence>
+                  {showNote && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
                         damping: 25,
                       }}
-                      className="space-y-3"
+                      className="overflow-hidden w-full"
                     >
-                      <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">
-                        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
-                          What went well
-                        </p>
-                        {reflection.data.strengths.map((s, i) => (
-                          <motion.p
-                            key={i}
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{
-                              delay: i * 0.1,
-                              type: "spring",
-                              stiffness: 260,
-                              damping: 25,
-                            }}
-                            className="text-sm text-[var(--nourish-dark)] leading-relaxed"
+                      <div className="space-y-2 pt-1">
+                        <textarea
+                          value={note}
+                          onChange={(e) => setNote(e.target.value)}
+                          placeholder="How did it taste? Anything you'd change?"
+                          rows={3}
+                          className="w-full rounded-xl border border-neutral-200 bg-[var(--nourish-input-bg)] px-3 py-2.5 text-sm placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20 resize-none"
+                        />
+                        {note.trim() && (
+                          <motion.button
+                            onClick={() => onAddNote(note)}
+                            whileTap={{ scale: 0.93 }}
+                            className="text-xs font-medium text-[var(--nourish-green)]"
+                            type="button"
                           >
-                            {s}
-                          </motion.p>
-                        ))}
+                            Save note
+                          </motion.button>
+                        )}
                       </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                      {reflection.data.nextTimeSuggestions.length > 0 && (
-                        <div className="rounded-xl border border-[var(--nourish-gold)]/20 bg-[var(--nourish-gold)]/5 p-4 space-y-2 text-left">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
-                            For next time
-                          </p>
-                          {reflection.data.nextTimeSuggestions.map((s, i) => (
-                            <motion.p
-                              key={i}
-                              initial={{ opacity: 0, x: -8 }}
-                              animate={{ opacity: 1, x: 0 }}
+                {/* ── Reflect on this meal (expandable) ── */}
+                <div className="w-full">
+                  <motion.button
+                    onClick={() => setShowReflection(!showReflection)}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                    className={cn(
+                      "flex w-full items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-medium transition duration-150",
+                      showReflection
+                        ? "border-[var(--nourish-green)]/30 text-[var(--nourish-green)] bg-[var(--nourish-green)]/5"
+                        : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+                    )}
+                    type="button"
+                    aria-label={
+                      showReflection
+                        ? "Hide meal reflection"
+                        : "Reflect on this meal"
+                    }
+                    aria-expanded={showReflection}
+                  >
+                    <Sparkles size={14} />
+                    Reflect on this meal
+                    <motion.div
+                      animate={{ rotate: showReflection ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown size={14} />
+                    </motion.div>
+                  </motion.button>
+
+                  <AnimatePresence>
+                    {showReflection && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 25,
+                        }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-3 space-y-3">
+                          {reflection.isLoading && (
+                            <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
+                              <p className="text-xs text-[var(--nourish-subtext)] animate-pulse">
+                                Thinking about your cook...
+                              </p>
+                            </div>
+                          )}
+
+                          {reflection.isError && (
+                            <div className="rounded-xl border border-neutral-100 bg-neutral-50/50 p-4">
+                              <p className="text-xs text-[var(--nourish-subtext)]">
+                                Great job completing this cook! Reflection
+                                unavailable right now.
+                              </p>
+                            </div>
+                          )}
+
+                          {reflection.data && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 6 }}
+                              animate={{ opacity: 1, y: 0 }}
                               transition={{
-                                delay: 0.3 + i * 0.1,
                                 type: "spring",
                                 stiffness: 260,
                                 damping: 25,
                               }}
-                              className="text-sm text-[var(--nourish-dark)] leading-relaxed"
+                              className="space-y-3"
                             >
-                              {s.message}
-                            </motion.p>
-                          ))}
+                              <div className="rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/5 p-4 space-y-2 text-left">
+                                <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-green)]">
+                                  What went well
+                                </p>
+                                {reflection.data.strengths.map((s, i) => (
+                                  <motion.p
+                                    key={i}
+                                    initial={{ opacity: 0, x: -8 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{
+                                      delay: i * 0.1,
+                                      type: "spring",
+                                      stiffness: 260,
+                                      damping: 25,
+                                    }}
+                                    className="text-sm text-[var(--nourish-dark)] leading-relaxed"
+                                  >
+                                    {s}
+                                  </motion.p>
+                                ))}
+                              </div>
+
+                              {reflection.data.nextTimeSuggestions.length >
+                                0 && (
+                                <div className="rounded-xl border border-[var(--nourish-gold)]/20 bg-[var(--nourish-gold)]/5 p-4 space-y-2 text-left">
+                                  <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--nourish-gold)]">
+                                    For next time
+                                  </p>
+                                  {reflection.data.nextTimeSuggestions.map(
+                                    (s, i) => (
+                                      <motion.p
+                                        key={i}
+                                        initial={{ opacity: 0, x: -8 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{
+                                          delay: 0.3 + i * 0.1,
+                                          type: "spring",
+                                          stiffness: 260,
+                                          damping: 25,
+                                        }}
+                                        className="text-sm text-[var(--nourish-dark)] leading-relaxed"
+                                      >
+                                        {s.message}
+                                      </motion.p>
+                                    ),
+                                  )}
+                                </div>
+                              )}
+                            </motion.div>
+                          )}
                         </div>
-                      )}
-                    </motion.div>
-                  )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );

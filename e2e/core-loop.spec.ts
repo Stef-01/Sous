@@ -256,6 +256,29 @@ test.describe("Core Loop - Today meal queue to cook", () => {
       page.getByRole("group", { name: /Rate this cook/i }),
     ).toBeVisible({ timeout: 10000 });
     await expect(page.getByText(/Logged to your diary/i)).toBeVisible();
+
+    const backToday = page.getByRole("button", { name: /Back to Today/i });
+    await expect(backToday).toBeVisible();
+    const backBox = await backToday.boundingBox();
+    expect(backBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    const moreActions = page.getByRole("button", { name: /More actions/i });
+    await expect(moreActions).toBeVisible();
+    const moreBox = await moreActions.boundingBox();
+    expect(moreBox?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    const saveCook = page.getByRole("button", {
+      name: /Save this cook to your scrapbook/i,
+    });
+    await expect(saveCook).toBeHidden();
+    await moreActions.click();
+    await expect(saveCook).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Add a photo of your dish/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Add a cook note/i }),
+    ).toBeVisible();
   });
 
   test("Meal queue opens and keyboard save state is visible", async ({
