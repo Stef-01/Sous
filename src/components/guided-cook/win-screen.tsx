@@ -661,7 +661,7 @@ export function WinScreen({
                         onFeedback?.(chip.id);
                       }}
                       className={cn(
-                        "rounded-full px-2.5 py-1 text-[11px] font-medium transition-colors",
+                        "inline-flex min-h-[44px] items-center rounded-full px-3 text-[11px] font-medium transition-colors",
                         feedback === chip.id
                           ? "bg-[var(--nourish-warm)]/15 text-[var(--nourish-warm)] ring-1 ring-[var(--nourish-warm)]/30"
                           : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
@@ -737,13 +737,13 @@ export function WinScreen({
                       setInviteFriendName(e.target.value.slice(0, 24))
                     }
                     placeholder="Friend's name (optional)"
-                    className="flex-1 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
+                    className="min-h-[44px] flex-1 rounded-lg border border-neutral-200 bg-white px-3 text-xs placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20"
                     aria-label="Friend's first name for the invite message"
                   />
                   <button
                     onClick={handleInvite}
                     type="button"
-                    className="rounded-lg bg-[var(--nourish-green)] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[var(--nourish-dark-green)] transition active:scale-[0.97]"
+                    className="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-[var(--nourish-green)] px-3 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                   >
                     Send invite
                   </button>

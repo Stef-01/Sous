@@ -543,6 +543,66 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
   });
 
+  test("Win reaction and invite controls keep 44px touch geometry", async ({
+    page,
+  }) => {
+    await page.goto("/cook/garlic-bread");
+    await page.getByRole("button", { name: /Let.s gather/i }).click();
+    await page.getByRole("button", { name: /I have everything/i }).click();
+
+    await expect(page.getByRole("img", { name: /Step 1 of 3/i })).toBeVisible({
+      timeout: 10000,
+    });
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 2 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+    await expect(page.getByRole("img", { name: /Step 3 of 3/i })).toBeVisible({
+      timeout: 5000,
+    });
+    await page.waitForTimeout(450);
+    await page.keyboard.press("ArrowRight");
+
+    await expect(
+      page.getByRole("group", { name: /Rate this cook/i }),
+    ).toBeVisible({ timeout: 10000 });
+
+    await page.getByRole("radio", { name: "1 star" }).click();
+    for (const name of [/too salty/i, /too dry/i, /instructions unclear/i]) {
+      const chip = page.getByRole("button", { name });
+      await expect(chip).toBeVisible();
+      const box = await chip.boundingBox();
+      expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+      expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+    }
+
+    await page.getByRole("radio", { name: "5 stars" }).click();
+    await expect(
+      page.getByText(/Cook this with someone next week/i),
+    ).toBeVisible({ timeout: 5000 });
+
+    const friendName = page.getByLabel(
+      "Friend's first name for the invite message",
+    );
+    await expect(friendName).toBeVisible();
+    let box = await friendName.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+
+    const sendInvite = page.getByRole("button", { name: "Send invite" });
+    await expect(sendInvite).toBeVisible();
+    box = await sendInvite.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+
+    const dismissInvite = page.getByRole("button", { name: "Not this time" });
+    await expect(dismissInvite).toBeVisible();
+    box = await dismissInvite.boundingBox();
+    expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+  });
+
   test("Meal queue opens and keyboard save state is visible", async ({
     page,
   }) => {
