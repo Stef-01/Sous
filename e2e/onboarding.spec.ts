@@ -53,6 +53,36 @@ async function answerBeliefCards(
 }
 
 test.describe("Onboarding journey", () => {
+  test("dismissed onboarding marks the intro seen without persisting answers", async ({
+    page,
+  }) => {
+    await openOnboarding(page);
+
+    await page.keyboard.press("Escape");
+    await expect(
+      page.getByRole("dialog", { name: "Taste onboarding" }),
+    ).toBeHidden({ timeout: 10000 });
+    await expect(page.locator("h1")).toContainText("Sous");
+
+    const stored = await page.evaluate(() => ({
+      done: localStorage.getItem("sous-coach-quiz-done"),
+      profile: localStorage.getItem("sous-onboarding-v2"),
+      preferences: localStorage.getItem("sous-preferences"),
+      effort: localStorage.getItem("sous-effort-tolerance"),
+      personalProfile: localStorage.getItem("sous-personal-profile-v1"),
+      pulseLedger: localStorage.getItem("sous-pulse-ledger-v1"),
+      parentMode: localStorage.getItem("sous-parent-mode-v1"),
+    }));
+
+    expect(stored.done).toBe("true");
+    expect(stored.profile).toBeNull();
+    expect(stored.preferences).toBeNull();
+    expect(stored.effort).toBeNull();
+    expect(stored.personalProfile).toBeNull();
+    expect(stored.pulseLedger).toBeNull();
+    expect(stored.parentMode).toBeNull();
+  });
+
   test("happy path warms preferences and keeps survey controls finger-sized", async ({
     page,
   }) => {
