@@ -575,9 +575,9 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `seasonFromMonth` windowsill accent; commit 7b7810a).
 - Playwright journey suite — STARTED: the new Today-deck features
   (multi-select filters, side search, skip-sides) are covered in
-  `e2e/today-filters-features.spec.ts`; onboarding happy, macro, and dismissed
-  branches are covered in `e2e/onboarding.spec.ts` across Chromium and mobile
-  Safari.
+  `e2e/today-filters-features.spec.ts`; onboarding happy, macro default,
+  macro non-default numeric, and dismissed branches are covered in
+  `e2e/onboarding.spec.ts` across Chromium and mobile Safari.
 - Pulse micro-survey host now shares the fullscreen overlay contract with
   onboarding: scroll lock, focus trap, Escape dismiss, `aria-modal`, and
   permanent ledger dismissal for one-tap skip.

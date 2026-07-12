@@ -52,6 +52,26 @@ async function answerBeliefCards(
   await expect(onboarding.getByText(/All set/i)).toBeVisible();
 }
 
+async function setActiveWheelValue(
+  onboarding: Locator,
+  value: number,
+): Promise<void> {
+  const slider = onboarding.getByRole("slider");
+  await expect(slider).toBeVisible();
+  const min = Number(await slider.getAttribute("aria-valuemin"));
+  await slider.evaluate(
+    (node, next) => {
+      const rowHeight = 44;
+      node.scrollTop = (next.value - next.min) * rowHeight;
+      node.dispatchEvent(new Event("scroll", { bubbles: true }));
+    },
+    { value, min },
+  );
+  await expect(slider).toHaveAttribute("aria-valuenow", String(value), {
+    timeout: 10000,
+  });
+}
+
 test.describe("Onboarding journey", () => {
   test("dismissed onboarding marks the intro seen without persisting answers", async ({
     page,
@@ -264,5 +284,96 @@ test.describe("Onboarding journey", () => {
       goal: "maintain",
     });
     expect(stored.pulseLedger.onboardingDoneAt).toEqual(expect.any(String));
+  });
+
+  test("macro branch persists male non-default numeric wheel values canonically", async ({
+    page,
+  }) => {
+    test.slow();
+
+    const onboarding = await openOnboarding(page);
+
+    await onboarding
+      .getByRole("radio", { name: "Hit my nutrition goals" })
+      .click();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await onboarding
+      .getByRole("checkbox", { name: "None of these, honestly" })
+      .click();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await answerBeliefCards(onboarding, "disagree");
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await onboarding.getByRole("checkbox", { name: "Everything" }).click();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await onboarding
+      .getByRole("radio", { name: /I can follow a recipe/i })
+      .click();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await expect(onboarding.getByText("A couple quick numbers")).toBeVisible();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await onboarding.getByRole("radio", { name: "Male", exact: true }).click();
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await expect(
+      onboarding.getByRole("heading", { name: "Your age" }),
+    ).toBeVisible();
+    await setActiveWheelValue(onboarding, 42);
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await expect(
+      onboarding.getByRole("heading", { name: "Your height" }),
+    ).toBeVisible();
+    await onboarding
+      .getByRole("button", { name: "ft/in", exact: true })
+      .click();
+    await setActiveWheelValue(onboarding, 183);
+    await onboarding.getByRole("button", { name: "Continue" }).click();
+
+    await expect(
+      onboarding.getByRole("heading", { name: "Your weight" }),
+    ).toBeVisible();
+    await onboarding.getByRole("button", { name: "lb", exact: true }).click();
+    await setActiveWheelValue(onboarding, 82);
+    await onboarding.getByRole("button", { name: "Finish" }).click();
+
+    await expect(
+      onboarding.getByText(/Your day is sized to about/i),
+    ).toBeVisible({
+      timeout: 10000,
+    });
+    await onboarding
+      .getByRole("button", { name: "Pick my first recipes" })
+      .click();
+
+    const stored = await page.evaluate(() => ({
+      profile: JSON.parse(localStorage.getItem("sous-onboarding-v2") ?? "null"),
+      personalProfile: JSON.parse(
+        localStorage.getItem("sous-personal-profile-v1") ?? "null",
+      ),
+    }));
+
+    expect(stored.profile.goalKey).toBe("macros");
+    expect(stored.profile.numeric).toMatchObject({
+      sex: "male",
+      age: 42,
+      heightCm: 183,
+      weightKg: 82,
+    });
+    expect(stored.personalProfile).toMatchObject({
+      sex: "male",
+      age: 42,
+      heightCm: 183,
+      weightKg: 82,
+      activity: "light",
+      goal: "maintain",
+    });
   });
 });
