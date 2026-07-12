@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Locator, type Page } from "@playwright/test";
 
 async function openCravingSearch(page: Page, query: string) {
   await page
@@ -9,6 +9,13 @@ async function openCravingSearch(page: Page, query: string) {
   await expect(input).toBeVisible({ timeout: 5000 });
   await input.fill(query);
   await input.press("Enter");
+}
+
+async function expectTouchTarget(locator: Locator) {
+  await expect(locator).toBeVisible({ timeout: 10000 });
+  const box = await locator.boundingBox();
+  expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+  expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
 }
 
 test.describe("Today progressive onboarding", () => {
@@ -717,6 +724,42 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await page.keyboard.press("Escape");
     await expect(infoDialog).toBeHidden({ timeout: 5000 });
     await expect(queueDialog).toBeVisible();
+  });
+
+  test("Profile settings sheet keeps core controls finger-sized", async ({
+    page,
+  }) => {
+    await page.goto("/today");
+    await page
+      .getByRole("button", { name: "Open profile and settings" })
+      .click();
+
+    const profile = page.getByRole("dialog", { name: /Profile/i });
+    await expect(profile).toBeVisible({ timeout: 10000 });
+
+    await expectTouchTarget(profile.getByRole("button", { name: "Close" }));
+    await expectTouchTarget(
+      profile.getByRole("textbox", { name: "Display name" }),
+    );
+    await expectTouchTarget(profile.getByRole("textbox", { name: "Email" }));
+
+    const switches = await profile.getByRole("switch").all();
+    expect(switches.length).toBeGreaterThanOrEqual(4);
+    for (const control of switches) {
+      await expectTouchTarget(control);
+    }
+
+    await expectTouchTarget(
+      profile.getByRole("button", { name: /Health focus/i }),
+    );
+
+    const tune = profile.getByRole("button", { name: /Tune my picks/i });
+    await tune.scrollIntoViewIfNeeded();
+    await expectTouchTarget(tune);
+
+    const resetDemo = profile.getByRole("button", { name: /Reset demo data/i });
+    await resetDemo.scrollIntoViewIfNeeded();
+    await expectTouchTarget(resetDemo);
   });
 
   test("Fallback actions open the craving helper", async ({ page }) => {

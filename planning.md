@@ -586,6 +586,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
 - Plan-open pulse cooldown is now covered in `e2e/pulses.spec.ts`: a fresh
   post-onboarding device opens `/path/plan`, waits past the anchor delay, and
   verifies the weekly-plan pulse stays hidden while the ledger remains untouched.
+- Today profile/settings touch ergonomics are now covered in
+  `e2e/core-loop.spec.ts`: the mascot entry sheet verifies close, switches,
+  profile inputs, health focus, Tune my picks, and demo reset all preserve 44px
+  hit geometry in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

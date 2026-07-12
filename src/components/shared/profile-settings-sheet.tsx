@@ -121,7 +121,7 @@ export function ProfileSettingsSheet({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
                 aria-label="Close"
               >
                 <X size={16} />
@@ -253,7 +253,7 @@ export function ProfileSettingsSheet({
                 <div className="flex items-start gap-3">
                   <span
                     aria-hidden
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
                   >
                     <Mic size={16} />
                   </span>
@@ -290,7 +290,7 @@ export function ProfileSettingsSheet({
                 <div className="flex items-start gap-3">
                   <span
                     aria-hidden
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
                   >
                     <Eye size={16} />
                   </span>
@@ -324,7 +324,7 @@ export function ProfileSettingsSheet({
                 <div className="flex items-start gap-3">
                   <span
                     aria-hidden
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
                   >
                     <CloudSun size={16} />
                   </span>
@@ -359,11 +359,11 @@ export function ProfileSettingsSheet({
                     haptic();
                     onTunePicks();
                   }}
-                  className="flex w-full items-center gap-3 text-left"
+                  className="flex min-h-11 w-full items-center gap-3 text-left"
                 >
                   <span
                     aria-hidden
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
                   >
                     <Sparkles size={16} />
                   </span>
@@ -394,11 +394,11 @@ export function ProfileSettingsSheet({
                     haptic();
                     onOpenEverywhere();
                   }}
-                  className="flex w-full items-center gap-3 text-left"
+                  className="flex min-h-11 w-full items-center gap-3 text-left"
                 >
                   <span
                     aria-hidden
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
                   >
                     <Smartphone size={16} />
                   </span>
@@ -445,7 +445,7 @@ export function ProfileSettingsSheet({
                   // off the old pod blob syncs cleanly.
                   window.location.reload();
                 }}
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] hover:border-[var(--nourish-warm)]/30 hover:text-[var(--nourish-warm)]"
+                className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-4 text-[11px] font-medium text-[var(--nourish-subtext)] hover:border-[var(--nourish-warm)]/30 hover:text-[var(--nourish-warm)]"
               >
                 <RotateCcw size={11} aria-hidden />
                 Reset demo data
@@ -496,7 +496,7 @@ const FODMAP_PHASES: { id: FodmapPhase; label: string }[] = [
 
 const chipClass = (active: boolean, tone: "green" | "warm") =>
   cn(
-    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors",
+    "min-h-11 rounded-full px-4 text-[12px] font-medium transition-colors",
     active
       ? tone === "green"
         ? "bg-[var(--nourish-green)]/12 text-[var(--nourish-green)] ring-1 ring-[var(--nourish-green)]/40"
@@ -547,7 +547,7 @@ function ProfileIdentityFields({
       <div className="flex items-start gap-3">
         <span
           aria-hidden
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
         >
           <UserRound size={16} />
         </span>
@@ -572,7 +572,7 @@ function ProfileIdentityFields({
               onBlur={commit}
               maxLength={40}
               placeholder="A community cook"
-              className="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
+              className="min-h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
             />
           </label>
 
@@ -597,7 +597,7 @@ function ProfileIdentityFields({
                 inputMode="email"
                 placeholder="you@example.com"
                 aria-invalid={emailTouched && !emailValid}
-                className="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 py-2 pr-3 pl-9 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
+                className="min-h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50/70 pr-3 pl-9 text-[14px] text-[var(--nourish-dark)] outline-none transition focus:border-[var(--nourish-green)] focus:bg-white focus:ring-2 focus:ring-[var(--nourish-green)]/15"
               />
             </div>
             {emailTouched && !emailValid ? (
@@ -644,12 +644,12 @@ function CareFocusSection() {
           setOpen((o) => !o);
         }}
         aria-expanded={open}
-        className="flex w-full items-start justify-between gap-3 text-left"
+        className="flex min-h-11 w-full items-start justify-between gap-3 text-left"
       >
         <div className="flex items-start gap-3">
           <span
             aria-hidden
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-cream)] text-[var(--nourish-subtext)]"
           >
             <HeartPulse size={16} />
           </span>

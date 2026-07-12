@@ -62,22 +62,28 @@ export function SettingToggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        "relative inline-flex shrink-0 items-center rounded-full transition-colors",
+        "relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 focus-visible:ring-offset-2",
         "disabled:cursor-not-allowed disabled:opacity-50",
-        s.track,
-        checked ? "bg-[var(--nourish-green)]" : "bg-neutral-200",
         className,
       )}
     >
       <span
         aria-hidden
         className={cn(
-          "inline-block rounded-full bg-white shadow transition-transform",
-          s.knob,
-          checked ? s.on : "translate-x-0.5",
+          "inline-flex items-center rounded-full transition-colors",
+          s.track,
+          checked ? "bg-[var(--nourish-green)]" : "bg-neutral-200",
         )}
-      />
+      >
+        <span
+          className={cn(
+            "inline-block rounded-full bg-white shadow transition-transform",
+            s.knob,
+            checked ? s.on : "translate-x-0.5",
+          )}
+        />
+      </span>
     </button>
   );
 }
