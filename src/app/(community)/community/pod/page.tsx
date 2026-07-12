@@ -54,7 +54,7 @@ export default function PodPage() {
             type="button"
             onClick={() => router.push("/community")}
             aria-label="Back to Content"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </button>
@@ -128,13 +128,13 @@ function NoPodState({ onTryDemo }: { onTryDemo: () => void }) {
       <div className="flex flex-col gap-2 pt-1 sm:flex-row">
         <Link
           href="/community/pod/create"
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+          className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Plus size={14} aria-hidden /> Create a pod
         </Link>
         <Link
           href="/community/pod/join"
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 py-2.5 text-sm font-semibold text-[var(--nourish-dark)] transition hover:border-neutral-300"
+          className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-4 text-sm font-semibold text-[var(--nourish-dark)] transition hover:border-neutral-300"
         >
           <TicketCheck size={14} aria-hidden /> Join with code
         </Link>
@@ -144,7 +144,7 @@ function NoPodState({ onTryDemo }: { onTryDemo: () => void }) {
       <button
         type="button"
         onClick={onTryDemo}
-        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 py-2.5 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/10"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-xl border border-[var(--nourish-green)]/30 bg-[var(--nourish-green)]/5 px-4 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/10"
       >
         <Sparkles size={14} aria-hidden /> Try a sample challenge
       </button>

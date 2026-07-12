@@ -144,7 +144,7 @@ function LeaderboardInner() {
           <Link
             href="/community"
             aria-label="Back to Community"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>

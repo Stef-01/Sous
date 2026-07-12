@@ -111,7 +111,7 @@ export function DemoChallengePicker({ open, onClose }: Props) {
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
                 aria-label="Close"
               >
                 <X size={16} />
@@ -131,7 +131,7 @@ export function DemoChallengePicker({ open, onClose }: Props) {
                     onClick={() => seedAndReload(option)}
                     disabled={seeding !== null}
                     className={cn(
-                      "flex w-full items-start gap-3 rounded-2xl border bg-white px-4 py-3 text-left shadow-sm transition",
+                      "flex min-h-11 w-full items-start gap-3 rounded-2xl border bg-white px-4 py-3 text-left shadow-sm transition",
                       "border-neutral-100/80 hover:border-[var(--nourish-green)]/40 hover:shadow-md",
                       "disabled:opacity-60 disabled:cursor-progress",
                     )}
@@ -139,7 +139,7 @@ export function DemoChallengePicker({ open, onClose }: Props) {
                     <span
                       aria-hidden
                       className={cn(
-                        "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+                        "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
                         option.sponsoredBy
                           ? "bg-[var(--nourish-gold)]/15 text-[var(--nourish-gold)]"
                           : "bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]",

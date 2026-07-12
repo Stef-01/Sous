@@ -38,7 +38,7 @@ export default function JoinPodPage() {
           <Link
             href="/community/pod"
             aria-label="Back to Pod challenge"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -83,7 +83,7 @@ export default function JoinPodPage() {
 
         <Link
           href="/community/pod/create"
-          className="block w-full rounded-2xl bg-[var(--nourish-green)] py-3 text-center text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+          className="flex min-h-11 w-full items-center justify-center rounded-2xl bg-[var(--nourish-green)] px-4 text-center text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           Create a pod instead
         </Link>

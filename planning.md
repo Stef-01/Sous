@@ -600,6 +600,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   research save/back controls, forum thanks/reply/cancel/composer/post controls,
   and immersive reel close/cook/share actions all preserve 44px geometry in
   Chromium and mobile Safari.
+- Community pod challenge controls are now covered in
+  `e2e/community-pod.spec.ts`: pod home back/create/join/sample controls, demo
+  challenge picker close/options, create-pod member inputs/chips/remove/submit
+  controls, join-pod code/CTA controls, and leaderboard back control all
+  preserve 44px geometry in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

@@ -125,7 +125,7 @@ export default function CreatePodPage() {
           <Link
             href="/community/pod"
             aria-label="Back to Pod challenge"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -176,7 +176,7 @@ export default function CreatePodPage() {
                 <button
                   type="button"
                   onClick={handleSeedFromHousehold}
-                  className="rounded-full border border-neutral-200 px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-subtext)] hover:border-neutral-300"
+                  className="inline-flex min-h-11 items-center rounded-full border border-neutral-200 px-3 text-[11px] font-medium text-[var(--nourish-subtext)] hover:border-neutral-300"
                 >
                   Use household
                 </button>
@@ -185,7 +185,7 @@ export default function CreatePodPage() {
                 <button
                   type="button"
                   onClick={handleAddMember}
-                  className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
+                  className="inline-flex min-h-11 items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-3 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
                 >
                   <Plus size={11} aria-hidden /> Add
                 </button>
@@ -228,7 +228,7 @@ export default function CreatePodPage() {
                       type="button"
                       onClick={() => handleRemoveMember(idx)}
                       aria-label={`Remove member ${idx + 1}`}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
                     >
                       <Trash2 size={14} />
                     </button>
@@ -241,7 +241,7 @@ export default function CreatePodPage() {
                       type="button"
                       onClick={() => handlePatchMember(idx, { ageBand: band })}
                       className={cn(
-                        "rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide transition",
+                        "inline-flex min-h-11 items-center rounded-full px-3 text-[10px] font-semibold uppercase tracking-wide transition",
                         m.ageBand === band
                           ? "bg-[var(--nourish-green)] text-white"
                           : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
@@ -259,7 +259,7 @@ export default function CreatePodPage() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="w-full rounded-2xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+          className="min-h-11 w-full rounded-2xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
         >
           Create pod
         </button>
@@ -284,4 +284,4 @@ function FormField({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
+  "min-h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
