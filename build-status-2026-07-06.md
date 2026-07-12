@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 60 Units Shipped
+## This Session: 61 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -63,7 +63,8 @@
 - **W57** - Added dismissed-onboarding Playwright coverage: Escape from the first Taste onboarding step now marks the intro seen while proving no answer profile, preferences, effort tolerance, personal profile, parent mode, or pulse quiet-window ledger is accidentally persisted (this commit)
 - **W58** - Added deeper macro-onboarding Playwright coverage: the numeric branch now verifies male + non-default age/height/weight wheel selections, imperial display toggles, and canonical metric persistence into both the onboarding profile and existing personal-targets store (this commit)
 - **W59** - Hardened the Today profile/settings sheet for repeat-demo touch ergonomics: shared switches keep their compact visual track but now expose 44px hit boxes, profile inputs/close/action rows/chips/reset keep 44px geometry, and core-loop Playwright verifies the sheet from the Today mascot entry in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 170 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W60** - Hardened the Community content home for simpler, more reliable navigation: the sticky Watch/Learn/Experts/Ask segmented control now keeps explicit 44px hit geometry with a flatter no-shadow active pill, small content actions/links keep 44px targets, and a new Community Playwright smoke verifies the doorway in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 172 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community-content touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

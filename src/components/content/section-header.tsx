@@ -23,7 +23,7 @@ interface Props {
  */
 export function SectionHeader({ eyebrow, title, action, className }: Props) {
   const actionClass =
-    "inline-flex shrink-0 items-center gap-0.5 self-end pb-1 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40";
+    "inline-flex min-h-11 shrink-0 items-center gap-0.5 self-end rounded-full px-2 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40";
   return (
     <div className={cn("flex items-end justify-between gap-3 px-1", className)}>
       <div>

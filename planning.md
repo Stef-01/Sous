@@ -590,6 +590,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `e2e/core-loop.spec.ts`: the mascot entry sheet verifies close, switches,
   profile inputs, health focus, Tune my picks, and demo reset all preserve 44px
   hit geometry in Chromium and mobile Safari.
+- Community content-home navigation is now covered in
+  `e2e/community-content.spec.ts`: Saved content, Watch/Learn/Experts/Ask,
+  Reels "See all", Group Challenge, leaderboard, and tag-clear controls all
+  preserve 44px geometry in Chromium and mobile Safari, and the active section
+  pill uses a flatter no-shadow treatment.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

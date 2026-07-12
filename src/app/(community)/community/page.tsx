@@ -128,7 +128,7 @@ export default function CommunityPage() {
             explainer; the pod page details it on tap). */}
         <Link
           href="/community/pod"
-          className="flex items-center gap-2.5 rounded-2xl border border-[var(--nourish-green)]/20 bg-white px-4 py-3 transition hover:border-[var(--nourish-green)]/40"
+          className="flex min-h-11 items-center gap-2.5 rounded-2xl border border-[var(--nourish-green)]/20 bg-white px-4 py-3 transition hover:border-[var(--nourish-green)]/40"
         >
           <Users
             size={18}
@@ -150,7 +150,7 @@ export default function CommunityPage() {
             unreachable). Slim, subordinate to the Group Challenge entry. */}
         <Link
           href="/community/leaderboard"
-          className="flex items-center gap-2 px-1 text-[12px] font-medium text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-green)]"
+          className="flex min-h-11 items-center gap-2 rounded-xl px-1 text-[12px] font-medium text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-green)]"
         >
           <Trophy
             size={14}
@@ -185,7 +185,7 @@ export default function CommunityPage() {
                 setTag(null);
                 router.replace("/community");
               }}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-[12px] font-semibold text-[var(--nourish-green)]"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-[var(--nourish-green)]/10 px-4 text-[12px] font-semibold text-[var(--nourish-green)]"
               aria-label={`Clear the #${tag} filter`}
             >
               Tagged #{tag}
@@ -283,7 +283,7 @@ function CommunitySectionNav() {
             type="button"
             onClick={() => handleTap(s.id)}
             aria-current={isActive ? "true" : undefined}
-            className="relative flex-1 rounded-full px-2 py-[11px] text-[13px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="relative flex min-h-11 flex-1 items-center justify-center rounded-full px-2 text-[13px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             {isActive && (
               <motion.span
@@ -293,7 +293,7 @@ function CommunitySectionNav() {
                     ? { duration: 0 }
                     : { type: "spring", stiffness: 420, damping: 34 }
                 }
-                className="absolute inset-0 rounded-full bg-white shadow-[var(--shadow-card)]"
+                className="absolute inset-0 rounded-full bg-white ring-1 ring-black/[0.04]"
               />
             )}
             <span
