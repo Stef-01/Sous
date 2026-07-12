@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 56 Units Shipped
+## This Session: 57 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -59,7 +59,8 @@
 - **W53** - Hardened pulse micro-surveys to match the onboarding modal contract: surfaced pulses now lock background scroll, trap focus, expose `aria-modal` dialog semantics, dismiss on Escape, and record one-tap skip/dismiss in the pulse ledger so declined prompts do not keep resurfacing; the shared overlay source contract now guards the pulse host (this commit)
 - **W54** - Added a volunteered-pulse Playwright journey smoke from Today profile settings: seeded devices open "Tune my picks", land in the first pulse as a focused dialog, Escape closes it, and the pulse ledger records `shown` plus permanent `dismissed` without marking the prompt answered (this commit)
 - **W55** - Cleared the tracked Markdown formatting blocker that was making the full repo lint gate fail after the Karpathy wiki refactor plan landed; `pnpm lint` is back to exercising the menu-app gate instead of stopping at Prettier on an unrelated planning doc (this commit)
-- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding, and volunteered-pulse Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W56** - Added plan-open pulse cooldown Playwright coverage: a fresh post-onboarding device can open `/path/plan` without surfacing the weekly-plan pulse, and the pulse ledger remains untouched after the anchor delay so the seven-day quiet window is enforced in-browser (this commit)
+- Tests: 21 -> 167 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding, volunteered-pulse, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

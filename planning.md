@@ -582,6 +582,9 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   permanent ledger dismissal for one-tap skip.
 - Volunteered pulse journey is now covered in `e2e/pulses.spec.ts`: Profile
   settings → "Tune my picks" → focused pulse dialog → Escape dismissal ledger.
+- Plan-open pulse cooldown is now covered in `e2e/pulses.spec.ts`: a fresh
+  post-onboarding device opens `/path/plan`, waits past the anchor delay, and
+  verifies the weekly-plan pulse stays hidden while the ledger remains untouched.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

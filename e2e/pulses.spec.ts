@@ -18,6 +18,24 @@ async function seedPulseReadyDevice(page: Page): Promise<void> {
   });
 }
 
+async function seedPostOnboardingQuietWindow(page: Page): Promise<void> {
+  await page.addInitScript(() => {
+    localStorage.setItem("sous-coach-quiz-done", "true");
+    localStorage.setItem("sous-firstrun-seen", "true");
+    localStorage.setItem("sous-path-tutorial-v1", "done");
+    localStorage.setItem("sous-device-id", "e2e-pulse-quiet-device");
+    localStorage.setItem(
+      "sous-pulse-ledger-v1",
+      JSON.stringify({
+        shown: [],
+        answered: [],
+        dismissed: [],
+        onboardingDoneAt: new Date().toISOString(),
+      }),
+    );
+  });
+}
+
 async function openProfileSheet(page: Page): Promise<Locator> {
   await page.goto("/today");
   await page.getByRole("button", { name: "Open profile and settings" }).click();
@@ -61,5 +79,27 @@ test.describe("Pulse micro-surveys", () => {
     ).toContain("felt-easier");
     expect(ledger.dismissed).toContain("felt-easier");
     expect(ledger.answered).not.toContain("felt-easier");
+  });
+
+  test("plan-open pulse anchor stays quiet during the post-onboarding cooldown", async ({
+    page,
+  }) => {
+    await seedPostOnboardingQuietWindow(page);
+
+    await page.goto("/path/plan");
+    await expect(
+      page.getByRole("heading", { name: "Plan the week" }),
+    ).toBeVisible({ timeout: 10000 });
+    await page.waitForTimeout(1700);
+
+    await expect(
+      page.getByRole("dialog", { name: "Weekly plan nudges" }),
+    ).toHaveCount(0);
+    const ledger = await page.evaluate(() =>
+      JSON.parse(localStorage.getItem("sous-pulse-ledger-v1") ?? "null"),
+    );
+    expect(ledger.shown).toEqual([]);
+    expect(ledger.dismissed).toEqual([]);
+    expect(ledger.answered).toEqual([]);
   });
 });
