@@ -580,6 +580,8 @@ each step (SOP §7 crosscheck; commit 45d0a75).
 - Pulse micro-survey host now shares the fullscreen overlay contract with
   onboarding: scroll lock, focus trap, Escape dismiss, `aria-modal`, and
   permanent ledger dismissal for one-tap skip.
+- Volunteered pulse journey is now covered in `e2e/pulses.spec.ts`: Profile
+  settings → "Tune my picks" → focused pulse dialog → Escape dismissal ledger.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

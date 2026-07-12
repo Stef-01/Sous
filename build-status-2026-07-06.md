@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 54 Units Shipped
+## This Session: 55 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -57,7 +57,8 @@
 - **W51** - Closed the cook-steps dead-end quick win at the Today feed source: `buildQuestDishes()` now filters no-step mains before scoring and `buildRoleQuestDishes()` filters no-step side/drink/snack dishes before the role switch can surface them, so Today cannot anchor a cook to an unguided catalog recipe; focused pool coverage pins every surfaced catalog dish has guided cook data (this commit)
 - **W52** - Broadened the Playwright journey suite into onboarding and hardened the shared survey shell: onboarding now behaves as a real modal dialog with scroll lock, Escape dismiss, focus trap, and `aria-modal`, tall first steps keep the CTA pinned on iPhone SE, thumb/chip/unit controls preserve 44px touch geometry, and the happy + macro onboarding branches persist the expected local state under Chromium and mobile Safari (this commit)
 - **W53** - Hardened pulse micro-surveys to match the onboarding modal contract: surfaced pulses now lock background scroll, trap focus, expose `aria-modal` dialog semantics, dismiss on Escape, and record one-tap skip/dismiss in the pulse ledger so declined prompts do not keep resurfacing; the shared overlay source contract now guards the pulse host (this commit)
-- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week, and onboarding Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, and pulse overlay contract coverage
+- **W54** - Added a volunteered-pulse Playwright journey smoke from Today profile settings: seeded devices open "Tune my picks", land in the first pulse as a focused dialog, Escape closes it, and the pulse ledger records `shown` plus permanent `dismissed` without marking the prompt answered (this commit)
+- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding, and volunteered-pulse Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, and pulse overlay contract coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
