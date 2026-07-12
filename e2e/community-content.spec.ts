@@ -54,4 +54,79 @@ test.describe("Community content surface", () => {
       page.getByRole("button", { name: "Clear the #fiber filter" }),
     );
   });
+
+  test("detail pages keep reading and reply controls finger-sized", async ({
+    page,
+  }) => {
+    await page.goto("/community/article/stanford-healthy-eating-habits", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("heading", {
+        name: "How to encourage healthy eating habits that actually stick",
+      }),
+    ).toBeVisible({ timeout: 10000 });
+    await expectTouchTarget(page.getByRole("button", { name: "Back" }));
+    await expectTouchTarget(
+      page.getByRole("button", {
+        name: /Save How to encourage healthy eating habits/i,
+      }),
+    );
+    await expectTouchTarget(page.getByRole("link", { name: /Venus Kalami/i }));
+    await expectTouchTarget(page.getByRole("link", { name: "#family-meals" }));
+
+    await page.goto("/community/research/stanford-childrens-gut-health", {
+      waitUntil: "domcontentloaded",
+    });
+    await expect(page.getByText("Source paper")).toBeVisible({
+      timeout: 10000,
+    });
+    await expectTouchTarget(page.getByRole("button", { name: "Back" }));
+    await expectTouchTarget(
+      page.getByRole("button", { name: /^Save / }).first(),
+    );
+
+    await page.goto("/community/forum/forum-rice-gummy", {
+      waitUntil: "domcontentloaded",
+    });
+    await expect(
+      page.getByRole("heading", { name: "Why is my rice always gummy?" }),
+    ).toBeVisible({ timeout: 10000 });
+    await expectTouchTarget(page.getByRole("button", { name: "Back" }));
+    await expectTouchTarget(
+      page.getByRole("button", { name: /Save Why is my rice/i }),
+    );
+    await expectTouchTarget(
+      page.getByRole("button", { name: "Thank this reply" }).first(),
+    );
+
+    const replyButton = page
+      .getByRole("button", { name: /Reply to @/ })
+      .first();
+    await expectTouchTarget(replyButton);
+    await replyButton.click();
+    await expectTouchTarget(
+      page.getByRole("button", { name: "Cancel reply target" }),
+    );
+    await expectTouchTarget(page.getByRole("textbox", { name: "Reply" }));
+    await expectTouchTarget(page.getByRole("button", { name: "Post reply" }));
+  });
+
+  test("immersive reels keep escape and cook actions finger-sized", async ({
+    page,
+  }) => {
+    await page.goto("/community/reels?start=reel-tadka-101", {
+      waitUntil: "domcontentloaded",
+    });
+
+    await expect(
+      page.getByRole("region", { name: "Reel: Tadka in 30 seconds" }).first(),
+    ).toBeVisible({ timeout: 10000 });
+    await expectTouchTarget(page.getByRole("button", { name: "Close reels" }));
+    await expectTouchTarget(page.getByRole("link", { name: /Cook this/ }));
+    await expectTouchTarget(page.getByRole("button", { name: "Like" }));
+    await expectTouchTarget(page.getByRole("button", { name: "Save" }));
+    await expectTouchTarget(page.getByRole("button", { name: "Share reel" }));
+  });
 });

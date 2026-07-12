@@ -595,6 +595,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   Reels "See all", Group Challenge, leaderboard, and tag-clear controls all
   preserve 44px geometry in Chromium and mobile Safari, and the active section
   pill uses a flatter no-shadow treatment.
+- Community content-detail controls are now covered in
+  `e2e/community-content.spec.ts`: BackLink, article author/tag/save controls,
+  research save/back controls, forum thanks/reply/cancel/composer/post controls,
+  and immersive reel close/cook/share actions all preserve 44px geometry in
+  Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

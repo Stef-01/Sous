@@ -55,7 +55,7 @@ export default function ArticleDetailPage({
         {author && (
           <Link
             href={`/community/expert/${author.slug}`}
-            className="inline-flex items-center gap-2 text-[12px] text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full pr-3 text-[12px] text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
           >
             <ExpertAvatar
               name={author.name}
@@ -109,7 +109,7 @@ export default function ArticleDetailPage({
         {article.relatedRecipeSlug && (
           <Link
             href={`/cook/${article.relatedRecipeSlug}`}
-            className="flex items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.99] motion-reduce:active:scale-100"
+            className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition-colors hover:bg-[var(--nourish-dark-green)] active:scale-[0.99] motion-reduce:active:scale-100"
           >
             <CookingPot size={16} aria-hidden />
             Cook{" "}
@@ -124,7 +124,7 @@ export default function ArticleDetailPage({
             <Link
               key={tag}
               href={`/community?tag=${encodeURIComponent(tag)}`}
-              className="rounded-full bg-neutral-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-green)]/10 hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/30"
+              className="inline-flex min-h-11 items-center rounded-full bg-neutral-100 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--nourish-subtext)] transition-colors hover:bg-[var(--nourish-green)]/10 hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/30"
             >
               #{tag}
             </Link>
@@ -150,7 +150,7 @@ export default function ArticleDetailPage({
               <li key={rel.id}>
                 <Link
                   href={`/community/article/${rel.slug}`}
-                  className="block rounded-2xl bg-white p-3 shadow-[var(--shadow-card)] text-sm font-semibold text-[var(--nourish-dark)] hover:shadow-[var(--shadow-raised)] transition-shadow"
+                  className="block min-h-11 rounded-2xl bg-white p-3 text-sm font-semibold text-[var(--nourish-dark)] shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-raised)]"
                 >
                   {rel.title}
                   <span className="block pt-0.5 text-[11px] font-normal text-[var(--nourish-subtext)]">

@@ -282,7 +282,7 @@ export default function ForumThreadPage({
             <button
               type="button"
               onClick={() => setReplyingTo(null)}
-              className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
+              className="inline-flex min-h-11 items-center gap-1 rounded-full bg-white px-3 text-[10px] font-semibold text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]"
               aria-label="Cancel reply target"
             >
               Cancel <X size={10} aria-hidden />
@@ -302,13 +302,13 @@ export default function ForumThreadPage({
                 : "Reply to this thread…"
             }
             rows={2}
-            className="flex-1 resize-none rounded-xl bg-transparent px-2 py-1.5 text-[13px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
+            className="min-h-11 flex-1 resize-none rounded-xl bg-transparent px-2 py-1.5 text-[13px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none"
             aria-label="Reply"
           />
           <button
             type="submit"
             disabled={draft.trim().length === 0}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-transform active:scale-95 disabled:opacity-40 disabled:active:scale-100"
             aria-label="Post reply"
           >
             <Send size={16} />
@@ -385,7 +385,7 @@ function ReplyCard({
           aria-pressed={isThanked}
           aria-label={isThanked ? "Remove thanks" : "Thank this reply"}
           className={cn(
-            "inline-flex items-center gap-1 rounded-full px-2 py-1 transition-colors",
+            "inline-flex min-h-11 items-center gap-1 rounded-full px-3 transition-colors",
             isThanked
               ? "bg-rose-50 text-rose-500"
               : "text-[var(--nourish-subtext)] hover:bg-neutral-50 hover:text-[var(--nourish-dark)]",
@@ -405,7 +405,7 @@ function ReplyCard({
         <button
           type="button"
           onClick={onReply}
-          className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 hover:text-[var(--nourish-dark)]"
+          className="inline-flex min-h-11 items-center gap-1 rounded-full px-3 text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 hover:text-[var(--nourish-dark)]"
           aria-label={`Reply to ${reply.authorHandle}`}
         >
           <Reply size={12} aria-hidden />

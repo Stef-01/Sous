@@ -171,7 +171,7 @@ export function ReelCard({ reel, reelInstanceId, isActive, onClose }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close reels"
-          className="absolute left-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/14 transition-colors hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          className="absolute left-3 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-black/25 text-white ring-1 ring-white/14 transition-colors hover:bg-black/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           style={{ top: "calc(env(safe-area-inset-top, 0px) + 3.25rem)" }}
         >
           <X size={18} />
@@ -202,7 +202,7 @@ export function ReelCard({ reel, reelInstanceId, isActive, onClose }: Props) {
             <Link
               href={`/cook/${reel.dishSlug}`}
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1.5 text-[12px] font-semibold text-neutral-950 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+              className="inline-flex min-h-11 items-center gap-1 rounded-full bg-white px-4 text-[12px] font-semibold text-neutral-950 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             >
               Cook this →
             </Link>

@@ -24,7 +24,7 @@ export function BackLink({
         if (window.history.length > 1) router.back();
         else router.push(fallbackHref);
       }}
-      className="inline-flex items-center gap-1.5 text-sm text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)] transition-colors active:scale-95"
+      className="inline-flex min-h-11 items-center gap-1.5 rounded-full pr-3 text-sm text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-dark)] active:scale-95"
       aria-label={label}
     >
       <ArrowLeft size={16} />
