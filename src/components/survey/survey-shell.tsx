@@ -40,7 +40,7 @@ export function SurveyShell({
   onSecondary?: () => void;
 }) {
   return (
-    <div className="flex min-h-full flex-col bg-[var(--nourish-cream)]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-[var(--nourish-cream)]">
       {/* Back + segmented progress (one segment per step). */}
       <div className="flex items-center gap-3 px-[var(--gutter)] pb-1 pt-3">
         <button
@@ -95,7 +95,7 @@ export function SurveyShell({
       )}
 
       {/* Step content. */}
-      <div className="flex-1 overflow-y-auto px-[var(--gutter)] py-2">
+      <div className="min-h-0 flex-1 overflow-y-auto px-[var(--gutter)] py-2">
         {children}
       </div>
 
@@ -118,7 +118,7 @@ export function SurveyShell({
           <button
             type="button"
             onClick={onSecondary}
-            className="h-9 w-full text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)]"
+            className="flex h-11 w-full items-center justify-center text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)]"
           >
             {secondaryLabel}
           </button>

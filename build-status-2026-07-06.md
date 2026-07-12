@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 52 Units Shipped
+## This Session: 53 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -55,7 +55,8 @@
 - **W49** - Hardened the Path planning surfaces so the swipe planner back/actions, completion/empty states, weekly review header and week navigator, day add affordances, meal-picker rows, manage-sheet move grid, cook/remove actions, add-sheet search/results, shop-week, and clear-week controls all keep 44px touch geometry while preserving the quiet planner layout; a new plan-week Playwright smoke verifies seeded week review, manage, add-sheet, swipe-planner, completed-planner, and empty-pool states in Chromium and mobile Safari (this commit)
 - **W50** - Closed the Reels share silent-fail quick win: the action rail now preserves the native share sheet when available, falls back to a deterministic `/community/reels?start=<id>` copied link when Web Share is unavailable, and surfaces success/failure toasts instead of doing nothing; focused unit coverage pins the fallback payload and clipboard outcomes (this commit)
 - **W51** - Closed the cook-steps dead-end quick win at the Today feed source: `buildQuestDishes()` now filters no-step mains before scoring and `buildRoleQuestDishes()` filters no-step side/drink/snack dishes before the role switch can surface them, so Today cannot anchor a cook to an unguided catalog recipe; focused pool coverage pins every surfaced catalog dish has guided cook data (this commit)
-- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week Playwright coverage, focused reel-share unit coverage, and guided-only QuestCard pool coverage
+- **W52** - Broadened the Playwright journey suite into onboarding and hardened the shared survey shell: onboarding now behaves as a real modal dialog with scroll lock, Escape dismiss, focus trap, and `aria-modal`, tall first steps keep the CTA pinned on iPhone SE, thumb/chip/unit controls preserve 44px touch geometry, and the happy + macro onboarding branches persist the expected local state under Chromium and mobile Safari (this commit)
+- Tests: 21 -> 166 plus strengthened core-loop, pantry, shopping-list, plan-week, and onboarding Playwright coverage, focused reel-share unit coverage, and guided-only QuestCard pool coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

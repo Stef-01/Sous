@@ -1,10 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { SurveyRunner } from "@/components/survey/survey-runner";
 import { SurveyShell } from "@/components/survey/survey-shell";
 import { MirrorSummary } from "@/components/survey/mirror-summary";
+import {
+  useBodyScrollLock,
+  useDismissOnEscape,
+  useFocusTrap,
+} from "@/lib/hooks/use-overlay-a11y";
 import { ONBOARDING_V2_DEF } from "@/data/onboarding-v2";
 import {
   buildOnboardingResult,
@@ -40,6 +45,7 @@ export function OnboardingFlow({
 }) {
   const reducedMotion = useReducedMotion();
   const parentMode = useParentMode();
+  const dialogRef = useRef<HTMLDivElement | null>(null);
   const [result, setResult] = useState<OnboardingResult | null>(null);
 
   const handleSurveyComplete = useCallback(
@@ -68,8 +74,17 @@ export function OnboardingFlow({
     onClose();
   }, [onClose]);
 
+  useBodyScrollLock(true);
+  useDismissOnEscape(true, handleSkip);
+  useFocusTrap(true, dialogRef);
+
   return (
     <motion.div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Taste onboarding"
+      tabIndex={-1}
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: reducedMotion ? 1 : 0 }}

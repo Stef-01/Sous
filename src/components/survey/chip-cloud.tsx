@@ -6,9 +6,9 @@ import { toggleMultiValue } from "@/lib/surveys/survey-logic";
 import type { SurveyOption } from "@/types/survey";
 
 /**
- * ChipCloud — a wrap layout of 32px multi-select pills (planning.md §6.2 W1,
- * Family C). Options flagged `recommended` render first under a pre-tinted
- * "Recommended for you" group. Supports an exclusive none-chip.
+ * ChipCloud — a wrap layout of compact 44px multi-select pills (planning.md
+ * §6.2 W1, Family C). Options flagged `recommended` render first under a
+ * pre-tinted "Recommended for you" group. Supports an exclusive none-chip.
  */
 export function ChipCloud({
   options,
@@ -36,7 +36,7 @@ export function ChipCloud({
         aria-checked={selected}
         onClick={() => toggle(o.value)}
         className={cn(
-          "inline-flex h-8 items-center gap-1.5 rounded-full border px-3.5 text-[13px] font-medium transition-colors",
+          "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-1 text-[13px] font-medium transition-colors",
           selected
             ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
             : o.recommended

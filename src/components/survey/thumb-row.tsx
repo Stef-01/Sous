@@ -55,7 +55,7 @@ export function ThumbRows({
                 aria-pressed={verdict === "dislike"}
                 aria-label={`Dislike ${row.label}`}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
+                  "flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
                   verdict === "dislike"
                     ? "border-[var(--nourish-evaluate)] bg-[var(--nourish-evaluate)]/10 text-[var(--nourish-evaluate)]"
                     : "border-[var(--nourish-border-strong)] text-[var(--nourish-subtext)] hover:border-[var(--nourish-evaluate)]/40",
@@ -69,7 +69,7 @@ export function ThumbRows({
                 aria-pressed={verdict === "like"}
                 aria-label={`Like ${row.label}`}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
+                  "flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
                   verdict === "like"
                     ? "border-[var(--nourish-green)] bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]"
                     : "border-[var(--nourish-border-strong)] text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/40",

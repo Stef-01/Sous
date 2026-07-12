@@ -189,7 +189,7 @@ export function WheelPicker({
               type="button"
               onClick={() => setDisplayUnit(u.value)}
               className={cn(
-                "rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
+                "min-h-11 min-w-11 rounded-full px-4 py-1 text-[12px] font-medium transition-colors",
                 displayUnit === u.value
                   ? "bg-[var(--nourish-green)] text-white"
                   : "text-[var(--nourish-subtext)]",

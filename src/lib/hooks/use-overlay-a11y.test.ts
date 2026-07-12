@@ -27,6 +27,7 @@ const HAND_ROLLED_OVERLAYS = [
   "components/today/quest-card.tsx",
   "components/path/achievements-launcher.tsx",
   "components/community/demo-challenge-picker.tsx",
+  "components/onboarding/onboarding-flow.tsx",
 ];
 
 const NESTED_HAND_ROLLED_OVERLAYS = ["components/today/meal-health-sheet.tsx"];

@@ -575,7 +575,8 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `seasonFromMonth` windowsill accent; commit 7b7810a).
 - Playwright journey suite — STARTED: the new Today-deck features
   (multi-select filters, side search, skip-sides) are covered in
-  `e2e/today-filters-features.spec.ts`; broaden to onboarding next.
+  `e2e/today-filters-features.spec.ts`; onboarding happy + macro branches are
+  covered in `e2e/onboarding.spec.ts` across Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).
