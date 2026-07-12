@@ -28,6 +28,7 @@ const HAND_ROLLED_OVERLAYS = [
   "components/path/achievements-launcher.tsx",
   "components/community/demo-challenge-picker.tsx",
   "components/onboarding/onboarding-flow.tsx",
+  "components/surveys/pulse-host.tsx",
 ];
 
 const NESTED_HAND_ROLLED_OVERLAYS = ["components/today/meal-health-sheet.tsx"];
@@ -96,4 +97,16 @@ describe("nested hand-rolled overlay a11y contract", () => {
       });
     });
   }
+});
+
+describe("pulse overlay dismissal contract", () => {
+  const src = readFileSync(
+    join(SRC_ROOT, "components/surveys/pulse-host.tsx"),
+    "utf8",
+  );
+
+  it("records a permanent pulse dismissal when the one-step survey exits", () => {
+    expect(src).toMatch(/dismissPulse\(/);
+    expect(src).toMatch(/onExit=\{handleDismiss\}/);
+  });
 });

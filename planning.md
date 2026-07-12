@@ -577,6 +577,9 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   (multi-select filters, side search, skip-sides) are covered in
   `e2e/today-filters-features.spec.ts`; onboarding happy + macro branches are
   covered in `e2e/onboarding.spec.ts` across Chromium and mobile Safari.
+- Pulse micro-survey host now shares the fullscreen overlay contract with
+  onboarding: scroll lock, focus trap, Escape dismiss, `aria-modal`, and
+  permanent ledger dismissal for one-tap skip.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

@@ -1,17 +1,23 @@
 "use client";
 
+import { useCallback, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { SurveyRunner } from "@/components/survey/survey-runner";
 import { persistSurveySignals } from "@/lib/surveys/apply-survey-signals";
-import { markPulseAnswered } from "@/lib/surveys/pulse-scheduler";
+import { dismissPulse, markPulseAnswered } from "@/lib/surveys/pulse-scheduler";
+import {
+  useBodyScrollLock,
+  useDismissOnEscape,
+  useFocusTrap,
+} from "@/lib/hooks/use-overlay-a11y";
 import type { PulseDef } from "@/data/pulses";
 
 /**
  * PulseHost (planning.md §6.2 W4) — runs a single one-screen pulse through the
  * W1 survey runner in a full-screen overlay. On completion it folds the answer
  * into the engine via the shared write path and marks the ledger; a one-tap
- * skip (the shell's Back from the only step) just closes. Mounted by the Today
- * auto-trigger and by the volunteered "Tune my picks" entry.
+ * skip permanently dismisses the pulse so it does not keep resurfacing. Mounted
+ * by the Today auto-trigger and by the volunteered "Tune my picks" entry.
  */
 export function PulseHost({
   pulse,
@@ -21,8 +27,24 @@ export function PulseHost({
   onClose: () => void;
 }) {
   const reducedMotion = useReducedMotion();
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+
+  const handleDismiss = useCallback(() => {
+    dismissPulse(pulse.id);
+    onClose();
+  }, [onClose, pulse.id]);
+
+  useBodyScrollLock(true);
+  useDismissOnEscape(true, handleDismiss);
+  useFocusTrap(true, dialogRef);
+
   return (
     <motion.div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={pulse.label}
+      tabIndex={-1}
       initial={reducedMotion ? false : { opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
@@ -37,7 +59,7 @@ export function PulseHost({
             markPulseAnswered(pulse.id);
             onClose();
           }}
-          onExit={onClose}
+          onExit={handleDismiss}
         />
       </div>
     </motion.div>
