@@ -654,6 +654,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   clear-search, result rows, pairing back/reroll/select/swap/expand controls,
   single-side cook actions, and the sticky cook CTA in Chromium and mobile
   Safari.
+- Community admin queue controls are now covered in
+  `e2e/community-admin-touch.spec.ts`: `/community/admin` preserves 44px
+  geometry for the admin back link plus Verify/Reject/Open review actions
+  against a seeded community recipe in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

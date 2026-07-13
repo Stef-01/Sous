@@ -82,7 +82,7 @@ export default function AdminPage() {
           <Link
             href="/community"
             aria-label="Back to Content"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-[45px] w-[45px] min-w-[45px] items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -109,7 +109,7 @@ export default function AdminPage() {
             {queue.map((recipe) => (
               <li
                 key={recipe.id}
-                className="rounded-2xl bg-white p-4 shadow-[var(--shadow-card)]"
+                className="rounded-2xl border border-neutral-100 bg-white p-4"
               >
                 <SectionKicker as="p" size="10px">
                   {recipe.cuisineFamily}
@@ -131,20 +131,20 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => handleApprove(recipe.id)}
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-3 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                   >
                     <Check size={12} aria-hidden /> Verify
                   </button>
                   <button
                     type="button"
                     onClick={() => handleReject(recipe.id)}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-rose-300 hover:text-rose-500"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-rose-300 hover:text-rose-500"
                   >
                     <X size={12} aria-hidden /> Reject
                   </button>
                   <Link
                     href={`/path/recipes/${recipe.id}/edit`}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
                   >
                     Open
                   </Link>
