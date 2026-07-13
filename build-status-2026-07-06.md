@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 71 Units Shipped
+## This Session: 72 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -74,7 +74,8 @@
 - **W68** - Hardened the Eat Out surface: back navigation, featured dish cards, nutrient-goal/cuisine filters, venue drill-down, dish selection, and one-tap logging now preserve 44px touch geometry, with a new Eat Out Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W69** - Hardened the Sous Everywhere surfaces: showcase back navigation, wallpaper save/setup/copy controls, live surface tiles, notify-intent controls, and gallery back/next controls now preserve 44px touch geometry, with a new Everywhere Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W70** - Hardened the Kitchen Arcade and mini-game controls: arcade doorway cards, What's Cooking input/guess controls, Flavor Pairs setup/card controls, Speed Chop start/sort controls, and Cuisine Compass back/map/submit controls now preserve 44px touch geometry, with a new Games Playwright smoke covering Chromium and mobile Safari (this commit)
-- Tests: 21 -> 216 plus strengthened core-loop, pantry, shopping-list, plan-week, Eat Out, Sous Everywhere, Games Arcade, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W71** - Hardened the viral-loop shell controls: the anonymous recipe-gift CTA and Doge app-shell back control now preserve 44px touch geometry, with a new viral-loop Playwright smoke covering Chromium and mobile Safari (this commit)
+- Tests: 21 -> 220 plus strengthened core-loop, pantry, shopping-list, plan-week, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

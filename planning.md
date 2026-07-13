@@ -645,6 +645,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   arcade doorway cards, back navigation, guess inputs, difficulty/start/sort
   controls, memory cards, map interaction, and submit controls in Chromium and
   mobile Safari.
+- Viral-loop shell controls are now covered in `e2e/viral-loop-touch.spec.ts`:
+  `/gift/[slug]` and `/doge` preserve 44px geometry for the anonymous
+  recipe-gift CTA and the Doge app-shell back control in Chromium and mobile
+  Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

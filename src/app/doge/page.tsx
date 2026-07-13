@@ -146,7 +146,7 @@ export default function DogePage() {
         // hides while a game overlay (menu/stats/care) is open, since the game
         // shows its own BACK there and two back buttons collide at top-left.
         data-doge-back=""
-        className="absolute left-3 top-3 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        className="absolute left-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
       >
         <ArrowLeft size={20} />
       </button>
