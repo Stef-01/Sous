@@ -663,6 +663,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   geometry for the Tonight commit pill, expanded input, submit/cancel controls,
   sheet close affordance, and post-commit Change action in Chromium and mobile
   Safari.
+- Fullscreen meal-queue Info controls are now covered in
+  `e2e/core-loop.spec.ts`: the nested sheet has no box shadow and preserves 44px
+  geometry for Close, Log it, and Save nutrition card in Chromium and mobile
+  Safari; the gated evidence disclosure and health-lens tabs use the same touch
+  floor in source.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

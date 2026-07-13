@@ -88,7 +88,7 @@ export function LogItButton({
         onClick={onLog}
         aria-label={`Log ${name} to today's diary`}
         className={cn(
-          "flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-sm font-medium text-[var(--nourish-green)] transition-colors",
+          "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-sm font-medium text-[var(--nourish-green)] transition-colors",
           logged
             ? "bg-[var(--nourish-green)]/12"
             : "bg-[var(--nourish-green)]/5 hover:bg-[var(--nourish-green)]/10",
@@ -107,7 +107,7 @@ export function LogItButton({
       onClick={onLog}
       aria-label={`Log ${name} to today's diary`}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors",
+        "inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition-colors",
         tone,
         className,
       )}

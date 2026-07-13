@@ -313,7 +313,7 @@ export function MealHealthPanel({
             type="button"
             onClick={() => setShowEvidence((s) => !s)}
             aria-expanded={showEvidence}
-            className="flex w-full items-center justify-between py-2 text-[13px] font-semibold text-[var(--nourish-dark)]"
+            className="flex min-h-11 w-full items-center justify-between py-2 text-[13px] font-semibold text-[var(--nourish-dark)]"
           >
             Evidence &amp; full nutrition
             <ChevronDown
@@ -365,9 +365,9 @@ function LensSwitcher({
           aria-selected={lens === l}
           onClick={() => onChange(l)}
           className={cn(
-            "flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors",
+            "min-h-11 flex-1 rounded-full px-2 py-1.5 text-[11px] font-semibold transition-colors",
             lens === l
-              ? "bg-white text-[var(--nourish-dark)] shadow-sm"
+              ? "bg-white text-[var(--nourish-dark)]"
               : "text-[var(--nourish-subtext)]",
           )}
         >

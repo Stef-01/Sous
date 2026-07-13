@@ -701,13 +701,22 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     const infoDialog = page.getByRole("dialog", { name: /Info for/i });
     await expect(infoDialog).toBeVisible({ timeout: 5000 });
     await expect(infoDialog).toBeFocused({ timeout: 5000 });
+    await expect(infoDialog).toHaveCSS("box-shadow", "none");
 
     await page.keyboard.press("Tab");
-    await expect(page.getByRole("button", { name: /Close info/i })).toBeFocused(
-      {
-        timeout: 5000,
-      },
-    );
+    const closeInfo = page.getByRole("button", { name: /Close info/i });
+    await expect(closeInfo).toBeFocused({ timeout: 5000 });
+    await expectTouchTarget(closeInfo);
+
+    const logMeal = infoDialog.getByRole("button", {
+      name: /Log .* to today's diary/i,
+    });
+    const saveNutrition = infoDialog.getByRole("button", {
+      name: /Save nutrition card/i,
+    });
+    await logMeal.scrollIntoViewIfNeeded();
+    await expectTouchTarget(logMeal);
+    await expectTouchTarget(saveNutrition);
 
     await page.keyboard.press("Shift+Tab");
     await expect(

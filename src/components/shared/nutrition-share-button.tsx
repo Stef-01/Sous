@@ -90,7 +90,7 @@ export function NutritionShareButton({
       type="button"
       onClick={handleSave}
       disabled={busy}
-      className="inline-flex items-center gap-1.5 rounded-full bg-neutral-50 px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-100 disabled:opacity-50"
+      className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-neutral-50 px-3 py-1.5 text-[11px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-100 disabled:opacity-50"
     >
       <Download size={12} aria-hidden />
       {busy ? "Saving…" : "Save nutrition card"}

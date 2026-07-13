@@ -82,7 +82,7 @@ export function MealHealthSheet({
             role="dialog"
             aria-modal="true"
             aria-label={`Info for ${dishName}`}
-            className="absolute inset-x-0 bottom-0 z-50 flex h-[68%] flex-col rounded-t-[var(--radius-lg)] bg-white shadow-[0_-10px_44px_rgba(0,0,0,0.22)] focus:outline-none"
+            className="absolute inset-x-0 bottom-0 z-50 flex h-[68%] flex-col rounded-t-[var(--radius-lg)] bg-white focus:outline-none"
             initial={reducedMotion ? false : { y: "100%" }}
             animate={{ y: 0 }}
             exit={reducedMotion ? { opacity: 0 } : { y: "100%" }}
@@ -101,7 +101,7 @@ export function MealHealthSheet({
                 type="button"
                 onClick={onClose}
                 aria-label="Close info"
-                className="absolute right-4 top-2 flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                className="absolute right-3 top-1 flex h-11 w-11 items-center justify-center rounded-full text-[var(--nourish-subtext)] transition hover:bg-neutral-100 hover:text-[var(--nourish-dark)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
               >
                 <X size={16} strokeWidth={2.2} />
               </button>
