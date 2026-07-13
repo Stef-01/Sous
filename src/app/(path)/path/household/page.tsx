@@ -76,7 +76,7 @@ export default function HouseholdPage() {
             type="button"
             onClick={() => router.push("/path")}
             aria-label="Back to Path"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </button>
@@ -90,7 +90,7 @@ export default function HouseholdPage() {
                 setEditingId(null);
                 setAddOpen((v) => !v);
               }}
-              className="ml-auto inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+              className="ml-auto inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               <Plus size={12} aria-hidden /> Add
             </button>
@@ -210,7 +210,7 @@ function MemberCard({
             type="button"
             onClick={onEdit}
             aria-label={`Edit ${member.name}`}
-            className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+            className="flex h-11 w-11 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
           >
             <Pencil size={14} />
           </button>
@@ -219,7 +219,7 @@ function MemberCard({
               type="button"
               onClick={onRemove}
               aria-label={`Remove ${member.name}`}
-              className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-rose-500"
+              className="flex h-11 w-11 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-rose-500"
             >
               <Trash2 size={14} />
             </button>

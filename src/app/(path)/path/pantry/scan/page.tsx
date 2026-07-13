@@ -76,7 +76,7 @@ export default function PantryScanPage() {
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/path/pantry"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             aria-label="Back to pantry"
           >
             <ArrowLeft size={16} aria-hidden />
@@ -98,7 +98,7 @@ export default function PantryScanPage() {
             <button
               type="button"
               disabled
-              className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--nourish-border-strong)] bg-[var(--nourish-input-bg)] py-3 text-sm font-medium text-[var(--nourish-subtext)]"
+              className="mb-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--nourish-border-strong)] bg-[var(--nourish-input-bg)] px-4 text-sm font-medium text-[var(--nourish-subtext)]"
             >
               <Camera size={16} aria-hidden />
               Camera (lights up at real-mode launch)
@@ -107,7 +107,7 @@ export default function PantryScanPage() {
             <button
               type="button"
               onClick={runDemoScan}
-              className="w-full rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+              className="min-h-11 w-full rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               Run a demo scan
             </button>
@@ -131,7 +131,7 @@ export default function PantryScanPage() {
                     onClick={() => onReject(item.name)}
                     aria-label={`Remove ${item.name}`}
                     className={cn(
-                      "group inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition",
+                      "group inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-xs font-medium transition",
                       "border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] hover:border-[var(--nourish-evaluate)]/50 hover:bg-[var(--nourish-evaluate)]/5",
                     )}
                   >
@@ -150,7 +150,7 @@ export default function PantryScanPage() {
               <button
                 type="button"
                 onClick={onAcceptAll}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 <Check size={14} aria-hidden />
                 Accept all + add to pantry
@@ -159,7 +159,7 @@ export default function PantryScanPage() {
               <button
                 type="button"
                 onClick={() => setState({ phase: "capture" })}
-                className="w-full rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
+                className="min-h-11 w-full rounded-xl border border-[var(--nourish-border-strong)] bg-white px-4 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
               >
                 Try another scan
               </button>
@@ -183,14 +183,14 @@ export default function PantryScanPage() {
             <div className="mt-5 flex flex-col gap-2">
               <Link
                 href="/path/pantry"
-                className="rounded-xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white shadow-[var(--shadow-cta)] transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 Back to pantry
               </Link>
               <button
                 type="button"
                 onClick={() => setState({ phase: "capture" })}
-                className="rounded-xl border border-[var(--nourish-border-strong)] bg-white py-3 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
+                className="min-h-11 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-4 text-sm font-medium text-[var(--nourish-subtext)] hover:bg-neutral-50"
               >
                 Scan again
               </button>

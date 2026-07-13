@@ -68,7 +68,7 @@ export default function RecapPage() {
             onClick={() => router.push("/path")}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             aria-label="Back to Path"
           >
             <ArrowLeft size={18} />
@@ -158,7 +158,7 @@ export default function RecapPage() {
                   role="radio"
                   aria-checked={active}
                   className={cn(
-                    "rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors",
+                    "min-h-11 rounded-full px-3 text-[12px] font-medium transition-colors",
                     active
                       ? "bg-[var(--nourish-green)] text-white"
                       : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
@@ -305,7 +305,7 @@ export default function RecapPage() {
               <button
                 type="button"
                 onClick={() => router.push(`/cook/${recap.signatureDishSlug}`)}
-                className="flex w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+                className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-4 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               >
                 <Sparkles size={14} aria-hidden />
                 Cook this year&apos;s signature again

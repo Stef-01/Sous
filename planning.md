@@ -619,6 +619,12 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   geometry for page back controls, form inputs, add/remove actions, sortable
   step controls, save/publish CTAs, quick-add draft CTA, and edit not-found
   recovery in Chromium and mobile Safari.
+- Path secondary utility controls are now covered in
+  `e2e/path-secondary-utility.spec.ts`: `/path/household`, `/path/eco`,
+  `/path/recap`, and `/path/pantry/scan` preserve 44px geometry for roster
+  edit/remove/add controls, shared household form inputs/chips/CTAs, Eco
+  baseline chips, Recap year/signature actions, and Pantry Scan
+  capture/confirm/done controls in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

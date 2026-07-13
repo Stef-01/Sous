@@ -151,7 +151,7 @@ export function MemberForm({
           max={5}
           value={spice}
           onChange={(e) => setSpice(Number(e.target.value))}
-          className="w-full accent-[var(--nourish-green)]"
+          className="min-h-11 w-full accent-[var(--nourish-green)]"
         />
       </FormField>
 
@@ -184,7 +184,7 @@ export function MemberForm({
           type="button"
           onClick={submit}
           disabled={!name.trim()}
-          className="flex-1 rounded-xl bg-[var(--nourish-green)] py-2 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] disabled:opacity-50 active:scale-[0.97]"
+          className="min-h-11 flex-1 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] disabled:opacity-50 active:scale-[0.97]"
         >
           {mode === "add" ? "Save member" : "Save changes"}
         </button>
@@ -192,7 +192,7 @@ export function MemberForm({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-xl border border-neutral-200 px-4 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+            className="min-h-11 rounded-xl border border-neutral-200 px-4 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
           >
             Cancel
           </button>
@@ -222,7 +222,7 @@ function MultiChipGroup({
             onClick={() => onToggle(opt)}
             aria-pressed={isOn}
             className={cn(
-              "rounded-full px-3 py-1 text-[11px] font-semibold lowercase tracking-wide transition",
+              "min-h-11 rounded-full px-3 text-[11px] font-semibold lowercase tracking-wide transition",
               isOn
                 ? "bg-[var(--nourish-green)] text-white"
                 : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",
@@ -252,4 +252,4 @@ function FormField({
 }
 
 const inputClass =
-  "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
+  "min-h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
