@@ -96,7 +96,7 @@ export default function SearchPage() {
         <div className="mx-auto flex max-w-md items-center gap-3">
           <Link
             href="/today"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             aria-label="Back to Today"
           >
             <ArrowLeft size={16} aria-hidden />
@@ -109,7 +109,7 @@ export default function SearchPage() {
 
       <main className="mx-auto max-w-md space-y-4 page-x pt-3">
         {/* Search input */}
-        <label className="relative flex items-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-3 py-2.5 shadow-sm focus-within:border-[var(--nourish-green)] focus-within:ring-2 focus-within:ring-[var(--nourish-green)]/30">
+        <label className="relative flex min-h-11 items-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-3 shadow-sm focus-within:border-[var(--nourish-green)] focus-within:ring-2 focus-within:ring-[var(--nourish-green)]/30">
           <Search
             size={16}
             aria-hidden
@@ -121,7 +121,7 @@ export default function SearchPage() {
             placeholder="Try 'viral pasta', 'Kim K smoothie'…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-[var(--nourish-dark)] outline-none placeholder:text-[var(--nourish-subtext)]"
+            className="min-h-11 flex-1 bg-transparent text-sm text-[var(--nourish-dark)] outline-none placeholder:text-[var(--nourish-subtext)]"
             aria-label="Search recipes"
           />
         </label>
@@ -139,7 +139,7 @@ export default function SearchPage() {
                     onClick={() => toggleFilter(key)}
                     aria-pressed={active}
                     className={cn(
-                      "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                      "inline-flex min-h-11 items-center rounded-full border px-3 text-xs font-semibold transition-colors",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                       active
                         ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
@@ -227,7 +227,7 @@ function SearchResultCard({
         href={result.url}
         target="_blank"
         rel="noreferrer"
-        className="mt-2 inline-flex text-xs font-semibold text-[var(--nourish-green)] hover:underline"
+        className="mt-1 inline-flex min-h-11 items-center text-xs font-semibold text-[var(--nourish-green)] hover:underline"
       >
         View original →
       </a>

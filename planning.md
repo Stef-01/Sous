@@ -605,6 +605,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   challenge picker close/options, create-pod member inputs/chips/remove/submit
   controls, join-pod code/CTA controls, and leaderboard back control all
   preserve 44px geometry in Chromium and mobile Safari.
+- Standalone Today search controls are now covered in
+  `e2e/today-search.spec.ts`: the `/today/search` back control, search input,
+  filter chips, active filter state, deterministic result render, and result
+  source link all preserve 44px geometry in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

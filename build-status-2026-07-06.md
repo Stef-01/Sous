@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 63 Units Shipped
+## This Session: 64 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -66,7 +66,8 @@
 - **W60** - Hardened the Community content home for simpler, more reliable navigation: the sticky Watch/Learn/Experts/Ask segmented control now keeps explicit 44px hit geometry with a flatter no-shadow active pill, small content actions/links keep 44px targets, and a new Community Playwright smoke verifies the doorway in Chromium and mobile Safari (this commit)
 - **W61** - Hardened the Community detail and immersive-reels controls behind the content doorway: shared BackLink, article author/tag/cook/related links, forum reply composer/thanks/reply/cancel controls, and reel close/cook actions now preserve 44px geometry, with the Community Playwright smoke expanded across article, research, forum, and reels routes in Chromium and mobile Safari (this commit)
 - **W62** - Hardened the Community pod challenge surfaces: pod home back/create/join/sample controls, sample challenge picker close/options, create-pod member inputs/chips/remove/submit controls, join-pod code/CTA controls, and leaderboard back control now preserve 44px geometry, with a new pod Playwright smoke covering Chromium and mobile Safari (this commit)
-- Tests: 21 -> 180 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W63** - Hardened the standalone Today search surface: back, search input, filter chips, and result source links now preserve 44px touch geometry without adding chrome, and a new Today search Playwright smoke verifies query/results/filter state in Chromium and mobile Safari (this commit)
+- Tests: 21 -> 182 plus strengthened core-loop, pantry, shopping-list, plan-week, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
