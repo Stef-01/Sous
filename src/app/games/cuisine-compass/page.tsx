@@ -198,7 +198,7 @@ function CuisineCompassInner() {
           <Link
             href="/games"
             aria-label="Back to Arcade"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:bg-neutral-50"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -257,7 +257,7 @@ function CuisineCompassInner() {
             onClick={handleSubmit}
             disabled={!guess}
             className={cn(
-              "flex w-full items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-semibold transition-colors",
+              "flex min-h-11 w-full items-center justify-center gap-1.5 rounded-xl px-4 text-sm font-semibold transition-colors",
               guess
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
                 : "bg-neutral-100 text-neutral-400",
@@ -380,7 +380,7 @@ function RevealCard({
         <button
           type="button"
           onClick={onShare}
-          className="flex items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-3 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+          className="flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-3 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Share2 size={14} aria-hidden />
           Share grid
@@ -388,7 +388,7 @@ function RevealCard({
         <button
           type="button"
           onClick={onCookThis}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white py-3 text-[13px] font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40"
+          className="flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 bg-white px-3 text-[13px] font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40"
         >
           <ChefHat size={14} aria-hidden />
           Cook this dish

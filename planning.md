@@ -639,6 +639,12 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   back navigation, wallpaper save/setup/copy controls, live surface tiles,
   notify-intent controls, and gallery back/next controls in Chromium and mobile
   Safari.
+- Kitchen Arcade controls are now covered in `e2e/games-touch.spec.ts`:
+  `/games`, `/games/whats-cooking`, `/games/flavor-pairs`,
+  `/games/speed-chop`, and `/games/cuisine-compass` preserve 44px geometry for
+  arcade doorway cards, back navigation, guess inputs, difficulty/start/sort
+  controls, memory cards, map interaction, and submit controls in Chromium and
+  mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

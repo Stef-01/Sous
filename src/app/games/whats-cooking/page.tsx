@@ -287,7 +287,7 @@ export default function WhatsCookingGame() {
               </p>
               <button
                 onClick={handleNextRound}
-                className="mt-2 rounded-xl bg-[var(--nourish-green)] px-6 py-2.5 text-sm font-semibold text-white"
+                className="mt-2 min-h-11 rounded-xl bg-[var(--nourish-green)] px-6 text-sm font-semibold text-white"
                 type="button"
               >
                 {currentDishIdx < dishes.length - 1
@@ -313,7 +313,7 @@ export default function WhatsCookingGame() {
               </p>
               <button
                 onClick={handleNextRound}
-                className="mt-2 rounded-xl bg-amber-600 px-6 py-2.5 text-sm font-semibold text-white"
+                className="mt-2 min-h-11 rounded-xl bg-amber-600 px-6 text-sm font-semibold text-white"
                 type="button"
               >
                 {currentDishIdx < dishes.length - 1
@@ -426,7 +426,7 @@ function GameOverScreen({
         <div className="space-y-2 pt-2">
           <button
             onClick={onPlayAgain}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white"
             type="button"
           >
             <RotateCcw size={16} />
@@ -434,7 +434,7 @@ function GameOverScreen({
           </button>
           <button
             onClick={onBack}
-            className="w-full rounded-xl border border-neutral-200 py-3 text-sm font-medium text-[var(--nourish-subtext)]"
+            className="min-h-11 w-full rounded-xl border border-neutral-200 px-4 text-sm font-medium text-[var(--nourish-subtext)]"
             type="button"
           >
             Back to Arcade

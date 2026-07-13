@@ -237,7 +237,7 @@ export default function FlavorPairsGame() {
           <div className="space-y-2 pt-2">
             <button
               onClick={() => startGame(difficulty)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white"
               type="button"
             >
               <RotateCcw size={16} />
@@ -245,7 +245,7 @@ export default function FlavorPairsGame() {
             </button>
             <button
               onClick={() => router.push("/games")}
-              className="w-full rounded-xl border border-neutral-200 py-3 text-sm font-medium text-[var(--nourish-subtext)]"
+              className="min-h-11 w-full rounded-xl border border-neutral-200 px-4 text-sm font-medium text-[var(--nourish-subtext)]"
               type="button"
             >
               Back to Arcade

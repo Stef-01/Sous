@@ -219,7 +219,7 @@ export default function SpeedChopGame() {
                 setStreak(0);
                 setGameState("playing");
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] py-3.5 text-sm font-semibold text-white"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white"
               type="button"
             >
               <RotateCcw size={16} />
@@ -227,7 +227,7 @@ export default function SpeedChopGame() {
             </button>
             <button
               onClick={() => router.push("/games")}
-              className="w-full rounded-xl border border-neutral-200 py-3 text-sm font-medium text-[var(--nourish-subtext)]"
+              className="min-h-11 w-full rounded-xl border border-neutral-200 px-4 text-sm font-medium text-[var(--nourish-subtext)]"
               type="button"
             >
               Back to Arcade
