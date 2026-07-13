@@ -57,7 +57,7 @@ function MacroBar({ macro }: { macro: TodayMacro }) {
 /** Object-box styling shared by every selectable metric (depth rule). */
 function metricBoxClass(active: boolean): string {
   return cn(
-    "-mx-1.5 rounded-lg px-1.5 py-1 text-left transition-colors",
+    "-mx-1.5 min-h-11 rounded-lg px-1.5 py-1 text-left transition-colors",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
     active
       ? "bg-[var(--nourish-green)]/[0.08] ring-1 ring-[var(--nourish-green)]/30"
@@ -78,7 +78,7 @@ export function TodayNutritionGlance() {
     return (
       <Link
         href="/nutrition"
-        className="flex items-center justify-between rounded-2xl border border-dashed border-[var(--nourish-green)]/25 bg-white/70 px-4 py-3 text-[var(--nourish-subtext)] shadow-[var(--shadow-card)] transition hover:border-[var(--nourish-green)]/45 active:scale-[0.99]"
+        className="flex min-h-11 items-center justify-between rounded-2xl border border-dashed border-[var(--nourish-green)]/25 bg-white/70 px-4 py-3 text-[var(--nourish-subtext)] transition hover:border-[var(--nourish-green)]/45 active:scale-[0.99]"
         aria-label="Track today's plate"
       >
         <span className="text-[13px]">
@@ -125,13 +125,13 @@ export function TodayNutritionGlance() {
       initial={reduce ? false : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)]"
+      className="overflow-hidden rounded-2xl border border-[var(--nourish-border-soft)] bg-white"
       aria-label="Today's nutrition"
     >
       {/* Header row → full dashboard */}
       <Link
         href="/nutrition"
-        className="flex items-center justify-between gap-2 px-4 pt-3 active:scale-[0.99]"
+        className="flex min-h-11 items-center justify-between gap-2 px-4 pt-1 active:scale-[0.99]"
       >
         <span className="sous-label">Today&rsquo;s plate</span>
         <span className="flex items-center gap-0.5 text-[12px] font-semibold text-[var(--nourish-green)]">
@@ -218,7 +218,7 @@ export function TodayNutritionGlance() {
             <Link
               key={s.slug}
               href={`/cook/${s.slug}`}
-              className="inline-flex min-w-0 items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-dark)] shadow-[var(--shadow-card)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.97]"
+              className="inline-flex min-h-11 min-w-0 items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-medium text-[var(--nourish-dark)] transition hover:bg-[var(--nourish-green)]/5 active:scale-[0.97]"
               title={s.name}
             >
               <span className="truncate">{s.name}</span>

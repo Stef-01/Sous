@@ -668,6 +668,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   geometry for Close, Log it, and Save nutrition card in Chromium and mobile
   Safari; the gated evidence disclosure and health-lens tabs use the same touch
   floor in source.
+- Today meal-first hierarchy is now covered in
+  `e2e/today-nutrition-glance.spec.ts`: the QuestCard food hero precedes the
+  nutrition doorway in the live DOM, the supporting nutrition surface has no
+  card shadow, and its dashboard link, energy/macro controls, and optional
+  nutrient suggestion preserve 44px geometry in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

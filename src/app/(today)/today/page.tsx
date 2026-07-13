@@ -687,12 +687,6 @@ function TodayPageContent() {
         {/* Phase 4 — first-run nudge pointing at the craving search (self-clearing). */}
         <FirstRunCoachmark onPersonalize={() => setShowCoachQuiz(true)} />
 
-        {/* Today's metrics at a glance — food + nutrient stats, with the biggest
-            gap linking straight to dishes that close it (nutrient → craving).
-            Compact + subordinate to the QuestCard hero; taps open the full
-            dashboard at /nutrition. See docs/TODAY-DASHBOARD-PLAN.md. */}
-        <TodayNutritionGlance />
-
         {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
             under the search, so the one thing the user opened the app for is
             never buried under engagement nudges. (Sous Test + meal-first; see
@@ -704,6 +698,13 @@ function TodayPageContent() {
           cookSessions={completedSessions}
           onDeckExhausted={() => triggerAnchorPulse("deck-exhaust")}
         />
+
+        {/* Today's metrics at a glance — food + nutrient stats, with the biggest
+            gap linking straight to dishes that close it (nutrient → craving).
+            It follows the QuestCard so nutrition supports the meal decision
+            instead of pushing the food hero down. Taps open the full dashboard
+            at /nutrition. See docs/TODAY-DASHBOARD-PLAN.md. */}
+        <TodayNutritionGlance />
 
         {/* Contextual surfaces below the hero — kept ONLY where each expresses
             a DISTINCT intent the hero can't: a commitment you made (Tonight),

@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 76 Units Shipped
+## This Session: 77 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -79,7 +79,8 @@
 - **W73** - Hardened the Community admin review queue: the admin back link and Verify/Reject/Open review actions now preserve 44px touch geometry, review cards use a flatter no-shadow treatment, and a new admin-queue Playwright smoke covers the seeded community recipe path in Chromium and mobile Safari (this commit)
 - **W74** - Hardened the Today Tonight commitment flow inside More Options: the commit pill, expanded input, submit/cancel controls, sheet close affordance, and post-commit Change action now preserve 44px geometry, with a new Today Tonight Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W75** - Flattened the fullscreen meal queue Info sheet and hardened its decision-point controls: the sheet no longer casts an upward shadow, and Close, Log it, Save nutrition card, evidence disclosure, and optional health-lens tabs now preserve 44px touch geometry; core-loop Playwright verifies the live sheet in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 227 plus strengthened core-loop, pantry, shopping-list, plan-week, Sides, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod/admin touch-target, standalone Today search touch-target, Today Tonight commitment touch-target, meal-queue Info-sheet touch/flatness, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W76** - Restored the Today page's meal-first hierarchy: the QuestCard food hero now renders before the nutrition doorway, while the supporting nutrition surface and nutrient-suggestion pills use a flat no-shadow treatment and its header/energy/macro/suggestion controls preserve 44px geometry; a new Today nutrition Playwright smoke covers Chromium and mobile Safari (this commit)
+- Tests: 21 -> 228 plus strengthened core-loop, pantry, shopping-list, plan-week, Sides, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod/admin touch-target, standalone Today search touch-target, Today Tonight commitment touch-target, meal-queue Info-sheet touch/flatness, Today meal-first nutrition-doorway hierarchy/touch/flatness, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
