@@ -94,7 +94,7 @@ export function MoreOptionsSheet({
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
+                className="inline-flex h-[45px] w-[45px] items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-white/70"
                 aria-label="Close"
               >
                 <X size={16} />

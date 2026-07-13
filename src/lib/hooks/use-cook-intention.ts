@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "sous-cook-intention-v1";
 
@@ -59,6 +59,65 @@ function save(intention: CookIntention | null): void {
   }
 }
 
+type Snapshot = {
+  intention: CookIntention | null;
+  mounted: boolean;
+};
+
+let storeIntention: CookIntention | null = null;
+let storeMounted = false;
+let snapshot: Snapshot = { intention: storeIntention, mounted: storeMounted };
+const SERVER_SNAPSHOT: Snapshot = { intention: null, mounted: false };
+const listeners = new Set<() => void>();
+
+function rebuildSnapshot() {
+  snapshot = { intention: storeIntention, mounted: storeMounted };
+}
+
+function emit() {
+  for (const listener of listeners) listener();
+}
+
+function setStoreIntention(next: CookIntention | null) {
+  storeIntention = next;
+  save(next);
+  rebuildSnapshot();
+  emit();
+}
+
+function onStorageEvent(e: StorageEvent) {
+  if (e.key !== STORAGE_KEY) return;
+  storeIntention = load();
+  storeMounted = true;
+  rebuildSnapshot();
+  emit();
+}
+
+function ensureHydrated() {
+  if (storeMounted || typeof window === "undefined") return;
+  storeIntention = load();
+  storeMounted = true;
+  rebuildSnapshot();
+  window.addEventListener("storage", onStorageEvent);
+  emit();
+}
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener);
+  ensureHydrated();
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+function getSnapshot(): Snapshot {
+  return snapshot;
+}
+
+function getServerSnapshot(): Snapshot {
+  return SERVER_SNAPSHOT;
+}
+
 export interface UseCookIntentionResult {
   intention: CookIntention | null;
   mounted: boolean;
@@ -74,16 +133,11 @@ export interface UseCookIntentionResult {
  * ritual that reinforces the habit loop without turning into a chore.
  */
 export function useCookIntention(): UseCookIntentionResult {
-  const [intention, setIntention] = useState<CookIntention | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Hydrate once from localStorage  -  intentional client-side state seed,
-    // so the UI can render a mount-aware fallback until storage is read.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIntention(load());
-    setMounted(true);
-  }, []);
+  const { intention, mounted } = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const commit = useCallback((dishName: string) => {
     const trimmed = dishName.trim();
@@ -93,13 +147,11 @@ export function useCookIntention(): UseCookIntentionResult {
       createdAt: new Date().toISOString(),
       targetDate: localDateKey(),
     };
-    save(next);
-    setIntention(next);
+    setStoreIntention(next);
   }, []);
 
   const clear = useCallback(() => {
-    save(null);
-    setIntention(null);
+    setStoreIntention(null);
   }, []);
 
   return { intention, mounted, commit, clear };

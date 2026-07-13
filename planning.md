@@ -658,6 +658,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `e2e/community-admin-touch.spec.ts`: `/community/admin` preserves 44px
   geometry for the admin back link plus Verify/Reject/Open review actions
   against a seeded community recipe in Chromium and mobile Safari.
+- Today Tonight commitment controls are now covered in
+  `e2e/today-tonight-chip.spec.ts`: the More Options sheet preserves 44px
+  geometry for the Tonight commit pill, expanded input, submit/cancel controls,
+  sheet close affordance, and post-commit Change action in Chromium and mobile
+  Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

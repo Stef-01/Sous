@@ -100,7 +100,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
           <button
             type="button"
             onClick={clear}
-            className="inline-flex h-8 min-w-[44px] items-center justify-center rounded-full px-2 text-[11px] font-medium text-[var(--nourish-subtext)] hover:bg-white/60 hover:text-[var(--nourish-dark)]"
+            className="inline-flex min-h-11 min-w-[44px] items-center justify-center rounded-full px-2 text-[11px] font-medium text-[var(--nourish-subtext)] hover:bg-white/60 hover:text-[var(--nourish-dark)]"
             aria-label="Clear tonight's cook"
           >
             Change
@@ -127,7 +127,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
             e.preventDefault();
             handleSubmit();
           }}
-          className="flex items-center gap-2 rounded-full border border-[var(--nourish-border)] bg-white px-3 py-2 shadow-[var(--shadow-card)]"
+          className="flex min-h-[52px] items-center gap-2 rounded-full border border-[var(--nourish-border)] bg-white px-3 py-1.5 shadow-[var(--shadow-card)]"
         >
           <Moon
             size={15}
@@ -144,14 +144,14 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
             }}
             placeholder="What's for dinner?"
             aria-label="Tonight's cook"
-            className="min-w-0 flex-1 rounded bg-transparent text-[15px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/40"
+            className="min-h-11 min-w-0 flex-1 rounded bg-transparent text-[15px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/40"
           />
           <button
             type="submit"
             disabled={!value.trim()}
             aria-label="Commit to tonight's cook"
             className={cn(
-              "inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors",
+              "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full transition-colors",
               value.trim()
                 ? "bg-[var(--nourish-green)] text-white hover:bg-[var(--nourish-dark-green)]"
                 : "bg-neutral-200 text-white cursor-not-allowed",
@@ -166,7 +166,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
               setValue("");
             }}
             aria-label="Cancel"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-neutral-100"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-neutral-100"
           >
             <X size={14} />
           </button>
@@ -181,7 +181,7 @@ export function TonightChip({ suggested, mode = "full" }: TonightChipProps) {
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.22 }}
           whileTap={{ scale: 0.98 }}
-          className="group inline-flex items-center gap-1.5 rounded-full border border-dashed border-[var(--nourish-border-strong)] bg-white/60 px-3.5 py-2 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50 hover:text-[var(--nourish-green)]"
+          className="group inline-flex min-h-11 items-center gap-1.5 rounded-full border border-dashed border-[var(--nourish-border-strong)] bg-white/60 px-3.5 py-2 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50 hover:text-[var(--nourish-green)]"
         >
           <Moon size={14} className="shrink-0" strokeWidth={2} />
           Commit to tonight&apos;s cook

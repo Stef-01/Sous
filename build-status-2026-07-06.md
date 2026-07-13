@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 74 Units Shipped
+## This Session: 75 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -77,7 +77,8 @@
 - **W71** - Hardened the viral-loop shell controls: the anonymous recipe-gift CTA and Doge app-shell back control now preserve 44px touch geometry, with a new viral-loop Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W72** - Hardened the Sides search and pairing surfaces: standalone side search, clear-search, result rows, pairing back/reroll/select/swap/expand controls, single-side cook actions, and the sticky cook CTA now preserve 44px touch geometry, with a new Sides Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W73** - Hardened the Community admin review queue: the admin back link and Verify/Reject/Open review actions now preserve 44px touch geometry, review cards use a flatter no-shadow treatment, and a new admin-queue Playwright smoke covers the seeded community recipe path in Chromium and mobile Safari (this commit)
-- Tests: 21 -> 225 plus strengthened core-loop, pantry, shopping-list, plan-week, Sides, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod/admin touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W74** - Hardened the Today Tonight commitment flow inside More Options: the commit pill, expanded input, submit/cancel controls, sheet close affordance, and post-commit Change action now preserve 44px geometry, with a new Today Tonight Playwright smoke covering Chromium and mobile Safari (this commit)
+- Tests: 21 -> 226 plus strengthened core-loop, pantry, shopping-list, plan-week, Sides, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod/admin touch-target, standalone Today search touch-target, Today Tonight commitment touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)
