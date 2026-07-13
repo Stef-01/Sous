@@ -1,6 +1,6 @@
 # Build Status - July 6, 2026
 
-## This Session: 69 Units Shipped
+## This Session: 70 Units Shipped
 
 ### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
 
@@ -72,7 +72,8 @@
 - **W66** - Hardened the Path secondary utility surfaces: Household roster/form controls, Eco dashboard toggles/baseline chips, Recap back/year/signature actions, and Pantry Scan capture/confirm/done controls now preserve 44px touch geometry, with a new secondary-utility Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W67** - Hardened the Nutrition diary/logging surface: Dobe entry, week-strip days, macro toggle, diary slot controls, servings steppers, remove actions, LogFood input/result/staple/import controls, and hydration pips now preserve 44px touch geometry, with a new Nutrition Playwright smoke covering Chromium and mobile Safari (this commit)
 - **W68** - Hardened the Eat Out surface: back navigation, featured dish cards, nutrient-goal/cuisine filters, venue drill-down, dish selection, and one-tap logging now preserve 44px touch geometry, with a new Eat Out Playwright smoke covering Chromium and mobile Safari (this commit)
-- Tests: 21 -> 202 plus strengthened core-loop, pantry, shopping-list, plan-week, Eat Out, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
+- **W69** - Hardened the Sous Everywhere surfaces: showcase back navigation, wallpaper save/setup/copy controls, live surface tiles, notify-intent controls, and gallery back/next controls now preserve 44px touch geometry, with a new Everywhere Playwright smoke covering Chromium and mobile Safari (this commit)
+- Tests: 21 -> 206 plus strengthened core-loop, pantry, shopping-list, plan-week, Eat Out, Sous Everywhere, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod touch-target, standalone Today search touch-target, and plan-open cooldown Playwright coverage, focused reel-share unit coverage, guided-only QuestCard pool coverage, pulse overlay contract coverage, and restored full-repo lint coverage
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

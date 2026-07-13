@@ -115,7 +115,7 @@ export default function GalleryPage() {
         type="button"
         onClick={() => router.push("/everywhere")}
         aria-label="Back"
-        className="absolute left-4 top-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+        className="absolute left-4 top-4 z-10 inline-flex h-[44px] w-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/35 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
       >
         <ArrowLeft size={20} />
       </button>
@@ -140,7 +140,7 @@ export default function GalleryPage() {
           type="button"
           onClick={advance}
           aria-label="Next dish"
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          className="inline-flex h-[44px] w-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm transition active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
           <ChevronRight size={18} />
         </button>

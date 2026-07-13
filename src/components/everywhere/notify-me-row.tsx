@@ -96,8 +96,8 @@ export function NotifyMeRow({
         aria-pressed={opted}
         className={
           opted
-            ? "inline-flex items-center gap-1.5 self-start rounded-full bg-[var(--nourish-green)]/10 px-3 py-1.5 text-[12px] font-semibold text-[var(--nourish-green)]"
-            : "inline-flex items-center gap-1.5 self-start rounded-full border border-[var(--nourish-green)]/30 px-3 py-1.5 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+            ? "inline-flex min-h-11 items-center gap-1.5 self-start rounded-full bg-[var(--nourish-green)]/10 px-3 text-[12px] font-semibold text-[var(--nourish-green)]"
+            : "inline-flex min-h-11 items-center gap-1.5 self-start rounded-full border border-[var(--nourish-green)]/30 px-3 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
         }
       >
         {opted ? (

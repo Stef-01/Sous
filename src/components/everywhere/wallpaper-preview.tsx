@@ -135,7 +135,7 @@ export function WallpaperPreview() {
           type="button"
           onClick={() => setShowSetup((s) => !s)}
           aria-expanded={showSetup}
-          className="flex w-full items-center justify-between gap-2 px-3.5 py-2.5 text-left"
+          className="flex min-h-11 w-full items-center justify-between gap-2 px-3.5 text-left"
         >
           <span className="text-[13px] font-semibold text-[var(--nourish-dark)]">
             Auto-set it daily (iOS)
@@ -156,7 +156,7 @@ export function WallpaperPreview() {
                 href={shortcutUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--nourish-green)]/10 py-2.5 text-[13px] font-semibold text-[var(--nourish-green)]"
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[var(--nourish-green)]/10 text-[13px] font-semibold text-[var(--nourish-green)]"
               >
                 Get the one-tap Shortcut
               </a>
@@ -187,7 +187,7 @@ export function WallpaperPreview() {
             <button
               type="button"
               onClick={copyDailyUrl}
-              className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--nourish-green)]/30 py-2.5 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-lg border border-[var(--nourish-green)]/30 text-[12px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
             >
               {copied ? (
                 <>

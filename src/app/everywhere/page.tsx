@@ -32,7 +32,7 @@ export default function EverywherePage() {
           type="button"
           onClick={() => router.push("/today")}
           aria-label="Back to Today"
-          className="-ml-1 inline-flex h-10 w-10 items-center justify-center rounded-full text-[var(--nourish-dark)] transition hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          className="-ml-1 inline-flex h-[44px] w-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--nourish-dark)] transition hover:bg-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         >
           <ArrowLeft size={20} />
         </button>

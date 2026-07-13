@@ -634,6 +634,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   preserves 44px geometry for back navigation, featured dish cards,
   nutrient-goal and cuisine filters, venue drill-down, dish selection, and
   one-tap restaurant dish logging in Chromium and mobile Safari.
+- Sous Everywhere controls are now covered in `e2e/everywhere-touch.spec.ts`:
+  `/everywhere` and `/everywhere/gallery` preserve 44px geometry for showcase
+  back navigation, wallpaper save/setup/copy controls, live surface tiles,
+  notify-intent controls, and gallery back/next controls in Chromium and mobile
+  Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).
