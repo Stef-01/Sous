@@ -85,7 +85,7 @@ export default function MyRecipesPage() {
             type="button"
             onClick={() => router.push("/path")}
             aria-label="Back to Path"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </button>
@@ -95,7 +95,7 @@ export default function MyRecipesPage() {
           <div className="ml-auto flex items-center gap-1.5">
             <Link
               href="/path/recipes/quick-add"
-              className="inline-flex items-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-3 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
               title="Describe a recipe in plain text — autogen drafts it"
             >
               <Sparkles size={11} aria-hidden /> Quick
@@ -103,14 +103,14 @@ export default function MyRecipesPage() {
             <button
               type="button"
               onClick={() => setShowImport(true)}
-              className="inline-flex items-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full border border-[var(--nourish-green)]/30 bg-white px-3 text-[11px] font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
               title="Paste JSON from ChatGPT to author a recipe instantly"
             >
               <ClipboardPaste size={11} aria-hidden /> Paste
             </button>
             <Link
               href="/path/recipes/new"
-              className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full bg-[var(--nourish-green)] px-3 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
             >
               <Plus size={12} aria-hidden /> New
             </Link>
@@ -225,13 +225,13 @@ export default function MyRecipesPage() {
                 <div className="mt-3 flex gap-2">
                   <Link
                     href={`/cook/${recipe.slug}`}
-                    className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] py-2 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+                    className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-3 text-xs font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
                   >
                     <Play size={12} aria-hidden /> Cook
                   </Link>
                   <Link
                     href={`/path/recipes/${recipe.id}/edit`}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
                   >
                     <Pencil size={12} aria-hidden /> Edit
                   </Link>
@@ -281,7 +281,7 @@ export default function MyRecipesPage() {
                         });
                       }
                     }}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 py-2 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
+                    className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-neutral-200 px-3 text-xs font-medium text-[var(--nourish-subtext)] transition hover:border-neutral-300 hover:text-[var(--nourish-dark)]"
                   >
                     <Share2 size={12} aria-hidden /> Share
                   </button>
@@ -402,7 +402,7 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
       <button
         type="button"
         onClick={onCreate}
-        className="rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
+        className="inline-flex min-h-11 items-center rounded-xl bg-[var(--nourish-green)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
       >
         Add your first recipe
       </button>

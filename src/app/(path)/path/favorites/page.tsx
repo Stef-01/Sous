@@ -29,7 +29,7 @@ export default function FavoritesPage() {
             onClick={() => router.push("/path")}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
             type="button"
             aria-label="Back to Path"
           >
@@ -84,7 +84,7 @@ export default function FavoritesPage() {
               onClick={() => router.push("/today")}
               whileTap={{ scale: 0.96 }}
               transition={{ type: "spring", stiffness: 400, damping: 15 }}
-              className="mt-1 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white cta-shadow transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+              className="mt-1 inline-flex min-h-11 items-center rounded-xl bg-[var(--nourish-green)] px-5 text-sm font-semibold text-white cta-shadow transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
               type="button"
             >
               Find something to cook →

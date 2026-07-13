@@ -46,7 +46,7 @@ export function RecipeFilterChips({ className }: { className?: string }) {
             aria-selected={isActive}
             onClick={() => setFilter(f)}
             className={cn(
-              "rounded-full px-3 py-1 text-[11px] font-semibold transition",
+              "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-[11px] font-semibold transition",
               isActive
                 ? "bg-[var(--nourish-green)] text-white"
                 : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",

@@ -609,6 +609,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `e2e/today-search.spec.ts`: the `/today/search` back control, search input,
   filter chips, active filter state, deterministic result render, and result
   source link all preserve 44px geometry in Chromium and mobile Safari.
+- Path saved-library controls are now covered in `e2e/path-library.spec.ts`:
+  `/path/recipes` back/quick/paste/new/filter/cook/edit/share controls and the
+  empty-state CTAs on `/path/favorites` and `/path/scrapbook` all preserve 44px
+  geometry in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).
