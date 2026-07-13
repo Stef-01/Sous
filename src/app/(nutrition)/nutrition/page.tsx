@@ -137,7 +137,7 @@ export default function NutritionPage() {
               setPetOpen(true);
             }}
             aria-label="Visit Dobe, your kitchen companion"
-            className="group flex items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/20 bg-white px-2.5 py-1 shadow-[var(--shadow-card)] transition hover:border-[var(--nourish-green)]/40 active:scale-95 motion-reduce:transition-none"
+            className="group flex min-h-11 items-center gap-1.5 rounded-full border border-[var(--nourish-green)]/20 bg-white px-3 shadow-[var(--shadow-card)] transition hover:border-[var(--nourish-green)]/40 active:scale-95 motion-reduce:transition-none"
           >
             <span className="pet-breathe block">
               <PixelDoberman mood="content" size={24} />
@@ -168,7 +168,7 @@ export default function NutritionPage() {
               haptic("success");
               spendFreezeOn(yesterdayKey);
             }}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-gold)]/40 bg-[var(--nourish-gold)]/10 px-3 py-2.5 text-[12.5px] font-semibold text-[var(--nourish-dark)] transition hover:bg-[var(--nourish-gold)]/15 active:scale-[0.98]"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-gold)]/40 bg-[var(--nourish-gold)]/10 px-3 text-[12.5px] font-semibold text-[var(--nourish-dark)] transition hover:bg-[var(--nourish-gold)]/15 active:scale-[0.98]"
           >
             🧊 Streak at risk — use a freeze ({freezesAvailable} banked)
           </button>
@@ -212,7 +212,7 @@ export default function NutritionPage() {
                     <Link
                       key={s.slug}
                       href={`/cook/${s.slug}`}
-                      className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11.5px] font-medium text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-green)]/5 active:scale-[0.97]"
+                      className="inline-flex min-h-11 items-center gap-1 rounded-full bg-white px-3 text-[11.5px] font-medium text-[var(--nourish-dark)] transition-colors hover:bg-[var(--nourish-green)]/5 active:scale-[0.97]"
                     >
                       {s.name}
                       <span className="font-semibold text-[var(--tier-strong)]">
@@ -240,7 +240,7 @@ export default function NutritionPage() {
             {isToday && (
               <Link
                 href="/today"
-                className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.97]"
+                className="mt-3 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 text-[12px] font-semibold text-white transition-opacity hover:opacity-90 active:scale-[0.97]"
               >
                 Find something to cook
               </Link>
@@ -259,7 +259,7 @@ export default function NutritionPage() {
               <button
                 type="button"
                 onClick={() => setShowAllSlots((v) => !v)}
-                className="text-[13px] font-medium text-[var(--nourish-green)]"
+                className="inline-flex min-h-11 items-center px-2 text-[13px] font-medium text-[var(--nourish-green)]"
               >
                 {showAllSlots ? "Collapse" : "View all"}
               </button>
@@ -305,7 +305,7 @@ export default function NutritionPage() {
           <button
             type="button"
             onClick={() => setShowImport(true)}
-            className="inline-flex min-h-[40px] items-center gap-1.5 rounded-full px-3 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)]"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full px-3 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)]"
           >
             <Sparkles size={13} aria-hidden />
             Import a day from ChatGPT

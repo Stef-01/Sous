@@ -260,14 +260,14 @@ export function LogFood({
     <section>
       <p className="sous-label mb-1.5">Log food</p>
 
-      <div className="flex items-center gap-2 rounded-xl border border-neutral-200/80 bg-white px-3 py-2">
+      <div className="flex min-h-11 items-center gap-2 rounded-xl border border-neutral-200/80 bg-white px-3">
         <Search size={15} className="shrink-0 text-[var(--nourish-subtext)]" />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Anything you ate — dish, brand, restaurant…"
           aria-label="Log food"
-          className="min-w-0 flex-1 bg-transparent text-[13px] text-[var(--nourish-dark)] outline-none placeholder:text-[var(--nourish-subtext-faint)]"
+          className="min-h-11 min-w-0 flex-1 bg-transparent text-[13px] text-[var(--nourish-dark)] outline-none placeholder:text-[var(--nourish-subtext-faint)]"
         />
         {q && (
           <button
@@ -277,7 +277,7 @@ export function LogFood({
               setAlternates([]);
             }}
             aria-label="Clear"
-            className="shrink-0 text-[var(--nourish-subtext-faint)] hover:text-[var(--nourish-dark)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--nourish-subtext-faint)] hover:text-[var(--nourish-dark)]"
           >
             <X size={14} />
           </button>
@@ -300,7 +300,7 @@ export function LogFood({
               }
             }}
             aria-label="Dictate"
-            className="shrink-0 text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]"
           >
             <Mic size={15} />
           </button>
@@ -309,7 +309,7 @@ export function LogFood({
           type="button"
           onClick={camOpen ? stopCamera : openCamera}
           aria-label="Read a label with the camera"
-          className="shrink-0 text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]"
+          className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--nourish-subtext)] hover:text-[var(--nourish-green)]"
         >
           <Camera size={15} />
         </button>
@@ -323,14 +323,14 @@ export function LogFood({
             type="button"
             onClick={stopCamera}
             aria-label="Close camera"
-            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white"
+            className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white"
           >
             <X size={15} />
           </button>
           <button
             type="button"
             onClick={readText}
-            className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-white px-4 py-2 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-md active:scale-[0.97]"
+            className="absolute bottom-2 left-1/2 inline-flex min-h-11 -translate-x-1/2 items-center rounded-full bg-white px-4 text-[12px] font-semibold text-[var(--nourish-dark)] shadow-md active:scale-[0.97]"
           >
             Read the label
           </button>
@@ -344,7 +344,7 @@ export function LogFood({
 
       {/* Barcode hit → one-tap log card. */}
       {foundProduct && (
-        <div className="mt-2 flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3 py-2.5">
+        <div className="mt-2 flex min-h-11 items-center gap-2 rounded-xl border border-neutral-200 bg-white px-3">
           <span className="min-w-0 flex-1 text-[13px] text-[var(--nourish-dark)]">
             <span className="font-semibold">{foundProduct.name}</span>
             {foundProduct.brand && (
@@ -363,7 +363,7 @@ export function LogFood({
           <button
             type="button"
             onClick={() => logBrandedFood(foundProduct)}
-            className="shrink-0 rounded-full bg-[var(--nourish-green)] px-3 py-1.5 text-[12px] font-semibold text-white active:scale-[0.97]"
+            className="min-h-11 shrink-0 rounded-full bg-[var(--nourish-green)] px-3 text-[12px] font-semibold text-white active:scale-[0.97]"
           >
             Log it
           </button>
@@ -381,7 +381,7 @@ export function LogFood({
               key={a}
               type="button"
               onClick={() => setQ(a)}
-              className="rounded-full border border-neutral-200 bg-white px-2.5 py-1 text-[11px] text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/50"
+              className="min-h-11 rounded-full border border-neutral-200 bg-white px-3 text-[11px] text-[var(--nourish-subtext)] hover:border-[var(--nourish-green)]/50"
             >
               {a}
             </button>
@@ -398,7 +398,7 @@ export function LogFood({
             for (const m of multi) diaryLogCook(m.id, m.name, 1, { date });
             setQ("");
           }}
-          className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-3.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
+          className="mt-2 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-3.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97]"
         >
           <Plus size={12} />
           Log all {multi.length}: {multi.map((m) => m.name).join(" + ")}
@@ -416,7 +416,7 @@ export function LogFood({
                   onClick={() =>
                     logLocal(m.id, m.name, lastServingsFor(diaryStore, m.id))
                   }
-                  className="flex w-full items-center gap-2.5 rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-left transition-colors hover:border-[var(--nourish-green)]/50"
+                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl border border-neutral-200/80 bg-white px-3 text-left transition-colors hover:border-[var(--nourish-green)]/50"
                 >
                   <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-[var(--nourish-dark)]">
                     {m.name}
@@ -438,7 +438,7 @@ export function LogFood({
                 <button
                   type="button"
                   onClick={() => logBrandedFood(f)}
-                  className="flex w-full items-center gap-2.5 rounded-xl border border-neutral-200/80 bg-white px-3 py-2 text-left transition-colors hover:border-[var(--nourish-green)]/50"
+                  className="flex min-h-11 w-full items-center gap-2.5 rounded-xl border border-neutral-200/80 bg-white px-3 text-left transition-colors hover:border-[var(--nourish-green)]/50"
                 >
                   <span className="min-w-0 flex-1 truncate text-[13px] text-[var(--nourish-dark)]">
                     {f.name}
@@ -487,7 +487,7 @@ export function LogFood({
               key={r.slug}
               type="button"
               onClick={() => logLocal(r.slug, r.name, r.usual)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1.5 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 text-[12px] font-medium text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 hover:bg-[var(--nourish-green)]/5"
             >
               <Plus size={12} className="text-[var(--nourish-green)]" />
               {r.name}

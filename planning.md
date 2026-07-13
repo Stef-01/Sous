@@ -625,6 +625,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   edit/remove/add controls, shared household form inputs/chips/CTAs, Eco
   baseline chips, Recap year/signature actions, and Pantry Scan
   capture/confirm/done controls in Chromium and mobile Safari.
+- Nutrition diary/logging controls are now covered in
+  `e2e/nutrition-touch.spec.ts`: `/nutrition` preserves 44px geometry for Dobe,
+  week-strip days, macro toggle, diary slot log/expand controls, entry serving
+  steppers, remove actions, LogFood input/camera/result/staple/import controls,
+  and hydration pips in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

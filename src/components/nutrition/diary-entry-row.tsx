@@ -89,7 +89,7 @@ export function DiaryEntryRow({
             type="button"
             onClick={() => step(-0.5)}
             aria-label={`Reduce ${entry.name} servings`}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
           >
             <Minus size={13} />
           </button>
@@ -97,7 +97,7 @@ export function DiaryEntryRow({
             type="button"
             onClick={() => setEditing(false)}
             aria-label="Done adjusting servings"
-            className="min-w-[40px] rounded-full bg-[var(--nourish-green)]/10 px-2 py-1 text-center text-[12px] font-semibold text-[var(--nourish-green)]"
+            className="min-h-11 min-w-11 rounded-full bg-[var(--nourish-green)]/10 px-2 text-center text-[12px] font-semibold text-[var(--nourish-green)]"
           >
             ×{entry.servings}
           </button>
@@ -105,7 +105,7 @@ export function DiaryEntryRow({
             type="button"
             onClick={() => step(0.5)}
             aria-label={`Increase ${entry.name} servings`}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/50 active:scale-95"
           >
             <Plus size={13} />
           </button>
@@ -116,7 +116,7 @@ export function DiaryEntryRow({
           onClick={() => setEditing(true)}
           aria-label={`Adjust ${entry.name} servings (currently ${entry.servings})`}
           className={cn(
-            "flex shrink-0 items-center gap-0.5 rounded-full py-1 pl-2 pr-1.5 text-[12px] font-medium transition-colors",
+            "flex min-h-11 shrink-0 items-center gap-0.5 rounded-full pl-3 pr-2 text-[12px] font-medium transition-colors",
             entry.servings !== 1
               ? "bg-neutral-100 text-[var(--nourish-dark)]"
               : "bg-neutral-100/70 text-[var(--nourish-subtext)] hover:bg-neutral-100",
@@ -143,7 +143,7 @@ export function DiaryEntryRow({
           });
         }}
         aria-label={`Remove ${entry.name}`}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-neutral-400 hover:text-[var(--nourish-dark)]"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-neutral-400 hover:text-[var(--nourish-dark)]"
       >
         <X size={15} />
       </button>

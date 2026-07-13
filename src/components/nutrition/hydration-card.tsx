@@ -32,7 +32,7 @@ export function HydrationCard() {
       </div>
 
       <div
-        className="mt-3 flex items-center gap-1"
+        className="mt-3 grid grid-cols-4 gap-2"
         role="group"
         aria-label="Water glasses"
       >
@@ -45,7 +45,7 @@ export function HydrationCard() {
               onClick={() => setGlasses(glasses === i + 1 ? i : i + 1)}
               aria-label={`Set water to ${i + 1} ${i === 0 ? "glass" : "glasses"}`}
               aria-pressed={filled}
-              className="flex flex-1 items-center justify-center rounded-lg py-1.5 transition-transform active:scale-90"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-transform active:scale-90"
             >
               <GlassWater
                 size={20}

@@ -70,7 +70,7 @@ export function WeekStrip({
             }}
             aria-label={`View ${d.toLocaleDateString(undefined, { weekday: "long" })}`}
             aria-pressed={isViewed}
-            className="flex flex-col items-center gap-1.5"
+            className="flex min-h-11 min-w-11 flex-col items-center justify-center gap-1.5"
           >
             <span
               className={cn(
@@ -240,7 +240,7 @@ export function MacrosCard({
         type="button"
         onClick={() => setMode((m) => (m === "consumed" ? "left" : "consumed"))}
         aria-label={mode === "consumed" ? "Show remaining" : "Show consumed"}
-        className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-neutral-100 text-[var(--nourish-subtext)] transition active:scale-90"
+        className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-100 text-[var(--nourish-subtext)] transition active:scale-90"
       >
         <ArrowLeftRight size={12} />
       </button>
@@ -360,7 +360,7 @@ export function DiarySlotCard({
           type="button"
           onClick={() => entries.length > 0 && setTapped((e) => !e)}
           aria-expanded={expanded}
-          className="min-w-0 flex-1 text-left"
+          className="min-h-11 min-w-0 flex-1 text-left"
         >
           <p className="text-[14px] font-semibold text-[var(--nourish-dark)]">
             {meta.label}
@@ -386,7 +386,7 @@ export function DiarySlotCard({
         <button
           type="button"
           onClick={onLog}
-          className="shrink-0 rounded-full bg-[var(--nourish-green)]/12 px-4 py-1.5 text-[13px] font-semibold text-[var(--nourish-green)] transition active:scale-[0.96]"
+          className="min-h-11 min-w-11 shrink-0 rounded-full bg-[var(--nourish-green)]/12 px-4 text-[13px] font-semibold text-[var(--nourish-green)] transition active:scale-[0.96]"
         >
           Log
         </button>
