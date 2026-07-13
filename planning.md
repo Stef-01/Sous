@@ -649,6 +649,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `/gift/[slug]` and `/doge` preserve 44px geometry for the anonymous
   recipe-gift CTA and the Doge app-shell back control in Chromium and mobile
   Safari.
+- Sides flow controls are now covered in `e2e/sides-touch.spec.ts`: `/sides`
+  and `/sides?main=...` preserve 44px geometry for standalone side search,
+  clear-search, result rows, pairing back/reroll/select/swap/expand controls,
+  single-side cook actions, and the sticky cook CTA in Chromium and mobile
+  Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

@@ -158,7 +158,7 @@ function SidesPageContent() {
             onClick={() => router.back()}
             whileTap={{ scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="flex h-[45px] w-[45px] min-w-[45px] items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             aria-label="Go back"
           >
             <ArrowLeft size={18} />
@@ -277,7 +277,7 @@ function SidesPageContent() {
             </p>
             <button
               onClick={() => router.back()}
-              className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
+              className="inline-flex min-h-11 items-center justify-center rounded-full px-4 text-xs font-medium text-[var(--nourish-green)] hover:underline"
               type="button"
             >
               Go back
@@ -297,7 +297,7 @@ function SidesPageContent() {
             </p>
             <button
               onClick={handleReroll}
-              className="text-xs font-medium text-[var(--nourish-green)] hover:underline"
+              className="inline-flex min-h-11 items-center justify-center rounded-full px-4 text-xs font-medium text-[var(--nourish-green)] hover:underline"
               type="button"
             >
               Try again

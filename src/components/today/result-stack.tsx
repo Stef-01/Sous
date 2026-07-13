@@ -449,7 +449,7 @@ export function ResultStack({
             whileTap={reducedMotion || isRerolling ? undefined : { scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
             className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-lg",
+              "flex h-[45px] w-[45px] min-w-[45px] shrink-0 items-center justify-center rounded-lg",
               "text-[var(--nourish-subtext-faint)]",
               "hover:bg-neutral-100 hover:text-[var(--nourish-green)]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
@@ -632,7 +632,7 @@ function ResultCard({
           }}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="-m-2 flex h-11 w-11 shrink-0 items-center justify-center"
+          className="-m-2 flex h-[45px] w-[45px] min-w-[45px] shrink-0 items-center justify-center"
           type="button"
           role="checkbox"
           aria-checked={selected}
@@ -741,7 +741,7 @@ function ResultCard({
           disabled={isRerolling}
           whileTap={{ scale: 0.85 }}
           transition={{ type: "spring", stiffness: 400, damping: 15 }}
-          className="flex h-11 w-11 shrink-0 items-center justify-center disabled:opacity-40"
+          className="flex h-[45px] w-[45px] min-w-[45px] shrink-0 items-center justify-center disabled:opacity-40"
           type="button"
           title="Swap this side"
           aria-label={`Swap ${side.name} for a different side`}
@@ -806,10 +806,9 @@ function ResultCard({
                   onCookThis();
                 }}
                 className={cn(
-                  "w-full rounded-xl border border-[var(--nourish-green)]/30 py-2.5 text-xs font-medium",
+                  "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-[var(--nourish-green)]/30 px-3 text-xs font-medium",
                   "text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/5",
                   "transition-colors duration-200",
-                  "flex items-center justify-center gap-2",
                 )}
                 type="button"
               >

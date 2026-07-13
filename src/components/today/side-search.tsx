@@ -72,7 +72,7 @@ export function SideSearch() {
             onClick={() => router.back()}
             whileTap={reducedMotion ? undefined : { scale: 0.88 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="flex h-[45px] w-[45px] min-w-[45px] items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             aria-label="Go back"
           >
             <ArrowLeft size={18} />
@@ -103,7 +103,7 @@ export function SideSearch() {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-2.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-neutral-100"
+              className="absolute right-1 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[var(--nourish-subtext)] hover:bg-neutral-100"
             >
               <X size={16} />
             </button>
