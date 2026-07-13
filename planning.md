@@ -630,6 +630,10 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   week-strip days, macro toggle, diary slot log/expand controls, entry serving
   steppers, remove actions, LogFood input/camera/result/staple/import controls,
   and hydration pips in Chromium and mobile Safari.
+- Eat Out controls are now covered in `e2e/eat-out-touch.spec.ts`: `/eat-out`
+  preserves 44px geometry for back navigation, featured dish cards,
+  nutrient-goal and cuisine filters, venue drill-down, dish selection, and
+  one-tap restaurant dish logging in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

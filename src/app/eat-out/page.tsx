@@ -234,7 +234,7 @@ function DishObject({
           <button
             type="button"
             onClick={onLog}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 py-2 text-[12px] font-semibold text-white transition active:scale-[0.96] motion-reduce:active:scale-100"
+            className="mt-2 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-[var(--nourish-green)] px-4 text-[12px] font-semibold text-white transition active:scale-[0.96] motion-reduce:active:scale-100"
           >
             <Plus size={13} aria-hidden /> Log this dish
           </button>
@@ -507,7 +507,7 @@ export default function EatOutPage() {
             onClick={() => router.push("/today")}
             type="button"
             aria-label="Back to Today"
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-[var(--nourish-subtext)] transition hover:bg-white hover:text-[var(--nourish-dark)] active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
           >
             <ArrowLeft size={18} />
           </button>
@@ -599,7 +599,7 @@ export default function EatOutPage() {
               onClick={() => setGoalsOnly((g) => !g)}
               aria-pressed={goalsOnly}
               className={cn(
-                "inline-flex shrink-0 items-center gap-1 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1 rounded-full border px-3 text-[12px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 goalsOnly
                   ? "border-[var(--nourish-gold)] bg-[var(--nourish-gold)]/15 text-[var(--nourish-green)]"
                   : "border-neutral-200 bg-white text-[var(--nourish-dark)]",
@@ -619,7 +619,7 @@ export default function EatOutPage() {
               onClick={() => setCuisine(c)}
               aria-pressed={cuisine === c}
               className={cn(
-                "shrink-0 rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+                "min-h-11 min-w-11 shrink-0 rounded-full border px-3 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
                 cuisine === c
                   ? "border-[var(--nourish-green)] bg-[var(--nourish-green)] text-white"
                   : "border-neutral-200 bg-white text-[var(--nourish-dark)] hover:border-[var(--nourish-green)]/50",
