@@ -106,7 +106,7 @@ export default function QuickAddPage() {
           <Link
             href="/path/recipes"
             aria-label="Back to My recipes"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </Link>
@@ -135,7 +135,7 @@ export default function QuickAddPage() {
             rows={10}
             maxLength={4000}
             className={cn(
-              "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]",
+              "min-h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)]",
               "focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20",
               "resize-none",
             )}
@@ -148,7 +148,7 @@ export default function QuickAddPage() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
         >
           <Sparkles size={14} aria-hidden />
           {draftMutation.isPending ? "Drafting…" : "Generate first draft"}

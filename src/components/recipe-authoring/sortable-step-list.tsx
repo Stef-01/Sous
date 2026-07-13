@@ -166,7 +166,7 @@ function SortableItem({
         <button
           type="button"
           aria-label={`Reorder step ${idx + 1}`}
-          className="flex h-6 w-6 shrink-0 cursor-grab items-center justify-center rounded-md text-neutral-300 hover:text-neutral-500 active:cursor-grabbing"
+          className="flex h-11 w-11 shrink-0 cursor-grab items-center justify-center rounded-md text-neutral-300 hover:bg-neutral-100 hover:text-neutral-500 active:cursor-grabbing"
           {...attributes}
           {...listeners}
         >
@@ -182,7 +182,7 @@ function SortableItem({
             onClick={() => setDetailsOpen((v) => !v)}
             aria-expanded={detailsOpen}
             aria-label={`${detailsOpen ? "Hide" : "Show"} details for step ${idx + 1}`}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
           >
             <ChevronDown
               size={14}
@@ -198,7 +198,7 @@ function SortableItem({
             type="button"
             onClick={onRemove}
             aria-label={`Remove step ${idx + 1}`}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
           >
             <Trash2 size={14} />
           </button>

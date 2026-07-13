@@ -613,6 +613,12 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   `/path/recipes` back/quick/paste/new/filter/cook/edit/share controls and the
   empty-state CTAs on `/path/favorites` and `/path/scrapbook` all preserve 44px
   geometry in Chromium and mobile Safari.
+- Path recipe-authoring controls are now covered in
+  `e2e/path-recipe-authoring.spec.ts`: `/path/recipes/new`,
+  `/path/recipes/quick-add`, and `/path/recipes/[id]/edit` preserve 44px
+  geometry for page back controls, form inputs, add/remove actions, sortable
+  step controls, save/publish CTAs, quick-add draft CTA, and edit not-found
+  recovery in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

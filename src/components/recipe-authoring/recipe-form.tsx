@@ -235,7 +235,7 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
                 appendBlankIngredient(form.getValues("ingredients")),
               )
             }
-            className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-3 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
           >
             <Plus size={11} aria-hidden /> Add
           </button>
@@ -261,7 +261,7 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
                   type="button"
                   onClick={() => ingredientsArray.remove(idx)}
                   aria-label={`Remove ingredient ${idx + 1}`}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-neutral-400 hover:bg-neutral-100 hover:text-[var(--nourish-dark)]"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -282,7 +282,7 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
             onClick={() =>
               stepsArray.replace(appendBlankStep(form.getValues("steps")))
             }
-            className="inline-flex items-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-full bg-[var(--nourish-green)]/10 px-3 text-[11px] font-semibold text-[var(--nourish-green)] hover:bg-[var(--nourish-green)]/20"
           >
             <Plus size={11} aria-hidden /> Add
           </button>
@@ -390,7 +390,7 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
       <button
         type="submit"
         disabled={form.formState.isSubmitting}
-        className="w-full rounded-2xl bg-[var(--nourish-green)] py-3 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
+        className="min-h-11 w-full rounded-2xl bg-[var(--nourish-green)] px-4 text-sm font-semibold text-white transition-transform active:scale-[0.98] disabled:opacity-60"
       >
         {mode === "new" ? "Save recipe" : "Save changes"}
       </button>
@@ -399,7 +399,7 @@ export function RecipeForm({ initialValues, mode }: RecipeFormProps) {
 }
 
 const inputClass =
-  "w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
+  "min-h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-[14px] text-[var(--nourish-dark)] placeholder:text-[var(--nourish-subtext)] focus:border-[var(--nourish-green)] focus:outline-none focus:ring-2 focus:ring-[var(--nourish-green)]/20";
 
 function FormField({
   label,

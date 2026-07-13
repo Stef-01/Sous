@@ -82,7 +82,7 @@ export default function EditRecipePage({
             type="button"
             onClick={() => router.push("/path/recipes")}
             aria-label="Back to My recipes"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-white text-[var(--nourish-dark)] transition hover:bg-neutral-50"
           >
             <ArrowLeft size={18} />
           </button>
@@ -109,7 +109,7 @@ export default function EditRecipePage({
               <button
                 type="button"
                 onClick={() => handleSubmitForReview(recipe)}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[var(--nourish-green)]/30 bg-white py-2.5 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
+                className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border border-[var(--nourish-green)]/30 bg-white px-4 text-sm font-semibold text-[var(--nourish-green)] transition hover:bg-[var(--nourish-green)]/5"
               >
                 <Send size={14} aria-hidden /> Publish to community
               </button>
@@ -160,7 +160,7 @@ function NotFoundCard({ onBack }: { onBack: () => void }) {
       <button
         type="button"
         onClick={onBack}
-        className="rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
+        className="inline-flex min-h-11 items-center rounded-xl bg-[var(--nourish-green)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-95"
       >
         Back to My recipes
       </button>
