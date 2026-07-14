@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, LayoutGroup, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  Apple,
+  BookOpenText,
+  ChartNoAxesColumnIncreasing,
+  Clock3,
+} from "lucide-react";
 import { useNavigation } from "@/lib/hooks/use-navigation";
 import { useHaptic } from "@/lib/hooks/use-haptic";
 import { cn } from "@/lib/utils/cn";
@@ -13,84 +19,66 @@ export function TabBar({
   user: { pathUnlocked: boolean; communityUnlocked: boolean } | null;
 }) {
   const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const tabs = useNavigation(user);
   const pathname = usePathname();
   const haptic = useHaptic();
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--nourish-border)] bg-white safe-area-bottom"
-      style={{
-        boxShadow:
-          "0 -1px 0 rgba(0,0,0,0.02), 0 -8px 24px -12px rgba(13,13,13,0.08)",
-      }}
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--nourish-border)] bg-white/95 backdrop-blur-xl safe-area-bottom"
       aria-label="Main navigation"
     >
-      <LayoutGroup>
-        <div className="mx-auto flex max-w-md items-center justify-around py-2">
-          {tabs.map((tab) => {
-            const isActive =
-              tab.href === "/today"
-                ? pathname === "/today"
-                : pathname.startsWith(tab.href);
+      <div className="mx-auto flex h-16 max-w-md items-stretch justify-around">
+        {tabs.map((tab) => {
+          const isActive =
+            tab.href === "/today"
+              ? pathname === "/today"
+              : pathname.startsWith(tab.href);
 
-            return (
-              <motion.div
-                key={tab.id}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                style={{ WebkitTapHighlightColor: "transparent" }}
-                onTapStart={haptic}
+          return (
+            <motion.div
+              key={tab.id}
+              className="flex flex-1"
+              whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+              transition={{ duration: 0.15 }}
+              style={{ WebkitTapHighlightColor: "transparent" }}
+              onTapStart={haptic}
+            >
+              <Link
+                href={tab.href}
+                className="relative flex min-h-11 flex-1 flex-col items-center justify-center gap-1 px-2 text-[11px] font-medium"
+                aria-current={isActive ? "page" : undefined}
+                aria-label={tab.label}
               >
-                <Link
-                  href={tab.href}
-                  className="relative flex flex-col items-center gap-0.5 rounded-xl px-4 py-1.5 text-xs font-medium"
-                  aria-current={isActive ? "page" : undefined}
-                  aria-label={tab.label}
-                >
-                  {/* Sliding active indicator */}
+                <div className="relative flex flex-col items-center gap-1">
+                  <TabIcon id={tab.id} active={isActive} />
+                  <span
+                    className={cn(
+                      "transition-colors duration-150",
+                      isActive
+                        ? "text-[var(--nourish-green)]"
+                        : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
+                    )}
+                  >
+                    {tab.label}
+                  </span>
                   {isActive && (
-                    <motion.div
+                    <motion.span
                       layoutId="tab-indicator"
-                      className="absolute inset-0 rounded-xl bg-[var(--nourish-green)]/10"
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 30,
-                        mass: 0.8,
-                      }}
+                      className="absolute -bottom-1.5 h-0.5 w-4 rounded-full bg-[var(--nourish-green)]"
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { type: "spring", stiffness: 420, damping: 34 }
+                      }
                     />
                   )}
-                  <motion.div
-                    className="relative z-10 flex flex-col items-center gap-0.5"
-                    animate={
-                      isActive ? { scale: 1, y: 0 } : { scale: 0.95, y: 0 }
-                    }
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 20,
-                    }}
-                  >
-                    <TabIcon id={tab.id} active={isActive} />
-                    <span
-                      className={cn(
-                        "transition-colors duration-200",
-                        isActive
-                          ? "text-[var(--nourish-green)]"
-                          : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
-                      )}
-                    >
-                      {tab.label}
-                    </span>
-                  </motion.div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </div>
-      </LayoutGroup>
+                </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      </div>
     </nav>
   );
 }
@@ -102,89 +90,21 @@ function TabIcon({
   id: "today" | "path" | "nutrition" | "community";
   active: boolean;
 }) {
-  const strokeColor = active
-    ? "var(--nourish-green)"
-    : "var(--nourish-subtext)";
-  const size = 22;
+  const Icon = {
+    today: Clock3,
+    path: ChartNoAxesColumnIncreasing,
+    nutrition: Apple,
+    community: BookOpenText,
+  }[id];
 
-  switch (id) {
-    case "today":
-      return (
-        <svg
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <circle cx="12" cy="12" r="10" />
-          <polyline points="12 6 12 12 16 14" />
-        </svg>
-      );
-    case "path":
-      return (
-        <svg
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M18 20V10" />
-          <path d="M12 20V4" />
-          <path d="M6 20v-6" />
-        </svg>
-      );
-    case "nutrition":
-      // Apple glyph — the universal "nutrition" signal.
-      return (
-        <svg
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path d="M12 8c0-2.5 2-4.5 4.5-4.5C19 3.5 21 5.5 21 8.5c0 5-4 10-9 12.5C7 18.5 3 13.5 3 8.5 3 5.5 5 3.5 7.5 3.5 10 3.5 12 5.5 12 8z" />
-          <path d="M12 7c0-2 1-3.5 2.5-4.5" />
-        </svg>
-      );
-    case "community":
-      // Stack-of-cards icon — signals the Content magazine surface
-      // (reels + articles + research) better than the old "users" glyph.
-      return (
-        <svg
-          width={size}
-          height={size}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={strokeColor}
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <rect x="4" y="3" width="16" height="14" rx="2.5" />
-          <path d="M8 7h8" />
-          <path d="M8 11h6" />
-          <path d="M3 20h14" />
-        </svg>
-      );
-  }
+  return (
+    <Icon
+      size={21}
+      strokeWidth={active ? 2.25 : 1.8}
+      className={
+        active ? "text-[var(--nourish-green)]" : "text-[var(--nourish-subtext)]"
+      }
+      aria-hidden="true"
+    />
+  );
 }

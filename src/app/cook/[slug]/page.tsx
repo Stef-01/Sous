@@ -804,7 +804,7 @@ export default function GuidedCookPage({
       </header>
 
       {/* Content */}
-      <main className="mx-auto max-w-md page-x py-6">
+      <main className="mx-auto max-w-md page-x pb-8 pt-0">
         <AnimatePresence mode="popLayout">
           {currentPhase === "mission" && (
             <PhaseShell key="mission">

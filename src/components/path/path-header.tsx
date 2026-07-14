@@ -44,14 +44,14 @@ export function PathHeader({
   const xpNeeded = XP_PER_LEVEL;
 
   return (
-    <header className="app-header page-x pt-3 pb-2.5">
-      <div className="mx-auto max-w-md space-y-2">
+    <header className="app-header page-x py-2">
+      <div className="mx-auto max-w-md space-y-1">
         {/* Row 1  -  title + compact stats. Stats cluster is a single pill-row
             with equal baseline so the two numbers line up even when one is
             double-digit. */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-1">
-            <h1 className="font-serif text-[17px] font-semibold leading-none text-[var(--nourish-dark)]">
+            <h1 className="font-serif text-lg font-semibold leading-none text-[var(--nourish-dark)]">
               Your Path
             </h1>
             {onReplayTutorial && (
@@ -91,7 +91,7 @@ export function PathHeader({
                 type="button"
                 whileTap={reducedMotion ? undefined : { scale: 0.94 }}
                 onClick={onOpenBadges}
-                className="flex items-center gap-1 rounded-full border border-amber-200/80 bg-gradient-to-br from-amber-50 to-orange-50 px-2 py-0.5 leading-none text-amber-950 shadow-sm ring-1 ring-amber-100/60 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                className="flex min-h-11 items-center gap-1 rounded-full px-2 leading-none text-amber-900 transition hover:bg-amber-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
                 aria-label={`View badges (${badgesUnlocked} of ${badgesTotal} unlocked)`}
                 aria-haspopup="dialog"
               >
@@ -113,7 +113,7 @@ export function PathHeader({
         {/* Row 2  -  bespoke level ring (custom SVG) + XP label. The ring's arc
             carries the XP progress, so the old flat bar + separate badge
             collapse into one crafted element. */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <LevelRing level={level} progress={xpInCurrentLevel / xpNeeded} />
           <div className="flex flex-col gap-0.5">
             <span className="sous-label text-[var(--nourish-green)]">

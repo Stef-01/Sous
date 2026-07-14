@@ -90,8 +90,8 @@ describe("globals.css ships the E1 token set", () => {
     );
   });
 
-  it("keeps card depth layered (a hairline ring + soft layers), not one heavy drop", () => {
-    // the light --shadow-card should carry the 0.5px ring layer
-    expect(css).toMatch(/--shadow-card:\s*\n?\s*0 0 0 0\.5px/);
+  it("keeps persistent cards flat while retaining raised overlay depth", () => {
+    expect(css).toContain("--shadow-card: none");
+    expect(css).toMatch(/--shadow-raised:\s*\n?\s*0 0 0 0\.5px/);
   });
 });

@@ -687,6 +687,17 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   optimized food imagery, and read-only cook payloads reopen without a network.
   APIs remain network-only except for those two network-first recipe reads;
   Chromium and mobile Safari verify the real cook CTA remains available.
+- The 2026-07-13 frontend modernization is complete. Shared surfaces use a
+  flat 6-8px geometry with elevation reserved for transient overlays; Today
+  presents food before optional guidance; the fullscreen queue separates its
+  title/actions from photography; Path has one compact kitchen workflow;
+  Community remains a first-class tab with curated preview budgets; and Cook
+  gives food more viewport while keeping Save and Start as distinct intents.
+  The detailed rationale, file map, acceptance criteria, verification evidence,
+  and follow-on constraints live in `docs/FRONTEND-MODERNIZATION-PLAN.md`.
+  Verification passed with 4,381 Vitest assertions in 387 files, 10 focused
+  Chromium/mobile-Safari modernization cases, 33 relevant Chromium flow cases,
+  full lint, production build, and mobile/desktop screenshot review.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).
@@ -705,7 +716,8 @@ each step (SOP §7 crosscheck; commit 45d0a75).
 `docs/ONBOARDING-SURVEY-DESIGN-KIT.md` measured tokens + inventory for §6.2 ·
 `docs/PET-AESTHETIC-OVERHAUL.md` (executed) ·
 `docs/STAGE-3-LEAN-CONTENT.md` Content spec ·
-`docs/INGREDIENT-NUTRITION-ARCHITECTURE-PLAN.md` registry design.
+`docs/INGREDIENT-NUTRITION-ARCHITECTURE-PLAN.md` registry design ·
+`docs/FRONTEND-MODERNIZATION-PLAN.md` (executed).
 The remaining ~50 docs are point-in-time plans: on conflict, trust THIS file
 
 - `ROADMAP.md` over any of them.

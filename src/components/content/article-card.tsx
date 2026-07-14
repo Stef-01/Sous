@@ -24,9 +24,9 @@ export function ArticleCard({ article, variant = "default" }: Props) {
     return (
       <Link
         href={`/community/article/${article.slug}`}
-        className="group flex items-center gap-3 rounded-2xl bg-white shadow-[var(--shadow-card)] p-2.5 transition duration-150 hover:shadow-[var(--shadow-raised)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+        className="group flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--nourish-border-soft)] bg-white p-2.5 transition duration-150 hover:border-[var(--nourish-border-strong)] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
       >
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[var(--nourish-cream)]">
+        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[var(--radius-sm)] bg-[var(--nourish-cream)]">
           <Image
             src={article.coverImageUrl}
             alt={article.title}
@@ -55,7 +55,7 @@ export function ArticleCard({ article, variant = "default" }: Props) {
   return (
     <Link
       href={`/community/article/${article.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-[var(--shadow-card)] transition duration-150 hover:shadow-[var(--shadow-raised)] active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+      className="group flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border-soft)] bg-white transition duration-150 hover:border-[var(--nourish-border-strong)] active:scale-[0.985] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--nourish-cream)]">
         <Image

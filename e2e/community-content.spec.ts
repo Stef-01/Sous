@@ -34,7 +34,7 @@ test.describe("Community content surface", () => {
   }) => {
     await page.goto("/community?tag=fiber", { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("heading", { name: "Content" })).toBeVisible({
+    await expect(page.getByRole("heading", { name: "Community" })).toBeVisible({
       timeout: 10000,
     });
 

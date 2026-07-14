@@ -164,12 +164,15 @@ export default function PathPage() {
 
         {/* Kitchen workflow — the 3-col grid of tiles (Pantry/Plan/Groceries),
             then the collapsed "Your kitchen" toggle row. */}
-        <div className="mx-auto max-w-md page-x pt-4">
-          <div className="grid grid-cols-3 gap-2">
+        <div className="mx-auto max-w-md page-x pt-3">
+          <nav
+            aria-label="Kitchen workflow"
+            className="grid grid-cols-3 divide-x divide-[var(--nourish-border)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white"
+          >
             {[0, 1, 2].map((i) => (
-              <div key={i} className="h-16 rounded-2xl shimmer" />
+              <div key={i} className="h-16 shimmer" />
             ))}
-          </div>
+          </nav>
           <div className="mt-3 flex min-h-[44px] items-center">
             <div className="h-4 w-28 rounded shimmer" />
           </div>
@@ -210,8 +213,11 @@ export default function PathPage() {
             loop the user actually runs — what you have (Pantry) → what you'll
             cook (Plan) → what you need (Groceries). Plan was previously
             unreachable from anywhere — the appraisal's biggest catch. */}
-        <div className="mx-auto max-w-md page-x pt-4">
-          <div className="grid grid-cols-3 gap-2">
+        <div className="mx-auto max-w-md page-x pt-3">
+          <nav
+            aria-label="Kitchen workflow"
+            className="grid grid-cols-3 divide-x divide-[var(--nourish-border)] overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white"
+          >
             {[
               { href: "/path/pantry", icon: Bookmark, label: "Pantry" },
               { href: "/path/plan/week", icon: CalendarDays, label: "Plan" },
@@ -228,35 +234,41 @@ export default function PathPage() {
               >
                 <Link
                   href={href}
-                  className="flex min-h-[64px] w-full flex-col items-center justify-center gap-1 rounded-2xl border border-neutral-200 bg-white text-[12px] font-semibold text-[var(--nourish-dark)] transition-colors hover:border-[var(--nourish-green)]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="flex min-h-[56px] w-full items-center justify-center gap-1.5 px-2 text-[12px] font-semibold text-[var(--nourish-dark)] transition-colors hover:bg-black/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]/40"
                 >
-                  <Icon size={18} className="text-[var(--nourish-green)]" />
+                  <Icon size={16} className="text-[var(--nourish-green)]" />
                   {label}
                 </Link>
               </motion.div>
             ))}
-          </div>
+          </nav>
 
           {/* First-run hero — a brand-new cook (0 completed cooks) otherwise lands
               on a barren Path: collapsed sections + an empty void, nothing inviting.
               Fill it with one card that says what this page BECOMES + drives the
               first cook (the Sous Test). Vanishes the moment they've cooked once. */}
           {completedSessions.length === 0 && (
-            <div className="mt-4 rounded-2xl border border-[var(--nourish-green)]/20 bg-gradient-to-br from-white to-[var(--nourish-green)]/[0.06] p-6 text-center shadow-[var(--shadow-card)]">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--nourish-green)]/10">
-                <ChefHat size={22} className="text-[var(--nourish-green)]" />
+            <section
+              className="py-8 text-center"
+              aria-labelledby="path-empty-title"
+            >
+              <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--nourish-green)]/8">
+                <ChefHat size={19} className="text-[var(--nourish-green)]" />
               </div>
-              <h2 className="mt-3 font-serif text-lg font-semibold text-[var(--nourish-dark)]">
-                Your kitchen journey starts here
+              <h2
+                id="path-empty-title"
+                className="mt-3 font-serif text-lg font-semibold text-[var(--nourish-dark)]"
+              >
+                Cook once. This space grows with you.
               </h2>
-              <p className="mx-auto mt-1.5 max-w-[270px] text-[13px] leading-snug text-[var(--nourish-subtext)]">
-                Cook your first meal — your skills, XP, and streak all grow on
-                this page as you go.
+              <p className="mx-auto mt-1.5 max-w-[280px] text-[13px] leading-relaxed text-[var(--nourish-subtext)]">
+                Skills, XP, and your cooking history appear here after your
+                first meal.
               </p>
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+              <div className="mt-4 flex flex-col items-center gap-1">
                 <Link
                   href="/today"
-                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-xl bg-[var(--nourish-green)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--nourish-green)] px-5 py-2.5 text-[13px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   Find something to cook
                   <ArrowRight size={15} />
@@ -264,12 +276,12 @@ export default function PathPage() {
                 <button
                   type="button"
                   onClick={replayPathTutorial}
-                  className="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[var(--nourish-green)]/20 bg-white px-4 py-2.5 text-[13px] font-semibold text-[var(--nourish-green)] transition hover:border-[var(--nourish-green)]/40 hover:bg-[var(--nourish-green)]/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                  className="inline-flex min-h-[44px] items-center justify-center px-3 text-[12px] font-medium text-[var(--nourish-subtext)] transition hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                 >
                   How Path works
                 </button>
               </div>
-            </div>
+            </section>
           )}
 
           {/* The rest of the kitchen — one tap away. (Diary became the
@@ -395,7 +407,7 @@ export default function PathPage() {
                     nodes={nodesWithStatus}
                     onNodeTap={handleNodeTap}
                   />
-                  <div className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-100 bg-white">
+                  <div className="divide-y divide-neutral-100 overflow-hidden rounded-[var(--radius-md)] border border-neutral-100 bg-white">
                     <div className="p-5">
                       <JourneySummary
                         bare

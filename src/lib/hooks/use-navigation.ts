@@ -8,11 +8,10 @@ type Tab = {
 };
 
 /**
- * Tab navigation  -  Today, Path, Nutrition, Content — always visible.
+ * Tab navigation  -  Today, Path, Nutrition, Community — always visible.
  * Nutrition (founder-directed, 2026-06-09) is the diary + insights home,
- * placed left of Content. The Content tab is a Flo-style magazine, NOT a
- * social graph — the route id stays `community` for URL/back-compat; only
- * the user-facing label is "Content".
+ * placed left of Community. Community combines cooking media, practical
+ * learning, expert guidance, and discussion in one destination.
  *
  * The `pathUnlocked` / `communityUnlocked` props are retained
  * for call-site backwards compatibility but no longer gate
@@ -37,7 +36,7 @@ export function useNavigation(
       },
       {
         id: "community",
-        label: "Content",
+        label: "Community",
         href: "/community",
         visible: true,
       },

@@ -78,7 +78,7 @@ export function TodayNutritionGlance() {
     return (
       <Link
         href="/nutrition"
-        className="flex min-h-11 items-center justify-between rounded-2xl border border-dashed border-[var(--nourish-green)]/25 bg-white/70 px-4 py-3 text-[var(--nourish-subtext)] transition hover:border-[var(--nourish-green)]/45 active:scale-[0.99]"
+        className="flex min-h-11 items-center justify-between rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white px-4 py-3 text-[var(--nourish-subtext)] transition hover:border-[var(--nourish-green)]/35 active:scale-[0.99]"
         aria-label="Track today's plate"
       >
         <span className="text-[13px]">
@@ -125,7 +125,7 @@ export function TodayNutritionGlance() {
       initial={reduce ? false : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className="overflow-hidden rounded-2xl border border-[var(--nourish-border-soft)] bg-white"
+      className="overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border-soft)] bg-white"
       aria-label="Today's nutrition"
     >
       {/* Header row → full dashboard */}

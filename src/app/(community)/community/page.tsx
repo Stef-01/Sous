@@ -31,6 +31,8 @@ import { ContentDisclaimer } from "@/components/content/content-disclaimer";
  */
 export default function CommunityPage() {
   const router = useRouter();
+  const [showAllReads, setShowAllReads] = useState(false);
+  const [showAllResearch, setShowAllResearch] = useState(false);
 
   // Tag filter (restored): article #tags deep-link to /community?tag=X. Read it
   // client-side (no Suspense constraint) and narrow the Learn list, with a clear
@@ -85,19 +87,19 @@ export default function CommunityPage() {
       tag ? sortedArticles.filter((a) => a.tags.includes(tag)) : sortedArticles,
     [tag, sortedArticles],
   );
+  const visibleArticles =
+    tag || showAllReads ? articlesToShow : articlesToShow.slice(0, 4);
+  const visibleResearch = showAllResearch
+    ? sortedResearch
+    : sortedResearch.slice(0, 2);
 
   return (
     <div className="min-h-full bg-[var(--nourish-cream)] pb-32">
-      <header className="page-x pt-6">
-        <div className="flex items-end justify-between gap-3">
-          <div>
-            <p className="sous-label text-[var(--nourish-green)]">
-              The Kitchen
-            </p>
-            <h1 className="sous-title mt-1 text-[var(--nourish-dark)]">
-              Content
-            </h1>
-          </div>
+      <header className="page-x pt-5">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="font-serif text-2xl font-semibold text-[var(--nourish-dark)]">
+            Community
+          </h1>
           <Link
             href="/community/saved"
             aria-label="Saved content"
@@ -116,7 +118,7 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <main className="space-y-8 page-x pt-5">
+      <main className="space-y-7 page-x pt-4">
         {/* Featured — the one highlighted story at the very top. */}
         {featured && <FeaturedHero article={featured} />}
 
@@ -128,7 +130,7 @@ export default function CommunityPage() {
             explainer; the pod page details it on tap). */}
         <Link
           href="/community/pod"
-          className="flex min-h-11 items-center gap-2.5 rounded-2xl border border-[var(--nourish-green)]/20 bg-white px-4 py-3 transition hover:border-[var(--nourish-green)]/40"
+          className="flex min-h-11 items-center gap-2.5 rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white px-4 py-3 transition hover:border-[var(--nourish-green)]/40"
         >
           <Users
             size={18}
@@ -193,7 +195,7 @@ export default function CommunityPage() {
             </button>
           )}
           <div className="grid grid-cols-2 gap-3">
-            {articlesToShow.map((article) => (
+            {visibleArticles.map((article) => (
               <ArticleCard key={article.id} article={article} />
             ))}
             {tag && articlesToShow.length === 0 && (
@@ -202,11 +204,29 @@ export default function CommunityPage() {
               </p>
             )}
           </div>
+          {!tag && articlesToShow.length > 4 && (
+            <button
+              type="button"
+              onClick={() => setShowAllReads((value) => !value)}
+              className="flex min-h-11 w-full items-center justify-center text-[13px] font-semibold text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            >
+              {showAllReads ? "Show fewer reads" : "Show all reads"}
+            </button>
+          )}
           <div className="space-y-2">
-            {sortedResearch.map((brief) => (
+            {visibleResearch.map((brief) => (
               <ResearchBriefCard key={brief.id} brief={brief} />
             ))}
           </div>
+          {sortedResearch.length > 2 && (
+            <button
+              type="button"
+              onClick={() => setShowAllResearch((value) => !value)}
+              className="flex min-h-11 w-full items-center justify-center text-[13px] font-semibold text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            >
+              {showAllResearch ? "Show fewer briefs" : "Show all research"}
+            </button>
+          )}
         </section>
 
         <div id="experts" className="scroll-mt-24">
@@ -272,8 +292,8 @@ function CommunitySectionNav() {
 
   return (
     <nav
-      aria-label="Content sections"
-      className="flex gap-1 rounded-full bg-black/[0.04] p-1"
+      aria-label="Community sections"
+      className="flex gap-1 rounded-[var(--radius-md)] bg-black/[0.04] p-1"
     >
       {SECTIONS.map((s) => {
         const isActive = active === s.id;
@@ -283,7 +303,7 @@ function CommunitySectionNav() {
             type="button"
             onClick={() => handleTap(s.id)}
             aria-current={isActive ? "true" : undefined}
-            className="relative flex min-h-11 flex-1 items-center justify-center rounded-full px-2 text-[13px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+            className="relative flex min-h-11 flex-1 items-center justify-center rounded-[var(--radius-sm)] px-2 text-[13px] font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
           >
             {isActive && (
               <motion.span
@@ -293,7 +313,7 @@ function CommunitySectionNav() {
                     ? { duration: 0 }
                     : { type: "spring", stiffness: 420, damping: 34 }
                 }
-                className="absolute inset-0 rounded-full bg-white ring-1 ring-black/[0.04]"
+                className="absolute inset-0 rounded-[var(--radius-sm)] bg-white ring-1 ring-black/[0.04]"
               />
             )}
             <span

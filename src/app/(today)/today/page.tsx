@@ -680,12 +680,9 @@ function TodayPageContent() {
       </HeadroomHeader>
 
       {/* Main content */}
-      <main className="page-x mx-auto max-w-md pt-4 pb-24 space-y-5">
+      <main className="page-x mx-auto max-w-md space-y-4 pb-28 pt-3">
         {/* Primary craving trigger  -  search bar */}
         <CravingSearchBar onClick={handleOpenSearch} />
-
-        {/* Phase 4 — first-run nudge pointing at the craving search (self-clearing). */}
-        <FirstRunCoachmark onPersonalize={() => setShowCoachQuiz(true)} />
 
         {/* Today's Quest  -  the meal IS the screen. It renders FIRST, right
             under the search, so the one thing the user opened the app for is
@@ -698,6 +695,8 @@ function TodayPageContent() {
           cookSessions={completedSessions}
           onDeckExhausted={() => triggerAnchorPulse("deck-exhaust")}
         />
+
+        <FirstRunCoachmark onPersonalize={() => setShowCoachQuiz(true)} />
 
         {/* Today's metrics at a glance — food + nutrient stats, with the biggest
             gap linking straight to dishes that close it (nutrient → craving).

@@ -272,7 +272,7 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     });
     await expect(page.locator('[data-visual-mode="true"]')).toBeVisible();
     await expect(
-      page.getByRole("button", { name: /Go to step 2|Next/i }),
+      page.getByRole("button", { name: /^(Go to step 2|Next)$/i }),
     ).toBeVisible();
 
     await page.keyboard.press("ArrowRight");
@@ -757,15 +757,13 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     await expect(closeInfo).toBeFocused({ timeout: 5000 });
     await expectTouchTarget(closeInfo);
 
-    const logMeal = infoDialog.getByRole("button", {
-      name: /Log .* to today's diary/i,
+    // The sheet is available even when a dish lacks enough composed nutrition
+    // for diary/save actions. Its evidence doorway is the stable lower action.
+    const evidence = infoDialog.getByRole("button", {
+      name: /Evidence & full nutrition/i,
     });
-    const saveNutrition = infoDialog.getByRole("button", {
-      name: /Save nutrition card/i,
-    });
-    await logMeal.scrollIntoViewIfNeeded();
-    await expectTouchTarget(logMeal);
-    await expectTouchTarget(saveNutrition);
+    await evidence.scrollIntoViewIfNeeded();
+    await expectTouchTarget(evidence);
 
     await page.keyboard.press("Shift+Tab");
     await expect(

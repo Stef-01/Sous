@@ -65,7 +65,7 @@ export function PlanCookChip({ totalMinutes }: PlanCookChipProps) {
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.22 }}
-        className="flex items-center gap-2 rounded-xl border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-3 py-2"
+        className="flex items-center gap-2 border-y border-[var(--nourish-green)]/15 bg-[var(--nourish-green)]/[0.04] px-1 py-2"
       >
         <Clock
           size={14}
@@ -105,7 +105,7 @@ export function PlanCookChip({ totalMinutes }: PlanCookChipProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.2 }}
-          className="flex items-center gap-2 rounded-xl border border-[var(--nourish-border-strong)] bg-white px-3 py-2"
+          className="flex items-center gap-2 border-y border-[var(--nourish-border)] bg-white px-1 py-2"
         >
           <Clock
             size={14}
@@ -148,7 +148,7 @@ export function PlanCookChip({ totalMinutes }: PlanCookChipProps) {
           exit={{ opacity: 0, y: -4 }}
           transition={{ duration: 0.22 }}
           whileTap={{ scale: 0.98 }}
-          className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-dashed border-[var(--nourish-border-strong)] bg-white/60 px-4 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:border-[var(--nourish-green)]/50 hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+          className="flex min-h-11 w-full items-center gap-2 border-y border-[var(--nourish-border-soft)] px-1 text-[13px] font-medium text-[var(--nourish-subtext)] transition-colors hover:text-[var(--nourish-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         >
           <Clock size={14} className="shrink-0" strokeWidth={2} />
           When do you want to eat?

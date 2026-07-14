@@ -4,14 +4,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import { premiumEntrance } from "@/lib/motion/tokens";
-import {
-  X,
-  Bookmark,
-  UtensilsCrossed,
-  Layers,
-  ChefHat,
-  Info,
-} from "lucide-react";
+import { X, Bookmark, UtensilsCrossed, ChefHat, Info } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useMealPlanWeek } from "@/lib/hooks/use-meal-plan-week";
 import {
@@ -744,14 +737,8 @@ function MealQueuePreview({
             aria-hidden
             className="absolute -inset-x-1 -bottom-1.5 top-2 -z-10 rounded-[var(--radius-lg)] border border-neutral-200 bg-neutral-100 [transform:rotate(-1.5deg)]"
           />
-          <div className="relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] bg-white shadow-[var(--shadow-card)]">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-lg)] bg-white">
             <DishImage dish={dish} priority fit="cover" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-3">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/92 px-3.5 py-1.5 text-[12px] font-semibold text-neutral-900 shadow-sm transition-colors group-hover:bg-white">
-                <Layers size={14} strokeWidth={2} aria-hidden />
-                Browse meals
-              </span>
-            </div>
           </div>
         </div>
 
@@ -1064,29 +1051,28 @@ function MealSwipeQueueOverlay({
 
       {activeDish && (
         <div
-          className="absolute inset-x-0 bottom-0 z-40 bg-[#080907]/96 px-4 pt-1.5"
+          className="relative z-40 shrink-0 bg-[#080907] px-4 pt-2"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)",
           }}
         >
-          {/* Floating Info button — anchored just above the recipe name, over the
-              photo, so it can never be occluded by this bar. Reveals the health
-              sheet. Hidden while the sheet is open. */}
-          {!healthPanel.isOpen && (
-            <button
-              type="button"
-              onClick={healthPanel.open}
-              aria-label={`Show info for ${activeDish.dishName}`}
-              className="absolute -top-[50px] right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-md transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-            >
-              <Info size={17} strokeWidth={2.2} />
-            </button>
-          )}
-
+          {/* Meal context and utilities stay below the image. */}
           <div className="mx-auto mb-2 max-w-[430px] space-y-0.5">
-            <h3 className="line-clamp-1 font-serif text-[23px] leading-none text-white">
-              {activeDish.dishName}
-            </h3>
+            <div className="relative">
+              <h3 className="line-clamp-1 min-w-0 pr-12 font-serif text-[23px] leading-none text-white">
+                {activeDish.dishName}
+              </h3>
+              {!healthPanel.isOpen && (
+                <button
+                  type="button"
+                  onClick={healthPanel.open}
+                  aria-label={`Show info for ${activeDish.dishName}`}
+                  className="absolute -right-1 -top-2 flex h-11 w-11 items-center justify-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                >
+                  <Info size={18} strokeWidth={2.1} />
+                </button>
+              )}
+            </div>
             <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-white/56">
               {activeDish.eatOut ? (
                 <>

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { UtensilsCrossed } from "lucide-react";
 import type { CookSessionRecord } from "@/lib/hooks/use-cook-sessions";
 import { FRIEND_COOKS, type FriendCook } from "@/data/friend-cooks";
@@ -18,20 +18,6 @@ import { buildRecipeGiftPath } from "@/lib/share/recipe-gift";
  *  it" without overclaiming, and keeps the star row in the gift page
  *  honest rather than absent. User's own cooks reuse their real rating. */
 const DEFAULT_FRIEND_STARS = 4;
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "spring" as const,
-      stiffness: 300,
-      damping: 26,
-      delay: i * 0.05,
-    },
-  }),
-};
 
 const accentRing: Record<NonNullable<FriendCook["accent"]>, string> = {
   rose: "ring-rose-300/80",
@@ -64,18 +50,14 @@ function initialFor(name: string): string {
  * constructed `/food_images/<slug>.png` path that may not exist (combined
  * plates, dishes without art); without an onError guard those rendered as a
  * broken <img> with the alt text spilling outside the card. On missing src OR
- * load failure we drop to a soft gradient + glyph instead.
+ * load failure we drop to a quiet neutral surface + glyph instead.
  */
 function FriendCookImage({ src, alt }: { src?: string; alt: string }) {
   const [errored, setErrored] = useState(false);
   if (!src || errored) {
     return (
       <div
-        className="flex h-full w-full items-center justify-center"
-        style={{
-          background:
-            "linear-gradient(135deg, var(--nourish-input-bg), var(--nourish-cream))",
-        }}
+        className="flex h-full w-full items-center justify-center bg-[var(--nourish-input-bg)]"
         aria-hidden
       >
         <UtensilsCrossed
@@ -119,9 +101,8 @@ export function FriendsStrip({
    *  surface. */
   onDishSelect?: (dishName: string) => void;
 }) {
-  const reducedMotion = useReducedMotion();
-  void reducedMotion;
   const router = useRouter();
+  const prefersReducedMotion = useReducedMotion();
   const { lastSeenAt } = useFriendsLastSeen();
   const entries = useMemo<EnrichedEntry[]>(() => {
     const mine: EnrichedEntry[] = sessions
@@ -150,9 +131,6 @@ export function FriendsStrip({
     }));
     return [...mine, ...friends];
   }, [sessions]);
-
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
 
   // "New since last visit" for friends' tiles. Computed from a mount-time
   // snapshot of Date.now() so render stays pure per React's new purity rules.
@@ -196,7 +174,7 @@ export function FriendsStrip({
   };
 
   return (
-    <section ref={ref} className="space-y-2" aria-label="Friends' recent cooks">
+    <section className="space-y-2" aria-label="Friends' recent cooks">
       <div className="flex items-baseline justify-between px-1">
         <h2 className="sous-label">Community this week</h2>
         <span className="text-[10px] text-[var(--nourish-subtext-faint)]">
@@ -205,7 +183,7 @@ export function FriendsStrip({
       </div>
 
       <div className="flex gap-3 overflow-x-auto pb-3 -mx-[var(--gutter)] px-[var(--gutter)] scrollbar-hide snap-x snap-mandatory">
-        {entries.map((entry, idx) => {
+        {entries.map((entry) => {
           // Only friend tiles can be "new since last visit"  -  the user's
           // own cooks are never surprising to them. Pre-computed in `newFlags`
           // above so render stays pure.
@@ -214,13 +192,9 @@ export function FriendsStrip({
             <motion.button
               key={entry.id}
               type="button"
-              custom={idx}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              variants={cardVariants}
-              whileTap={{ scale: 0.97 }}
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
               onClick={() => handleTap(entry)}
-              className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-neutral-100/80 bg-white text-left transition-colors hover:border-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="group relative flex shrink-0 snap-start flex-col overflow-hidden rounded-[var(--radius-md)] border border-neutral-100/80 bg-white text-left transition-colors hover:border-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
               style={{ width: 168 }}
               aria-label={
                 entry.isSelf

@@ -105,7 +105,7 @@ export function FullscreenSwipeCard({
 
   return (
     <motion.div
-      className="absolute inset-x-0 bottom-0 top-0 mx-auto w-full max-w-[430px] px-0 pb-[100px] pt-[68px]"
+      className="absolute inset-x-0 bottom-0 top-0 mx-auto w-full max-w-[430px] px-0 pb-1 pt-[56px]"
       style={{
         x: isTop ? x : 0,
         rotate: isTop ? (reducedMotion ? 0 : rotate) : peekRotate,
@@ -151,7 +151,7 @@ export function FullscreenSwipeCard({
       <article
         data-testid="meal-swipe-card"
         className={cn(
-          "relative h-full overflow-hidden rounded-[1.375rem] bg-white",
+          "relative h-full overflow-hidden rounded-[var(--radius-lg)] bg-white",
           isTop && "cursor-grab active:cursor-grabbing",
         )}
         aria-label={`${dish.dishName}, ${dish.cuisineFamily}`}

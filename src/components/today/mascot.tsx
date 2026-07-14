@@ -237,12 +237,12 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         onClick={onClick}
         whileTap={{ scale: 0.98 }}
         transition={SPRING.snappy}
-        className="group flex min-h-[64px] w-full items-center gap-3 rounded-2xl bg-white px-3 py-2 text-left shadow-[var(--shadow-card)] transition duration-200
+        className="group flex min-h-[52px] w-full items-center gap-3 rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white px-2.5 py-1.5 text-left transition duration-150
                    hover:bg-white active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
         type="button"
         aria-label="Search what you're craving"
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[var(--nourish-green)]/10">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--nourish-green)]/8">
           <Search size={16} className="text-[var(--nourish-green)]" />
         </div>
         <span className="min-w-0 flex-1 text-[15px] font-medium text-[var(--nourish-subtext)] transition-colors group-hover:text-[var(--nourish-dark)]">
@@ -250,7 +250,7 @@ export function CravingSearchBar({ onClick }: { onClick: () => void }) {
         </span>
         <span
           aria-hidden="true"
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-colors group-hover:bg-[var(--nourish-dark-green)]"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)] text-white transition-colors group-hover:bg-[var(--nourish-dark-green)]"
         >
           <ArrowRight size={18} strokeWidth={2.4} />
         </span>

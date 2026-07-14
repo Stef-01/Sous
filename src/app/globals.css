@@ -27,7 +27,7 @@
   --tier-limited: #5b6470;
   --tier-limited-bg: #eef1f4;
   --nourish-warm: #e8833a; /* unified flame/streak accent (was amber-500/orange-500 drift) */
-  --nourish-cream: #fafaf8;
+  --nourish-cream: #f7f7f5;
   --nourish-dark: #0d0d0d;
   --nourish-input-bg: #f0ede8;
   /* Secondary text. Darkened from #6b6b6b (≈4.5:1, borderline on #fff) to
@@ -54,17 +54,13 @@
      low-opacity (2–8%) layers, never one heavy drop; the ring lets focal
      surfaces drop their 1px border (E2 sweep). */
   --ring-hairline: 0 0 0 0.5px rgba(13, 13, 13, 0.08);
-  --shadow-card:
-    0 0 0 0.5px rgba(13, 13, 13, 0.04), 0 1px 2px rgba(13, 13, 13, 0.04),
-    0 2px 6px -1px rgba(13, 13, 13, 0.05);
+  --shadow-card: none;
   --shadow-raised:
     0 0 0 0.5px rgba(13, 13, 13, 0.05), 0 4px 12px -2px rgba(13, 13, 13, 0.08),
     0 2px 4px -1px rgba(13, 13, 13, 0.04);
-  --shadow-cta:
-    0 2px 8px -1px rgba(45, 90, 61, 0.22), 0 1px 2px rgba(45, 90, 61, 0.18);
-  --shadow-cta-hover:
-    0 4px 14px -2px rgba(45, 90, 61, 0.32), 0 2px 4px rgba(45, 90, 61, 0.18);
-  --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.04);
+  --shadow-cta: none;
+  --shadow-cta-hover: none;
+  --shadow-header: none;
 
   /* Readability tokens — senior-friendly baseline.
      Body is the floor for regular UI text; cook is the floor for anything
@@ -125,15 +121,15 @@
   --space-10: 40px;
   /* semantic intent */
   --gutter: var(--space-5); /* THE page rail — 20px, matches references */
-  --section-gap: var(--space-8); /* between major sections — 32px */
+  --section-gap: 28px;
   --card-pad: var(--space-4); /* inside a card — 16px */
   --row-gap: var(--space-3); /* between list rows — 12px */
   --float-inset: var(--space-4); /* floating UI ↔ edge/nav — 16px min */
 
   /* ── Radius family — collapse ad-hoc rounded-[22px]/[26px]/2xl/xl onto four. */
-  --radius-sm: 12px; /* thumbnails, chip containers */
-  --radius-md: 16px; /* standard cards, inputs */
-  --radius-lg: 22px; /* hero / feature cards, sheet inner */
+  --radius-sm: 6px; /* thumbnails, compact controls */
+  --radius-md: 8px; /* standard cards, inputs */
+  --radius-lg: 8px; /* feature cards */
   --radius-pill: 999px;
 
   /* ── Data-viz ramp — the ONLY colours allowed in rings/bars/scores, mirroring
@@ -221,17 +217,13 @@
   /* Dark elevation = a lighter surface (white hairline ring), not a heavier
      drop. Black layers softened from the old 0.4/0.5 ("heavy = cheap"). */
   --ring-hairline: 0 0 0 0.5px rgba(255, 255, 255, 0.1);
-  --shadow-card:
-    0 0 0 0.5px rgba(255, 255, 255, 0.06), 0 1px 2px rgba(0, 0, 0, 0.22),
-    0 2px 6px -1px rgba(0, 0, 0, 0.26);
+  --shadow-card: none;
   --shadow-raised:
     0 0 0 0.5px rgba(255, 255, 255, 0.08), 0 6px 16px -2px rgba(0, 0, 0, 0.34),
     0 2px 4px -1px rgba(0, 0, 0, 0.26);
-  --shadow-cta:
-    0 2px 8px -1px rgba(74, 140, 92, 0.35), 0 1px 2px rgba(74, 140, 92, 0.22);
-  --shadow-cta-hover:
-    0 4px 14px -2px rgba(74, 140, 92, 0.45), 0 2px 4px rgba(74, 140, 92, 0.22);
-  --shadow-header: 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-cta: none;
+  --shadow-cta-hover: none;
+  --shadow-header: none;
 
   --surface-elevated: #1f1d1c;
   --surface-pressed: rgba(255, 255, 255, 0.06);
@@ -372,7 +364,7 @@
   z-index: 100;
   background: #ffffff;
   border-bottom: 1px solid var(--nourish-border-soft);
-  box-shadow: var(--shadow-header);
+  box-shadow: none;
   isolation: isolate;
   padding-top: env(safe-area-inset-top, 0px);
 }
@@ -381,14 +373,14 @@
 .surface-card {
   background: #ffffff;
   border: 1px solid var(--nourish-border-soft);
-  border-radius: 1rem;
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-md);
+  box-shadow: none;
 }
 
 .surface-raised {
   background: #ffffff;
   border: 1px solid var(--nourish-border-soft);
-  border-radius: 1rem;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-raised);
 }
 

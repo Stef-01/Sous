@@ -64,7 +64,7 @@ export function MissionScreen({
     <motion.div
       initial={false}
       animate={{ opacity: 1 }}
-      className="flex min-h-[calc(100dvh-160px)] flex-col gap-3"
+      className="flex min-h-[calc(100dvh-160px)] flex-col gap-3.5"
     >
       {/* Food-first hero: full-width in the mobile rail with no permanent
           controls over the meal. */}
@@ -77,7 +77,7 @@ export function MissionScreen({
             : { type: "spring", stiffness: 260, damping: 25 }
         }
         data-testid="cook-mission-hero"
-        className="relative left-1/2 h-[min(40dvh,340px)] w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-none bg-[var(--nourish-dark)]"
+        className="relative left-1/2 h-[min(44dvh,370px)] w-screen max-w-md -translate-x-1/2 overflow-hidden rounded-none bg-[var(--nourish-dark)]"
       >
         {heroImageUrl && !imgError ? (
           <Image
@@ -92,10 +92,7 @@ export function MissionScreen({
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center gap-3"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--nourish-green) 0%, var(--nourish-light-green) 40%, #a8d8b9 100%)",
-            }}
+            style={{ background: "var(--nourish-green)" }}
           >
             <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/20">
               <UtensilsCrossed
@@ -168,7 +165,7 @@ export function MissionScreen({
                         delay: 0.15 + idx * 0.05,
                       }
                 }
-                className="rounded-full border border-[var(--nourish-green)]/20 bg-[var(--nourish-green)]/[0.06] px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)] capitalize"
+                className="text-[12px] font-medium capitalize text-[var(--nourish-subtext)] after:ml-1.5 after:text-[var(--nourish-border-strong)] after:content-['·'] last:after:hidden"
               >
                 {flavor}
               </motion.span>
@@ -192,7 +189,7 @@ export function MissionScreen({
                         delay: 0.15 + Math.min(flavorProfile.length, 3) * 0.05,
                       }
                 }
-                className="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-[11px] font-medium text-[var(--nourish-subtext)]"
+                className="text-[12px] font-medium text-[var(--nourish-subtext)]"
               >
                 {formatMissionDuration(totalTime)}
               </motion.span>
@@ -236,7 +233,7 @@ export function MissionScreen({
             onClick={toggleSaved}
             aria-label={isSaved ? "Remove from saved recipes" : "Save recipe"}
             aria-pressed={isSaved}
-            className="flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
+            className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--nourish-border-strong)] bg-white text-[var(--nourish-dark)] transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 motion-reduce:active:scale-100"
           >
             <Bookmark
               size={18}
@@ -254,7 +251,7 @@ export function MissionScreen({
           whileTap={reducedMotion ? undefined : { scale: 0.98 }}
           onClick={onStart}
           className={cn(
-            "h-12 rounded-xl text-sm font-semibold text-white",
+            "h-12 rounded-[var(--radius-md)] text-sm font-semibold text-white",
             "bg-[var(--nourish-green)] hover:bg-[var(--nourish-dark-green)]",
             "transition-colors duration-200",
           )}

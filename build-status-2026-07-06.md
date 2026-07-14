@@ -1,8 +1,8 @@
 # Build Status - July 6, 2026
 
-## This Session: 80 Units Shipped
+## This Session: Menu-app W1-W80 Shipped
 
-### Menu-app (W1-W20 shipped, autonomous track complete + founder preflight + queue polish)
+### Menu-app (W1-W80 shipped, autonomous track complete + founder preflight + visual modernization)
 
 - **W1** - Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** - Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -83,7 +83,8 @@
 - **W77** - Flattened the persistent Today header and hardened its utility interactions: the header now uses a quiet separator instead of elevation, the profile/settings and animated streak controls preserve 44px geometry, and the rest-day menu item plus confirm/cancel actions stay finger-sized through popover motion; core-loop Playwright covers Chromium and mobile Safari (this commit)
 - **W78** - Made the Today table picker reactive and physically reliable: every mounted `useTonightTable` consumer now reads one same-tab reactive store with cross-tab storage synchronization, so changing tonight's diners immediately reaches recommendation consumers without a reload; the picker is flat, shadow-free, and its compact member pills preserve 44px geometry, with focused unit and Chromium/mobile-Safari Playwright coverage (this commit)
 - **W79** - Made previously visited guided cooks reopenable on flaky or absent networks: the versioned service worker now caches exact successful single/combined cook documents, optimized food images, and only the two read-only cook-data queries with network-first semantics; single catalog cooks additionally reuse the same bundled static-payload formatter as the server when tRPC is unreachable. Chromium and mobile-Safari Playwright verify both single and combined Mission screens retain their food-led UI and primary action fully offline (this commit)
-- Tests: 21 -> 232 plus strengthened core-loop, pantry, shopping-list, plan-week, Sides, Eat Out, Sous Everywhere, Games Arcade, viral-loop shell, Nutrition diary/logging, Path saved-library, Path recipe-authoring, Path secondary-utility, onboarding happy/macro/dismissal/non-default numeric, volunteered-pulse, profile-sheet touch-target, community home/detail/reels/pod/admin touch-target, standalone Today search touch-target, Today Tonight commitment touch-target, meal-queue Info-sheet touch/flatness, Today meal-first nutrition-doorway hierarchy/touch/flatness, Today header/streak flatness and touch, Today table-picker synchronization/flatness/touch, offline single/combined cook recovery, and plan-open cooldown Playwright coverage, focused static-cook payload, reel-share, guided-only QuestCard pool, pulse overlay contract, and restored full-repo lint coverage
+- **W80** - Modernized the core frontend around a flat, food-first visual system: shared cards/navigation now use restrained 6-8px geometry and no persistent elevation; Today surfaces the meal before optional personalization; the fullscreen meal queue keeps titles and actions outside photography; Path uses one compact kitchen workflow; Community remains a first-class tab and curated content hub; and guided Cook gives food more viewport while simplifying metadata, planning, and accessibility controls. Static design contracts, Chromium/mobile-Safari modernization journeys, relevant core-flow regression coverage, mobile/desktop screenshot review, lint, and production build verify the slice (this commit)
+- Tests: 4,381 assertions across 387 Vitest files plus 10 modernization Playwright cases across Chromium/mobile Safari and 33 relevant flow cases in Chromium; full lint and production build pass
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

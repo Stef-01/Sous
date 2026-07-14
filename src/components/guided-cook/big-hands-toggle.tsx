@@ -15,7 +15,7 @@ export function BigHandsToggle() {
   if (!mounted) return null;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-start">
       <button
         type="button"
         onClick={toggle}
@@ -23,11 +23,11 @@ export function BigHandsToggle() {
         aria-label="Bigger controls — larger text and buttons for this cook"
         title="Bigger controls — larger text and buttons for this cook"
         className={cn(
-          "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-4 text-xs font-medium transition-colors",
+          "inline-flex min-h-[44px] items-center gap-1.5 px-1 text-xs font-medium transition-colors",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           enabled
-            ? "border-[var(--nourish-green)]/40 bg-[var(--nourish-green)]/8 text-[var(--nourish-green)]"
-            : "border-neutral-200 text-[var(--nourish-subtext)] hover:border-neutral-300",
+            ? "text-[var(--nourish-green)]"
+            : "text-[var(--nourish-subtext)] hover:text-[var(--nourish-dark)]",
         )}
       >
         <Hand size={13} strokeWidth={2} />

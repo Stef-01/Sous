@@ -24,7 +24,7 @@ export function TodayContentCard() {
     >
       <Link
         href={`/community/article/${article.slug}`}
-        className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-[var(--shadow-card)] transition hover:bg-neutral-50 active:scale-[0.99]"
+        className="flex items-center gap-3 rounded-[var(--radius-md)] border border-[var(--nourish-border-soft)] bg-white px-4 py-3 transition hover:border-[var(--nourish-border)] hover:bg-neutral-50 active:scale-[0.99]"
         aria-label={`Read: ${article.title}`}
       >
         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--nourish-green)]/10 text-[var(--nourish-green)]">

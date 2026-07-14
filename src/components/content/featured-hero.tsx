@@ -13,7 +13,7 @@ export function FeaturedHero({ article }: { article: Article }) {
     <Link
       href={`/community/article/${article.slug}`}
       aria-label={`Featured: ${article.title}`}
-      className="group relative block overflow-hidden rounded-[var(--radius-lg)] shadow-[var(--shadow-card)]"
+      className="group relative block overflow-hidden rounded-[var(--radius-lg)]"
     >
       <div className="relative aspect-[16/10] w-full bg-[var(--nourish-cream)]">
         <Image
