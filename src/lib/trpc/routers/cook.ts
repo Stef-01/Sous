@@ -8,6 +8,7 @@ import {
   buildSequencerDish,
   sequenceDishes,
 } from "@/lib/engine/cook-sequencer";
+import { formatStaticCookPayload } from "@/lib/cook/static-cook-payload";
 import { hasDatabaseUrl } from "@/lib/db/connection";
 
 export const cookRouter = router({
@@ -93,29 +94,7 @@ export const cookRouter = router({
         return { dish: null, steps: [], ingredients: [] };
       }
 
-      return {
-        dish: {
-          id: staticData.slug,
-          name: staticData.name,
-          slug: staticData.slug,
-          description: staticData.description,
-          cuisineFamily: staticData.cuisineFamily,
-          prepTimeMinutes: staticData.prepTimeMinutes,
-          cookTimeMinutes: staticData.cookTimeMinutes,
-          skillLevel: staticData.skillLevel,
-          heroImageUrl: staticData.heroImageUrl,
-          flavorProfile: staticData.flavorProfile,
-          temperature: staticData.temperature,
-        },
-        steps: staticData.steps.map((s, idx) => ({
-          id: `${staticData.slug}-step-${idx + 1}`,
-          ...s,
-          // W44: seed catalog has no authored pointers; user
-          // recipes carry their own via the adapter.
-          attentionPointers: null,
-        })),
-        ingredients: staticData.ingredients,
-      };
+      return formatStaticCookPayload(staticData);
     }),
 
   /**

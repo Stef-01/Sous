@@ -57,6 +57,7 @@ import {
   getStaticCookData,
   getStaticMealCookData,
 } from "@/data/guided-cook-steps";
+import { formatStaticCookPayload } from "@/lib/cook/static-cook-payload";
 import { getSkillNodesForDish, getSkillNode } from "@/data/skill-tree";
 import type { SkillProgressEntry } from "@/components/guided-cook/win-screen";
 import { cn } from "@/lib/utils/cn";
@@ -195,22 +196,37 @@ export default function GuidedCookPage({
   // PREFER the draft so it never resolves to a catalog recipe of the same name.
   const isCustomRoute = slug.startsWith("custom-");
   const draftSlug = isCustomRoute ? slug.replace(/^custom-/, "") : slug;
+  const staticCatalogData = useMemo(
+    () => getStaticCookData(slug) ?? getStaticMealCookData(slug),
+    [slug],
+  );
   const data = useMemo(() => {
     const fromDrafts = findUserRecipeBySlug(userDrafts, draftSlug);
     if (isCustomRoute && fromDrafts) return adaptUserRecipeForCook(fromDrafts);
     if (tRPCData?.dish) return tRPCData;
     if (fromDrafts) return adaptUserRecipeForCook(fromDrafts);
+    if (error && staticCatalogData) {
+      return formatStaticCookPayload(staticCatalogData);
+    }
     return tRPCData;
-  }, [tRPCData, userDrafts, draftSlug, isCustomRoute]);
+  }, [
+    tRPCData,
+    userDrafts,
+    draftSlug,
+    isCustomRoute,
+    error,
+    staticCatalogData,
+  ]);
 
   // Cuisine family for this dish (side, meal, or user recipe).
   const cuisine = useMemo(() => {
     const userRecipe = findUserRecipeBySlug(userDrafts, draftSlug);
     if (isCustomRoute && userRecipe) return userRecipe.cuisineFamily;
-    const staticData = getStaticCookData(slug) ?? getStaticMealCookData(slug);
-    if (staticData?.cuisineFamily) return staticData.cuisineFamily;
+    if (staticCatalogData?.cuisineFamily) {
+      return staticCatalogData.cuisineFamily;
+    }
     return userRecipe?.cuisineFamily ?? "unknown";
-  }, [slug, draftSlug, isCustomRoute, userDrafts]);
+  }, [draftSlug, isCustomRoute, userDrafts, staticCatalogData]);
 
   // Start session on mount (once data is available). Y2 W6:
   // also attach the engine score breakdown stashed by the
@@ -696,7 +712,7 @@ export default function GuidedCookPage({
     );
   }
 
-  if (error || !data?.dish) {
+  if (!data?.dish) {
     return (
       <DeadEndShell
         title={

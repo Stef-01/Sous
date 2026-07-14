@@ -682,6 +682,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   consumer immediately and synchronize across tabs. `e2e/today-table.spec.ts`
   verifies persistence, live count updates, the flat no-shadow selector, and
   44px member controls in Chromium and mobile Safari.
+- Offline guided-cook recovery is now covered in `e2e/offline-cook.spec.ts`:
+  after one controlled online visit, exact single and combined Mission routes,
+  optimized food imagery, and read-only cook payloads reopen without a network.
+  APIs remain network-only except for those two network-first recipe reads;
+  Chromium and mobile Safari verify the real cook CTA remains available.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

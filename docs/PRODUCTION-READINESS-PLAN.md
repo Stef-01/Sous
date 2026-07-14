@@ -367,6 +367,10 @@ ready to open.
 
 - 🟢 **PWA**: manifest, installable, offline shell for the cook flow
   (works on a phone in a kitchen with flaky wifi).
+  Visited single and combined Mission routes now cache their exact document,
+  optimized food imagery, and read-only cook payload with network-first
+  refresh; `e2e/offline-cook.spec.ts` verifies offline reopen in Chromium and
+  mobile Safari (W79).
 - 🟢 **Accessibility**: keyboard nav + screen-reader pass (queued in
   `FOUNDER-UNLOCK-RUNBOOK.md` "NOT in runbook"); reduced-motion gate
   (`docs/REDUCED-MOTION-GATE-TODO.md`); contrast/tap-target audit.
