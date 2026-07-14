@@ -53,7 +53,7 @@ export function WhosAtTable() {
       initial={reducedMotion ? false : { opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
-      className="space-y-2 rounded-2xl bg-white p-3 shadow-[var(--shadow-card)]"
+      className="space-y-2 rounded-2xl border border-[var(--nourish-border-soft)] bg-white p-3"
       aria-label="Who's at the table"
     >
       <div className="flex items-center justify-between">
@@ -84,7 +84,7 @@ export function WhosAtTable() {
                 onClick={() => toggle(m.id)}
                 aria-pressed={isOn}
                 className={cn(
-                  "inline-flex shrink-0 snap-start items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold transition",
+                  "inline-flex min-h-11 shrink-0 snap-start items-center justify-center gap-1 rounded-full px-3 text-[11px] font-semibold transition",
                   isOn
                     ? "bg-[var(--nourish-green)] text-white"
                     : "bg-neutral-100 text-[var(--nourish-subtext)] hover:bg-neutral-200",

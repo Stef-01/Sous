@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { parseStoredTonightTable } from "./use-tonight-table";
 
 describe("parseStoredTonightTable", () => {
@@ -56,5 +57,16 @@ describe("parseStoredTonightTable", () => {
     const b = parseStoredTonightTable(null);
     expect(a).not.toBe(b);
     expect(a.selectedIds).not.toBe(b.selectedIds);
+  });
+
+  it("uses one reactive store across every mounted consumer", () => {
+    const source = readFileSync(
+      new URL("./use-tonight-table.ts", import.meta.url),
+      "utf8",
+    );
+    expect(source).toContain("useSyncExternalStore");
+    expect(source).toContain("const listeners = new Set");
+    expect(source).toContain("emit();");
+    expect(source).not.toContain("useState");
   });
 });

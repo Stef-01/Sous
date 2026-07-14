@@ -14,8 +14,10 @@
  * change it manually whenever. (A day-stamp auto-reset is a
  * follow-on if usage data shows it's wanted.)
  *
- * Mirrors the W15 / W22 / W24 / W32 pref-hook pattern:
- *   - freshDefault factory (no shared mutable state)
+ * Uses one external-store snapshot for every mounted consumer:
+ *   - same-tab writes notify every subscriber immediately
+ *   - cross-tab storage events refresh the shared snapshot
+ *   - freshDefault factory prevents mutable fallback reuse
  *   - object-shape gate before destructuring (W15 RCA)
  *   - schema-version check
  *   - graceful fallback on corrupt payloads
@@ -24,7 +26,7 @@
  * can exercise it without a DOM.
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "sous-tonight-table-v1";
 const SCHEMA_VERSION = 1 as const;
@@ -32,6 +34,10 @@ const SCHEMA_VERSION = 1 as const;
 interface PersistedShape {
   schemaVersion: typeof SCHEMA_VERSION;
   selectedIds: string[];
+}
+
+interface TonightTableSnapshot extends PersistedShape {
+  mounted: boolean;
 }
 
 function freshDefault(): PersistedShape {
@@ -76,49 +82,96 @@ function persist(state: PersistedShape) {
   }
 }
 
-export function useTonightTable() {
-  const [state, setState] = useState<PersistedShape>(freshDefault);
-  const [mounted, setMounted] = useState(false);
+let state = freshDefault();
+let mounted = false;
+let hydrated = false;
+let snapshot: TonightTableSnapshot = { ...state, mounted };
+const serverSnapshot: TonightTableSnapshot = {
+  ...freshDefault(),
+  mounted: false,
+};
+const listeners = new Set<() => void>();
 
-  /* eslint-disable react-hooks/set-state-in-effect -- legitimate: hydrate from localStorage on mount */
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      setMounted(true);
-      return;
-    }
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      setState(parseStoredTonightTable(raw));
-    } catch {
-      setState(freshDefault());
-    }
-    setMounted(true);
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
+function rebuildSnapshot() {
+  snapshot = { ...state, mounted };
+}
+
+function emit() {
+  listeners.forEach((listener) => listener());
+}
+
+function readStoredState() {
+  try {
+    return parseStoredTonightTable(localStorage.getItem(STORAGE_KEY));
+  } catch {
+    return freshDefault();
+  }
+}
+
+function handleStorage(event: StorageEvent) {
+  if (event.key !== STORAGE_KEY && event.key !== null) return;
+  state = parseStoredTonightTable(event.newValue);
+  mounted = true;
+  rebuildSnapshot();
+  emit();
+}
+
+function ensureHydrated() {
+  if (hydrated || typeof window === "undefined") return;
+  hydrated = true;
+  state = readStoredState();
+  mounted = true;
+  rebuildSnapshot();
+  window.addEventListener("storage", handleStorage);
+  emit();
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  ensureHydrated();
+  return () => listeners.delete(listener);
+}
+
+function getSnapshot() {
+  return snapshot;
+}
+
+function getServerSnapshot() {
+  return serverSnapshot;
+}
+
+function setStoreState(next: PersistedShape) {
+  state = next;
+  mounted = true;
+  rebuildSnapshot();
+  persist(next);
+  emit();
+}
+
+export function useTonightTable() {
+  const current = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
+  );
 
   const toggle = useCallback((id: string) => {
-    setState((prev) => {
-      const isOn = prev.selectedIds.includes(id);
-      const next: PersistedShape = {
-        schemaVersion: SCHEMA_VERSION,
-        selectedIds: isOn
-          ? prev.selectedIds.filter((x) => x !== id)
-          : [...prev.selectedIds, id],
-      };
-      persist(next);
-      return next;
+    const isOn = state.selectedIds.includes(id);
+    setStoreState({
+      schemaVersion: SCHEMA_VERSION,
+      selectedIds: isOn
+        ? state.selectedIds.filter((selectedId) => selectedId !== id)
+        : [...state.selectedIds, id],
     });
   }, []);
 
   const clear = useCallback(() => {
-    const next = freshDefault();
-    persist(next);
-    setState(next);
+    setStoreState(freshDefault());
   }, []);
 
   return {
-    selectedIds: state.selectedIds,
-    mounted,
+    selectedIds: current.selectedIds,
+    mounted: current.mounted,
     toggle,
     clear,
   };

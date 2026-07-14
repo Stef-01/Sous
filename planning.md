@@ -677,6 +677,11 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   persistent header uses a border separator instead of a box shadow, while the
   profile/settings trigger, animated streak pill, rest-day menu item, and its
   confirm/cancel actions preserve 44px geometry in Chromium and mobile Safari.
+- Today table selection is now one reactive browser store instead of isolated
+  per-component snapshots, so diner changes reach every mounted recommendation
+  consumer immediately and synchronize across tabs. `e2e/today-table.spec.ts`
+  verifies persistence, live count updates, the flat no-shadow selector, and
+  44px member controls in Chromium and mobile Safari.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).
