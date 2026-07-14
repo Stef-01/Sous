@@ -135,6 +135,21 @@ export function goesStraightToCook(
   return dish.hasGuidedCook && !dish.isMeal;
 }
 
+/** Canonical destination for selecting a cookable deck dish. Mains return to
+ * the side recommender; standalone dishes open guided Cook immediately. */
+export function questDishSelectionHref(
+  dish: Pick<
+    QuestDish,
+    "dishName" | "hasGuidedCook" | "heroImageUrl" | "isMeal" | "slug"
+  >,
+): string {
+  if (goesStraightToCook(dish)) return `/cook/${dish.slug}`;
+
+  const params = new URLSearchParams({ main: dish.dishName });
+  if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
+  return `/sides?${params.toString()}`;
+}
+
 /** The deck's primary swipe-action label. Eat-out logs; a straight-to-cook dish
  *  cooks; everything else (mains, and no-cook sides) builds a plate via /sides —
  *  so "Cook" never lies about opening the side-picker. */

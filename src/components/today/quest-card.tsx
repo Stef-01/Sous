@@ -43,6 +43,7 @@ import {
   computePantryFit,
   goesStraightToCook,
   primaryActionLabel,
+  questDishSelectionHref,
 } from "./quest-pool";
 import { QuestFilterMenu } from "./quest-filter-menu";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
@@ -464,28 +465,10 @@ export function QuestCard({
     filters.mealTypes,
     filters.source,
   ]);
-  const { saveDish, isDishSaved } = useSavedDishes();
+  const { saveDish, removeDish, isDishSaved } = useSavedDishes();
   const { recordSignal } = usePreferenceProfile();
-  const [savedToastSlug, setSavedToastSlug] = useState<string | null>(null);
   const router = useRouter();
   const haptic = useHaptic();
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  // Clean up all pending timeouts on unmount
-  useEffect(() => {
-    return () => {
-      timersRef.current.forEach(clearTimeout);
-    };
-  }, []);
-
-  const scheduleTimeout = useCallback((fn: () => void, ms: number) => {
-    const id = setTimeout(() => {
-      timersRef.current = timersRef.current.filter((t) => t !== id);
-      fn();
-    }, ms);
-    timersRef.current.push(id);
-    return id;
-  }, []);
 
   // The live deck = today's dishes minus the ones already swiped (persisted).
   const remainingDishes = useMemo(
@@ -532,21 +515,19 @@ export function QuestCard({
         return;
       }
 
-      if (goesStraightToCook(dish)) {
-        router.push(`/cook/${dish.slug}`);
-        return;
-      }
-
-      const params = new URLSearchParams({ main: dish.dishName });
-      if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
-      router.push(`/sides?${params.toString()}`);
+      router.push(questDishSelectionHref(dish));
     },
     [router, eatOutLookup],
   );
 
-  const handleSaveDish = useCallback(
-    (dish: QuestDish) => {
+  const handleToggleSavedDish = useCallback(
+    (dish: QuestDish): "saved" | "removed" => {
       haptic();
+      if (isDishSaved(dish.slug)) {
+        removeDish(dish.slug);
+        return "removed";
+      }
+
       const wasNew = saveDish(dish.slug, dish.dishName);
       if (wasNew) {
         // A genuine new save is an explicit interest signal — feed the taste
@@ -562,11 +543,10 @@ export function QuestCard({
             ingredients: dish.ingredientNames,
           }),
         });
-        setSavedToastSlug(dish.slug);
-        scheduleTimeout(() => setSavedToastSlug(null), 1500);
       }
+      return "saved";
     },
-    [haptic, saveDish, scheduleTimeout, recordSignal],
+    [haptic, isDishSaved, recordSignal, removeDish, saveDish],
   );
 
   if (questDishes.length === 0) {
@@ -676,29 +656,13 @@ export function QuestCard({
       )}
 
       <AnimatePresence>
-        {savedToastSlug && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="mx-auto w-fit rounded-full bg-[var(--nourish-dark)] px-4 py-2"
-          >
-            <span className="flex items-center gap-1.5 text-xs font-medium text-white">
-              <Bookmark size={12} className="fill-current" />
-              Saved for later
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
         {queueOpen && (
           <MealSwipeQueueOverlay
             key={deckResetNonce}
             dishes={queueDishes}
             isDishSaved={isDishSaved}
             onClose={() => setQueueOpen(false)}
-            onSaveDish={handleSaveDish}
+            onToggleSavedDish={handleToggleSavedDish}
             onCookDish={routeDish}
             onDeckExhausted={onDeckExhausted}
             onConsume={consumeDish}
@@ -781,7 +745,7 @@ function MealSwipeQueueOverlay({
   dishes,
   isDishSaved,
   onClose,
-  onSaveDish,
+  onToggleSavedDish,
   onCookDish,
   onDeckExhausted,
   onConsume,
@@ -790,7 +754,7 @@ function MealSwipeQueueOverlay({
   dishes: QuestDish[];
   isDishSaved: (slug: string) => boolean;
   onClose: () => void;
-  onSaveDish: (dish: QuestDish) => void;
+  onToggleSavedDish: (dish: QuestDish) => "saved" | "removed";
   onCookDish: (dish: QuestDish) => void;
   onDeckExhausted?: () => void;
   /** Persist a swiped dish so it doesn't reappear on return (day-scoped). */
@@ -814,6 +778,13 @@ function MealSwipeQueueOverlay({
   const haptic = useHaptic();
   const { recordSignal } = usePreferenceProfile();
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const saveFeedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const [saveFeedback, setSaveFeedback] = useState<{
+    slug: string;
+    message: string;
+  } | null>(null);
   const queueDialogRef = useRef<HTMLDivElement>(null);
   const healthPanel = useMealHealthPanel();
   const { isOpen: healthPanelOpen, close: closeHealthPanel } = healthPanel;
@@ -897,8 +868,18 @@ function MealSwipeQueueOverlay({
 
   const saveActive = useCallback(() => {
     if (!activeDish) return;
-    onSaveDish(activeDish);
-  }, [activeDish, onSaveDish]);
+    const result = onToggleSavedDish(activeDish);
+    setSaveFeedback({
+      slug: activeDish.slug,
+      message: result === "saved" ? "Saved for later" : "Removed from saved",
+    });
+    if (saveFeedbackTimerRef.current) {
+      clearTimeout(saveFeedbackTimerRef.current);
+    }
+    const id = setTimeout(() => setSaveFeedback(null), 1500);
+    saveFeedbackTimerRef.current = id;
+    timersRef.current.push(id);
+  }, [activeDish, onToggleSavedDish]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
@@ -1073,8 +1054,19 @@ function MealSwipeQueueOverlay({
                 </button>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-white/56">
-              {activeDish.eatOut ? (
+            <div
+              className="flex min-h-4 flex-wrap items-center gap-2 text-[11px] font-medium text-white/56"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {saveFeedback?.slug === activeDish.slug ? (
+                <span
+                  role="status"
+                  className="text-[var(--nourish-light-green)]"
+                >
+                  {saveFeedback.message}
+                </span>
+              ) : activeDish.eatOut ? (
                 <>
                   <span>{activeDish.eatOut.venueName}</span>
                   <span aria-hidden="true">/</span>
@@ -1127,7 +1119,7 @@ function MealSwipeQueueOverlay({
               )}
               aria-label={
                 isDishSaved(activeDish.slug)
-                  ? "Already saved"
+                  ? `Remove ${activeDish.dishName} from saved`
                   : `Save ${activeDish.dishName}`
               }
             >

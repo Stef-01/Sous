@@ -689,10 +689,15 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     ).toBeVisible();
     await page.keyboard.press("s");
     await expect(
-      page
-        .getByRole("button", { name: /Already saved|^Saved\b|Saved .+/i })
-        .first(),
+      page.getByRole("button", { name: /Remove .+ from saved/i }).first(),
     ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole("status")).toHaveText("Saved for later");
+
+    await page.keyboard.press("s");
+    await expect(
+      page.getByRole("button", { name: /^Save\b|Save .+/i }).first(),
+    ).toBeVisible({ timeout: 5000 });
+    await expect(page.getByRole("status")).toHaveText("Removed from saved");
   });
 
   test("Meal queue stays photo-led with minimal visible actions", async ({

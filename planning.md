@@ -698,6 +698,14 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   Verification passed with 4,381 Vitest assertions in 387 files, 10 focused
   Chromium/mobile-Safari modernization cases, 33 relevant Chromium flow cases,
   full lint, production build, and mobile/desktop screenshot review.
+- The 2026-07-13 W81 save-flow pass makes the fullscreen queue's Save action a
+  reversible toggle with in-panel status feedback. Saved meals now reuse one
+  canonical destination builder, so mains return to intelligent side pairing
+  while standalone dishes open guided Cook directly. The Today saved rail is
+  flat, shadow-free, and keeps meal names and cook times outside photography.
+  Verification passed with 4,383 Vitest assertions in 387 files, 12 focused
+  Chromium/mobile-Safari modernization cases, 22 Chromium core-loop cases,
+  full lint, and the production build.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

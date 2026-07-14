@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { contextBoost, type DeckContext } from "./quest-pool";
+import {
+  contextBoost,
+  questDishSelectionHref,
+  type DeckContext,
+} from "./quest-pool";
 
 function ctx(over: Partial<DeckContext> = {}): DeckContext {
   return {
@@ -135,5 +139,33 @@ describe("contextBoost — table spice tolerance (W37 minSpiceTolerance)", () =>
     expect(contextBoost(spicy, ctx({ tableMinSpice: 3 }))).toBe(0); // tolerant
     expect(contextBoost(spicy, ctx())).toBe(0); // no table (default 5)
     expect(contextBoost(mild, ctx({ tableMinSpice: 1 }))).toBe(0); // not spicy
+  });
+});
+
+describe("questDishSelectionHref", () => {
+  it("returns mains to side recommendations with their hero image", () => {
+    expect(
+      questDishSelectionHref({
+        dishName: "Butter Chicken",
+        hasGuidedCook: true,
+        heroImageUrl: "/food_images/butter_chicken.png",
+        isMeal: true,
+        slug: "butter-chicken",
+      }),
+    ).toBe(
+      "/sides?main=Butter+Chicken&img=%2Ffood_images%2Fbutter_chicken.png",
+    );
+  });
+
+  it("opens standalone guided dishes directly in Cook", () => {
+    expect(
+      questDishSelectionHref({
+        dishName: "Garlic Bread",
+        hasGuidedCook: true,
+        heroImageUrl: "/food_images/garlic_bread.png",
+        isMeal: false,
+        slug: "garlic-bread",
+      }),
+    ).toBe("/cook/garlic-bread");
   });
 });

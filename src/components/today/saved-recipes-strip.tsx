@@ -6,7 +6,7 @@ import { Bookmark } from "lucide-react";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
-import { buildQuestDishes } from "./quest-pool";
+import { buildQuestDishes, questDishSelectionHref } from "./quest-pool";
 import { DishImage } from "./dish-image";
 import type { QuestDish } from "./quest-card";
 
@@ -36,8 +36,11 @@ export function SavedRecipesStrip() {
   if (dishes.length === 0) return null;
 
   return (
-    <section className="mt-7">
-      <h2 className="mb-2 flex items-center gap-1.5 px-[var(--gutter)] text-base font-semibold text-[var(--nourish-dark)]">
+    <section className="space-y-2" aria-labelledby="saved-meals-title">
+      <h2
+        id="saved-meals-title"
+        className="sous-label flex items-center gap-1.5 px-1"
+      >
         <Bookmark
           className="size-4 fill-[var(--nourish-green)] text-[var(--nourish-green)]"
           aria-hidden
@@ -49,24 +52,25 @@ export function SavedRecipesStrip() {
           <button
             key={dish.slug}
             type="button"
-            onClick={() => router.push(`/cook/${dish.slug}`)}
-            aria-label={`Cook ${dish.dishName}`}
-            className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)] motion-reduce:active:scale-100"
+            onClick={() => router.push(questDishSelectionHref(dish))}
+            aria-label={`Open saved ${dish.dishName}`}
+            className="w-[9rem] shrink-0 snap-start overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white text-left transition-colors hover:border-[var(--nourish-border-strong)] active:bg-black/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]"
           >
-            <div className="relative h-24 w-full">
+            <div className="relative aspect-[4/3] w-full">
               <DishImage dish={dish} fit="cover" />
-              {/* Bottom-RIGHT to avoid DishImage's chef-credit chip (bottom-left). */}
+            </div>
+            <div className="space-y-0.5 px-2.5 py-2">
+              <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
+                {dish.dishName}
+              </p>
               {dish.cookTimeMinutes > 0 && (
-                <span className="absolute bottom-1.5 right-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
+                <p className="text-[10px] font-medium text-[var(--nourish-subtext)]">
                   {dish.cookTimeMinutes >= 60
-                    ? `${Math.floor(dish.cookTimeMinutes / 60)}hr ${dish.cookTimeMinutes % 60 ? `${dish.cookTimeMinutes % 60}m` : ""}`.trim()
+                    ? `${Math.floor(dish.cookTimeMinutes / 60)} hr ${dish.cookTimeMinutes % 60 ? `${dish.cookTimeMinutes % 60} min` : ""}`.trim()
                     : `${dish.cookTimeMinutes} min`}
-                </span>
+                </p>
               )}
             </div>
-            <p className="line-clamp-2 px-2.5 py-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
-              {dish.dishName}
-            </p>
           </button>
         ))}
       </div>
