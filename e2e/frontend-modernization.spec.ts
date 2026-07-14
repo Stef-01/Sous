@@ -94,6 +94,48 @@ test.describe("frontend modernization", () => {
     );
   });
 
+  test("saved Eat Out dishes reopen at the exact choice", async ({ page }) => {
+    await page.goto("/today");
+    await page.getByRole("tab", { name: "Eat out", exact: true }).click();
+    await page.locator('button[aria-label^="Browse meals"]').click();
+
+    const queue = page.getByRole("dialog", { name: "Meal swipe queue" });
+    const titleText = (await queue.locator("h3").first().textContent())?.trim();
+    if (!titleText) throw new Error("Eat Out queue title did not render");
+    const title = titleText;
+
+    await page.keyboard.press("s");
+    await expect(queue.getByRole("status")).toHaveText("Saved for later");
+    await page.keyboard.press("Escape");
+
+    await page.evaluate(() => {
+      window.scrollTo(0, document.documentElement.scrollHeight);
+      for (const element of document.querySelectorAll<HTMLElement>("*")) {
+        const overflowY = getComputedStyle(element).overflowY;
+        if (
+          element.scrollHeight > element.clientHeight + 8 &&
+          (overflowY === "auto" || overflowY === "scroll")
+        ) {
+          element.scrollTop = element.scrollHeight;
+        }
+      }
+    });
+
+    const savedDish = page.getByRole("button", {
+      name: `Open saved ${title}`,
+    });
+    await expect(savedDish).toBeVisible({ timeout: 10000 });
+    await savedDish.evaluate((button) => (button as HTMLButtonElement).click());
+
+    await expect(page).toHaveURL(/\/eat-out\?venue=.+&dish=.+/);
+    const selectedDish = page.getByRole("button", { name: `Close ${title}` });
+    await expect(selectedDish).toBeVisible();
+    await expect(selectedDish).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page.getByRole("button", { name: "Log this dish" }),
+    ).toBeVisible();
+  });
+
   test("Path presents kitchen tools as one compact workflow", async ({
     page,
   }) => {

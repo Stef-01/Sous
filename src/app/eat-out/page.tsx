@@ -12,9 +12,16 @@
  * Places/hours integration is a later stage; this set is badged as a curated demo.
  */
 
-import { useMemo, useState, type ReactNode } from "react";
+import {
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   ChevronDown,
@@ -43,6 +50,7 @@ import { dishToFacets } from "@/lib/intelligence/dish-to-facets";
 import { toast } from "@/lib/hooks/use-toast";
 import { haptic } from "@/lib/motion/haptics";
 import { cn } from "@/lib/utils/cn";
+import { resolveEatOutDeepLink } from "@/lib/eat-out/deep-link";
 
 /** Starred nutrient keys → the demo dishes' goal-fit tag vocabulary. */
 const STAR_TO_TAG: Record<string, DemoDish["tags"][number]> = {
@@ -156,6 +164,7 @@ function DishObject({
 }) {
   return (
     <div
+      id={`eat-out-dish-${dish.slug}`}
       className={cn(
         "overflow-hidden rounded-xl border transition-colors",
         selected
@@ -166,6 +175,7 @@ function DishObject({
       <button
         type="button"
         onClick={onSelect}
+        aria-label={`${selected ? "Close" : "View"} ${dish.name}`}
         aria-expanded={selected}
         className="flex w-full items-center gap-3 p-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]"
       >
@@ -360,7 +370,40 @@ function VenueObject({
 }
 
 export default function EatOutPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-dvh bg-[var(--nourish-cream)]">
+          <header className="app-header page-x py-2.5">
+            <div className="mx-auto flex max-w-md items-center gap-3">
+              <div className="size-11 rounded-[var(--radius-md)] shimmer" />
+              <div className="space-y-1.5">
+                <div className="h-4 w-20 rounded shimmer" />
+                <div className="h-2.5 w-32 rounded shimmer" />
+              </div>
+            </div>
+          </header>
+          <main className="mx-auto max-w-md space-y-3 page-x pt-4">
+            <div className="h-28 rounded-[var(--radius-md)] shimmer" />
+            <div className="h-28 rounded-[var(--radius-md)] shimmer" />
+          </main>
+        </div>
+      }
+    >
+      <EatOutPageContent />
+    </Suspense>
+  );
+}
+
+function EatOutPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedVenue = searchParams.get("venue");
+  const requestedDish = searchParams.get("dish");
+  const deepLink = useMemo(
+    () => resolveEatOutDeepLink(requestedVenue, requestedDish),
+    [requestedDish, requestedVenue],
+  );
   const { stars } = useNutrientGoals();
   const { merged, recordSignal } = usePreferenceProfile();
   // Parent Mode (off by default) — when on, dishes show kid-friendly / too-spicy
@@ -372,8 +415,32 @@ export default function EatOutPage() {
   const [goalsOnly, setGoalsOnly] = useState(false);
   // Selection state: which venue is drilled-open (the gold object-box), and which
   // dish inside it is selected (the green object-box). Single-select at each level.
-  const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
-  const [selectedDish, setSelectedDish] = useState<string | null>(null);
+  const [expandedVenue, setExpandedVenue] = useState<string | null>(
+    deepLink?.venueSlug ?? null,
+  );
+  const [selectedDish, setSelectedDish] = useState<string | null>(
+    deepLink?.dishSlug ?? null,
+  );
+  const scrolledDeepLinkRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (
+      !deepLink ||
+      expandedVenue !== deepLink.venueSlug ||
+      selectedDish !== deepLink.dishSlug ||
+      scrolledDeepLinkRef.current === deepLink.dishSlug
+    ) {
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      document
+        .getElementById(`eat-out-dish-${deepLink.dishSlug}`)
+        ?.scrollIntoView({ block: "center" });
+      scrolledDeepLinkRef.current = deepLink.dishSlug;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [deepLink, expandedVenue, selectedDish]);
   const toggleVenue = (v: DemoVenue) => {
     setSelectedDish(null);
     const opening = expandedVenue !== v.slug;
@@ -546,7 +613,7 @@ export default function EatOutPage() {
                     }),
                   });
                 }}
-                className="w-[8.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-neutral-200/70 bg-white text-left shadow-sm transition-transform hover:border-[var(--nourish-gold)]/55 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)] motion-reduce:active:scale-100"
+                className="w-[8.75rem] shrink-0 snap-start overflow-hidden rounded-[var(--radius-md)] border border-[var(--nourish-border)] bg-white text-left transition-colors hover:border-[var(--nourish-border-strong)] active:bg-black/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--nourish-green)]"
               >
                 <div className="relative h-24 w-full">
                   <Image
@@ -564,18 +631,13 @@ export default function EatOutPage() {
                       />
                     </span>
                   )}
-                  {/* kcal pill on the photo — consistent with the recipe time
-                      pills + the reference's pill-on-photo card grammar. */}
-                  <span className="absolute bottom-1.5 left-1.5 rounded-full bg-white/90 px-2 py-0.5 text-[10px] font-semibold text-[var(--nourish-dark)] shadow-sm backdrop-blur-sm">
-                    ~{dish.kcal} kcal
-                  </span>
                 </div>
                 <div className="px-2.5 py-2">
                   <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
                     {dish.name}
                   </p>
                   <p className="mt-0.5 truncate text-[10.5px] text-[var(--nourish-subtext)]">
-                    {venue.name}
+                    {venue.name} · ~{dish.kcal} kcal
                   </p>
                 </div>
               </button>

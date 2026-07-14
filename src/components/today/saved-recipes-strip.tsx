@@ -6,7 +6,11 @@ import { Bookmark } from "lucide-react";
 import { useSavedDishes } from "@/lib/hooks/use-saved-dishes";
 import { useRecipeDrafts } from "@/lib/recipe-authoring/use-recipe-drafts";
 import { userRecipeToQuestDish } from "@/lib/cook/user-recipe-quest";
-import { buildQuestDishes, questDishSelectionHref } from "./quest-pool";
+import {
+  buildEatOutQuestDishes,
+  buildQuestDishes,
+  questDishSelectionHref,
+} from "./quest-pool";
 import { DishImage } from "./dish-image";
 import type { QuestDish } from "./quest-card";
 
@@ -23,9 +27,13 @@ export function SavedRecipesStrip() {
 
   const dishes = useMemo<QuestDish[]>(() => {
     if (saved.length === 0) return [];
-    // Resolve from the catalog AND the user's own drafts — both are saveable in
-    // the deck, so a saved custom recipe must not silently vanish here.
-    const all = [...buildQuestDishes(), ...drafts.map(userRecipeToQuestDish)];
+    // Every saveable queue source must resolve here; otherwise the Save action
+    // succeeds but the item silently vanishes from the user's library.
+    const all = [
+      ...buildQuestDishes(),
+      ...buildEatOutQuestDishes(),
+      ...drafts.map(userRecipeToQuestDish),
+    ];
     const bySlug = new Map(all.map((d) => [d.slug, d]));
     // Preserve saved order (newest first); keep only resolvable dishes.
     return saved
@@ -63,13 +71,17 @@ export function SavedRecipesStrip() {
               <p className="line-clamp-2 text-[12px] font-semibold leading-snug text-[var(--nourish-dark)]">
                 {dish.dishName}
               </p>
-              {dish.cookTimeMinutes > 0 && (
+              {dish.eatOut ? (
+                <p className="truncate text-[10px] font-medium text-[var(--nourish-subtext)]">
+                  {dish.eatOut.venueName}
+                </p>
+              ) : dish.cookTimeMinutes > 0 ? (
                 <p className="text-[10px] font-medium text-[var(--nourish-subtext)]">
                   {dish.cookTimeMinutes >= 60
                     ? `${Math.floor(dish.cookTimeMinutes / 60)} hr ${dish.cookTimeMinutes % 60 ? `${dish.cookTimeMinutes % 60} min` : ""}`.trim()
                     : `${dish.cookTimeMinutes} min`}
                 </p>
-              )}
+              ) : null}
             </div>
           </button>
         ))}

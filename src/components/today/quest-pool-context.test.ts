@@ -168,4 +168,25 @@ describe("questDishSelectionHref", () => {
       }),
     ).toBe("/cook/garlic-bread");
   });
+
+  it("opens saved Eat Out dishes at their exact venue and dish", () => {
+    expect(
+      questDishSelectionHref({
+        dishName: "Chicken Tikka",
+        hasGuidedCook: false,
+        heroImageUrl: "/food_images/chicken_tikka.png",
+        isMeal: true,
+        slug: "zareens-chicken-tikka-masala",
+        eatOut: {
+          venueSlug: "zareens-palo-alto",
+          venueName: "Zareen's",
+          distanceKm: 3.9,
+          price: "$$",
+          kcal: 680,
+        },
+      }),
+    ).toBe(
+      "/eat-out?venue=zareens-palo-alto&dish=zareens-chicken-tikka-masala",
+    );
+  });
 });

@@ -15,6 +15,8 @@ import {
   getAvailableCookSlugs,
 } from "@/data/guided-cook-summary";
 import { sides, meals } from "@/data";
+import { STANFORD_VENUES } from "@/data/eat-out/stanford-demo";
+import { eatOutDishHref } from "@/lib/eat-out/deep-link";
 import {
   mealDaypartFromHour,
   type MealDaypart,
@@ -135,19 +137,52 @@ export function goesStraightToCook(
   return dish.hasGuidedCook && !dish.isMeal;
 }
 
-/** Canonical destination for selecting a cookable deck dish. Mains return to
- * the side recommender; standalone dishes open guided Cook immediately. */
+/** Canonical destination for reopening a saved deck choice. Eat Out dishes
+ * return to their exact venue; mains use pairing; standalone dishes use Cook. */
 export function questDishSelectionHref(
   dish: Pick<
     QuestDish,
-    "dishName" | "hasGuidedCook" | "heroImageUrl" | "isMeal" | "slug"
+    "dishName" | "eatOut" | "hasGuidedCook" | "heroImageUrl" | "isMeal" | "slug"
   >,
 ): string {
+  if (dish.eatOut) {
+    return dish.eatOut.venueSlug
+      ? eatOutDishHref(dish.eatOut.venueSlug, dish.slug)
+      : "/eat-out";
+  }
   if (goesStraightToCook(dish)) return `/cook/${dish.slug}`;
 
   const params = new URLSearchParams({ main: dish.dishName });
   if (dish.heroImageUrl) params.set("img", dish.heroImageUrl);
   return `/sides?${params.toString()}`;
+}
+
+export function buildEatOutQuestDishes(): QuestDish[] {
+  return STANFORD_VENUES.flatMap((venue) =>
+    venue.dishes.map((dish) => ({
+      dishName: dish.name,
+      slug: dish.slug,
+      heroImageUrl: dish.image,
+      cookTimeMinutes: 0,
+      cuisineFamily: venue.cuisine,
+      description: dish.blurb,
+      tags: [...dish.tags],
+      ingredientCount: 0,
+      ingredientNames: [],
+      hasGuidedCook: false,
+      isMeal: true,
+      isVerified: false,
+      role: "main" as const,
+      pantryFit: 0,
+      eatOut: {
+        venueSlug: venue.slug,
+        venueName: venue.name,
+        distanceKm: venue.distanceKm,
+        price: venue.price,
+        kcal: dish.kcal,
+      },
+    })),
+  ).sort((a, b) => a.eatOut!.distanceKm - b.eatOut!.distanceKm);
 }
 
 /** The deck's primary swipe-action label. Eat-out logs; a straight-to-cook dish

@@ -706,6 +706,13 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   Verification passed with 4,383 Vitest assertions in 387 files, 12 focused
   Chromium/mobile-Safari modernization cases, 22 Chromium core-loop cases,
   full lint, and the production build.
+- The 2026-07-13 W82 follow-through closes the Eat Out save dead end. Queue and
+  saved-rail cards now resolve from one Eat Out dish builder; saved restaurant
+  dishes retain venue context and reopen through a validated deep link that
+  expands and centers the exact dish with Log ready. The touched featured rail
+  is flat and keeps kcal metadata outside photography. Verification passed with
+  4,387 Vitest assertions in 388 files, 14 Chromium/mobile-Safari modernization
+  cases, full lint, and the production build.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

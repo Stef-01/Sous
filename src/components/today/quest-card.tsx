@@ -38,6 +38,7 @@ import {
   QUEUE_EXIT_MS,
 } from "./meal-swipe-queue-cards";
 import {
+  buildEatOutQuestDishes,
   buildQuestDishes,
   buildRoleQuestDishes,
   computePantryFit,
@@ -88,6 +89,7 @@ export interface QuestDish {
   /** Present when the card is an eat-out menu item (deck mode toggle) —
    *  swaps the meta line + primary action (Log instead of Cook). */
   eatOut?: {
+    venueSlug?: string;
     venueName: string;
     distanceKm: number;
     price: string;
@@ -327,34 +329,7 @@ export function QuestCard({
   // Founder feature (2026-06-11): the SAME condensed deck format can show
   // eat-out menu content — tap the header chips to switch sources.
   const [queueMode, setQueueMode] = useState<"cook" | "eat-out">("cook");
-  const eatOutDeck = useMemo<QuestDish[]>(
-    () =>
-      STANFORD_VENUES.flatMap((venue) =>
-        venue.dishes.map((dish) => ({
-          dishName: dish.name,
-          slug: dish.slug,
-          heroImageUrl: dish.image,
-          cookTimeMinutes: 0,
-          cuisineFamily: venue.cuisine,
-          description: dish.blurb,
-          tags: [...dish.tags],
-          ingredientCount: 0,
-          ingredientNames: [],
-          hasGuidedCook: false,
-          isMeal: true,
-          isVerified: false,
-          role: "main" as const,
-          pantryFit: 0,
-          eatOut: {
-            venueName: venue.name,
-            distanceKm: venue.distanceKm,
-            price: venue.price,
-            kcal: dish.kcal,
-          },
-        })),
-      ).sort((a, b) => a.eatOut!.distanceKm - b.eatOut!.distanceKm),
-    [],
-  );
+  const eatOutDeck = useMemo<QuestDish[]>(() => buildEatOutQuestDishes(), []);
   const plannedSlug = useMemo(() => {
     if (!planMounted) return null;
     const now = new Date();
