@@ -12,10 +12,23 @@ async function openCravingSearch(page: Page, query: string) {
 }
 
 async function expectTouchTarget(locator: Locator) {
-  await expect(locator).toBeVisible({ timeout: 10000 });
-  const box = await locator.boundingBox();
-  expect(Math.ceil(box?.height ?? 0)).toBeGreaterThanOrEqual(44);
-  expect(Math.ceil(box?.width ?? 0)).toBeGreaterThanOrEqual(44);
+  await expect
+    .poll(
+      async () => {
+        try {
+          await locator.scrollIntoViewIfNeeded({ timeout: 1000 });
+          const box = await locator.boundingBox();
+          if (!box) return "missing";
+          const height = Math.ceil(box.height);
+          const width = Math.ceil(box.width);
+          return height >= 44 && width >= 44 ? "ready" : `${width}x${height}`;
+        } catch {
+          return "detached";
+        }
+      },
+      { timeout: 10000 },
+    )
+    .toBe("ready");
 }
 
 test.describe("Today progressive onboarding", () => {
@@ -128,6 +141,42 @@ test.describe("Core Loop - Today meal queue to cook", () => {
     const arrowBox = await arrowAffordance.boundingBox();
     expect(arrowBox?.height ?? 0).toBeGreaterThanOrEqual(44);
     expect(arrowBox?.width ?? 0).toBeGreaterThanOrEqual(44);
+  });
+
+  test("Today header and streak actions stay flat and finger-sized", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "sous-cook-stats",
+        JSON.stringify({
+          currentStreak: 4,
+          completedCooks: 7,
+          longestStreak: 6,
+        }),
+      );
+    });
+    await page.goto("/today");
+
+    const header = page.locator("header").first();
+    await expect(header).toHaveCSS("box-shadow", "none");
+    await expectTouchTarget(
+      page.getByRole("button", { name: "Open profile and settings" }),
+    );
+
+    const streak = page.getByRole("button", {
+      name: /Streak: 4 days\. Streak options/i,
+    });
+    await expectTouchTarget(streak);
+    await streak.click();
+
+    const takeRestDay = page.getByRole("menuitem", {
+      name: /Take a rest day/i,
+    });
+    await expectTouchTarget(takeRestDay);
+    await takeRestDay.click();
+    await expectTouchTarget(page.getByRole("button", { name: "Rest today" }));
+    await expectTouchTarget(page.getByRole("button", { name: "Nevermind" }));
   });
 
   test("Craving helper icon actions keep 44px tap targets", async ({

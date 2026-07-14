@@ -76,7 +76,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
         }
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
-          "flex items-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-1 transition-colors duration-150 hover:bg-[var(--nourish-warm)]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
+          "flex min-h-[45px] min-w-[45px] items-center justify-center gap-1 rounded-full bg-[var(--nourish-warm)]/10 px-2 py-1 transition-colors duration-150 hover:bg-[var(--nourish-warm)]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40",
           // Dotted ring when today is a rest day  -  signals the streak is
           // being intentionally held open.
           todayIsRestDay &&
@@ -157,7 +157,7 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
                 type="button"
                 role="menuitem"
                 onClick={() => setConfirming(true)}
-                className="flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                className="flex min-h-[45px] w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] text-[var(--nourish-dark)] transition-colors hover:bg-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
               >
                 <span>Take a rest day</span>
                 <span className="sous-label">1 / week</span>
@@ -177,14 +177,14 @@ export function StreakCounter({ streak = 0 }: StreakCounterProps) {
                       setConfirming(false);
                       setOpen(false);
                     }}
-                    className="flex-1 rounded-lg bg-[var(--nourish-green)] px-2.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 active:scale-[0.97]"
+                    className="min-h-[45px] flex-1 rounded-lg bg-[var(--nourish-green)] px-2.5 py-1.5 text-[12px] font-semibold text-white transition hover:bg-[var(--nourish-dark-green)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40 active:scale-[0.97]"
                   >
                     Rest today
                   </button>
                   <button
                     type="button"
                     onClick={() => setConfirming(false)}
-                    className="rounded-lg border border-[var(--nourish-border-strong)] px-2.5 py-1.5 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+                    className="min-h-[45px] rounded-lg border border-[var(--nourish-border-strong)] px-2.5 py-1.5 text-[12px] font-medium text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
                   >
                     Nevermind
                   </button>

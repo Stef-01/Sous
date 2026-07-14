@@ -653,7 +653,7 @@ function TodayPageContent() {
           / Apple Music / NYT Cooking pattern. The bottom tab bar
           stays sticky so navigation isn't lost when the top hides. */}
       <HeadroomHeader>
-        <header className="page-x bg-white shadow-[var(--shadow-header)] py-2.5">
+        <header className="page-x border-b border-[var(--nourish-border-soft)] bg-white py-2.5">
           <div className="mx-auto flex max-w-md items-center justify-between">
             {/* Brand + the ONE cadence signal: the streak flame. The old
                 "Day 4 of cooking" welcome line was a second copy of the same
@@ -671,7 +671,7 @@ function TodayPageContent() {
               type="button"
               onClick={() => setShowProfileSettings(true)}
               aria-label="Open profile and settings"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 hover:text-[var(--nourish-dark)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-neutral-200 bg-white text-[var(--nourish-subtext)] transition-colors hover:bg-neutral-50 hover:text-[var(--nourish-dark)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--nourish-green)]/40"
             >
               <Settings size={20} strokeWidth={1.9} />
             </button>
