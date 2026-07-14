@@ -11,6 +11,10 @@
 
 import { meals, sides } from "@/data";
 import {
+  getAvailableCookSlugs,
+  getAvailableMealCookSlugs,
+} from "@/data/guided-cook-summary";
+import {
   getDishNutrition,
   NUTRITION_COVERAGE_FLOOR,
 } from "@/lib/engine/dish-nutrition";
@@ -22,11 +26,16 @@ export interface DeficitFillSuggestion {
   name: string;
   /** Percentage points of the daily target one serving adds (rounded). */
   closesPct: number;
-  /** Whether a guided cook flow exists is the caller's concern; we only need
-   *  dishes to be real catalogue entries (they all route via /cook/slug). */
 }
 
-const ALL = [...meals, ...sides].map((d) => ({ id: d.id, name: d.name }));
+const GUIDED_COOK_SLUGS = new Set([
+  ...getAvailableCookSlugs(),
+  ...getAvailableMealCookSlugs(),
+]);
+
+const ALL = [...meals, ...sides]
+  .filter((dish) => GUIDED_COOK_SLUGS.has(dish.id))
+  .map((dish) => ({ id: dish.id, name: dish.name }));
 
 /** Top dishes for closing ONE nutrient gap. Deterministic; display-grade only. */
 export function dishesForDeficit(

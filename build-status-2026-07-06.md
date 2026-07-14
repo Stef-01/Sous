@@ -1,8 +1,8 @@
 # Build Status - July 6, 2026
 
-## This Session: Menu-app W1-W82 Shipped
+## This Session: Menu-app W1-W83 Shipped
 
-### Menu-app (W1-W82 shipped, autonomous track complete + founder preflight + visual modernization)
+### Menu-app (W1-W83 shipped, autonomous track complete + founder preflight + visual modernization)
 
 - **W1** - Community poll 60s auto-refresh + visibilitychange refetch + clobber guard (`5bdc5fe`)
 - **W2** - Meal-request vote reconcile (most already done, added request-vote path) (`ebe28e8`)
@@ -86,7 +86,8 @@
 - **W80** - Modernized the core frontend around a flat, food-first visual system: shared cards/navigation now use restrained 6-8px geometry and no persistent elevation; Today surfaces the meal before optional personalization; the fullscreen meal queue keeps titles and actions outside photography; Path uses one compact kitchen workflow; Community remains a first-class tab and curated content hub; and guided Cook gives food more viewport while simplifying metadata, planning, and accessibility controls. Static design contracts, Chromium/mobile-Safari modernization journeys, relevant core-flow regression coverage, mobile/desktop screenshot review, lint, and production build verify the slice (this commit)
 - **W81** - Removed friction from the Today queue's save decision: Save is now a reversible in-place toggle with visible fullscreen feedback, saved meals reopen through the same canonical direct-cook or side-pairing destination as the queue, and the Saved for later rail uses the flat food-first card grammar without image overlays or shadows. Focused route unit tests, Chromium/mobile-Safari modernization coverage, and the full Chromium core loop guard the behavior (this commit)
 - **W82** - Closed the Eat Out save dead end: queue and saved-rail dishes now share one Eat Out quest builder, saved restaurant dishes remain visible with venue context, and reopening validates the venue/dish pair before expanding and centering the exact choice with its Log action ready. The touched featured rail also drops card shadows and photo metadata overlays for the current flat food-first grammar (this commit)
-- Tests: 4,387 assertions across 388 Vitest files plus 14 modernization Playwright cases across Chromium/mobile Safari and 22 core-loop cases in Chromium; full lint and production build pass
+- **W83** - Closed dead routes in Today's nutrition-gap suggestions: the ranker now intersects nutrition-resolved catalog dishes with generated guided-cook slugs before scoring, so every suggested nutrient fill has a real Mission destination. Before the fix, 10 of 12 deficit categories exposed at least one dead route; all 12 now retain three useful guided choices, and Chromium/mobile-Safari coverage follows the live Today suggestion into Cook (this commit)
+- Tests: 4,388 assertions across 388 Vitest files plus 14 modernization Playwright cases across Chromium/mobile Safari, 22 core-loop cases in Chromium, and 2 Today nutrition doorway cases across Chromium/mobile Safari; full lint and production build pass
 - Next unit: run the preflight against real `DATABASE_URL` when available, or take one narrow core-loop friction reduction
 
 ### Casa (K11 + RF13 shipped, next: Y7)

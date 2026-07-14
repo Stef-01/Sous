@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { dishesForDeficit, deficitFillFor } from "./deficit-fill-dishes";
 import type { PerServingNutrition } from "@/types/nutrition";
+import { FLAGGABLE_DEFICIT_KEYS } from "./deficits";
+import {
+  getAvailableCookSlugs,
+  getAvailableMealCookSlugs,
+} from "@/data/guided-cook-summary";
 
 const N = (o: Record<string, number>) => o as unknown as PerServingNutrition;
 
@@ -30,6 +35,24 @@ describe("deficit-fill suggestions (#3)", () => {
       3,
     );
     expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+  });
+
+  it("only surfaces dishes with a real guided-cook destination", () => {
+    const guided = new Set([
+      ...getAvailableCookSlugs(),
+      ...getAvailableMealCookSlugs(),
+    ]);
+
+    for (const key of FLAGGABLE_DEFICIT_KEYS) {
+      const suggestions = dishesForDeficit(
+        { key, label: key, pct: 0, weight: 1 },
+        3,
+      );
+      expect(suggestions.length, key).toBeGreaterThan(0);
+      for (const suggestion of suggestions) {
+        expect(guided.has(suggestion.slug), suggestion.slug).toBe(true);
+      }
+    }
   });
 
   it("unknown nutrient key → empty (never throws)", () => {

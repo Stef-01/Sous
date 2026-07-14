@@ -153,13 +153,13 @@ This modernization is one coherent visual-system slice. Functional redesigns suc
 Status: **implemented and verified 2026-07-13**.
 
 - Shared shell: persistent cards, headers, CTAs, and bottom navigation are flat; standard radii are 6-8px; the active tab uses a restrained underline instead of a lozenge.
-- Today: the food hero precedes optional personalization, the craving trigger is compact, supporting nutrition surfaces are quieter, and the home Community strip remains visible without delayed entrance animation.
+- Today: the food hero precedes optional personalization, the craving trigger is compact, supporting nutrition surfaces are quieter, nutrition-gap suggestions route only to real guided-cook Missions, and the home Community strip remains visible without delayed entrance animation.
 - Meal queue: the photo owns the flexible viewport while the title, metadata, Save, Pass, and Cook controls occupy a separate bottom region, preventing text or controls from covering food.
 - Saved meals: Save is a reversible queue action with in-panel feedback, and the flat Saved for later rail reuses canonical direct-cook, side-pairing, or exact Eat Out destinations instead of losing context or bypassing recommended sides.
 - Path: Pantry, Plan, and Groceries form one compact workflow row; the fresh-user state is unframed and the progression content is secondary.
 - Community: the destination is consistently named Community, the default hub is curated to four reads and two research briefs, and users can reveal the full collection intentionally.
 - Cook: the Mission hero is larger, metadata is plain text, and planning/accessibility controls are flat while Save and Start remain distinct actions.
-- Verification: 4,387 Vitest assertions across 388 files, 14 modernization Playwright cases across Chromium and mobile Safari, 22 core-loop cases in Chromium, lint, production build, and mobile/desktop screenshot review all passed.
+- Verification: 4,388 Vitest assertions across 388 files, 14 modernization Playwright cases across Chromium and mobile Safari, 22 core-loop cases in Chromium, 2 Today nutrition doorway cases across Chromium and mobile Safari, lint, production build, and mobile/desktop screenshot review all passed.
 
 ### Follow-on Work
 

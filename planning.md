@@ -713,6 +713,14 @@ each step (SOP §7 crosscheck; commit 45d0a75).
   is flat and keeps kcal metadata outside photography. Verification passed with
   4,387 Vitest assertions in 388 files, 14 Chromium/mobile-Safari modernization
   cases, full lint, and the production build.
+- The 2026-07-14 W83 core-loop pass closes dead routes in Today's nutrition-gap
+  suggestions. Root cause: the ranker scored every nutrition-resolved catalog
+  dish while the UI always linked results to `/cook/<slug>`, even when no guided
+  recipe existed. The candidate pool now intersects the catalog with generated
+  guided-cook slugs before ranking; all 12 deficit categories retain three real
+  Mission destinations. Verification passed with 4,388 Vitest assertions in
+  388 files, both Today nutrition doorway cases in Chromium and mobile Safari,
+  full lint, and the production build.
 - **FOUNDER-GATED — Remaining eat-out hero photos:** founder saves from
   Instagram → `public/eat-out/<venue-slug>.jpg` → one-line heroImage wiring
   (the disk test auto-verifies).

@@ -100,7 +100,13 @@ test.describe("Today nutrition doorway", () => {
     }
 
     const suggestion = nutritionLinks.nth(1);
-    if ((await suggestion.count()) > 0)
+    if ((await suggestion.count()) > 0) {
       await expectTouchTarget(suggestion, "nutrient suggestion");
+      await suggestion.click();
+      await expect(page).toHaveURL(/\/cook\/.+/);
+      await expect(
+        page.getByRole("button", { name: /Let’s gather|Let’s cook/ }),
+      ).toBeVisible({ timeout: 10000 });
+    }
   });
 });
