@@ -1,10 +1,10 @@
 ---
-dispatch_id: DSP-Sous-20260724-01
+dispatch_id: DSP-Sous-20260810-01
 repo: Sous
 state: open
-priority: P2
-created: 2026-07-24
-expires: 2026-08-07
+priority: P1
+created: 2026-08-10
+expires: 2026-08-24
 estimated_scope: M
 classification: AUTO-BUILD
 requires_founder: []
@@ -13,7 +13,8 @@ source_of_priority:
   - "docs/YEAR-5-VIBECODE-PLAN.md is the canonical active workstream; its cursor reads 'Sprints A-G + J + N are Shipped. Remaining: Sprint H (Retention analytics, W29-W32) -> I -> K -> L -> M'. Sprint H is the next unshipped sprint in sequence."
   - "The plan states 'every Y5 sprint is AUTO-BUILD on its own' and pins Sprint H as 'pure aggregator over cook_sessions. Stub fixtures drive tests.' — no founder key, no external API, no infra."
   - "Continuity: last shipped Y5 work is Sprint G (d82d100, pod challenges 2.0). Sprint A already shipped the sibling module src/lib/cohort/segmentation.ts, so Sprint H lands beside proven code."
-  - "repo-dispatch-sync tier + momentum: Tier A, 84 commits/30d, 0 commits/7d, last commit 2026-07-14 — active repo that has gone quiet, which is exactly when the next sprint slips."
+  - "Re-dispatch of DSP-Sous-20260724-01 (archived in docs/dispatch-archive.md): it expired 2026-08-07 with zero progress, no STATUS.md, and no commit after the dispatch commit b4773e1. Same task, priority raised P2 to P1."
+  - "repo-dispatch-sync momentum 2026-08-10: Tier A, 0 commits in 7d, 0 commits in 30d, last commit 2026-07-24 which was the dispatch itself. Seventeen dormant days is the staleness condition this dispatch exists to break."
   - "No competing signal: no Sous mention in Granola meetings for 2026-07-10..2026-07-24, and no Sous-linked open task in the Airtable Task Registry. The plan document is therefore the highest-quality available priority signal."
 depends_on: []
 verify_commands:
@@ -148,7 +149,7 @@ with `git pull --ff-only` before starting.
 ## Definition of Done
 
 All ACs checked, `pnpm verify` green (the 4-gate), committed to main and pushed, `STATUS.md` written with
-`dispatch_id: DSP-Sous-20260724-01`, an outcome, and the verify-command evidence.
+`dispatch_id: DSP-Sous-20260810-01`, an outcome, and the verify-command evidence.
 
 ## Out of Scope
 
