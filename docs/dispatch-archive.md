@@ -176,3 +176,19 @@ Surgical Changes guard — do **not**:
 - Wire Clerk / Neon / R2 / Redis / Sentry or any Stage-2 production-hardening concern.
 ```
 </details>
+
+## DSP-Sous-20260810-01 — EXPIRED UNCONSUMED
+
+**Archived:** 2026-08-24 by repo-dispatch-sync (rung 2 of optimus-weekly).
+**Outcome:** expired. No STATUS.md was ever written. No commit landed after the dispatch
+commit itself (8b6c3f4, 2026-08-10). Repo has 0 commits in the 14 days the dispatch was open.
+
+**Task:** Y5 Sprint H — D7/D30 retention aggregator + cohort retention curves.
+
+**Not re-issued.** This is the SECOND consecutive expiry of the same Sprint H task
+(DSP-Sous-20260724-01 expired 2026-08-07, re-issued as this one at P1, expired again).
+Re-issuing a third time would repeat the pattern the repo dispatch board has now flagged
+as a founder ask twice: the task specification is not the failing variable, the absence of
+a pull consumer is. The task remains valid and is preserved here for whoever picks it up.
+
+---
